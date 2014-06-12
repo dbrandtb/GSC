@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
@@ -128,6 +129,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
+    public static final String OBTIENE_DATOS_CLIENTE_GENERAL="OBTIENE_DATOS_CLIENTE_GENERAL";
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
     public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
@@ -153,6 +155,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String HABILITA_SIG_RECIBO = "HABILITA_SIG_RECIBO";
 	public static final String VALIDA_DATOS_DXN = "VALIDA_DATOS_DXN";
 	public static final String VALIDA_USUARIO_SUCURSAL = "VALIDA_USUARIO_SUCURSAL";
+	public static final String ACTUALIZA_CDIDEPER = "ACTUALIZA_CDIDEPER";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -228,6 +231,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
+        addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL, new ObtenDatosClienteGeneral(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
@@ -254,6 +258,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
 		addStoredProcedure(VALIDA_DATOS_DXN, new ValidaDatosDxn(getDataSource()));
 		addStoredProcedure(VALIDA_USUARIO_SUCURSAL, new ValidaUsuarioSucursal(getDataSource()));
+		addStoredProcedure(ACTUALIZA_CDIDEPER, new ActualizaCdIdeper(getDataSource()));
 	}
 	
 	
@@ -271,6 +276,31 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
+	protected class ActualizaCdIdeper extends CustomStoredProcedure {
+
+		protected ActualizaCdIdeper(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CDIDEPER");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideper_i", OracleTypes.VARCHAR));
 
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -4057,6 +4087,123 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setTelefonoCli(rs.getString("telefonoCli"));
     		cliente.setTituloCli(rs.getString("tituloCli"));
     		cliente.setTitulonobCli(rs.getString("titulonobCli"));
+    		
+    		return cliente;
+    	}
+    }
+
+    protected class ObtenDatosClienteGeneral extends CustomStoredProcedure {
+    	
+    	protected ObtenDatosClienteGeneral(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_cons_sal_cli");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClienteGeneralMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    
+    protected class ClienteGeneralMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		ClienteGeneral cliente = new ClienteGeneral();
+    		//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+    		SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
+    		Calendar cal;
+    		
+    		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
+    		cliente.setApellidomCli(rs.getString("apellidomCli"));
+    		cliente.setApellidopCli(rs.getString("apellidopCli"));
+    		cliente.setBannomCli(rs.getString("bannomCli"));
+    		cliente.setCallecarCli(rs.getString("callecarCli"));
+    		cliente.setCalleCli(rs.getString("calleCli"));
+    		cliente.setCanconCli(rs.getInt("canconCli"));
+    		cliente.setCelularCli(rs.getString("celularCli"));
+    		cliente.setCheqdevCli(rs.getInt("cheqdevCli"));
+    		cliente.setClaveCli(rs.getInt("claveCli"));
+    		cliente.setCodcarCli(rs.getInt("codcarCli"));
+    		cliente.setCodposCli(rs.getInt("codposCli"));
+    		cliente.setColcarCli(rs.getString("colcarCli"));
+    		cliente.setColoniaCli(rs.getString("coloniaCli"));
+    		cliente.setEdocarCli(rs.getInt("edocarCli"));
+    		cliente.setEdocivilCli(rs.getInt("edocivilCli"));
+    		cliente.setEstadoCli(rs.getInt("estadoCli"));
+    		cliente.setFaxCli(rs.getString("faxCli"));
+    		
+    		
+    		cal = Utilerias.getCalendar(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+    		if(cal != null){
+    			cliente.setFecaltaCli(cal);
+    		}else{
+    			logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
+    		}
+    		
+    		cal = Utilerias.getCalendar(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+    		if(cal != null){
+    			cliente.setFecnacCli(cal);
+    		}else{
+    			logger.error("NO SE PUDO PARSEAR LA FECHA fecnacCli !!! " + rs.getString("fecnacCli"));
+    		}
+    		
+    		cliente.setFismorCli(rs.getInt("fismorCli"));
+    		cliente.setGiroCli(rs.getInt("giroCli"));
+    		
+    		logger.debug("cliente.getGiroCli(): "+cliente.getGiroCli());
+    		
+    		cliente.setMuncarCli(rs.getString("muncarCli"));
+    		cliente.setMunicipioCli(rs.getString("municipioCli"));
+    		cliente.setNombreCli(rs.getString("nombreCli"));
+    		cliente.setNumcarCli(rs.getString("numcarCli"));
+    		cliente.setNumeroCli(rs.getString("numeroCli"));
+    		cliente.setPobcarCli(rs.getString("pobcarCli"));
+    		cliente.setPoblacionCli(rs.getString("poblacionCli"));
+    		cliente.setRfcCli(rs.getString("rfcCli"));
+    		cliente.setRmdbRn(rs.getInt("rmdbRn"));
+    		cliente.setSexoCli(rs.getInt("sexoCli"));
+    		cliente.setSinocurCli(rs.getInt("sinocurCli"));
+    		cliente.setSucursalCli(rs.getInt("sucursalCli"));
+    		cliente.setTelefonoCli(rs.getString("telefonoCli"));
+    		cliente.setTituloCli(rs.getString("tituloCli"));
+    		cliente.setTitulonobCli(rs.getString("titulonobCli"));
+    		
+    		
+    		cliente.setNacCli(rs.getString("nacCli"));
+    		cliente.setCveEle(rs.getString("cveEle"));
+    		cliente.setCurpCli(rs.getString("curpCli"));
+    		cliente.setMailCli(rs.getString("mailCli"));
+    		cliente.setOrirecCli(rs.getString("orirecCli"));
+    		cliente.setAdmconCli(rs.getString("admconCli"));
+    		cliente.setApodeCli(rs.getString("apodeCli"));
+    		cliente.setPasaporteCli(rs.getString("pasaporteCli"));
+    		cliente.setUsucapCli(rs.getInt("usucapCli"));
+    		cliente.setUsuautCli(rs.getInt("usuautCli"));
+    		
+    		cal = Utilerias.getCalendar(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
+    		if(cal != null){
+    			cliente.setFecstaCli(cal);
+    		}else{
+    			logger.error("NO SE PUDO PARSEAR LA FECHA fecstaCli !!! " + rs.getString("fecstaCli"));
+    		}
+    		
+    		cliente.setOcuPro(rs.getInt("ocuPro"));
+    		cliente.setRazSoc(rs.getString("razSoc"));
+    		cliente.setRamoCli(rs.getInt("ramoCli"));
+    		cliente.setNumeroExterno(rs.getString("llaveCli"));
     		
     		return cliente;
     	}

@@ -161,6 +161,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados obtenDatosRecibosDxN(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;
 	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados obtenDatosClienteGeneralWS(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados mesaControlUpdateSolici(String ntramite,String nmsolici) throws ApplicationException;
 	public WrapperResultados mesaControlUpdateStatus(String ntramite,String status) throws ApplicationException;
 	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException;
@@ -276,5 +277,5 @@ public interface KernelManagerSustituto {
      */
     public WrapperResultados existeDomicilioContratante(String cdideper);
     
-    
+    public boolean actualizaCdIdeper(Map<String,String> params); 
 }

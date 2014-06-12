@@ -40,7 +40,6 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
-import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.Autos.service.EmisionAutosService;
@@ -48,12 +47,10 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -932,6 +929,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			for(Map<String,Object>aseg:list1)
 			{
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+				String cdIdeperAseg = (String) aseg.get("cdideper");
 				/* MODELO RECIBIDO
 				name", "nmsituac")));
 				name", "cdrol"
@@ -945,7 +943,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				name", "cdrfc")));*/
 				parametros.put("pv_cdperson_i",(String)aseg.get("cdperson"));
 				parametros.put("pv_cdtipide_i","1");// 												);// IN  MPERSONA.cdtipide%TYPE DEFAULT NULL, Valor por default 1
-				parametros.put("pv_cdideper_i", (String)aseg.get("cdideper"));//						);// IN  MPERSONA.cdideper%TYPE DEFAULT NULL, Valor de CDRFC
+				parametros.put("pv_cdideper_i", cdIdeperAseg);//						);// IN  MPERSONA.cdideper%TYPE DEFAULT NULL, Valor de CDRFC
 				parametros.put("pv_dsnombre_i",(String)aseg.get("nombre"));// 						);// IN  MPERSONA.dsnombre%TYPE DEFAULT NULL,
 				parametros.put("pv_cdtipper_i","1");// 												);// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
 				parametros.put("pv_otfisjur_i",(String)aseg.get("tpersona"));// 												);// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
@@ -977,138 +975,145 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_accion_i",	"I");
 				parametros.put("pv_swexiper_i", (String)aseg.get("swexiper"));
 				log.debug("#iteracion mov mpoliper "+i);
+				
+				
+				/**
+				 * SOLO PARA EL CONTRATANTE
+				 */
 				if(((String)aseg.get("nmsituac")).equals("0"))
 				{
 					kernelManager.borraMpoliper(parametros);
 					
 					/**
-					 * PARA INSERTAR DATOS DEL DOMICILIO DE LA PERSONA CONTRATANTE SI AUN NO ESTAN EN LA BD
+					 * En caso  de que si tenga un cdIdeper y el domicilio aun no este guardado en BD, se buscan los datos en el WS y se insertan en BD
 					 */
-					try{
-						WrapperResultados result = kernelManager.existeDomicilioContratante((String)aseg.get("cdideper"));
-						
-						if(result != null && result.getItemMap() != null && result.getItemMap().containsKey("EXISTE_DOMICILIO")){
-							if(StringUtils.isBlank((String)result.getItemMap().get("EXISTE_DOMICILIO")) || !Constantes.SI.equalsIgnoreCase((String)result.getItemMap().get("EXISTE_DOMICILIO"))){
-								/**
-								 * Se va al WS por la informacion del domicilio
-								 */
-						    	String cdtipsitGS = kernelManager.obtenCdtipsitGS(parametros);
-						    	
-						    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-						    	clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-						    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-						    	//clienteGeneral.setClaveCli(Integer.parseInt((String)aseg.get("cdideper")));
-						    	
-						    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
-						    	
-						    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-						    		if(clientesRes.getClientesGeneral().length > 1){
-						    			logger.error("Error, No se pudo obtener el domicilio del WS. Se ha encontrado mas de Un Domicilio!");
-						    		}
-						    		ClienteGeneral cliDom = null;
-						    		for(ClienteGeneral cliIter : clientesRes.getClientesGeneral()){
-						    			if(cliIter.getClaveCli() == Integer.parseInt((String)aseg.get("cdideper"))){
-						    				cliDom = cliIter;
-						    			}
-						    		}
-						    		
-						    		if(cliDom != null){
-						    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
-						    			paramDomicil.put("pv_cdperson_i", (String)aseg.get("cdperson"));
-						    			paramDomicil.put("pv_nmorddom_i", "1");
-						    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() + cliDom.getNumeroCli());
-						    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
-						    			paramDomicil.put("pv_cdpostal_i", Integer.toString(cliDom.getCodposCli()));
-						    			paramDomicil.put("pv_cdedo_i",    null/*cliDom.getPoblacionCli()*/);
-						    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
-						    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
-						    			paramDomicil.put("pv_nmnumero_i", null);
-						    			paramDomicil.put("pv_nmnumint_i", null);
-						    			paramDomicil.put("pv_accion_i", "I");
+					if(StringUtils.isNotBlank(cdIdeperAseg) && !"0".equalsIgnoreCase(cdIdeperAseg) && !"0L".equalsIgnoreCase(cdIdeperAseg)){
+						try{
+							WrapperResultados result = kernelManager.existeDomicilioContratante(cdIdeperAseg);
+							
+							if(true){
+								if(true){
+									/**
+									 *  Si no existe Domicilio, Se va al WS por la informacion del mismo
+									 */
+							    	String cdtipsitGS = kernelManager.obtenCdtipsitGS(parametros);
+							    	
+							    	ClienteGeneral clienteGeneral = new ClienteGeneral();
+							    	clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+							    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
+							    	//clienteGeneral.setClaveCli(cdIdeperAseg);
+							    	
+							    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+							    	
+							    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
+							    		if(clientesRes.getClientesGeneral().length > 1){
+							    			logger.error("Error, No se pudo obtener el domicilio del WS. Se ha encontrado mas de Un Domicilio!");
+							    		}
+							    		ClienteGeneral cliDom = null;
+							    		for(ClienteGeneral cliIter : clientesRes.getClientesGeneral()){
+							    			if(cdIdeperAseg.equalsIgnoreCase(cliIter.getNumeroExterno())){
+							    				cliDom = cliIter;
+							    			}
+							    		}
+							    		
+							    		if(cliDom != null){
+							    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
+							    			paramDomicil.put("pv_cdperson_i", (String)aseg.get("cdperson"));
+							    			paramDomicil.put("pv_nmorddom_i", "1");
+							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() +" "+ cliDom.getNumeroCli());
+							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
+							    			paramDomicil.put("pv_cdpostal_i", Integer.toString(cliDom.getCodposCli()));
+							    			paramDomicil.put("pv_cdedo_i",    null/*cliDom.getPoblacionCli()*/);
+							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
+							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
+							    			paramDomicil.put("pv_nmnumero_i", null);
+							    			paramDomicil.put("pv_nmnumint_i", null);
+							    			paramDomicil.put("pv_accion_i", "I");
 
-						    			kernelManager.pMovMdomicil(paramDomicil);
-						    			
-						    			HashMap<String,String> paramValoper = new HashMap<String, String>();
-						    			paramValoper.put("pv_cdunieco", "0");
-						    			paramValoper.put("pv_cdramo",   "0");
-						    			paramValoper.put("pv_estado",   null);
-						    			paramValoper.put("pv_nmpoliza", "0");
-						    			paramValoper.put("pv_nmsituac", null);
-						    			paramValoper.put("pv_nmsuplem", null);
-						    			paramValoper.put("pv_status",   null);
-						    			paramValoper.put("pv_cdrol",    "1");
-						    			paramValoper.put("pv_cdperson", (String)aseg.get("cdperson"));
-						    			paramValoper.put("pv_cdatribu", null);
-						    			paramValoper.put("pv_cdtipsit", null);
-						    			
-						    			paramValoper.put("pv_otvalor01", cliDom.getCveEle());
-						    			paramValoper.put("pv_otvalor02", cliDom.getPasaporteCli());
-						    			paramValoper.put("pv_otvalor03", null);
-						    			paramValoper.put("pv_otvalor04", null);
-						    			paramValoper.put("pv_otvalor05", null);
-						    			paramValoper.put("pv_otvalor06", null);
-						    			paramValoper.put("pv_otvalor07", null);
-						    			paramValoper.put("pv_otvalor08", cliDom.getOrirecCli());
-						    			paramValoper.put("pv_otvalor09", null);
-						    			paramValoper.put("pv_otvalor10", null);
-						    			paramValoper.put("pv_otvalor11", cliDom.getNacCli());
-						    			paramValoper.put("pv_otvalor12", null);
-						    			paramValoper.put("pv_otvalor13", null);
-						    			paramValoper.put("pv_otvalor14", null);
-						    			paramValoper.put("pv_otvalor15", null);
-						    			paramValoper.put("pv_otvalor16", null);
-						    			paramValoper.put("pv_otvalor17", null);
-						    			paramValoper.put("pv_otvalor18", null);
-						    			paramValoper.put("pv_otvalor19", null);
-						    			paramValoper.put("pv_otvalor20", Integer.toString(cliDom.getOcuPro()));
-						    			paramValoper.put("pv_otvalor21", null);
-						    			paramValoper.put("pv_otvalor22", null);
-						    			paramValoper.put("pv_otvalor23", null);
-						    			paramValoper.put("pv_otvalor24", null);
-						    			paramValoper.put("pv_otvalor25", cliDom.getCurpCli());
-						    			paramValoper.put("pv_otvalor26", null);
-						    			paramValoper.put("pv_otvalor27", null);
-						    			paramValoper.put("pv_otvalor28", null);
-						    			paramValoper.put("pv_otvalor29", null);
-						    			paramValoper.put("pv_otvalor30", null);
-						    			paramValoper.put("pv_otvalor31", null);
-						    			paramValoper.put("pv_otvalor32", null);
-						    			paramValoper.put("pv_otvalor33", null);
-						    			paramValoper.put("pv_otvalor34", null);
-						    			paramValoper.put("pv_otvalor35", null);
-						    			paramValoper.put("pv_otvalor36", null);
-						    			paramValoper.put("pv_otvalor37", null);
-						    			paramValoper.put("pv_otvalor38", null);
-						    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
-						    			paramValoper.put("pv_otvalor40", null);
-						    			paramValoper.put("pv_otvalor41", null);
-						    			paramValoper.put("pv_otvalor42", null);
-						    			paramValoper.put("pv_otvalor43", null);
-						    			paramValoper.put("pv_otvalor44", null);
-						    			paramValoper.put("pv_otvalor45", null);
-						    			paramValoper.put("pv_otvalor46", null);
-						    			paramValoper.put("pv_otvalor47", null);
-						    			paramValoper.put("pv_otvalor48", null);
-						    			paramValoper.put("pv_otvalor49", null);
-						    			paramValoper.put("pv_otvalor50", null);
-						    			
-						    			kernelManager.pMovTvaloper(paramValoper);
-						    			
-						    		}else{
-						    			logger.error("Error. Cliente no encontrado en WS !");
-						    		}
-						    	}else{
-						    		logger.error("Error, No se pudo obtener el domicilio del WS.");
-						    	}
-						    	
+							    			kernelManager.pMovMdomicil(paramDomicil);
+							    			
+							    			HashMap<String,String> paramValoper = new HashMap<String, String>();
+							    			paramValoper.put("pv_cdunieco", "0");
+							    			paramValoper.put("pv_cdramo",   "0");
+							    			paramValoper.put("pv_estado",   null);
+							    			paramValoper.put("pv_nmpoliza", "0");
+							    			paramValoper.put("pv_nmsituac", null);
+							    			paramValoper.put("pv_nmsuplem", null);
+							    			paramValoper.put("pv_status",   null);
+							    			paramValoper.put("pv_cdrol",    "1");
+							    			paramValoper.put("pv_cdperson", (String)aseg.get("cdperson"));
+							    			paramValoper.put("pv_cdatribu", null);
+							    			paramValoper.put("pv_cdtipsit", null);
+							    			
+							    			paramValoper.put("pv_otvalor01", cliDom.getCveEle());
+							    			paramValoper.put("pv_otvalor02", cliDom.getPasaporteCli());
+							    			paramValoper.put("pv_otvalor03", null);
+							    			paramValoper.put("pv_otvalor04", null);
+							    			paramValoper.put("pv_otvalor05", null);
+							    			paramValoper.put("pv_otvalor06", null);
+							    			paramValoper.put("pv_otvalor07", null);
+							    			paramValoper.put("pv_otvalor08", cliDom.getOrirecCli());
+							    			paramValoper.put("pv_otvalor09", null);
+							    			paramValoper.put("pv_otvalor10", null);
+							    			paramValoper.put("pv_otvalor11", cliDom.getNacCli());
+							    			paramValoper.put("pv_otvalor12", null);
+							    			paramValoper.put("pv_otvalor13", null);
+							    			paramValoper.put("pv_otvalor14", null);
+							    			paramValoper.put("pv_otvalor15", null);
+							    			paramValoper.put("pv_otvalor16", null);
+							    			paramValoper.put("pv_otvalor17", null);
+							    			paramValoper.put("pv_otvalor18", null);
+							    			paramValoper.put("pv_otvalor19", null);
+							    			paramValoper.put("pv_otvalor20", Integer.toString(cliDom.getOcuPro()));
+							    			paramValoper.put("pv_otvalor21", null);
+							    			paramValoper.put("pv_otvalor22", null);
+							    			paramValoper.put("pv_otvalor23", null);
+							    			paramValoper.put("pv_otvalor24", null);
+							    			paramValoper.put("pv_otvalor25", cliDom.getCurpCli());
+							    			paramValoper.put("pv_otvalor26", null);
+							    			paramValoper.put("pv_otvalor27", null);
+							    			paramValoper.put("pv_otvalor28", null);
+							    			paramValoper.put("pv_otvalor29", null);
+							    			paramValoper.put("pv_otvalor30", null);
+							    			paramValoper.put("pv_otvalor31", null);
+							    			paramValoper.put("pv_otvalor32", null);
+							    			paramValoper.put("pv_otvalor33", null);
+							    			paramValoper.put("pv_otvalor34", null);
+							    			paramValoper.put("pv_otvalor35", null);
+							    			paramValoper.put("pv_otvalor36", null);
+							    			paramValoper.put("pv_otvalor37", null);
+							    			paramValoper.put("pv_otvalor38", null);
+							    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
+							    			paramValoper.put("pv_otvalor40", null);
+							    			paramValoper.put("pv_otvalor41", null);
+							    			paramValoper.put("pv_otvalor42", null);
+							    			paramValoper.put("pv_otvalor43", null);
+							    			paramValoper.put("pv_otvalor44", null);
+							    			paramValoper.put("pv_otvalor45", null);
+							    			paramValoper.put("pv_otvalor46", null);
+							    			paramValoper.put("pv_otvalor47", null);
+							    			paramValoper.put("pv_otvalor48", null);
+							    			paramValoper.put("pv_otvalor49", null);
+							    			paramValoper.put("pv_otvalor50", null);
+							    			
+							    			kernelManager.pMovTvaloper(paramValoper);
+							    			
+							    		}else{
+							    			logger.error("Error. Cliente no encontrado en WS !");
+							    		}
+							    	}else{
+							    		logger.error("Error, No se pudo obtener el domicilio del WS.");
+							    	}
+							    	
+								}else{
+									logger.debug("Ya Existe el domicilio del cdiper.");
+								}
 							}else{
-								logger.debug("Ya Existe el domicilio del cdiper.");
+								logger.error("Error al verificar si hay datos en mdomicil!!");
 							}
-						}else{
-							logger.error("Error al verificar si hay datos en mdomicil!!");
+						}catch(Exception eWS){
+							logger.error("Error en obtencion de Domicilio para contratante.",eWS);
 						}
-					}catch(Exception eWS){
-						logger.error("Error en obtencion de Domicilio para contratante.",eWS);
 					}
 					
 				}
@@ -1515,6 +1520,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmpoliexEmitida = null;
 		String nmsuplemEmitida = null;
 		String esDxN           = null;
+		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		
 		////// obtener parametros
@@ -1688,6 +1694,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
 				nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
 				esDxN           = (String)wr.getItemMap().get("esdxn");
+				cdIdeperRes     = (String)wr.getItemMap().get("CDIDEPER");
 				
 				panel2.put("nmpoliza",nmpolizaEmitida);
 				panel2.put("nmpoliex",nmpoliexEmitida);
@@ -1739,7 +1746,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				sucursal = "1000";
 			}
-			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
+			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
 			logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
 			logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
 			logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
@@ -1750,30 +1757,46 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
 			
 			//ws cliente
-			if(success)
+			
+			if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+					)
 			{
-				try
-				{
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							)
-					{
-						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+				ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+			}
+			else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			{
+				if(StringUtils.isBlank(cdIdeperRes)){
+					
+					ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+					if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
+						cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
+						if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
+						
+							HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
+							paramsIdeper.put("pv_cdunieco_i", _cdunieco);
+							paramsIdeper.put("pv_cdramo_i",   _cdramo);
+							paramsIdeper.put("pv_estado_i",   edoPoliza);
+							paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
+							paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
+							paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
+							
+							kernelManager.actualizaCdIdeper(paramsIdeper);
+									
+						}else {
+							success = false;
+							mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+							logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
+						} 
+					}else{
+						success = false;
+						mensajeRespuesta = "Error al crear Cliente en WS.";
+						logger.error("Error al Crear el cliente en WS!");
 					}
-					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
-					{
-						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
-					}
-				}
-				catch(Exception ex)
-				{
-					log.error("error en el ws de cliente",ex);
-					mensajeRespuesta = ex.getMessage();
-					success          = false;
 				}
 			}
-			
+				
 			////// ws de cotizacion y emision para autos
 			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
 			{
@@ -1787,7 +1810,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			
 			//ws recibos
-			if(success)
+			if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+					))
 			{
 				try
 				{
@@ -1942,6 +1968,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmpoliexEmitida  = null;
 		String nmsuplemEmitida  = null;
 		String esDxN            = null;
+		String cdIdeperRes      = null;
 		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String rutaCarpeta      = null;
 		
@@ -2025,6 +2052,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
 				nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
 				esDxN           = (String)wr.getItemMap().get("esdxn");
+				cdIdeperRes     = (String)wr.getItemMap().get("CDIDEPER");
 			}
 			catch(Exception ex)
 			{
@@ -2077,14 +2105,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			String edoPoliza = "M";
 			String _nmpoliza = nmpolizaEmitida;
 			String _nmsuplem = nmsuplemEmitida;
-			String sucursal  = cdunieco;
-			
+			String sucursal = cdunieco;
 			if("1".equals(sucursal))
 			{
 				sucursal = "1000";
 			}
-			
-			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
+			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
 			logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
 			logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
 			logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
@@ -2095,30 +2121,46 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
 			
 			//ws cliente
-			if(success)
+			
+			if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+					)
 			{
-				try
-				{
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							)
-					{
-						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+				ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+			}
+			else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			{
+				if(StringUtils.isBlank(cdIdeperRes)){
+					
+					ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+					if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
+						cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
+						if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
+						
+							HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
+							paramsIdeper.put("pv_cdunieco_i", _cdunieco);
+							paramsIdeper.put("pv_cdramo_i",   _cdramo);
+							paramsIdeper.put("pv_estado_i",   edoPoliza);
+							paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
+							paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
+							paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
+							
+							kernelManager.actualizaCdIdeper(paramsIdeper);
+									
+						}else {
+							success = false;
+							mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+							logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
+						} 
+					}else{
+						success = false;
+						mensajeRespuesta = "Error al crear Cliente en WS.";
+						logger.error("Error al Crear el cliente en WS!");
 					}
-					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
-					{
-						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
-					}
-				}
-				catch(Exception ex)
-				{
-					log.error("error en el ws de cliente",ex);
-					mensajeRespuesta = ex.getMessage();
-					success          = false;
 				}
 			}
-			
+				
 			////// ws de cotizacion y emision para autos
 			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
 			{
@@ -2131,29 +2173,42 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 			}
 			
-			// ws recibos
-			if(success)
+			//ws recibos
+			if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+					))
 			{
-				if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
-					
-					// Ejecutamos el Web Service de Recibos:
-					ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-							edoPoliza, _nmpoliza, 
-							_nmsuplem, rutaCarpeta,
-							sucursal, nmpoliza, ntramite, 
-							false, tipoMov,
-							us);
-					// Ejecutamos el Web Service de Recibos DxN:
-					recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
-				}else{
-					
-					// Ejecutamos el Web Service de Recibos:
-					ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-							edoPoliza, _nmpoliza, 
-							_nmsuplem, rutaCarpeta,
-							sucursal, nmpoliza,ntramite, 
-							true, tipoMov,
-							us);
+				try
+				{
+					if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+					{	
+						// Ejecutamos el Web Service de Recibos:
+						ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+								edoPoliza, _nmpoliza, 
+								_nmsuplem, rutaCarpeta,
+								sucursal, nmpoliza, ntramite, 
+								false, tipoMov,
+								us);
+						// Ejecutamos el Web Service de Recibos DxN:
+						recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
+					}
+					else
+					{
+						// Ejecutamos el Web Service de Recibos:
+						ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+								edoPoliza, _nmpoliza, 
+								_nmsuplem, rutaCarpeta,
+								sucursal, nmpoliza,ntramite, 
+								true, tipoMov,
+								us);
+					}
+				}
+				catch(Exception ex)
+				{
+					log.error("error al lanzar ws recibos",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
 				}
 			}
 		}
@@ -2266,7 +2321,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		Ice2sigsService.Operacion operation = Ice2sigsService.Operacion.valueOf(operacion);
 
 		// Ejecutamos el Web Service de Cliente Salud:
-		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
+		//ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, null, (UserVO) session.get("USUARIO"), true);
 		
 		success = true;
 		return SUCCESS;
@@ -2324,7 +2380,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		try
 		{
-		    slist1=kernelManager.buscarRFC(map1);
+		    //slist1=kernelManager.buscarRFC(map1);
 		    
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
@@ -2352,16 +2408,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	if(listaClientesGS != null && listaClientesGS.length > 0 ){
 		    		logger.debug("Añadiendo Clientes de GS a Lista, " + listaClientesGS.length);
 		    		clienteWS = true;
+		    		
+		    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		    		Calendar calendar =  Calendar.getInstance();
 			    	HashMap<String, String> agregar = null;
 			    	
 			    	for(ClienteGeneral cli: listaClientesGS){
 			    		agregar = new HashMap<String,String>();
 			    		
-				    	agregar.put("RFCCLI", cli.getRfcCli());
-				    	agregar.put("NOMBRECLI", cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
-				    	agregar.put("FENACIMICLI", cli.getFecnacCli().getTime().toString());
+				    	agregar.put("RFCCLI",       cli.getRfcCli());
+				    	agregar.put("NOMBRECLI",    cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
+				    	if(cli.getFecnacCli()!= null){
+				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+							agregar.put("FENACIMICLI", sdf.format(calendar.getTime()));
+				    	}else {
+				    		agregar.put("FENACIMICLI", "");
+				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(cli.getCodposCli()!=0 ?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli()+" "+cli.getPoblacionCli());
-				    	agregar.put("CLAVECLI", Integer.toString(cli.getClaveCli()));
+				    	agregar.put("CLAVECLI",     cli.getNumeroExterno());
 				    	slist1.add(agregar);
 			    	}
 			    			
