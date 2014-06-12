@@ -889,7 +889,7 @@ Ext.onReady(function() {
         autoScroll:true,
         defaults: {frame:true, width:200, height: 200, margin : '2'},
         items:[{
-            title:'BUSQUEDA DE POLIZAS',
+            title:'B&Uacute;SQUEDA DE P&Oacute;LIZAS',
             colspan:2,
             width:990,
             height:170,
