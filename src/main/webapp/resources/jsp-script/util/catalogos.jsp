@@ -83,7 +83,9 @@ var EstatusTramite = {
 
 // Catalogo de cdramo:
 var Ramo = {
-    SaludVital : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>'   
+	AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_FRONTERIZOS.cdramo"/>',
+    Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
+    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>'
 };
 
 
@@ -96,8 +98,10 @@ var TipoPago = {
 
 // Catalogo de cdtipsit:
 var TipoSituacion = {
-    SaludVital  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />',
-    SaludNomina : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />'
+    AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_FRONTERIZOS.cdtipsit" />',
+    Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD.cdtipsit" />',
+    SaludNomina      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />',
+    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />'
 };
 
 
