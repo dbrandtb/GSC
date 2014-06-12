@@ -40,6 +40,7 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.Autos.service.EmisionAutosService;
@@ -991,30 +992,36 @@ public class ComplementariosAction extends PrincipalCoreAction
 						try{
 							WrapperResultados result = kernelManager.existeDomicilioContratante(cdIdeperAseg);
 							
-							if(true){
-								if(true){
+							if(result != null && result.getItemMap() != null && result.getItemMap().containsKey("EXISTE_DOMICILIO")){
+								if(StringUtils.isBlank((String)result.getItemMap().get("EXISTE_DOMICILIO")) || !Constantes.SI.equalsIgnoreCase((String)result.getItemMap().get("EXISTE_DOMICILIO"))){
 									/**
 									 *  Si no existe Domicilio, Se va al WS por la informacion del mismo
 									 */
 							    	String cdtipsitGS = kernelManager.obtenCdtipsitGS(parametros);
 							    	
 							    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-							    	clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+							    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
 							    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-							    	//clienteGeneral.setClaveCli(cdIdeperAseg);
+							    	clienteGeneral.setNumeroExterno(cdIdeperAseg);
 							    	
 							    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 							    	
 							    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-							    		if(clientesRes.getClientesGeneral().length > 1){
+							    		ClienteGeneral cliDom = null;
+							    		
+							    		if(clientesRes.getClientesGeneral().length == 1){
+							    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+							    			cliDom = clientesRes.getClientesGeneral()[0];
+							    		}else {
 							    			logger.error("Error, No se pudo obtener el domicilio del WS. Se ha encontrado mas de Un Domicilio!");
 							    		}
-							    		ClienteGeneral cliDom = null;
-							    		for(ClienteGeneral cliIter : clientesRes.getClientesGeneral()){
+							    		
+							    		/*Cuando se encontraba el cliente de una lista
+							    		 * for(ClienteGeneral cliIter : clientesRes.getClientesGeneral()){
 							    			if(cdIdeperAseg.equalsIgnoreCase(cliIter.getNumeroExterno())){
 							    				cliDom = cliIter;
 							    			}
-							    		}
+							    		}*/
 							    		
 							    		if(cliDom != null){
 							    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
@@ -2380,7 +2387,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		try
 		{
-		    //slist1=kernelManager.buscarRFC(map1);
+		    slist1=kernelManager.buscarRFC(map1);
 		    
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
