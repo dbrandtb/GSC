@@ -1063,6 +1063,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.OBTIENE_DATOS_CLIENTE);
 		return result;
 	}
+
+	public WrapperResultados obtenDatosClienteGeneralWS(HashMap<String,Object> params) throws ApplicationException
+	{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_CLIENTE_GENERAL);
+		return result;
+	}
 	
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException
 	{
@@ -1344,6 +1351,16 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		} catch(Exception e) {
 			throw new ApplicationException(new StringBuilder("El usuario ").append(username).append(" no est� asociado a la sucursal de documento elegida, debe elegir otra.").toString(), e);
 		}
+	}
+
+	public boolean actualizaCdIdeper(Map<String,String> params){
+		try{
+			this.returnBackBoneInvoke(params,ProcesoDAO.ACTUALIZA_CDIDEPER);
+		}catch(Exception e){
+			logger.error("Error al insertar el cdIdeper. ", e);
+			return false;
+		}
+		return true;
 	}
 	
 }

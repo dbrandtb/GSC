@@ -8,7 +8,6 @@ import java.util.List;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -37,7 +36,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRes
 import mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
@@ -345,7 +343,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		
 		if(Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
 			try {
-				result = kernelManager.obtenDatosClienteWS(params);
+				result = kernelManager.obtenDatosClienteGeneralWS(params);
 				if(result.getItemList() != null && result.getItemList().size() > 0){
 					cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
 				}
@@ -363,7 +361,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				usuario = userVO.getUser();
 			}
 			
-			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave: " + cliente.getClaveCli());
+			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Externa: " + cliente.getNumeroExterno());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
 			try{
 				
@@ -397,7 +395,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					}
 				}
 			}catch(WSException e){
-				logger.error("Error al ejecutar WS Cliente General Clave: " + cliente.getClaveCli() + " RFC: " + cliente.getRfcCli(), e);
+				logger.error("Error al ejecutar WS Cliente General Clave Externa: " + cliente.getNumeroExterno() + " RFC: " + cliente.getRfcCli(), e);
 				logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 				if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
 					try {
@@ -417,7 +415,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				}
 				
 			}catch (Exception e){
-				logger.error("Error al ejecutar WS Cliente General Clave: " + cliente.getClaveCli() + " RFC: " + cliente.getRfcCli(), e);
+				logger.error("Error al ejecutar WS Cliente General Clave: " + cliente.getNumeroExterno() + " RFC: " + cliente.getRfcCli(), e);
 			}
 		}else{
 			logger.error("Error, No se tienen datos del Cliente");
