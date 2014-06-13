@@ -1806,6 +1806,22 @@ Ext.onReady(function()
         };
         comboTipoValor.addListener('change',changeFunction);
         changeFunction();
+        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+        {
+             var anioActual = new Date().getFullYear();
+             var max = anioActual-5;
+             var min = anioActual-20;
+             var value = _0_formAgrupados.down('[name=parametros.pv_otvalor05]').getValue()-0;
+             debug('anioActual:',anioActual);
+             debug('max:',max);
+             debug('min:',min);
+             debug('value:',value);
+             if(value<min||value>max)
+             {
+                 _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
+                 mensajeWarning('El modelo debe estar en el rago '+min+'-'+max);
+             }
+        });
     }
     <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
         var items=_0_formAgrupados.items.items;
