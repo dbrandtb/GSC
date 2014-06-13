@@ -1,14 +1,34 @@
 package mx.com.gseguros.ws.Autos.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Agente;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Cobertura;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.CodigoPostal;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.ConfiguracionPaquete;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Cotizacion;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.CotizacionRequest;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.FormasDePago_type0;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.GuardarCotizacionResponse;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Inciso;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Paquete;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.SDTClientesSDTClientesItem;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.TipoProducto;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.TipoVehiculo;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.TotalFormaPago;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Version;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacion;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionE;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionResponseE;
@@ -20,6 +40,7 @@ import mx.com.gseguros.ws.Autos.service.EmisionAutosService;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Implementaci�n de los m�todos para invocar al WS recibossigs
@@ -44,22 +65,325 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		Cotizacion datosCotizacionAuto = null;
 		
 		//Se invoca servicio para obtener los datos del auto
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		params.put("pv_ntramite_i", ntramite);
+		try
+		{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			List<Map<String,String>>lista=storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+			if(lista.size()>0)
+			{
+				Map<String,String>m=lista.get(0);
+				datosCotizacionAuto=new Cotizacion();
 				
-//		try {
-//			result = kernelManager.obtenDatosAutoWS(params);
-//			if(result.getItemList() != null && result.getItemList().size() > 0){
-//				datosCotizacionAuto = ((ArrayList<datosCotizacionAuto>) result.getItemList()).get(0);
-//			}
-//		} catch (Exception e1) {
-//			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
-//		}	
+				//idagente y sucursal
+				Agente agente=new Agente();
+				datosCotizacionAuto.setAgente(agente);
+				agente.setIdAgente(m.get("IDAGENTE"));
+				agente.setSucursal(Integer.valueOf(m.get("SUCURSAL")));
+				
+				//cve_cli
+				SDTClientesSDTClientesItem cliente = new SDTClientesSDTClientesItem();
+				datosCotizacionAuto.setCliente(cliente);
+				cliente.setCve_cli(Integer.valueOf(m.get("CVE_CLI").substring(m.get("CVE_CLI").length()-10)));
+				cliente.setFis_mor("");//null
+				cliente.setNom_cli("");//null
+				cliente.setApe_pat("");//null
+				cliente.setApe_mat("");//null
+				cliente.setRaz_soc("");//null
+				cliente.setAne_cli("");//null
+				cliente.setRfc_cli("");//null
+				cliente.setCve_ele("");//null
+				cliente.setCurpcli("");//null
+				cliente.setCal_cli("");//null
+				cliente.setNum_cli("");//null
+				cliente.setColonia("");//null
+				cliente.setPoblaci("");//null
+				cliente.setNac_ext("");//null
+				cliente.setTelefo1("");//null
+				cliente.setTelefo2("");//null
+				cliente.setTelefo3("");//null
+				cliente.setCor_ele("");//null
+				cliente.setPag_web("");//null
+				cliente.setFue_ing("");//null
+				cliente.setAdm_con("");//null
+				cliente.setCar_pub("");//null
+				cliente.setNom_car("");//null
+				cliente.setPer_car("");//null
+				cliente.setApo_cli("");//null
+				cliente.setDom_ori("");//null
+				cliente.setNum_pas("");//null
+				cliente.setSta_cli("");//null
+				
+				datosCotizacionAuto.setFormasDePago(new FormasDePago_type0());//null
+				
+				//codigo
+				CodigoPostal cp=new CodigoPostal();
+				datosCotizacionAuto.setCodigoPostal(cp);
+				cp.setCodigo(Integer.valueOf(m.get("CODIGO")));
+				
+				//cveusuariocaptura
+				datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(m.get("CVEUSUARIOCAPTURA")));
+				
+				//descuentoagente
+				datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
+				
+				//idagentecompartido
+				int aux=0;
+				if(m.get("IDAGENTECOMPARTIDO")!=null)
+				{
+					aux=Integer.valueOf(m.get("IDAGENTECOMPARTIDO")).intValue();
+				}
+				datosCotizacionAuto.setIdAgenteCompartido(aux);
+				
+				//porcencomisionagente2
+				aux=0;
+				if(m.get("PORCENCOMISIONAGENTE2")!=null)
+				{
+					aux=Integer.valueOf(m.get("PORCENCOMISIONAGENTE2")).intValue();
+				}
+				datosCotizacionAuto.setPorcenComisionAgente2(aux);
+				
+				//idestatuscotizacion
+				datosCotizacionAuto.setIdEstatusCotizacion(Integer.valueOf(m.get("IDESTATUSCOTIZACION")));
+				
+				//tipoproducto
+				TipoProducto tipoProducto=TipoProducto.ROJO;
+				if(StringUtils.isNotBlank(m.get("TIPOPRODUCTO"))
+						&&m.get("TIPOPRODUCTO").equalsIgnoreCase("VERDE"))
+				{
+					tipoProducto=TipoProducto.VERDE;
+				}
+				datosCotizacionAuto.setTipoProducto(tipoProducto);
+				
+				//tipoServicio
+				datosCotizacionAuto.setTipoServicio(Integer.valueOf(m.get("TIPOSERVICIO")));
+				
+				//versiontarifa
+				datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
+				
+				//inicioVigencia
+				datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
+				
+				//moneda
+				datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));
+				
+				//formapago
+				datosCotizacionAuto.setFormaPago(Integer.valueOf(m.get("FORMAPAGO")));
+				
+				TotalFormaPago totalFormaPago=new TotalFormaPago();
+				datosCotizacionAuto.setTotalFormaPago(totalFormaPago);
+				
+				//derechopoliza
+				totalFormaPago.setDerechoPoliza(Double.valueOf(m.get("DERECHOPOLIZA")));
+				
+				//iva
+				totalFormaPago.setIva(Double.valueOf(m.get("IVA")));
+				
+				//pagosubsecuente
+				totalFormaPago.setPagoSubSecuente(Double.valueOf(m.get("PAGOSUBSECUENTE")));
+				
+				//primaneta
+				totalFormaPago.setPrimaNeta(Double.valueOf(m.get("PRIMANETA")));
+				
+				//primerpago
+				totalFormaPago.setPrimerPago(Double.valueOf(m.get("PRIMERPAGO")));
+				
+				//recargopagofraccionado
+				totalFormaPago.setRecargoPagoFraccionado(Double.valueOf(m.get("RECARGOPAGOFRACCIONADO")));
+				
+				Map<String,Integer[]>mapaIndicesIncisos=new HashMap<String,Integer[]>();
+				List<Inciso> incisos=new ArrayList<Inciso>();
+				
+				//encontrar todos los incisos
+				{
+					int indiceRow    = 0;
+					int indiceInciso = 0;
+					for(Map<String,String>row:lista)
+					{
+						String nmsituac=row.get("NMSITUAC");
+						if(!mapaIndicesIncisos.containsKey(nmsituac))
+						{
+							mapaIndicesIncisos.put(nmsituac,new Integer[]{Integer.valueOf(indiceInciso),Integer.valueOf(indiceRow)});
+							incisos.add(new Inciso());
+							indiceInciso=indiceInciso+1;
+						}
+						indiceRow = indiceRow+1;
+					}
+				}
+				
+				Map<String,List<Map<String,String>>>listaRowCoberturaPorInciso=new HashMap<String,List<Map<String,String>>>();
+				
+				//encontrar todas las coberturas por inciso
+				for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
+				{
+					String nmsituac=indiceInciso.getKey();
+					List<Map<String,String>>coberturasDelInciso=new ArrayList<Map<String,String>>();
+					for(Map<String,String>row:lista)
+					{
+						if(row.get("NMSITUAC").equalsIgnoreCase(nmsituac))
+						{
+							coberturasDelInciso.add(row);
+						}
+					}
+					listaRowCoberturaPorInciso.put(nmsituac,coberturasDelInciso);
+				}
+				
+				//llenar todos los incisos
+				for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
+				{
+					String nmsituac=indiceInciso.getKey();
+					int indiceArray;
+					int indiceRow;
+					{
+						Integer[] indices = indiceInciso.getValue();
+						indiceArray       = indices[0].intValue();
+						indiceRow         = indices[1].intValue();
+					}
+					Inciso incisoIterado   = incisos.get(indiceArray);
+					Map<String,String> row = lista.get(indiceRow);
+					
+					//idtipovalor
+					incisoIterado.setIdTipoValor(Integer.valueOf(row.get("IDTIPOVALOR")));
+					
+					//modelo
+					incisoIterado.setModelo(Integer.valueOf(row.get("MODELO")));
+					
+					//nummotor
+					incisoIterado.setNumMotor(row.get("NUMMOTOR"));
+					
+					//numserie
+					incisoIterado.setNumSerie(row.get("NUMSERIE"));
+					
+					//numplacas
+					incisoIterado.setNumPlacas(row.get("NUMPLACAS"));
+					
+					//numeconomico
+					incisoIterado.setNumEconomico(row.get("NUMECONOMICO"));
+					
+					//numocupantes
+					incisoIterado.setNumOcupantes(Integer.valueOf(row.get("NUMOCUPANTES")));
+					
+					//beneficiariopreferente
+					incisoIterado.setBeneficiarioPref(row.get("BENEFICIARIOPREFERENTE"));
+					
+					//tipvehica
+					incisoIterado.setTipVehiCA(Integer.valueOf(row.get("TIPVEHICA")));
+					
+					//tipovehiculo
+					TipoVehiculo tipoVehiculo=null;
+					if(StringUtils.isNotBlank(row.get("TIPOVEHICULO"))
+							&&row.get("TIPOVEHICULO").equalsIgnoreCase("FRONTERIZO"))
+					{
+						tipoVehiculo=TipoVehiculo.FRONTERIZO;
+					}
+					incisoIterado.setTipoVehiculo(tipoVehiculo);
+					
+					//valor
+					incisoIterado.setValor(Double.valueOf(row.get("VALOR")));
+					
+					//conductor
+					incisoIterado.setConductor(row.get("CONDUCTOR"));
+					
+					//primanetainc
+					incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
+					
+					//version
+					Version version=new Version();
+					incisoIterado.setVersion(version);
+					version.setDescripcion(row.get("VERSION"));
+					
+					ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
+					incisoIterado.setConfiguracionPaquete(confPaq);
+					
+					//versionTarifa
+					confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
+					
+					List<Paquete> paquetesIncisoIterado = new ArrayList<Paquete>();
+					Paquete paqueteIncisoIterado        = new Paquete();
+					paquetesIncisoIterado.add(paqueteIncisoIterado);
+					
+					//idconfiguracionpaquete
+					paqueteIncisoIterado.setIdConfiguracionPaquete(Integer.valueOf(row.get("IDCONFIGURACIONPAQUETE")));
+					
+					//seleccionado
+					boolean seleccionado = false;
+					if(StringUtils.isNotBlank(row.get("SELECCIONADO"))
+							&&row.get("SELECCIONADO").equalsIgnoreCase("TRUE"))
+					{
+						seleccionado = true;
+					}
+					paqueteIncisoIterado.setSeleccionado(seleccionado);
+					
+					List<Map<String,String>>listaCoberturasIncisoIterado=listaRowCoberturaPorInciso.get(nmsituac);
+					
+					List<Cobertura>coberturasIncisoIterado=new ArrayList<Cobertura>();
+					
+					////// iterar cada cobertura //////
+					for(Map<String,String>rowCoberturaIncisoIterado:listaCoberturasIncisoIterado)
+					{
+						Cobertura coberturaIteradaPaqueteIncisoIterado=new Cobertura();
+						
+						//idcobertura
+						coberturaIteradaPaqueteIncisoIterado.setIdCobertura(Integer.parseInt(rowCoberturaIncisoIterado.get("IDCOBERTURA")));
+						
+						//seleccionadocob
+						boolean seleccionadoCob = false;
+						if(StringUtils.isNotBlank(rowCoberturaIncisoIterado.get("SELECCIONADOCOB"))
+								&&rowCoberturaIncisoIterado.get("SELECCIONADOCOB").equalsIgnoreCase("TRUE"))
+						{
+							seleccionadoCob = true;
+						}
+						coberturaIteradaPaqueteIncisoIterado.setSeleccionado(seleccionadoCob);
+						
+						//deducible
+						coberturaIteradaPaqueteIncisoIterado.setDeducible(Double.valueOf(rowCoberturaIncisoIterado.get("DEDUCIBLE")));
+						
+						//suma_asegurada
+						coberturaIteradaPaqueteIncisoIterado.setSuma_asegurada(Double.valueOf(rowCoberturaIncisoIterado.get("SUMA_ASEGURADA")));
+						
+						//prima_bruta
+						coberturaIteradaPaqueteIncisoIterado.setPrima_bruta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_BRUTA")));
+						
+						//prima_netacob
+						coberturaIteradaPaqueteIncisoIterado.setPrima_neta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_NETACOB")));
+						
+						//comision
+						coberturaIteradaPaqueteIncisoIterado.setComision(Double.valueOf(rowCoberturaIncisoIterado.get("COMISION")));
+
+						coberturasIncisoIterado.add(coberturaIteradaPaqueteIncisoIterado);
+					}
+					
+					Cobertura[] listaCoberturasPaqueteAux=new Cobertura[coberturasIncisoIterado.size()];
+					for(int i=0;i<listaCoberturasPaqueteAux.length;i++)
+					{
+						listaCoberturasPaqueteAux[i]=coberturasIncisoIterado.get(i);
+					}
+					paqueteIncisoIterado.setCoberturas(listaCoberturasPaqueteAux);
+					
+					Paquete[]listaPaquetesIncisoIteradoAux=new Paquete[paquetesIncisoIterado.size()];
+					for(int i=0;i<listaPaquetesIncisoIteradoAux.length;i++)
+					{
+						listaPaquetesIncisoIteradoAux[i]=paquetesIncisoIterado.get(i);
+					}
+					confPaq.setPaquetes(listaPaquetesIncisoIteradoAux);
+				}
+				
+				Inciso[]incisosCotizacionAux=new Inciso[incisos.size()];
+				for(int i=0;i<incisosCotizacionAux.length;i++)
+				{
+					incisosCotizacionAux[i]=incisos.get(i);
+				}
+				datosCotizacionAuto.setIncisos(incisosCotizacionAux);
+				
+			}
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
+		}	
 		
 		if(datosCotizacionAuto != null){
 			try{
