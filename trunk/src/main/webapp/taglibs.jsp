@@ -6,5 +6,5 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
-<jsp:useBean id="currentDate" class="java.util.Date" />
-<fmt:formatDate pattern="yyyyMMddHHmm" value="${currentDate}" var="now" />
+<c:set var="now" value="<%= new java.util.Date() %>" />
+<fmt:formatDate pattern="yyyyMMddHHmm" value="${now}" var="now" />
