@@ -191,16 +191,48 @@ function _0_comprar()
                     	    }
                     	]
                     }).show();
-                    var msg = Ext.Msg.show(
+                    if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
                     {
-                    	title    : 'Solicitud enviada'
-                    	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
-                    	            + json.comprarNmpoliza
-                    	            + ', ahora puede subir los documentos del trámite'
-                    	,buttons : Ext.Msg.OK
-                    	,y       : 50
-                    });
-                    msg.setY(50);
+                        var msg = Ext.Msg.show(
+                        {
+                            title    : 'Tr&aacute;mite actualizado'
+                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                                        + json.comprarNmpoliza
+                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
+                            ,buttons : Ext.Msg.OK
+                            ,y       : 50
+                            ,fn      : function()
+                            {
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    url             : _0_urlDatosComplementarios
+                                    ,standardSubmit : true
+                                    ,params         :
+                                    {
+                                        cdunieco         : _0_smap1.cdunieco
+                                        ,cdramo          : _0_smap1.cdramo
+                                        ,estado          : 'W'
+                                        ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                        ,'map1.ntramite' : json.comprarNmpoliza
+                                        ,cdtipsit        : _0_smap1.cdtipsit
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else
+                    {
+                        var msg = Ext.Msg.show(
+                        {
+                        	title    : 'Solicitud enviada'
+                        	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
+                        	            + json.comprarNmpoliza
+                        	            + ', ahora puede subir los documentos del trámite'
+                        	,buttons : Ext.Msg.OK
+                        	,y       : 50
+                        });
+                        msg.setY(50);
+                    }
                 }
                 else
                 {
