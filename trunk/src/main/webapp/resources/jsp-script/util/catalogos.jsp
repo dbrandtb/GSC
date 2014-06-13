@@ -99,6 +99,7 @@ var TipoPago = {
 // Catalogo de cdtipsit:
 var TipoSituacion = {
     AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_FRONTERIZOS.cdtipsit" />',
+    AutosPickUp      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_PICK_UP.cdtipsit" />',
     Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD.cdtipsit" />',
     SaludNomina      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />',
     SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />'

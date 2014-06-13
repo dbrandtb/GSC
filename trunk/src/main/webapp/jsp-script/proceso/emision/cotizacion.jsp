@@ -1699,7 +1699,7 @@ Ext.onReady(function()
     
     _0_formAgrupados = new _0_FormAgrupados();
     _0_gridIncisos   = new _0_GridIncisos();
-    if(_0_smap1.cdtipsit=='AF')
+    if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
     {
         _0_gridIncisos.setTitle('Datos del contratante');
         _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('blur',function()
