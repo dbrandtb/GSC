@@ -290,7 +290,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
 					paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
 					paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
-					paramsR.put("pv_copagofi_i",params.get("copagoTotal")); // Copago Final
+					paramsR.put("pv_copagofi_i",params.get("idPenalCircHospitalario")); // Copago Final
 					paramsR.put("pv_porpenal_i",params.get("idPenalCircHospitalario")); // penalizacion por circulo hospitalario
 					paramsR.put("pv_cdicd_i",params.get("cdicd"));
 					paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
@@ -363,6 +363,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_otvalor03",params.get("feautori"));             		// Fecha de autorizacion
 							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
 							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
+							paramsMCAut.put("pv_otvalor06",params.get("copagoTotal"));					// Total Penalizacinn
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
 							
 							if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -391,6 +392,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    		otvalor.put("pv_otvalor02_i"  , params.get("fesolici"));
 				    		otvalor.put("pv_otvalor03_i"  , params.get("feautori"));
 				    		otvalor.put("pv_otvalor04_i"  , params.get("fevencim"));
+				    		otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
 				    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
 				    		
 				    		// Tenemos que actualizar el status para el guardado

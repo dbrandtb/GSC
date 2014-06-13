@@ -304,6 +304,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setIcd(rs.getString("ICD"));
         	consulta.setCpt(rs.getString("CPT"));
         	consulta.setLimites(rs.getString("LIMITES"));
+        	consulta.setTipoCopago(rs.getString("TIPOCOPAGO"));
             return consulta;
         }
     }

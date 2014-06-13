@@ -22,6 +22,7 @@ public class DatosSiniestroVO implements Serializable{
 	private String icd;
 	private String cpt;
 	private String limites;
+	private String tipoCopago;
 
 	
 	public String getCdgarant() {
@@ -126,6 +127,17 @@ public class DatosSiniestroVO implements Serializable{
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+
+	public String getTipoCopago() {
+		return tipoCopago;
+	}
+
+
+	public void setTipoCopago(String tipoCopago) {
+		this.tipoCopago = tipoCopago;
 	}	
+	
 	
 }
