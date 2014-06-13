@@ -127,7 +127,32 @@ Ext.onReady(function()
 		title       : 'Asegurados'
 		,store      : _p20_storeAsegurados
 		,columns    : _p20_columnasGridAsegurados
-		,viewConfig : viewConfigAutoSize
+		,viewConfig :
+		{
+			listeners :
+		    {
+		        refresh : function(dataview)
+		        {
+		            Ext.each(dataview.panel.columns, function(column)
+		            {
+		                column.autoSize();
+		                debug(column);
+		                if(column.text=='RFC')
+		                {
+		                	column.setWidth(120);
+		                }
+		                if(column.text=="Sexo")
+		                {
+		                	column.setWidth(70);
+		                }
+		                if(column.text=="Nombre")
+                        {
+                            column.setWidth(100);
+                        }
+		            });
+		        }
+		    }
+		}
 		,plugins    : _p20_rowEditingPlugin
 		,minHeight  : 250
 		,tbar       :
