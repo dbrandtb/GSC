@@ -1016,11 +1016,12 @@ debug("validarYGuardar flag:2");
                                     }
                                     else
                                     {
-                                        Ext.Msg.show({
+                                        var ven=Ext.Msg.show({
                                             title:'Sin coincidencias',
                                             msg: 'No hay coincidencias de RFC',
                                             buttons: Ext.Msg.OK
                                         });
+                                        centrarVentanaInterna(ven);
                                     }
                                 }
                                 ,failure:function()
@@ -1152,11 +1153,12 @@ debug("validarYGuardar flag:2");
 		            		    	}
 		            		    	else
 		            		    	{
-		            		    		Ext.Msg.show({
-		                                    title:'Sin coincidencias',
-		                                    msg: 'No hay coincidencias de RFC',
-		                                    buttons: Ext.Msg.OK
-		                                });
+		            		    		var ven=Ext.Msg.show({
+                                            title:'Sin coincidencias',
+                                            msg: 'No hay coincidencias de RFC',
+                                            buttons: Ext.Msg.OK
+                                        });
+                                        centrarVentanaInterna(ven);
 		            		    	}
 		            		    }
 		            		    ,failure:function()
