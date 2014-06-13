@@ -17,6 +17,7 @@ var inputEstadop4          = '<s:property value="smap1.pv_estado" />';
 var inputNmpolizap4        = '<s:property value="smap1.pv_nmpoliza" />';
 var inputNmsituacp4        = '<s:property value="smap1.pv_nmsituac" />';
 var inputCdpersonp4        = '<s:property value="smap1.pv_cdperson" />';
+var inputCdideperp4        = '<s:property value="smap1.cdideper" />';
 var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
 var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
@@ -374,6 +375,19 @@ Ext.onReady(function(){
 	    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
 	    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
 	    }
+    }else if((inputCdramop4+'x')=='16x' && inputCdtipsitp4 =='AF' && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
+    	//alert("cdrol: " + inputCdrolp4);
+    	
+    	formPanelp4.items.items[2].items.items.forEach(function(element, index, array){
+    		debug('elem ITerada: ', element);
+    		if('smap1.CDMUNICI' != element.name && 'smap1.CDCOLONI' != element.name){
+    			element.setReadOnly(true);
+    		}else {
+    			element.setReadOnly(false);
+    		}
+    		
+    	});
+    		
     }
     
     //establecer cargar colonia al cambiar cod pos
