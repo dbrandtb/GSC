@@ -28,8 +28,6 @@ Ext.override(Ext.form.TextField,
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
-
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -87,6 +85,24 @@ var _0_selectedIdcobertura;
 var _0_validacion_custom;
 
 debug('_0_smap1: ',_0_smap1);
+
+
+var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
+	clicksToEdit : 1,
+	errorSummary : true,
+	listeners: {
+		beforeedit: function(){
+			_0_botCotizar.disable();
+		},
+		edit: function(){
+			_0_botCotizar.enable();
+		},
+		canceledit: function(){
+			_0_botCotizar.enable();
+		}
+	}
+});
+
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
