@@ -152,6 +152,32 @@ Ext.onReady(function()
 	    	edit : _p20_buscarRFC
 	    }
 	});
+	
+	
+	var editorRfc;
+	var editorWswxiper;
+	var editorCdperson;
+	var editorCdideper;
+	
+	_p20_columnasGridAsegurados.forEach(function(element, index, array){
+		//debug('Columna ITerada: ', element.dataIndex);
+		if('cdrfc' == element.dataIndex){
+			editorRfc = element;
+		}else if('swexiper' == element.dataIndex){
+			editorWswxiper = element;
+		}else if('cdperson' == element.dataIndex){
+			editorCdperson = element;
+		}else if('cdideper' == element.dataIndex){
+			editorCdideper = element;
+		}
+	});
+	
+	editorRfc.editor.on('change', function(){
+		editorWswxiper.editor.setValue('N');
+		editorCdperson.editor.setValue('');
+		editorCdideper.editor.setValue('');
+	});
+	
 	Ext.create('Ext.panel.Panel',
 	{
 		defaults  :
@@ -407,13 +433,23 @@ function _p20_buscarRFC()
         url     : _p20_urlBuscarRFC
         ,params :
         {
-            'map1.pv_rfc_i' : _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].get('cdrfc')
+            'map1.pv_rfc_i' : _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].get('cdrfc'),
+            'map1.cdtipsit'     : _p20_map1.cdtipsit,
+			'map1.pv_cdunieco_i': _p20_map1.cdunieco,
+       		'map1.pv_cdramo_i'  : _p20_map1.cdramo,
+       		'map1.pv_estado_i'  : _p20_map1.estado,
+       		'map1.pv_nmpoliza_i': _p20_map1.nmpoliza
+			
         }
         ,success:function(response)
         {
         	_p20_gridAsegurados.setLoading(false);
             var json=Ext.decode(response.responseText);
             debug('json response:',json);
+            if(json && !json.success){
+	    		mensajeError("Error al Buscar RFC, Intente nuevamente. Si el problema persiste consulte a soporte t&eacute;cnico.");
+	    		return;
+	    	}
             if(json&&json.slist1&&json.slist1.length>0)
             {
                 var ven=Ext.create('Ext.window.Window',
@@ -450,9 +486,18 @@ function _p20_buscarRFC()
                                                        ,handler : function(grid, rowIndex, colIndex) {
                                                            var record = grid.getStore().getAt(rowIndex);
                                                            debug(record);
+                                                           debug('cliente obtenido de WS? ', json.clienteWS);
+                                                           
                                                            _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
-                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                           
+                                                           if(json.clienteWS){
+                                                        	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+                                                           }else{
+                                                        	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                               _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                           }
+                                                           
+                                                           
                                                            grid.up().up().destroy();
                                                        }
                                                    }
