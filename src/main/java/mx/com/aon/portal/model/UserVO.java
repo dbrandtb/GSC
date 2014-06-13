@@ -1,12 +1,11 @@
 /*
-* AON
-*
-* Creado el 24/01/2008 11:36:29 a.m. (dd/mm/aaaa hh:mm:ss)
-*
-* Copyright (C) Biosnet S.C.
-* All rights reserved. Todos los derechos reservados.
-*
-* http://www.biosnetmx.com/
+ * 
+ * Creado el 24/01/2008 11:36:29 a.m. (dd/mm/aaaa hh:mm:ss)
+ *
+ * Copyright (C) Biosnet S.C.
+ * All rights reserved. Todos los derechos reservados.
+ *
+ * http://www.biosnetmx.com/
 */
 package mx.com.aon.portal.model;
 
@@ -71,6 +70,11 @@ public class UserVO implements Serializable {
     private Converter converterStringToTimestamp;
     private String currentUrl;
     private String method;
+    
+    /**
+     * Clave interna de GSeguros del usuario que captura un tr&aacute;mite 
+     */
+    private String claveUsuarioCaptura;
 
     public UserVO () {
     	this.setFormatDate(formatDate);
@@ -383,6 +387,14 @@ public class UserVO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getClaveUsuarioCaptura() {
+		return claveUsuarioCaptura;
+	}
+
+	public void setClaveUsuarioCaptura(String claveUsuarioCaptura) {
+		this.claveUsuarioCaptura = claveUsuarioCaptura;
 	}
 
 }
