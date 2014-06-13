@@ -623,7 +623,7 @@ function _mcotiza_cotiza()
 	////// validacion de datos generales //////
 	
 	////// factor convenido //////
-	if(_mcotiza_smap1.cdtipsit=='AF'&&valido)
+	if((_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')&&valido)
 	{
 	    var value=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getValue()-0;
 	    var minval=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMinValue()-0;
@@ -1159,8 +1159,8 @@ Ext.setup({onReady:function()
 			        }
 			        ,{
 			        	xtype    : 'formpanel'
-			        	,title   : _mcotiza_smap1.cdtipsit=='AF'?'&nbsp;Contratante&nbsp;':'&nbsp;Inciso&nbsp;'
-			        	,titulo  : _mcotiza_smap1.cdtipsit=='AF'?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
+			        	,title   : (_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')?'&nbsp;Contratante&nbsp;':'&nbsp;Inciso&nbsp;'
+			        	,titulo  : (_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
 			        	//,hidden  : !_mcotiza_necesitoIncisos
 			        	,iconCls : 'add'
 			        	,itemId  : '_mcotiza_formAsegurados'
@@ -1168,7 +1168,7 @@ Ext.setup({onReady:function()
 			        	[
 				        	{
 				        		xtype  : 'fieldset'
-				        		,title : _mcotiza_smap1.cdtipsit=='AF'?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
+				        		,title : (_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
 				        		,items :
 				        		[
 				        		    {
@@ -1219,8 +1219,8 @@ Ext.setup({onReady:function()
 			        }
 			        ,{
                         xtype             : 'list'
-                        ,title            : _mcotiza_smap1.cdtipsit=='AF'?'&nbsp;Contratante&nbsp;':'&nbsp;Incisos&nbsp;'
-                        ,titulo           : _mcotiza_smap1.cdtipsit=='AF'?'Contratante':'Incisos'
+                        ,title            : (_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')?'&nbsp;Contratante&nbsp;':'&nbsp;Incisos&nbsp;'
+                        ,titulo           : (_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')?'Contratante':'Incisos'
                         ,iconCls          : 'more'
                         //,hidden           : !_mcotiza_necesitoIncisos
                         ,itemId           : '_mcotiza_listAsegurados'
@@ -1269,7 +1269,7 @@ Ext.setup({onReady:function()
 		]
 	});
 	
-	if(_mcotiza_smap1.cdtipsit=='AF')
+	if(_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')
 	{
 	    _mcotiza_navView.down('[name=parametros.pv_otvalor03]').addListener('blur',function(comp)
         {
@@ -1326,6 +1326,22 @@ Ext.setup({onReady:function()
         };
         comboTipoValor.addListener('change',changeFunction);
         changeFunction();
+        _mcotiza_navView.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+        {
+             var anioActual = new Date().getFullYear();
+             var max = anioActual-5;
+             var min = anioActual-20;
+             var value = _mcotiza_navView.down('[name=parametros.pv_otvalor05]').getValue()-0;
+             debug('anioActual:',anioActual);
+             debug('max:',max);
+             debug('min:',min);
+             debug('value:',value);
+             if(value<min||value>max)
+             {
+                 _mcotiza_navView.down('[name=parametros.pv_otvalor05]').setValue('');
+                 Ext.Msg.alert('Aviso','El modelo debe estar en el rago '+min+'-'+max);
+             }
+        });
 	}
 	
 	<s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
