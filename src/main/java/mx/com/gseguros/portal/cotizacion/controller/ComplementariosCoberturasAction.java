@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -990,6 +991,19 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					if(t.getSwsuscri().equalsIgnoreCase("N"))//N=Agrupado
 					{
 						tatriTemp.add(t);
+						if(
+								(smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								 ||smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								 )
+								 &&
+								 (
+										 t.getSwpresen().equalsIgnoreCase("S")
+										 ||t.getNameCdatribu().equalsIgnoreCase("26")
+								)
+								)
+						{
+							t.setSoloLectura(true);
+						}
 					}
 				}
 				else
@@ -1147,6 +1161,38 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 								log.debug("compara "+cpanterior+" con "+cpnuevo
 										+" para cdperson "+asegurado.get("cdperson"));
 								if(!cpanterior.equalsIgnoreCase(cpnuevo))
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , null);
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
+							}
+							else if(smap1.get("cdramo").equals("4"))
+							{
+								String estadoanterior = (String) valositAseguradoIterado.get("pv_otvalor04");
+								String ciudadanterior = (String) valositAseguradoIterado.get("pv_otvalor05");
+								String estadonuevo    = parametros.get("pv_otvalor04");
+								String ciudadnueva    = parametros.get("pv_otvalor05");
+								log.debug("compara estado"+estadoanterior+" con "+estadonuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								log.debug("compara ciudad"+ciudadanterior+" con "+ciudadnueva
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!estadoanterior.equalsIgnoreCase(estadonuevo)
+										||!ciudadanterior.equalsIgnoreCase(ciudadnueva)
+										)
 								{
 									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
 									log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
