@@ -146,7 +146,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	}
 	        	else
 	        	{
-	        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+	        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())||
+	        				cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
 	        		{
 	        			if(tatriIte.getNameCdatribu().equalsIgnoreCase("26"))
 	        			{
@@ -242,7 +243,7 @@ public class CotizacionAction extends PrincipalCoreAction
         ////////////////////////////////////////
         
 		////// parches por situacion //////
-		if(cdtipsit.equalsIgnoreCase("AF"))
+		if(cdtipsit.equalsIgnoreCase("AF")||cdtipsit.equalsIgnoreCase("PU"))
 		{
 			try
 			{
