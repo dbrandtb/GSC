@@ -2413,7 +2413,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	
 		    	ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
 		    	if(listaClientesGS != null && listaClientesGS.length > 0 ){
-		    		logger.debug("Añadiendo Clientes de GS a Lista, " + listaClientesGS.length);
+		    		logger.debug("Aï¿½adiendo Clientes de GS a Lista, " + listaClientesGS.length);
 		    		clienteWS = true;
 		    		
 		    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
