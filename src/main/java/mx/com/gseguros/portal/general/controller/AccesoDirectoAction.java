@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -47,6 +48,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     private HashMap<String,String> params;
     
     private String user;
+    /**
+     * Clave de usuario de captura que env&iacute;a GSeguros
+     */
+    private String e;
     private String codigoCliente;
     private String codigoRol;
     private String _codigoCliente = null;
@@ -80,6 +85,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	        logger.debug(">>>> usuario user: "+usuario.getUser());
 	        logger.debug(">>>> usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
 	        logger.debug(">>>> usuario codigopersona: "+usuario.getCodigoPersona());
+	        logger.debug(">>>> usuario claveUsuarioCaptura: "+usuario.getClaveUsuarioCaptura());
         }catch( Exception e){
             logger.error(">>>> Error en el proceso Interno", e);
             return false;
@@ -110,6 +116,13 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     }
     
     
+    /**
+     * Crea la sesi&oacute;n de usuario en el sistema 
+     * @param usuario
+     * @param claveUsuarioCaptura
+     * @return
+     * @throws Exception
+     */
     private boolean creaSesionDeUsuario(String usuario) throws Exception {
 
 		boolean exito = false;
@@ -130,6 +143,9 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
 		userVO.setFormatDate(dateFormat);
 		userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
+		// Se agrega la clave interna de GSeguros de usuario que captura:
+		logger.debug("claveUsuarioCaptura=" + e);
+		userVO.setClaveUsuarioCaptura(e);
 
 		logger.debug(">>>> DATOS USUARIO333 *****: " + userVO);
 		session.put(Constantes.USER, userVO);
@@ -159,6 +175,13 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
         listaRolCliente = usuarioManager.getClientesRoles(usuario.getUser());
         numReg = navigationManager.getNumRegistro(usuario.getUser());
         userList = usuarioManager.getAttributesUser(usuario.getUser());
+		// Se agrega la clave interna de GSeguros de usuario que captura:
+        Iterator<UserVO> itUserList = userList.iterator();
+        while(itUserList.hasNext()) {
+        	UserVO usVO = (UserVO)itUserList.next();
+        	usVO.setClaveUsuarioCaptura(e);
+        }
+        
         logger.debug(">>>> Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento (ERROR)");
        
         complementaUsuario(usuario);
@@ -429,6 +452,15 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+
+	public String getE() {
+		return e;
+	}
+
+	public void setE(String e) {
+		this.e = e;
 	}
 	
 }
