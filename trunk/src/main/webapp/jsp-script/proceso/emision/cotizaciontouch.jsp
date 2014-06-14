@@ -1339,7 +1339,7 @@ Ext.setup({onReady:function()
              if(value<min||value>max)
              {
                  _mcotiza_navView.down('[name=parametros.pv_otvalor05]').setValue('');
-                 Ext.Msg.alert('Aviso','El modelo debe estar en el rago '+min+'-'+max);
+                 Ext.Msg.alert('Aviso','El modelo debe estar en el rango '+min+'-'+max);
              }
         });
 	}

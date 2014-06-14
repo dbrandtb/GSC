@@ -1819,7 +1819,7 @@ Ext.onReady(function()
              if(value<min||value>max)
              {
                  _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
-                 mensajeWarning('El modelo debe estar en el rago '+min+'-'+max);
+                 mensajeWarning('El modelo debe estar en el rango '+min+'-'+max);
              }
         });
     }
