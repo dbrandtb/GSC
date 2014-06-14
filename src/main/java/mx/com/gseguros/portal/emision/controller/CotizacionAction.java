@@ -145,7 +145,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
 	        for(ComponenteVO tatriIte:tatrisit)
 			{
-	        	tatriIte.setComboVacio(true);
+	        	if(tatriIte.getValue()==null&&tatriIte.getDefaultValue()==null)
+	        	{
+	        		tatriIte.setComboVacio(true);
+	        	}
 	        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
 	        	{
 	        		temp.add(tatriIte);
