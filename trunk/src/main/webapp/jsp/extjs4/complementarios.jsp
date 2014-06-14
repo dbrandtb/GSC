@@ -38,6 +38,7 @@
             urlEditarAsegurados['SN']='<s:url namespace="/" action="editarAsegurados"     />';
             urlEditarAsegurados['MS']='<s:url namespace="/" action="editarAsegurados"     />';
             urlEditarAsegurados['AF']='<s:url namespace="/" action="editarAseguradosAuto" />';
+            urlEditarAsegurados['PU']='<s:url namespace="/" action="editarAseguradosAuto" />';
             var contexto='${ctx}';
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
