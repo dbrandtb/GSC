@@ -56,6 +56,11 @@
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+            
+            var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
+            var fechaMaxEmi = Ext.Date.parse('<s:property value="map1.fechamax" />','d/m/Y');
+            debug('fechaMinEmi:',fechaMinEmi);
+            debug('fechaMaxEmi:',fechaMaxEmi);
             debug(sesionDsrol);
             
             function expande(indice)
@@ -247,7 +252,9 @@
 		                                    fieldLabel:'Fecha de solicitud',
 		                                    allowBlank:false,
 		                                    style:'margin:5px;',
-		                                    format:'d/m/Y'
+		                                    format:'d/m/Y',
+		                                    minValue:fechaMinEmi,
+		                                    maxValue:fechaMaxEmi
 		                                },
 		                                {
 		                                    xtype:'datefield',
@@ -265,7 +272,9 @@
 		                                                Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
 		                                            }catch(e){}
 		                                        }
-		                                    }
+		                                    },
+		                                    minValue:fechaMinEmi,
+                                            maxValue:fechaMaxEmi
 		                                },
 		                                {
 		                                    xtype:'datefield',
@@ -291,7 +300,12 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
+		                                            <s:if test='cdtipsit=="AF"||cdtipsit=="PU"'>
+		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA_AUTO"/>'},
+		                                            </s:if>
+		                                            <s:else>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA"/>'},
+		                                            </s:else>
 		                                            reader:
 		                                            {
 		                                                type: 'json',
@@ -318,7 +332,12 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
+		                                            <s:if test='cdtipsit=="AF"||cdtipsit=="PU"'>
+		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA_SIN_DXN"/>'},
+		                                            </s:if>
+		                                            <s:else>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA"/>'},
+		                                            </s:else>
 		                                            reader:
 		                                            {
 		                                                type: 'json',
@@ -555,7 +574,7 @@
 		                        ,{
 		                            text     : 'Emitir'
 		                            ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-		                            ,hidden  : (!sesionDsrol)||sesionDsrol!='SUSCRIPTOR'
+		                            ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&(inputCdramo+'x')!='16x'
 		                            ,handler : function()
 		                            {
 		                                var form=Ext.getCmp('formPanel');
@@ -1342,7 +1361,7 @@
                         ,Ext.create('Ext.panel.Panel',
                         {
                         	id:'tabPanelAsegurados'
-                        	,title:'Editar asegurados'
+                        	,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
                         	,cls:'claseTitulo'
                         	,loader:
                         	{
