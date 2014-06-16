@@ -44,8 +44,8 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.SDTPoliza;
-import mx.com.gseguros.ws.Autos.service.EmisionAutosService;
+import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.SDTPoliza;
+import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -1835,7 +1835,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					)
 			{
 				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-							edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+							estado, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
 				success = aux!=null && aux.getNumpol()>0l;
 				if(!success)
 				{
@@ -2163,8 +2163,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
 			}
-			else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+			else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
 			{
 				if(StringUtils.isBlank(cdIdeperRes)){
 					
@@ -2197,14 +2196,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 				
 			////// ws de cotizacion y emision para autos
-			if(success && (
-					cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-					)
-				)
+			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
 			{
 				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-							edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+							estado, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
 				success = aux!=null && aux.getNumpol()>0l;
 				if(!success)
 				{
@@ -2463,7 +2458,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    	}else {
 				    		agregar.put("FENACIMICLI", "");
 				    	}
-				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(cli.getCodposCli()!=0 ?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli()+" "+cli.getPoblacionCli());
+				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli()+" "+cli.getPoblacionCli());
 				    	agregar.put("CLAVECLI",     cli.getNumeroExterno());
 				    	slist1.add(agregar);
 			    	}

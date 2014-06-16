@@ -28,6 +28,7 @@
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
         <property name="nadaService"             ref="nadaServiceImpl"/>
         <property name="ice2sigsService"         ref="ice2sigsServiceImpl"     />
+        <property name="tipoCambioService"         ref="tipoCambioServiceImpl"     />
     </bean>
     
     <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
