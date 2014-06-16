@@ -124,7 +124,7 @@ Ext.onReady(function()
 	});
 	_p20_gridAsegurados = Ext.create('Ext.grid.Panel',
 	{
-		title       : 'Asegurados'
+		title       : 'Clientes'
 		,store      : _p20_storeAsegurados
 		,columns    : _p20_columnasGridAsegurados
 		,viewConfig :
