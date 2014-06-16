@@ -153,6 +153,10 @@ public class NadaServiceImpl implements NadaService {
 			
 			logger.debug("Xml enviado para obtener los datos del auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
+			if( datosVehiculo == null){
+				logger.error("Respuesta de WS NADA Nula.");
+			}
+			
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}

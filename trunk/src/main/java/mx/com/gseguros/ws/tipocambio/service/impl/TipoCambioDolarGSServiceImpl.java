@@ -74,6 +74,12 @@ public class TipoCambioDolarGSServiceImpl implements TipoCambioDolarGSService {
 			
 			logger.debug("Xml enviado para obtener los datos del auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
+			if(resTipoCambio != null && resTipoCambio.getExito() && resTipoCambio.getTipoCambio() != null && resTipoCambio.getTipoCambio().getVenCam() != null){
+				logger.info("Respuesta Tipo de Cambio Venta WS: " + resTipoCambio.getTipoCambio().getVenCam());
+			}else{
+				logger.error("Resultado de Tipo de Cambio WS es Nulo o no fue existoso.");
+			}
+			
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
