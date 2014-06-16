@@ -96,6 +96,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_PAGO_POLIZA_SIN_DXN:
 				case TIPOS_PERSONA:
 				case TIPOS_POLIZA:
+				case TIPOS_POLIZA_AUTO:
 				case TIPO_PAGO_SINIESTROS:
 				case TIPO_ATENCION_SINIESTROS:
 				case TIPO_CONCEPTO_SINIESTROS:
