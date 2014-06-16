@@ -1791,7 +1791,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
 			}
-			else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			else if(
+					cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+					)
 			{
 				if(StringUtils.isBlank(cdIdeperRes)){
 					
@@ -1824,7 +1827,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 				
 			////// ws de cotizacion y emision para autos
-			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			if(success
+					&& (
+							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+							|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+						)
+					)
 			{
 				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
 							estado, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
