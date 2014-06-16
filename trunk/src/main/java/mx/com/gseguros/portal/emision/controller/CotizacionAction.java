@@ -30,6 +30,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
+import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
 import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -165,6 +166,20 @@ public class CotizacionAction extends PrincipalCoreAction
 	        				tatriIte.setOculto(true);
 	        				temp.add(tatriIte);
 	        			}
+	        		}
+	        	}
+	        	if(
+	        			(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+	        			||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+	        			)
+	        			&&tatriIte.getNameCdatribu().equalsIgnoreCase("24")
+	        			)
+	        	{
+	        		ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
+	        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+	        		{
+	        			tatriIte.setSoloLectura(true);
+	        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
 	        		}
 	        	}
 			}
