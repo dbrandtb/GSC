@@ -27,6 +27,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -37,6 +38,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
@@ -72,6 +74,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private transient Ice2sigsService ice2sigsService;
 	private transient RecibosSigsService recibosSigsService;
 	private CatalogosManager catalogosManager;
+	private StoredProceduresManager storedProceduresManager;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -192,6 +195,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 			if(map1==null)
 				map1=new LinkedHashMap<String,String>(0);
 			map1.put("sesiondsrol",dsrol);
+			
+			LinkedHashMap<String,Object>paramsRetroactividad=new LinkedHashMap<String,Object>();
+			paramsRetroactividad.put("param1",cdunieco);
+			paramsRetroactividad.put("param2",cdramo);
+			paramsRetroactividad.put("param3",TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
+			Map<String,String>retroactividad=storedProceduresManager.procedureMapCall(
+					ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
+			int retroac=Integer.valueOf(retroactividad.get("RETROAC"));
+			int diferi =Integer.valueOf(retroactividad.get("DIFERI"));
+			Calendar calendarMin=Calendar.getInstance();
+			Calendar calendarMax=Calendar.getInstance();
+			calendarMin.add(Calendar.DAY_OF_YEAR, retroac*-1);
+			calendarMax.add(Calendar.DAY_OF_YEAR, diferi);
+			map1.put("fechamin",renderFechas.format(calendarMin.getTime()));
+			map1.put("fechamax",renderFechas.format(calendarMax.getTime()));
+			
 		} catch (Exception ex) {
 			log.error("error al obtener los campos dinamicos", ex);
 			items = null;
@@ -2984,6 +3003,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setClienteWS(boolean clienteWS) {
 		this.clienteWS = clienteWS;
+	}
+
+	public void setStoredProceduresManager(
+			StoredProceduresManager storedProceduresManager) {
+		this.storedProceduresManager = storedProceduresManager;
 	}
 
 }
