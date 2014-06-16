@@ -4137,7 +4137,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setCheqdevCli(rs.getInt("cheqdevCli"));
     		cliente.setClaveCli(rs.getInt("claveCli"));
     		cliente.setCodcarCli(rs.getInt("codcarCli"));
-    		cliente.setCodposCli(rs.getInt("codposCli"));
+    		cliente.setCodposCli(rs.getString("codposCli"));
     		cliente.setColcarCli(rs.getString("colcarCli"));
     		cliente.setColoniaCli(rs.getString("coloniaCli"));
     		cliente.setEdocarCli(rs.getInt("edocarCli"));

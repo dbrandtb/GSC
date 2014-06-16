@@ -11,8 +11,9 @@
 	    <property name="urlImpresionRecibos" value="${recibos.impresion.url}"></property>
 	</bean>
 	
-	<bean id="emisionAutosServiceImpl" class="mx.com.gseguros.ws.Autos.service.impl.EmisionAutosServiceImpl">
-        <property name="endpoint"                value = "${ws.ice2sigs.url}"          />
+	<bean id="emisionAutosServiceImpl" class="mx.com.gseguros.ws.autosgs.service.impl.EmisionAutosServiceImpl">
+        <property name="endpointCotiza"          value = "${ws.cotizacion.autos.url}"          />
+        <property name="endpointEmite"           value = "${ws.emision.autos.url}"          />
 	    <property name="storedProceduresManager" ref   = "storedProceduresManagerImpl" />
     </bean>
 	
@@ -40,6 +41,11 @@
         <property name="endpointToken" value="${ws.nada.login.url}"></property>
         <property name="user"          value="${ws.nada.login.user}"></property>
         <property name="password"      value="${ws.nada.login.pass}"></property>
+	</bean>
+
+    <!-- WS TIPO CAMBIO -->
+	<bean id="tipoCambioServiceImpl" class="mx.com.gseguros.ws.tipocambio.service.impl.TipoCambioDolarGSServiceImpl">
+        <property name="endpoint"      value="${ws.tipocambio.url}"></property>
 	</bean>
 	
 	

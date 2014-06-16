@@ -30,6 +30,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
+import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +58,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private Map<String,String>               params;
 	private StoredProceduresManager          storedProceduresManager;
 	private NadaService          			 nadaService;
+	private TipoCambioDolarGSService         tipoCambioService;
 	private transient Ice2sigsService ice2sigsService;
 	private boolean                          success;
 	
@@ -1548,7 +1550,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramDomicil.put("pv_nmorddom_i", "1");
 							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() +" "+ cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
-							    			paramDomicil.put("pv_cdpostal_i", Integer.toString(cliDom.getCodposCli()));
+							    			paramDomicil.put("pv_cdpostal_i", cliDom.getCodposCli());
 							    			paramDomicil.put("pv_cdedo_i",    null/*cliDom.getPoblacionCli()*/);
 							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
 							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
@@ -1735,6 +1737,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public void setTipoCambioService(TipoCambioDolarGSService tipoCambioService) {
+		this.tipoCambioService = tipoCambioService;
 	}
 
 }

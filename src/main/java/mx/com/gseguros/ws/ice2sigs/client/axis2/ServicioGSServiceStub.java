@@ -259,7 +259,7 @@
      */
     public ServicioGSServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://10.1.21.68:8080/ice2sigs/servicios" );
+                    this(configurationContext,"http://gswas.com.mx:80/ice2sigsdesa/servicios" );
                 
     }
 
@@ -268,7 +268,7 @@
      */
     public ServicioGSServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://10.1.21.68:8080/ice2sigs/servicios" );
+                    this("http://gswas.com.mx:80/ice2sigsdesa/servicios" );
                 
     }
 
@@ -4023,7 +4023,7 @@
         }
         return false;
     }
-     //http://10.1.21.68:8080/ice2sigs/servicios
+     //http://gswas.com.mx:80/ice2sigsdesa/servicios
         public static class PolizaGSE
         implements org.apache.axis2.databinding.ADBBean{
         
@@ -58074,50 +58074,6 @@
                              }
                              
 
-                        /**
-                        * field for NumeroExterno
-                        */
-
-                        
-                                    protected java.lang.String localNumeroExterno ;
-                                
-                           /*  This tracker boolean wil be used to detect whether the user called the set method
-                          *   for this attribute. It will be used to determine whether to include this field
-                           *   in the serialized XML
-                           */
-                           protected boolean localNumeroExternoTracker = false ;
-                           
-
-                           /**
-                           * Auto generated getter method
-                           * @return java.lang.String
-                           */
-                           public  java.lang.String getNumeroExterno(){
-                               return localNumeroExterno;
-                           }
-
-                           
-                        
-                            /**
-                               * Auto generated setter method
-                               * @param param NumeroExterno
-                               */
-                               public void setNumeroExterno(java.lang.String param){
-                            
-                                       if (param != null){
-                                          //update the setting tracker
-                                          localNumeroExternoTracker = true;
-                                       } else {
-                                          localNumeroExternoTracker = false;
-                                              
-                                       }
-                                   
-                                            this.localNumeroExterno=param;
-                                    
-
-                               }
-                            
-
      /**
      * isReaderMTOMAware
      * @return true if the reader supports MTOM
@@ -58335,41 +58291,7 @@
                                                xmlWriter.writeEndElement();
                                         
                                     }
-                                 } if (localNumeroExternoTracker){
-                                    namespace = "";
-                                    if (! namespace.equals("")) {
-                                        prefix = xmlWriter.getPrefix(namespace);
-
-                                        if (prefix == null) {
-                                            prefix = generatePrefix(namespace);
-
-                                            xmlWriter.writeStartElement(prefix,"numeroExterno", namespace);
-                                            xmlWriter.writeNamespace(prefix, namespace);
-                                            xmlWriter.setPrefix(prefix, namespace);
-
-                                        } else {
-                                            xmlWriter.writeStartElement(namespace,"numeroExterno");
-                                        }
-
-                                    } else {
-                                        xmlWriter.writeStartElement("numeroExterno");
-                                    }
-                                
-
-                                          if (localNumeroExterno==null){
-                                              // write the nil attribute
-                                              
-                                                     throw new org.apache.axis2.databinding.ADBException("numeroExterno cannot be null!!");
-                                                  
-                                          }else{
-
-                                        
-                                                   xmlWriter.writeCharacters(localNumeroExterno);
-                                            
-                                          }
-                                    
-                                   xmlWriter.writeEndElement();
-                             }
+                                 }
                     xmlWriter.writeEndElement();
                
 
@@ -58574,16 +58496,7 @@
                                     
                              }
 
-                        } if (localNumeroExternoTracker){
-                                      elementList.add(new javax.xml.namespace.QName("",
-                                                                      "numeroExterno"));
-                                 
-                                        if (localNumeroExterno != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNumeroExterno));
-                                        } else {
-                                           throw new org.apache.axis2.databinding.ADBException("numeroExterno cannot be null!!");
-                                        }
-                                    }
+                        }
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -58750,24 +58663,6 @@
                                                                 ClienteGeneral.class,
                                                                 list3));
                                                             
-                              }  // End of if for expected property start element
-                                
-                                    else {
-                                        
-                                    }
-                                
-                                    
-                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
-                                
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","numeroExterno").equals(reader.getName())){
-                                
-                                    java.lang.String content = reader.getElementText();
-                                    
-                                              object.setNumeroExterno(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
-                                              
-                                        reader.next();
-                                    
                               }  // End of if for expected property start element
                                 
                                     else {
@@ -64534,7 +64429,7 @@
                         */
 
                         
-                                    protected int localCodposCli ;
+                                    protected java.lang.String localCodposCli ;
                                 
                            /*  This tracker boolean wil be used to detect whether the user called the set method
                           *   for this attribute. It will be used to determine whether to include this field
@@ -64545,9 +64440,9 @@
 
                            /**
                            * Auto generated getter method
-                           * @return int
+                           * @return java.lang.String
                            */
-                           public  int getCodposCli(){
+                           public  java.lang.String getCodposCli(){
                                return localCodposCli;
                            }
 
@@ -64557,15 +64452,14 @@
                                * Auto generated setter method
                                * @param param CodposCli
                                */
-                               public void setCodposCli(int param){
+                               public void setCodposCli(java.lang.String param){
                             
-                                       // setting primitive attribute tracker to true
-                                       
-                                               if (param==java.lang.Integer.MIN_VALUE) {
-                                           localCodposCliTracker = false;
-                                              
-                                       } else {
+                                       if (param != null){
+                                          //update the setting tracker
                                           localCodposCliTracker = true;
+                                       } else {
+                                          localCodposCliTracker = false;
+                                              
                                        }
                                    
                                             this.localCodposCli=param;
@@ -67124,13 +67018,18 @@
                                         xmlWriter.writeStartElement("codposCli");
                                     }
                                 
-                                               if (localCodposCli==java.lang.Integer.MIN_VALUE) {
-                                           
-                                                         throw new org.apache.axis2.databinding.ADBException("codposCli cannot be null!!");
-                                                      
-                                               } else {
-                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCodposCli));
-                                               }
+
+                                          if (localCodposCli==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("codposCli cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCodposCli);
+                                            
+                                          }
                                     
                                    xmlWriter.writeEndElement();
                              } if (localColcarCliTracker){
@@ -68850,9 +68749,12 @@
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "codposCli"));
                                  
-                                elementList.add(
-                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCodposCli));
-                            } if (localColcarCliTracker){
+                                        if (localCodposCli != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCodposCli));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("codposCli cannot be null!!");
+                                        }
+                                    } if (localColcarCliTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "colcarCli"));
                                  
@@ -69573,7 +69475,7 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setCodposCli(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
                                     
@@ -69581,8 +69483,6 @@
                                 
                                     else {
                                         
-                                               object.setCodposCli(java.lang.Integer.MIN_VALUE);
-                                           
                                     }
                                 
                                     
