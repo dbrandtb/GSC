@@ -799,9 +799,9 @@
 									                                                                                    ,icon    : Ext.Msg.WARNING
 									                                                                                    ,fn      : function(){
 									                                                                                    	if(json.retryWS){
-									                                                                                    		Ext.Msg.show({
+									                                                                                    		/*Ext.Msg.show({
 												                                                                                    title    :'Confirmaci&oacute;n'
-												                                                                                    ,msg     : '&iquest;Desea Reenviar los Web Services?'
+												                                                                                    ,msg     : '&iquest;Desea Reenviar los Web Services de Autos?'
 												                                                                                    ,buttons : Ext.Msg.YESNO
 												                                                                                    ,icon    : Ext.Msg.QUESTION
 												                                                                                    ,fn      : function(boton, text, opt){
@@ -809,7 +809,7 @@
 												                                                                                    		
 												                                                                                    	}
 												                                                                                    }
-												                                                                                });
+												                                                                                });*/
 									                                                                                    	}
 									                                                                                    }
 									                                                                                });
