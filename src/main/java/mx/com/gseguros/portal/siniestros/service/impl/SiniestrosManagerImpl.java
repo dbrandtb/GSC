@@ -1228,6 +1228,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
-	
-	
+
+	@Override
+	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

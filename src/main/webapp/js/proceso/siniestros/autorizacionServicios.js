@@ -5,6 +5,8 @@ var storeQuirugicoBase;
 var storeQuirugico;
 var extraParams='';
 var cdrol;
+var notasInternas ='';
+var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
 var _Existe = "S";
 var _NExiste = "N";
 Ext.onReady(function() {
@@ -607,7 +609,58 @@ Ext.onReady(function() {
     	colspan:2,						fieldLabel : 'ICD',					allowBlank: false,				displayField : 'value',		width:500,
     	id:'idComboICD',				labelWidth: 170,					valueField   : 'key',			forceSelection : true,
     	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.otclave',	store : storeTiposICD,
-    	minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all',			hideTrigger:true
+    	minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all',			hideTrigger:true,
+    	listeners : {
+    		'select':function(field,value){
+    			Ext.Ajax.request(
+    	        {
+    	            url     : _URL_NUM_MESES_TIEMPO_ESPERA
+    	            ,params : 
+    	            {           
+    	                'params.otvalor':this.getValue(),
+    	                'params.cdtabla':'TAPERESP'
+    	            }
+    	            ,success : function (response)
+    	            {
+    	                var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
+    	                var tiempo ='';
+    	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
+    	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+    	                	if(tiempoEsperaICD == "24"){
+    	                		tiempo = '2 años';
+    	                	}else if(tiempoEsperaICD == "60"){
+    	                		tiempo = '5 años';
+    	                	}else{
+    	                		tiempo = '10 meses';
+    	                	}
+    	                	
+    	                	notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + (mensajeInicial +tiempo);
+    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+    	                	
+    	                	
+    	                	//alert("Movimiento no procede por padecimiento de periodo de espera");
+    	                	centrarVentanaInterna(Ext.Msg.show({
+		  		               title: 'Error',
+		  		               msg: mensajeInicial +tiempo,
+		  		               buttons: Ext.Msg.OK,
+		  		               icon: Ext.Msg.ERROR
+		  		           	}));
+    	                }
+    	            },
+    	            failure : function ()
+    	            {
+    	                me.up().up().setLoading(false);
+    	                centrarVentanaInterna(Ext.Msg.show({
+    	                    title:'Error',
+    	                    msg: 'Error de comunicaci&oacute;n',
+    	                    buttons: Ext.Msg.OK,
+    	                    icon: Ext.Msg.ERROR
+    	                }));
+    	            }
+    	        });
+    	    }
+    	}
+    	
     });
     
     cptConAutorizado = Ext.create('Ext.form.field.ComboBox',
@@ -619,22 +672,70 @@ Ext.onReady(function() {
     	listeners : {
     		'select' : function(combo, record) {
     	    	Ext.getCmp('precioConAutorizado').setValue('');
-    	        Ext.Ajax.request(
+    	    	//PRIMERO VALIDACIÓN DEL NUMERO DE MESES DE PERIODO DE ESPERA
+    	    	Ext.Ajax.request(
     	        {
-    	            url     : _URL_LISTA_TABULADOR
+    	            url     : _URL_NUM_MESES_TIEMPO_ESPERA
     	            ,params : 
     	            {           
-    	                'params.cdcpt':this.getValue(),
-    	                'params.cdtipmed':'1',
-    	                'params.mtobase':Ext.getCmp('idMontoBase').getValue()
+    	                'params.otvalor':Ext.getCmp('cptConAutorizado').getValue(),
+    	                'params.cdtabla':'TAPERESP'
     	            }
     	            ,success : function (response)
     	            {
-    	                if(Ext.decode(response.responseText).listaPorcentaje != null)
-	                	{
-    	                	var json=Ext.decode(response.responseText).listaPorcentaje[0];
-    				        Ext.getCmp('precioConAutorizado').setValue(json.mtomedico);
-	                	}
+    	                var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
+    	                var tiempo ='';
+    	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
+    	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+    	                	if(tiempoEsperaICD == "24"){
+    	                		tiempo = '2 años';
+    	                	}else if(tiempoEsperaICD == "60"){
+    	                		tiempo = '5 años';
+    	                	}else{
+    	                		tiempo = '10 meses';
+    	                	}
+    	                	//alert("Movimiento no procede por padecimiento de periodo de espera");
+    	                	notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + (mensajeInicial +tiempo);
+    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+    	                	
+    	                	//panelConceptosAutorizados.getForm().reset();
+	        				//ventanaConceptosAutorizado.close();
+    	                	centrarVentanaInterna(Ext.Msg.show({
+		  		               title: 'Error',
+		  		               msg: mensajeInicial +tiempo,
+		  		               buttons: Ext.Msg.OK,
+		  		               icon: Ext.Msg.ERROR
+		  		           	}));
+    	                }//else{
+		                	    Ext.Ajax.request(
+				    	        {
+				    	            url     : _URL_LISTA_TABULADOR
+				    	            ,params : 
+				    	            {           
+				    	                'params.cdcpt':Ext.getCmp('cptConAutorizado').getValue(),
+				    	                'params.cdtipmed':'1',
+				    	                'params.mtobase':Ext.getCmp('idMontoBase').getValue()
+				    	            }
+				    	            ,success : function (response)
+				    	            {
+				    	                if(Ext.decode(response.responseText).listaPorcentaje != null)
+					                	{
+				    	                	var json=Ext.decode(response.responseText).listaPorcentaje[0];
+				    				        Ext.getCmp('precioConAutorizado').setValue(json.mtomedico);
+					                	}
+				    	            },
+				    	            failure : function ()
+				    	            {
+				    	                me.up().up().setLoading(false);
+				    	                centrarVentanaInterna(Ext.Msg.show({
+				    	                    title:'Error',
+				    	                    msg: 'Error de comunicaci&oacute;n',
+				    	                    buttons: Ext.Msg.OK,
+				    	                    icon: Ext.Msg.ERROR
+				    	                }));
+				    	            }
+				    	        });
+    	                //}
     	            },
     	            failure : function ()
     	            {
@@ -662,25 +763,72 @@ Ext.onReady(function() {
     	    	Ext.getCmp('precioQuirurgico').setValue('');
 		        Ext.getCmp('porcentajeQuirurgico').setValue('');
 		        Ext.getCmp('importeQuirurgico').setValue('');
-    	        Ext.Ajax.request(
+    	        //PRIMERO VALIDACIÓN DEL NUMERO DE MESES DE PERIODO DE ESPERA
+		        Ext.Ajax.request(
     	        {
-    	            url     : _URL_LISTA_TABULADOR
+    	            url     : _URL_NUM_MESES_TIEMPO_ESPERA
     	            ,params : 
     	            {           
-    	                'params.cdcpt':this.getValue(),
-    	                'params.cdtipmed':'1',
-    	                'params.mtobase': Ext.getCmp('idMontoBase').getValue()
+    	                'params.otvalor':Ext.getCmp('cptQuirBase').getValue(),
+    	                'params.cdtabla':'TAPERESP'
     	            }
     	            ,success : function (response)
     	            {
-    	            	if(Ext.decode(response.responseText).listaPorcentaje != null)
-	            		{
-    	            		var json=Ext.decode(response.responseText).listaPorcentaje[0];
-        	                Ext.getCmp('precioQuirurgico').setValue(json.mtomedico);
-        	                //<<<
-    				        var importeTotal= Ext.getCmp('precioQuirurgico').getValue() * (Ext.getCmp('porcentajeQuirurgico').getValue()*100);
-    						Ext.getCmp('importeQuirurgico').setValue(importeTotal);
-	            		}
+    	                var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
+    	                var tiempo ='';
+    	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
+    	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+    	                	if(tiempoEsperaICD == "24"){
+    	                		tiempo = '2 años';
+    	                	}else if(tiempoEsperaICD == "60"){
+    	                		tiempo = '5 años';
+    	                	}else{
+    	                		tiempo = '10 meses';
+    	                	}
+    	                	
+    	                	//panelEquipoQuirurgicoBase.getForm().reset();
+							//ventanaEqQuirurgicoBase.close()
+							notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT equipo quirúrgico base: " +cptQuirBase.rawValue + (mensajeInicial +tiempo);
+    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+    	                	centrarVentanaInterna(Ext.Msg.show({
+		  		               title: 'Error',
+		  		               msg: mensajeInicial+tiempo,
+		  		               buttons: Ext.Msg.OK,
+		  		               icon: Ext.Msg.ERROR
+		  		           	}));
+    	                }//else{
+			    	        Ext.Ajax.request(
+			    	        {
+			    	            url     : _URL_LISTA_TABULADOR
+			    	            ,params : 
+			    	            {           
+			    	                'params.cdcpt':Ext.getCmp('cptQuirBase').getValue(),
+			    	                'params.cdtipmed':'1',
+			    	                'params.mtobase': Ext.getCmp('idMontoBase').getValue()
+			    	            }
+			    	            ,success : function (response)
+			    	            {
+			    	            	if(Ext.decode(response.responseText).listaPorcentaje != null)
+				            		{
+			    	            		var json=Ext.decode(response.responseText).listaPorcentaje[0];
+			        	                Ext.getCmp('precioQuirurgico').setValue(json.mtomedico);
+			        	                //<<<
+			    				        var importeTotal= Ext.getCmp('precioQuirurgico').getValue() * (Ext.getCmp('porcentajeQuirurgico').getValue()*100);
+			    						Ext.getCmp('importeQuirurgico').setValue(importeTotal);
+				            		}
+			    	            },
+			    	            failure : function ()
+			    	            {
+			    	                me.up().up().setLoading(false);
+			    	                centrarVentanaInterna(Ext.Msg.show({
+			    	                    title:'Error',
+			    	                    msg: 'Error de comunicaci&oacute;n',
+			    	                    buttons: Ext.Msg.OK,
+			    	                    icon: Ext.Msg.ERROR
+			    	                }));
+			    	            }
+			    	        });	
+    	                //}
     	            },
     	            failure : function ()
     	            {
@@ -826,8 +974,8 @@ Ext.onReady(function() {
 			,
 			{
 		 		id		: 'precioQuirurgico',				xtype      	: 'textfield',			    fieldLabel 	: 'Precio',					labelWidth: 100,
-		 		name    : 'precioQuirurgico',				allowBlank	: false,					allowDecimals :true,          			decimalSeparator :'.',
-		 		readOnly   : true
+		 		name    : 'precioQuirurgico',				allowBlank	: false,					allowDecimals :true,          			decimalSeparator :'.'//,
+		 		//readOnly   : true
 			}
 			,
 			{
@@ -1468,6 +1616,7 @@ Ext.onReady(function() {
 	Ext.getCmp('panelbusqueda').hide();
 	Ext.getCmp('clausulasGridId').hide();
 	
+	
 	panelClausula= Ext.create('Ext.form.Panel', {
 		id: 'panelClausula',
 		border:0,
@@ -1557,13 +1706,16 @@ Ext.onReady(function() {
 					]
 			});
 	
+	//Ext.getCmp('idCopagoFin').hide();
+	//Ext.getCmp('idPenalCircHospitalario').hide();
+	//Ext.getCmp('idPenalCambioZona').hide();
 	
 	if(valorAction.nmAutSer == null && valorAction.ntramite ==null)
 	{
 		cdrol = valorAction.cdrol;
 		modificacionClausula.showAt(50,100);
 	}else{
-		
+			//Ext.getCmp('idCopagoFin').hide();
 			storeMedico.load();
 			storeTratamiento.load();
 			storePlazas.load();
@@ -1700,6 +1852,16 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'TipoCopago'		,id       : 'idTipoCopago', 	name:'idTipoCopago',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'MesesTmpEsperaICD'		,id       : 'idTiempoEsperaICD', 	name:'idTiempoEsperaICD',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'MesesTmpEsperaCPT'		,id       : 'idTiempoEsperaCPT', 	name:'idTiempoEsperaCPT',
 					 labelWidth: 170,					hidden:true
 	 			}
 	 			,
@@ -1906,7 +2068,7 @@ Ext.onReady(function() {
 			 	{
 			 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Notas internas'				,id       : 'notaInterna'
 		 			,labelWidth: 170						,name:'dsnotas',
-		 			width      : 700						,height: 70
+		 			width      : 700						,height: 100
 			 	},
 			 	{
 			 		colspan:2,
