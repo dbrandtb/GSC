@@ -4,14 +4,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <style>
+        <%--<style>
         div.claseTitulo>div.x-panel-header>div.x-header-body>div.x-box-inner>div.x-box-target>div.x-panel-header-text-container>span.x-header-text
         {
             font-size:16px;
             font-weight: bold;
             text-transform: uppercase;
         }
-        </style>
+        </style>--%>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%
@@ -74,8 +74,8 @@
            		{
             	    comp=Ext.getCmp('tabPanelAsegurados');
            		}
-           		//window.parent.scrollTo(0,150+comp.y);
-          		comp.expand();
+           		window.parent.scrollTo(0,0);
+          		accordion.setActiveTab(comp);
           	}
             
             Ext.onReady(function(){
@@ -100,16 +100,17 @@
                     ]
                 });
                 
-                accordion=Ext.create('Ext.panel.Panel',
+                accordion=Ext.create('Ext.tab.Panel',
                 {
                 	title:'Tr&aacute;mite '+inputNtramite,
+                	border:0,
                 	renderTo : 'maindiv'
-                	,layout   :
+                	/*,layout   :
                		{
                 		type           : 'accordion'
                 		,animate       : true
                 		,titleCollapse : true
-               		}
+               		}*/
                     ,items:
                     [
                     /**/
@@ -120,6 +121,7 @@
 		                    //renderTo:'maindiv',
 		                    url:urlGuardar,
 		                    buttonAlign:'center',
+		                    border:0,
 		                    //bodyPadding:5,
 		                    items:[
 		                        Ext.create('Ext.panel.Panel',{
@@ -1363,6 +1365,7 @@
                         	id:'tabPanelAsegurados'
                         	,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
                         	,cls:'claseTitulo'
+                        	,border:0
                         	,loader:
                         	{
                         		url     : urlEditarAsegurados[inputCdtipsit]
@@ -1379,9 +1382,14 @@
                         	}
 	                        ,listeners:
 	                        {
-	                            expand:function( p, eOpts )
+	                            /*expand:function( p, eOpts )
 	                            {
 	                                window.parent.scrollTo(0,150+p.y);
+	                            }*/
+	                            afterrender:function(tab)
+	                            {
+	                                debug('afterrender tabPanelAsegurados');
+	                                tab.loader.load();
 	                            }
 	                        }
                         })
@@ -1390,6 +1398,7 @@
                             id:'tabPanelValosit'
                             ,title:'Datos de cotizaci&oacute;n'
                             ,cls:'claseTitulo'
+                            ,border:0
                             ,loader:
                             {
                                 url       : urlPantallaValosit
@@ -1407,9 +1416,14 @@
                             }
                             ,listeners:
                             {
-                                expand:function( p, eOpts )
+                                /*expand:function( p, eOpts )
                                 {
                                     window.parent.scrollTo(0,150+p.y);
+                                }*/
+                                afterrender:function(tab)
+                                {
+                                    debug('afterrender tabPanelValosit');
+                                    tab.loader.load();
                                 }
                             }
                         })
@@ -1418,6 +1432,7 @@
                             id:'tabPanelAgentes'
                             ,title:'Agentes'
                             ,cls:'claseTitulo'
+                            ,border:0
                             ,loader:
                             {
                                 url       : urlPantallaAgentes
@@ -1435,13 +1450,31 @@
                             }
                             ,listeners:
                             {
-                                expand:function( p, eOpts )
+                                /*expand:function( p, eOpts )
                                 {
                                     window.parent.scrollTo(0,150+p.y);
+                                }*/
+                                afterrender:function(tab)
+                                {
+                                    debug('afterrender tabPanelAgentes');
+                                    tab.loader.load();
                                 }
                             }
                         })
                     ]
+                    ,listeners:
+                    {
+                        add :function(panel,tab,pos)
+                        {
+                            debug('>accordion add pos:',pos);
+                            if(pos>3)
+                            {
+                                tab.border=0;
+                                panel.setActiveTab(tab);
+                            }
+                            debug('<accordion add');
+                        }
+                    }
                 });
                 
                 //para ver documentos en vivo
@@ -1473,7 +1506,7 @@
 		                    ,'smap1.tipomov'  : '0'
 		                }
 		            }
-		        }).showAt(650,40);
+		        }).showAt(700,0);
                 venDocuTramite.collapse();
                 //para ver documentos en vivo
                 
