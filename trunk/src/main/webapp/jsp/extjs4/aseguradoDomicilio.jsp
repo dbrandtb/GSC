@@ -310,11 +310,11 @@ Ext.onReady(function(){
                                 var json=Ext.decode(opts.response.responseText);
                                 if(json.success==true)
                                 {
-                                    Ext.Msg.show({
+                                    centrarVentanaInterna(Ext.Msg.show({
                                         title:'Datos guardados',
                                         msg: 'Se han guardado los datos',
                                         buttons: Ext.Msg.OK
-                                    });
+                                    }));
                                     expande(2);
                                 }
                                 else
