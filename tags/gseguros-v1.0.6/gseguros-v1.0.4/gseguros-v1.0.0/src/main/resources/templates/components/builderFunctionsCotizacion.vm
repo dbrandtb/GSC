@@ -1,3 +1,0 @@
-#foreach($fuctioncontrol in $parameters.FUNCTIONS_COMBOS)
-    			$fuctioncontrol#if($velocityCount < $parameters.FUNCTIONS_COMBOS.size())             #end
-#end
