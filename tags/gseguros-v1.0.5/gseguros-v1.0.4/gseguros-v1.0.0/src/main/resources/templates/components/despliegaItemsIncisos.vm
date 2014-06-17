@@ -1,0 +1,5 @@
+#if ($parameters.item != '')
+	$parameters.item
+#else
+	Ext.Msg.alert('Status', "No existen datos");
+#end

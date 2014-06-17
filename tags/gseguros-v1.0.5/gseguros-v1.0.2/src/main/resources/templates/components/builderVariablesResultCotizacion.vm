@@ -1,0 +1,3 @@
+#foreach($storecontrol in $parameters.STORES_CONTROL_RESULT)
+    			$storecontrol#if($velocityCount < $parameters.STORES_CONTROL_RESULT.size())             #end
+#end

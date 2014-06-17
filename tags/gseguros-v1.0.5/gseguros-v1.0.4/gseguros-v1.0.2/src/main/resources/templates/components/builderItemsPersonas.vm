@@ -1,0 +1,102 @@
+
+items: [{
+		border:false,
+        colspan: 3,
+        bodyStyle:'margin-bottom: 20px;',
+        width:800,
+        html: '<div align="center"><span style="color:#98012e;font-size:12px;font-family:Arial,Helvetica,sans-serif;">Personas Aseguradas</span></div>'
+        },{
+        border:false,
+        layout:'form',
+        labelWidth : 30,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Rol',
+		        width : 170,
+		 		name:'rol'
+        }]
+       
+ 		},{
+        border:false,
+        layout:'form',
+        labelWidth : 40,
+        width : 250,
+        items:[{  
+         		 fieldLabel:'Sexo ',
+        		 emptyText:'Seleccione...',
+				 xtype:'combo',        
+				 name:'sexo',
+				 hiddenName:'hsexo',
+				 // id:'idformaPago',
+				 store: storeProceso,
+				 displayField:'label',
+				 valueField:'value', 
+				 triggerAction: 'all',
+				  width : 200,
+				 mode: 'local',
+				 typeAhead: true,
+				 editable:true
+        }]
+        },{
+        border:false,
+        layout:'form',
+        width : 275,
+        labelWidth : 145,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Número de Empleado',
+		        width : 100,
+		 		name:'numeroEmpleado'
+        }]
+       },{
+        border:false,
+        layout:'form',
+        labelWidth : 80,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Identificador ',
+		        width : 120,
+		 		name:'identificador'
+		        
+        }]
+      },{
+        border:false,
+         colspan: 2,
+        layout:'form',
+        labelWidth : 130,
+         items:[{  
+         		xtype:'datefield',
+		 		fieldLabel: 'Fecha de Nacimiento',
+		        name: 'fechaNacimiento',
+		        width : 100,
+		        allowBlank:true
+        }]
+    
+      },{
+      border:false,
+        layout:'form',
+        width : 100,
+        items:[{  
+	      	xtype: 'button',
+	      	text:'Agregar',
+	        id:'agregar',
+	        handler: function() {
+	        		windowAdd2.show();
+	        		}
+	      
+        }]
+         },{
+      border:false,
+        layout:'form',
+        width : 100,
+        items:[{  
+	      	xtype: 'button',
+	      	text:'Eliminar',
+	        id:'borrar',
+	        handler: function() {
+	        		windowDel2.show();
+	        		}
+        }]				
+ }]

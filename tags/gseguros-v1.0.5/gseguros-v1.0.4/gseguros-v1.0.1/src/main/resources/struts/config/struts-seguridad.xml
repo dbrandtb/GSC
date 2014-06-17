@@ -1,0 +1,99 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="seguridad" extends="json-default" namespace="/seguridad">
+
+		<interceptors>
+			<interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+			<interceptor-stack name="loggingStack">
+				<interceptor-ref name="authenticationInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<action name="login">
+			<interceptor-ref name="loggingStack"></interceptor-ref>
+			<result name="login">/jsp/portal/login.jsp</result>
+			<result name="load" type="redirectAction">
+                <param name="actionName">load</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="tree" type="redirectAction">
+                <param name="actionName">seleccionaRolCliente</param>
+                <param name="namespace">/</param>
+            </result>
+		</action>
+		
+		<action name="logout" class="autenticacionAction"
+            method="logoutUsuario">
+            <result name="success">/jsp/portal/login.jsp</result>
+        </action>
+
+		<!--<action name="datosPoliza"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
+			</action> <action name="consultaDatosSuplemento"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
+			</action> -->
+
+		<action name="autenticaUsuario" class="autenticacionAction"
+			method="autenticaUsuario">
+			<result name="success" type="json" />
+		</action>
+		
+		<!-- Actions temporales que utilizara GS para no pasar por el login -->
+		
+		<action name="cotizarSaludVital" class="cotizaSaludVitalAction" method="cotizaSaludVital">
+		  <result name="success">/jsp/extjs4/asegurados.jsp</result>
+        </action>
+        
+        <action name="accesoDirecto" class="cotizaSaludVitalAction" method="accesoDirecto">
+		    <result name="cotizadorSaludVital" type="redirectAction">
+                <param name="actionName">cotizacionVital</param>
+                <param name="namespace">/</param>
+                <param name="cdtipsit">${cdtipsit}</param>
+            </result>
+		    <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
+		    <result name="error">/jsp/portal/login.jsp</result>
+        </action>
+
+		<action name="pruebaWSweblogic" class="cotizaSaludVitalAction" method="pruebaWSweblogic">
+		 <result name="success" type="json" />
+        </action>
+		
+		<action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
+		  <result name="success" type="redirectAction">
+		      <param name="actionName">seleccionaRolCliente</param>
+              <param name="namespace">/seguridad</param>
+		  </result>
+        </action>
+        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
+            <result name="success" type="redirectAction">
+              <param name="actionName">regresaCodigo</param>
+              <param name="namespace">/seguridad</param>
+              <param name="codigoCliente">6442</param>
+              <param name="codigoRol">EJECUTIVOCUENTA</param>
+            </result>
+            <result name="load" type="redirectAction">
+              <param name="actionName">regresaCodigo</param>
+              <param name="namespace">/seguridad</param>
+              <param name="codigoCliente">6442</param>
+              <param name="codigoRol">EJECUTIVOCUENTA</param>
+            </result>
+        </action>
+        <action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
+            <!-- <result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
+            <result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result> -->
+            <!-- <result name="confcompleta" type="redirectAction">
+                <param name="actionName">cotizacionVital</param>
+                <param name="namespace">/</param>
+            </result> -->
+            <result name="success" type="redirectAction">
+                <param name="actionName">cotizacionVital</param>
+                <param name="namespace">/</param>
+            </result>
+        </action>
+        <!-- Fin Actions temporales -->
+        
+	</package>
+
+</struts>
