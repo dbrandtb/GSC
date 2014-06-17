@@ -64,7 +64,7 @@ Ext.onReady(function()
 	Ext.define('RFCPersona',
     {
         extend  : 'Ext.data.Model'
-        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY"]
+        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"]
     });
 	////// modelos //////
 	
@@ -509,9 +509,10 @@ function _p20_buscarRFC()
                                                            _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                            
                                                            if(json.clienteWS){
-                                                        	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+                                                        	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
                                                            }else{
                                                         	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                        	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
                                                                _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
                                                            }
                                                            

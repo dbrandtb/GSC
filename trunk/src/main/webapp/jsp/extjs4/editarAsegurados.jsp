@@ -58,7 +58,7 @@
 	Ext.define('RFCPersona',
 	{
 		extend  : 'Ext.data.Model'
-		,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY"]
+		,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"]
 	});
 	
     function rendererRolp2(v)
@@ -985,9 +985,10 @@ debug("validarYGuardar flag:2");
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                                                    
                                                                                    if(json.clienteWS){
-                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
                                                                                    }else{
                                                                                 	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
                                                                                        gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
                                                                                    }
                                                                                    
@@ -1122,9 +1123,10 @@ debug("validarYGuardar flag:2");
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
 			            		    		    	                               
 			            		    		    	                               if(json.clienteWS){
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
 			            		    		    	                               }else{
 			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
 				            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
 			            		    		    	                               }
 			            		    		    	                               
