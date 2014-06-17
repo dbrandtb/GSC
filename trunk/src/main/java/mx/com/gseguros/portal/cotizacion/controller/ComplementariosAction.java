@@ -85,6 +85,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String nmpoliza;
 	private String cdtipsit;
 	private boolean success = true;
+	private boolean retryWS;
 	private ScreenInterceptor scrInt = new ScreenInterceptor();
 	SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	Calendar calendarHoy = Calendar.getInstance();
@@ -1530,6 +1531,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		////// variables 
 		success                = true;
+		retryWS                = false;
 		String ntramite        = null;
 		UserVO us              = null;
 		String cdunieco        = null;
@@ -1837,6 +1839,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
 							edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
 				success = aux!=null && aux.getNumpol()>0l;
+				retryWS = !success;
 				if(!success)
 				{
 					mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
@@ -2425,7 +2428,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
 		     */
-		    if(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")) && (slist1 == null || slist1.isEmpty())){
+		    if((TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")) || TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
 		    	slist1 = new ArrayList<Map<String, String>>();
@@ -3023,6 +3026,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 	public void setStoredProceduresManager(
 			StoredProceduresManager storedProceduresManager) {
 		this.storedProceduresManager = storedProceduresManager;
+	}
+
+	public boolean isRetryWS() {
+		return retryWS;
+	}
+
+	public void setRetryWS(boolean retryWS) {
+		this.retryWS = retryWS;
 	}
 
 }
