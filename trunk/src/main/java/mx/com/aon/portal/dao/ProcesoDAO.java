@@ -4356,7 +4356,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class BuscarRFCMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{"RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI"};
+			String cols[]=new String[]{"RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","CDIDEPER"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
