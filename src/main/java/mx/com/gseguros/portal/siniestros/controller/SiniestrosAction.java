@@ -101,6 +101,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String montoMaximo;
     private String existePenalizacion;
     private String montoArancel;
+    private String mesesTiempoEspera;
     private String existeDocAutServicio;
     private String autorizarProceso;
     private String porcentajePenalizacion;
@@ -5149,6 +5150,18 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
+    public String obtieneMesesTiempoEspera(){
+	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
+	   	try {
+	   			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor"),params.get("cdtabla"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el periodo de espera en meses",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
+    
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}
@@ -5761,6 +5774,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		return montoArancel;
 	}
 
+	public String getMesesTiempoEspera() {
+		return mesesTiempoEspera;
+	}
+	
+	public void setMesesTiempoEspera(String mesesTiempoEspera) {
+		this.mesesTiempoEspera = mesesTiempoEspera;
+	}
 
 	public void setMontoArancel(String montoArancel) {
 		this.montoArancel = montoArancel;
