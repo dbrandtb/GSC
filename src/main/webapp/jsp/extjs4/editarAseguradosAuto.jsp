@@ -135,19 +135,32 @@ Ext.onReady(function()
 		        {
 		            Ext.each(dataview.panel.columns, function(column)
 		            {
-		                column.autoSize();
+		                //column.autoSize();
 		                debug(column);
 		                if(column.text=='RFC')
 		                {
+		                	column.flex=0;
 		                	column.setWidth(120);
 		                }
 		                if(column.text=="Sexo")
 		                {
+		                	column.flex=0;
 		                	column.setWidth(70);
 		                }
 		                if(column.text=="Nombre")
                         {
+		                	column.flex=0;
                             column.setWidth(100);
+                        }
+		                if(column.text=="Fecha de nacimiento")
+                        {
+                            column.flex=0;
+                            column.setWidth(100);
+                        }
+		                if(column.xtype=='actioncolumn')
+                        {
+                            column.flex=0;
+                            column.setWidth(50);
                         }
 		            });
 		        }
@@ -429,14 +442,7 @@ function _p20_editarDomicilio(grid, rowIndex, colIndex)
                 ,autoLoad:true
                 ,scripts:true
             }
-            ,listeners:
-            {
-                expand:function( p, eOpts )
-                {
-                    window.parent.scrollTo(0,150+p.y);
-                }
-            }
-        }).expand();
+        });
 		debug('<dirigir');
 	};
 	_p20_guardar(null,null,dirigir);
@@ -560,6 +566,6 @@ function _p20_buscarRFC()
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p20_divpri"></div>
+<body><div id="_p20_divpri" style="height:500px;"></div>
 </body>
 </html>
