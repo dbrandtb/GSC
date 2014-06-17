@@ -243,11 +243,11 @@
                 	}
                 	else
                 	{
-	                	Ext.Msg.show({
+	                	centrarVentanaInterna(Ext.Msg.show({
 	                        title:'Asegurados guardados',
 	                        msg: 'Se ha guardado la informaci&oacute;n',
 	                        buttons: Ext.Msg.OK
-	                    });
+	                    }));
 	                	expande(1);
                 	}
                 }
@@ -1319,14 +1319,7 @@ debug("validarYGuardar flag:2");
                         ,autoLoad:true
                         ,scripts:true
                     }
-                    ,listeners:
-                    {
-                        expand:function( p, eOpts )
-                        {
-                            window.parent.scrollTo(0,150+p.y);
-                        }
-                    }
-                }).expand();
+                });
             }
    	    });
 	    
@@ -1573,14 +1566,7 @@ debug("validarYGuardar flag:2");
        					,autoLoad:true
        					,scripts:true
        				}
-	       			,listeners:
-	                {
-	                    expand:function( p, eOpts )
-	                    {
-	                        window.parent.scrollTo(0,150+p.y);
-	                    }
-	                }
-       			}).expand();
+       			});
 	        	/*
 	        	Ext.create('Ext.form.Panel').submit({
                     standardSubmit:true,
@@ -1620,14 +1606,7 @@ debug("validarYGuardar flag:2");
                         ,autoLoad:true
                         ,scripts:true
                     }
-                    ,listeners:
-                    {
-                        expand:function( p, eOpts )
-                        {
-                            window.parent.scrollTo(0,150+p.y);
-                        }
-                    }
-                }).expand();
+                });
 	        },
 	        
 	        onExclusionSave:function(grid,rowIndex)
@@ -1661,14 +1640,7 @@ debug("validarYGuardar flag:2");
                         ,autoLoad:true
                         ,scripts:true
                     }
-                    ,listeners:
-                    {
-                        expand:function( p, eOpts )
-                        {
-                            window.parent.scrollTo(0,150+p.y);
-                        }
-                    }
-                }).expand();
+                });
             },
 	        
 	        onExclusionInter:function(grid,rowIndex)
@@ -1776,14 +1748,7 @@ debug("validarYGuardar flag:2");
                         ,autoLoad:true
                         ,scripts:true
                     }
-                    ,listeners:
-                    {
-                        expand:function( p, eOpts )
-                        {
-                            window.parent.scrollTo(0,150+p.y);
-                        }
-                    }
-                }).expand();
+                });
             }
 	    });
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2207,7 +2172,7 @@ debug("validarYGuardar flag:2");
 </head>
 <body>
 --%>
-<div id="maindivasegurados"></div>
+<div id="maindivasegurados" style="height:500px;"></div>
 <%--
 </body>
 </html>
