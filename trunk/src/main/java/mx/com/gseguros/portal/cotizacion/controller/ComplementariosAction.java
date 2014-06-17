@@ -2464,7 +2464,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    	}else {
 				    		agregar.put("FENACIMICLI", "");
 				    	}
-				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli()+" "+cli.getPoblacionCli());
+				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	agregar.put("CLAVECLI",     cli.getNumeroExterno());
 				    	slist1.add(agregar);
 			    	}

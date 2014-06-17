@@ -1566,7 +1566,13 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() +" "+ cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
 							    			paramDomicil.put("pv_cdpostal_i", cliDom.getCodposCli());
-							    			paramDomicil.put("pv_cdedo_i",    null/*cliDom.getPoblacionCli()*/);
+							    			
+							    			String edoAdosPos = Integer.toString(cliDom.getEstadoCli());
+							    			if(edoAdosPos.length() ==  1){
+							    				edoAdosPos = "0"+edoAdosPos;
+							    			}
+							    			
+							    			paramDomicil.put("pv_cdedo_i",    cliDom.getCodposCli()+edoAdosPos);
 							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
 							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
 							    			paramDomicil.put("pv_nmnumero_i", null);
@@ -1607,7 +1613,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramValoper.put("pv_otvalor17", null);
 							    			paramValoper.put("pv_otvalor18", null);
 							    			paramValoper.put("pv_otvalor19", null);
-							    			paramValoper.put("pv_otvalor20", Integer.toString(cliDom.getOcuPro()));
+							    			paramValoper.put("pv_otvalor20", (cliDom.getOcuPro() > 0) ? Integer.toString(cliDom.getOcuPro()) : "0");
 							    			paramValoper.put("pv_otvalor21", null);
 							    			paramValoper.put("pv_otvalor22", null);
 							    			paramValoper.put("pv_otvalor23", null);
