@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<decorators defaultdir="/decorators">
+
+    <!-- URLs que no usaran decorator -->
+	<excludes>
+		<pattern>/nodecorate/*</pattern>
+		<pattern>/resources/*</pattern>
+		<pattern>/styles/*</pattern>
+		<pattern>/scripts/*</pattern>
+		<pattern>/images/*</pattern>
+		<pattern>/struts/*</pattern>
+		<pattern>/jsp/portal/portal.jsp</pattern>
+		<pattern>/jsp/menu/menu.jsp</pattern>
+		<pattern>/load.action</pattern>
+		
+		<pattern>/cancelacion/pantallaCancelar.action</pattern>
+        <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
+        <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
+        <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
+        <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
+        <pattern>/endosos/pantallaEndosoDomicilioSimple.action</pattern>
+        <pattern>/endosos/pantallaEndosoNombres.action</pattern>
+        <pattern>/endosos/pantallaEndosoNombresSimple.action</pattern>
+        <pattern>/endosos/endosoValositBasico.action</pattern>
+        <pattern>/endosos/endosoValositBasicoSimple.action</pattern>
+        <pattern>/endosos/pantallaEndosoClausulas.action</pattern>
+        <pattern>/endosos/pantallaEndosoAltaBajaAsegurado.action</pattern>
+        <pattern>/endosos/endosoEdad.action</pattern>
+        <pattern>/endosos/endosoSexo.action</pattern>
+        <pattern>/endosos/endosoDomicilioFull.action</pattern>
+        <pattern>/endosos/errorEndosoAnterior.action</pattern>
+        <pattern>/endosos/endosoDeducible.action</pattern>
+        <pattern>/endosos/endosoCopago.action</pattern>
+        <pattern>/endosos/endosoReexpedicion.action</pattern>
+        <pattern>/endosos/endosoExtraprima.action</pattern>
+        <pattern>/endosos/endosoFormaPago.action</pattern>
+        <pattern>/endosos/endosoAgente.action</pattern>
+        <pattern>/general/obtieneRecibos.action</pattern>
+        <pattern>/catalogos/agregaUsuarios.action</pattern>
+        <pattern>/siniestros/calculosReclamaciones.action</pattern>
+        
+	</excludes>
+
+
+    <!-- decorator que solo contiene la estructura HTML, HEAD y BODY -->
+	<decorator name="clean" page="decorator_clean.jsp">
+		<pattern>/seguridad/*</pattern>
+		<pattern>/jsp/portal/login.jsp</pattern>
+		<pattern>/editarAsegurados.action</pattern>
+		<pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
+		<pattern>/editarCoberturas.action</pattern>
+		<pattern>/jsp/extjs4/aseguradoCoberturas.jsp</pattern>
+		<pattern>/pantallaDomicilio.action</pattern>
+		<pattern>/jsp/extjs4/aseguradoDomicilio.jsp</pattern>
+		<pattern>/pantallaExclusion.action</pattern>
+		<pattern>/jsp/extjs4/aseguradoExclusion.jsp</pattern>
+		<pattern>/pantallaValosit.action</pattern>
+        <pattern>/jsp/extjs4/pantallaValosit.jsp</pattern>
+		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
+		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
+		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
+		<pattern>/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</pattern>
+		<pattern>/flujocotizacion/principal.action</pattern>
+        <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
+        
+        <pattern>/siniestros/historialReclamaciones.action</pattern>
+        <pattern>/siniestros/verCoberturas.action</pattern>
+        <pattern>/siniestros/verAutorizacionServicio.action</pattern>
+        <pattern>/siniestros/revisionDocumentos.action</pattern>
+        <pattern>/siniestros/altaTramite.action</pattern>
+        <pattern>/siniestros/rechazoReclamaciones.action</pattern>
+        
+	</decorator>
+    
+    
+    <!-- decorator que incluye taglibs, framework UI, utilerias JS -->
+	<decorator name="default" page="decorator_default.jsp">
+		<pattern>/seguridad/accesoDirecto.action</pattern>
+		<pattern>/seguridad/cotizarSaludVital.action</pattern>
+		<pattern>/cotizacionVital.action</pattern>
+		<pattern>/jsp/extjs4/asegurados.jsp</pattern>
+		<pattern>/jsp/extjs4/aseguradosGB.jsp</pattern>
+
+		<pattern>/dinosaurio.action</pattern>
+		<pattern>/jsp/extjs4/denegado.jsp</pattern>
+
+		<pattern>/datosComplementarios.action</pattern>
+		<pattern>/jsp/extjs4/complementarios.jsp</pattern>
+
+		<pattern>/subirArchivoMostrarPanel.action</pattern>
+		<pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
+
+		<pattern>/subirArchivo.action</pattern>
+		<pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
+
+		<pattern>/subirArchivoMostrarBarra.action</pattern>
+		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
+		
+		<pattern>/procesoemision/busquedaPoliza.action</pattern>
+		<pattern>/jsp/consultas/*.jsp</pattern>
+		
+		<!-- mesa de control -->
+		<pattern>/mesacontrol/principal.action</pattern>
+        <pattern>/jsp/extjs4/mesacontrol/principal.jsp</pattern>
+        <pattern>/mesacontrol/mcdinamica.action</pattern>
+        <pattern>/jsp/extjs4/mesacontrol/mcdinamica.jsp</pattern>
+        <!-- fin de mesa de control -->
+        
+        <pattern>/catalogos/*.action</pattern>
+        <pattern>/jsp/catalogos/*.jsp</pattern>
+        
+        <pattern>/cancelacion/*.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/*.jsp</pattern>
+        <pattern>/rehabilitacion/*.action</pattern>
+        <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
+        <pattern>/endosos/*.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
+        <pattern>/emision/*.action</pattern>
+        <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
+        
+        
+        <pattern>/siniestros/principal.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/principal.jsp</pattern>
+        
+        <pattern>/siniestros/principalCordinadorAR.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</pattern>
+        
+        <pattern>/siniestros/afiliadosAfectados.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</pattern>
+        
+         <pattern>/siniestros/detalleAfiliadosAfectados.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/detalleAfiliadosAfectados.jsp</pattern>
+         
+         <pattern>/siniestros/autorizacionServicios.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</pattern>
+         
+         <pattern>/siniestros/seleccionCobertura.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</pattern>
+         
+         <pattern>/siniestros/tipoAutorizacion.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</pattern>
+         
+         <pattern>/siniestros/asignarReclamaciones.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</pattern>
+         
+         <pattern>/siniestros/ajustesMedicos.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</pattern>
+
+	</decorator>
+	
+	
+	<decorator name="roles" page="decorator_roles.jsp">
+        <pattern>/ArbolRolCliente.action</pattern>
+        <pattern>/seleccionaRolCliente.action</pattern>
+        <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
+    </decorator>
+    
+    <decorator name="extjs2" page="default2_deprecated.jsp">
+		<!-- Wizard de Parametrizacion -->
+        <pattern>/parametrizador.action</pattern>
+        <pattern>/jsp/wizard/indexWithIframe.jsp</pattern>		
+        <pattern>/jsp/wizard/agregarCoberturas.jsp</pattern>
+        <pattern>/indexWithIframe.jsp</pattern>		
+	</decorator>
+    
+    
+    <decorator name="mainbody" page="decorator_mainbody.jsp">
+        <pattern>/jsp/portal/mainBody.jsp</pattern>
+    </decorator>
+
+
+</decorators>

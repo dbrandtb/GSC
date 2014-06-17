@@ -1,0 +1,3 @@
+#foreach($menuVertical in $!parameters.USUARIO.listaMenuVertical)
+	<li><a href="$!menuVertical.href">$!menuVertical.text</a></li>
+#end

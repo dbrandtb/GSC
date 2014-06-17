@@ -1,0 +1,6 @@
+ 
+//Función que crea un texto de columna/fila como hiperlink
+		function crearHLink (value, metadata, record, rowIndex, colIndex, store) {
+				return '<span style="color:blue;font-size:11px; text-decoration:underline; font-family:Arial,Helvetica,sans-serif;">' + value + '</span>';
+		}
+

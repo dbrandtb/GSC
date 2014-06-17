@@ -1,0 +1,7 @@
+{
+    tipoSiniestro: [
+            {"key":"1",  "value":"Accidentes"},
+            {"key":"2",  "value":"Enfermedad"},
+            {"key":"3",  "value":"Maternidad"}
+    ]
+}

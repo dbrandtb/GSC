@@ -1,0 +1,76 @@
+
+items: [{
+		border:false,
+        colspan: 3,
+        bodyStyle:'margin-bottom: 20px;',
+        width:800,
+        html: '<div align="center"><span style="color:#98012e;font-size:12px;font-family:Arial,Helvetica,sans-serif;">Datos Agrupador de Pago</span></div>'
+        },{
+        border:false,
+        layout:'form',
+        labelWidth : 80,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Agrupador',
+		        width : 100,
+		 		name:'agrupador'
+        }]
+       
+ 		},{
+        border:false,
+        layout:'form',
+        labelWidth : 130,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Forma de Pago',
+		        width : 110,
+		 		name:'formaPago'
+        }]
+        },{
+        border:false,
+        layout:'form',
+        width : 275,
+        labelWidth : 145,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Identificador de Persona ',
+		        width : 100,
+		 		name:'idPersona'
+        }]
+       },{
+        border:false,
+        layout:'form',
+        labelWidth : 80,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Domicilio',
+		        width : 100,
+		 		name:'domicilio'
+		        
+        }]
+      },{
+        border:false,
+        layout:'form',
+        labelWidth : 130,
+        width : 275,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Cuenta Deudor',
+		        width : 110,
+		 		name:'cuentaDeudor'
+        }]
+     },{
+        border:false,
+        layout:'form',
+        width : 275,
+        labelWidth : 145,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Grupo',
+		        width : 100,
+		 		name:'grupo'
+        }]
+ }]

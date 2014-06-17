@@ -1,0 +1,21 @@
+items:[{
+		xtype: 'editorgrid',
+		frame:true,
+		id:'gridResultado',
+            store: getResultado(),
+            stripeRows: true,
+            cm: cm1,
+            clicksToEdit : 2,
+            height:120,
+            width:800,
+           
+		viewConfig: {autoFill: true,forceFit:true}, 
+            bbar: new Ext.PagingToolbar({
+            pageSize: 25,
+            store: storeGrid,
+            displayInfo: true,
+            displayMsg: 'Displaying rows {0} - {1} of {2}',
+            emptyMsg: "No rows to display"
+                  })
+     
+   }]

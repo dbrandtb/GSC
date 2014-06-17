@@ -1,0 +1,40 @@
+,buttons: [{
+ 			xtype: 'button',
+	      	text:'Regresar',
+	        id:'regresar', ///grid consulta
+	        cls:'padding: 30px 0px 50px 0px;',
+	        handler: function() {
+ 					//window.location  = 'regresaCapturaCotizacon.action';
+ 					if ( botonRegresaCotizacion == "S" ) {
+ 						window.location = _URL_REGRESO_CONSULTA_COTIZACION;
+ 					} else {
+ 						window.location = _URL_REGRESO;
+ 					}
+ 			}//end handler
+ 
+ }]
+
+ ,listeners: {
+           beforerender  : function() {
+                       storeRegistro.load({
+	                    callback : function(r,options,success) {
+                       if(storeRegistro.getTotalCount()==null || storeRegistro.getTotalCount()==""){
+                       }else{
+                       var record = storeRegistro.getAt(0);
+                       simple.getForm().loadRecord(record);
+                       // simple.getForm().submit();
+                      }    //else
+	                     }//callback 
+                        });
+                        
+                        
+                         storeGrid.load({
+                          callback : function(r,options,success) {
+                          
+                          obtieneVigencia(storeGrid);
+                          
+                          // Ext.MessageBox.alert('storeGrid.getTotalCount()',storeGrid.getTotalCount()); 
+                          }//callback 
+                         });
+          }//beforerender
+ }//listeners

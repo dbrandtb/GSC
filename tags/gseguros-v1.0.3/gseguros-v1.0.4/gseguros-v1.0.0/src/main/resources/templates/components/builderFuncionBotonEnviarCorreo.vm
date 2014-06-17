@@ -1,0 +1,121 @@
+
+function enviarCorreo( html ) {
+
+	// *****************************************************
+	// Items de FORMPANEL
+	// *****************************************************
+	var direccionEmail = new Ext.form.TextField({
+		id: 'addressId',
+		name : 'correoName',
+		labelSeparator: ':',
+		fieldLabel: 'Direcci&oacute;n de correo electr&oacute;nico',
+		tooltip: 'Direcci&oacute;n de correo electr&oacute;nico',
+		allowBlank: false,
+		vtype: 'email',
+		anchor: '78%',
+		width: 200,
+		emailText: 'Este campo deber&iacute;a ser una direcci&oacute;n email con el formato usuario@dominio.com'
+	});
+	
+	var direccionEmailCC = new Ext.form.TextField({
+		id: 'addressIdCC',
+		name : 'correoCCName',
+		labelSeparator: ':',
+		fieldLabel: 'CC',
+		tooltip: 'Direcci&oacute;n de correo electr&oacute;nico con copia',
+		allowBlank: true,
+		vtype: 'email',
+		anchor: '78%',
+		emailText: 'Este campo deber&iacute;a ser una direcci&oacute;n email con el formato usuario@dominio.com'
+	});
+	
+	var comentario = new Ext.form.TextArea({
+		id: 'comentario',
+		name: 'comentarioName',
+		labelSeparator: ':',
+		fieldLabel: 'Comentario',
+		tooltip: 'Comentario',
+		allowBlank: true,
+		width : 200,
+		grow: false,
+		preventScrollbars: true  
+	});
+	// *****************************************************
+	// FIN Items de FORMPANEL
+	// *****************************************************
+
+	// *****************************************************
+	// FORMPANEL para la ventana de envio de correo
+	// *****************************************************
+	var formPanel = new Ext.FormPanel ({
+		id: 'enviarCorreoForm',
+		url : _ACTION_ENVIAR_CORREO,
+		border: false,
+		frame: true,
+		width : 470,
+		buttonAlign: 'center',
+		baseCls: 'x-plain',
+		labelWidth : 150,
+		labelAlign: 'right',
+		bodyStyle: 'padding: 10px; background: white',
+		items : [ direccionEmail, direccionEmailCC, comentario ]
+	});
+
+	// *****************************************************
+	// WINDOW para envio de correo
+	// *****************************************************
+	var window = new Ext.Window({
+		id: 'windowEnvCorreoElectronicoId',
+		title: 'Enviar Correo Electr&oacute;nico',
+		width: 500,
+		height: 250,
+		minWidth: 300,
+		minHeight: 250,
+		layout: 'fit',
+		plain: true,
+		modal: true,
+		bodyStyle: 'padding:5px;',
+		buttonAlign: 'center',
+		items: formPanel,
+		buttons : [{
+			id: 'windowEnvCorreoElectronicoButtonsEnviarId',
+			text: 'Enviar Correo',
+			tooltip: 'Envia Correo',
+			disabled: false,
+			handler : function() {
+				if ( formPanel.form.isValid() ) {
+					formPanel.form.submit({
+        	               	url: _ACTION_ENVIAR_CORREO,
+        	               	params:{
+        	               		correo: Ext.getCmp('addressId').getValue(),
+        	               		CC: Ext.getCmp('addressIdCC').getValue(),
+        	               		comentario: Ext.getCmp('comentario').getValue(),
+        	               		adjunto: html
+        	               	},
+            	           	waitTitle:'Espere',
+                	       	waitMsg:'Procesando',
+                        	failure: function(form, action) {
+                       	    	Ext.MessageBox.alert('Error','Error al enviar correo electr&oacute;nico. Verifique que sean direcciones de correo existentes');
+                       	    	window.close();
+                       		},
+                       		success: function(form, action) {
+	                           	Ext.MessageBox.alert('Aviso', 'La operaci&oacute;n ha sido exitosa');
+                           		window.close();
+                       		}
+                    });
+				} else {
+					Ext.MessageBox.alert( 'Aviso', 'Complete la informaci&oacute;n requerida' );                        
+				}
+			}
+		},{
+			id: 'windowEnvCorreoElectronicoButtonsEnviarId',
+			text: 'Cancelar',                
+			tooltip: 'Cancelar',    
+			handler : function() {
+				window.close();
+			}
+		}]
+	});
+          
+	window.show();
+}
