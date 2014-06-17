@@ -514,12 +514,12 @@
 																	var json = Ext
 																			.decode(response.responseText);
 																	if (json.success == true) {
-																		Ext.Msg
+																		centrarVentanaInterna(Ext.Msg
 																				.show({
 																					title : 'Datos guardados',
 																					msg : 'Se han guardado las coberturas',
 																					buttons : Ext.Msg.OK
-																				});
+																				}));
 																		expande(2);
 																	} else {
 																		Ext.Msg
