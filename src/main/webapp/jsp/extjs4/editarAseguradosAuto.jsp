@@ -180,27 +180,19 @@ Ext.onReady(function()
 	
 	
 	var editorRfc;
-	var editorWswxiper;
-	var editorCdperson;
-	var editorCdideper;
 	
 	_p20_columnasGridAsegurados.forEach(function(element, index, array){
 		//debug('Columna ITerada: ', element.dataIndex);
 		if('cdrfc' == element.dataIndex){
 			editorRfc = element;
-		}else if('swexiper' == element.dataIndex){
-			editorWswxiper = element;
-		}else if('cdperson' == element.dataIndex){
-			editorCdperson = element;
-		}else if('cdideper' == element.dataIndex){
-			editorCdideper = element;
 		}
 	});
 	
 	editorRfc.editor.on('change', function(){
-		editorWswxiper.editor.setValue('N');
-		editorCdperson.editor.setValue('');
-		editorCdideper.editor.setValue('');
+		var recordRfc = _p20_gridAsegurados.getSelectionModel().getLastSelected();
+		recordRfc.set('swexiper', 'N')
+		recordRfc.set('cdperson', '')
+		recordRfc.set('cdideper', '')
 	});
 	
 	Ext.create('Ext.panel.Panel',
