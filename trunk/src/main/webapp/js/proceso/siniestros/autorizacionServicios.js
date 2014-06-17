@@ -627,11 +627,11 @@ Ext.onReady(function() {
     	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
     	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
     	                	if(tiempoEsperaICD == "24"){
-    	                		tiempo = '2 años';
+    	                		tiempo = '2 años.';
     	                	}else if(tiempoEsperaICD == "60"){
-    	                		tiempo = '5 años';
+    	                		tiempo = '5 años.';
     	                	}else{
-    	                		tiempo = '10 meses';
+    	                		tiempo = '10 meses.';
     	                	}
     	                	
     	                	notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + (mensajeInicial +tiempo);
@@ -688,11 +688,11 @@ Ext.onReady(function() {
     	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
     	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
     	                	if(tiempoEsperaICD == "24"){
-    	                		tiempo = '2 años';
+    	                		tiempo = '2 años.';
     	                	}else if(tiempoEsperaICD == "60"){
-    	                		tiempo = '5 años';
+    	                		tiempo = '5 años.';
     	                	}else{
-    	                		tiempo = '10 meses';
+    	                		tiempo = '10 meses.';
     	                	}
     	                	//alert("Movimiento no procede por padecimiento de periodo de espera");
     	                	notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + (mensajeInicial +tiempo);
@@ -779,11 +779,11 @@ Ext.onReady(function() {
     	                // EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
     	                if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
     	                	if(tiempoEsperaICD == "24"){
-    	                		tiempo = '2 años';
+    	                		tiempo = '2 años.';
     	                	}else if(tiempoEsperaICD == "60"){
-    	                		tiempo = '5 años';
+    	                		tiempo = '5 años.';
     	                	}else{
-    	                		tiempo = '10 meses';
+    	                		tiempo = '10 meses.';
     	                	}
     	                	
     	                	//panelEquipoQuirurgicoBase.getForm().reset();
