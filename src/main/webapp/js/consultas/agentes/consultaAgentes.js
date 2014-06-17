@@ -416,12 +416,12 @@ Ext.onReady(function() {
                                         if(jsonResp.success==true){
                                         	contadorGral=0;
                                             datosInternos = [];
-                                            Ext.Msg.show({
+                                            centrarVentanaInterna(Ext.Msg.show({
                                                 title:'Guardado',
                                                 msg: 'Se modificaron los datos de los agentes',
                                                 buttons: Ext.Msg.OK,
                                                 icon: Ext.Msg.OK
-                                            });
+                                            }));
                                             expande(2);
                                         }
                                         else{
