@@ -2249,12 +2249,14 @@ Ext.onReady(function() {
                         /*OBTENEMOS LOS VALORES*/
 			        	if(json.listaConsultaTablas[i].cdtipaut==1)
                     	{
+                    		var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
                         	var rec = new modelListadoTablas({
                         		nmautser: json.listaConsultaTablas[i].nmautser,
                         		cdtipaut:json.listaConsultaTablas[i].cdtipaut,
                         		cdmedico:json.listaConsultaTablas[i].cdmedico,
-                        		nombreMedico:json.listaConsultaTablas[i].nombreMedico,
-                        		desccpt:json.listaConsultaTablas[i].desccpt,
+                        		nombreMedico: medicoCompleto,
+                        		desccpt:cptCompleto,
                         		precio:json.listaConsultaTablas[i].precio,
                         		cdtipmed:json.listaConsultaTablas[i].cdtipmed,
                         		cdcpt:json.listaConsultaTablas[i].cdcpt,
@@ -2266,12 +2268,15 @@ Ext.onReady(function() {
                     	}
                         else
                     	{
+                        	var medicoCompleto = json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
+                        	
                         	var rec = new modelListadoTablas({
                         		nmautser: json.listaConsultaTablas[i].nmautser,
                         		cdtipaut:json.listaConsultaTablas[i].cdtipaut,
                         		cdmedico:json.listaConsultaTablas[i].cdmedico,
-                        		nombreMedico:json.listaConsultaTablas[i].nombreMedico,
-                        		desccpt:json.listaConsultaTablas[i].desccpt,
+                        		nombreMedico:medicoCompleto,
+                        		desccpt:cptCompleto,
                         		precio:json.listaConsultaTablas[i].precio,
                         		cdtipmed:json.listaConsultaTablas[i].cdtipmed,
                         		cdcpt:json.listaConsultaTablas[i].cdcpt,
