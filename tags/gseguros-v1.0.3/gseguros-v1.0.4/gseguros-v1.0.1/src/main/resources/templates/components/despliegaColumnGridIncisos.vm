@@ -1,6 +1,0 @@
-var cm = new Ext.grid.ColumnModel([
-		new Ext.grid.RowNumberer(),
-        #foreach($column in $parameters.listColumns)
-    		$column.toString() #if($velocityCount < $parameters.listColumns.size()),#end
-		#end
-	]); 

@@ -1,7 +1,0 @@
-
-items:[{
-			xtype:'textfield',
- 			fieldLabel: '$parameters.componente',
- 			name:'ejemplo1'
- 
- }]
