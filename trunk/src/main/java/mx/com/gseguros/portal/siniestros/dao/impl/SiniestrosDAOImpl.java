@@ -3090,4 +3090,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 
+
+	@Override
+	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdtabla_i", nomTabla);
+		params.put("pv_otclave_i", valorICDCPT);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneMesesTiempoEspera(getDataSource()), params);
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneMesesTiempoEspera extends StoredProcedure {
+    	
+    	protected ObtieneMesesTiempoEspera(DataSource dataSource) {
+    		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_MESES_TESPERA");
+    		declareParameter(new SqlParameter("pv_cdtabla_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_otclave_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

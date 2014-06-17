@@ -376,4 +376,5 @@ public interface SiniestrosDAO {
 	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception;
 
 	public void eliminacionDocumentosxTramite(String ntramite) throws Exception;
+	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
 }

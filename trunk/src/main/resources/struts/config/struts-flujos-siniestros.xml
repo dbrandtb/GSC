@@ -513,6 +513,17 @@
 			</result>
 		</action>
 		
+		<action name="obtieneMesesTiempoEspera" class="siniestrosAction"
+			method="obtieneMesesTiempoEspera">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mesesTiempoEspera
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaExclusionPenalizacion" class="siniestrosAction"
 			method="validaExclusionPenalizacion">
 			<result type="json">
