@@ -104,11 +104,11 @@ Ext.onReady(function()
                             success:function()
                             {
                                 form.setLoading(false);
-                                Ext.Msg.show({
+                                centrarVentanaInterna(Ext.Msg.show({
                                     title:'Cambios guardados',
                                     msg: 'Sus cambios han sido guardados',
                                     buttons: Ext.Msg.OK
-                                });
+                                }));
                                 expande(2);
                             },
                             failure:function(){
@@ -195,4 +195,4 @@ Ext.onReady(function()
     //////////////////////
 });
 </script>
-<div id="maindivpantallavalosit<s:property value='smap1.timestamp' />" style="min-height:150px;"></div>
+<div id="maindivpantallavalosit<s:property value='smap1.timestamp' />" style="height:1200px;"></div>
