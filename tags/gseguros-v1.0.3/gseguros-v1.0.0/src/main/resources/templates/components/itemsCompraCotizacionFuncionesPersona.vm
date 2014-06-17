@@ -1,4 +1,0 @@
-
-#foreach($textfield in $parameters.LISTA_COMBOS_FUNCIONES_POLIZA)
-       $textfield#if($velocityCount < $parameters.LISTA_COMBOS_FUNCIONES_POLIZA.size()), #end
-#end
