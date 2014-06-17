@@ -1,0 +1,97 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="catalogos" extends="json-default" namespace="/catalogos">
+	
+	   <action name="obtieneCatalogo" class="catalogoAction" method="obtieneCatalogo">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    lista.*,
+                    success
+                </param>
+            </result>
+	   </action>
+
+        <action name="clausulas">
+          <result>/jsp/catalogos/clausulas.jsp</result>
+        </action>
+
+        <action name="cargaClausulas" class="clausuladoAction" method="cargaClausulas">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    listaGenerica.*,
+                    success
+                </param>
+            </result>
+        </action>
+
+        <action name="consultaClausulas" class="clausuladoAction" method="consultaClausulas">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    listaGenerica.*,
+                    success
+                </param>
+            </result>
+        </action>
+
+        <action name="insertaClausula" class="clausuladoAction" method="insertaClausula">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success
+                </param>
+            </result>
+        </action>
+        <action name="consultaClausulaDetalle" class="clausuladoAction" method="consultaClausulaDetalle">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    msgResult.*,
+                    success
+                </param>
+            </result>
+        </action>
+        <action name="actualizaClausula" class="clausuladoAction" method="actualizaClausula">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="agregaUsuarios">
+            <result>/jsp/catalogos/agregaUsuarios.jsp</result>
+        </action>
+
+        <action name="gestionUsuarios" class="usuarioAction" method="cargaPantallaUsuarios">
+            <result>/jsp-script/catalogos/usuarios.jsp</result>
+        </action>
+        <action name="busquedaUsuarios" class="usuarioAction" method="obtieneUsuarios">
+   			<result type="json">
+            </result>
+        </action>
+        
+        <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
+            <result type="json">
+            </result>
+        </action>
+        
+        <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
+            <result type="json">
+                <!-- <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    msgResult.*,
+                    success
+                </param> -->
+            </result>
+        </action>
+
+	</package>
+
+</struts>

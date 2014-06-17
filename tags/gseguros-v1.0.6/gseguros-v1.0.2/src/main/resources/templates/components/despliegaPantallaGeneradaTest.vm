@@ -1,0 +1,238 @@
+#*	
+	var TABAPOYOMARCAStore = new Ext.data.Store({
+	proxy : new Ext.data.HttpProxy({
+		url : 'flujocotizacion/obtenerListaComboOttabval.action'
+	}),
+	reader : new Ext.data.JsonReader({
+		root : 'itemList',
+		id : 'value'
+	}, [{
+		name : 'value',
+		type : 'string',
+		mapping : 'value'
+	}, {
+		name : 'label',
+		type : 'string',
+		mapping : 'label'
+	}]),
+	remoteSort : true,
+	baseParams : [{
+		ottabval : ' '
+	}, {
+		valAnterior : ' '
+	}, {
+		valAntAnt : ' '
+	}],
+	sortInfo : {
+		field : 'value',
+		direction : 'DESC'
+	}
+});
+var TABAPOYOStore = new Ext.data.Store({
+	proxy : new Ext.data.HttpProxy({
+		url : 'flujocotizacion/obtenerListaComboOttabval.action'
+	}),
+	reader : new Ext.data.JsonReader({
+		root : 'itemList',
+		id : 'value'
+	}, [{
+		name : 'value',
+		type : 'string',
+		mapping : 'value'
+	}, {
+		name : 'label',
+		type : 'string',
+		mapping : 'label'
+	}]),
+	remoteSort : true,
+	baseParams : [{
+		ottabval : ' '
+	}, {
+		valAnterior : ' '
+	}, {
+		valAntAnt : ' '
+	}],
+	sortInfo : {
+		field : 'value',
+		direction : 'DESC'
+	}
+});
+var TABAPOYODESCRIPCIONStore = new Ext.data.Store({
+	proxy : new Ext.data.HttpProxy({
+		url : 'flujocotizacion/obtenerListaComboOttabval.action'
+	}),
+	reader : new Ext.data.JsonReader({
+		root : 'itemList',
+		id : 'value'
+	}, [{
+		name : 'value',
+		type : 'string',
+		mapping : 'value'
+	}, {
+		name : 'label',
+		type : 'string',
+		mapping : 'label'
+	}]),
+	remoteSort : true,
+	baseParams : [{
+		ottabval : ' '
+	}, {
+		valAnterior : ' '
+	}, {
+		valAntAnt : ' '
+	}],
+	sortInfo : {
+		field : 'value',
+		direction : 'DESC'
+	}
+});
+var simple = new Ext.FormPanel({
+	renderTo : 'items',
+	labelWidth : 75,
+	id : 'simpleForm',
+	url : 'flujocotizacion/generaCotizacion.action',
+	layout : 'form',
+	title : 'COTIZACION',
+	bodyStyle : 'padding:5px 5px 0',
+	autoHeight : true,
+	labelAlign : 'right',
+	labelWidth : 120,
+	defaultType : 'textfield',
+	title : "Form",
+	items : [{
+		xtype : "fieldset",
+		title : "Legend",
+		autoHeight : true,
+		items : [{
+			displayField : "label",
+			editable : false,
+			emptyText : "Seleccione",
+			fieldLabel : "Marca",
+			forceSelection : true,
+			hiddenName : "hmarca",
+			id : "marca",
+			store : TABAPOYOMARCAStore,
+			labelSeparator : "",
+			listWidth : 200,
+			mode : "local",
+			name : "marca",
+			onSelect : function(record, index, skipCollapse) {
+				if (this.fireEvent('beforeselect', this, record, index) !== false) {
+					this.setValue(record.data[this.valueField
+							|| this.displayField]);
+					if (!skipCollapse) {
+						this.collapse();
+					}
+					this.lastSelectedIndex = (index + 1);
+					this.fireEvent('select', this, record, index);
+				}
+				Ext.getCmp('labelmarca').setValue(record.get('label'));
+			},
+			selectOnFocus : false,
+			triggerAction : "",
+			typeAhead : false,
+			valueField : "",
+			width : 0,
+			xtype : "combo"
+		}, {
+			displayField : "label",
+			editable : false,
+			emptyText : "Seleccione",
+			fieldLabel : "Modelo",
+			forceSelection : true,
+			hiddenName : "hmodelo",
+			id : "modelo|TABAPOYO",
+			store : TABAPOYOStore,
+			labelSeparator : "",
+			listWidth : 200,
+			mode : "local",
+			name : "modelo",
+			onSelect : function(record, index, skipCollapse) {
+				if (this.fireEvent('beforeselect', this, record, index) !== false) {
+					this.setValue(record.data[this.valueField
+							|| this.displayField]);
+					if (!skipCollapse) {
+						this.collapse();
+					}
+					this.lastSelectedIndex = (index + 1 );
+					this.fireEvent('select', this, record, index);
+				}
+				Ext.getCmp('labelmodelo').setValue(record.get('label'));
+			},
+			selectOnFocus : false,
+			triggerAction : "",
+			typeAhead : false,
+			valueField : "",
+			width : 0,
+			xtype : "combo"
+		}, {
+			displayField : "label",
+			editable : false,
+			emptyText : "Seleccione",
+			fieldLabel : "Descripcion",
+			forceSelection : true,
+			hiddenName : "hdescripcion",
+			id : "descripcion",
+			store : TABAPOYODESCRIPCIONStore,
+			labelSeparator : "",
+			listWidth : 200,
+			mode : "local",
+			name : "descripcion",
+			onSelect : function(record, index, skipCollapse) {
+				if (this.fireEvent('beforeselect', this, record, index) !== false) {
+					this.setValue(record.data[this.valueField
+							|| this.displayField]);
+					if (!skipCollapse) {
+						this.collapse();
+					}
+					this.lastSelectedIndex = (index + 1);
+					this.fireEvent('select', this, record, index);
+				}
+				Ext.getCmp('labeldescripcion').setValue(record.get('label'));
+			},
+			selectOnFocus : false,
+			triggerAction : "",
+			typeAhead : false,
+			valueField : "",
+			width : 0,
+			xtype : "combo"
+		}, {
+			xtype : "textfield",
+			fieldLabel : "Text",
+			name : "textvalue"
+		}]
+	}]
+});
+Ext.getCmp('marca').on('select', function(combo, record, ind) {
+	Ext.getCmp('modelo').clearValue();
+	Ext.getCmp('descripcion').clearValue();
+	TABAPOYOStore.baseParams['ottabval'] = 'TABAPOYO';
+	TABAPOYOStore.baseParams['valAnterior'] = Ext.getCmp('marca').getValue();
+	TABAPOYOStore.baseParams['valAntAnt'] = '0';
+	TABAPOYOStore.load({
+		callback : function(r, options, success) {
+			if (!success) {
+				TABAPOYOStore.removeAll();
+			}
+		}
+	});
+});
+Ext.getCmp('modelo').on('select', function(combo, record, ind) {
+	Ext.getCmp('descripcion').clearValue();
+	TABAPOYODESCRIPCIONStore.baseParams['ottabval'] = 'TABAPOYODESCRIPCION';
+	TABAPOYODESCRIPCIONStore.baseParams['valAnterior'] = Ext.getCmp('modelo')
+			.getValue();
+	TABAPOYODESCRIPCIONStore.baseParams['valAntAnt'] = Ext.getCmp('marca')
+			.getValue();
+	TABAPOYODESCRIPCIONStore.load({
+		callback : function(r, options, success) {
+			if (!success) {
+				TABAPOYODESCRIPCIONStore.removeAll();
+			}
+		}
+	});
+});
+	
+	*#
+	
+	$parameters.item

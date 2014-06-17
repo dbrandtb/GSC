@@ -1,0 +1,5 @@
+[
+	#foreach($record in $parameters.listRecords)
+    		$record.toString() #if($velocityCount < $parameters.listRecords.size()),#end
+	#end
+]

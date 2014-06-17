@@ -1,0 +1,234 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mx.com.aon.kernel.service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.SituacionVO;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+
+/**
+ *
+ * @author Jair
+ */
+public interface KernelManagerSustituto {
+    public WrapperResultados calculaNumeroPoliza(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i) throws ApplicationException;
+    public WrapperResultados insertaMaestroPolizas(Map<String, String> parameters) throws ApplicationException;
+    public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException;
+    public WrapperResultados insertaPolisit(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String swreduci
+    		,String cdagrupa
+    		,String cdestado
+    		,Date   fefecsit
+    		,Date   fecharef
+    		,String cdgrupo
+    		,String nmsituaext
+    		,String nmsitaux
+    		,String nmsbsitext
+    		,String cdplan
+    		,String cdasegur
+    		,String accion) throws ApplicationException;
+    public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
+    public WrapperResultados insertaValoresSituaciones(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String accion
+    		,Map<String, String> otvalorValosit) throws ApplicationException;
+    public WrapperResultados actualizaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
+    public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados coberturasEnd(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException;
+    public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
+    public List<Map<String,String>>    obtenerResultadosCotizacion2(Map<String,String> params) throws ApplicationException;
+    public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
+    public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatripol(String[] args) throws ApplicationException;
+    public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
+    public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
+    public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
+    /**
+     * PKG_SATELITES.P_GET_INFO_MPOLIZAS
+     * @return cdusuari,cdunieco,dsunieco,cdperson,cdagente,
+     * nombre,cdramo,dsramo,nmcuadro,cdtipsit,fesolici,nmsolici,feefecto,feproren,ottempot,cdperpag
+     */
+    public Map<String,Object> getInfoMpolizas(Map<String,Object>parameters) throws ApplicationException;
+    /**
+     * PKG_SATELITES.P_GET_INFO_MPOLIZAS
+     * @return cdusuari,cdunieco,dsunieco,cdperson,cdagente,
+     * nombre,cdramo,dsramo,nmcuadro,cdtipsit,fesolici,nmsolici,feefecto,feproren,ottempot,cdperpag
+     */
+    public Map<String,Object> getInfoMpolizas(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String cdusuari) throws ApplicationException;
+    public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
+	public List<Map<String, Object>> obtenerAsegurados(Map<String, String> map1) throws ApplicationException;
+	public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException;
+	public WrapperResultados pMovTvalopol(Map<String, String> parameters) throws ApplicationException;
+	public WrapperResultados pMovTvalogar(Map<String, String> parameters) throws ApplicationException;
+	public WrapperResultados pMovTvaloper(Map<String, String> parameters) throws ApplicationException;
+	//requiere de su propio catch si no hay datos:
+	public Map<String,Object> pGetTvalopol(Map<String,String> parameters) throws ApplicationException;
+	public String generaCdperson() throws ApplicationException;
+	public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException;
+	public WrapperResultados movMpoliper(Map<String,Object> parameters) throws ApplicationException;
+	public WrapperResultados borraMpoliper(Map<String,Object> parameters) throws ApplicationException;
+	public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException;
+	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
+	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;
+	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException;
+	public List<ComponenteVO> obtenerTatrigar(Map<String, String> smap1) throws ApplicationException;
+	//requiere de su propio catch si no hay datos:
+	public Map<String, Object> obtenerValoresTatrigar(Map<String, String> param) throws ApplicationException;
+	public List<ComponenteVO> obtenerTatriper(Map<String, String> smap1) throws ApplicationException;
+	//requiere de su propio catch si no hay datos:
+	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
+	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_MOV_MDOMICIL
+	 */
+	public WrapperResultados pMovMdomicil(Map<String, String> paramDomicil) throws ApplicationException;
+	public WrapperResultados emitir(Map<String, Object> paramEmi) throws ApplicationException;
+	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException;
+	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>params) throws ApplicationException;
+	public List<Map<String, String>> obtenerListaDocumentos(Map<String, String> paramsGetDoc) throws ApplicationException;
+	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException;
+	public WrapperResultados movMPoliage(Map<String, Object> param) throws ApplicationException;
+	public List<Map<String, String>> cargarTiposClausulasExclusion() throws ApplicationException;
+	public List<Map<String, String>> obtenerExclusionesPorTipo(Map<String, String> smap1) throws ApplicationException;
+	public Map<String, String> obtenerHtmlClausula(Map<String, String> paramObtenerHtml) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLICOT
+	 */
+	public WrapperResultados PMovMpolicot(Map<String, String> smap1) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLICOT
+	 */
+	public WrapperResultados PMovMpolicot(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem
+			,String status
+			,String cdtipcla
+			,String swmodi
+			,String dslinea
+			,String accion) throws ApplicationException;
+	public List<Map<String, String>> obtenerPolicot(Map<String, String> smap1) throws ApplicationException;
+	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
+	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException;
+	public List<Map<String, String>> loadMesaControlSuper(Map<String,String>params) throws ApplicationException;
+	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados obtenDatosRecibosDxN(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;
+	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados mesaControlUpdateSolici(String ntramite,String nmsolici) throws ApplicationException;
+	public WrapperResultados mesaControlUpdateStatus(String ntramite,String status) throws ApplicationException;
+	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException;
+	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> smap1) throws ApplicationException;
+	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException;
+	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;
+	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException;
+	public Map<String, Object> obtieneValositSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac) throws ApplicationException;
+	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException;
+	public WrapperResultados borrarMpoliper(Map<String, String> param) throws ApplicationException;
+	public List<Map<String, String>> obtenerRamos(String cdunieco) throws ApplicationException;
+	public List<Map<String, String>> obtenerTipsit(String cdunieco) throws ApplicationException;
+	public WrapperResultados movBitacobro(String cdunieco,String cdramo,String estado,String poliza,String codigo,String mensaje, String usuario) throws ApplicationException;
+	public List<Map<String, String>> PValInfoPersonas(Map<String,String> params) throws ApplicationException;	
+	public WrapperResultados obtenerAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
+	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
+	 */
+	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
+	/**
+	 * pkg_satelites.valida_extraprima_situac
+	 */
+	public WrapperResultados validarExtraprima(Map<String, String> params) throws ApplicationException;
+	/**
+	 * pkg_satelites.valida_extraprima_situac
+	 */
+	public WrapperResultados validarExtraprimaSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac) throws ApplicationException;
+	/**
+	 * pkg_satelites.valida_extraprima_situac
+	 */
+	public WrapperResultados validarExtraprimaSituac(Map<String, String> params) throws ApplicationException;
+	/**
+	 * pkg_satelites.valida_extraprima_situac_read
+	 */
+	public WrapperResultados validarExtraprimaSituacRead(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem) throws ApplicationException;
+	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
+	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return nmsituac,cdrol,fenacimi,sexo,cdperson,nombre,segundo_nombre,Apellido_Paterno
+	 * ,Apellido_Materno,cdrfc,Parentesco,tpersona,nacional,swexiper
+	 * @throws ApplicationException
+	 */
+    public List<Map<String, Object>> obtenerAsegurados(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem) throws ApplicationException;
+    
+    public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException;
+}

@@ -1,0 +1,130 @@
+items:[{
+        xtype: 'grid',
+        id:'gridResultado',
+            store: getResultado(),
+            title: '<span style="color:#98012e;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Listado</span>',
+            stripeRows: true,
+            cm: cm,
+            //cls: 'alinear',
+            height:250,
+            width: 730,
+        	//autoExpandColumn: 'Aseguradora',
+            //viewConfig: {autoFill: true,forceFit:true},
+        
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                frame:true,
+                listeners: {                            
+                    rowselect: function(sm, row, rec) { 
+                        //var selectedId = storeGrid.data.items[row].id;
+                        //window.location.href = 'endoso.action'+'?id='+selectedId;
+                        
+                        var cdUnieco = rec.get('cdUnieco');
+                        var cdRamo = rec.get('cdRamo');
+                        var estado = rec.get('dsStatusPoliza');
+                        var nmPoliza = rec.get('nmPoliza');                        
+                        var aseguradora = rec.get('dsAseguradora');
+                        var producto = rec.get('dsProducto');
+                        var poliza = rec.get('dsPoliza'); 
+                        var dsNombre = rec.get('dsAsegurado');
+                        var nmPoliza = rec.get('nmPoliza');
+                        var cdUniAge = rec.get('cdUniAge');
+                        var myFecha = rec.get('feEfecto');
+                        var fechas= myFecha.slice(0,10);
+                        var fecha= fechas.split("-");
+                        var inciso = rec.get('inciso');
+                        var status = rec.get('status');
+                        var swCancel = rec.get('swCancel');
+
+                        var feEfecto = fecha[2]+'/'+fecha[1]+'/'+fecha[0];
+                        /*trozo = cadena.slice (4,9); 
+                        alert(myFecha);
+                        alert (fecha);
+                        alert (year);
+                        alert (month);
+                        alert (day);
+                        alert (feEfecto);*/
+                        myFecha= rec.get('feVencim');
+                        var fechas= myFecha.slice(0,10);
+                        var fecha= fechas.split("-");
+                        
+                        var feVencim = fecha[2]+'/'+fecha[1]+'/'+fecha[0];
+                            
+                        Ext.getCmp('detalle').on('click', function(){
+                            window.location.href = _CONTEXT+"/procesoemision/detallePoliza.action?"+"cdUnieco="+cdUnieco+"&cdRamo="+cdRamo+"&estado="+estado+"&nmPoliza="+nmPoliza+"&poliza="+poliza+"&producto="+producto+"&aseguradora="+aseguradora;
+                        });
+                        
+					    Ext.getCmp('emisionEndoso').on('click',function(){    
+					    	if (sm.getSelected().get('status') == 'CANCELADA' ||
+					    			sm.getSelected().get('status') == 'Cancelada'){
+								Ext.MessageBox.alert('Aviso', 'La p&oacute;liza ya est&aacute; cancelada');						                                                                                    
+						    } else {
+						    		var params  = "cdRamo="+cdRamo;
+								    var conn = new Ext.data.Connection();
+					        			
+					                	conn.request ({
+					                		url:_ACTION_VALIDA_ENDOSO,
+					                		method: 'POST',
+					                		successProperty : '@success',
+					                		params : params,
+					                		callback: function (options, success, response) {    
+					                			validacion = Ext.util.JSON.decode(response.responseText).validaEndoso;
+					                			if(validacion==true){                				
+					                				window.location.href = _CONTEXT+"/flujoendoso/detallePoliza.action?cdUnieco="+cdUnieco+"&cdRamo="+cdRamo+"&estado="+estado+"&nmPoliza="+nmPoliza+"&poliza="+poliza+"&producto="+producto+"&aseguradora="+aseguradora+"&inciso="+inciso+"&proc=end";
+					                			}else{
+					                				Ext.MessageBox.alert('Aviso', 'Para el producto seleccionado no se permiten endosos');					                			
+					                			}                		                	
+											}
+					                	});														    
+						    }
+					    });
+					    
+					    Ext.getCmp('cancelar').on('click',function(){
+					        if (sm.getSelected().get('status') != 'CANCELADA'){
+					        	if (sm.getSelected().get('swCancel') != 'S'){
+						        	Ext.MessageBox.alert('Atenci&oacute;n', 'El producto no permite la cancelaci&oacute;n de p&oacute;lizas');
+						        } else {
+									window.location = _ACTION_IR_CANCELACION_MANUAL+ '?nombreAsegurado=' + dsNombre + '&cdUnieco=' + cdUnieco +'&dsUnieco=' + aseguradora +'&cdRamo=' + cdRamo + '&dsRamo=' + producto +'&nmPoliza='+ nmPoliza +'&poliza=' + poliza + '&feEfecto=' + feEfecto +'&feVencim='+ feVencim +'&cdUniAge='+ cdUniAge;
+								}
+					        } else { 
+					        	Ext.MessageBox.alert('P&oacute;liza cancelada', 'La p&oacute;liza ya est&aacute; cancelada');
+					        }
+					    });    
+                    }
+                }
+            }),
+             buttonAlign: 'center',
+             buttons:[{
+                    id:'detalle',
+                    text:'Detalle',
+                    tooltip:'Detalle de la opcion seleccionada'                           
+                    },{
+                    text:'Exportar',
+                    tooltip:'Exporta opciones',
+                    handler: exportButton(_ACTION_EXPORT)
+                	},{
+                	id:'emisionEndoso',
+                    text:'Endoso',
+                    tooltip:'Endoso'
+                    },{
+                    id: 'cancelar',
+                    text:'Cancelar',
+                    tooltip:'Cancelaci&oacute;n Manual'
+                }],
+            bbar: new Ext.PagingToolbar({
+            pageSize: 20,
+            store: storeGrid,
+            displayInfo: true,
+    		displayMsg: 'Registros mostrados {0} - {1} de {2}',
+    		emptyMsg: 'No hay registros para mostrar',
+    		beforePageText: 'P&aacute;gina',
+    		afterPageText: 'de {0}'
+             /*items:['-', {
+                text: 'Exportar'
+            
+            },{
+                text: 'Reportes'
+            }]*/
+            
+                  })
+        }]//items

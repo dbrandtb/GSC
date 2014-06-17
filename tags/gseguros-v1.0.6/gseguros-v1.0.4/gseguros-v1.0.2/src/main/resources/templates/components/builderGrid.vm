@@ -1,0 +1,69 @@
+items:[{
+		xtype: 'grid',
+		id:'gridResultado',
+            store: new Ext.data.Store({
+		            proxy: new Ext.data.HttpProxy({
+		            url: 'flujocotizacion/getGridTest.action'         
+		            }),
+		            reader:new Ext.data.JsonReader({    
+        				   root:'dataGrid',
+        				   totalProperty: 'totalCount',
+        				   successProperty : '@success',
+        				   id: 'cdConjunto'
+        					},
+						    [
+						        {name: 'cdConjunto',  type: 'string',  mapping:'cdConjunto'},
+						        {name: 'nombreConjunto',  type: 'string',  mapping:'nombreConjunto'},
+						        {name: 'descripcion',  type: 'string',  mapping:'descripcion'},
+						        {name: 'proceso',  type: 'string',  mapping:'proceso'},
+						        {name: 'cliente',  type: 'string',  mapping:'cliente'}                    
+						    ]
+    				), 
+		            remoteSort: true,
+		            sortInfo:{ field:'cdConjunto', direction:'DESC' }
+		        	}),
+
+            title: 'Busqueda de Registros',
+            stripeRows: true,
+            cm: new Ext.grid.ColumnModel([
+        		new Ext.grid.RowNumberer(),
+	            {header: "ClaveConjunto",      dataIndex:'cdConjunto',  width: 120, sortable:true,  locked:false,   id:'cdConjunto', hidden:true},          
+	            {header: "Nombre del conjunto",   dataIndex:'nombreConjunto',  width: 150, sortable:true},
+	            {header: "Descripción",dataIndex:'descripcion',  width: 150, sortable:true},
+	            {header: "Proceso",       dataIndex:'proceso',  width: 150, sortable:true},
+	            {header: "Cliente",       dataIndex:'cliente',  width: 150, sortable:true}
+                                
+   			 ]),
+            cls: 'alinear',
+            height:250,
+            width:600,
+            viewConfig: {autoFill: true,forceFit:true},
+        
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {                            
+                    rowselect: function(sm, row, rec) { 
+                    windowDetalle.show();
+                    Ext.getCmp('detalleFormPanel').getForm().submit();
+                     Ext.getCmp('detalleFormPanel').getForm().loadRecord(rec);
+                    var selectedId = storeGrid.data.items[row].id;
+                    Ext.get('id').dom.value=selectedId;
+                    }
+                }
+            })
+     
+   }]
+   ,buttons: [{  
+   			xtype: 'button',
+	      	text:'Regresar',
+	        id:'regresar', ///grid consulta
+	        handler: function() {
+  				 window.location  = 'cotizacionEntrada.action';
+            }//end handler
+    }]
+    ,listeners: {
+            beforerender  : function() {
+                        Ext.getCmp('gridResultado').store.load();
+                        
+          }//beforerender
+       }//listeners

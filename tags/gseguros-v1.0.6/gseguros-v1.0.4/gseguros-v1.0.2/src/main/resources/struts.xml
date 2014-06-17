@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <!-- jtezva agregado para monitorear el progreso de subir archivo -->
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="monitored" class="mx.com.gseguros.portal.general.util.CustomMonitoredMultiPartRequest" scope="default" />
+    <!-- jtezva agregado para monitorear el progreso de subir archivo -->
+    
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
+
+    <include file="struts/config/struts-catalogos.xml"/>
+    <include file="struts/config/struts-consultas-poliza.xml"/>
+    <include file="struts/config/struts-documentosPoliza.xml"/>
+    <include file="struts/config/struts-flujos-cancelacion.xml"/>
+    <include file="struts/config/struts-flujos-cotizacion.xml"/>
+    <include file="struts/config/struts-flujos-emision.xml"/>
+    <include file="struts/config/struts-flujos-endosos.xml"/>
+    <include file="struts/config/struts-flujos-rehabilitacion.xml"/>
+    <include file="struts/config/struts-flujos-siniestros.xml"/>
+    <include file="struts/config/struts-general.xml"/>
+    <include file="struts/config/struts-mesacontrol.xml"/>
+    <include file="struts/config/struts-portal.xml"/>
+    <include file="struts/config/struts-seguridad.xml"/>
+    <include file="struts/config/struts-confpantallas.xml"/>
+    
+    <include file="struts/config/struts-wizard.xml"/>
+	<include file="struts/config/struts-wizard-atributosVariables.xml"/>
+	<include file="struts/config/struts-wizard-definicion.xml"/>
+	<include file="struts/config/struts-wizard-planes.xml"/>
+	<include file="struts/config/struts-wizard-incisos.xml"/>
+	<include file="struts/config/struts-wizard-librerias.xml"/>
+	<include file="struts/config/struts-wizard-conceptosCobertura.xml"/>
+	<include file="struts/config/struts-wizard-sumaAsegurada.xml"/>
+	<include file="struts/config/struts-wizard-rol.xml"/>
+	<include file="struts/config/struts-wizard-tipoObjeto.xml"/>
+	<include file="struts/config/struts-wizard-datosFijos.xml"/>
+	<include file="struts/config/struts-wizard-reglaValidacion.xml"/>
+	<include file="struts/config/struts-wizard-expresiones.xml"/>
+	<include file="struts/config/struts-wizard-tablaCincoClaves.xml"/>
+	
+    
+    <package name="default" namespace="/" extends="json-default">
+        <interceptors>
+        
+            <interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+        
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception" />
+				<!--  <interceptor-ref name="alias" />-->
+                <interceptor-ref name="servletConfig" />
+                <interceptor-ref name="prepare" />
+                <!-- <interceptor-ref name="i18n" />
+                <interceptor-ref name="chain" />
+                <interceptor-ref name="modelDriven" />-->
+                <interceptor-ref name="fileUpload" />              
+                <interceptor-ref name="staticParams" />
+                <interceptor-ref name="params" />
+                <interceptor-ref name="conversionError" />
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+            </interceptor-stack>
+
+            <interceptor-stack name="secureStack">
+                <interceptor-ref name="authenticationInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            
+        </interceptors>
+        
+        <default-interceptor-ref name="secureStack" />
+        
+        <global-results>
+            <result name="denied">/jsp/extjs4/denegado.jsp</result>
+	    <result name="login">/jsp/portal/login.jsp</result>
+            <result name="datosPoliza">/jsp/portal/login.jsp</result>
+        </global-results>
+
+		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
+			<result>/jsp/portal/portal.jsp</result>
+		</action>
+        
+        <action name="obtieneMenuPrincipal" class="menuAction" method="llenadoMenuPrincipal">
+            <result name="input">/jsp/menu/menu.jsp</result>
+            <result name="success" type="json">
+                <param name="root">listaMenu</param>
+            </result>
+        </action>
+        
+        <action name="obtieneMenuVertical" class="menuAction" method="llenadoMenuPrincipal">
+            <result name="input">/jsp/menu/menu.jsp</result>
+            <result name="success" type="json">
+                <param name="root">listaMenuVertical</param>
+            </result>
+        </action>
+        
+        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
+	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+	    	<exception-mapping result="success" exception="java.sql.SQLException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+			<result name="success">/jsp/portal/treeRolElemento.jsp</result>
+			<result name="load" type="redirectAction">
+	            <param name="actionName">load</param>
+	            <param name="namespace">/</param>
+	        </result>
+		</action>		
+		
+		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
+			<result name="success" type="json">			
+			<param name="root">listaRolCliente</param>
+			</result>
+		</action>
+
+		<action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
+			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
+			<result name="input">/jsp/portal/treeRolElemento.jsp</result>
+			<result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		
+		
+		<!-- NUEVOS -->
+		
+        <action name="dinosaurio" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
+            <result name="success">/jsp/portal/testFileUpload.jsp</result>
+        </action>
+        <action name="dinosaurio2" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json"/>
+        </action>
+
+
+        
+        <action name="cotizacionVital" class="cotizacionVital" method="entrar">
+            <result name="gb">/jsp/extjs4/aseguradosGB.jsp</result>
+            <result name="success">/jsp/extjs4/asegurados.jsp</result>
+            <result name="input">/error.jsp</result>
+        </action>
+        
+        <!-- jtezva subir archivo -->
+        <action name="subirArchivoMostrarPanel" class="beanSubirArchivo" method="mostrarPanel">
+            <result name="success">/jsp/portal/testFileUpload.jsp</result>
+        </action>
+        <action name="subirArchivoPonerLlaveSesion" class="beanSubirArchivo" method="ponerLlaveSesion">
+            <result name="success" type="json" />
+        </action>
+        <action name="subirArchivo" class="beanSubirArchivo" method="subirArchivo">
+            <result name="success">/jsp/extjs4/subirArchivoReceptor.jsp</result>
+        </action>
+        <action name="subirArchivoMostrarBarra" class="beanSubirArchivo" method="mostrarBarra">
+            <result name="success">/jsp/extjs4/subirArchivoBarra.jsp</result>
+        </action>
+        <action name="jsonObtenerProgreso" class="beanSubirArchivo" method="jsonObtenerProgreso">
+            <result name="success" type="json" />
+        </action>
+        <!-- jtezva subir archivo -->
+        <action name="datosComplementarios" class="beanDatosComplementarios" method="mostrarPantalla">
+            <result name="success">/jsp/extjs4/complementarios.jsp</result>
+        </action>
+        <action name="guardarDatosComplementarios" class="beanDatosComplementarios" method="guardar">
+            <result name="success" type="json" />
+        </action>
+        <action name="cargarDatosComplementarios" class="beanDatosComplementarios" method="cargar">
+            <result name="success" type="json" />
+        </action>
+        <action name="editarAsegurados" class="beanDatosComplementarios" method="pantallaAsegurados">
+            <result name="success">/jsp/extjs4/editarAsegurados.jsp</result>
+        </action>
+        <action name="cargarComplementariosAsegurados" class="beanDatosComplementarios" method="cargarPantallaAsegurados">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarComplementariosAsegurados" class="beanDatosComplementarios" method="guardarPantallaAsegurados">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json"/>
+        </action>
+        <action name="editarCoberturas" class="beanDatosComplementariosCoberturas" method="pantallaCoberturas">
+            <result name="success">/jsp/extjs4/aseguradoCoberturas.jsp</result>
+        </action>
+        <action name="cargarPantallaCoberturas" class="beanDatosComplementariosCoberturas" method="cargarPantallaCoberturas">
+            <result name="success" type="json" />
+        </action>
+        <action name="generarCdperson" class="beanDatosComplementarios" method="generarCdperson">
+            <result name="success" type="json" />
+        </action>
+        <action name="detalleCotizacion" class="beanDatosComplementarios" method="detalleCotizacion">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarCoberturasUsuario" class="beanDatosComplementariosCoberturas" method="guardarCoberturasUsuario">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        <action name="obtenerCamposTatrigar" class="beanDatosComplementariosCoberturas" method="obtenerCamposTatrigar">
+            <result name="success" type="json" />
+        </action>
+        <action name="obtenerValoresTatrigar" class="beanDatosComplementariosCoberturas" method="obtenerValoresTatrigar">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarValoresTatrigar" class="beanDatosComplementariosCoberturas" method="guardarValoresTatrigar">
+            <result name="success" type="json" />
+        </action>
+        <action name="pantallaDomicilio" class="beanDatosComplementariosCoberturas" method="pantallaDomicilio">
+            <result name="success">/jsp/extjs4/aseguradoDomicilio.jsp</result>
+        </action>
+        <action name="pantallaExclusion" class="beanDatosComplementariosCoberturas" method="pantallaExclusion">
+            <result name="success">/jsp/extjs4/aseguradoExclusion.jsp</result>
+        </action>
+        <action name="pantallaValosit" class="beanDatosComplementariosCoberturas" method="pantallaValosit">
+            <result name="success">/jsp/extjs4/pantallaValosit.jsp</result>
+        </action>
+        <action name="pantallaValositLoad" class="beanDatosComplementariosCoberturas" method="pantallaValositLoad">
+            <result name="success" type="json" />
+        </action>
+        <action name="pantallaValositSave" class="beanDatosComplementariosCoberturas" method="pantallaValositSave">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarExclusiones" class="beanDatosComplementariosCoberturas" method="guardarExclusiones">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        <action name="cargarPantallaExclusion" class="beanDatosComplementariosCoberturas" method="cargarPantallaExclusion">
+            <result name="success" type="json" />
+        </action>
+        <action name="obtenerExclusionesPorTipo" class="beanDatosComplementariosCoberturas" method="obtenerExclusionesPorTipo">
+            <result name="success" type="json" />
+        </action>
+        <action name="cargarTiposClausulasExclusion" class="beanDatosComplementariosCoberturas" method="cargarTiposClausulasExclusion">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarHtmlExclusion" class="beanDatosComplementariosCoberturas" method="guardarHtmlExclusion">
+            <result name="success" type="json" />
+        </action>
+        <action name="agregarExclusion" class="beanDatosComplementariosCoberturas" method="agregarExclusion">
+            <result name="success" type="json" />
+        </action>
+        <action name="cargarHtmlExclusion" class="beanDatosComplementariosCoberturas" method="cargarHtmlExclusion">
+            <result name="success" type="json" />
+        </action>
+        <action name="cargarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="cargarPantallaDomicilio">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="guardarPantallaDomicilio">
+            <result name="success" type="json" />
+        </action>
+        <action name="recotizar" class="beanDatosComplementarios" method="retarificar">
+            <result name="success" type="json" />
+        </action>
+        <action name="emitir" class="beanDatosComplementarios" method="emitir">
+            <result name="success" type="json" />
+        </action>
+        <action name="manualWScliente" class="beanDatosComplementarios" method="ejecutaWSManualCliente">
+            <result name="success" type="json" />
+        </action>
+        <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
+            <result name="success" type="json" />
+        </action>
+        <!-- <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
+            <result name="success" type="json" />
+        </action> -->
+        
+        <action name="agregarExclusionDetalle" class="beanDatosComplementariosCoberturas" method="agregarExclusionDetalle">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
+            <result name="success" type="json" />
+		</action>
+		
+		<action name="buscarPersonasRepetidas" class="beanDatosComplementarios" method="buscarPersonasRepetidas">
+		    <result name="success" type="json" />
+		</action>
+		
+		<action name="obtenerRamos" class="beanDatosComplementarios" method="obtenerRamos">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerTipsit" class="beanDatosComplementarios" method="obtenerTipsit">
+            <result name="success" type="json" />
+        </action>
+        
+        <!-- PARA WIZARD DE PARAMETRIZACION -->
+		<action name="parametrizador" class="ExpresionesAction" method="entrarWizard">
+			<result name="success">/jsp/wizard/indexWithIframe.jsp</result>
+		</action>
+		<!-- PARA WIZARD DE PARAMETRIZACION -->
+                
+    </package>
+
+</struts>
