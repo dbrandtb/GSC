@@ -43,6 +43,7 @@
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
             var urlEmitir='<s:url namespace="/" action="emitir" />';
+            var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
             var panDatComUrlDoc= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             var panDatComUrlDoc2='<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
@@ -785,13 +786,33 @@
 									                                                                                        title:'Aviso del sistema',
 									                                                                                        msg: json.mensajeRespuesta,
 									                                                                                        buttons: Ext.Msg.OK,
-									                                                                                        icon: Ext.Msg.WARNING
+									                                                                                        icon: Ext.Msg.WARNING,
+									                                                                                        fn: function(){
+									                                                                                        	if(!Ext.isEmpty(json.nmpolAlt)){
+									                                                                                        		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + json.nmpolAlt);
+									                                                                                        	}
+									                                                                                        }
 									                                                                                    });
 										                                                            	    			centrarVentanaInterna(ventanaTmp);
+										                                                            	    		}else { 
+										                                                            	    			if(!Ext.isEmpty(json.nmpolAlt)){
+							                                                                                        		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + json.nmpolAlt);
+							                                                                                        	}
 										                                                            	    		}
 										                                                            	    	}
 										                                                            	    	else
 										                                                            	    	{
+										                                                            	    		if(json.retryWS){
+										                                                            	    			datComPolizaMaestra=json.panel2.nmpoliza;
+											                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
+											                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
+											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+											                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+											                                                            	    		//me.up().up().setClosable(false);
+											                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+											                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
+										                                                            	    		}
 										                                                            	    		Ext.Msg.show({
 									                                                                                    title    :'Aviso'
 									                                                                                    ,msg     : json.mensajeRespuesta
@@ -799,17 +820,19 @@
 									                                                                                    ,icon    : Ext.Msg.WARNING
 									                                                                                    ,fn      : function(){
 									                                                                                    	if(json.retryWS){
-									                                                                                    		/*Ext.Msg.show({
-												                                                                                    title    :'Confirmaci&oacute;n'
-												                                                                                    ,msg     : '&iquest;Desea Reenviar los Web Services de Autos?'
-												                                                                                    ,buttons : Ext.Msg.YESNO
-												                                                                                    ,icon    : Ext.Msg.QUESTION
-												                                                                                    ,fn      : function(boton, text, opt){
-												                                                                                    	if(boton == 'yes'){
-												                                                                                    		
-												                                                                                    	}
-												                                                                                    }
-												                                                                                });*/
+									                                                                                    		var paramsWS = {
+																                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
+																                                                                        ,'panel1.pv_ntramite' : inputNtramite
+																                                                                        ,'panel2.pv_cdramo'   : inputCdramo
+																                                                                        ,'panel2.pv_cdunieco' : inputCdunieco
+																                                                                        ,'panel2.pv_estado'   : inputEstado
+																                                                                        ,'panel2.pv_nmpoliza' : inputNmpoliza
+																                                                                        ,'panel2.pv_cdtipsit' : inputCdtipsit
+																                                                                        ,'nmpoliza'           : json.nmpoliza
+																                                                                        ,'nmsuplem'           : json.nmsuplem
+																                                                                        ,'cdIdeper'           : json.cdIdeper
+																                                                            		}
+									                                                                                    		reintentarWSAuto(me.up().up(), paramsWS);
 									                                                                                    	}
 									                                                                                    }
 									                                                                                });
@@ -1491,6 +1514,67 @@
                         }
                     }
                 });
+                
+                //funcion para reintentar WS auto
+                
+                function reintentarWSAuto(loading, params){
+
+                	Ext.Msg.show({
+	                   title    :'Confirmaci&oacute;n'
+	                   ,msg     : '&iquest;Desea Reenviar los Web Services de Autos?'
+	                   ,buttons : Ext.Msg.YESNO
+	                   ,icon    : Ext.Msg.QUESTION
+	                   ,fn      : function(boton, text, opt){
+	                   	if(boton == 'yes'){
+	                   		
+	                   		loading.setLoading(true);
+	                    	
+	                    	Ext.Ajax.request(
+	                            	{
+	                            		url     : urlReintentarWS
+	                            		,timeout: 240000
+	                            		,params :params
+	                            	    ,success:function(response)
+	                            	    {
+	                            	    	loading.setLoading(false);
+	                            	    	var json=Ext.decode(response.responseText);
+	                            	    	debug(json);
+	                            	    	if(json.success==true)
+	                            	    	{
+	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. Poliza Alterna Generada: ' + json.nmpolAlt);
+	                            	    	}
+	                            	    	else
+	                            	    	{
+	                            	    		Ext.Msg.show({
+	                                                title    :'Aviso'
+	                                                ,msg     : json.mensajeRespuesta
+	                                                ,buttons : Ext.Msg.OK
+	                                                ,icon    : Ext.Msg.WARNING
+	                                                ,fn      : function(){
+	                                                	reintentarWSAuto(loading, params);
+	                                                }
+	                                            });
+	                            	    	}
+	                            	    }
+	                            	    ,failure:function()
+	                            	    {
+	                            	    	loading.setLoading(false);
+	                            	    	Ext.Msg.show({
+	                                            title:'Error',
+	                                            msg: 'Error de comunicaci&oacute;n',
+	                                            buttons: Ext.Msg.OK,
+	                                            icon: Ext.Msg.ERROR
+	                                            ,fn      : function(){
+	                                            	reintentarWSAuto(loading, params);
+	                                            }
+	                                        });
+	                            	    }
+	                            	});
+	                   	}
+	                   }
+                	});
+                	                	
+                }
                 
                 //para ver documentos en vivo
                 var venDocuTramite=Ext.create('Ext.window.Window',
