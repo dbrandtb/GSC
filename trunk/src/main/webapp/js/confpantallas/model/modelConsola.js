@@ -81,6 +81,7 @@ Ext.define('modelSuperPanel', {
 		 {name: 'columna_hidden',type:'boolean'},
          {name: 'columna_move',type:'boolean'},
          {name: 'columna_resize',type:'boolean'},
+         {name: 'winEstilo',type:'string'},
          {name: 'isBorder',type:'boolean'}
      ]
 });
@@ -221,6 +222,7 @@ Ext.define('modelWindow', {
         {name: 'height',			type:'int'},
         {name: 'width',			type:'int'},
         {name: 'isDesplegable',type:'boolean'},
+        {name: 'winEstilo',type:'string'},
 		 {name: 'isFondo',type:'boolean'},
 		 {name: 'isCerrable',type:'boolean'},
 		 {name: 'bodyPadding',type:'string'},
