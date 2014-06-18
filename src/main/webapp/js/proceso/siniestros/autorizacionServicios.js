@@ -1443,10 +1443,6 @@ Ext.onReady(function() {
 /*#####################################################################################################################################################
 ###################################################### 		 DATOS PARA LA BUSQUEDA INICIAL 	#######################################################
 #######################################################################################################################################################*/
-	
-	
-	
-	
 	panelbusquedas= Ext.create('Ext.panel.Panel',
 	{
 		border  : 0,		id     : 'panelbusqueda',				width	: 600,		style  : 'margin:5px'
@@ -1476,7 +1472,6 @@ Ext.onReady(function() {
 					storeTipoMedico.load();
 					storeMedico.load();
 					storeProveedor.load();
-					//storeSubcobertura.load();
 					storeTiposICD.load();
 					
 					cargaStorePaginadoLocal(storeListadoAsegurado, _URL_CONSULTA_LISTADO_AUTORIZACION, 'listaAutorizacion', params, function(options, success, response){
@@ -1628,49 +1623,41 @@ Ext.onReady(function() {
 		}
 		,
 		items: [
-		        //codigoAsegurado 	// <-- contiene los valores de los combo
-		        
-		       
-	{
-		//colspan:2,
-		xtype: 'combo',id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
-		queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
-		blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
-		width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
-		listeners : {
-			'select' : function(combo, record) {
-					closedStatusSelectedID = this.getValue();
-					Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
-					if(closedStatusSelectedID !=1){
-						Ext.getCmp('panelbusqueda').show();
-						Ext.getCmp('clausulasGridId').show();
-						
-						if(cdrol=="COORDINAMED")
-						{
-							Ext.getCmp('Autorizar').hide();
-						}else{
-							Ext.getCmp('Autorizar').show();
+		        {
+					xtype: 'combo',id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
+					queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
+					blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
+					width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
+					listeners : {
+						'select' : function(combo, record) {
+								closedStatusSelectedID = this.getValue();
+								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
+								if(closedStatusSelectedID !=1){
+									Ext.getCmp('panelbusqueda').show();
+									Ext.getCmp('clausulasGridId').show();
+									
+									if(cdrol=="COORDINAMED")
+									{
+										Ext.getCmp('Autorizar').hide();
+									}else{
+										Ext.getCmp('Autorizar').show();
+									}
+								}else{
+									Ext.getCmp('panelbusqueda').hide();
+									Ext.getCmp('clausulasGridId').hide();
+									Ext.getCmp('idNumeroAnterior').hide();
+									Ext.getCmp('btnBuscar').hide();
+									if(cdrol=="COORDINAMED")
+									{
+										Ext.getCmp('Autorizar').hide();
+									}else{
+										Ext.getCmp('Autorizar').show();
+									}
+						        	modificacionClausula.hide();
+								}
+							}
 						}
-					}else{
-						Ext.getCmp('panelbusqueda').hide();
-						Ext.getCmp('clausulasGridId').hide();
-						Ext.getCmp('idNumeroAnterior').hide();
-						Ext.getCmp('btnBuscar').hide();
-						if(cdrol=="COORDINAMED")
-						{
-							Ext.getCmp('Autorizar').hide();
-						}else{
-							Ext.getCmp('Autorizar').show();
-						}
-			        	
-			        	//modificacionClausula.close();
-						modificacionClausula.hide();
-						
-					}
 				}
-			}
-	}
-		        
 		        ,panelbusquedas 	// <-- contiene el formulario para la busqueda de acuerdo al codigo del asegurado
 		        ,gridDatos 			// <-- Contiene la información de los asegurados
 			]

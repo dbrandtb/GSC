@@ -25,7 +25,7 @@
     
 </script>
        
-<script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js"></script>
+<script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js?${now}"></script>
    
 <div style="height:100px;">
     <div id="div_clau21"></div>
