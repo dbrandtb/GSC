@@ -64,6 +64,7 @@
 "lista_ValorId":[{key: 'key', value:'key'},{key: 'value', value:'value'}],  
 "lista_TituloAling":[{key: 'left', value:'left'},{key: 'right', value:'right'},{key: 'center', value:'center'}],
 "lista_Estilo":[{key: 'normal', value:'normal'},{key: 'submit', value:'submit'},{key: 'reset', value:'reset'}],
+"lista_WinEstilo":[{key: 'normal', value:'normal'},{key: 'pregunta', value:'pregunta'}],
 "lista_Escala":[{key: 'small', value:'small'},{key: 'medium', value:'medium'},{key: 'large', value:'large'}],
 "attrLabel":[{tipo: 'Label'}],
 "attrImagen":[{tipo: 'Imagen'}],
