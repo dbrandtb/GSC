@@ -1292,15 +1292,17 @@ Ext.setup({onReady:function()
                     debug('nada response:',json);
                     if(json.success)
                     {
+                        var precioDolar = _mcotiza_navView.down('[name=parametros.pv_otvalor24]').getValue()-0;
+                        debug('precioDolar:',precioDolar);
                         _mcotiza_navView.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
                         _mcotiza_navView.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
                         _mcotiza_navView.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
-                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO);
-                        _mcotiza_navView.down('[name=parametros.pv_otvalor26]').setValue(json.smap1.AUTO_PRECIO);
-                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMinValue((json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
-                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMaxValue((json.smap1.AUTO_PRECIO-0)*(1+(json.smap1.FACTOR_MAX-0)));
-                        debug('set min value:',(json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
-                        debug('set max value:',(json.smap1.AUTO_PRECIO-0)*(1+(json.smap1.FACTOR_MAX-0)));
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO*precioDolar);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor26]').setValue(json.smap1.AUTO_PRECIO*precioDolar);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMinValue((json.smap1.AUTO_PRECIO*precioDolar)*(1-(json.smap1.FACTOR_MIN-0)));
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMaxValue((json.smap1.AUTO_PRECIO*precioDolar)*(1+(json.smap1.FACTOR_MAX-0)));
+                        debug('set min value:',(json.smap1.AUTO_PRECIO*precioDolar)*(1-(json.smap1.FACTOR_MIN-0)));
+                        debug('set max value:',(json.smap1.AUTO_PRECIO*precioDolar)*(1+(json.smap1.FACTOR_MAX-0)));
                     }
                     else
                     {
