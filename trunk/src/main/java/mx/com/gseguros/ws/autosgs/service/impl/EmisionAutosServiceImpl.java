@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
@@ -39,6 +41,7 @@ import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPoliza
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
 
@@ -296,8 +299,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					//version
 					Version version=new Version();
+					version.setDescripcion(row.get("DESCRIPCION"));
 					incisoIterado.setVersion(version);
-					version.setDescripcion(row.get("VERSION"));
 					
 					ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
 					incisoIterado.setConfiguracionPaquete(confPaq);
@@ -394,18 +397,15 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
 				
 				if(cotRes != null && cotRes.getExito()){
-					logger.debug("REspuesta de WS Cotizacion cotRes.getCodigo()" +cotRes.getCodigo());
-					logger.debug("REspuesta de WS Cotizacion cotRes.getMensaje()" +cotRes.getMensaje());
-					logger.debug("REspuesta de WS Cotizacion cotRes.toString()" +cotRes.toString());
+					logger.debug("REspuesta de WS Cotizacion cotRes.getCodigo(): " +cotRes.getCodigo());
+					logger.debug("REspuesta de WS Cotizacion cotRes.getMensaje(): " +cotRes.getMensaje());
 					
-					/**
-					 * TODO: Ver de donde se saca el numero de cotizacion, el cual se manda a la emision.
-					 */
-					long numSolicitud = cotRes.getCodigo();
+					long numSolicitud = cotRes.getCotizacion().getIdCotizacion();
 					WrapperResultadosWS resultWSEmi = this.ejecutaEmisionAutosWS(numSolicitud);
 					
-					polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
-					logger.debug("Numero de Poliza de Emision generada por el WS: " + polizaEmiRes.getNumpol());
+					if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
+						polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
+					}
 					
 				}else{
 					logger.error("Error en la cotizacion de Autos WS, respuesta no exitosa");
@@ -484,19 +484,35 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		WsEmitirPolizaEMITIRPOLIZA wsEmitirPolizaEMITIRPOLIZA = new WsEmitirPolizaEMITIRPOLIZA();
 		wsEmitirPolizaEMITIRPOLIZA.setVnumsolicitud(numSolicitud);
 		
-		WsEmitirPolizaEMITIRPOLIZAResponse wsEmitirResponse = null;
-		SDTPoliza response = null;
+		OMElement wsEmitirResponse = null;
+		SDTPoliza resultadoWS = null; 
+		String polRes = null;
 		
 		try {
 			wsEmitirResponse = stubGS.eMITIRPOLIZA(wsEmitirPolizaEMITIRPOLIZA);
-			response = wsEmitirResponse.getSdtpoliza();
-			resultWS.setResultadoWS(response);
-			resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
+			logger.debug("XML Respuesta emision WS: " +  wsEmitirResponse);
+			
+			OMElement sdtPol = wsEmitirResponse.getFirstChildWithName(new QName("KB_WSEmisionPoliza", "Sdtpoliza")); 
+			polRes =  sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText();
+				
+			if(StringUtils.isNotBlank(polRes)){
+
+				resultadoWS =  new SDTPoliza();
+				resultadoWS.setEndoso(Long.parseLong(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
+				resultadoWS.setNumpol(Long.parseLong(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
+				resultadoWS.setRamos(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
+				resultadoWS.setSucursal(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
+				resultadoWS.setTipendo(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText());
+				
+				resultWS.setResultadoWS(resultadoWS);
+				resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+
+			}
 			logger.debug("Xml enviado para emitir poliza de auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
 		} catch (Exception re) {
-			throw new WSException("Error de conexion Emision Autos: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			throw new WSException("Error del llamado al WS Emision Autos: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resultWS;

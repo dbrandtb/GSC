@@ -7,6 +7,8 @@
  */
         package mx.com.gseguros.ws.autosgs.client.axis2;
 
+import org.apache.axiom.om.OMElement;
+
         
 
         /*
@@ -128,7 +130,7 @@
         
                     /**
                      * Auto generated method signature
-                     * 
+                     * <br/>SE MODIFICO EL TIPO DE RETORNO, PUESTO QUE NO HACE EL PARSEO, SE REGRESA TAL CUAL EL OMELEMENT QUE RETORNA EL WS
                      * @see mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPoliza#eMITIRPOLIZA
                      * @param wsEmitirPolizaEMITIRPOLIZA0
                     
@@ -136,7 +138,7 @@
 
                     
 
-                            public  mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZAResponse eMITIRPOLIZA(
+                            public  OMElement eMITIRPOLIZA(
 
                             mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA wsEmitirPolizaEMITIRPOLIZA0)
                         
@@ -185,14 +187,16 @@
                                            org.apache.axis2.wsdl.WSDLConstants.MESSAGE_LABEL_IN_VALUE);
                 org.apache.axiom.soap.SOAPEnvelope _returnEnv = _returnMessageContext.getEnvelope();
                 
-                
-                                java.lang.Object object = fromOM(
+                				/**
+                				 * SE MODIFICO EL TIPO DE RETORNO, PUESTO QUE NO HACE EL PARSEO, SE REGRESA TAL CUAL EL OMELEMENT QUE RETORNA
+                				 */
+                                java.lang.Object object = _returnEnv.getBody().getFirstElement();/*fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
                                              mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZAResponse.class,
-                                              getEnvelopeNamespaces(_returnEnv));
+                                              getEnvelopeNamespaces(_returnEnv));*/
 
                                
-                                        return (mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZAResponse)object;
+                                        return (OMElement)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 

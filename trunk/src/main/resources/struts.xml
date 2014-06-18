@@ -339,6 +339,10 @@
         <action name="redireccion" class="beanDatosComplementarios" method="redireccion">
             <result name="success">/jsp-script/general/redireccion.jsp</result>
         </action>
+        
+        <action name="reintentaWSautos" class="beanDatosComplementarios" method="reintentaWSautos">
+            <result name="success" type="json" />
+        </action>
                 
     </package>
 
