@@ -380,6 +380,19 @@ Ext.onReady(function() {
 					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
 					Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
 					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
+					
+					//Verificamos el CDTIPSIT del Asegurado para saber si es Salud Vital ó Multisalud
+					if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
+						Ext.getCmp('idCopagoFin').show();
+						Ext.getCmp('idPenalCircHospitalario').show();
+						Ext.getCmp('idPenalCambioZona').show();
+					}else{
+						
+						Ext.getCmp('idCopagoFin').hide();
+						Ext.getCmp('idPenalCircHospitalario').hide();
+						Ext.getCmp('idPenalCambioZona').hide();
+					}
+					
 					Ext.getCmp('idMesesAsegurado').setValue(record.get('mesesAsegurado'));
 					storeCobertura.load({
 	                    params:{
@@ -1591,8 +1604,7 @@ Ext.onReady(function() {
 						
 					}
 				}
-	           	//modificacionClausula.close();
-				modificacionClausula.hide();
+	           	modificacionClausula.hide();
 	           	
 	        }			     	
 	    }
@@ -1632,7 +1644,13 @@ Ext.onReady(function() {
 						'select' : function(combo, record) {
 								closedStatusSelectedID = this.getValue();
 								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
-								if(closedStatusSelectedID !=1){
+								
+								//Selección de tipo de Autorización:- Aparecerá oculto los valores al inicio
+								Ext.getCmp('idCopagoFin').hide();
+	        					Ext.getCmp('idPenalCircHospitalario').hide();
+	        					Ext.getCmp('idPenalCambioZona').hide();
+	        					
+	        					if(closedStatusSelectedID !=1){
 									Ext.getCmp('panelbusqueda').show();
 									Ext.getCmp('clausulasGridId').show();
 									
@@ -1693,16 +1711,11 @@ Ext.onReady(function() {
 					]
 			});
 	
-	//Ext.getCmp('idCopagoFin').hide();
-	//Ext.getCmp('idPenalCircHospitalario').hide();
-	//Ext.getCmp('idPenalCambioZona').hide();
-	
 	if(valorAction.nmAutSer == null && valorAction.ntramite ==null)
 	{
 		cdrol = valorAction.cdrol;
 		modificacionClausula.showAt(50,100);
 	}else{
-			//Ext.getCmp('idCopagoFin').hide();
 			storeMedico.load();
 			storeTratamiento.load();
 			storePlazas.load();
@@ -2023,14 +2036,14 @@ Ext.onReady(function() {
 			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoFin'
-		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal'//,  width: 670
+		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal',  width: 670
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario'
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario'
 		 			,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario'
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona'
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona'
 		 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
 			 	},
 			 	
@@ -2410,10 +2423,19 @@ Ext.onReady(function() {
 						Ext.getCmp('idcdtipsit').setValue(json.cdtipsit);
 						Ext.getCmp('iddsplanAsegurado').setValue(json.dsplan);
 						Ext.getCmp('idMesesAsegurado').setValue(json.mesesAsegurado);
-						
-						
 						//Fecha Autorización
 						Ext.getCmp('fechaAutorizacion').setValue(dateFechaAutorizacion);
+						
+						if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
+							Ext.getCmp('idCopagoFin').show();
+							Ext.getCmp('idPenalCircHospitalario').show();
+							Ext.getCmp('idPenalCambioZona').show();
+						}else{
+							Ext.getCmp('idCopagoFin').hide();
+							Ext.getCmp('idPenalCircHospitalario').hide();
+							Ext.getCmp('idPenalCambioZona').hide();
+						}
+						
             		}
 	            },
 	            failure : function ()
