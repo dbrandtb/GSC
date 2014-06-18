@@ -245,6 +245,15 @@ var storeListaEstilo = Ext.create('Ext.data.Store',{
         reader: {type: 'json',root: 'lista_Estilo'}
    }
 });
+var storeListaWinEstilo = Ext.create('Ext.data.Store',{
+	model: 'modelComboBox',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'lista_WinEstilo'}
+   }
+});
 var storeListaIconCls = Ext.create('Ext.data.Store',{
 	model: 'modelComboBox',
 	autoLoad: true,
