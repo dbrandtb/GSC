@@ -178,7 +178,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        		ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
 	        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
 	        		{
-	        			tatriIte.setSoloLectura(true);
+	        			tatriIte.setOculto(true);
 	        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
 	        		}
 	        	}
