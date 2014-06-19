@@ -34,9 +34,9 @@ var _t11 = 'No puede acceder en este momento';
 
 ////// variables globales //////
 var _urlLogin              = '<s:url namespace="/seguridad" action="autenticaUsuario"         />';
-var _urlPantallaArbolJson  = '<s:url namespace="/"          action="seleccionaRolClienteJson" />';
-var _urlCargarArbolRol     = '<s:url namespace="/"          action="ArbolRolCliente"          />';
-var _urlRegresaCodigoArbol = '<s:url namespace="/"          action="regresaCodigo"            />';
+var _urlPantallaArbolJson  = '<s:url namespace="/seguridad" action="seleccionaRolClienteJson" />';
+var _urlCargarArbolRol     = '<s:url namespace="/seguridad" action="ArbolRolCliente"          />';
+var _urlRegresaCodigoArbol = '<s:url namespace="/seguridad" action="regresaCodigo"            />';
 var _urlPortalExtjs        = '<s:url namespace="/"          action="load"                     />';
 ////// variables globales //////
 

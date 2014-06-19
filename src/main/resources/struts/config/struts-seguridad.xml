@@ -14,6 +14,28 @@
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>
 		</interceptors>
+		
+		
+		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
+            <result name="success" type="json">         
+                <param name="root">listaRolCliente</param>
+            </result>
+        </action>
+        
+        <action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
+            <result name="success" type="json">
+                <param name="ignoreHierarchy">false</param>
+            </result>
+            <result name="input">/jsp/portal/treeRolElemento.jsp</result>
+            <result name="confcompleta" type="json">
+                <param name="ignoreHierarchy">false</param>
+            </result>
+        </action>
+        
+        <action name="seleccionaRolClienteJson" class="loadClientesRolesAction" method="obtenRolesClientes">
+            <result name="success" type="json" />
+            <result name="load"    type="json" />
+        </action>
 
 		<action name="login">
 			<interceptor-ref name="loggingStack"></interceptor-ref>

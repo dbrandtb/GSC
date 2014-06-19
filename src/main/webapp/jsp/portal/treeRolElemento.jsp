@@ -29,10 +29,10 @@
 <script type="text/javascript" src="${ctx}/resources/scripts/util/AON_utils.js"></script>
 <script type="text/javascript">
     var _CONTEXT = "${ctx}";
-    var _ACTION_ARBOL = "<s:url action='ArbolRolCliente' namespace='/' />";
-    var _ACTION_PORTAL = "<s:url action='load' namespace='/' />";
-    var _ACTION_REGRESA= "<s:url action='regresaCodigo' namespace='/'/>";
-    var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url action='validaConfiguracionCompleta' namespace='/principal'/>";
+    var _ACTION_ARBOL                          = "<s:url namespace='/seguridad' action='ArbolRolCliente' />";
+    var _ACTION_PORTAL                         = "<s:url namespace='/'          action='load' />";
+    var _ACTION_REGRESA                        = "<s:url namespace='/seguridad' action='regresaCodigo' />";
+    var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url namespace='/principal' action='validaConfiguracionCompleta' />";
 </script>
 <script type="text/javascript">
 Ext.onReady(function(){
