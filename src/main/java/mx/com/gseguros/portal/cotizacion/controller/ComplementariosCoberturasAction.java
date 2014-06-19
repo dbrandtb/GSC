@@ -992,17 +992,18 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					{
 						tatriTemp.add(t);
 						if(
-								(smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								 ||smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-								 )
-								 &&
-								 (
-										 t.getSwpresen().equalsIgnoreCase("S")
-										 ||t.getNameCdatribu().equalsIgnoreCase("26")
-								)
+								smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								 ||smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()) 
 								)
 						{
-							t.setSoloLectura(true);
+							if(t.getSwpresen().equalsIgnoreCase("S"))
+							{
+								t.setSoloLectura(true);
+							}
+							if(t.getNameCdatribu().equals("24")||t.getNameCdatribu().equals("26"))
+							{
+								t.setOculto(true);
+							}
 						}
 					}
 				}
