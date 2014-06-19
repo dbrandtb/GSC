@@ -43,7 +43,7 @@ var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="co
 var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
 var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios"    />';
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
+var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="mcdinamica"              />';
 var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
 var _0_urlNada                 = '<s:url namespace="/emision"         action="webServiceNada"          />';
 
@@ -1532,6 +1532,12 @@ Ext.onReady(function()
 		                                                ({
 		                                                    url             : _0_urlMesaControl
 		                                                    ,standardSubmit : true
+                                                            ,params         :
+                                                            {
+                                                                'smap1.gridTitle'      : 'Tareas'
+                                                                ,'smap2.pv_cdtiptra_i' : 1
+                                                                ,'smap1.editable'      : 1
+                                                            }
 		                                                });
 		                                            }
 		                                            else
