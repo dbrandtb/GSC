@@ -104,6 +104,7 @@ Ext.onReady(function()
                             success:function()
                             {
                                 form.setLoading(false);
+                                window.parent.scrollTo(0,0);
                                 centrarVentanaInterna(Ext.Msg.show({
                                     title:'Cambios guardados',
                                     msg: 'Sus cambios han sido guardados',
