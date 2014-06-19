@@ -10,6 +10,7 @@ var _4_urlAutorizarEndoso  = '<s:url namespace="/endosos"     action="autorizarE
 var _4_urlUpdateStatus     = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 var _4_urlUpdateComments   = '<s:url namespace="/mesacontrol" action="actualizaComentariosTramite" />';
 var _4_urlRegresarEmision  = '<s:url namespace="/mesacontrol" action="regresarEmisionEnAutori" />';
+var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
 
 var _STATUS_EN_ESPERA_DE_AUTORIZACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_AUTORIZACION.codigo" />';
 var _STATUS_TRAMITE_RECHAZADO         = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
@@ -94,11 +95,31 @@ function _4_moverTramite()
                 if(jsonResponse.success)
                 {
 	                ventana.hide();
-                    mensajeCorrecto('Aviso',jsonResponse.mensajeRespuesta);
+                    mensajeCorrecto('Aviso',jsonResponse.mensajeRespuesta, function(){
+                    	if(!Ext.isEmpty(jsonResponse.nmpolAlt)){
+                    		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + jsonResponse.nmpolAlt);
+                    	}
+                    });
                 }
                 else
                 {
-                    mensajeError(jsonResponse.mensajeRespuesta);
+                    mensajeError(jsonResponse.mensajeRespuesta, function(){
+                    	if(jsonResponse.retryWS){
+                    		var paramsWS = {
+                                    'panel1.pv_nmpoliza'  : record.get('nmpoliza')
+                                    ,'panel1.pv_ntramite' : record.get('otvalor03')
+                                    ,'panel2.pv_cdramo'   : record.get('cdramo')
+                                    ,'panel2.pv_cdunieco' : record.get('cdunieco')
+                                    ,'panel2.pv_estado'   : "M"
+                                    ,'panel2.pv_nmpoliza' : record.get('nmpoliza')
+                                    ,'panel2.pv_cdtipsit' : record.get('cdtipsit')
+                                    ,'nmpoliza'           : jsonResponse.nmpoliza
+                                    ,'nmsuplem'           : jsonResponse.nmsuplem
+                                    ,'cdIdeper'           : jsonResponse.cdIdeper
+                        		}
+                    		reintentarWSAuto(ventana, paramsWS);
+                    	}
+                    });
                 }
             }
             ,failure  : function()
@@ -370,6 +391,67 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
         items       : [panelRechazoEmi]
     }).show();
     centrarVentana(windowRechazo);	
+}
+
+//funcion para reintentar WS auto
+
+function reintentarWSAuto(loading, params){
+
+	Ext.Msg.show({
+       title    :'Confirmaci&oacute;n'
+       ,msg     : '&iquest;Desea Reenviar los Web Services de Autos?'
+       ,buttons : Ext.Msg.YESNO
+       ,icon    : Ext.Msg.QUESTION
+       ,fn      : function(boton, text, opt){
+       	if(boton == 'yes'){
+       		
+       		loading.setLoading(true);
+        	
+        	Ext.Ajax.request(
+                	{
+                		url     : urlReintentarWS
+                		,timeout: 240000
+                		,params :params
+                	    ,success:function(response)
+                	    {
+                	    	loading.setLoading(false);
+                	    	var json=Ext.decode(response.responseText);
+                	    	debug(json);
+                	    	if(json.success==true)
+                	    	{
+                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. Poliza Alterna Generada: ' + json.nmpolAlt);
+                	    	}
+                	    	else
+                	    	{
+                	    		Ext.Msg.show({
+                                    title    :'Aviso'
+                                    ,msg     : json.mensajeRespuesta
+                                    ,buttons : Ext.Msg.OK
+                                    ,icon    : Ext.Msg.WARNING
+                                    ,fn      : function(){
+                                    	reintentarWSAuto(loading, params);
+                                    }
+                                });
+                	    	}
+                	    }
+                	    ,failure:function()
+                	    {
+                	    	loading.setLoading(false);
+                	    	Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                                ,fn      : function(){
+                                	reintentarWSAuto(loading, params);
+                                }
+                            });
+                	    }
+                	});
+       	}
+       }
+	});
+	                	
 }
 ////// funciones //////
 

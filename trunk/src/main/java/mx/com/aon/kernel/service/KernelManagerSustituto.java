@@ -277,5 +277,9 @@ public interface KernelManagerSustituto {
      */
     public WrapperResultados existeDomicilioContratante(String cdideper);
     
-    public boolean actualizaCdIdeper(Map<String,String> params); 
+    public boolean actualizaCdIdeper(Map<String,String> params);
+    
+    public void validaDatosAutos(Map<String,String> params)throws Exception;
+    
+    public void actualizaPolizaExterna(Map<String,String> params)throws Exception; 
 }

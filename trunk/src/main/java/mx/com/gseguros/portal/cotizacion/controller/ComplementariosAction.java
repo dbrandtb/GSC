@@ -1388,7 +1388,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//////////////////////////////////////////
 			
 			
-			
+			//Validar datos de Producto de Autos para WS de Emision
+			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+				try{
+					HashMap<String, String> paramsValidaAut = new HashMap<String, String>();
+					paramsValidaAut.put("pv_cdunieco_i", cdunieco);
+					paramsValidaAut.put("pv_cdramo_i",   cdramo);
+					paramsValidaAut.put("pv_estado_i",   "W");
+					paramsValidaAut.put("pv_nmpoliza_i", panel1.get("nmpoliza"));
+					paramsValidaAut.put("pv_nmsituac_i", "1");
+					paramsValidaAut.put("pv_nmsuplem_i", "0");
+					kernelManager.validaDatosAutos(paramsValidaAut);
+					
+				}catch(Exception e){
+					logger.error("Error al Validar datos de Auto: " + e.getMessage(), e);
+					mensajeRespuesta = e.getMessage();
+					return SUCCESS;
+				}
+			}
 			
 			
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -1647,7 +1664,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
 					paramsMesaControl.put("pv_nmsolici_i"   , null);
-					paramsMesaControl.put("pv_cdtipsit_i"   , null);
+					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
 					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
 					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
 					paramsMesaControl.put("pv_otvalor03"    , ntramite);
@@ -1745,10 +1762,162 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
+		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		
+		////// ws cliente y recibos
+		if(success)
+		{
+					String _cdunieco = cdunieco;
+					String _cdramo   = cdramo;
+					String edoPoliza = "M";
+					String _nmpoliza = nmpolizaEmitida;
+					String _nmsuplem = nmsuplemEmitida;
+					String sucursal = cdunieco;
+					if("1".equals(sucursal))
+					{
+						sucursal = "1000";
+					}
+					logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
+					logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
+					logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
+					logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
+					logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
+					logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
+					logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
+					logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
+					logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
+					
+					//ws cliente
+					
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							)
+					{
+						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+					}
+					else if(
+							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+							)
+					{
+						if(StringUtils.isBlank(cdIdeperRes)){
+							
+							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
+								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
+								if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
+								
+									HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
+									paramsIdeper.put("pv_cdunieco_i", _cdunieco);
+									paramsIdeper.put("pv_cdramo_i",   _cdramo);
+									paramsIdeper.put("pv_estado_i",   edoPoliza);
+									paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
+									paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
+									paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
+									
+									kernelManager.actualizaCdIdeper(paramsIdeper);
+									
+									this.cdIdeper = cdIdeperRes;
+											
+								}else {
+									success = false;
+									retryWS = true;
+									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+									logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
+								} 
+							}else{
+								success = false;
+								retryWS = true;
+								mensajeRespuesta = "Error al crear Cliente en WS.";
+								logger.error("Error al Crear el cliente en WS!, Datos Nulos");
+							}
+						}
+					}
+						
+					////// ws de cotizacion y emision para autos
+					if(success
+							&& (
+									cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								)
+							)
+					{
+						SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+						success = aux!=null && aux.getNumpol()>0l;
+						retryWS = !success;
+						if(success)
+						{
+							logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
+							this.nmpolAlt = Long.toString(aux.getNumpol()); 
+							panel2.put("nmpoliex", this.nmpolAlt);
+							
+							//Insetar Poliza Externa WS Auto
+							try{
+								HashMap<String, String> paramsInsertaPolAlt = new HashMap<String, String>();
+								paramsInsertaPolAlt.put("pv_cdunieco_i", cdunieco);
+								paramsInsertaPolAlt.put("pv_cdramo_i",   cdramo);
+								paramsInsertaPolAlt.put("pv_estado_i",   edoPoliza);
+								paramsInsertaPolAlt.put("pv_nmpoliza_i", nmpolizaEmitida);
+								paramsInsertaPolAlt.put("pv_nmsuplem_i", nmsuplemEmitida);
+								paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
+								kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
+								
+							}catch(Exception e){
+								logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
+								mensajeRespuesta = "Error al insertar Poliza Externa: " + this.nmpolAlt;
+								success = false;
+							}
+							
+						}else {
+							mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+						}
+					}
+					
+					//ws recibos
+					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							))
+					{
+						try
+						{
+							if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+							{	
+								// Ejecutamos el Web Service de Recibos:
+								ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+										edoPoliza, _nmpoliza, 
+										_nmsuplem, rutaCarpeta,
+										sucursal, nmpoliza, ntramite, 
+										false, tipoMov,
+										us);
+								// Ejecutamos el Web Service de Recibos DxN:
+								recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
+							}
+							else
+							{
+								// Ejecutamos el Web Service de Recibos:
+								ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+										edoPoliza, _nmpoliza, 
+										_nmsuplem, rutaCarpeta,
+										sucursal, nmpoliza,ntramite, 
+										true, tipoMov,
+										us);
+							}
+						}
+						catch(Exception ex)
+						{
+							log.error("error al lanzar ws recibos",ex);
+							mensajeRespuesta = ex.getMessage();
+							success          = false;
+						}
+					}
+		}
+				
 		////// crear carpeta para los documentos
 		if(success)
 		{
-			rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -1853,136 +2022,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-	////// ws cliente y recibos
-			if(success)
-			{
-				String _cdunieco = cdunieco;
-				String _cdramo   = cdramo;
-				String edoPoliza = "M";
-				String _nmpoliza = nmpolizaEmitida;
-				String _nmsuplem = nmsuplemEmitida;
-				String sucursal = cdunieco;
-				if("1".equals(sucursal))
-				{
-					sucursal = "1000";
-				}
-				logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
-				logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
-				logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
-				logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
-				logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
-				logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
-				logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
-				logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
-				logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
-				
-				//ws cliente
-				
-				if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-						)
-				{
-					ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
-				}
-				else if(
-						cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-						)
-				{
-					if(StringUtils.isBlank(cdIdeperRes)){
-						
-						ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
-						if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
-							cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
-							if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
-							
-								HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
-								paramsIdeper.put("pv_cdunieco_i", _cdunieco);
-								paramsIdeper.put("pv_cdramo_i",   _cdramo);
-								paramsIdeper.put("pv_estado_i",   edoPoliza);
-								paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
-								paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
-								paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
-								
-								kernelManager.actualizaCdIdeper(paramsIdeper);
-										
-							}else {
-								success = false;
-								retryWS = true;
-								mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
-								logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
-							} 
-						}else{
-							success = false;
-							retryWS = true;
-							mensajeRespuesta = "Error al crear Cliente en WS.";
-							logger.error("Error al Crear el cliente en WS!");
-						}
-					}
-				}
-					
-				////// ws de cotizacion y emision para autos
-				if(success
-						&& (
-								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-							)
-						)
-				{
-					SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-								edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
-					success = aux!=null && aux.getNumpol()>0l;
-					retryWS = !success;
-					if(success)
-					{
-						logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
-						this.nmpolAlt = Long.toString(aux.getNumpol()); 
-					}else {
-						mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
-					}
-				}
-				
-				//ws recibos
-				if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-						))
-				{
-					try
-					{
-						if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
-						{	
-							// Ejecutamos el Web Service de Recibos:
-							ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-									edoPoliza, _nmpoliza, 
-									_nmsuplem, rutaCarpeta,
-									sucursal, nmpoliza, ntramite, 
-									false, tipoMov,
-									us);
-							// Ejecutamos el Web Service de Recibos DxN:
-							recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
-						}
-						else
-						{
-							// Ejecutamos el Web Service de Recibos:
-							ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-									edoPoliza, _nmpoliza, 
-									_nmsuplem, rutaCarpeta,
-									sucursal, nmpoliza,ntramite, 
-									true, tipoMov,
-									us);
-						}
-					}
-					catch(Exception ex)
-					{
-						log.error("error al lanzar ws recibos",ex);
-						mensajeRespuesta = ex.getMessage();
-						success          = false;
-					}
-				}
-			}
-		
 		log.debug(""
 				+ "\n######   emitir   ######"
 				+ "\n########################"
@@ -2040,6 +2079,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = success && ( cdperson         = panel1.get("otvalor04")          )!=null;
 				success = success && ( comentarios      = panel2.get("observaciones")      )!=null;
 				success = success && ( fechaEmision     = panel1.get("ferecepc")           )!=null;
+				success = success && ( cdtipsit         = panel1.get("cdtipsit")           )!=null;
 				success = success && ( fechaEmisionDate = renderFechas.parse(fechaEmision) )!=null;
 				success = success && ( us               = (UserVO)session.get("USUARIO")   )!=null;
 				if(!success)
@@ -2117,13 +2157,160 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success          = false;
 			}
 		}
+
+	rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+	
+	////// ws cliente y recibos
+	if(success)
+	{
+					String _cdunieco = cdunieco;
+					String _cdramo   = cdramo;
+					String edoPoliza = "M";
+					String _nmpoliza = nmpolizaEmitida;
+					String _nmsuplem = nmsuplemEmitida;
+					String sucursal = cdunieco;
+					if("1".equals(sucursal))
+					{
+						sucursal = "1000";
+					}
+					logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
+					logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
+					logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
+					logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
+					logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
+					logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
+					logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
+					logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
+					logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
+					
+					//ws cliente
+					
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							)
+					{
+						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+					}
+					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+					{
+						if(StringUtils.isBlank(cdIdeperRes)){
+							
+							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
+								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
+								if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
+								
+									HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
+									paramsIdeper.put("pv_cdunieco_i", _cdunieco);
+									paramsIdeper.put("pv_cdramo_i",   _cdramo);
+									paramsIdeper.put("pv_estado_i",   edoPoliza);
+									paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
+									paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
+									paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
+									
+									kernelManager.actualizaCdIdeper(paramsIdeper);
+									
+									this.cdIdeper = cdIdeperRes;
+											
+								}else {
+									success = false;
+									retryWS = true;
+									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+									logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
+								} 
+							}else{
+								success = false;
+								retryWS = true;
+								mensajeRespuesta = "Error al crear Cliente en WS.";
+								logger.error("Error al Crear el cliente en WS!, Datos Nulos");
+							}
+						}
+					}
+						
+					////// ws de cotizacion y emision para autos
+					if(success &&
+							(
+								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+							)
+						)
+					{
+						SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+						success = aux!=null && aux.getNumpol()>0l;
+						retryWS = !success;
+						if(!success)
+						{
+							mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+							this.nmpolAlt = Long.toString(aux.getNumpol());
+							nmpoliexEmitida =  this.nmpolAlt;
+							
+							//Insetar Poliza Externa WS Auto
+							try{
+								HashMap<String, String> paramsInsertaPolAlt = new HashMap<String, String>();
+								paramsInsertaPolAlt.put("pv_cdunieco_i", cdunieco);
+								paramsInsertaPolAlt.put("pv_cdramo_i",   cdramo);
+								paramsInsertaPolAlt.put("pv_estado_i",   edoPoliza);
+								paramsInsertaPolAlt.put("pv_nmpoliza_i", nmpolizaEmitida);
+								paramsInsertaPolAlt.put("pv_nmsuplem_i", nmsuplemEmitida);
+								paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
+								kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
+								
+							}catch(Exception e){
+								logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
+								mensajeRespuesta = "Error al insertar Poliza Externa: " + this.nmpolAlt;
+								success = false;
+							}
+						}
+					}
+					
+					//ws recibos
+					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							))
+					{
+						try
+						{
+							if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+							{	
+								// Ejecutamos el Web Service de Recibos:
+								ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+										edoPoliza, _nmpoliza, 
+										_nmsuplem, rutaCarpeta,
+										sucursal, nmpoliza, ntramite, 
+										false, tipoMov,
+										us);
+								// Ejecutamos el Web Service de Recibos DxN:
+								recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
+							}
+							else
+							{
+								// Ejecutamos el Web Service de Recibos:
+								ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+										edoPoliza, _nmpoliza, 
+										_nmsuplem, rutaCarpeta,
+										sucursal, nmpoliza,ntramite, 
+										true, tipoMov,
+										us);
+							}
+						}
+						catch(Exception ex)
+						{
+							log.error("error al lanzar ws recibos",ex);
+							mensajeRespuesta = ex.getMessage();
+							success          = false;
+						}
+					}
+				}
 		
 		////// carpeta documentos
 		if(success)
 		{
 			try
 			{
-				rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	            File carpeta = new File(rutaCarpeta);
 	            if(!carpeta.exists())
 	            {
@@ -2238,132 +2425,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-	////// ws cliente y recibos
-			if(success)
-			{
-				String _cdunieco = cdunieco;
-				String _cdramo   = cdramo;
-				String edoPoliza = "M";
-				String _nmpoliza = nmpolizaEmitida;
-				String _nmsuplem = nmsuplemEmitida;
-				String sucursal = cdunieco;
-				if("1".equals(sucursal))
-				{
-					sucursal = "1000";
-				}
-				logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
-				logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
-				logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
-				logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
-				logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
-				logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
-				logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
-				logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
-				logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
-				
-				//ws cliente
-				
-				if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-						)
-				{
-					ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
-				}
-				else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-				{
-					if(StringUtils.isBlank(cdIdeperRes)){
-						
-						ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
-						if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
-							cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
-							if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
-							
-								HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
-								paramsIdeper.put("pv_cdunieco_i", _cdunieco);
-								paramsIdeper.put("pv_cdramo_i",   _cdramo);
-								paramsIdeper.put("pv_estado_i",   edoPoliza);
-								paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
-								paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
-								paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
-								
-								kernelManager.actualizaCdIdeper(paramsIdeper);
-										
-							}else {
-								success = false;
-								retryWS = true;
-								mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
-								logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
-							} 
-						}else{
-							success = false;
-							retryWS = true;
-							mensajeRespuesta = "Error al crear Cliente en WS.";
-							logger.error("Error al Crear el cliente en WS!");
-						}
-					}
-				}
-					
-				////// ws de cotizacion y emision para autos
-				if(success &&
-						(
-							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-						)
-					)
-				{
-					SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-								edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
-					success = aux!=null && aux.getNumpol()>0l;
-					retryWS = !success;
-					if(!success)
-					{
-						mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
-						this.nmpolAlt = Long.toString(aux.getNumpol());
-					}
-				}
-				
-				//ws recibos
-				if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-						))
-				{
-					try
-					{
-						if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
-						{	
-							// Ejecutamos el Web Service de Recibos:
-							ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-									edoPoliza, _nmpoliza, 
-									_nmsuplem, rutaCarpeta,
-									sucursal, nmpoliza, ntramite, 
-									false, tipoMov,
-									us);
-							// Ejecutamos el Web Service de Recibos DxN:
-							recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
-						}
-						else
-						{
-							// Ejecutamos el Web Service de Recibos:
-							ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-									edoPoliza, _nmpoliza, 
-									_nmsuplem, rutaCarpeta,
-									sucursal, nmpoliza,ntramite, 
-									true, tipoMov,
-									us);
-						}
-					}
-					catch(Exception ex)
-					{
-						log.error("error al lanzar ws recibos",ex);
-						mensajeRespuesta = ex.getMessage();
-						success          = false;
-					}
-				}
-			}
-			
 		logger.debug(""
 				+ "\n###### autorizaEmision ######"
 				+ "\n#############################"
@@ -2387,11 +2448,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		String cdIdeperRes = this.cdIdeper;
 		UserVO us          = (UserVO)session.get("USUARIO");
+		String cdusuari    = us.getUser();
 		
 		if("1".equals(sucursal))
 		{
 			sucursal = "1000";
 		}
+		
+		String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		
 		logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
 		logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
 		logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
@@ -2419,6 +2484,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
 					
 					kernelManager.actualizaCdIdeper(paramsIdeper);
+					
+					this.cdIdeper = cdIdeperRes;
 							
 				}else {
 					success = false;
@@ -2430,7 +2497,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = false;
 				retryWS = true;
 				mensajeRespuesta = "Error al crear Cliente en WS.";
-				logger.error("Error al Crear el cliente en WS!");
+				logger.error("Error al Crear el cliente en WS!, Datos Nulos");
 			}
 		}
 			
@@ -2450,10 +2517,136 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
 				this.nmpolAlt = Long.toString(aux.getNumpol());
+				panel2.put("nmpoliex", this.nmpolAlt);
+				
+				//Insetar Poliza Externa WS Auto
+				try{
+					HashMap<String, String> paramsInsertaPolAlt = new HashMap<String, String>();
+					paramsInsertaPolAlt.put("pv_cdunieco_i", _cdunieco);
+					paramsInsertaPolAlt.put("pv_cdramo_i",   _cdramo);
+					paramsInsertaPolAlt.put("pv_estado_i",   edoPoliza);
+					paramsInsertaPolAlt.put("pv_nmpoliza_i", _nmpoliza);
+					paramsInsertaPolAlt.put("pv_nmsuplem_i", _nmsuplem);
+					paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
+					kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
+					
+				}catch(Exception e){
+					logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
+					mensajeRespuesta = "Error al insertar Poliza Externa: " + this.nmpolAlt;
+					success = false;
+				}
+				
 			}else {
 				mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
 			}
 		}
+		
+		////// crear carpeta para los documentos
+			if(success)
+			{
+	            File carpeta = new File(rutaCarpeta);
+	            if(!carpeta.exists())
+	            {
+	            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+	            	carpeta.mkdir();
+	            	if(carpeta.exists())
+	            	{
+	            		log.debug("carpeta creada");
+	            	}
+	            	else
+	            	{
+	            		log.debug("carpeta NO creada");
+	            		success          = false;
+	            		mensajeRespuesta = "Error al crear la carpeta de documentos";
+	            	}
+	            }
+	            else
+	            {
+	            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+	            }
+			}
+			
+			////// documentos
+			if(success)
+			{
+				try
+				{
+					Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+					paramsGetDoc.put("pv_cdunieco_i" , _cdunieco);
+					paramsGetDoc.put("pv_cdramo_i"   , _cdramo);
+					paramsGetDoc.put("pv_estado_i"   , "M");
+					paramsGetDoc.put("pv_nmpoliza_i" , _nmpoliza);
+					paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
+					paramsGetDoc.put("pv_ntramite_i" , ntramite);
+					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+					
+					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+					for(Map<String,String> docu:listaDocu)
+					{
+						log.debug("docu iterado: "+docu);
+						String descripc=docu.get("descripc");
+						String descripl=docu.get("descripl");
+						String url=this.getText("ruta.servidor.reports")
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+this.getText("pass.servidor.reports")
+								+ "&report="+descripl
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+_cdunieco
+								+ "&p_ramo="+_cdramo
+								+ "&p_estado='M'"
+								+ "&p_poliza="+_nmpoliza
+								+ "&p_suplem="+_nmsuplem
+								+ "&desname="+rutaCarpeta+"/"+descripc;
+						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+						{
+							// C R E D E N C I A L _ X X X X X X . P D F
+							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+						}
+						log.debug(""
+								+ "\n#################################"
+								+ "\n###### Se solicita reporte ######"
+								+ "\na "+url);
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+						log.debug(""
+								+ "\n######                    ######"
+								+ "\n###### reporte solicitado ######"
+								+ "\n################################"
+								+ "");
+					}
+				}
+				catch(Exception ex)
+				{
+					log.error("error al generar documentacion de emision",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
+				}
+			}
+			
+			////// detalle emision
+			if(success)
+			{
+				try
+				{
+					log.debug("se inserta detalle nuevo para emision");
+		        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+		        	parDmesCon.put("pv_feinicio_i"   , new Date());
+		        	parDmesCon.put("pv_cdclausu_i"   , null);
+		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
+		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	kernelManager.movDmesacontrol(parDmesCon);
+				}
+				catch(Exception ex)
+				{
+					log.error("error al insertar detalle de emision",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
+				}
+			}
 		
 		return SUCCESS;
 		

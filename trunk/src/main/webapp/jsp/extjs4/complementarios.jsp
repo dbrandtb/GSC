@@ -805,11 +805,10 @@
 										                                                            	    		if(json.retryWS){
 										                                                            	    			datComPolizaMaestra=json.panel2.nmpoliza;
 											                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
-											                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+											                                                            	    		
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
-											                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
-											                                                            	    		//me.up().up().setClosable(false);
+											                                                            	    		
 											                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
 											                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		}
@@ -1542,6 +1541,8 @@
 	                            	    	if(json.success==true)
 	                            	    	{
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. Poliza Alterna Generada: ' + json.nmpolAlt);
+	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
+                                	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 	                            	    	}
 	                            	    	else
 	                            	    	{
