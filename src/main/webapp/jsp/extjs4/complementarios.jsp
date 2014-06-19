@@ -784,7 +784,7 @@
 										                                                            	    		if(inputCdramo+'x'=='16x')
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
-										                                                            	    		}										                                                            	    		}
+										                                                            	    		}
 										                                                            	    		else
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
@@ -847,7 +847,7 @@
 																                                                                        ,'nmpoliza'           : json.nmpoliza
 																                                                                        ,'nmsuplem'           : json.nmsuplem
 																                                                                        ,'cdIdeper'           : json.cdIdeper
-																                                                            		}
+																                                                            		};
 									                                                                                    		reintentarWSAuto(me.up().up(), paramsWS);
 									                                                                                    	}
 									                                                                                    }
