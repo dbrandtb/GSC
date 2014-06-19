@@ -147,13 +147,14 @@ function datosIncompletos()
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function errorComunicacion()
+function errorComunicacion(callback)
 {
 	var tmpMensajeEmergente=Ext.Msg.show({
         title    : 'Error'
         ,icon    : Ext.Msg.ERROR
         ,msg     : 'Error de comunicaci&oacute;n'
         ,buttons : Ext.Msg.OK
+        ,fn      : callback
     });
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
@@ -194,13 +195,14 @@ function mensajeWarning(mensaje,funcion)
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function mensajeError(mensaje)
+function mensajeError(mensaje, callback)
 {
 	var tmpMensajeEmergente=Ext.Msg.show({
 		title    : 'Error'
         ,icon    : Ext.Msg.ERROR
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
+        ,fn     : callback
     });
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
