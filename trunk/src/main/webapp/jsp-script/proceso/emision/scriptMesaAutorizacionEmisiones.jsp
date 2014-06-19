@@ -116,7 +116,7 @@ function _4_moverTramite()
                                     ,'nmpoliza'           : jsonResponse.nmpoliza
                                     ,'nmsuplem'           : jsonResponse.nmsuplem
                                     ,'cdIdeper'           : jsonResponse.cdIdeper
-                        		}
+                        		};
                     		reintentarWSAuto(ventana, paramsWS);
                     	}
                     });
