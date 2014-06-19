@@ -189,6 +189,9 @@
         <action name="datosComplementarios" class="beanDatosComplementarios" method="mostrarPantalla">
             <result name="success">/jsp/extjs4/complementarios.jsp</result>
         </action>
+        <action name="guardarCartaRechazo" class="beanDatosComplementarios" method="guardarCartaRechazo">
+            <result type="json" />
+        </action>
         <action name="guardarDatosComplementarios" class="beanDatosComplementarios" method="guardar">
             <result name="success" type="json" />
         </action>
