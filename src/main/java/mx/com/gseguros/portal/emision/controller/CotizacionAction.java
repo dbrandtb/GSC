@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.emision.controller;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

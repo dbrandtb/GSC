@@ -132,7 +132,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				cp.setCodigo(Integer.valueOf(m.get("CODIGO")));
 				
 				//cveusuariocaptura
-				datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(m.get("CVEUSUARIOCAPTURA")));
+				if(userVO != null) logger.info("Clave del Usuario Captura Externo en Sesion: " + userVO.getClaveUsuarioCaptura());
+				if(userVO != null && StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
+					datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(userVO.getClaveUsuarioCaptura()));
+				}else{
+					datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(m.get("CVEUSUARIOCAPTURA")));
+				}
+				logger.info("Clave del Usuario Captura a enviar: "+ datosCotizacionAuto.getCveUsuarioCaptura());
 				
 				//descuentoagente
 				datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));

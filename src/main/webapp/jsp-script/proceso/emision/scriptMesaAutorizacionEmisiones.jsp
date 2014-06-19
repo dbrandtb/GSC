@@ -97,7 +97,7 @@ function _4_moverTramite()
 	                ventana.hide();
                     mensajeCorrecto('Aviso',jsonResponse.mensajeRespuesta, function(){
                     	if(!Ext.isEmpty(jsonResponse.nmpolAlt)){
-                    		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + jsonResponse.nmpolAlt);
+                    		mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + jsonResponse.nmpolAlt);
                     	}
                     });
                 }
@@ -419,7 +419,7 @@ function reintentarWSAuto(loading, params){
                 	    	debug(json);
                 	    	if(json.success==true)
                 	    	{
-                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. Poliza Alterna Generada: ' + json.nmpolAlt);
+                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
                 	    	}
                 	    	else
                 	    	{

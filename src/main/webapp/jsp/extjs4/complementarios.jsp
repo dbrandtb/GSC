@@ -789,14 +789,14 @@
 									                                                                                        icon: Ext.Msg.WARNING,
 									                                                                                        fn: function(){
 									                                                                                        	if(!Ext.isEmpty(json.nmpolAlt)){
-									                                                                                        		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + json.nmpolAlt);
+									                                                                                        		mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
 									                                                                                        	}
 									                                                                                        }
 									                                                                                    });
 										                                                            	    			centrarVentanaInterna(ventanaTmp);
 										                                                            	    		}else { 
 										                                                            	    			if(!Ext.isEmpty(json.nmpolAlt)){
-							                                                                                        		mensajeCorrecto("Aviso","Poliza Alterna Generada: " + json.nmpolAlt);
+							                                                                                        		mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
 							                                                                                        	}
 										                                                            	    		}
 										                                                            	    	}
@@ -1540,7 +1540,7 @@
 	                            	    	debug(json);
 	                            	    	if(json.success==true)
 	                            	    	{
-	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. Poliza Alterna Generada: ' + json.nmpolAlt);
+	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 	                            	    	}
