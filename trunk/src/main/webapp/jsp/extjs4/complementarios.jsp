@@ -57,6 +57,8 @@
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+            var compleUrlGuardarCartoRechazo = '<s:url namespace="/" action="guardarCartaRechazo" />';
+            var compleUrlCotizacion = '<s:url namespace="/emision" action="cotizacion" />';
             
             var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
             var fechaMaxEmi = Ext.Date.parse('<s:property value="map1.fechamax" />','d/m/Y');
@@ -257,7 +259,8 @@
 		                                    style:'margin:5px;',
 		                                    format:'d/m/Y',
 		                                    minValue:fechaMinEmi,
-		                                    maxValue:fechaMaxEmi
+		                                    maxValue:fechaMaxEmi,
+		                                    readOnly:inputCdramo+'x'=='16x'
 		                                },
 		                                {
 		                                    xtype:'datefield',
@@ -778,7 +781,14 @@
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 										                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 										                                                            	    		//me.up().up().setClosable(false);
-										                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+										                                                            	    		if(inputCdramo+'x'=='16x')
+										                                                            	    		{
+										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+										                                                            	    		}										                                                            	    		}
+										                                                            	    		else
+										                                                            	    		{
+										                                                            	    		    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+										                                                            	    		}
 										                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
 										                                                            	    		{
@@ -809,7 +819,14 @@
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 											                                                            	    		
-											                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+											                                                            	    		if(inputCdramo+'x'=='16x')
+											                                                            	    		{
+											                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+											                                                            	    		}
+											                                                            	    		else
+											                                                            	    		{
+											                                                            	    		    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+											                                                            	    		}
 											                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		}
 										                                                            	    		Ext.Msg.show({
@@ -855,6 +872,7 @@
 										                                                        	,id      : 'botonEmitirPolizaFinalPreview'
 										                                                        	,text    : 'Vista previa'
 										                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+										                                                        	,hidden  : inputCdramo+'x'=='16x'
 										                                                        	,handler : function()
 										                                                            {
 										                                                                var me=this;
@@ -935,6 +953,7 @@
 										                                                            ,id      : 'venDocVenEmiBotNueCotiza'
 										                                                            ,text    : 'Regresar a mesa de control'
 										                                                            ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+										                                                            ,hidden  : inputCdramo+'x'=='16x'
 										                                                            ,handler : function()
 										                                                            {
 										                                                                var me=this;
@@ -952,6 +971,27 @@
 										                                                            }
 										                                                        }
 										                                                        ,{
+										                                                            xtype    : 'button'
+                                                                                                    ,id      : 'venDocVenEmiBotIrCotiza'
+                                                                                                    ,text    : 'Nueva cotizaci&oacute;n'
+                                                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/book_open.png'
+                                                                                                    ,hidden  : inputCdramo+'x'!='16x'
+                                                                                                    ,handler : function()
+                                                                                                    {
+                                                                                                        var me=this;
+                                                                                                        Ext.create('Ext.form.Panel').submit(
+                                                                                                        {
+                                                                                                            standardSubmit : true
+                                                                                                            ,url           : compleUrlCotizacion
+                                                                                                            ,params        :
+                                                                                                            {
+                                                                                                                'smap1.cdramo'    : inputCdramo
+                                                                                                                ,'smap1.cdtipsit' : inputCdtipsit
+                                                                                                            }
+                                                                                                        });
+                                                                                                    }
+										                                                        }
+										                                                        ,{
 										                                                        	xtype    : 'button'
 									                                                                ,id      : 'venDocVenEmiBotCancelar'
 										                                                            ,text    : 'Cancelar'
@@ -967,6 +1007,7 @@
 										                                            ]
 										                                        }).showAt(50,50);
 										                                        Ext.getCmp('venDocVenEmiBotNueCotiza').hide();
+										                                        Ext.getCmp('venDocVenEmiBotIrCotiza').hide();
 										                                        /**/
 									                                        }
 									                                    }
@@ -1319,6 +1360,20 @@
                                                                             var json=Ext.decode(response.responseText);
                                                                             if(json.success==true)
                                                                             {
+                                                                                Ext.Ajax.request(
+                                                                                {
+                                                                                    url     : compleUrlGuardarCartoRechazo
+                                                                                    ,params :
+                                                                                    {
+                                                                                        'map1.ntramite'  : inputNtramite
+                                                                                        ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+                                                                                        ,'map1.cdsisrol' : sesionDsrol
+                                                                                        ,'map1.cdunieco' : inputCdunieco
+                                                                                        ,'map1.cdramo'   : inputCdramo
+                                                                                        ,'map1.estado'   : inputEstado
+                                                                                        ,'map1.nmpoliza' : inputNmpoliza
+                                                                                    }
+                                                                                });
                                                                                 Ext.create('Ext.form.Panel').submit
                                                                                 ({
                                                                                     url             : datComUrlMC
