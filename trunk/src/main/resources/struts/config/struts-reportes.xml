@@ -3,7 +3,7 @@
 
 <struts>
     
-    <package name="reportes" namespace="/reportes" extends="default">
+    <package name="reportes" namespace="/reportes" extends="struts-default, json-default">
         
         <action name="principal" class="reportesAction">
            <result>/jsp-script/reportes/reportes.jsp</result>

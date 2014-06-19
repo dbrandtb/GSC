@@ -43,9 +43,9 @@ var _t14 = 'No disponible para este dispositivo';
 ////// variables globales //////
 var _urlLogin              = '<s:url namespace="/seguridad" action="autenticaUsuario"         />';
 var _urlLogout             = '<s:url namespace="/seguridad" action="logoutJson"               />';
-var _urlPantallaArbolJson  = '<s:url namespace="/"          action="seleccionaRolClienteJson" />';
-var _urlCargarArbolRol     = '<s:url namespace="/"          action="ArbolRolCliente"          />';
-var _urlRegresaCodigoArbol = '<s:url namespace="/"          action="regresaCodigo"            />';
+var _urlPantallaArbolJson  = '<s:url namespace="/seguridad" action="seleccionaRolClienteJson" />';
+var _urlCargarArbolRol     = '<s:url namespace="/seguridad" action="ArbolRolCliente"          />';
+var _urlRegresaCodigoArbol = '<s:url namespace="/seguridad" action="regresaCodigo"            />';
 var _urlObtenerMenus       = '<s:url namespace="/"          action="obtieneMenuPrincipal"     />';
 ////// variables globales //////
 

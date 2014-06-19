@@ -142,7 +142,7 @@
 	
 	
 	<decorator name="roles" page="decorator_roles.jsp">
-        <pattern>/ArbolRolCliente.action</pattern>
+        <pattern>/seguridad/ArbolRolCliente.action</pattern>
         <pattern>/seleccionaRolCliente.action</pattern>
         <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
     </decorator>

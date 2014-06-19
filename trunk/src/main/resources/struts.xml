@@ -128,40 +128,8 @@
                 <param name="estadoSesion">menu</param>
             </result>
 		</action>
-		
-		<action name="seleccionaRolClienteJson" class="loadClientesRolesAction" method="obtenRolesClientes">
-            <result name="success" type="json" />
-            <result name="load"    type="json" />
-        </action>		
-		
-		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
-			<result name="success" type="json">			
-			<param name="root">listaRolCliente</param>
-			</result>
-		</action>
-
-		<action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
-			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
-			<result name="input">/jsp/portal/treeRolElemento.jsp</result>
-			<result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result>
-		</action>
-		
-		
-		
+				
 		<!-- NUEVOS -->
-		
-        <action name="dinosaurio" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
-            <result name="success">/jsp/portal/testFileUpload.jsp</result>
-        </action>
-        <action name="dinosaurio2" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json"/>
-        </action>
-
-
         
         <action name="cotizacionVital" class="cotizacionVital" method="entrar">
             <result name="gb">/jsp/extjs4/aseguradosGB.jsp</result>
