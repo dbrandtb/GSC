@@ -1363,4 +1363,12 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return true;
 	}
 	
+	public void validaDatosAutos(Map<String,String> params)throws Exception{
+		this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_DATOS_AUTOS);
+	}
+	
+	public void actualizaPolizaExterna(Map<String,String> params)throws Exception{
+		this.returnBackBoneInvoke(params,ProcesoDAO.ACTUALIZA_POLALT);
+	}
+	
 }

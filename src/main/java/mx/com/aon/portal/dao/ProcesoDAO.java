@@ -156,6 +156,8 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String VALIDA_DATOS_DXN = "VALIDA_DATOS_DXN";
 	public static final String VALIDA_USUARIO_SUCURSAL = "VALIDA_USUARIO_SUCURSAL";
 	public static final String ACTUALIZA_CDIDEPER = "ACTUALIZA_CDIDEPER";
+	public static final String VALIDA_DATOS_AUTOS = "VALIDA_DATOS_AUTOS";
+	public static final String ACTUALIZA_POLALT = "ACTUALIZA_POLALT";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -259,6 +261,8 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(VALIDA_DATOS_DXN, new ValidaDatosDxn(getDataSource()));
 		addStoredProcedure(VALIDA_USUARIO_SUCURSAL, new ValidaUsuarioSucursal(getDataSource()));
 		addStoredProcedure(ACTUALIZA_CDIDEPER, new ActualizaCdIdeper(getDataSource()));
+		addStoredProcedure(VALIDA_DATOS_AUTOS, new ValidaDatosAutos(getDataSource()));
+		addStoredProcedure(ACTUALIZA_POLALT, new ActualizaPolizaExterna(getDataSource()));
 	}
 	
 	
@@ -313,6 +317,54 @@ public class ProcesoDAO extends AbstractDAO {
             WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
             return mapper.build(map);
         }
+	}
+	protected class ValidaDatosAutos extends CustomStoredProcedure {
+		
+		protected ValidaDatosAutos(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_VALIDA_DAT_OBLIG_AUTOS");
+			
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+			
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	protected class ActualizaPolizaExterna extends CustomStoredProcedure {
+		
+		protected ActualizaPolizaExterna(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_NMPOLIEX_AUTOS");
+			
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+			
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
 	}
 	
 	
