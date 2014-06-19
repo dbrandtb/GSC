@@ -38,6 +38,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -3199,6 +3200,71 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	public String guardarCartaRechazo()
+	{
+		logger.info(""
+				+ "\n#################################"
+				+ "\n###### guardarCartaRechazo ######"
+				);
+		logger.info("map1: "+map1);
+		String ntramite    = map1.get("ntramite");
+		String comments    = map1.get("comments");
+		String cdsisrol    = map1.get("cdsisrol");
+		String cdunieco    = map1.get("cdunieco");
+		String cdramo      = map1.get("cdramo");
+		String estado      = map1.get("estado");
+		String nmpoliza    = map1.get("nmpoliza");
+		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		String url         = this.getText("ruta.servidor.reports")
+				+ "?destype=cache"
+				+ "&desformat=PDF"
+				+ "&userid="+this.getText("pass.servidor.reports")
+				+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
+						this.getText("rdf.emision.rechazo.medico.nombre"):
+							this.getText("rdf.emision.rechazo.admin.nombre"))
+				+ "&paramform=no"
+				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+				+ "&p_ntramite="+ntramite
+				+ "&p_comments="+comments;
+		log.debug(""
+				+ "\n#################################"
+				+ "\n###### Se solicita reporte ######"
+				+ "\n###### "+url
+				);
+		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
+		log.debug(""
+				+ "\n###### Se solicita reporte ######"
+				+ "\n#################################"
+				);
+		try
+		{
+			HashMap<String, Object> paramsR = new HashMap<String, Object>();
+			paramsR.put("pv_cdunieco_i"  , cdunieco);
+			paramsR.put("pv_cdramo_i"    , cdramo);
+			paramsR.put("pv_estado_i"    , estado);
+			paramsR.put("pv_nmpoliza_i"  , nmpoliza);
+			paramsR.put("pv_nmsuplem_i"  , 0);
+			paramsR.put("pv_feinici_i"   , new Date());
+			paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
+			paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
+			paramsR.put("pv_nmsolici_i"  , nmpoliza);
+			paramsR.put("pv_ntramite_i"  , ntramite);
+			paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			paramsR.put("pv_swvisible_i" , Constantes.SI);
+			kernelManager.guardarArchivo(paramsR);
+	    }
+		catch(Exception ex)
+		{
+			log.error("error al crear la carta rechazo",ex);
+		}
+	
+		logger.info(""
+				+ "\n###### guardarCartaRechazo ######"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	
 	public List<Map<String, Object>> getList1() {
 		return list1;
 	}
