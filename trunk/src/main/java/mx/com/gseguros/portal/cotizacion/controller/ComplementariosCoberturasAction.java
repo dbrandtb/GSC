@@ -978,11 +978,32 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				UserVO usuario=(UserVO)session.get("USUARIO");
 				cdusuari=usuario.getUser();
 			}
-			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
+			String cdtipsit = smap1.get("cdtipsit");
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.setCdtipsit(smap1.get("cdtipsit"));
+			gc.setCdtipsit(cdtipsit);
 			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
 			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
+			
+			/*
+			 * Guardo los cdatribu derecho (los que salen del lado derecho en la cotizacion)
+			 * porque esos son de solo lectura en la pantalla de "datos de cotizacion"
+			 */
+			Map<String,String>mapaCdatribuDerecho=new HashMap<String,String>();
+			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+					 ||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+			{
+				List<ComponenteVO>cdatribusDerechos=pantallasManager.obtenerComponentes(
+						null, null, null, cdtipsit, null, null, "COTIZACION_CUSTOM", "CDATRIBU_DERECHO", null);
+				if(cdatribusDerechos.size()>0)
+				{
+					for(ComponenteVO cdatribuderecho:cdatribusDerechos)
+					{
+						mapaCdatribuDerecho.put(cdatribuderecho.getNameCdatribu(),"DUMMY");
+					}
+				}
+			}
+			
 			for(ComponenteVO t:tatrisit)
 			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
 			{
@@ -992,11 +1013,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					{
 						tatriTemp.add(t);
 						if(
-								smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								 ||smap1.get("cdtipsit").equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()) 
+								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								 ||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()) 
 								)
 						{
-							if(t.getSwpresen().equalsIgnoreCase("S"))
+							if(!mapaCdatribuDerecho.containsKey(t.getNameCdatribu()))
 							{
 								t.setSoloLectura(true);
 							}
