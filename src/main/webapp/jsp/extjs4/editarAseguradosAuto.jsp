@@ -387,6 +387,7 @@ function _p20_guardar(button,event,callback)
 
 function _p20_editarDomicilio(grid, rowIndex, colIndex)
 {
+	debug('>_p20_editarDomicilio');
 	var record=grid.getStore().getAt(rowIndex);
 	var recordClave = record.get('nombre')+' '
 	                + (record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')
