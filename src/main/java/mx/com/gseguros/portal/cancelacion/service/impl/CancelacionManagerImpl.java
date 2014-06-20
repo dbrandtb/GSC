@@ -67,7 +67,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 		String nmsuplemCancela = null;
 		log.debug("CancelacionManager cancelaPoliza params: "+params);
 		nmsuplemCancela = cancelacionDAO.cancelaPoliza(params);
-		log.debug("CancelacionManager cancelaPoliza end");
+		log.debug("CancelacionManager cancelaPoliza end: "+nmsuplemCancela);
 		return nmsuplemCancela;
 	}
 	
@@ -122,7 +122,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 	
 	//pkg_cancela.p_cancela_poliza
 	@Override
-	public void                     cancelaPoliza             (
+	public String                     cancelaPoliza             (
 			String cdunieco
 			,String cdramo
 			,String cduniage
@@ -151,7 +151,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 		params.put("pv_fecancel_i" , fecancel);
 		params.put("pv_usuario_i"  , cdusuari);
 		params.put("pv_cdtipsup_i" , cdtipsup);
-		this.cancelaPoliza(params);
+		return this.cancelaPoliza(params);
 	}
 	
 	/**
