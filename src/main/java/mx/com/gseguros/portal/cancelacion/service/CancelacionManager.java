@@ -15,7 +15,7 @@ public interface CancelacionManager
 	public List<Map<String,String>> obtenerPolizasCandidatas  (Map<String,String> params) throws Exception;
 	public void                     seleccionaPolizas         (Map<String,Object> params) throws Exception;
 	public String                   cancelaPoliza             (Map<String,String> params) throws Exception;
-	public void                     cancelaPoliza             (
+	public String                   cancelaPoliza             (
 			String cdunieco
 			,String cdramo
 			,String cduniage
