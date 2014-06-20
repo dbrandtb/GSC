@@ -457,6 +457,13 @@ Ext.onReady(function(){
             //console.log(resp);
         	//console.log(resp);
             formPanelp4.loadRecord(resp);
+            debug('heredarPanel');
+            if(formPanelp4.down('[name=smap1.CODPOSTAL]').getValue()+'x'!='x'&&formPanelp4.down('[name=smap1.CODPOSTAL]').getValue().length==4)
+            {
+                debug('poniendo cero para cp:',formPanelp4.down('[name=smap1.CODPOSTAL]').getValue());
+                formPanelp4.down('[name=smap1.CODPOSTAL]').setValue('0'+formPanelp4.down('[name=smap1.CODPOSTAL]').getValue());
+            }
+            heredarPanel(formPanelp4.items.items[2]);
             formPanelp4.down('[name=smap1.asegurado]').setValue(inputNombreaseguradop4);
             formPanelp4.down('[name=smap1.rfc]').setValue(inputCdrfcp4);
             
