@@ -6259,7 +6259,7 @@ public class EndososAction extends PrincipalCoreAction
 			cancelacionManager.seleccionaPolizaUnica(cdunieco, cdramo, nmpoliza, null, dFecha);
 			
 			//pkg_cancela.p_cancela_poliza
-			cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
+			String nmsuplemCancela = cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
 					,cdrazonReexp, comentaReexp, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
@@ -6325,7 +6325,7 @@ public class EndososAction extends PrincipalCoreAction
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
-						nmsuplem, null, 
+						nmsuplemCancela, null, 
 						sucursal, "", ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
