@@ -31,6 +31,15 @@
 			<result name="success">/jsp-script/proceso/emision/cotizacionDemo.jsp
 			</result>
 		</action>
+		
+		<action name="guardaPantalla" class="generadorPantallasAction" method="guardaPantalla">
+            <result name="success">/jsp-script/proceso/emision/cotizacionDemo.jsp</result>
+        </action>
+        
+        
+        
+        
+        
 
 	</package>
 
