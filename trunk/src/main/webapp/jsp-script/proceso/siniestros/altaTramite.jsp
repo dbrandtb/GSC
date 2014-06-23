@@ -10,6 +10,7 @@
             var _CONTEXT = '${ctx}';
             
             var _CATALOGO_OFICINA_RECEP= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            var _CAT_RAMOS		       = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
             var _CATALOGO_TipoAtencion = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
             var _CATALOGO_TipoPago     = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_PAGO_SINIESTROS"/>';
             var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
@@ -33,7 +34,7 @@
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
-        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramite.js"></script>
+        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramite.js?${now}"></script>
         
     </head>
     <body>

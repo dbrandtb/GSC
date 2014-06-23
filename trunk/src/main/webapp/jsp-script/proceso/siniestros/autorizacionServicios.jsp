@@ -19,6 +19,7 @@
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             
             var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
+            var _CAT_RAMOS		       				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
             
             var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"  action="includes/historialReclamaciones" />';
             var _VER_COBERTURAS		    			= '<s:url namespace="/consultasPoliza"  action="includes/verCoberturasPoliza" />';

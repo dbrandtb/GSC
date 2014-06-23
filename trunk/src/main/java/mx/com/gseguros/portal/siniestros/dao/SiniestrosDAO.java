@@ -63,7 +63,7 @@ public interface SiniestrosDAO {
 	
 	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws DaoException;
 	
-	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson) throws DaoException;
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo) throws DaoException;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/

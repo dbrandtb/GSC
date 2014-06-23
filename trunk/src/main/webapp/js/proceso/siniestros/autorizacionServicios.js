@@ -258,6 +258,21 @@ Ext.onReady(function() {
         }
     });
     
+    storeRamos = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_URL_CATALOGOS,
+            extraParams : {catalogo:_CAT_RAMOS},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
     //DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	storeConceptoAutorizados=new Ext.data.Store(
 	{
@@ -432,6 +447,21 @@ Ext.onReady(function() {
 			]
 	});
 	
+	cmbRamos = Ext.create('Ext.form.field.ComboBox',
+	{
+		colspan	   :2,			fieldLabel   : 'Ramo ',			id        : 'cmbRamos',		allowBlank     : false,	
+	    editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : false,
+	    width	   :500,		labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos'
+	    ,store : storeRamos
+	    ,listeners : {
+	    	'select' : function(combo, record) {
+	    	//change:function(e){
+	    		Ext.getCmp('idAsegurado').setValue('');
+	    		Ext.getCmp('polizaAfectadaCom').setValue('');
+	    	}
+	    }
+	});
+	
 	asegurado = Ext.create('Ext.form.field.ComboBox',
     {
 		colspan:2,						fieldLabel     : 'Asegurado',		allowBlank     : false,			displayField : 'value',
@@ -455,7 +485,8 @@ Ext.onReady(function() {
 			    	
 			    	
 					var params = {
-			                'params.cdperson' : obtieneCDPerson
+			                'params.cdperson' : obtieneCDPerson,
+                            'params.cdramo' : Ext.getCmp('cmbRamos').getValue()
 			        };
 					
 			        cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
@@ -865,6 +896,17 @@ Ext.onReady(function() {
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs'
 		,store : storePlazas
+		,listeners : {
+	    	//'select' : function(combo, record) {
+	    	change:function(e){
+	    		//Ext.getCmp('cmbRamos').setValue('');
+	    		storeRamos.load({
+	                params:{
+	                	'params.idPadre' :this.getValue()
+	                }
+	            });
+	    	}
+	    }
 	});	
 	
 	
@@ -1914,6 +1956,10 @@ Ext.onReady(function() {
 		 			 	]
 			 	}
 			 	,
+			 	sucursal
+			 	,
+			 	cmbRamos
+			 	,
 			 	asegurado
 			 	,
 			 	{
@@ -2016,8 +2062,6 @@ Ext.onReady(function() {
 				 			 })				
 			 			 ]
 			 	},
-			 	sucursal,
-			 	
 			 	coberturaAfectada,
 			 	subCobertura,
 			 	proveedor,
@@ -2385,7 +2429,16 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
 			
+			storePlazas.load();
 			Ext.getCmp('idSucursal').setValue(json.cduniecs);
+			
+			storeRamos.load({
+                params:{
+                	'params.idPadre':Ext.getCmp('idSucursal').getValue()
+                }
+			});
+			Ext.getCmp('cmbRamos').setValue(json.cdramo);
+			
 			
 			Ext.getCmp('idComboICD').setValue(json.cdicd);
 			
