@@ -477,6 +477,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 					parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
 					parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
+					parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
 					if(params.get("cmbProveedor").toString().length() > 0){
 						parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 					}
@@ -521,6 +522,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			    		otvalor.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 			    		otvalor.put("pv_otvalor11_i",params.get("cmbProveedor"));
 			    		otvalor.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
+			    		otvalor.put("pv_otvalor20_i",params.get("cmbRamos"));
 						if(params.get("cmbProveedor").toString().length() > 0){
 							otvalor.put("pv_otvalor13_i",Rol.CLINICA.getCdrol());
 						}
@@ -645,8 +647,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
     */ 
    public String consultaListaPoliza(){
    	logger.debug(" **** Entrando al mï¿½todo de Lista de Poliza ****");
+   	logger.debug(params);
    	try {
-				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
+				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
 				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
 			}catch( Exception e){
 				logger.error("Error al obtener los datos de la poliza ",e);
@@ -2542,6 +2545,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
     						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
     				//4.- Obtenemos la penalización por circulo Hospitalario
+    				
+    				
+    				logger.debug("###### CIRHOSPI ######");
+    				logger.debug(informacionGral.get(0).get("CIRHOSPI"));
+    				logger.debug("###### CIRHOPROV ######");
+    				logger.debug(informacionGral.get(0).get("CIRHOPROV"));
+    				logger.debug("###### CDCAUSA ######");
+    				logger.debug(informacionGral.get(0).get("CDCAUSA"));
+    				
     				double penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
@@ -2683,7 +2695,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						listaConceptosSiniestro.add(concepto);
     						
     						//hospitalizacion
-    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
+    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA") || factura.get("CDGARANT").equalsIgnoreCase("4HOS"))
     						{
     							logger.debug(">>HOSPITALIZACION");
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
@@ -2824,7 +2836,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         								{
         									copagoPorc = true;
         								}
-        								scopago=scopago.replace("%", "").replace("$", "");
+        								scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
         								copago=Double.valueOf(scopago);
         								if(copagoPorc)
         								{
@@ -3013,6 +3025,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    							&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 	    							)
 	    					{
+	    						logger.debug("#####VALOR#######");
+	    						logger.debug(concepto.get("SUBTTDESCUENTO"));
 	    						subttDescuentoSiniestroIte+= Double.valueOf(concepto.get("SUBTTDESCUENTO"));
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
@@ -3419,12 +3433,17 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	String copagoFinal= null;
     	
     	double copagoOriginalPoliza = 0d;
+    	logger.debug("######copagoOriginal####### "+copagoOriginal);
     	String copagoModificado= copagoOriginal.replaceAll(",", "");
+    	
     	if(copagoOriginal.equalsIgnoreCase("no") || copagoOriginal.equalsIgnoreCase("na")){
     		copagoOriginalPoliza = 0d;
     	}else{
-    		
-    		copagoOriginalPoliza= Double.parseDouble(copagoModificado);
+    		if(copagoOriginal.equalsIgnoreCase("#######")){
+    			copagoOriginalPoliza = 0d;
+    		}else{
+    			copagoOriginalPoliza= Double.parseDouble(copagoModificado);
+    		}
     	}
     	
     	if(causaSiniestro != null)
@@ -3489,7 +3508,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		}else{
         			if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
                 	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
-                	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
+                	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000"))
+                	{
+                		valor1="3";
+                	}
+                	else{
+                		valor1="0";
+                	}
         		}
         		
         		if(circuloHospProveedor == null){

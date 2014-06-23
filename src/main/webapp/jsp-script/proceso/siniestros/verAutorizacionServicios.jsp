@@ -19,6 +19,7 @@
     var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"  action="validaExclusionPenalizacion"/>';
     var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
     var _URL_PORCENTAJE_PENALIZACION1		= '<s:url namespace="/siniestros"  action="validaPorcentajePenalizacion"/>';
+    var _CAT_RAMOS2		       				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
     
     // Obtenemos el contenido en formato JSON de la propiedad solicitada:
     var valorAction = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;

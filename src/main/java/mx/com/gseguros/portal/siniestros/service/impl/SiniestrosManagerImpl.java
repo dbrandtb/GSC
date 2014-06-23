@@ -280,9 +280,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException {
 		try {
-			return siniestrosDAO.obtieneListadoPoliza(cdperson);
+			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}

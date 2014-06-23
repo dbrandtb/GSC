@@ -65,8 +65,30 @@ Ext.onReady(function() {
         }
     });
     
+    storeRamos2 = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_URL_CATALOGOS,
+            extraParams : {catalogo:_CAT_RAMOS2},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
     
-    
+    cmbRamos2 = Ext.create('Ext.form.field.ComboBox',
+	{
+		colspan	   :2,			fieldLabel   : 'Ramo ',			id        : 'cmbRamos2',		allowBlank     : false,			width:500	
+	    ,editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : true,
+	    labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos2', readOnly   : true
+	    ,store : storeRamos2
+	});
+	
     sucursalConsulta= Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan		:2,					fieldLabel   : 'Plaza',			id: 'sucConsulta',				allowBlank: false,			width:500	
@@ -376,6 +398,10 @@ Ext.onReady(function() {
     	                    name       : 'nmautant',			labelWidth	: 170,										readOnly   : true
     	                }
     				 	,
+    				 	sucursalConsulta
+    				 	,
+    				 	cmbRamos2
+    				 	,
     				 	{
     				 		xtype       : 'textfield',			colspan:2,				fieldLabel : 'Asegurado',     	readOnly   : true,
     	                    id:'idAsegurado1',					labelWidth: 170,		width:500,						name       : 'nombreCliente'
@@ -410,8 +436,6 @@ Ext.onReady(function() {
     		                 colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada1'
     		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza', hidden:true
     		             }
-    				 	,
-    	                sucursalConsulta
     				 	,
     				 	{
     	                    xtype       : 'textfield',			fieldLabel : 'Cobertura',				id  : 'cobertura1',
@@ -545,6 +569,13 @@ Ext.onReady(function() {
 						panelInicialPrincipal1.getForm().loadRecord(records[0]);
 						Ext.getCmp('sucConsulta').setValue(Ext.getCmp('cveSucursal1').getValue());
 						
+						storeRamos2.load({
+			                params:{
+			                	'params.idPadre':Ext.getCmp('sucConsulta').getValue()
+			                }
+						});
+						
+						Ext.getCmp('cmbRamos2').setValue(Ext.getCmp('cdramo1').getValue());
 						Ext.Ajax.request(
 						{
 							url     : _URL_LISTA_SUBCOBERTURA1
