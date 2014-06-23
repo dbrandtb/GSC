@@ -1872,7 +1872,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							}
 							
 						}else {
-							mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
 						}
 					}
 					
@@ -2244,7 +2244,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						retryWS = !success;
 						if(!success)
 						{
-							mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
 							this.nmpolAlt = Long.toString(aux.getNumpol());
 							nmpoliexEmitida =  this.nmpolAlt;
 							
@@ -2538,7 +2538,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				
 			}else {
-				mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+				mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
 			}
 		}
 		
