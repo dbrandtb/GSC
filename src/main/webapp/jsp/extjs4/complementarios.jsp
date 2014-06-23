@@ -66,6 +66,8 @@
             debug('fechaMaxEmi:',fechaMaxEmi);
             debug(sesionDsrol);
             
+            var _paramsRetryWS;
+            
             function expande(indice)
             {
             	var comp;
@@ -868,6 +870,19 @@
 										                                                            }
 										                                                        }
 										                                                        ,{
+										                                                        	id     : 'botonReenvioWS'
+										                                                            ,xtype : 'button'
+										                                                            ,text  : 'Reintentar Emisi&oacute;n Web Services'
+										                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+										                                                            ,disabled: true
+										                                                            ,hidden: (inputCdtipsit != "AF" && inputCdtipsit != "PU") ? true: false
+										                                                            ,handler:function()
+										                                                            {
+										                                                            	var me=this;
+										                                                            	reintentarWSAuto(me.up().up(), _paramsRetryWS);
+										                                                            }
+										                                                        }
+										                                                        ,{
 										                                                        	xtype    : 'button'
 										                                                        	,id      : 'botonEmitirPolizaFinalPreview'
 										                                                        	,text    : 'Vista previa'
@@ -1598,6 +1613,8 @@
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+                                	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
+                                	    		Ext.getCmp('botonReenvioWS').hide();
 	                            	    	}
 	                            	    	else
 	                            	    	{
@@ -1626,6 +1643,10 @@
 	                                        });
 	                            	    }
 	                            	});
+	                   	}else{
+	                   		_paramsRetryWS = params;
+	                   		debug("Habilitando Boton Reenvio WS");
+	                   		Ext.getCmp('botonReenvioWS').setDisabled(false);
 	                   	}
 	                   }
                 	});
