@@ -986,23 +986,23 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
 			
 			/*
-			 * Guardo los cdatribu derecho (los que salen del lado derecho en la cotizacion)
-			 * porque esos son de solo lectura en la pantalla de "datos de cotizacion"
+			 * Estos atributos no pueden modificarse
 			 */
-			Map<String,String>mapaCdatribuDerecho=new HashMap<String,String>();
-			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-					 ||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-			{
-				List<ComponenteVO>cdatribusDerechos=pantallasManager.obtenerComponentes(
-						null, null, null, cdtipsit, null, null, "COTIZACION_CUSTOM", "CDATRIBU_DERECHO", null);
-				if(cdatribusDerechos.size()>0)
-				{
-					for(ComponenteVO cdatribuderecho:cdatribusDerechos)
-					{
-						mapaCdatribuDerecho.put(cdatribuderecho.getNameCdatribu(),"DUMMY");
-					}
-				}
-			}
+			Map<String,String>mapaAtributosReadonly=new HashMap<String,String>();
+			mapaAtributosReadonly.put("1" , "DUMMY");
+			mapaAtributosReadonly.put("2" , "DUMMY");
+			mapaAtributosReadonly.put("3" , "DUMMY");
+			mapaAtributosReadonly.put("4" , "DUMMY");
+			mapaAtributosReadonly.put("5" , "DUMMY");
+			mapaAtributosReadonly.put("6" , "DUMMY");
+			mapaAtributosReadonly.put("7" , "DUMMY");
+			
+			/*
+			 * Estos atributos no deben verse
+			 */
+			Map<String,String>mapaAtributosOcultos=new HashMap<String,String>();
+			mapaAtributosOcultos.put("24" , "DUMMY");
+			mapaAtributosOcultos.put("26" , "DUMMY");
 			
 			for(ComponenteVO t:tatrisit)
 			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
@@ -1017,11 +1017,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 								 ||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()) 
 								)
 						{
-							if(!mapaCdatribuDerecho.containsKey(t.getNameCdatribu()))
+							if(mapaAtributosReadonly.containsKey(t.getNameCdatribu()))
 							{
 								t.setSoloLectura(true);
 							}
-							if(t.getNameCdatribu().equals("24")||t.getNameCdatribu().equals("26"))
+							if(mapaAtributosOcultos.containsKey(t.getNameCdatribu()))
 							{
 								t.setOculto(true);
 							}
