@@ -308,7 +308,7 @@ Ext.onReady(function(){
                             {
                                 formPanelp4.setLoading(false);
                                 var json=Ext.decode(opts.response.responseText);
-                                if(json.success==true)
+                                if(json.exito==true)
                                 {
                                     centrarVentanaInterna(Ext.Msg.show({
                                         title:'Datos guardados',
@@ -319,12 +319,12 @@ Ext.onReady(function(){
                                 }
                                 else
                                 {
-                                    Ext.Msg.show({
+                                    centrarVentanaInterna(Ext.Msg.show({
                                         title:'Error',
-                                        msg: 'Error al guardar la informaci&oacute;n',
+                                        msg: json.str1,
                                         buttons: Ext.Msg.OK,
                                         icon: Ext.Msg.ERROR
-                                    });
+                                    }));
                                 }
                             },
                             failure:function(response,opts)
