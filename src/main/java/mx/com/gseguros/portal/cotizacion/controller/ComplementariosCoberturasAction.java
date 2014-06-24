@@ -49,6 +49,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	private Map<String,Object> opanel3;
 	private Logger log=Logger.getLogger(ComplementariosCoberturasAction.class);
 	private boolean success=false;
+	private boolean exito  =false;
 	private Map<String,String>parametros;
 	private String str1;
 	private String str2;
@@ -836,6 +837,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				+ "\n######                               ######");
 		try
 		{
+			success=true;
 			log.debug(smap1);
 			log.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
@@ -901,12 +903,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			/*/////////////////////////////////////*/
 			////// guardar persona datos fijos //////
 			/////////////////////////////////////////
-			success=true;
+			
+			exito=true;
 		}
 		catch(Exception ex)
 		{
 			log.error("error al guardar los datos de domicilio",ex);
-			success=false;
+			str1=ex.getMessage();
+			exito=false;
 		}
 		log.debug("\n######                               ######"
 				+ "\n######                               ######"
@@ -1548,6 +1552,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
 	}
 	
 }
