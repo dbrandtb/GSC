@@ -55,12 +55,13 @@ var _mcotiza_selectedCdplan;
 var _mcotiza_selectedDsplan;
 var _mcotiza_selectedNmsituac;
 
-var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="cotizar"            />';
-var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar"            />';
-var _mcotiza_urlViewDoc        = '<s:url namespace="/documentos"      action="descargaDocInline"  />';
-var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
-var _mcotiza_urlLoad           = '<s:url namespace="/emision"         action="cargarCotizacion"   />';
-var _mcotiza_urlNada           = '<s:url namespace="/emision"         action="webServiceNada"     />';
+var _mcotiza_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"              />';
+var _mcotiza_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"              />';
+var _mcotiza_urlViewDoc              = '<s:url namespace="/documentos"      action="descargaDocInline"    />';
+var _mcotiza_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"   />';
+var _mcotiza_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"     />';
+var _mcotiza_urlNada                 = '<s:url namespace="/emision"         action="webServiceNada"       />';
+var _mcotiza_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios" />';
 
 var _mcotiza_necesitoIncisos = true;
 <s:if test='%{getImap().get("fieldsIndividuales")==null}'>
@@ -147,68 +148,84 @@ function _mcotiza_load()
 		    		    	debug('json response:',json);
 		    		    	if(json.success)
 		    		    	{
-		    		    		_mcotiza_nueva();
-		    		    		for(var i=0;i<json.slist1.length;i++)
-		    		    		{
-		    		    			_mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+		    		    	    if(!json.smap1.CDUNIECO)
+		    		    	    {
+		    		    		    _mcotiza_nueva();
+		    		    		    for(var i=0;i<json.slist1.length;i++)
+		    		    		    {
+    		    		    			_mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+		    		    		    }
+		    		    		    debug('store:',_mcotiza_storeIncisos);
+		    		    		    var primerInciso = new _mcotiza_IncisoAgrupado(json.slist1[0]);
+		    		    		    debug('primerInciso:',primerInciso);
+		    		    		    //leer elementos anidados
+		    		    		    var form      = _mcotiza_getFormDatosGenerales();
+		    		    		    var formItems =_mcotiza_getFormDatosGenerales().items.items[0].items.items;
+		    		    		    var numBlurs  = 0;
+		    		    		    for(var i=0;i<formItems.length;i++)
+		    		    		    {
+		    		    			    var item=formItems[i];
+		    		    			    if(item.hasListener('blur'))
+		    		    			    {
+		    		    				    var numBlursSeguidos = 1;
+		    		    				    debug('contando blur:',item);
+		    		    				    for(var j=i+1;j<formItems.length;j++)
+		    		    				    {
+		    		    					    if(formItems[j].hasListener('blur'))
+		    		    					    {
+    		    		    						numBlursSeguidos=numBlursSeguidos+1;
+		    		    					    }
+		    		    				    }
+		    		    				    if(numBlursSeguidos>numBlurs)
+		    		    				    {
+    		    		    					numBlurs=numBlursSeguidos;
+		    		    				    }
+		    		    			    }
+		    		    		    }
+		    		    		    debug('numBlurs:',numBlurs);
+		    		    		    var i=0;
+		    		    		    var renderiza=function()
+		    		    		    {
+    		    		    			debug('renderiza',i);
+		    		    			    form.setRecord(primerInciso);
+		    		    			    if(i<numBlurs)
+		    		    			    {
+    		    		    				i=i+1;
+		    		    				    for(var j=0;j<formItems.length;j++)
+		    		    				    {
+    		    		    				    var iItem  = formItems[j];
+		    		    				        var iItem2 = formItems[j+1];
+                                                debug('iItem2:',iItem2,'store:',iItem2?iItem2._store:'iItem2 no');
+		    		    					    if(iItem.hasListener('blur')&&iItem2&&iItem2._store)
+		    		    					    {
+    		    		    						debug('tiene blur y lo hacemos heredar',iItem);
+		    		    						    _g_heredarCombo(true,iItem2.id,iItem.id);
+		    		    					    }
+		    		    				    }
+		    		    				    setTimeout(renderiza,1000);
+		    		    			    }
+		    		    			    else
+		    		    			    {
+    		    		    				_mcotiza_getFieldNmpoliza().setValue(value);
+		    		    				    unmaskui();
+		    		    			    }
+		    		    		    }
+		    		    		    maskui();
+		    		    		    renderiza();
 		    		    		}
-		    		    		debug('store:',_mcotiza_storeIncisos);
-		    		    		var primerInciso = new _mcotiza_IncisoAgrupado(json.slist1[0]);
-		    		    		debug('primerInciso:',primerInciso);
-		    		    		//leer elementos anidados
-		    		    		var form      = _mcotiza_getFormDatosGenerales();
-		    		    		var formItems =_mcotiza_getFormDatosGenerales().items.items[0].items.items;
-		    		    		var numBlurs  = 0;
-		    		    		for(var i=0;i<formItems.length;i++)
+		    		    		else
 		    		    		{
-		    		    			var item=formItems[i];
-		    		    			if(item.hasListener('blur'))
-		    		    			{
-		    		    				var numBlursSeguidos = 1;
-		    		    				debug('contando blur:',item);
-		    		    				for(var j=i+1;j<formItems.length;j++)
-		    		    				{
-		    		    					if(formItems[j].hasListener('blur'))
-		    		    					{
-		    		    						numBlursSeguidos=numBlursSeguidos+1;
-		    		    					}
-		    		    				}
-		    		    				if(numBlursSeguidos>numBlurs)
-		    		    				{
-		    		    					numBlurs=numBlursSeguidos;
-		    		    				}
-		    		    			}
+		    		    		    $(['<form action="'+_mcotiza_urlDatosComplementarios+'" >'
+                                      ,'<input type="text" name="cdunieco"      value="'+json.smap1.CDUNIECO+'" />'
+                                      ,'<input type="text" name="cdramo"        value="'+json.smap1.cdramo+'"   />'
+                                      ,'<input type="text" name="estado"        value="W"                       />'
+                                      ,'<input type="text" name="nmpoliza"      value="'+json.smap1.nmpoliza+'" />'
+                                      ,'<input type="text" name="map1.ntramite" value="'+json.smap1.NTRAMITE+'" />'
+                                      ,'<input type="text" name="cdtipsit"      value="'+json.smap1.cdtipsit+'" />'
+                                      ,'</form>'].join("")
+                                    )
+                                    .submit();
 		    		    		}
-		    		    		debug('numBlurs:',numBlurs);
-		    		    		var i=0;
-		    		    		var renderiza=function()
-		    		    		{
-		    		    			debug('renderiza',i);
-		    		    			form.setRecord(primerInciso);
-		    		    			if(i<numBlurs)
-		    		    			{
-		    		    				i=i+1;
-		    		    				for(var j=0;j<formItems.length;j++)
-		    		    				{
-		    		    				    var iItem  = formItems[j];
-		    		    				    var iItem2 = formItems[j+1];
-                                            debug('iItem2:',iItem2,'store:',iItem2?iItem2._store:'iItem2 no');
-		    		    					if(iItem.hasListener('blur')&&iItem2&&iItem2._store)
-		    		    					{
-		    		    						debug('tiene blur y lo hacemos heredar',iItem);
-		    		    						_g_heredarCombo(true,iItem2.id,iItem.id);
-		    		    					}
-		    		    				}
-		    		    				setTimeout(renderiza,1000);
-		    		    			}
-		    		    			else
-		    		    			{
-		    		    				_mcotiza_getFieldNmpoliza().setValue(value);
-		    		    				unmaskui();
-		    		    			}
-		    		    		}
-		    		    		maskui();
-		    		    		renderiza();
 		    		    	}
 		    		    	else
 		    		    	{
@@ -356,13 +373,32 @@ function _mcotiza_comprar()
             debug('response:',json);
             if (json.success == true)
             {
-           		_mcotiza_getBotonLectura().setText('Tr&aacute;mite '+json.comprarNmpoliza+' generado para '+_mcotiza_selectedDsplan);
-           		_mcotiza_getBotonLectura().show();
-           		_mcotiza_getBotonPlan().hide();
-                _mcotiza_getBotonComprar().hide();
-				_mcotiza_getBotonCorreo().hide();
-                _mcotiza_getBotonImprimir().hide();
-            	Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza);
+                if(_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')
+                {
+                    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza,function()
+                    {
+                        $(['<form action="'+_mcotiza_urlDatosComplementarios+'" >'
+                          ,'<input type="text" name="cdunieco"      value="'+_mcotiza_smap1.cdunieco+'"                />'
+                          ,'<input type="text" name="cdramo"        value="'+_mcotiza_smap1.cdramo+'"                  />'
+                          ,'<input type="text" name="estado"        value="W"                                          />'
+                          ,'<input type="text" name="nmpoliza"      value="'+_mcotiza_getFieldNmpoliza().getValue()+'" />'
+                          ,'<input type="text" name="map1.ntramite" value="'+json.comprarNmpoliza+'"                   />'
+                          ,'<input type="text" name="cdtipsit"      value="'+_mcotiza_smap1.cdtipsit+'"                />'
+                          ,'</form>'].join("")
+                        )
+                        .submit();
+                    });
+                }
+                else
+                {
+           		    _mcotiza_getBotonLectura().setText('Tr&aacute;mite '+json.comprarNmpoliza+' generado para '+_mcotiza_selectedDsplan);
+           		    _mcotiza_getBotonLectura().show();
+           		    _mcotiza_getBotonPlan().hide();
+                    _mcotiza_getBotonComprar().hide();
+				    _mcotiza_getBotonCorreo().hide();
+                    _mcotiza_getBotonImprimir().hide();
+            	    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza);
+            	}
             }
             else
             {
