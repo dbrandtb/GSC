@@ -267,11 +267,17 @@ Ext.onReady(function() {
 	    editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : false,
 	    width	   :500,		labelWidth   : 250,				queryMode :'local',			name           :'cmbRamos'
 	    ,store : storeRamos
-	    /*,listeners : {
-    		change:function(e){
-    			alert(Ext.getCmp('cmbRamos').getValue());
-    		}
-	    }*/
+	    ,listeners : {
+	    	'select' : function(combo, record) {
+	    		if(Ext.getCmp('cmbTipoPago').getValue() == "1"){ // --> Pago Directo
+	    			storeListAsegPagDirecto.removeAll();
+	    		}else{
+	    			// --> Pago por Reembolso
+	    			Ext.getCmp('cmbAseguradoAfectado').setValue("");
+					Ext.getCmp('cmbBeneficiario').setValue("");
+	    		}
+	    	}
+	    }
 	});
     
     var comboTipoAte= Ext.create('Ext.form.ComboBox',
