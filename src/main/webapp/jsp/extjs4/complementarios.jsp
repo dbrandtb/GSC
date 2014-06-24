@@ -875,7 +875,7 @@
 										                                                        ,{
 										                                                        	id     : 'botonReenvioWS'
 										                                                            ,xtype : 'button'
-										                                                            ,text  : 'Reintentar Emisi&oacute;n Web Services'
+										                                                            ,text  : 'Reintentar Emisi&oacute;n'
 										                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 										                                                            ,disabled: true
 										                                                            ,hidden: (inputCdtipsit != "AF" && inputCdtipsit != "PU") ? true: false
