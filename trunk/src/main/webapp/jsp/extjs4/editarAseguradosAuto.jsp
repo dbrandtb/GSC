@@ -133,6 +133,16 @@ Ext.onReady(function()
 			}
 		}
 	});
+	
+	if (Ext.grid.RowEditor) {
+		Ext.apply(Ext.grid.RowEditor.prototype, {
+			saveBtnText : "Buscar/Actualizar",
+			cancelBtnText : "Cancelar",
+			errorsText : "Errores",
+			dirtyText : "Debe guardar o cancelar sus cambios"
+		});
+	}
+	
 	_p20_gridAsegurados = Ext.create('Ext.grid.Panel',
 	{
 		title       : 'Clientes'
