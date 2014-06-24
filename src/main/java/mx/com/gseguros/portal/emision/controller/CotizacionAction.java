@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -1236,7 +1237,22 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsValidaCargarCotizacion.put("param1" , cdramo);
 				paramsValidaCargarCotizacion.put("param2" , cdtipsit);
 				paramsValidaCargarCotizacion.put("param3" , nmpoliza);
-				storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CARGAR_COTIZACION.getNombre(), paramsValidaCargarCotizacion, null);
+				Map<String,String>datosParaComplementar=storedProceduresManager.procedureMapCall(ObjetoBD.VALIDA_CARGAR_COTIZACION.getNombre(), paramsValidaCargarCotizacion, null);
+				
+				/*
+				 * cuando se encuentra cdunieco y ntramite para esa cotizacion y no es auto:
+				 */
+				if((!cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo()))&&datosParaComplementar.containsKey("CDUNIECO"))
+				{
+					throw new Exception("La cotizaci&oacute;n ya se encuentra en tr&aacute;mite de emisi&oacute;n");
+				}
+				/*
+				 * cuando se encuentra cdunieco y ntramite y es auto, se mandara a datos complementarios
+				 */
+				else
+				{
+					smap1.putAll(datosParaComplementar);
+				}
 			}
 			catch(Exception ex)
 			{
