@@ -1583,6 +1583,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String esDxN           = null;
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
+		String cdRamoGS        = null;
 		
 		////// obtener parametros
 		if(success)
@@ -1861,6 +1862,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
 							this.nmpolAlt = Long.toString(aux.getNumpol()); 
 							panel2.put("nmpoliex", this.nmpolAlt);
+							cdRamoGS = Short.toString(aux.getRamos());
 							
 							//Insetar Poliza Externa WS Auto
 							try{
@@ -1999,6 +2001,75 @@ public class ComplementariosAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				
+				/**
+				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+				 */
+				if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+					
+					String parametros = null;
+					String urlCaratula = this.getText("caratula.impresion.autos.url");
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					/**
+					 * Para Caratula
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i",   cdramo);
+					paramsR.put("pv_estado_i",   "M");
+					paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
+					paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
+					paramsR.put("pv_feinici_i",  new Date());
+					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					paramsR.put("pv_nmsolici_i", nmpoliza);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+					paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Recibo 1
+					 */
+					parametros = "?9999,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
+					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo 1");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para AP inciso 1
+					 */
+					parametros = "?14,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
+					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlAp + parametros);
+					paramsR.put("pv_dsdocume_i", "AP");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+				}
 			}
 			catch(Exception ex)
 			{
@@ -2072,6 +2143,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes      = null;
 		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String rutaCarpeta      = null;
+		String cdRamoGS         = null;
 		
 		////// obtener parametros
 		if(success)
@@ -2255,6 +2327,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
 							this.nmpolAlt = Long.toString(aux.getNumpol());
 							nmpoliexEmitida =  this.nmpolAlt;
+							cdRamoGS = Short.toString(aux.getRamos());
 							
 							//Insetar Poliza Externa WS Auto
 							try{
@@ -2398,6 +2471,75 @@ public class ComplementariosAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				
+				/**
+				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+				 */
+				if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+					
+					String parametros = null;
+					String urlCaratula = this.getText("caratula.impresion.autos.url");
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					/**
+					 * Para Caratula
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i",   cdramo);
+					paramsR.put("pv_estado_i",   "M");
+					paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
+					paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
+					paramsR.put("pv_feinici_i",  new Date());
+					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					paramsR.put("pv_nmsolici_i", nmpoliza);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+					paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Recibo 1
+					 */
+					parametros = "?9999,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
+					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo 1");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para AP inciso 1
+					 */
+					parametros = "?14,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
+					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlAp + parametros);
+					paramsR.put("pv_dsdocume_i", "AP");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+				}
 			}
 			catch(Exception ex)
 			{
@@ -2454,6 +2596,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String ntramite  = panel1.get("pv_ntramite");
 		String sucursal  = _cdunieco;
 		cdtipsit = panel2.get("pv_cdtipsit"); 
+		String cdRamoGS  = null;
 		
 		String cdIdeperRes = this.cdIdeper;
 		UserVO us          = (UserVO)session.get("USUARIO");
@@ -2527,6 +2670,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
 				this.nmpolAlt = Long.toString(aux.getNumpol());
 				panel2.put("nmpoliex", this.nmpolAlt);
+				cdRamoGS = Short.toString(aux.getRamos());
 				
 				//Insetar Poliza Externa WS Auto
 				try{
@@ -2624,6 +2768,75 @@ public class ComplementariosAction extends PrincipalCoreAction
 								+ "\n###### reporte solicitado ######"
 								+ "\n################################"
 								+ "");
+					}
+					
+					/**
+					 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+					 */
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+						
+						String parametros = null;
+						String urlCaratula = this.getText("caratula.impresion.autos.url");
+						String urlRecibo = this.getText("recibo.impresion.autos.url");
+						String urlCaic = this.getText("caic.impresion.autos.url");
+						String urlAp = this.getText("ap.impresion.autos.url");
+						
+						/**
+						 * Para Caratula
+						 */
+						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+						logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+						
+						HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+						paramsR.put("pv_cdunieco_i", _cdunieco);
+						paramsR.put("pv_cdramo_i",   _cdramo);
+						paramsR.put("pv_estado_i",   "M");
+						paramsR.put("pv_nmpoliza_i", _nmpoliza);
+						paramsR.put("pv_nmsuplem_i", _nmsuplem);
+						paramsR.put("pv_feinici_i",  new Date());
+						paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+						paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+						paramsR.put("pv_nmsolici_i", nmpoliza);
+						paramsR.put("pv_ntramite_i", ntramite);
+						paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+						paramsR.put("pv_swvisible_i", Constantes.SI);
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para Recibo 1
+						 */
+						parametros = "?9999,0,"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
+						logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+						paramsR.put("pv_dsdocume_i", "Recibo 1");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para CAIC inciso 1
+						 */
+						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						paramsR.put("pv_dsdocume_i", "CAIC");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para AP inciso 1
+						 */
+						parametros = "?14,0,"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
+						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlAp + parametros);
+						paramsR.put("pv_dsdocume_i", "AP");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
 					}
 				}
 				catch(Exception ex)
