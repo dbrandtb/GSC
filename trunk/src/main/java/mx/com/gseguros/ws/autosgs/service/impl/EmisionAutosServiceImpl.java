@@ -505,11 +505,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			if(StringUtils.isNotBlank(polRes)){
 
 				resultadoWS =  new SDTPoliza();
-				resultadoWS.setEndoso(Long.parseLong(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
+				resultadoWS.setEndoso(Long.parseLong(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","endoso")).getText()));
 				resultadoWS.setNumpol(Long.parseLong(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
-				resultadoWS.setRamos(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
-				resultadoWS.setSucursal(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText()));
-				resultadoWS.setTipendo(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","numpol")).getText());
+				resultadoWS.setRamos(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","ramos")).getText()));
+				resultadoWS.setSucursal(Short.parseShort(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","sucursal")).getText()));
+				resultadoWS.setTipendo(sdtPol.getFirstChildWithName(new QName("KB_WSEmisionPoliza","tipendo")).getText());
 				
 				resultWS.setResultadoWS(resultadoWS);
 				resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
