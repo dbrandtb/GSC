@@ -55,6 +55,9 @@
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
+            <s:if test='%{getSmap1.get("cdramo").equals("16")}'>
+            _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
+            </s:if>
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             var compleUrlGuardarCartoRechazo = '<s:url namespace="/" action="guardarCartaRechazo" />';
@@ -890,7 +893,6 @@
 										                                                        	,id      : 'botonEmitirPolizaFinalPreview'
 										                                                        	,text    : 'Vista previa'
 										                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-										                                                        	,hidden  : inputCdramo+'x'=='16x'
 										                                                        	,handler : function()
 										                                                            {
 										                                                                var me=this;
