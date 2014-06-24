@@ -2,7 +2,6 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2403,13 +2402,13 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
 			
-			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 	
 			compile();
 		}
 	
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
 			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
 			return mapper.build(map);
 		}
