@@ -55,7 +55,7 @@
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
-            <s:if test='%{getSmap1.get("cdramo").equals("16")}'>
+            <s:if test='%{getCdramo().equals("16")}'>
             _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
             </s:if>
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
