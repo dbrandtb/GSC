@@ -767,68 +767,88 @@ function _0_cargar()
                     debug('json response:',json);
                     if(json.success)
                     {
-                    	_0_limpiar();
-                        for(var i=0;i<json.slist1.length;i++)
+                        if(!json.smap1.CDUNIECO)
                         {
-                        	_0_storeIncisos.add(new _0_modelo(json.slist1[i]));
-                        }
-                        debug('store:',_0_storeIncisos);
-                        var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-                        debug('primerInciso:',primerInciso);
-                        //leer elementos anidados
-                        var form      = _0_formAgrupados;
-                        var formItems = form.items.items;
-                        var numBlurs  = 0;
-                        for(var i=0;i<formItems.length;i++)
-                        {
-                            var item=formItems[i];
-                            if(item.hasListener('blur'))
+                    	    _0_limpiar();
+                            for(var i=0;i<json.slist1.length;i++)
                             {
-                                var numBlursSeguidos = 1;
-                                debug('contando blur:',item);
-                                for(var j=i+1;j<formItems.length;j++)
+                            	_0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                            }
+                            debug('store:',_0_storeIncisos);
+                            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                            debug('primerInciso:',primerInciso);
+                            //leer elementos anidados
+                            var form      = _0_formAgrupados;
+                            var formItems = form.items.items;
+                            var numBlurs  = 0;
+                            for(var i=0;i<formItems.length;i++)
+                            {
+                                var item=formItems[i];
+                                if(item.hasListener('blur'))
                                 {
-                                    if(formItems[j].hasListener('blur'))
+                                    var numBlursSeguidos = 1;
+                                    debug('contando blur:',item);
+                                    for(var j=i+1;j<formItems.length;j++)
                                     {
-                                        numBlursSeguidos=numBlursSeguidos+1;
+                                        if(formItems[j].hasListener('blur'))
+                                        {
+                                            numBlursSeguidos=numBlursSeguidos+1;
+                                        }
+                                    }
+                                    if(numBlursSeguidos>numBlurs)
+                                    {
+                                        numBlurs=numBlursSeguidos;
                                     }
                                 }
-                                if(numBlursSeguidos>numBlurs)
-                                {
-                                    numBlurs=numBlursSeguidos;
-                                }
                             }
-                        }
-                        debug('numBlurs:',numBlurs);
-                        var i=0;
-                        var renderiza=function()
-                        {
-                            debug('renderiza',i);
-                            form.loadRecord(primerInciso);
-                            if(i<numBlurs)
+                            debug('numBlurs:',numBlurs);
+                            var i=0;
+                            var renderiza=function()
                             {
-                                i=i+1;
-                                for(var j=0;j<formItems.length;j++)
+                                debug('renderiza',i);
+                                form.loadRecord(primerInciso);
+                                if(i<numBlurs)
                                 {
-                                    var iItem  = formItems[j]; 
-                                    var iItem2 = formItems[j+1];
-                                    debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
-                                    if(iItem.hasListener('blur')&&iItem2&&iItem2.store)
+                                    i=i+1;
+                                    for(var j=0;j<formItems.length;j++)
                                     {
-                                        debug('tiene blur y lo hacemos heredar',formItems[j]);
-                                        iItem2.heredar(true);
+                                        var iItem  = formItems[j]; 
+                                        var iItem2 = formItems[j+1];
+                                        debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store)
+                                        {
+                                            debug('tiene blur y lo hacemos heredar',formItems[j]);
+                                            iItem2.heredar(true);
+                                        }
                                     }
+                                    setTimeout(renderiza,1000);
                                 }
-                                setTimeout(renderiza,1000);
+                                else
+                                {
+                            	    _0_fieldNmpoliza.setValue(value);
+                            	    _0_panelPri.setLoading(false);
+                                }
                             }
-                            else
-                            {
-                            	_0_fieldNmpoliza.setValue(value);
-                            	_0_panelPri.setLoading(false);
-                            }
+                            _0_panelPri.setLoading(true);
+                            renderiza();
                         }
-                        _0_panelPri.setLoading(true);
-                        renderiza();
+                        else
+                        {
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                url             : _0_urlDatosComplementarios
+                                ,standardSubmit : true
+                                ,params         :
+                                {
+                                    cdunieco         : json.smap1.CDUNIECO
+                                    ,cdramo          : json.smap1.cdramo
+                                    ,estado          : 'W'
+                                    ,nmpoliza        : json.smap1.nmpoliza
+                                    ,'map1.ntramite' : json.smap1.NTRAMITE
+                                    ,cdtipsit        : json.smap1.cdtipsit
+                                }
+                            });                        
+                        }
                     }
                     else
                     {
