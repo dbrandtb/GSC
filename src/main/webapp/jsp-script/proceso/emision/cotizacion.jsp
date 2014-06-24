@@ -847,7 +847,7 @@ function _0_cargar()
                                     ,'map1.ntramite' : json.smap1.NTRAMITE
                                     ,cdtipsit        : json.smap1.cdtipsit
                                 }
-                            });                        
+                            });
                         }
                     }
                     else
