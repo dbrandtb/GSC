@@ -20,7 +20,7 @@ debug('_p20_itemsFormAsegurados:',_p20_itemsFormAsegurados);
 var _p20_columnasGridAsegurados = [ <s:property value="item3" /> ];
 debug('_p20_columnasGridAsegurados:',_p20_columnasGridAsegurados);
 
-var _p20_rowEditingPlugin = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
+var _p20_rowEditingPlugin;
 
 var _p20_gridAsegurados;
 var _p20_storeAsegurados;
@@ -64,7 +64,7 @@ Ext.onReady(function()
 	Ext.define('RFCPersona',
     {
         extend  : 'Ext.data.Model'
-        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"]
+        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER", "SEXO", "TIPOPERSONA", "NACIONALIDAD", "NOMBRE", "SNOMBRE", "APPAT", "APMAT"]
     });
 	////// modelos //////
 	
@@ -121,6 +121,17 @@ Ext.onReady(function()
 		    	,tooltip      : 'Borrar asegurado'
 		    }
 		]
+	});
+	
+	_p20_rowEditingPlugin = Ext.create('Ext.grid.plugin.RowEditing',{
+		clicksToEdit : 1, 
+		errorSummary : true,
+		listeners: {
+			beforeedit: function(editor, context, eopts){
+				var sinCdideper = Ext.isEmpty(context.record.get('cdideper'));
+				if(!sinCdideper) return false;
+			}
+		}
 	});
 	_p20_gridAsegurados = Ext.create('Ext.grid.Panel',
 	{
@@ -514,6 +525,16 @@ function _p20_buscarRFC()
                                                            debug('cliente obtenido de WS? ', json.clienteWS);
                                                            
                                                            _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+                                                           
+                                                           
+                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("nombre",record.get("NOMBRE"));
+                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("segundo_nombre",record.get("SNOMBRE"));
+                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("Apellido_Paterno",record.get("APPAT"));
+                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("Apellido_Materno",record.get("APMAT"));
+                                                           _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("fenacimi",record.get("FENACIMICLI"));
+                                                    	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("sexo",record.get("SEXO"));
+                                                    	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("tpersona",record.get("TIPOPERSONA"));
+                                                    	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("nacional",record.get("NACIONALIDAD"));
                                                            
                                                            if(json.clienteWS){
                                                         	   _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));

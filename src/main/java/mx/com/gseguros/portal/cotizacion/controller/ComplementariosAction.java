@@ -841,6 +841,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				UserVO usuario  = (UserVO)session.get("USUARIO");
 				String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
 				String pantalla = "EDITAR_ASEGURADOS";
+				
 				String seccion  = "ASEGURADO";
 				List<ComponenteVO>componenteAsegurado=pantallasManager.obtenerComponentes(
 						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
@@ -848,7 +849,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				gc.generaComponentes(componenteAsegurado, true, true, true, true, true, false);
 				item1=gc.getFields();
 				item2=gc.getItems();
+				
+				seccion  = "ASEGURADO_EDITOR";
+				componenteAsegurado=pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
+				gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.generaComponentes(componenteAsegurado, true, true, true, true, true, false);
 				item3=gc.getColumns();
+				
 				
 				seccion = "VALIDA_BORRAR";
 				List<ComponenteVO> botonBorrar=pantallasManager.obtenerComponentes(
@@ -2764,8 +2772,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 			    	for(ClienteGeneral cli: listaClientesGS){
 			    		agregar = new HashMap<String,String>();
 			    		
-				    	agregar.put("RFCCLI",       cli.getRfcCli());
-				    	agregar.put("NOMBRECLI",    cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
+				    	agregar.put("RFCCLI",    cli.getRfcCli());
+				    	agregar.put("NOMBRECLI", cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
+				    	agregar.put("NOMBRE",    cli.getNombreCli());
+				    	agregar.put("SNOMBRE",   "");
+				    	
+				    	String apellidoPat = "";
+				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+				    		apellidoPat = cli.getApellidopCli();
+				    	}
+				    	agregar.put("APPAT",     apellidoPat);
+				    	
+				    	String apellidoMat = "";
+				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+				    		apellidoMat = cli.getApellidomCli();
+				    	}
+				    	agregar.put("APMAT",     apellidoMat);
+				    	
 				    	if(cli.getFecnacCli()!= null){
 				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
 							agregar.put("FENACIMICLI", sdf.format(calendar.getTime()));
@@ -2775,7 +2798,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	agregar.put("CLAVECLI",     "");
 				    	agregar.put("CDIDEPER",     cli.getNumeroExterno());
+				    	
+				    	String sexo = "H"; //Hombre
+				    	if(cli.getSexoCli() > 0){
+				    		if(cli.getSexoCli() == 2) sexo = "M";
+				    	}
+				    	agregar.put("SEXO",     sexo);
+				    	
+				    	String tipoPersona = "F"; //Fisica
+				    	if(cli.getFismorCli() > 0){
+				    		if(cli.getFismorCli() == 2){
+				    			tipoPersona = "M";
+				    		}else if(cli.getFismorCli() == 3){
+				    			tipoPersona = "S";
+				    		}
+				    	}
+				    	agregar.put("TIPOPERSONA",     tipoPersona);
+				    	
+				    	String nacionalidad = "001";// Nacional
+				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+				    		nacionalidad = "002";
+				    	}
+				    	agregar.put("NACIONALIDAD",     nacionalidad);
+				    	
 				    	slist1.add(agregar);
+				    	
 			    	}
 			    			
 		    	}else {
