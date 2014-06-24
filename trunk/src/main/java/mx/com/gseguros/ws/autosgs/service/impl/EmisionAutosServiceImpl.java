@@ -403,10 +403,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
 				
 				if(cotRes != null && cotRes.getExito()){
-					logger.debug("REspuesta de WS Cotizacion cotRes.getCodigo(): " +cotRes.getCodigo());
-					logger.debug("REspuesta de WS Cotizacion cotRes.getMensaje(): " +cotRes.getMensaje());
+					logger.debug("Respuesta de WS Cotizacion Codigo(): " +cotRes.getCodigo());
+					logger.debug("Respuesta de WS Cotizacion Mensaje(): " +cotRes.getMensaje());
 					
 					long numSolicitud = cotRes.getCotizacion().getIdCotizacion();
+					logger.debug("Numero de Cotizacion Generada: " + numSolicitud);
+					
 					WrapperResultadosWS resultWSEmi = this.ejecutaEmisionAutosWS(numSolicitud);
 					
 					if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
