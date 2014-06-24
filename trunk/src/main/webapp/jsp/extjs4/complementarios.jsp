@@ -783,6 +783,9 @@
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 										                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 										                                                            	    		//me.up().up().setClosable(false);
+										                                                            	    		
+                                	    																			Ext.getCmp('botonReenvioWS').hide();
+										                                                            	    		
 										                                                            	    		if(inputCdramo+'x'=='16x')
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
