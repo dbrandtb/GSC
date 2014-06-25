@@ -772,8 +772,15 @@ function _0_cargar()
                     	    _0_limpiar();
                             for(var i=0;i<json.slist1.length;i++)
                             {
-                                if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
+                                if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
                                 {
+                                    if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
+                                    {
+                            	        _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                            	    }
+                            	}
+                            	else
+                            	{
                             	    _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
                             	}
                             }
