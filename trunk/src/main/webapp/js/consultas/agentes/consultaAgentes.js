@@ -422,7 +422,7 @@ Ext.onReady(function() {
                                                 buttons: Ext.Msg.OK,
                                                 icon: Ext.Msg.OK
                                             }));
-                                            expande(2);
+                                            expande(1);
                                         }
                                         else{
                                             Ext.Msg.show({
