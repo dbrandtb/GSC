@@ -3,6 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     
+    <bean id="dinamicDao" class="mx.com.gseguros.confpantallas.base.dao.DinamicDao" parent="abstractManagerDAO"/>
+    
+    <bean id="dinamicDAOImpl" class="mx.com.gseguros.confpantallas.base.dao.DinamicDao" parent="abstractManagerDAO"/>
+    
     <bean id="generadorPantallasDAOImpl" class="mx.com.gseguros.confpantallas.dao.impl.GeneradorPantallasDAOImpl" parent="abstractManagerDAO"></bean>
     
 </beans>
