@@ -16,6 +16,7 @@ import mx.com.gseguros.utils.Constantes;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -23,6 +24,9 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 {
+	
+	private static Logger logger = Logger.getLogger(PantallasDAOImpl.class);
+	
 	/////////////////////////////////
 	////// obtener componentes //////
 	/*/////////////////////////////*/
@@ -405,6 +409,30 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//PANTALLA,SECCION
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void insertaPantalla(String cdpantalla, String datos, String componentes) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("PV_CDPANTALLA_I", cdpantalla);
+		params.put("PV_DATOS_I", datos);
+		params.put("PV_COMPONENTES_I", componentes);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new InsertaPantalla(this.getDataSource()), params);
+		logger.debug("resultadoMap=" + resultadoMap);
+		logger.debug("PV_MSG_ID_O=" + resultadoMap.get("PV_MSG_ID_O"));
+		logger.debug("PV_TITLE_O=" + resultadoMap.get("PV_TITLE_O"));
+	}
+	
+	protected class InsertaPantalla extends StoredProcedure {
+		protected InsertaPantalla(DataSource dataSource) {
+			super(dataSource,"PKG_CONF_PANTALLAS.P_MOV_TPANTALLAS");
+			declareParameter(new SqlParameter("PV_CDPANTALLA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_DATOS_I"      , OracleTypes.CLOB));
+			declareParameter(new SqlParameter("PV_COMPONENTES_I", OracleTypes.CLOB));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"      , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

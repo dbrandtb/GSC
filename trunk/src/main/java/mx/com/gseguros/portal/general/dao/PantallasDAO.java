@@ -35,4 +35,13 @@ public interface PantallasDAO
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> obtienePantalla(Map<String,String> params) throws Exception;
+	
+	/**
+	 * 
+	 * @param cdpantalla
+	 * @param datos
+	 * @param componentes
+	 * @throws Exception
+	 */
+	public void insertaPantalla(String cdpantalla, String datos, String componentes) throws Exception;
 }

@@ -484,7 +484,7 @@ public class CotizacionAction extends PrincipalCoreAction
         imap = new HashMap<String,Item>();
         
 		params =  new HashMap<String,String>();
-		params.put("PV_CDPANTALLA_I", "1");
+		params.put("PV_CDPANTALLA_I", "45");
 		params.put("PV_CDRAMO_I", "16");
 		params.put("PV_CDTIPSIT_I", "AF");
 		
@@ -495,11 +495,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			log.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
 		}
 		
-		logger.debug("variablesGeneradas: " + result.get("DSSTORES"));
-		logger.debug("panelGenerado: " + result.get("DSARCHIVOSEC"));
+		logger.debug("variablesGeneradas: " + result.get("COMPONENTES"));
+		logger.debug("panelGenerado: " + result.get("DATOS"));
 		
-		smap1.put("variablesGeneradas", result.get("DSSTORES"));
-		smap1.put("panelGenerado", result.get("DSARCHIVOSEC"));
+		smap1.put("variablesGeneradas", result.get("COMPONENTES"));
+		smap1.put("panelGenerado", result.get("DATOS"));
         try
         {
 			if(camposIndividuales.size()>0)
