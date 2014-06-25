@@ -11,6 +11,10 @@
         <property name="adminCargaPanelesManager" ref="adminCargaPanelesManagerImpl"></property>
     </bean>
     
+    <bean id="pintaPanelAction" class="mx.com.gseguros.confpantallas.action.PintaPanelAction" scope="prototype">
+        <property name="adminCargaPanelesManager" ref="adminCargaPanelesManagerImpl"></property>
+    </bean>
+    
     
     
 </beans>
