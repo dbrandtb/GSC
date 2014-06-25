@@ -9,9 +9,12 @@
 		<action name="grabapanel" class="mx.com.gseguros.confpantallas.action.GrabaPanel">
 			<result name="SUCCESS">/jsp/confpantallas/success.jsp</result>
 		</action>
-		<action name="cargainfo" class="mx.com.gseguros.confpantallas.action.CargaInfo">
+		<action name="cargainfoFER" class="mx.com.gseguros.confpantallas.action.CargaInfo">
 			<result name="SUCCESS">/jsp/confpantallas/comboresp.jsp</result>
 		</action>
+		<action name="cargainfo" class="cargaInfoAction">
+            <result type="json"/>
+        </action>
 		<action name="pintapanel" class="mx.com.gseguros.confpantallas.action.PintaPanel">
 			<result name="SUCCESS">/jsp/confpantallas/commonJson.jsp</result>
 		</action>

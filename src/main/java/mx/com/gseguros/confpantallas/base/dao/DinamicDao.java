@@ -6,10 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import mx.com.gseguros.confpantallas.bd.ConnectDB;
 import mx.com.gseguros.confpantallas.model.DinamicComboVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlVo;
@@ -18,121 +14,101 @@ import mx.com.gseguros.confpantallas.model.DinamicPanelAttrGetVo;
 import mx.com.gseguros.confpantallas.model.DinamicPanelAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicPanelVo;
 import mx.com.gseguros.confpantallas.model.DinamicTatriVo;
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
 
-public class DinamicDao {
-	private ConnectDB conn=null;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterface {
+	
+	private static Logger logger = Logger.getLogger(DinamicDao.class);
 	
 	public List<DinamicControlAttrVo> GetAttrGrid(HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query").toString(),mapa);
-		List<DinamicControlAttrVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicControlAttrVo.class));
+		List<DinamicControlAttrVo> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicControlAttrVo.class));
 		return rgs;
 	}
 	public List<Map> GetListados (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List rgs = jdbcTemplate.queryForList(qry);
+		List rgs = getJdbcTemplate().queryForList(qry);
 		return rgs;
 	}
 	public List<HashMap> GetListadosHM (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List rgs = jdbcTemplate.queryForList(qry);
+		List rgs = getJdbcTemplate().queryForList(qry);
 		return rgs;
 	}
 	public List<HashMap> GetDataGrid (String qry){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
-		List rgs = jdbcTemplate.queryForList(qry);
+		List rgs = getJdbcTemplate().queryForList(qry);
 		return rgs;
 	}
 	public List<DinamicTatriVo> getDatosControlTatrisit (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List<DinamicTatriVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicTatriVo.class));
+		List<DinamicTatriVo> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicTatriVo.class));
 		return rgs;
 	}
 	public List<DinamicPanelAttrGetVo> getDinamicPanelAttrGetVo (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List<DinamicPanelAttrGetVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicPanelAttrGetVo.class));
+		List<DinamicPanelAttrGetVo> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicPanelAttrGetVo.class));
 		return rgs;
 	}
 	public List<DinamicComboVo> getListaCombox (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"));
-		List<DinamicComboVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicComboVo.class));
+		@SuppressWarnings("unchecked")
+		List<DinamicComboVo> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicComboVo.class));
 		return rgs;
 	}
 	public List<DinamicComboVo> getDinamicComboVo (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List<DinamicComboVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicComboVo.class));
+		List<DinamicComboVo> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicComboVo.class));
 		return rgs;
 	}
 
 	public List<DinamicItemBean> getDinamicItemBean (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		List<DinamicItemBean> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicItemBean.class));
+		List<DinamicItemBean> rgs  = getJdbcTemplate().query(qry,new BeanPropertyRowMapper(DinamicItemBean.class));
 		return rgs;
 	}
 	public String getString (HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		String rgs = jdbcTemplate.queryForObject(qry,String.class);
+		String rgs = getJdbcTemplate().queryForObject(qry,String.class);
 		return rgs;
 	}
 	public void ejecuta(HashMap<String, String> mapa){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
-		jdbcTemplate.update(qry);
+		System.out.println("qry=" + qry);
+		if(StringUtils.isNotBlank(qry)) {
+			getJdbcTemplate().update(qry);
+		}
 	}
 	public void ejecuta(String query, DinamicPanelVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public void ejecuta(String query, DinamicPanelAttrVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public void ejecuta(String query, DinamicControlVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public void ejecuta(String query, DinamicControlAttrVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public void ejecutaG(String query, DinamicControlAttrVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelectG(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public void ejecutaSql(String query, DinamicControlAttrVo objeto){
-		conn = new ConnectDB();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelectSql(query,objeto);
-		jdbcTemplate.update(qry);
+		getJdbcTemplate().update(qry);
 	}
 	public String setCFExtjs (HashMap<String, String> mapa){
 		String rgs = "";
@@ -272,6 +248,10 @@ public class DinamicDao {
 	}
 	
 	private String getSqlSelect (String qry, HashMap<String, String> mapa){
+		
+		logger.debug("qry="+ qry);
+		logger.debug("mapa="+ mapa);
+		
 		String rgs = "";
 		if(qry.equals("ListadeTablasPredeterminados")){
 			rgs = "SELECT NOMBRE, TABLA FROM DNC_TABLAS ORDER BY IDCONTROL";
@@ -337,53 +317,19 @@ public class DinamicDao {
 		}else if(qry.equals("SqlQuery")){
 			rgs = "SELECT VALOR FROM DNC_DOCCONTROLGRID_SQL WHERE IDCONTROL = "+mapa.get("valor")+" AND IDPANEL = " +mapa.get("tabla");
 		}else if(qry.equals("setCFExtjs")){
-			rgs = "INSERT INTO TPANTALLAS (CDPANTALLA,DATOS,COMPONENTES) VALUES ("+mapa.get("panel")+",'"+mapa.get("stores")+"','"+mapa.get("codigo")+"')";
+			//rgs = "INSERT INTO TPANTALLAS (CDPANTALLA,DATOS,COMPONENTES) VALUES ("+mapa.get("panel")+",'"+mapa.get("stores")+"','"+mapa.get("codigo")+"')";
+			
+			WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+			PantallasDAO pantallasDAOImpl = (PantallasDAO)context.getBean("pantallasDAOImpl");
+			try {
+				logger.debug("INICIO DE INSERCION DE CODIGO DE LA PANTALLA");
+				pantallasDAOImpl.insertaPantalla(mapa.get("panel"), mapa.get("codigo"), mapa.get("stores"));
+				logger.debug("FIN DE INSERCION DE CODIGO DE LA PANTALLA");
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		return rgs;
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

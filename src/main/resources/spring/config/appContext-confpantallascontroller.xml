@@ -7,4 +7,10 @@
         <property name="generadorPantallasManager" ref="generadorPantallasManagerImpl"></property>
     </bean>
     
+    <bean id="cargaInfoAction" class="mx.com.gseguros.confpantallas.action.CargaInfoAction" scope="prototype">
+        <property name="adminCargaPanelesManager" ref="adminCargaPanelesManagerImpl"></property>
+    </bean>
+    
+    
+    
 </beans>
