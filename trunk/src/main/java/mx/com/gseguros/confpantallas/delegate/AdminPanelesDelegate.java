@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import mx.com.gseguros.confpantallas.base.dao.DinamicDao;
+import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
 import mx.com.gseguros.confpantallas.model.DinamicAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlVo;
@@ -16,7 +16,21 @@ import mx.com.gseguros.confpantallas.model.DinamicPanelVo;
 import mx.com.gseguros.confpantallas.model.ViewBean;
 import net.sf.json.JSONArray;
 
+import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 public class AdminPanelesDelegate {
+	
+	public AdminPanelesDelegate() {
+		super();
+		//TODO: cambiar usando Spring Ioc:
+		WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+		dinamicDAO = (DinamicDaoInterface)context.getBean("dinamicDAOImpl");
+	}
+	
+	private DinamicDaoInterface dinamicDAO;
+	
 	int consec = 1;
 	int intMaxp = 0;
 	Collection<DinamicAttrVo> listPaneles = null;
@@ -32,8 +46,7 @@ public class AdminPanelesDelegate {
 			data.put("query", "existePanel");
 			data.put("panel", panel);
 			
-			DinamicDao dao = new DinamicDao();
-			rgs = dao.getString(data);
+			rgs = dinamicDAO.getString(data);
 			System.out.println(rgs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -47,13 +60,12 @@ public class AdminPanelesDelegate {
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			data.put("query", "maxPanel");
-			String maxP = dao.getString(data);
+			String maxP = dinamicDAO.getString(data);
 			intMaxp = Integer.parseInt(maxP);
 			data.clear();
 			data.put("query", "maxPadre");
-			String maxPadre = dao.getString(data);
+			String maxPadre = dinamicDAO.getString(data);
 			int intMaxPadre = Integer.parseInt(maxPadre);
 
 			JSONArray jsonArrayUbicacion = JSONArray.fromObject(json);
@@ -109,7 +121,7 @@ public class AdminPanelesDelegate {
 			datas.put("ltsListaControlesArrt", lstdeLstCtrolAttr);
 			datas.put("lstdeLstCtrolGridAttr", lstdeLstCtrolGridAttr);
 			datas.put("lstdeLstCtrolGridSql", lstdeLstCtrolGridSql);
-			rgs = dao.setPanel(datas);
+			rgs = dinamicDAO.setPanel(datas);
 			// tengo que man dar a obtener el codigo ExtJS
 			AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
@@ -148,7 +160,7 @@ public class AdminPanelesDelegate {
 			 dataE.put("panel", acP);
 			 dataE.put("stores", st.toString());
 			 dataE.put("codigo", stl.toString());
-			rgs = dao.setCFExtjs(dataE);
+			rgs = dinamicDAO.setCFExtjs(dataE);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -499,41 +511,9 @@ public class AdminPanelesDelegate {
 		}
 		return rgs;
 	}
+
+	public void setDinamicDAO(DinamicDaoInterface dinamicDAO) {
+		this.dinamicDAO = dinamicDAO;
+	}
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

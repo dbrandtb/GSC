@@ -5,11 +5,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.confpantallas.base.dao.DinamicDao;
-import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
 
-public class AdminControlesPredeterminados extends AbstractManagerDAO{
+import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+public class AdminControlesPredeterminados {
+
+	public AdminControlesPredeterminados() {
+		super();
+		//TODO: cambiar usando Spring Ioc:
+		WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+		dinamicDAO = (DinamicDaoInterface)context.getBean("dinamicDAOImpl");
+	}
+	
+	private DinamicDaoInterface dinamicDAO;
+	
 	public String getTablas(){
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
@@ -45,8 +57,7 @@ public class AdminControlesPredeterminados extends AbstractManagerDAO{
 		data.put("cdramo", cdramo);
 		data.put("tabla", "");
 		try {
-			DinamicDao dao = new DinamicDao();
-			List<Map> lts = dao.GetListados(data);
+			List<Map> lts = dinamicDAO.GetListados(data);
 			
 			Iterator<Map> itLts = lts.iterator();
 			StringBuffer strJson = new StringBuffer();
@@ -64,6 +75,10 @@ public class AdminControlesPredeterminados extends AbstractManagerDAO{
 		}
 		
 		return rgs;
+	}
+
+	public void setDinamicDAO(DinamicDaoInterface dinamicDAO) {
+		this.dinamicDAO = dinamicDAO;
 	}
 	
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import mx.com.gseguros.confpantallas.base.dao.DinamicDao;
+import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
 import mx.com.gseguros.confpantallas.model.DinamicComboVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicData;
@@ -19,7 +19,21 @@ import mx.com.gseguros.confpantallas.model.ViewBean;
 import mx.com.gseguros.confpantallas.model.ViewPanel;
 import net.sf.json.JSONArray;
 
+import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 public class AdminCargaPanelesDelegate {
+	
+	public AdminCargaPanelesDelegate() {
+		super();
+		//TODO: cambiar usando Spring Ioc:
+		WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+		dinamicDAO = (DinamicDaoInterface)context.getBean("dinamicDAOImpl");
+	}
+	
+	private DinamicDaoInterface dinamicDAO;
+	
 	private Logger log = Logger.getAnonymousLogger();
 	ArrayList<String> mapaCmb = new ArrayList<String>();
 	ArrayList<String> mapaCmbHijo = new ArrayList<String>();
@@ -29,8 +43,7 @@ public class AdminCargaPanelesDelegate {
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
 			data.put("query", "listaPanelesExistentes");
-			DinamicDao dao = new DinamicDao();
-			List<DinamicComboVo> ltsP = dao.getListaCombox(data);
+			List<DinamicComboVo> ltsP = dinamicDAO.getListaCombox(data);
 			JSONArray jsonObject = JSONArray.fromObject(ltsP);
 			System.out.println(jsonObject);
 			rgs = jsonObject.toString();
@@ -44,11 +57,10 @@ public class AdminCargaPanelesDelegate {
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			data.put("query", "listaValoresTablaApoyo");
 			data.put("tabla", tabla);
 
-			List<DinamicComboVo> ltsP = dao.getDinamicComboVo(data);
+			List<DinamicComboVo> ltsP = dinamicDAO.getDinamicComboVo(data);
 			JSONArray jsonObject = JSONArray.fromObject(ltsP);
 			System.out.println(jsonObject);
 			rgs = jsonObject.toString();
@@ -62,12 +74,11 @@ public class AdminCargaPanelesDelegate {
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			data.put("query", "SqlQuery");
 			data.put("tabla", tabla);
 			data.put("valor", valor);
-			String qry = dao.getString(data);
-			List<HashMap> ltsP = dao.GetDataGrid(qry);
+			String qry = dinamicDAO.getString(data);
+			List<HashMap> ltsP = dinamicDAO.GetDataGrid(qry);
 			JSONArray jsonObject = JSONArray.fromObject(ltsP);
 			System.out.println(jsonObject);
 			rgs = jsonObject.toString();
@@ -81,11 +92,10 @@ public class AdminCargaPanelesDelegate {
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			data.put("query", "listaValoresTablaApoyoHijos");
 			data.put("tabla", tabla);
 			data.put("valor", valor);
-			List<DinamicComboVo> ltsP = dao.getDinamicComboVo(data);
+			List<DinamicComboVo> ltsP = dinamicDAO.getDinamicComboVo(data);
 			JSONArray jsonObject = JSONArray.fromObject(ltsP);
 			System.out.println(jsonObject);
 			rgs = jsonObject.toString();
@@ -551,8 +561,7 @@ public class AdminCargaPanelesDelegate {
 			data.put("query", "ListadeControlesGrid");
 			data.put("id", String.valueOf(id));
 			data.put("panel", String.valueOf(panel));
-			DinamicDao dao = new DinamicDao();
-			List<Map> ltsP = dao.GetListados(data);
+			List<Map> ltsP = dinamicDAO.GetListados(data);
 			Iterator<Map> iltsP = ltsP.iterator();
 			while (iltsP.hasNext()) {
 				StringBuffer rgsAttr = new StringBuffer();
@@ -561,7 +570,7 @@ public class AdminCargaPanelesDelegate {
 				String idCtrol = idCtrolM.get("IDCONTROL").toString();
 				data.put("query", "ListadeControlesGridAttr");
 				data.put("control", idCtrol);
-				List<DinamicControlAttrVo> ltsPAG = dao.GetAttrGrid(data);
+				List<DinamicControlAttrVo> ltsPAG = dinamicDAO.GetAttrGrid(data);
 				Iterator<DinamicControlAttrVo> iltsPAG = ltsPAG.iterator();
 				while (iltsPAG.hasNext()) {
 					DinamicControlAttrVo ctrl = iltsPAG.next();
@@ -591,8 +600,7 @@ public class AdminCargaPanelesDelegate {
 			data.put("query", "ListadeControlesGrid");
 			data.put("id", String.valueOf(id));
 			data.put("panel", String.valueOf(panel));
-			DinamicDao dao = new DinamicDao();
-			List<Map> ltsP = dao.GetListados(data);
+			List<Map> ltsP = dinamicDAO.GetListados(data);
 			Iterator<Map> iltsP = ltsP.iterator();
 			while (iltsP.hasNext()) {
 				StringBuffer rgsAttr = new StringBuffer();
@@ -601,7 +609,7 @@ public class AdminCargaPanelesDelegate {
 				String idCtrol = idCtrolM.get("IDCONTROL").toString();
 				data.put("query", "ListadeControlesGridAttr");
 				data.put("control", idCtrol);
-				List<DinamicControlAttrVo> ltsPAG = dao.GetAttrGrid(data);
+				List<DinamicControlAttrVo> ltsPAG = dinamicDAO.GetAttrGrid(data);
 				Iterator<DinamicControlAttrVo> iltsPAG = ltsPAG.iterator();
 				while (iltsPAG.hasNext()) {
 					DinamicControlAttrVo ctrl = iltsPAG.next();
@@ -694,11 +702,10 @@ public class AdminCargaPanelesDelegate {
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			data.put("operacion", "analizaStore");
 			data.put("store", name);
 			data.put("query", "nameTablaApoyoData");
-			List<DinamicItemBean> ltsP = dao.getDinamicItemBean(data);
+			List<DinamicItemBean> ltsP = dinamicDAO.getDinamicItemBean(data);
 			//JSONArray jsonObject = JSONArray.fromObject(ltsP);
 			//System.out.println(jsonObject);
 			//rgs = jsonObject.toString();
@@ -730,13 +737,12 @@ public class AdminCargaPanelesDelegate {
 	public List<DinamicPanelAttrGetVo> GetListaDinamicPanelAttrGetVo (HashMap<String, Object> data){
 		List<DinamicPanelAttrGetVo> rgs = new ArrayList<DinamicPanelAttrGetVo>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			HashMap<String, String> mapa = new HashMap<String, String>();
 			if (data.get("id") != null){mapa.put("id", data.get("id").toString());}
 			if (data.get("idPanel") != null){mapa.put("idPanel", data.get("idPanel").toString());}
 			if (data.get("idControl") != null){mapa.put("idControl", data.get("idControl").toString());}
 			mapa.put("query", data.get("query").toString());
-			rgs = (List<DinamicPanelAttrGetVo>) dao.getDinamicPanelAttrGetVo(mapa);
+			rgs = (List<DinamicPanelAttrGetVo>) dinamicDAO.getDinamicPanelAttrGetVo(mapa);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -745,13 +751,12 @@ public class AdminCargaPanelesDelegate {
 	public List<HashMap> GetLista (HashMap<String, Object> data){
 		List<HashMap> rgs = new ArrayList<HashMap>();
 		try {
-			DinamicDao dao = new DinamicDao();
 			HashMap<String, String> mapa = new HashMap<String, String>();
 			if (data.get("panel") != null){mapa.put("panel", data.get("panel").toString());}
 			if (data.get("panelID") != null){mapa.put("panelID", data.get("panelID").toString());}
 			if (data.get("controlID") != null){mapa.put("controlID", data.get("controlID").toString());}
 			mapa.put("query", data.get("query").toString());
-			rgs = (List<HashMap>) dao.GetListadosHM(mapa);
+			rgs = (List<HashMap>) dinamicDAO.GetListadosHM(mapa);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -767,29 +772,9 @@ public class AdminCargaPanelesDelegate {
 		}
 		return rgs;
 	}
+
+	public void setDinamicDAO(DinamicDaoInterface dinamicDAO) {
+		this.dinamicDAO = dinamicDAO;
+	}
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
