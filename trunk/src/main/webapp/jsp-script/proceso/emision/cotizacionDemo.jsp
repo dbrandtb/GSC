@@ -10,11 +10,7 @@
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-_0_smap1.panelGenerado = '';
-
-var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
-
-var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
+var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
@@ -29,8 +25,9 @@ var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="co
 var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
 var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios"    />';
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
+var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="mcdinamica"              />';
 var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
+var _0_urlNada                 = '<s:url namespace="/emision"         action="webServiceNada"          />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -70,6 +67,24 @@ var _0_selectedIdcobertura;
 var _0_validacion_custom;
 
 debug('_0_smap1: ',_0_smap1);
+
+
+var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
+	clicksToEdit : 1,
+	errorSummary : true,
+	listeners: {
+		beforeedit: function(){
+			_0_botCotizar.disable();
+		},
+		edit: function(){
+			_0_botCotizar.enable();
+		},
+		canceledit: function(){
+			_0_botCotizar.enable();
+		}
+	}
+});
+
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -158,16 +173,48 @@ function _0_comprar()
                     	    }
                     	]
                     }).show();
-                    var msg = Ext.Msg.show(
+                    if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
                     {
-                    	title    : 'Solicitud enviada'
-                    	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
-                    	            + json.comprarNmpoliza
-                    	            + ', ahora puede subir los documentos del trámite'
-                    	,buttons : Ext.Msg.OK
-                    	,y       : 50
-                    });
-                    msg.setY(50);
+                        var msg = Ext.Msg.show(
+                        {
+                            title    : 'Tr&aacute;mite actualizado'
+                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                                        + json.comprarNmpoliza
+                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
+                            ,buttons : Ext.Msg.OK
+                            ,y       : 50
+                            ,fn      : function()
+                            {
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    url             : _0_urlDatosComplementarios
+                                    ,standardSubmit : true
+                                    ,params         :
+                                    {
+                                        cdunieco         : _0_smap1.cdunieco
+                                        ,cdramo          : _0_smap1.cdramo
+                                        ,estado          : 'W'
+                                        ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                        ,'map1.ntramite' : json.comprarNmpoliza
+                                        ,cdtipsit        : _0_smap1.cdtipsit
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else
+                    {
+                        var msg = Ext.Msg.show(
+                        {
+                        	title    : 'Solicitud enviada'
+                        	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
+                        	            + json.comprarNmpoliza
+                        	            + ', ahora puede subir los documentos del trámite'
+                        	,buttons : Ext.Msg.OK
+                        	,y       : 50
+                        });
+                        msg.setY(50);
+                    }
                 }
                 else
                 {
@@ -217,26 +264,22 @@ function _0_imprimir()
 {
 	var me = this;
     var urlRequestImpCotiza = _0_urlImprimirCotiza
-            + '?p_cdplan='
-            + _0_selectedCdplan
+            + '?p_unieco='      + _0_smap1.cdunieco
+            + '&p_ramo='        + _0_smap1.cdramo
+            + '&p_subramo='     + _0_smap1.cdtipsit
             + '&p_estado=W'
-            + '&p_poliza='
-            + _0_fieldNmpoliza.getValue()
-            + '&p_unieco='
-            + _0_smap1.cdunieco
-            + '&p_ramo='
-            + _0_smap1.cdramo
-            + '&p_cdusuari='
-            + _0_smap1.user
-            + '&p_ntramite='
-            + _0_smap1.ntramite
+            + '&p_poliza='      + _0_fieldNmpoliza.getValue()
+            + '&p_suplem=0'
+            + '&p_cdplan='      + _0_selectedCdplan
+            + '&p_plan='        + _0_selectedCdplan
+            + '&p_perpag='      + _0_selectedCdperpag
+            + '&p_ntramite='    + _0_smap1.ntramite
+            + '&p_cdusuari='    + _0_smap1.user
             + '&destype=cache'
             + "&desformat=PDF"
-            + "&userid="
-            + _0_reportsServerUser
+            + "&userid="        + _0_reportsServerUser
             + "&ACCESSIBLE=YES"
-            + "&report="
-            + _0_reporteCotizacion
+            + "&report="        + _0_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
     var numRand = Math.floor((Math.random() * 100000) + 1);
@@ -316,27 +359,23 @@ function _0_mail()
 		    				{
 		    					to : Ext.getCmp('_0_idInputCorreos').getValue(),
 		    					urlArchivo : _0_urlImprimirCotiza
-		    					            + '?p_cdplan='
-		    					            + _0_selectedCdplan
-		    					            + "&p_estado='W'"
-		    					            + '&p_poliza='
-		    					            + _0_fieldNmpoliza.getValue()
-		    					            + '&p_unieco='
-		    					            + _0_smap1.cdunieco
-		    					            + '&p_ramo='
-		    					            + _0_smap1.cdramo
-		    					            + '&p_cdusuari='
-		    					            + _0_smap1.user
-		    					            + '&p_ntramite='
-		    					            + _0_smap1.ntramite
-		    					            + '&destype=cache'
-		    					            + "&desformat=PDF"
-		    					            + "&userid="
-		    					            + _0_reportsServerUser
-		    					            + "&ACCESSIBLE=YES"
-		    					            + "&report="
-		    					            + _0_reporteCotizacion
-		    					            + "&paramform=no",
+                                             + '?p_unieco='      + _0_smap1.cdunieco
+                                             + '&p_ramo='        + _0_smap1.cdramo
+                                             + '&p_subramo='     + _0_smap1.cdtipsit
+                                             + '&p_estado=W'
+                                             + '&p_poliza='      + _0_fieldNmpoliza.getValue()
+                                             + '&p_suplem=0'
+                                             + '&p_cdplan='      + _0_selectedCdplan
+                                             + '&p_plan='        + _0_selectedCdplan
+                                             + '&p_perpag='      + _0_selectedCdperpag
+                                             + '&p_ntramite='    + _0_smap1.ntramite
+                                             + '&p_cdusuari='    + _0_smap1.user
+                                             + '&destype=cache'
+                                             + "&desformat=PDF"
+                                             + "&userid="        + _0_reportsServerUser
+                                             + "&ACCESSIBLE=YES"
+                                             + "&report="        + _0_reporteCotizacion
+                                             + "&paramform=no",
 		    					nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 		    			    },
 		    			    callback : function(options,success,response)
@@ -496,8 +535,8 @@ function _0_detalles()
                 var wndDetalleCotizacion = Ext.create('Ext.window.Window',
                 {
                 	title       : 'Detalles de cotizaci&oacute;n'
-                	,maxHeight  : 500
-                	,width      : 800
+                	//,maxHeight  : 500
+                	,width      : 600
                 	,autoScroll : true
                 	,modal      : true
                 	,items      :
@@ -513,11 +552,12 @@ function _0_detalles()
                 	    		    {
                 	    		    	sorterFn : function(o1,o2)
                 	    		    	{
+                	    		    	    debug('sorting:',o1,o2);
                 	    		    		if (o1.get('orden') === o2.get('orden'))
                 	    		    		{
                 	    		    			return 0;
                 	    		    		}
-                	    		    		return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                	    		    		return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
                 	    		    	}
                 	    		    }
                 	    		]
@@ -533,7 +573,7 @@ function _0_detalles()
                 	    	    {
                 	    	    	header           : 'Nombre de la cobertura'
                 	    	    	,dataIndex       : 'Nombre_garantia'
-                	    	    	,flex            : 1
+                	    	    	,flex            : 3
                 	    	    	,summaryType     : 'count'
                 	    	    	,summaryRenderer : function(value)
                 	    	    	{
@@ -680,64 +720,98 @@ function _0_cargar()
                     debug('json response:',json);
                     if(json.success)
                     {
-                    	_0_limpiar();
-                        for(var i=0;i<json.slist1.length;i++)
+                        if(!json.smap1.CDUNIECO)
                         {
-                        	_0_storeIncisos.add(new _0_modelo(json.slist1[i]));
-                        }
-                        debug('store:',_0_storeIncisos);
-                        var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-                        debug('primerInciso:',primerInciso);
-                        //leer elementos anidados
-                        var form      = _0_formAgrupados;
-                        var formItems = form.items.items;
-                        var numBlurs  = 0;
-                        for(var i=0;i<formItems.length;i++)
-                        {
-                            var item=formItems[i];
-                            if(item.hasListener('blur'))
+                    	    _0_limpiar();
+                            for(var i=0;i<json.slist1.length;i++)
                             {
-                                var numBlursSeguidos = 1;
-                                for(var j=i+1;j<formItems.length;j++)
+                                if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
                                 {
-                                    if(formItems[j].hasListener('blur'))
+                                    if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
                                     {
-                                        numBlursSeguidos=numBlursSeguidos+1;
+                            	        _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                            	    }
+                            	}
+                            	else
+                            	{
+                            	    _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                            	}
+                            }
+                            debug('store:',_0_storeIncisos);
+                            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                            debug('primerInciso:',primerInciso);
+                            //leer elementos anidados
+                            var form      = _0_formAgrupados;
+                            var formItems = form.items.items;
+                            var numBlurs  = 0;
+                            for(var i=0;i<formItems.length;i++)
+                            {
+                                var item=formItems[i];
+                                if(item.hasListener('blur'))
+                                {
+                                    var numBlursSeguidos = 1;
+                                    debug('contando blur:',item);
+                                    for(var j=i+1;j<formItems.length;j++)
+                                    {
+                                        if(formItems[j].hasListener('blur'))
+                                        {
+                                            numBlursSeguidos=numBlursSeguidos+1;
+                                        }
+                                    }
+                                    if(numBlursSeguidos>numBlurs)
+                                    {
+                                        numBlurs=numBlursSeguidos;
                                     }
                                 }
-                                if(numBlursSeguidos>numBlurs)
-                                {
-                                    numBlurs=numBlursSeguidos;
-                                }
                             }
-                        }
-                        debug('numBlurs:',numBlurs);
-                        var i=0;
-                        var renderiza=function()
-                        {
-                            debug('renderiza',i);
-                            form.loadRecord(primerInciso);
-                            if(i<numBlurs)
+                            debug('numBlurs:',numBlurs);
+                            var i=0;
+                            var renderiza=function()
                             {
-                                i=i+1;
-                                for(var j=0;j<formItems.length;j++)
+                                debug('renderiza',i);
+                                form.loadRecord(primerInciso);
+                                if(i<numBlurs)
                                 {
-                                    if(formItems[j].hasListener('blur'))
+                                    i=i+1;
+                                    for(var j=0;j<formItems.length;j++)
                                     {
-                                        debug('tiene blur',formItems[j]);
-                                        formItems[j+1].heredar(true);
+                                        var iItem  = formItems[j]; 
+                                        var iItem2 = formItems[j+1];
+                                        debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store)
+                                        {
+                                            debug('tiene blur y lo hacemos heredar',formItems[j]);
+                                            iItem2.heredar(true);
+                                        }
                                     }
+                                    setTimeout(renderiza,1000);
                                 }
-                                setTimeout(renderiza,1000);
+                                else
+                                {
+                            	    _0_fieldNmpoliza.setValue(value);
+                            	    _0_panelPri.setLoading(false);
+                                }
                             }
-                            else
-                            {
-                            	_0_fieldNmpoliza.setValue(value);
-                            	_0_panelPri.setLoading(false);
-                            }
+                            _0_panelPri.setLoading(true);
+                            renderiza();
                         }
-                        _0_panelPri.setLoading(true);
-                        renderiza();
+                        else
+                        {
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                url             : _0_urlDatosComplementarios
+                                ,standardSubmit : true
+                                ,params         :
+                                {
+                                    cdunieco         : json.smap1.CDUNIECO
+                                    ,cdramo          : json.smap1.cdramo
+                                    ,estado          : 'W'
+                                    ,nmpoliza        : json.smap1.nmpoliza
+                                    ,'map1.ntramite' : json.smap1.NTRAMITE
+                                    ,cdtipsit        : json.smap1.cdtipsit
+                                }
+                            });
+                        }
                     }
                     else
                     {
@@ -1137,6 +1211,20 @@ Ext.onReady(function()
     {
         autoLoad : false
         ,model   : 'RowCobertura'
+        ,sorters    :
+        [
+            {
+                sorterFn : function(o1,o2)
+                {
+                    debug('sorting:',o1,o2);
+                    if (o1.get('orden') === o2.get('orden'))
+                    {
+                        return 0;
+                    }
+                    return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
+                }
+            }
+        ]
         ,proxy   :
         {
             type    : 'ajax'
@@ -1281,7 +1369,7 @@ Ext.onReady(function()
             {
             	title        : 'Datos de incisos'
             	,store       : _0_storeIncisos
-            	,minHeight   : 250
+            	,minHeight   : 170
             	//,hidden      : !_0_necesitoIncisos
             	,tbar        :
             	[
@@ -1370,6 +1458,12 @@ Ext.onReady(function()
 		                                                ({
 		                                                    url             : _0_urlMesaControl
 		                                                    ,standardSubmit : true
+                                                            ,params         :
+                                                            {
+                                                                'smap1.gridTitle'      : 'Tareas'
+                                                                ,'smap2.pv_cdtiptra_i' : 1
+                                                                ,'smap1.editable'      : 1
+                                                            }
 		                                                });
 		                                            }
 		                                            else
@@ -1464,7 +1558,7 @@ Ext.onReady(function()
             {
                 dataIndex : 'dsGarant'
                 ,text : 'Cobertura'
-                ,flex : 1
+                ,flex : 3
             }
             ,{
                 dataIndex : 'sumaAsegurada'
@@ -1562,8 +1656,125 @@ Ext.onReady(function()
     
     _0_formAgrupados = <s:property value="smap1.panelGenerado" escapeHtml="false" />
     _0_gridIncisos   = new _0_GridIncisos();
-    _0_botonera      = new _0_Botonera();			    
-	 
+    if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
+    {
+        _0_gridIncisos.setTitle('Datos del contratante');
+        _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('blur',function()
+        {
+            var vim=this.value;
+            debug('>llamando a nada:',vim);
+            _0_formAgrupados.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url     : _0_urlNada
+                ,params :
+                {
+                    'smap1.vim'       : vim
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                    _0_formAgrupados.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('nada response:',json);
+                    if(json.success)
+                    {
+                        var precioDolar = _0_formAgrupados.down('[name=parametros.pv_otvalor24]').getValue()-0;
+                        debug('precioDolar:',precioDolar);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO*precioDolar);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue(json.smap1.AUTO_PRECIO*precioDolar);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue((json.smap1.AUTO_PRECIO*precioDolar)*(1-(json.smap1.FACTOR_MIN-0)));
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue((json.smap1.AUTO_PRECIO*precioDolar)*(1+(json.smap1.FACTOR_MAX-0)));
+                        debug('set min value:',(json.smap1.AUTO_PRECIO*precioDolar)*(1-(json.smap1.FACTOR_MIN-0)));
+                        debug('set max value:',(json.smap1.AUTO_PRECIO*precioDolar)*(1+(json.smap1.FACTOR_MAX-0)));
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure : function()
+                {
+                    _0_formAgrupados.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+            debug('<llamando a nada');
+        });
+        var comboTipoValor =_0_formAgrupados.down('[name=parametros.pv_otvalor02]');
+        var itemSumaAsegu  =_0_formAgrupados.down('[name=parametros.pv_otvalor07]');
+        var changeFunction = function()
+        {
+            debug('>comboTipoValor change');
+            itemSumaAsegu.setValue('');
+            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='1x');
+            
+            debug('<comboTipoValor change');
+        };
+        comboTipoValor.addListener('change',changeFunction);
+        changeFunction();
+        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+        {
+             var anioActual = new Date().getFullYear();
+             var max = anioActual-5;
+             var min = anioActual-20;
+             var value = _0_formAgrupados.down('[name=parametros.pv_otvalor05]').getValue()-0;
+             debug('anioActual:',anioActual);
+             debug('max:',max);
+             debug('min:',min);
+             debug('value:',value);
+             if(value<min||value>max)
+             {
+                 _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
+                 mensajeWarning('El modelo debe estar en el rango '+min+'-'+max);
+             }
+        });
+    }
+    <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
+        var items=_0_formAgrupados.items.items;
+        debug('items a reordenar:',items);
+        var cdatribus_derechos=_0_smap1.CDATRIBU_DERECHO.split(',');
+        debug('cdatribus_derechos:',cdatribus_derechos);
+        var itemsIzq=[];
+        var itemsDer=[];
+        for(var i=0;i<items.length;i++)
+        {
+            var iItem=items[i];
+            debug('item revisado:',iItem);
+            var indexOfIItem=$.inArray(iItem.cdatribu,cdatribus_derechos);
+            debug('indexOfIItem:',indexOfIItem);
+            if(indexOfIItem==-1)
+            {
+                debug('izquierdo');
+                itemsIzq.push(iItem);
+            }
+            else
+            {
+                debug('derecho');
+                itemsDer.push(iItem);
+            }
+        }
+        _0_formAgrupados.removeAll(false);
+        _0_formAgrupados.layout='hbox';
+        _0_formAgrupados.add(
+        [
+            {
+                xtype  : 'fieldset'
+                ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
+                ,items : itemsIzq
+            }
+            ,{
+                xtype  : 'fieldset'
+                ,title : '<span style="font:bold 14px Calibri;">DATOS DE COBERTURAS</span>'
+                ,items : itemsDer
+            }
+        ]);
+    </s:if>
+    _0_botonera      = new _0_Botonera();
     _0_panelPri = Ext.create('Ext.panel.Panel',{
 		 	renderTo  : '_0_divPri'
 		 	,bodyStyle   : 'padding:10px;'
@@ -1607,7 +1818,6 @@ Ext.onReady(function()
                ,_0_botonera
 			]
     });
-
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
