@@ -15,9 +15,12 @@
 		<action name="cargainfo" class="cargaInfoAction">
             <result type="json"/>
         </action>
-		<action name="pintapanel" class="mx.com.gseguros.confpantallas.action.PintaPanel">
+		<action name="pintapanelFER" class="mx.com.gseguros.confpantallas.action.PintaPanel">
 			<result name="SUCCESS">/jsp/confpantallas/commonJson.jsp</result>
 		</action>
+		<action name="pintapanel" class="pintaPanelAction">
+            <result type="json"/>
+        </action>
 		<action name="pintatreepanel"
 			class="mx.com.gseguros.confpantallas.action.PintaTreePanel">
 			<result name="success">/jsp/confpantallas/treepanel.jsp</result>
