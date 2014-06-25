@@ -91,12 +91,17 @@ public class WebServicesUtil {
 			/**invoke service*/
 			if(!asincrono) {
 				MessageContext resultMessage = callerOp.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
-				respuesta = resultMessage.getEnvelope().getBody().getFirstElement();
+				respuesta = resultMessage.getEnvelope().getBody().getFirstElement().cloneOMElement();
+				
+				logger.debug("Respuesta Inmediata antes cleanUp de WS: " + respuesta);
 			} 
 		}catch(Exception e){
 			throw e;
 		}finally{
-			if(serviceClient != null ) serviceClient.cleanupTransport();
+			logger.debug("Haciendo cleanupTransport para serviceClient: " + serviceClient);
+			if(serviceClient != null ){
+				serviceClient.cleanupTransport();
+			}
 		}
 		
 		logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);
