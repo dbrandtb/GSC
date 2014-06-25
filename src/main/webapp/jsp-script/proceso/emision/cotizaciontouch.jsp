@@ -153,7 +153,10 @@ function _mcotiza_load()
 		    		    		    _mcotiza_nueva();
 		    		    		    for(var i=0;i<json.slist1.length;i++)
 		    		    		    {
-    		    		    			_mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+		    		    		        if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
+                                        {
+    		    		    			    _mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+    		    		    			}
 		    		    		    }
 		    		    		    debug('store:',_mcotiza_storeIncisos);
 		    		    		    var primerInciso = new _mcotiza_IncisoAgrupado(json.slist1[0]);
