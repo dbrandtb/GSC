@@ -1041,7 +1041,13 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				}
 			}
 			tatrisit=tatriTemp;
-			if(agrupado)
+			if(agrupado&&
+					(
+							cdtipsit.equals(TipoSituacion.SALUD_VITAL)
+							||cdtipsit.equals(TipoSituacion.SALUD_NOMINA)
+							||cdtipsit.equals(TipoSituacion.MULTISALUD)
+					)
+				)
 			//reordenar cp, estado, municipio
 			{
 				List<ComponenteVO>tatriTemp2=new ArrayList<ComponenteVO>(0);
