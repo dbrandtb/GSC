@@ -112,7 +112,7 @@ public class WebServicesAction extends PrincipalCoreAction{
     			}
     			
     			if(!gcal){
-    				mensajeRespuesta = "Error en guardaCalendariosDxnFinaliza. El tipo de resultado que devulve los calendarios no es EXITO.";
+    				mensajeRespuesta = "Detalle: Error al insertar los calendarios y metodo DxnFinaliza. El tipo de resultado que devuelve el WS no se pudo parsear.";
             		success = false;
             		return SUCCESS;	
     			}
