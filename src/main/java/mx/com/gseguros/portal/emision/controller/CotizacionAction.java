@@ -395,21 +395,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 
 	public String pantallaCotizacionDemo() {
-		
-		/**
-		 * TODO: Eliminar codigo de ejemplo para el WS de NADA
-		 * 1GCHK23275F895304
-		 
-		VehicleValue_Struc datosAuto= nadaService.obtieneDatosAutomovilNADA("1GCHK23275F895304");
-		if(datosAuto != null){
-			logger.debug("Resultados....");	
-			logger.debug("getVehicleYear: "+datosAuto.getVehicleYear());	
-			logger.debug("getMakeDescr: "+datosAuto.getMakeDescr());	
-			logger.debug("getSeriesDescr: "+datosAuto.getSeriesDescr());	
-			logger.debug("getWeight: "+datosAuto.getWeight());	
-		}
-		*/
-		
 		this.session=ActionContext.getContext().getSession();
 		log.debug("\n"
 				+ "\n####################################"
@@ -430,7 +415,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		UserVO usuario  = (UserVO) session.get("USUARIO");
 		String cdtipsit = smap1.get("cdtipsit");
 		
-		String ntramite=null;
 		String cdunieco=null;
 		String cdramo=null;
 		
@@ -441,7 +425,6 @@ public class CotizacionAction extends PrincipalCoreAction
         if(smap1.get("ntramite")!=null)
         //cuando viene ntramite tambien vienen cdunieco y cdramo
         {
-        	ntramite = smap1.get("ntramite");
         	cdunieco = smap1.get("cdunieco");
         	cdramo   = smap1.get("cdramo");
         }
@@ -452,7 +435,6 @@ public class CotizacionAction extends PrincipalCoreAction
         	try
         	{
         		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdramo
-        		ntramite="";
         		cdunieco=datUsu.getCdunieco();
         		if(StringUtils.isBlank(smap1.get("cdramo")))
         		{
@@ -478,15 +460,12 @@ public class CotizacionAction extends PrincipalCoreAction
         ////// obtener campos de tatrisit //////
         gc.setCdtipsit(cdtipsit);
         
-        //List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
-        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
-        
         imap = new HashMap<String,Item>();
         
 		params =  new HashMap<String,String>();
 		params.put("PV_CDPANTALLA_I", "45");
-		params.put("PV_CDRAMO_I", "16");
-		params.put("PV_CDTIPSIT_I", "AF");
+		params.put("PV_CDRAMO_I", "2");
+		params.put("PV_CDTIPSIT_I", "SL");
 		
 		Map<String,String> result = null;
 		try {
@@ -502,19 +481,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		smap1.put("panelGenerado", result.get("DATOS"));
         try
         {
-			if(camposIndividuales.size()>0)
-			{
-				gc.generaParcialConEditor(camposIndividuales);
-				imap.put("itemsIndividuales"  , gc.getItems());
-				imap.put("camposIndividuales" , gc.getColumns());
-				imap.put("fieldsIndividuales" , gc.getFields());
-			}
-			else
-			{
-				imap.put("itemsIndividuales"  , null);
-				imap.put("camposIndividuales" , null);
-				imap.put("fieldsIndividuales" , null);
-			}
 			
 			List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
 					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
@@ -549,20 +515,8 @@ public class CotizacionAction extends PrincipalCoreAction
         	log.error("error al obtener los campos de cotizacion",ex);
         }
         
-		log.debug("camposIndividuales: "+camposIndividuales);
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
-		
-		//Obtenemos la edad m�xima para la cotizacion:
-		/*
-        try {
-        	smap1.put("edadMaximaCotizacion",
-        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
-        } catch(Exception e) {
-        	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
-        	smap1.put("edadMaximaCotizacion", "0");
-        }
-        */
         
 		log.debug("\n"
 				+ "\n######                        ######"
