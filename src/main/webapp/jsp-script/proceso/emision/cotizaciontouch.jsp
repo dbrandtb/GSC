@@ -153,8 +153,15 @@ function _mcotiza_load()
 		    		    		    _mcotiza_nueva();
 		    		    		    for(var i=0;i<json.slist1.length;i++)
 		    		    		    {
-		    		    		        if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
-                                        {
+		    		    		        if(_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')
+		    		    		        {
+		    		    		            if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
+                                            {
+        		    		    			    _mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+    		    		    			    }
+    		    		    			}
+    		    		    			else
+    		    		    			{
     		    		    			    _mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
     		    		    			}
 		    		    		    }
