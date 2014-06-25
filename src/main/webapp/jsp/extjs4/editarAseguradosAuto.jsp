@@ -237,7 +237,7 @@ Ext.onReady(function()
 		                	column.flex=0;
                             column.setWidth(100);
                         }
-		                if(column.text&&column.text.length>=3&&column.text.substring(0,3)=="Fe.")
+		                if(column.text&&column.text.length>=3&&column.text.substring(0,3)=="Fec")
                         {
                             column.flex=0;
                             column.setWidth(130);
