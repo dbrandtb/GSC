@@ -121,8 +121,74 @@
                		}*/
                     ,items:
                     [
-                    /**/
-                        Ext.create('Ext.form.Panel',{
+                    /**/Ext.create('Ext.panel.Panel',
+                        {
+                            id:'tabPanelValosit'
+                            ,title:'Datos de cotizaci&oacute;n'
+                            ,cls:'claseTitulo'
+                            ,border:0
+                            ,loader:
+                            {
+                                url       : urlPantallaValosit
+                                ,params   :
+                                {
+                                    'smap1.cdunieco'  : inputCdunieco
+                                    ,'smap1.cdramo'   : inputCdramo
+                                    ,'smap1.estado'   : inputEstado
+                                    ,'smap1.nmpoliza' : inputNmpoliza
+                                    ,'smap1.cdtipsit' : inputCdtipsit
+                                    ,'smap1.agrupado' : 'si'
+                                }
+                                ,scripts  : true
+                                ,autoLoad : true
+                            }
+                            ,listeners:
+                            {
+                                /*expand:function( p, eOpts )
+                                {
+                                    window.parent.scrollTo(0,150+p.y);
+                                }*/
+                                afterrender:function(tab)
+                                {
+                                    debug('afterrender tabPanelValosit');
+                                    tab.loader.load();
+                                }
+                            }
+                        })
+                        ,Ext.create('Ext.panel.Panel',
+                        {
+                            id:'tabPanelAsegurados'
+                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
+                            ,cls:'claseTitulo'
+                            ,border:0
+                            ,loader:
+                            {
+                                url     : urlEditarAsegurados[inputCdtipsit]
+                                ,params :
+                                {
+                                    'map1.cdunieco'  : inputCdunieco
+                                    ,'map1.cdramo'   : inputCdramo
+                                    ,'map1.cdtipsit' : inputCdtipsit
+                                    ,'map1.estado'   : inputEstado
+                                    ,'map1.nmpoliza' : inputNmpoliza
+                                }
+                                ,scripts:true
+                                ,autoLoad:true
+                            }
+                            ,listeners:
+                            {
+                                /*expand:function( p, eOpts )
+                                {
+                                    window.parent.scrollTo(0,150+p.y);
+                                }*/
+                                afterrender:function(tab)
+                                {
+                                    debug('afterrender tabPanelAsegurados');
+                                    tab.loader.load();
+                                }
+                            }
+                        })
+                        ,Ext.create('Ext.form.Panel',{
                         	title : 'Editar datos complementarios / emitir',
                         	cls:'claseTitulo',
 		                    id:'formPanel',//id1
@@ -1472,73 +1538,6 @@
                             }
 		                })
                     /**/
-                        ,Ext.create('Ext.panel.Panel',
-                        {
-                        	id:'tabPanelAsegurados'
-                        	,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
-                        	,cls:'claseTitulo'
-                        	,border:0
-                        	,loader:
-                        	{
-                        		url     : urlEditarAsegurados[inputCdtipsit]
-                        		,params :
-                        		{
-                                    'map1.cdunieco'  : inputCdunieco
-                                    ,'map1.cdramo'   : inputCdramo
-                                    ,'map1.cdtipsit' : inputCdtipsit
-                                    ,'map1.estado'   : inputEstado
-                                    ,'map1.nmpoliza' : inputNmpoliza
-                                }
-                        		,scripts:true
-                        		,autoLoad:true
-                        	}
-	                        ,listeners:
-	                        {
-	                            /*expand:function( p, eOpts )
-	                            {
-	                                window.parent.scrollTo(0,150+p.y);
-	                            }*/
-	                            afterrender:function(tab)
-	                            {
-	                                debug('afterrender tabPanelAsegurados');
-	                                tab.loader.load();
-	                            }
-	                        }
-                        })
-                        ,Ext.create('Ext.panel.Panel',
-                        {
-                            id:'tabPanelValosit'
-                            ,title:'Datos de cotizaci&oacute;n'
-                            ,cls:'claseTitulo'
-                            ,border:0
-                            ,loader:
-                            {
-                                url       : urlPantallaValosit
-                                ,params   :
-                                {
-                                    'smap1.cdunieco'  : inputCdunieco
-                                    ,'smap1.cdramo'   : inputCdramo
-                                    ,'smap1.estado'   : inputEstado
-                                    ,'smap1.nmpoliza' : inputNmpoliza
-                                    ,'smap1.cdtipsit' : inputCdtipsit
-                                    ,'smap1.agrupado' : 'si'
-                                }
-                                ,scripts  : true
-                                ,autoLoad : true
-                            }
-                            ,listeners:
-                            {
-                                /*expand:function( p, eOpts )
-                                {
-                                    window.parent.scrollTo(0,150+p.y);
-                                }*/
-                                afterrender:function(tab)
-                                {
-                                    debug('afterrender tabPanelValosit');
-                                    tab.loader.load();
-                                }
-                            }
-                        })
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAgentes'
