@@ -415,6 +415,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		UserVO usuario  = (UserVO) session.get("USUARIO");
 		String cdtipsit = smap1.get("cdtipsit");
 		
+		String ntramite;
 		String cdunieco=null;
 		String cdramo=null;
 		
@@ -425,6 +426,7 @@ public class CotizacionAction extends PrincipalCoreAction
         if(smap1.get("ntramite")!=null)
         //cuando viene ntramite tambien vienen cdunieco y cdramo
         {
+        	ntramite = smap1.get("ntramite");
         	cdunieco = smap1.get("cdunieco");
         	cdramo   = smap1.get("cdramo");
         }
@@ -435,6 +437,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	try
         	{
         		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdramo
+        		ntramite="";
         		cdunieco=datUsu.getCdunieco();
         		if(StringUtils.isBlank(smap1.get("cdramo")))
         		{
@@ -460,6 +463,9 @@ public class CotizacionAction extends PrincipalCoreAction
         ////// obtener campos de tatrisit //////
         gc.setCdtipsit(cdtipsit);
         
+        List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
+        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
+        
         imap = new HashMap<String,Item>();
         
 		params =  new HashMap<String,String>();
@@ -481,6 +487,92 @@ public class CotizacionAction extends PrincipalCoreAction
 		smap1.put("panelGenerado", result.get("DATOS"));
         try
         {
+        	List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,usuario.getUser());
+        	
+	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
+	        for(ComponenteVO tatriIte:tatrisit)
+			{
+	        	if(tatriIte.getValue()==null&&tatriIte.getDefaultValue()==null)
+	        	{
+	        		tatriIte.setComboVacio(true);
+	        	}
+	        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
+	        	{
+	        		temp.add(tatriIte);
+	        	}
+	        	else
+	        	{
+	        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())||
+	        				cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+	        		{
+	        			if(tatriIte.getNameCdatribu().equalsIgnoreCase("26"))
+	        			{
+	        				tatriIte.setOculto(true);
+	        				temp.add(tatriIte);
+	        			}
+	        		}
+	        	}
+	        	if(
+	        			(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+	        			||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+	        			)
+	        			&&tatriIte.getNameCdatribu().equalsIgnoreCase("24")
+	        			)
+	        	{
+	        		ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
+	        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+	        		{
+	        			tatriIte.setOculto(true);
+	        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
+	        		}
+	        	}
+			}
+	        tatrisit=temp;
+	        
+			for(ComponenteVO tatriIte:tatrisit)
+			{
+				////////////////////
+				////// custom //////
+				if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
+				{
+					if(tatriIte.getCatalogo()!=null&&
+							(tatriIte.getCatalogo().equalsIgnoreCase("2CODPOS")
+									||tatriIte.getCatalogo().equalsIgnoreCase("2CODPOSN")))//codigo postal
+					{
+						tatriIte.setCatalogo("");
+					}
+				}
+				////// custom //////
+				////////////////////
+					
+				if(tatriIte.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+				{
+					tatriIte.setColumna(Constantes.SI);
+					camposIndividuales.add(tatriIte);
+				}
+				else
+				{
+					camposAgrupados.add(tatriIte);
+				}
+			}
+
+			gc.generaParcial(camposAgrupados);
+			//imap.put("camposAgrupados" , gc.getItems());
+			imap.put("fieldsAgrupados" , gc.getFields());
+        	
+			if(camposIndividuales.size()>0)
+			{
+				gc.generaParcialConEditor(camposIndividuales);
+				imap.put("itemsIndividuales"  , gc.getItems());
+				imap.put("camposIndividuales" , gc.getColumns());
+				imap.put("fieldsIndividuales" , gc.getFields());
+			}
+			else
+			{
+				imap.put("itemsIndividuales"  , null);
+				imap.put("camposIndividuales" , null);
+				imap.put("fieldsIndividuales" , null);
+			}
 			
 			List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
 					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
@@ -515,6 +607,8 @@ public class CotizacionAction extends PrincipalCoreAction
         	log.error("error al obtener los campos de cotizacion",ex);
         }
         
+		log.debug("camposAgrupados: "+camposAgrupados);
+		log.debug("camposIndividuales: "+camposIndividuales);
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
         
