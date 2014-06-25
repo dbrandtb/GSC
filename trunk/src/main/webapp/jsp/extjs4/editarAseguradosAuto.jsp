@@ -17,7 +17,7 @@ var _p20_map1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" 
 debug('_p20_map1:',_p20_map1);
 var _p20_itemsFormAsegurados = [ <s:property value="item2" /> ];
 debug('_p20_itemsFormAsegurados:',_p20_itemsFormAsegurados);
-var _p20_columnasGridAsegurados = [ <s:property value="item3" /> ];
+var _p20_columnasGridAsegurados = [ <s:property value="item3" escapeHtml="false" /> ];
 debug('_p20_columnasGridAsegurados:',_p20_columnasGridAsegurados);
 
 var _p20_rowEditingPlugin;
@@ -127,9 +127,73 @@ Ext.onReady(function()
 		clicksToEdit : 1, 
 		errorSummary : true,
 		listeners: {
-			beforeedit: function(editor, context, eopts){
+			beforeedit: function(editor, context, eopts)
+			{
+				debug('context.record.data:',context.record.data);
+				for(var i=0;i<_p20_rowEditingPlugin.editor.items.items.length;i++)
+                {
+                    if(_p20_rowEditingPlugin.editor.items.items[i].name=='tpersona')
+                    {
+                        _p20_rowEditingPlugin.editor.items.items[i].addListener('change',function(combo,value)
+                        {
+                            debug('value:',value);
+                            if(value!='F')
+                            {
+                            	for(var i=0;i<_p20_rowEditingPlugin.editor.items.items.length;i++)
+                                {
+                                    if(_p20_rowEditingPlugin.editor.items.items[i].name=='segundo_nombre'
+                                            ||_p20_rowEditingPlugin.editor.items.items[i].name=='Apellido_Paterno'
+                                            ||_p20_rowEditingPlugin.editor.items.items[i].name=='Apellido_Materno'
+                                            ||_p20_rowEditingPlugin.editor.items.items[i].name=='sexo'
+                                            )
+                                    {
+                                    	debug('disable:',_p20_rowEditingPlugin.editor.items.items[i].name);
+                                    	_p20_rowEditingPlugin.editor.items.items[i].setDisabled(false);
+                                    	_p20_rowEditingPlugin.editor.items.items[i].setValue('');
+                                    	_p20_rowEditingPlugin.editor.items.items[i].setDisabled(true);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                            	for(var i=0;i<editor.editor.items.items.length;i++)
+                                {
+                                    editor.editor.items.items[i].setDisabled(false);
+                                }
+                            }
+                        });
+                    }
+                }
 				var sinCdideper = Ext.isEmpty(context.record.get('cdideper'));
-				if(!sinCdideper) return false;
+				if(!sinCdideper)
+				{
+					return false;
+				}
+				if(context.record.get('tpersona')!='F')
+				{
+					debug('editor.editor.items.items:',editor.editor.items.items);
+					context.record.set('segundo_nombre'   , '');
+					context.record.set('Apellido_Paterno' , '');
+					context.record.set('Apellido_Materno' , '');
+					for(var i=0;i<editor.editor.items.items.length;i++)
+					{
+						if(editor.editor.items.items[i].name=='segundo_nombre'
+								||editor.editor.items.items[i].name=='Apellido_Paterno'
+								||editor.editor.items.items[i].name=='Apellido_Materno'
+								||editor.editor.items.items[i].name=='sexo'
+								)
+						{
+							editor.editor.items.items[i].setDisabled(true);
+						}
+					}
+				}
+				else
+				{
+					for(var i=0;i<editor.editor.items.items.length;i++)
+                    {
+                        editor.editor.items.items[i].setDisabled(false);
+                    }
+				}
 			}
 		}
 	});
@@ -168,15 +232,15 @@ Ext.onReady(function()
 		                	column.flex=0;
 		                	column.setWidth(70);
 		                }
-		                if(column.text=="Nombre")
+		                if(column.text&&column.text.length>=3&&column.text.substring(0,3)=="Nom")
                         {
 		                	column.flex=0;
                             column.setWidth(100);
                         }
-		                if(column.text=="Fecha de nacimiento")
+		                if(column.text&&column.text.length>=3&&column.text.substring(0,3)=="Fe.")
                         {
                             column.flex=0;
-                            column.setWidth(100);
+                            column.setWidth(130);
                         }
 		                if(column.xtype=='actioncolumn')
                         {
