@@ -2986,8 +2986,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 			    		agregar = new HashMap<String,String>();
 			    		
 				    	agregar.put("RFCCLI",    cli.getRfcCli());
-				    	agregar.put("NOMBRECLI", cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
-				    	agregar.put("NOMBRE",    cli.getNombreCli());
+				    	agregar.put("NOMBRECLI", (cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc() );
+				    	agregar.put("NOMBRE",    (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
 				    	agregar.put("SNOMBRE",   "");
 				    	
 				    	String apellidoPat = "";
