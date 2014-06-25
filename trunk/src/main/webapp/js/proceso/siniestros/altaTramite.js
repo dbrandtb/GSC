@@ -1219,9 +1219,6 @@ Ext.onReady(function() {
                 					
                 					Ext.getCmp('cmbAseguradoAfectado').setValue(obtener[0].modCdperson);
                 					Ext.getCmp('dtFechaOcurrencia').setValue(obtener[0].modFechaOcurrencia);
-                				}else{
-                					Ext.getCmp('idcdRamo').setValue(obtener[0].modRamo);
-                					Ext.getCmp('idCdtipsit').setValue(obtener[0].modCdtipsit);
                 				}
         					}else{
         						

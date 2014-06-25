@@ -39,7 +39,7 @@ var _urlSeleccionCobertura      = '<s:url namespace="/siniestros" action="selecc
 var _URL_CATALOGOS              = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
 var _URL_CONSULTA_TRAMITE       = '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
 var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
-
+var _URL_CONSULTA_GRID_ALTA_TRAMITE = '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
 var _mesasin_url_lista_reasignacion = '<s:url namespace="/siniestros" action="obtenerUsuariosPorRol" />';
 
 var _UrlGeneraSiniestroTramite =      '<s:url namespace="/siniestros" action="generaSiniestroTramite" />';
@@ -455,6 +455,7 @@ var msgWindow;
 		var params = {};
 		
 		params['params.tipopago'] = formapago;
+		params['params.ntramite'] = record.get('ntramite');
 		
 		var conCoberYSubcober = false;
 		if(esPagoDirecto||true)
@@ -474,38 +475,80 @@ var msgWindow;
 				if(esPagoDirecto)
 				{
 					urlDestino = _UrlDetalleSiniestroDirecto;
+					debug('urlDestino_1 :',urlDestino);
+					debug('params_1 :',params);
+					Ext.create('Ext.form.Panel').submit(
+					{
+						url             : urlDestino
+						,params         : params
+					    ,standardSubmit : true
+					});
 				}
 				else
 				{
 					urlDestino = _UrlDetalleSiniestro;
+					debug('urlDestino_2 :',urlDestino);
+					debug('params_2:',params);
+					Ext.create('Ext.form.Panel').submit(
+					{
+						url             : urlDestino
+						,params         : params
+					    ,standardSubmit : true
+					});
 				}
-				params['params.ntramite'] = record.get('ntramite');
 			}
 			else
 			{
-				urlDestino = _urlSeleccionCobertura;
-				params['params.ntramite']  = record.get('ntramite');
-				params['params.cdunieco']  = record.get('cdsucdoc');
-				params['params.cdramo']    = record.get('cdramo');
-				params['params.cdtipsit']  = record.get('cdtipsit');
-				params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
+				//Colocar Validación del numero de asegurados cuando sea pago directo
+				if(esPagoDirecto)
+				{
+					Ext.Ajax.request(
+					{
+					    url     : _URL_CONSULTA_GRID_ALTA_TRAMITE,
+					    params:{
+							'params.ntramite': record.get('ntramite')
+			               }
+					    ,success : function (response)
+					    {
+			                   if(Ext.decode(response.responseText).listaAltaTramite != null)
+				    		{
+					    		var json=Ext.decode(response.responseText).listaAltaTramite;
+					    		var totalAsegurados = json.length;
+					    		if(totalAsegurados > 1){
+					    			params['params.cdramo']    = json[0].cdramo;
+									params['params.cdtipsit']  = json[0].cdtipsit;
+					    		}else{
+					    			params['params.cdramo']    = record.get('cdramo');
+									params['params.cdtipsit']  = record.get('cdtipsit');
+					    		}
+					    		
+					    		
+					    		urlDestino = _urlSeleccionCobertura;
+								params['params.cdunieco']  = record.get('cdsucdoc');
+								params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
+								debug('urlDestino_3 :',urlDestino);
+								debug('params_3 :',params);
+								Ext.create('Ext.form.Panel').submit(
+								{
+									url             : urlDestino
+									,params         : params
+								    ,standardSubmit : true
+								});
+				    		}
+					    },
+					    failure : function ()
+					    {
+					        Ext.Msg.show({
+					            title:'Error',
+					            msg: 'Error de comunicaci&oacute;n',
+					            buttons: Ext.Msg.OK,
+					            icon: Ext.Msg.ERROR
+					        });
+					    }
+					});
+				}
 			}
 		}
-		else
-		{
-			params['params.ntramite'] = record.get('ntramite');
-		}
-		debug('urlDestino:',urlDestino);
-		
-		debug('params:',params);
-		
-		Ext.create('Ext.form.Panel').submit(
-		{
-			url             : urlDestino
-			,params         : params
-		    ,standardSubmit : true
-		    //,target         : '_parent'
-		});
 	}
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){
