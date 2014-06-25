@@ -615,12 +615,12 @@ debug("validarYGuardar flag:2");
                                 }
                                 else
                                 {
-                                    Ext.Msg.show({
+                                    centrarVentanaInterna(Ext.Msg.show({
                                         title:'Datos incompletos',
                                         msg: 'El nombre, apellidos y RFC son requeridos',
                                         buttons: Ext.Msg.OK,
                                         icon: Ext.Msg.WARNING
-                                    });
+                                    }));
 debug("validarYGuardar flag:2");
                 timeoutflagp2=2;
                                 }
@@ -2121,12 +2121,12 @@ debug("validarYGuardar flag:2");
                             	}
 	                            else
                             	{
-	                            	Ext.Msg.show({
+	                            	centrarVentanaInterna(Ext.Msg.show({
 	                                    title:'Datos incompletos',
 	                                    msg: 'El nombre, apellidos y RFC son requeridos',
 	                                    buttons: Ext.Msg.OK,
 	                                    icon: Ext.Msg.WARNING
-	                                });
+	                                }));
                             	}
 	                        }
 		            		else
