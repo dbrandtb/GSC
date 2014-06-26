@@ -118,6 +118,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private PantallasManager pantallasManager;
 	private EmisionAutosService emisionAutosService;
 	private boolean clienteWS;
+	private String mensajeEmail;
 
 	public String mostrarPantalla()
 	/*
@@ -2014,11 +2015,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String urlCaic = this.getText("caic.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
 					
+					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
+										"<br>Estimado(a) cliente,<br/><br/>"+
+										"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+										"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
+					
 					/**
 					 * Para Caratula
 					 */
 					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 					
 					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 					paramsR.put("pv_cdunieco_i", cdunieco);
@@ -2041,20 +2048,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 */
 					parametros = "?9999,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
 					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 					
 					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
 					paramsR.put("pv_dsdocume_i", "Recibo 1");
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					/**
-					 * Para CAIC inciso 1
-					 */
-					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-					
-					paramsR.put("pv_cddocume_i", urlCaic + parametros);
-					paramsR.put("pv_dsdocume_i", "CAIC");
 					
 					kernelManager.guardarArchivo(paramsR);
 					
@@ -2063,11 +2060,28 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 */
 					parametros = "?14,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
 					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 					
 					paramsR.put("pv_cddocume_i", urlAp + parametros);
 					paramsR.put("pv_dsdocume_i", "AP");
 					
 					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
+										 "General de Seguros<br/>"+
+										 "</span>";
 					
 				}
 			}
@@ -2484,11 +2498,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String urlCaic = this.getText("caic.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
 					
+					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
+							"<br>Estimado(a) cliente,<br/><br/>"+
+							"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+							"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
+					
 					/**
 					 * Para Caratula
 					 */
 					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 					
 					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 					paramsR.put("pv_cdunieco_i", cdunieco);
@@ -2511,20 +2531,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 */
 					parametros = "?9999,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
 					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 					
 					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
 					paramsR.put("pv_dsdocume_i", "Recibo 1");
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					/**
-					 * Para CAIC inciso 1
-					 */
-					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-					
-					paramsR.put("pv_cddocume_i", urlCaic + parametros);
-					paramsR.put("pv_dsdocume_i", "CAIC");
 					
 					kernelManager.guardarArchivo(paramsR);
 					
@@ -2533,11 +2543,28 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 */
 					parametros = "?14,0,"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
 					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 					
 					paramsR.put("pv_cddocume_i", urlAp + parametros);
 					paramsR.put("pv_dsdocume_i", "AP");
 					
 					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
+							 "General de Seguros<br/>"+
+							 "</span>";
 					
 				}
 			}
@@ -2782,11 +2809,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 						String urlCaic = this.getText("caic.impresion.autos.url");
 						String urlAp = this.getText("ap.impresion.autos.url");
 						
+						this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
+								"<br>Estimado(a) cliente,<br/><br/>"+
+								"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+								"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
+						
 						/**
 						 * Para Caratula
 						 */
 						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
 						logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 						
 						HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 						paramsR.put("pv_cdunieco_i", _cdunieco);
@@ -2809,20 +2842,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 */
 						parametros = "?9999,0,"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
 						logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 						
 						paramsR.put("pv_cddocume_i", urlRecibo + parametros);
 						paramsR.put("pv_dsdocume_i", "Recibo 1");
-						
-						kernelManager.guardarArchivo(paramsR);
-						
-						/**
-						 * Para CAIC inciso 1
-						 */
-						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-						
-						paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						paramsR.put("pv_dsdocume_i", "CAIC");
 						
 						kernelManager.guardarArchivo(paramsR);
 						
@@ -2831,11 +2854,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 */
 						parametros = "?14,0,"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",1";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
 						paramsR.put("pv_cddocume_i", urlAp + parametros);
 						paramsR.put("pv_dsdocume_i", "AP");
 						
 						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para CAIC inciso 1
+						 */
+						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+						
+						paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						paramsR.put("pv_dsdocume_i", "CAIC");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+
+						this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
+								 "General de Seguros<br/>"+
+								 "</span>";
 						
 					}
 				}
@@ -3688,6 +3729,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setNmpolAlt(String nmpolAlt) {
 		this.nmpolAlt = nmpolAlt;
+	}
+
+	public String getMensajeEmail() {
+		return mensajeEmail;
+	}
+
+	public void setMensajeEmail(String mensajeEmail) {
+		this.mensajeEmail = mensajeEmail;
 	}
 
 }

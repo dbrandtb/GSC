@@ -62,6 +62,8 @@
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             var compleUrlGuardarCartoRechazo = '<s:url namespace="/" action="guardarCartaRechazo" />';
             var compleUrlCotizacion = '<s:url namespace="/emision" action="cotizacion" />';
+           
+            var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
             
             var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
             var fechaMaxEmi = Ext.Date.parse('<s:property value="map1.fechamax" />','d/m/Y');
@@ -70,6 +72,7 @@
             debug(sesionDsrol);
             
             var _paramsRetryWS;
+            var _mensajeEmail;
             
             function expande(indice)
             {
@@ -851,9 +854,16 @@
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 										                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
-										                                                            	    		//me.up().up().setClosable(false);
 										                                                            	    		
                                 	    																			Ext.getCmp('botonReenvioWS').hide();
+                                	    																			
+                                	    																			if(inputCdtipsit == "AF" || inputCdtipsit == "PU"){
+                                	    																				_mensajeEmail = json.mensajeEmail;
+                                	    																				//debug("Mensaje Mail: " + _mensajeEmail);
+                                	    																				Ext.getCmp('botonEnvioEmail').enable();
+                                	    																			}else {
+                                	    																				Ext.getCmp('botonEnvioEmail').hide();
+                                	    																			}
 										                                                            	    		
 										                                                            	    		if(inputCdramo+'x'=='16x')
 										                                                            	    		{
@@ -939,6 +949,66 @@
 										                                                                        });
 										                                                            	    }
 										                                                            	});
+										                                                            }
+										                                                        }
+										                                                        ,{
+										                                                        	id     : 'botonEnvioEmail'
+										                                                            ,xtype : 'button'
+										                                                            ,text  : 'Enviar Email'
+										                                                            ,icon  : contexto+'/resources/fam3icons/icons/email.png'
+										                                                            ,disabled: true
+										                                                            ,hidden: (inputCdtipsit != "AF" && inputCdtipsit != "PU") ? true: false
+										                                                            ,handler:function()
+										                                                            {
+										                                                            	Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+										                                                            	function(buttonId, text){
+										                                                            		if(buttonId == "ok" && !Ext.isEmpty(text)){
+										                                                            			
+										                                                            			if(Ext.isEmpty(_mensajeEmail)){
+										                                                            				mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+										                                                            				return;
+										                                                            			}
+										                                                            			
+										                                                            			Ext.Ajax.request(
+										                                                        		    			{
+										                                                        		    				url : _urlEnviarCorreo,
+										                                                        		    				params :
+										                                                        		    				{
+										                                                        		    					to     : text,
+										                                                        		    					asunto : 'Documentación de póliza de Autos',
+										                                                        		    					mensaje: _mensajeEmail,
+										                                                        		    					html   : true
+										                                                        		    			    },
+										                                                        		    			    callback : function(options,success,response)
+										                                                        		    			    {
+										                                                        		    			    	if (success)
+										                                                        		    			    	{
+										                                                        		    			    		var json = Ext.decode(response.responseText);
+										                                                        		    			    		if (json.success == true)
+										                                                        		    			    		{
+										                                                        		    			    			Ext.Msg.show(
+										                                                        		    			    			{
+										                                                        		    			    				title : 'Correo enviado'
+										                                                        		    			    				,msg : 'El correo ha sido enviado'
+										                                                        		    			    				,buttons : Ext.Msg.OK
+										                                                        		    			    			});
+										                                                        		    			    		}
+										                                                        		    			    		else
+										                                                        		    			    		{
+										                                                        		    			    			mensajeError('Error al enviar el correo');
+										                                                        		    			    		}
+										                                                        		    			    	}
+										                                                        		    			    	else
+										                                                        		    			    	{
+										                                                        		    			    		errorComunicacion();
+										                                                        		    			    	}
+										                                                        		    			    }
+										                                                        		    			});
+										                                                            		
+										                                                            		}else {
+										                                                            			mensajeWarning('Introduzca al menos una direcci&oacute;n de email');	
+										                                                            		}
+										                                                            	})
 										                                                            }
 										                                                        }
 										                                                        ,{
@@ -1619,6 +1689,9 @@
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
                                 	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
                                 	    		Ext.getCmp('botonReenvioWS').hide();
+                                	    		
+                                	    		_mensajeEmail = json.mensajeEmail;
+												Ext.getCmp('botonEnvioEmail').enable();
 	                            	    	}
 	                            	    	else
 	                            	    	{
