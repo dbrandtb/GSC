@@ -412,8 +412,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			gc.setEsMovil(true);
 		}
 		
-		UserVO usuario  = (UserVO) session.get("USUARIO");
-		String cdtipsit = smap1.get("cdtipsit");
+		UserVO usuario    = (UserVO) session.get("USUARIO");
+		String cdtipsit   = smap1.get("cdtipsit");
+		String cdpantalla = smap1.get("cdpantalla");
 		
 		String ntramite;
 		String cdunieco=null;
@@ -469,9 +470,9 @@ public class CotizacionAction extends PrincipalCoreAction
         imap = new HashMap<String,Item>();
         
 		params =  new HashMap<String,String>();
-		params.put("PV_CDPANTALLA_I", "45");
-		params.put("PV_CDRAMO_I", "2");
-		params.put("PV_CDTIPSIT_I", "SL");
+		params.put("PV_CDPANTALLA_I", cdpantalla);
+		params.put("PV_CDRAMO_I", cdramo);
+		params.put("PV_CDTIPSIT_I", cdtipsit);
 		
 		Map<String,String> result = null;
 		try {
@@ -479,9 +480,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		} catch (Exception e) {
 			log.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
 		}
-		
-		logger.debug("variablesGeneradas: " + result.get("COMPONENTES"));
-		logger.debug("panelGenerado: " + result.get("DATOS"));
 		
 		smap1.put("variablesGeneradas", result.get("COMPONENTES"));
 		smap1.put("panelGenerado", result.get("DATOS"));
