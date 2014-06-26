@@ -50,7 +50,7 @@ public class MailAction extends ActionSupport {
 	/**
 	 * Indica si el content-type del mensaje es HTML 
 	 */
-	private boolean contentTypeHTML;
+	private boolean html;
 	
 	
 	/**
@@ -79,7 +79,7 @@ public class MailAction extends ActionSupport {
 			}
 			
 			success = mailService.enviaCorreo(obtieneEMails(to),obtieneEMails(cc), obtieneEMails(bcc),
-					asunto, mensaje, obtieneRutasAdjuntos(archivos), contentTypeHTML);
+					asunto, mensaje, obtieneRutasAdjuntos(archivos), html);
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -198,12 +198,12 @@ public class MailAction extends ActionSupport {
 		this.urlArchivo = urlArchivo;
 	}
 	
-	public boolean isContentTypeHTML() {
-		return contentTypeHTML;
+	public boolean isHtml() {
+		return html;
 	}
 
-	public void setContentTypeHTML(boolean contentTypeHTML) {
-		this.contentTypeHTML = contentTypeHTML;
+	public void setHtml(boolean html) {
+		this.html = html;
 	}
 
 
