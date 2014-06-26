@@ -2,7 +2,7 @@ package mx.com.gseguros.confpantallas.action;
 
 import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesDelegate;
 
-
+@Deprecated
 public class CargaInfo {
 	private String tarea;
 	private String regreso;
