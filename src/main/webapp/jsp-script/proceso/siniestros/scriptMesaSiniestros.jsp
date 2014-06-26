@@ -546,6 +546,20 @@ var msgWindow;
 					        });
 					    }
 					});
+				}else{
+					urlDestino = _urlSeleccionCobertura;
+					params['params.cdunieco']  = record.get('cdsucdoc');
+					params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
+					params['params.cdramo']    = record.get('cdramo');
+					params['params.cdtipsit']  = record.get('cdtipsit');
+					debug('urlDestino_4 :',urlDestino);
+					debug('params_4 :',params);
+					Ext.create('Ext.form.Panel').submit(
+					{
+						url             : urlDestino
+						,params         : params
+					    ,standardSubmit : true
+					});
 				}
 			}
 		}
