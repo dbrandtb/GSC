@@ -50,9 +50,9 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 				field.setAccessible(true); // You might want to set modifier to public first.
 				Object value;
 				value = field.get(someObject);
-		        logger.debug(new StringBuilder(field.getName()).append("=").append(value));
+		        //logger.debug(new StringBuilder(field.getName()).append("=").append(value));
 		        strJSON = JSONUtil.serialize(value);
-		        logger.debug(new StringBuilder("convertToJSON ").append(nombrePropiedad).append("=").append(strJSON));
+		        //logger.debug(new StringBuilder("convertToJSON ").append(nombrePropiedad).append("=").append(strJSON));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

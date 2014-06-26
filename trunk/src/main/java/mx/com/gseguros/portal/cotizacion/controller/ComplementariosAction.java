@@ -1815,6 +1815,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						if(StringUtils.isBlank(cdIdeperRes)){
 							
 							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+							
 							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
 								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
 								if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
