@@ -624,6 +624,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			paramTatriper.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
 			paramTatriper.put("pv_cdrol_i"    , smap1.get("pv_cdrol"));
 			paramTatriper.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
+			paramTatriper.put("pv_cdperson_i" , smap1.get("pv_cdperson"));
 			List<ComponenteVO>tatriper=kernelManager.obtenerTatriper(paramTatriper);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdrol(smap1.get("pv_cdrol"));
