@@ -30,7 +30,7 @@ public class MailServiceImpl implements MailService {
 	
 	
 	@Override
-	public boolean enviaCorreo(String[] to, String[] cc, String[] bcc, String asunto, String mensaje, String[] rutasAdjuntos) {
+	public boolean enviaCorreo(String[] to, String[] cc, String[] bcc, String asunto, String mensaje, String[] rutasAdjuntos, boolean contentTypeHTML) {
 		
 		// Se genera una lista de objetos File a partir del arreglo rutasAdjuntos:
 		List<File> archivos = new ArrayList<File>();
@@ -40,12 +40,12 @@ public class MailServiceImpl implements MailService {
 			}
 		}
 		// Se invoca el envío de correo:
-		return enviaCorreo(to, cc, bcc, asunto, mensaje, archivos);
+		return enviaCorreo(to, cc, bcc, asunto, mensaje, archivos, contentTypeHTML);
 	}
 
 	
 	@Override
-	public boolean enviaCorreo(String[] to, String[] cc, String[] bcc, String asunto, String mensaje, List<File> adjuntos) {
+	public boolean enviaCorreo(String[] to, String[] cc, String[] bcc, String asunto, String mensaje, List<File> adjuntos, boolean contentTypeHTML) {
 		
 		boolean exito = false;
 		MimeMessage message = mailSender.createMimeMessage();
@@ -69,7 +69,7 @@ public class MailServiceImpl implements MailService {
 			//TODO: Eliminar defaultMailMessage, cambiar funcionalidad para obtener asunto y mensaje de BD
 			helper.setSubject( StringUtils.isBlank(asunto) ? defaultMailMessage.getSubject() : asunto );
 			// Se asigna el mensaje:
-			helper.setText( StringUtils.isBlank(mensaje) ? defaultMailMessage.getText() : mensaje );
+			helper.setText( StringUtils.isBlank(mensaje) ? defaultMailMessage.getText() : mensaje, contentTypeHTML );
 			// Se asignan los adjuntos:
 			for(File file : adjuntos) {
 				if(file != null && file.exists()) {

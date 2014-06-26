@@ -47,6 +47,11 @@ public class MailAction extends ActionSupport {
 	 */
 	private String urlArchivo;
 	
+	/**
+	 * Indica si el content-type del mensaje es HTML 
+	 */
+	private boolean contentTypeHTML;
+	
 	
 	/**
 	 * Envia un e-mail. Se pueden adjuntar archivos de 2 formas: <br/>
@@ -74,7 +79,7 @@ public class MailAction extends ActionSupport {
 			}
 			
 			success = mailService.enviaCorreo(obtieneEMails(to),obtieneEMails(cc), obtieneEMails(bcc),
-					asunto, mensaje, obtieneRutasAdjuntos(archivos));
+					asunto, mensaje, obtieneRutasAdjuntos(archivos), contentTypeHTML);
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -192,6 +197,15 @@ public class MailAction extends ActionSupport {
 	public void setUrlArchivo(String urlArchivo) {
 		this.urlArchivo = urlArchivo;
 	}
+	
+	public boolean isContentTypeHTML() {
+		return contentTypeHTML;
+	}
+
+	public void setContentTypeHTML(boolean contentTypeHTML) {
+		this.contentTypeHTML = contentTypeHTML;
+	}
+
 
 	/**
 	 * mailService setter
