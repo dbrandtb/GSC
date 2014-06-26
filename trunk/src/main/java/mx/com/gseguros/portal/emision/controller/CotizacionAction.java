@@ -179,7 +179,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
 	        		{
 	        			tatriIte.setOculto(true);
-	        			tatriIte.setValue((Math.round(rtc.getTipoCambio().getVenCam().doubleValue()*100.0)/100.0)+"");
+	        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
 	        		}
 	        	}
 			}
