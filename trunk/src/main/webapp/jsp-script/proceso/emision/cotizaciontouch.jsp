@@ -446,12 +446,8 @@ function _mcotiza_imprimir()
             + "&report="        + _mcotiza_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
-    $(['<form action="'+_mcotiza_urlViewDoc+'" target="_blank">'
-       ,'<input type="text" name="url"         value="'+urlRequestImpCotiza+'" />'
-       ,'<input type="text" name="contentType" value="application/pdf" />'
-       ,'</form>'].join("")
-       )
-   .submit();
+    document.getElementById("hiddenPdfFormUrlField").value=urlRequestImpCotiza;
+    document.getElementById("hiddenPdfForm").submit();
 }
 
 function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
@@ -1527,5 +1523,9 @@ function _mcotiza_getBotonCorreo()
 </script>
 </head>
 <body>
+<form id="hiddenPdfForm" action="<s:url namespace="/documentos" action="descargaDocInline" />" target="_blank" method="post">
+<input type="text" name="url"         id="hiddenPdfFormUrlField" hidden="true" />
+<input type="text" name="contentType" value="application/pdf"    hidden="true" />
+</form>
 </body>
 </html>
