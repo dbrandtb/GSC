@@ -10,6 +10,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
@@ -39,6 +40,7 @@ import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -432,6 +434,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			String tipoMov, UserVO userVO) {
 		
 		boolean allInserted = true;
+		String cdtipsit = null;
 		String cdtipsitGS = null;
 		
 		logger.debug("*** Entrando a metodo Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + " tipoMov: " + tipoMov + "***");
@@ -451,6 +454,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			result = kernelManager.obtenDatosRecibos(params);
 			recibos = (ArrayList<ReciboWrapper>) result.getItemList();
 			
+			cdtipsit   = kernelManager.obtenCdtipsit(params);
 			cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 			
 		} catch (Exception e1) {
@@ -568,8 +572,17 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					tipoEndoso = recibo.getTipEnd();
 				}
 				
+				int modalidad = 0;
+				if(StringUtils.isNotBlank(cdtipsit)){
+					if(TipoSituacion.SALUD_VITAL.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+						modalidad = 1;
+					}else if(TipoSituacion.SALUD_NOMINA.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+						modalidad = 2;
+					}
+				}
+				
 				//Parametro1:  9999: Recibo
-				//Parametro2:  Siempre va en 0
+				//Parametro2:  Modalidad casi siempre va en 0
 				//Parametro3:  Sucursal
 				//Parametro4:  Ramo (213 o 214)
 				//Parametro5:  Poliza
@@ -577,8 +590,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				//Parametro7:  Numero de endoso (Cuando es poliza nueva poner 0)
 				//Parametro8:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
 				//Parametro9:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
-				//if( 1 == recibo.getNumRec()){
-					String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
+				
+					String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 					//HttpRequestUtil.generaReporte(this.getText("recibos.impresion.url")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
 					

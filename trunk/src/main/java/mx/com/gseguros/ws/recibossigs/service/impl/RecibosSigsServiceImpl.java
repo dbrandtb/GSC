@@ -12,6 +12,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
@@ -26,6 +27,7 @@ import mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl.GeneradorRecibo
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -47,7 +49,9 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 	
 	private KernelManagerSustituto kernelManager;
 
-	
+	/**
+	 * Recibos DXN solo se utiliza en emision para obtener los calendarios en la emision, luego de esto en endosos se utiliza el WS de Recibos normal 
+	 */
 	public boolean generaRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String sucursal, String nmsolici, String ntramite, UserVO userVO){
 		
 		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
@@ -151,6 +155,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 		
 		if(calendarios == null) return false;
 		
+		String cdtipsit = null;
 		String cdtipsitGS = null;
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -219,14 +224,30 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			
 			try {
 				kernelManager.guardaPeriodosDxN(params);
+				cdtipsit = kernelManager.obtenCdtipsit(params);
 				cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 			} catch (Exception e) {
 				logger.error("Error en llamado a PL", e);
 			}
 			
+			/**
+			 * Se salta el primer calendario porque ya se grabo el primer recibo en el WS de Recibos normal
+			 */
 			if(cont == 1)continue;
 			
-			String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
+			int modalidad = 0;
+			if(StringUtils.isNotBlank(cdtipsit)){
+				if(TipoSituacion.SALUD_VITAL.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+					modalidad = 1;
+				}else if(TipoSituacion.SALUD_NOMINA.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+					modalidad = 2;
+				}
+			}
+			
+			/**
+			 * La url no contempla endosos pues es solo para la emision.
+			 */
+			String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
 			logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 			
 			HashMap<String, Object> paramsR =  new HashMap<String, Object>();

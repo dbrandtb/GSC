@@ -1328,6 +1328,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return cdtipsitGS;
 	}
 	
+	public String obtenCdtipsit(Map<String, Object> params) throws ApplicationException{
+		String cdtipsit = null;
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.OBTEN_CDTIPSIT_GS);
+		cdtipsit = (String) res.getItemMap().get("cdtipsit");
+		logger.debug(">>>> cdTipsit obtenido: " + cdtipsit);
+		return cdtipsit;
+	}
+	
 	public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException{
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_DATOS_DXN);
 		boolean exito = "1".equals(res.getItemMap().get("EXITO"));
