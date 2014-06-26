@@ -10,6 +10,11 @@ import mx.com.gseguros.confpantallas.model.DinamicData;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
+/**
+ * Does some thing in old style.
+ *
+ * @deprecated use {@link PintaPanelAction} instead.  
+ */
 @Deprecated
 public class PintaPanel extends ActionSupport
 {
