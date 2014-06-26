@@ -4741,6 +4741,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_cdsubram_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_cdtipsit_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
     		compile();
@@ -4751,6 +4752,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		WrapperResultados wrapperResultados=mapper.build(map);
     		wrapperResultados.setItemMap(new HashMap<String, Object>());
     		wrapperResultados.getItemMap().put("cdtipsitGS", map.get("pv_cdsubram_o"));
+    		wrapperResultados.getItemMap().put("cdtipsit", map.get("pv_cdtipsit_o"));
     		return wrapperResultados;
     	}   	
     	

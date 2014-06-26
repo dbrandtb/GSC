@@ -239,6 +239,8 @@ public interface KernelManagerSustituto {
 	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
 
 	public String obtenCdtipsitGS(Map<String, Object> params) throws ApplicationException;
+	public String obtenCdtipsit(Map<String, Object> params) throws ApplicationException;
+	
 	/**
 	 * PKG_SATELITES.P_OBT_DATOS_MPOLIPER
 	 * @param cdunieco

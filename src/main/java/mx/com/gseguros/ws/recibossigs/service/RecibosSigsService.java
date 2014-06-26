@@ -39,7 +39,7 @@ public interface RecibosSigsService {
 	}
 	
 	/**
-	 * Genera los recibos de descuento por nomina
+	 * Genera los recibos de descuento por nomina, solo se utiliza en emision para obtener los calendarios en la emision, luego de esto en endosos se utiliza el WS de Recibos normal
 	 * @param cdunieco
 	 * @param cdramo
 	 * @param estado
