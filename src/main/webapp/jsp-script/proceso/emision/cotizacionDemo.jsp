@@ -9,6 +9,8 @@
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+_0_smap1['panelGenerado'] = '';
+_0_smap1['variablesGeneradas'] = '';
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
@@ -1775,47 +1777,50 @@ Ext.onReady(function()
         ]);
     </s:if>
     _0_botonera      = new _0_Botonera();
-    _0_panelPri = Ext.create('Ext.panel.Panel',{
+    
+    _0_formAgrupados.insert(0, _0_fieldNmpoliza);
+    _0_formAgrupados.insert(0, _0_fieldNtramite);
+    
+    _0_formAgrupados.add([{
+        	id          : 'fechaInicioVigencia'
+            ,name       : 'feini'
+            ,fieldLabel : 'INICIO DE VIGENCIA'
+            ,xtype      : 'datefield'
+            ,format     : 'd/m/Y'
+            ,editable   : true
+            ,allowBlank : false
+            ,value      : new Date()
+            ,listeners  :
+            {
+                change : function(field,value)
+                {
+                    try
+                    {
+                        Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+                    }
+                    catch (e) {}
+                }
+            }
+        },
+        {
+            id          : 'fechaFinVigencia'
+            ,name       : 'fefin'
+            ,fieldLabel : 'FIN DE VIGENCIA'
+            ,xtype      : 'datefield'
+            ,format     : 'd/m/Y'
+            ,readOnly   : true
+            ,allowBlank : false
+            ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+        }]);
+    
+    	_0_panelPri = Ext.create('Ext.panel.Panel',{
 		 	renderTo  : '_0_divPri'
 		 	,bodyStyle   : 'padding:10px;'
 			,items   :
 			[
-			    _0_fieldNtramite
-			    ,_0_fieldNmpoliza
-			    ,_0_formAgrupados
-			    ,{
-                   id          : 'fechaInicioVigencia'
-                   ,name       : 'feini'
-                   ,fieldLabel : 'INICIO DE VIGENCIA'
-                   ,xtype      : 'datefield'
-                   ,format     : 'd/m/Y'
-                   ,editable   : true
-                   ,allowBlank : false
-                   ,value      : new Date()
-                   ,listeners  :
-                   {
-                       change : function(field,value)
-                       {
-                           try
-                           {
-                               Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-                           }
-                           catch (e) {}
-                       }
-                   }
-               },
-               {
-                   id          : 'fechaFinVigencia'
-                   ,name       : 'fefin'
-                   ,fieldLabel : 'FIN DE VIGENCIA'
-                   ,xtype      : 'datefield'
-                   ,format     : 'd/m/Y'
-                   ,readOnly   : true
-                   ,allowBlank : false
-                   ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
-               }
-               ,_0_gridIncisos
-               ,_0_botonera
+			    _0_formAgrupados
+                ,_0_gridIncisos
+                ,_0_botonera
 			]
     });
     /*///////////////////*/
