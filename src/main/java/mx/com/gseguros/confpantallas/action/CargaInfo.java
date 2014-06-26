@@ -2,6 +2,11 @@ package mx.com.gseguros.confpantallas.action;
 
 import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesDelegate;
 
+/**
+ * Does some thing in old style.
+ *
+ * @deprecated use {@link CargaInfoAction} instead.  
+ */
 @Deprecated
 public class CargaInfo {
 	private String tarea;
