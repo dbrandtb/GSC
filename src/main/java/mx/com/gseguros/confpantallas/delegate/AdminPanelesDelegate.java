@@ -16,6 +16,7 @@ import mx.com.gseguros.confpantallas.model.DinamicPanelVo;
 import mx.com.gseguros.confpantallas.model.ViewBean;
 import net.sf.json.JSONArray;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -122,6 +123,9 @@ public class AdminPanelesDelegate {
 			datas.put("lstdeLstCtrolGridAttr", lstdeLstCtrolGridAttr);
 			datas.put("lstdeLstCtrolGridSql", lstdeLstCtrolGridSql);
 			rgs = dinamicDAO.setPanel(datas);
+			if(StringUtils.isBlank(rgs)){
+				rgs = maxP;
+			}
 			// tengo que man dar a obtener el codigo ExtJS
 			AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
@@ -133,7 +137,12 @@ public class AdminPanelesDelegate {
 				 //este es el codigo Extjs
 				 System.out.println("este es el codigo Extjs");
 				 System.out.println(pnl.getCodigo());
+				 stl.append("new Ext.form.Panel({autoScroll:true, border: false});").append("\n");
+				 stl.append("var miVarpanel_1 =");
 				 stl.append(pnl.getCodigo()).append("\n");
+				 stl.append("target.add(miVarpanel_1);");
+				 stl.append("});");
+				 System.out.println(stl.toString());
 			 }
 			 
 			 String acP = rgs;
@@ -144,7 +153,7 @@ public class AdminPanelesDelegate {
 				 //sesion.put("listaCatalogosEA", lt);
 				 System.out.println("este es el codigo de los stores");
 				 System.out.println(lt);
-				 st.append("Ext.QuickTips.init();").append("\n");
+				 //st.append("Ext.QuickTips.init();").append("\n");
 				 st.append("Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]});").append("\n");
 				 for (int i = 0; i < lt.size(); i++){
 					 DinamicData cp = lt.get(i);
@@ -469,6 +478,7 @@ public class AdminPanelesDelegate {
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "allowBlank", vo.getIsRequerido(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "readOnly", vo.getSoloLectura(), "B"));consec++;
+		if(!vo.getIsPadre().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "isPadre", vo.getIsPadre(), "S"));consec++;}
 		if(!vo.getTexto().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "value", vo.getTexto(), "S"));consec++;}
 		return rgs;
 		
