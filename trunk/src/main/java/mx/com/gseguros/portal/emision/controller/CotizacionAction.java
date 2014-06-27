@@ -1524,12 +1524,17 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param13_pv_dsapellido1_i" , aseg.get("Apellido_Materno"));
 						parametros.put("param14_pv_feingreso_i"   , new Date());
 						parametros.put("param15_pv_cdnacion_i"    , aseg.get("nacional"));
-						parametros.put("param16_pv_accion_i"      , "I");
+						parametros.put("param16"                  , null);
+						parametros.put("param17"                  , null);
+						parametros.put("param18"                  , null);
+						parametros.put("param19"                  , null);
+						parametros.put("param20_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","DATE",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR"
+								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
 						};
 						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 					}
