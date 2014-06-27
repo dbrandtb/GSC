@@ -106,6 +106,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case PLANES:
 				case TIPO_MONEDA:
 				case TIPO_MENU:
+				case TIPO_RESIDENCIA:
 				case DESTINOPAGO:
 				case CATCONCEPTO:
 				case REFERENCIAS_TRAMITE_NUEVO:
