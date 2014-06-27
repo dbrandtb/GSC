@@ -20,6 +20,27 @@ function debug(a,b,c,d)
 	}
 }
 
+function rendererColumnasDinamico(value,comboName)
+{
+    debug('>rendererColumnasDinamico',value,comboName);
+    var combo = Ext.ComponentQuery.query('[name='+comboName+']')[0];
+    if(combo&&combo.getStore)
+    {
+        var store = combo.getStore();
+        var found = false;
+        store.each(function(record)
+        {
+            if(record.get('key')==value&&!found)
+            {
+                found = true;
+                value = record.get('value');
+            }
+        });
+    }
+    debug('<rendererColumnasDinamico value',value);
+    return value;
+}
+
 function validarRFC(rfc,tper)
 {
 	debug('validarRFC',rfc,tper);
@@ -238,7 +259,7 @@ function mensajeCorrecto(titulo,mensaje,funcion)
  */
 function heredarPanel(formPanel)
 {
-	debug('heredarPanel');
+	debug('>heredarPanel:',formPanel.items.items);
 	for(var i=0;i<formPanel.items.items.length;i++)
 	{
 		if(formPanel.items.items[i].heredar)
@@ -247,6 +268,7 @@ function heredarPanel(formPanel)
 			formPanel.items.items[i].heredar(true);
 		}
 	}
+	debug('<heredarPanel');
 }
 
 /**
