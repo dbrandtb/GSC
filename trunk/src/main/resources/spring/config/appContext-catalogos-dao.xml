@@ -10,4 +10,6 @@
 
     <bean id="menuDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.MenuDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="personasDAOImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.PersonasDAOImpl" parent="abstractManagerDAO"/>
+    
 </beans>
