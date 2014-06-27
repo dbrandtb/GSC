@@ -131,20 +131,19 @@ public class AdminPanelesDelegate {
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
 			 List<ViewBean> listadePaneles = (List<ViewBean>) dataExt.get("lista");
 			 StringBuffer stl = new StringBuffer();
+			 
+			 stl.append("new Ext.form.Panel({autoScroll:true, border: false,");
+			 stl.append("items:[{");
 			 for (int i = 0; i < listadePaneles.size(); i++){
 				 ViewBean pnl = new ViewBean();
 				 pnl = listadePaneles.get(i);
-				 //este es el codigo Extjs
-				 System.out.println("este es el codigo Extjs");
-				 System.out.println(pnl.getCodigo());
-				 stl.append("new Ext.form.Panel({autoScroll:true, border: false});").append("\n");
-				 stl.append("var miVarpanel_1 =");
-				 stl.append(pnl.getCodigo()).append("\n");
-				 stl.append("target.add(miVarpanel_1);");
-				 stl.append("});");
-				 System.out.println(stl.toString());
+				 String str = pnl.getCodigo().replace(";", "");
+				 stl.append(str).append("\n");
 			 }
-			 
+			 stl.append("}]");
+			 stl.append("});");
+			 System.out.println(stl.toString());
+					 
 			 String acP = rgs;
 			 rgs = "";
 			 List<DinamicData> lt = adm.GetListaTablas((List<String>) dataExt.get("listaCmb"),(List<String>) dataExt.get("listaCmbHijo"));
