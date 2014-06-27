@@ -14,18 +14,22 @@ import org.springframework.jdbc.core.RowMapper;
 public class DinamicMapper implements RowMapper
 {
 	
-	private static Logger log=Logger.getLogger(DinamicMapper.class);
+	private static Logger logger=Logger.getLogger(DinamicMapper.class);
 
 	@Override
 	public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 	{
+		String cols="";
 		Map<String,String> map=new LinkedHashMap<String,String>(0);
 		ResultSetMetaData metaData = rs.getMetaData();
 		int numCols=metaData.getColumnCount();
 		for (int i=1;i<=numCols;i++)
 		{
 			String col=metaData.getColumnName(i);
-			//log.debug("columna: "+col);
+			if(rowNum==0)
+			{
+				cols=cols+col+",";
+			}
 			if(col!=null&&(col.substring(0,2).equalsIgnoreCase("fe")||col.substring(0,2).equalsIgnoreCase("ff")))
 			{
 				map.put(col,Utilerias.formateaFecha(rs.getString(col)));
@@ -35,7 +39,10 @@ public class DinamicMapper implements RowMapper
 				map.put(col,rs.getString(col));
 			}			
 		}
+		if(rowNum==0)
+		{
+			logger.info("Columnas: "+cols);
+		}
 		return map;
 	}
-	
 }
