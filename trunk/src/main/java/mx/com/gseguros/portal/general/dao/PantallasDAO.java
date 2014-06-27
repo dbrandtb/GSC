@@ -14,6 +14,18 @@ public interface PantallasDAO
 	/**
 	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
 	 */
+	public List<ComponenteVO>       obtenerComponentes         (String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden) throws Exception;
+	/**
+	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
+	 */
 	public List<Map<String,String>> obtenerParametros          (Map<String,String> params) throws Exception;
 	/**
 	 * PKG_CONF_PANTALLAS.P_MOV_TCONFCMP
@@ -29,7 +41,7 @@ public interface PantallasDAO
 	public List<Map<String,String>> obtenerArbol               ()                          throws Exception;
 	
 	/**
-	 * Obtiene codigo ExtJS generado por el diseñador visual de pantallas
+	 * Obtiene codigo ExtJS generado por el diseï¿½ador visual de pantallas
 	 * @param params
 	 * @return
 	 * @throws Exception
