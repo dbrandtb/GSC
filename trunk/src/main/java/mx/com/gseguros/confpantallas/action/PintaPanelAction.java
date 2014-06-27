@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesManager;
+import mx.com.gseguros.confpantallas.delegate.CargaPanelesManager;
 import mx.com.gseguros.confpantallas.model.DinamicData;
 
 import org.apache.log4j.Logger;
@@ -18,7 +18,7 @@ public class PintaPanelAction extends ActionSupport {
 
 	private Logger logger = Logger.getLogger(PintaPanelAction.class);
 	
-	private transient AdminCargaPanelesManager adminCargaPanelesManager;
+	private transient CargaPanelesManager cargaPanelesManager;
 	
 	private String nombrepanel;
 	
@@ -28,9 +28,9 @@ public class PintaPanelAction extends ActionSupport {
 		ActionContext contexto = ActionContext.getContext();
 		Map<String, Object> sesion = contexto.getSession();
 		if(getTarea().equals("pintaPanel")){
-		    HashMap<String, Object> data = adminCargaPanelesManager.GeneraJson(getNombrepanel());
+		    HashMap<String, Object> data = cargaPanelesManager.GeneraJson(getNombrepanel());
 		    sesion.put("datoSesion", data.get("lista"));
-			List<DinamicData> lt = adminCargaPanelesManager.GetListaTablas(
+			List<DinamicData> lt = cargaPanelesManager.GetListaTablas(
 					(List<String>) data.get("listaCmb"),
 					(List<String>) data.get("listaCmbHijo"));
 		    if(lt.size() > 0){
@@ -44,19 +44,22 @@ public class PintaPanelAction extends ActionSupport {
 	
 	//Getters and setters:
 	
+	public void setCargaPanelesManager(CargaPanelesManager cargaPanelesManager) {
+		this.cargaPanelesManager = cargaPanelesManager;
+	}
+	
 	public String getNombrepanel() {
 		return nombrepanel;
-	}
-	public void setAdminCargaPanelesManager(AdminCargaPanelesManager adminCargaPanelesManager) {
-		this.adminCargaPanelesManager = adminCargaPanelesManager;
 	}
 
 	public void setNombrepanel(String nombrepanel) {
 		this.nombrepanel = nombrepanel;
 	}
+	
 	public String getTarea() {
 		return tarea;
 	}
+	
 	public void setTarea(String tarea) {
 		this.tarea = tarea;
 	}

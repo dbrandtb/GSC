@@ -2,6 +2,12 @@ package mx.com.gseguros.confpantallas.action;
 
 import mx.com.gseguros.confpantallas.delegate.AdminControlesPredeterminados;
 
+/**
+ * Does some thing in old style.
+ *
+ * @deprecated use {@link PintaTreePanelAction} instead.  
+ */
+@Deprecated
 public class PintaTreePanel {
 	
 	private String json;

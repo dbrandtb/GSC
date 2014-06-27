@@ -19,9 +19,9 @@ import mx.com.gseguros.confpantallas.model.ViewPanel;
 
 import org.apache.log4j.Logger;
 
-public class AdminCargaPanelesManagerImpl implements AdminCargaPanelesManager {
+public class CargaPanelesManagerImpl implements CargaPanelesManager {
 	
-	private Logger logger = Logger.getLogger(AdminCargaPanelesManagerImpl.class);
+	private Logger logger = Logger.getLogger(CargaPanelesManagerImpl.class);
 	
 	private DinamicDaoInterface dinamicDAO;
 	
