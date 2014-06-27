@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,37 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		return (List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	@Override
+	public List<ComponenteVO> obtenerComponentes(String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_CDTIPSIT_I" , cdtipsit);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_CDSISROL_I" , cdsisrol);
+		params.put("PV_CDTIPTRA_I" , cdtiptra);
+		params.put("PV_ORDEN_I"    , orden);
+		params.put("PV_SECCION_I"  , seccion);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
+		List<ComponenteVO>lista=(List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
+		if(lista==null)
+		{
+			lista=new ArrayList<ComponenteVO>();
+		}
+		logger.debug("obtenerComponentes lista size: "+lista.size());
+		return lista;
 	}
 	
 	protected class ObtenerComponentes extends StoredProcedure
