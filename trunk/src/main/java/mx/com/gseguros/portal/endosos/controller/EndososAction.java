@@ -504,6 +504,10 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_dsapellido1_i" , persona.get("amat"));
 				paramPersona.put("pv_feingreso_i"   , null);
 				paramPersona.put("pv_cdnacion_i"    , null);
+				paramPersona.put("pv_canaling_i"    , null);
+				paramPersona.put("pv_conducto_i"    , null);
+				paramPersona.put("pv_ptcumupr_i"    , null);
+				paramPersona.put("pv_residencia_i"  , null);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -697,6 +701,10 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_dsapellido1_i" , persona.get("amat"));
 				paramPersona.put("pv_feingreso_i"   , null);
 				paramPersona.put("pv_cdnacion_i"    , null);
+				paramPersona.put("pv_canaling_i"    , null);
+				paramPersona.put("pv_conducto_i"    , null);
+				paramPersona.put("pv_ptcumupr_i"    , null);
+				paramPersona.put("pv_residencia_i"  , null);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -3200,6 +3208,10 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpersona.put("pv_dsapellido1_i" , amat);
 				mapaMpersona.put("pv_feingreso_i"   , fechaHoy);
 				mapaMpersona.put("pv_cdnacion_i"    , cdnacion);
+				mapaMpersona.put("pv_canaling_i"    , null);
+				mapaMpersona.put("pv_conducto_i"    , null);
+				mapaMpersona.put("pv_ptcumupr_i"    , null);
+				mapaMpersona.put("pv_residencia_i"  , null);
 				mapaMpersona.put("pv_accion_i"      , "I");
 				kernelManager.movMpersona(mapaMpersona);
                 ////// mpersona //////
