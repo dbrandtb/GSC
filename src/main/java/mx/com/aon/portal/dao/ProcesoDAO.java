@@ -1671,76 +1671,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return wrapperResultados;
 		}
 	}
-	
-	protected class ObtieneTatriperMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			ComponenteVO result=new ComponenteVO();
-			result.setFlagEsAtribu(true);
-			result.setType(ComponenteVO.TIPO_TATRIPER);
-			result.setNameCdatribu(rs.getString("CDATRIBU"));
-			result.setTipoCampo(rs.getString("SWFORMAT"));
-			
-			String sMinlen = rs.getString("NMLMIN");
-            int minlen = -1;
-            boolean fMinlen = false;
-            if(StringUtils.isNotBlank(sMinlen))
-            {
-            	try
-            	{
-            		minlen=(Integer)Integer.parseInt(sMinlen);
-            		fMinlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		minlen=-1;
-            		fMinlen=false;
-            	}
-            }
-            result.setMinLength(minlen);
-            result.setFlagMinLength(fMinlen);
-            
-            String sMaxlen = rs.getString("NMLMAX");
-            int maxlen = -1;
-            boolean fMaxlen = false;
-            if(StringUtils.isNotBlank(sMaxlen))
-            {
-            	try
-            	{
-            		maxlen=(Integer)Integer.parseInt(sMaxlen);
-            		fMaxlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		maxlen=-1;
-            		fMaxlen=false;
-            	}
-            }
-            result.setMaxLength(maxlen);
-            result.setFlagMaxLength(fMaxlen);
-			
-            String sObliga = rs.getString("SWOBLIGA");
-            boolean isObliga = false;
-            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
-            {
-            	isObliga = true;
-            }
-            result.setObligatorio(isObliga);
-			
-			result.setLabel(rs.getString("DSATRIBU"));
-			result.setCatalogo(rs.getString("OTTABVAL"));
-			
-			String sDepend = rs.getString("CDTABLJ1");
-            boolean isDepend = false;
-            if(StringUtils.isNotBlank(sDepend))
-            {
-            	isDepend = true;
-            }
-            result.setDependiente(isDepend);
-			
-			return result;
-		}
-	}
 	/*//////////////////////////////////////////*/
 	////// Obtiene campos tatripol de tabla //////
 	//////////////////////////////////////////////
@@ -2615,24 +2545,28 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected PMovMpersona(DataSource dataSource) {
     		super(dataSource,"PKG_SATELITES.P_MOV_MPERSONA");
-    		declareParameter(new SqlParameter("pv_cdperson_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdperson%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_cdtipide_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdtipide%TYPE DEFAULT NULL, Valor por default 1
-			declareParameter(new SqlParameter("pv_cdideper_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdideper%TYPE DEFAULT NULL, Valor de CDRFC
-			declareParameter(new SqlParameter("pv_dsnombre_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_cdtipper_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
-			declareParameter(new SqlParameter("pv_otfisjur_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
-			declareParameter(new SqlParameter("pv_otsexo_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.otsexo%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_fenacimi_i", 		OracleTypes.DATE));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_cdrfc_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdrfc%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_dsemail_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.dsemail%TYPE DEFAULT NULL,  Valor de email o nulo,
-			declareParameter(new SqlParameter("pv_dsnombre1_i", 	OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre1%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_dsapellido_i", 	OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_dsapellido1_i", 	OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido1%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_feingreso_i", 	OracleTypes.DATE));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
-			declareParameter(new SqlParameter("pv_cdnacion_i", 		OracleTypes.VARCHAR));//
-			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));//
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipide_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideper_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipper_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otfisjur_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otsexo_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fenacimi_i"    , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdrfc_i"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsemail_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre1_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido1_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feingreso_i"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdnacion_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_canaling_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_conducto_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptcumupr_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_residencia_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"      , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
     		
     		compile();
     	}
