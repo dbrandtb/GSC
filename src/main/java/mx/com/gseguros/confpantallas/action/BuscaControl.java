@@ -2,7 +2,12 @@ package mx.com.gseguros.confpantallas.action;
 
 import mx.com.gseguros.confpantallas.delegate.AdminBuscaControlDelegate;
 
-
+/**
+ * Does some thing in old style.
+ *
+ * @deprecated use {@link BuscaControlAction} instead.  
+ */
+@Deprecated
 public class BuscaControl {
 	private String tarea;
 	private String regreso;

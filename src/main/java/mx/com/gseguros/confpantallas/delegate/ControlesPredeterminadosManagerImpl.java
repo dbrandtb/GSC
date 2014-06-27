@@ -1,33 +1,25 @@
 package mx.com.gseguros.confpantallas.delegate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
+import mx.com.gseguros.confpantallas.model.NodoVO;
 
-import org.apache.struts2.ServletActionContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.log4j.Logger;
 
-/**
- * Does some thing in old style.
- *
- * @deprecated use {@link ControlesPredeterminadosManagerImpl} instead.  
- */
-public class AdminControlesPredeterminados {
+public class ControlesPredeterminadosManagerImpl implements ControlesPredeterminadosManager {
 
-	public AdminControlesPredeterminados() {
-		super();
-		//TODO: cambiar usando Spring Ioc:
-		WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
-		dinamicDAO = (DinamicDaoInterface)context.getBean("dinamicDAOImpl");
-	}
+	private Logger logger = Logger.getLogger(ControlesPredeterminadosManagerImpl.class);
 	
 	private DinamicDaoInterface dinamicDAO;
 	
+	/* TODO: Revisar si se utiliza o no
 	public String getTablas(){
+		
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("operacion", "getListas");
@@ -35,7 +27,7 @@ public class AdminControlesPredeterminados {
 		try {
 			HashMap<String, Object> dataR = new HashMap<String, Object>();
 			//dataR = dnc.dispatch(data);
-			System.out.println(data);
+			logger.debug("data=" + data);
 			List<Map> lts = (List<Map>) dataR.get("rgs");
 			Iterator<Map> itLts = lts.iterator();
 			StringBuffer strJson = new StringBuffer();
@@ -47,14 +39,18 @@ public class AdminControlesPredeterminados {
 			rgs = strJson.toString();
 			rgs = rgs.substring(0, strJson.toString().length()-1);
 			rgs = rgs + "]}";
-			System.out.println(rgs);
+			logger.debug("rgs="+ rgs);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return rgs;
 	}
+	*/
 	
-	public String getInfo(String query, Boolean leaf, String idAttr, String cdramo){
+	
+	public List<NodoVO> getInfo(String query, Boolean leaf, String idAttr, String cdramo) {
+		
+		List<NodoVO> nodos = new ArrayList<NodoVO>();
 		String rgs = "";
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("operacion", "getListas");
@@ -64,22 +60,29 @@ public class AdminControlesPredeterminados {
 		try {
 			List<Map> lts = dinamicDAO.GetListados(data);
 			
+			logger.debug("lts==="+ lts);
+			
 			Iterator<Map> itLts = lts.iterator();
 			StringBuffer strJson = new StringBuffer();
 			strJson.append("{\"children\":[");
 			while (itLts.hasNext()) {
 				Map map = itLts.next();
+				NodoVO nodo = new NodoVO();
+				nodo.setId( new StringBuilder().append(idAttr).append("_").append(map.get("TABLA")).toString() );
+				nodo.setText( new StringBuilder().append(map.get("NOMBRE")).toString() );
+				nodo.setLeaf(leaf);
+				nodos.add(nodo);
 				strJson.append("{\"text\":\"").append(map.get("NOMBRE")).append("\",\"leaf\":").append(leaf).append(", id:\"").append(idAttr).append("_").append(map.get("TABLA")).append("\"},");
 			}
 			rgs = strJson.toString();
 			rgs = rgs.substring(0, strJson.toString().length()-1);
 			rgs = rgs + "]}";
-			System.out.println(rgs);
+			logger.debug("rgs="+ rgs);
+			logger.debug("nodos="+ nodos);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
-		
-		return rgs;
+		return nodos;
 	}
 
 	public void setDinamicDAO(DinamicDaoInterface dinamicDAO) {

@@ -7,8 +7,17 @@
         <property name="generadorPantallasDAO" ref="generadorPantallasDAOImpl"></property>
     </bean>
     
-    <bean id="adminCargaPanelesManagerImpl" class="mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesManagerImpl">
+    <bean id="cargaPanelesManagerImpl" class="mx.com.gseguros.confpantallas.delegate.CargaPanelesManagerImpl">
         <property name="dinamicDAO" ref="dinamicDAOImpl"></property>
     </bean>
+    
+    <bean id="buscaControlManagerImpl" class="mx.com.gseguros.confpantallas.delegate.BuscaControlManagerImpl">
+        <property name="dinamicDAO" ref="dinamicDAOImpl"></property>
+    </bean>
+    
+    <bean id="controlesPredeterminadosManagerImpl" class="mx.com.gseguros.confpantallas.delegate.ControlesPredeterminadosManagerImpl">
+        <property name="dinamicDAO" ref="dinamicDAOImpl"></property>
+    </bean>
+    
     
 </beans>

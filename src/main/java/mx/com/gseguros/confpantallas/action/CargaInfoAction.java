@@ -2,7 +2,7 @@ package mx.com.gseguros.confpantallas.action;
 
 import java.util.List;
 
-import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesManager;
+import mx.com.gseguros.confpantallas.delegate.CargaPanelesManager;
 
 import org.apache.log4j.Logger;
 
@@ -15,7 +15,7 @@ public class CargaInfoAction extends ActionSupport {
 	
 	private Logger log= Logger.getLogger(CargaInfoAction.class);
 	
-	private transient AdminCargaPanelesManager adminCargaPanelesManager; 
+	private transient CargaPanelesManager cargaPanelesManager; 
 	
 	private String tarea;
 	
@@ -30,13 +30,13 @@ public class CargaInfoAction extends ActionSupport {
 	public String execute() {
 		log.debug("Inicio de CargaInfo");
 		if("llenaComboPaneles".equals(tarea)) {
-			success = adminCargaPanelesManager.GetListadePaneles();
+			success = cargaPanelesManager.GetListadePaneles();
 		}else if("llenaCombo".equals(tarea)) {
-			success = adminCargaPanelesManager.getDataCombo(tabla, valor);
+			success = cargaPanelesManager.getDataCombo(tabla, valor);
 		}else if("llenaComboHijo".equals(tarea)) {
-			success = adminCargaPanelesManager.getDataComboHijo(tabla, valor);
+			success = cargaPanelesManager.getDataComboHijo(tabla, valor);
 		}else if("llenaGrid".equals(tarea)) {
-			success = adminCargaPanelesManager.getDataGrid(tabla, valor);
+			success = cargaPanelesManager.getDataGrid(tabla, valor);
 		}
 		log.debug("Fin de CargaInfo");
 		return SUCCESS;
@@ -45,9 +45,8 @@ public class CargaInfoAction extends ActionSupport {
 	
 	//Getters and setters:
 	
-	
-	public void setAdminCargaPanelesManager(AdminCargaPanelesManager adminCargaPanelesManager) {
-		this.adminCargaPanelesManager = adminCargaPanelesManager;
+	public void setCargaPanelesManager(CargaPanelesManager cargaPanelesManager) {
+		this.cargaPanelesManager = cargaPanelesManager;
 	}
 	
 	public String getTarea() {

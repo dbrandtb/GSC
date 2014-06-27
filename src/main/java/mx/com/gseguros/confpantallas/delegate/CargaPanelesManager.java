@@ -8,7 +8,7 @@ import mx.com.gseguros.confpantallas.model.DinamicComboVo;
 import mx.com.gseguros.confpantallas.model.DinamicData;
 import mx.com.gseguros.confpantallas.model.DinamicPanelAttrGetVo;
 
-public interface AdminCargaPanelesManager {
+public interface CargaPanelesManager {
 	
 	/**
 	 * 

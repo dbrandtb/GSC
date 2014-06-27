@@ -8,11 +8,19 @@
     </bean>
     
     <bean id="cargaInfoAction" class="mx.com.gseguros.confpantallas.action.CargaInfoAction" scope="prototype">
-        <property name="adminCargaPanelesManager" ref="adminCargaPanelesManagerImpl"></property>
+        <property name="cargaPanelesManager" ref="cargaPanelesManagerImpl"></property>
     </bean>
     
     <bean id="pintaPanelAction" class="mx.com.gseguros.confpantallas.action.PintaPanelAction" scope="prototype">
-        <property name="adminCargaPanelesManager" ref="adminCargaPanelesManagerImpl"></property>
+        <property name="cargaPanelesManager" ref="cargaPanelesManagerImpl"></property>
+    </bean>
+    
+    <bean id="buscaControlAction" class="mx.com.gseguros.confpantallas.action.BuscaControlAction" scope="prototype">
+        <property name="buscaControlManager" ref="buscaControlManagerImpl"></property>
+    </bean>
+
+    <bean id="pintaTreePanelAction" class="mx.com.gseguros.confpantallas.action.PintaTreePanelAction" scope="prototype">
+        <property name="controlesPredeterminadosManager" ref="controlesPredeterminadosManagerImpl"></property>
     </bean>
     
     
