@@ -113,7 +113,7 @@ public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterfac
 	public String setCFExtjs (HashMap<String, String> mapa){
 		String rgs = "";
 		this.ejecuta(mapa);
-		
+		rgs = mapa.get("panel");//TODO:es temporal, cambiar logica
 		return rgs;
 	}
 	public String setPanel (HashMap<String, Object> mapa){

@@ -77,7 +77,7 @@ storeD.load();
             height: 32, 
             autoEl: {
                 tag: 'div',
-                html:'<center><p><b><font size="4" face="Georgia, Arial, Garamond">Creando tus pantallas de forma Dinamica</font></b></p></center>'
+                html:'<center><p><b><font size="4" face="Georgia, Arial, Garamond">Generador de Pantallas</font></b></p></center>'
                 //html:'<center><img src="../resources/img/tituloConsola.png"></center>'
             }
         }),{
@@ -155,7 +155,7 @@ storeD.load();
 												nAttr = '0'+nAttr;
 											}
 											nombre = nombre+nAttr;
-											if(jsonResponse[0].ottabval == ''){
+											if( Ext.isEmpty(jsonResponse[0].ottabval) ){
 												if(jsonResponse[0].swformat == 'F'){
 													tipo = 'Picker';
 												}else if(jsonResponse[0].swformat == 'P' || jsonResponse[0].swformat == 'N'){
@@ -1700,7 +1700,7 @@ function fncGrabaPanel(text,nombre){
 	        success: function(response, opts){          
 	            var text = trim(response.responseText);
 	            var jsonResponse = Ext.JSON.decode(text);
-	            if(jsonResponse.success != '') {
+	            if(jsonResponse.existe == true) {
 	            	Ext.MessageBox.show({
 			           title:'Guardando Formulario?',
 			           msg: 'El nombre ['+nombre+'] del panel ya existe. <br />Deseas sobreescribirlo?',
@@ -1732,10 +1732,10 @@ Ext.Ajax.request({
 	        	target.body.unmask();    
 	            var text = trim(response.responseText);
 	            var jsonResponse = Ext.JSON.decode(text);
-	            if(jsonResponse.success == '') {
+	            if(jsonResponse.success == true) {
             	Ext.MessageBox.show({
 			           title:'Información',
-			           msg: 'El panel ha sido guardado satisfactoriamente.',
+			           msg: 'El panel ha sido guardado satisfactoriamente \n ID=' + jsonResponse.panel,
 			           buttons: Ext.MessageBox.OK,
 			           icon: Ext.MessageBox.WARNING
        				});
