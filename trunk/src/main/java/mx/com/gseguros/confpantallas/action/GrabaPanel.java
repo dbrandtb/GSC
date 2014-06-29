@@ -1,26 +1,38 @@
 package mx.com.gseguros.confpantallas.action;
 
+import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionSupport;
+
 import mx.com.gseguros.confpantallas.delegate.AdminPanelesDelegate;
 
-public class GrabaPanel {
+public class GrabaPanel extends ActionSupport {
+	
+	private static final long serialVersionUID = -5458409876380834872L;
+
+	private Logger logger = Logger.getLogger(GrabaPanel.class);
+	
 	private String nombrepanel;
 	private String tarea;
 	private String regreso;
 	private String json;
 	
+	//TODO:es temporal, cambiar logica
+	private boolean success;
+	private boolean existe;
+	private String panel;
+	
 	 public String execute() {
-		 System.out.println("Ya ingrese a mi action :::::");
+		 logger.debug("Ya ingrese a mi action :::::");
 		 AdminPanelesDelegate adm = new AdminPanelesDelegate();
-		 if(getTarea().equals("existe")){
-			 setRegreso(adm.ExistePanel(getNombrepanel()));
-		 }else if(getTarea().equals("graba")){
-			 setRegreso(adm.SetPanel(getNombrepanel(), getJson()));
-			 System.out.println(getJson());
-			 
+		 if(tarea.equals("existe")){
+			 existe = adm.ExistePanel(nombrepanel);
+		 }else if(tarea.equals("graba")){
+			 panel = adm.SetPanel(nombrepanel, json);
+			 logger.debug("json=" + json);
 		 }
-		 
-		 
-		 return "SUCCESS";
+		 success = true;
+		 return SUCCESS;
 	 }
 
 	public String getNombrepanel() {
@@ -55,4 +67,30 @@ public class GrabaPanel {
 		this.json = json;
 	}
 
+	
+	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+	
+	public boolean isExiste() {
+		return existe;
+	}
+
+	public void setExiste(boolean existe) {
+		this.existe = existe;
+	}
+
+	public String getPanel() {
+		return panel;
+	}
+
+	public void setPanel(String panel) {
+		this.panel = panel;
+	}
+	
 }

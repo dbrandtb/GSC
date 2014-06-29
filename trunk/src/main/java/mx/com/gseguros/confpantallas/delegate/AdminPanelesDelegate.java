@@ -17,11 +17,14 @@ import mx.com.gseguros.confpantallas.model.ViewBean;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class AdminPanelesDelegate {
+	
+	private Logger logger = Logger.getLogger(AdminPanelesDelegate.class);
 	
 	public AdminPanelesDelegate() {
 		super();
@@ -40,21 +43,22 @@ public class AdminPanelesDelegate {
 	ArrayList<DinamicControlAttrVo> lstdeLstCtrolGridAttr = new ArrayList<DinamicControlAttrVo>();
 	ArrayList<DinamicControlAttrVo> lstdeLstCtrolGridSql = new ArrayList<DinamicControlAttrVo>();
 	
-	public String ExistePanel(String panel) {
-		String rgs = "";
+	public boolean ExistePanel(String panel) {
+		boolean existe = false;
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
 			data.put("query", "existePanel");
 			data.put("panel", panel);
-			
-			rgs = dinamicDAO.getString(data);
-			System.out.println(rgs);
+			dinamicDAO.getString(data);
+			//Si no hubo excepcion, se obtuvo resultado, y si existe:
+			existe = true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			System.out.println("El panel no existe es new...");
+			logger.error(e.getMessage(), e);
+			logger.warn("El panel no existe es new...");
 		}
-		return rgs;
+		return existe;
 	}
 	
 	public String SetPanel (String panel, String json) {
@@ -131,17 +135,17 @@ public class AdminPanelesDelegate {
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
 			 List<ViewBean> listadePaneles = (List<ViewBean>) dataExt.get("lista");
 			 StringBuffer stl = new StringBuffer();
-			 
-			 stl.append("new Ext.form.Panel({autoScroll:true, border: false,");
-			 stl.append("items:[{");
+			 stl.append("new ");
+			 //stl.append("new Ext.form.Panel({autoScroll:true, border: false,");
+			 //stl.append("items:[{");
 			 for (int i = 0; i < listadePaneles.size(); i++){
 				 ViewBean pnl = new ViewBean();
 				 pnl = listadePaneles.get(i);
-				 String str = pnl.getCodigo().replace(";", "");
-				 stl.append(str).append("\n");
+				 //String str = pnl.getCodigo().replace(";", "");
+				 stl.append(pnl.getCodigo()).append("\n");
 			 }
-			 stl.append("}]");
-			 stl.append("});");
+			 //stl.append("}]");
+			 //stl.append("});");
 			 System.out.println(stl.toString());
 					 
 			 String acP = rgs;
@@ -168,7 +172,7 @@ public class AdminPanelesDelegate {
 			 dataE.put("panel", acP);
 			 dataE.put("stores", st.toString());
 			 dataE.put("codigo", stl.toString());
-			rgs = dinamicDAO.setCFExtjs(dataE);
+            rgs = dinamicDAO.setCFExtjs(dataE);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -286,6 +290,8 @@ public class AdminPanelesDelegate {
 	private ArrayList<DinamicPanelAttrVo> creaInsertPanel(DinamicAttrVo vo){
 		ArrayList<DinamicPanelAttrVo> rgs = new ArrayList<DinamicPanelAttrVo>();
 		int consec = 1;
+		//logger.debug("creaInsertPanel() this.consec=" + this.consec);
+		//logger.debug("creaInsertPanel() consec=" + consec);
 		if(!vo.getIdHijo().equals("")){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "id", vo.getIdHijo(), "S"));consec++;}
 		if(!vo.getTitulo().equals("")){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "title", vo.getTitulo(), "S"));consec++;}
 		if(vo.getTipo().equals("form")){
@@ -355,7 +361,9 @@ public class AdminPanelesDelegate {
 	
 	private ArrayList<DinamicControlAttrVo> creaInsertControlAttrGral(DinamicAttrVo vo, int nControl, int nPanel){
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
+		//logger.debug("creaInsertControlAttrGral() this.consec=" + this.consec);
 		consec = 1;
+		//logger.debug("creaInsertControlAttrGral() this.consec aumentado=" + this.consec);
 		if(!vo.getIdHijo().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "id", vo.getIdHijo(), "S"));consec++;}
 		if(!vo.getName().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "name", vo.getName(), "S"));consec++;}
 		if(!vo.getEtiqueta().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "fieldLabel", vo.getEtiqueta(), "S"));consec++;}
@@ -384,6 +392,7 @@ public class AdminPanelesDelegate {
 	}
 
 	private ArrayList<DinamicControlAttrVo> creaInsertComboboxAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertComboboxAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		if(!vo.getDelimitador().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "delimiter", vo.getDelimitador(), "S"));consec++;}
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
@@ -406,6 +415,7 @@ public class AdminPanelesDelegate {
 	}
 
 	private ArrayList<DinamicControlAttrVo> creaInsertButtonAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertButtonAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		if(!vo.getEscala().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "scale", vo.getEscala(), "S"));consec++;}
 		if(!vo.getImagenCls().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "iconCls", vo.getImagenCls(), "S"));consec++;}
@@ -417,6 +427,7 @@ public class AdminPanelesDelegate {
 	}
 	
 	private ArrayList<DinamicControlAttrVo> creaInsertRadioAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertRadioAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "checked", vo.getIsSeleccionado(), "B"));consec++;
@@ -429,6 +440,7 @@ public class AdminPanelesDelegate {
 	}
 
 	private ArrayList<DinamicControlAttrVo> creaInsertCheckBoxAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertCheckBoxAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "checked", vo.getIsSeleccionado(), "B"));consec++;
@@ -442,6 +454,7 @@ public class AdminPanelesDelegate {
 		
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertDatefieldAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertDatefieldAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "editable", vo.getIsEditable(), "B"));consec++;
@@ -458,6 +471,7 @@ public class AdminPanelesDelegate {
 		
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertNumericAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertNumericAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "editable", vo.getIsEditable(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "hideTrigger", vo.getIsFlechas(), "B"));consec++;
@@ -473,6 +487,7 @@ public class AdminPanelesDelegate {
 		
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertTextAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertTextAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "allowBlank", vo.getIsRequerido(), "B"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "disabled", vo.getIsBloqueado(), "B"));consec++;
@@ -483,22 +498,26 @@ public class AdminPanelesDelegate {
 		
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertLabelAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertLabelAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		if(!vo.getTexto().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "text", vo.getTexto(), "S"));consec++;}
 		if(!vo.getHtml().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "html", vo.getHtml(), "S"));consec++;}
 		return rgs;
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertImagenAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertImagenAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		if(!vo.getSrc().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "src", vo.getSrc(), "S"));consec++;}
 		return rgs;
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertHiddenAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertHiddenAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		if(!vo.getTexto().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "value", vo.getTexto(), "S"));consec++;}
 		return rgs;
 	}
 	private ArrayList<DinamicControlAttrVo> creaInsertGridAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		//logger.debug("creaInsertGridAttr() this.consec=" + this.consec);
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "columns", String.valueOf(consec), "S"));consec++;
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "enableColumnHide", vo.getColumna_hidden(), "B"));consec++;

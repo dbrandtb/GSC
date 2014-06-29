@@ -3,10 +3,10 @@
 
 <struts>
 
-	<package name="confpantallas" namespace="/confpantallas" extends="default">
+	<package name="confpantallas" namespace="/confpantallas" extends="struts-default, json-default">
 
 		<action name="grabapanel" class="mx.com.gseguros.confpantallas.action.GrabaPanel">
-			<result name="SUCCESS">/jsp/confpantallas/success.jsp</result>
+			<result type="json"/>
 		</action>
 		
 		<action name="cargainfoFER" class="mx.com.gseguros.confpantallas.action.CargaInfo">
