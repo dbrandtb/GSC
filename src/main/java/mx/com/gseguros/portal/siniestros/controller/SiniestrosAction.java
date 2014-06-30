@@ -101,6 +101,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String montoMaximo;
     private String existePenalizacion;
     private String montoArancel;
+    private String requiereAutServ;
     private String mesesTiempoEspera;
     private String existeDocAutServicio;
     private String autorizarProceso;
@@ -1503,6 +1504,19 @@ public String generarSiniestroSinAutorizacion()
 	   	return SUCCESS;
  }
    
+   
+   public String obtieneRequiereAutServ(){
+	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
+	   	try {
+	   		requiereAutServ = siniestrosManager.requiereAutorizacionServ(params.get("cobertura"),params.get("subcobertura"));
+	   	}catch( Exception e){
+	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+}
+   
    public String validaAutorizacionProceso(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
 	   	try {
@@ -1844,15 +1858,8 @@ public String generarSiniestroSinAutorizacion()
 	    	String subcobertura = factura.get("CDCONVAL");
 	    	String valorComplementario = "0";
 	    	
-	    	if(cobertura.equalsIgnoreCase("18HO") || cobertura.equalsIgnoreCase("18PS"))
-	    	{
-	    		if(cobertura.equalsIgnoreCase("18HO") && (subcobertura.equalsIgnoreCase("18HO024")|| subcobertura.equalsIgnoreCase("18HO025")|| subcobertura.equalsIgnoreCase("18HO026")|| subcobertura.equalsIgnoreCase("18HO027"))){
-		    		valorComplementario = "1";
-		    	}
-		    	if(cobertura.equalsIgnoreCase("18PS") && (subcobertura.equalsIgnoreCase("18PS001")||subcobertura.equalsIgnoreCase("18PS002"))){
-		    		valorComplementario = "1";
-			    }
-	    	}else{
+	    	String requiereAutorizacion = siniestrosManager.requiereAutorizacionServ(cobertura, subcobertura);
+	    	if(requiereAutorizacion.equalsIgnoreCase("OP")){
 	    		valorComplementario = "1";
 	    	}
 	    	
@@ -5809,6 +5816,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setMontoArancel(String montoArancel) {
 		this.montoArancel = montoArancel;
+	}
+
+	public String getRequiereAutServ() {
+		return requiereAutServ;
+	}
+
+
+	public void setRequiereAutServ(String requiereAutServ) {
+		this.requiereAutServ = requiereAutServ;
 	}
 	
 	
