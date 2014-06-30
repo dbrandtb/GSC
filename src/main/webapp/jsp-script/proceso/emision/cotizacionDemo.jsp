@@ -430,15 +430,32 @@ function _0_mail()
 
 function _0_bloquear(b)
 {
-	for(var i=2;i<_0_formAgrupados.items.items.length-1;i++)
-	{
-		_0_formAgrupados.items.items[i].setReadOnly(b);
+	if(_0_formAgrupados.items){
+		deshabilitaItems(_0_formAgrupados.items, b);
 	}
+	
 	_0_gridIncisos.setDisabled(b);
 	_0_botonera.setDisabled(b);
 	if(b)
 	{
 		window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());
+	}
+}
+
+function deshabilitaItems(items, b){
+	
+	for(var i=0 ; i < items.length ; i++)
+	{
+		if(items[i] && items[i].setReadOnly){
+			items[i].setReadOnly(b);
+		}
+		if(items[i] && items[i].items){
+			deshabilitaItems(items[i].items, b);
+		}
+		
+	}
+	if(items.items){
+		deshabilitaItems(items.items, b);
 	}
 }
 
@@ -995,7 +1012,7 @@ function _0_cotizar(boton)
                         })
                         ,columns          : Ext.decode(json.smap1.columnas)
                         ,selType          : 'cellmodel'
-                        ,minHeight        : 200 //TODO: REVERTIR CODIGO
+                        ,minHeight        : 100
                         ,enableColumnMove : false
                         ,buttonAlign      : 'center'
                         ,buttons          :
@@ -1682,19 +1699,17 @@ Ext.onReady(function()
                     debug('nada response:',json);
                     if(json.success)
                     {
-                        //TODO: REVERTIR CODIGO
-                        //var precioDolar = _0_formAgrupados.down('[name=parametros.pv_otvalor24]').getValue()-0;
-                        var precioDolar = 13.56;
+                        var precioDolar = _0_formAgrupados.down('[name=parametros.pv_otvalor24]').getValue()-0;
                         debug('precioDolar:',precioDolar);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
                         _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
-                        //_0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                        //_0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
-                        //debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                        //debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                        debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
                     }
                     else
                     {
