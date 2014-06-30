@@ -1346,6 +1346,7 @@ Ext.onReady(function()
         ,text     : 'Detalles'
         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
         ,disabled : true
+        ,hidden   : _0_smap1.cdramo == TipoSituacion.AutosFronterizos  
         ,handler  : _0_detalles
     });
     
