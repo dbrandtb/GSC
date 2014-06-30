@@ -25,7 +25,9 @@
             var _NTRAMITE= '<s:property value="params.ntramite" />';
             var _TIPOPAGO= '<s:property value="params.tipopago" />';
             var _CDROL   = '<s:property value="params.cdrol" />';
+            var _CDTIPSIT   = '<s:property value="params.cdtipsit" />';
             debug('_CDROL',_CDROL);
+            debug('_CDTIPSIT',_CDTIPSIT);
             var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
             var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
             debug('_TIPOPAGO',_TIPOPAGO);

@@ -460,4 +460,5 @@ public interface SiniestrosManager {
 
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
 	
+	public String requiereAutorizacionServ(String cobertura, String subcobertura)throws Exception;
 }

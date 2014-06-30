@@ -201,20 +201,26 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	}
 	
 	public String guardaFacturaTramite() throws ApplicationException{
-		
+		logger.debug(""
+		+ "\n######################################"
+		+ "\n######################################"
+		+ "\n###### GUARDA FACTURA X TRAMITE ######"
+		+ "\n######                          ######"
+		);
+		logger.debug("parametros de entrada: "+ params);
 		Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
 		paramsTvalosin.put("pv_cdunieco"  , params.get("cdunieco"));
 		paramsTvalosin.put("pv_cdramo"    , params.get("cdramo"));
 		paramsTvalosin.put("pv_aaapertu"    , params.get("aaapertu"));
 		paramsTvalosin.put("pv_status"    , params.get("status"));
 		paramsTvalosin.put("pv_nmsinies"    , params.get("nmsinies"));
-		paramsTvalosin.put("pv_cdtipsit"    , "SL");
+		paramsTvalosin.put("pv_cdtipsit"    , params.get("cdtipsit"));
 		paramsTvalosin.put("pv_nmsuplem"    , params.get("nmsuplem"));
 		paramsTvalosin.put("pv_cdusuari"    , null);
 		paramsTvalosin.put("pv_feregist"    , null);
 		paramsTvalosin.put("pv_otvalor01"    , parametros.get("pv_otvalor01"));
 		paramsTvalosin.put("pv_otvalor02"    , parametros.get("pv_otvalor02"));
-		paramsTvalosin.put("pv_accion_i","I");
+		paramsTvalosin.put("pv_accion_i"	, params.get("operacion"));
         kernelManager.PMovTvalosin(paramsTvalosin);
 		
 		//realizamos el llamado al guardado
@@ -257,11 +263,25 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   		success =  false;
 	   		return SUCCESS;
 	   	}
+	   	
+	   	logger.debug(""
+		+ "\n######                           ######"
+		+ "\n###### GUARDA FACTURA X TRAMITE  ######"
+		+ "\n#######################################"
+		+ "\n#######################################"
+		);
 	   	success = true;
 	   	return SUCCESS;
 	}
 	
 	public String actualizaFacturaTramite(){
+		logger.debug(""
+		+ "\n######################################"
+		+ "\n######################################"
+		+ "\n###### 	ACTUALIZA FACT      #######"
+		+ "\n######                         #######"
+		);
+		logger.debug("parametros de entrada modificacion : "+ params);
 		String cdunieco  = params.get("cdunieco");
 		String cdramo    = params.get("cdramo");
 		String estado    = params.get("estado");
@@ -301,13 +321,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				paramsTvalosin.put("pv_aaapertu"    , params.get("aaapertu"));
 				paramsTvalosin.put("pv_status"    , params.get("status"));
 				paramsTvalosin.put("pv_nmsinies"    , params.get("nmsinies"));
-				paramsTvalosin.put("pv_cdtipsit"    , "SL");
+				paramsTvalosin.put("pv_cdtipsit"    , params.get("cdtipsit"));
 				paramsTvalosin.put("pv_nmsuplem"    , params.get("nmsuplem"));
 				paramsTvalosin.put("pv_cdusuari"    , null);
 				paramsTvalosin.put("pv_feregist"    , null);
 				paramsTvalosin.put("pv_otvalor01"    , parametros.get("pv_otvalor01"));
 				paramsTvalosin.put("pv_otvalor02"    , parametros.get("pv_otvalor02"));
-				paramsTvalosin.put("pv_accion_i","I");
+				paramsTvalosin.put("pv_accion_i","U");
 		        kernelManager.PMovTvalosin(paramsTvalosin);
 		        
 			
@@ -438,6 +458,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
+		
+		logger.debug(""
+		+ "\n######                           ######"
+		+ "\n###### 	ACTUALIZA FACTURA	  ######"
+		+ "\n#######################################"
+		+ "\n#######################################"
+		);
 		success = true;
 		return SUCCESS;
 	}

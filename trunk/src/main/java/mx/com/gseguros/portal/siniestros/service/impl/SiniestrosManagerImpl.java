@@ -1238,4 +1238,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String requiereAutorizacionServ(String cobertura, String subcobertura) throws Exception {
+		try {
+			return siniestrosDAO.requiereAutorizacionServicio(cobertura, subcobertura);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

@@ -726,6 +726,17 @@
         <action name="obtenerUsuariosPorRol" class="siniestrosAction" method="obtenerUsuariosPorRol">
             <result type="json"></result>
         </action>
+        
+        <action name="obtieneRequiereAutServ" class="siniestrosAction"
+			method="obtieneRequiereAutServ">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					requiereAutServ
+				</param>
+			</result>
+		</action>
 		
     </package>
 
