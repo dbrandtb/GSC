@@ -135,17 +135,19 @@ public class AdminPanelesDelegate {
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
 			 List<ViewBean> listadePaneles = (List<ViewBean>) dataExt.get("lista");
 			 StringBuffer stl = new StringBuffer();
-			 stl.append("new ");
-			 //stl.append("new Ext.form.Panel({autoScroll:true, border: false,");
-			 //stl.append("items:[{");
-			 for (int i = 0; i < listadePaneles.size(); i++){
-				 ViewBean pnl = new ViewBean();
-				 pnl = listadePaneles.get(i);
-				 //String str = pnl.getCodigo().replace(";", "");
-				 stl.append(pnl.getCodigo()).append("\n");
+			 
+			 stl.append("new Ext.form.Panel({autoScroll:true, border: false,");
+			 stl.append("items:[");
+			 for (int i = 1; i <= listadePaneles.size(); i++){
+				 
+				 stl.append(listadePaneles.get(i-1).getCodigo().replace(";", ""));
+				 if(i != listadePaneles.size()){
+					 stl.append(",");
+				 }
+				 stl.append("\n");
 			 }
-			 //stl.append("}]");
-			 //stl.append("});");
+			 stl.append("]");
+			 stl.append("});");
 			 System.out.println(stl.toString());
 					 
 			 String acP = rgs;
