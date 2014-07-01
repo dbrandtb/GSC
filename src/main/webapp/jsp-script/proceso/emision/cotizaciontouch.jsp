@@ -139,6 +139,7 @@ function _mcotiza_load()
 		    			{
 		    				'smap1.nmpoliza'  : value
 		    				,'smap1.cdramo'   : _mcotiza_smap1.cdramo
+                            ,'smap1.cdunieco' : _mcotiza_smap1.cdunieco
 		    				,'smap1.cdtipsit' : _mcotiza_smap1.cdtipsit
 		    			}
 		    		    ,success : function(response)
