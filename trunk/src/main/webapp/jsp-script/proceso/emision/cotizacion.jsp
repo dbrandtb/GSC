@@ -758,6 +758,7 @@ function _0_cargar()
                 {
                     'smap1.nmpoliza'  : value
                     ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdunieco' : _0_smap1.cdunieco
                     ,'smap1.cdtipsit' : _0_smap1.cdtipsit
                 }
                 ,success : function(response)
