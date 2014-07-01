@@ -3519,8 +3519,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							this.getText("rdf.emision.rechazo.admin.nombre"))
 				+ "&paramform=no"
 				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-				+ "&p_ntramite="+ntramite;
-				//+ "&p_comments="+comments;
+				+ "&p_ntramite="+ntramite
+				+ "&p_comments="+comments;
 		log.debug(""
 				+ "\n#################################"
 				+ "\n###### Se solicita reporte ######"
