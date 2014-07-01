@@ -851,7 +851,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				item1=gc.getFields();
 				item2=gc.getItems();
 				
-				seccion  = "ASEGURADO_EDITOR";
+				seccion  = "ASEG_EDITOR";
 				componenteAsegurado=pantallasManager.obtenerComponentes(
 						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
 				gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
