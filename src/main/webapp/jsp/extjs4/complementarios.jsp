@@ -1497,7 +1497,7 @@
 		                                                    ,autoScroll  : true
 		                                                    ,items       :
 		                                                    [
-		                                                        Ext.create('Ext.form.HtmlEditor', {
+		                                                        Ext.create('Ext.form.field.TextArea', {
 		                                                            id        : 'inputTextareaCommentsToRechazo'
 		                                                            ,width  : 570
 		                                                            ,height : 300
