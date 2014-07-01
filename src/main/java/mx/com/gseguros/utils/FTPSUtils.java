@@ -46,9 +46,10 @@ public class FTPSUtils {
 			logger.debug("password="+password);
 			logger.debug("remoteDirectory=" + remoteDirectory);
 			logger.debug("localDirectory=" + localDirectory);
+			logger.debug("fileToFTP=" + fileToFTP);
 			
 			// check if the file exists
-			String filepath = localDirectory + fileToFTP;
+			String filepath = localDirectory + "/" + fileToFTP;
 			File file = new File(filepath);
 			if (!file.exists()) {
 				throw new RuntimeException("Error. Local file not found");
@@ -66,7 +67,7 @@ public class FTPSUtils {
 			// Create the SFTP URI using the host name, userid, password, remote
 			// path and file name
 			String sftpUri = "sftp://" + userId + ":" + password + "@"
-					+ serverAddress + "/" + remoteDirectory + fileToFTP;
+					+ serverAddress + "/" + remoteDirectory + "/" + fileToFTP;
 
 			// Create local file object
 			FileObject localFile = manager.resolveFile(file.getAbsolutePath());
