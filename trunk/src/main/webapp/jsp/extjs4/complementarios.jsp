@@ -1590,8 +1590,7 @@
 		    		                                                                                    });
 		    		                                                                                }
    		                                                                                        });
-   		                                                                                    else
-   		                                                                                    {
+   		                                                                                    }else{
    		                                                                                        window.setLoading(false);
    		                                                                                        Ext.Msg.show({
    		                                                                                            title:'Error',
