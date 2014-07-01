@@ -129,6 +129,9 @@
         <pattern>/general/*.action</pattern>
         <pattern>/jsp-script/general/*.jsp</pattern>
         
+        <pattern>/cobranza/*.action</pattern>
+        <pattern>/jsp-script/cobranza/*.jsp</pattern>
+        
         <pattern>/confpantallas/cotizacionDemo.action</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionDemo.jsp</pattern>
         
