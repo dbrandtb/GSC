@@ -5,6 +5,7 @@
 package mx.com.gseguros.portal.general.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +47,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
     private List<Map<String,String>>slist1;
     private boolean success;
+    private String mensajeRespuesta;
     
     public String mostrarPanel()
     {
@@ -155,6 +158,40 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         return SUCCESS;
     }
 
+    public String subirArchivoCobranza(){
+    	log.debug("Subiendo Archivo de Cobranza ... ");
+        log.debug("file "+file);
+        log.debug("fileFileName "+fileFileName);
+        log.debug("fileContentType "+fileContentType);
+        
+        File nuevoArchivo = new File(this.getText("ruta.documentos.temporal") + "/" + fileFileName);
+        try
+        {
+        	//FileInputStream inputFile = new FileInputStream(file);
+        	if(file.renameTo(nuevoArchivo)){
+    			log.debug("archivo movido");	
+    		}else{
+    			log.debug("archivo NO movido");
+    		}
+        	
+        	FTPSUtils.subeArchivo("10.1.1.133", "oinstall", "j4v4n3s", "/export/home/oinstall/ice/layout", nuevoArchivo.getParent() , fileFileName);
+        	
+        	nuevoArchivo.delete();
+        }
+        
+        catch(Exception ex)
+        {
+        	log.error("Error al subir el archivo al Disco de BD",ex);
+        	
+        	success= false;
+        	return SUCCESS;
+        }
+        
+        success= true;
+        return SUCCESS;
+    }
+    
+    
 	public String ventanaDocumentosPolizaLoad()
 	{
 		logger.debug(""
@@ -397,6 +434,14 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 
 	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+
+	public String getMensajeRespuesta() {
+		return mensajeRespuesta;
+	}
+
+	public void setMensajeRespuesta(String mensajeRespuesta) {
+		this.mensajeRespuesta = mensajeRespuesta;
 	}
     
 }
