@@ -21,14 +21,14 @@ Ext.selection.CheckboxModel.override({
 var _CONTEXT = '${ctx}';
 extjs_custom_override_mayusculas = false;
 
-var recargaGridCobAplicada;
+var recargaGridCobCargada;
 var recargaGridRemesaAplicada;
 
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var _UrlSubirArchivoCobranza    = '<s:url namespace="/cobranza" action="subirArchivoCobranza" />';
 
-var _UrlCobAplicada    = '<s:url namespace="/catalogos"    action="obtieneMenusPorRol" />';
-var _UrlRemesaAplicada = '<s:url namespace="/catalogos"    action="obtieneOpMenu" />';
+var _UrlCobCargada    =  '<s:url namespace="/cobranza"    action="consultaCobranzaAplicada" />';
+var _UrlRemesaAplicada = '<s:url namespace="/cobranza"    action="consultaRemesaAplicada" />';
 
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
@@ -44,18 +44,18 @@ Ext.onReady(function()
 	////// modelos //////
 	/*/////////////////*/
 	
-	Ext.define('gridCobAplicadaModel',
+	Ext.define('gridCobCargadaModel',
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDTITULO','DSTITULO','DSURL','SWTIPDES','DSTIPDES']
+				['CDUNIECO', 'CDRAMO', 'ESTADO', 'NMPOLIZA', 'PTIMPORT']
 	});
 	
 	Ext.define('gridRemesaAplicadaModel',
 	{
 		extend : 'Ext.data.Model'
 		,fields :
-		['CDMENU','DSMENU','CDELEMENTO','CDPERSON','CDROL', 'CDUSUARIO', 'CDESTADO', 'CDTIPOMENU']
+		['NMREMESA', 'FEAPLICA', 'CDUNIECO', 'CDRAMO', 'ESTADO', 'NMPOLIZA', 'NMRECIBO', 'PTIMPORT', 'TIPOPAGO' , 'SALDO']
 	});
 	
 	/*/////////////////*/
@@ -66,11 +66,11 @@ Ext.onReady(function()
 	////// stores //////
 	/*////////////////*/
 	
-	var cobAplicadaStore = Ext.create('Ext.data.Store',
+	var cobCargadaStore = Ext.create('Ext.data.Store',
     {
 		pageSize : 20,
         autoLoad : true
-        ,model   : 'gridCobAplicadaModel'
+        ,model   : 'gridCobCargadaModel'
         ,proxy   :
         {
             type         : 'memory'
@@ -102,30 +102,23 @@ Ext.onReady(function()
 	////// contenido //////
 	/*///////////////////*/
 	
-	var gridCobAplicada = Ext.create('Ext.grid.Panel',
+	var gridCobCargada = Ext.create('Ext.grid.Panel',
 		    {
-	    	title : 'Cobranza Aplicada'
-	    	,height : 250
+	    	title : 'Cobranza Cargada'
+	    	,height : 300
+	    	,width :  800
 	    	,selType: 'checkboxmodel'
-	    	,store : cobAplicadaStore
-	    	,columns :
-	    	[ { header     : 'CDMENU' , dataIndex : 'CDMENU', hidden: true},
-	    	  { header     : 'CDELEMENTO' , dataIndex : 'CDELEMENTO', hidden: true},
-	          { header     : 'Nombre Men&uacute;', dataIndex : 'DSMENU', flex: 1},
-	          { header     : 'CDPERSON' , dataIndex : 'CDPERSON', hidden: true},
-	          { header     : 'CDROL' , dataIndex : 'CDROL', hidden: true},
-	          { header     : 'CDUSUARIO' , dataIndex : 'CDUSUARIO', hidden: true},
-	          { header     : 'CDESTADO' ,dataIndex : 'CDESTADO', hidden: true},
-	          { header     : 'Tipo Men&uacute;' ,dataIndex : 'CDTIPOMENU', flex: 1, renderer : function(value){
-	        	  if("1"== value) return "MENU GENERAL";
-	        	  	else if("2"== value) return "MENU SESION";
-	        	  		else return res;
-	          }}
+	    	,store : cobCargadaStore
+	    	,columns :[
+	    		{ header     : 'Sucursal'		 	,dataIndex : 'CDUNIECO'	, flex: 1},
+				{ header     : 'Producto' 			,dataIndex : 'CDRAMO'	, flex: 1},
+				{ header     : 'No. P&oacute;liza' 	,dataIndex : 'NMPOLIZA'	, flex: 1},
+				{ header     : 'Importe por Aplicar',dataIndex : 'PTIMPORT'	, flex: 1}
 			]
 	    	,bbar     :
 	        {
 	            displayInfo : true,
-	            store       : cobAplicadaStore,
+	            store       : cobCargadaStore,
 	            xtype       : 'pagingtoolbar'
 	            
 	        }
@@ -134,22 +127,21 @@ Ext.onReady(function()
 	var gridRemesaAplicada = Ext.create('Ext.grid.Panel',
 		    {
 	    	title : 'Remesa Aplicada'
-	    	,height : 250
+	    	,height : 300
+	    	,width :  800
 	    	,selType: 'checkboxmodel'
 	    	,store : remesaAplicadaStore
 	    	,columns :
-	    	[ { header     : 'CDMENU' , dataIndex : 'CDMENU', hidden: true},
-	    	  { header     : 'CDELEMENTO' , dataIndex : 'CDELEMENTO', hidden: true},
-	          { header     : 'Nombre Men&uacute;', dataIndex : 'DSMENU', flex: 1},
-	          { header     : 'CDPERSON' , dataIndex : 'CDPERSON', hidden: true},
-	          { header     : 'CDROL' , dataIndex : 'CDROL', hidden: true},
-	          { header     : 'CDUSUARIO' , dataIndex : 'CDUSUARIO', hidden: true},
-	          { header     : 'CDESTADO' ,dataIndex : 'CDESTADO', hidden: true},
-	          { header     : 'Tipo Men&uacute;' ,dataIndex : 'CDTIPOMENU', flex: 1, renderer : function(value){
-	        	  if("1"== value) return "MENU GENERAL";
-	        	  	else if("2"== value) return "MENU SESION";
-	        	  		else return res;
-	          }}
+	    	[
+	    	 	{ header     : 'Remesa'		 				,dataIndex : 'NMREMESA'	, flex: 1},
+	    	 	{ header     : 'Fecha de Aplicaci&oacute;n'	,dataIndex : 'FEAPLICA'	, flex: 2},
+	    		{ header     : 'Sucursal'		 			,dataIndex : 'CDUNIECO'	, flex: 1},
+				{ header     : 'Producto' 					,dataIndex : 'CDRAMO'	, flex: 1},
+				{ header     : 'P&oacute;liza' 				,dataIndex : 'NMPOLIZA'	, flex: 1},
+				{ header     : 'Recibo' 					,dataIndex : 'NMRECIBO'	, flex: 1},
+				{ header     : 'Importe Aplicado'			,dataIndex : 'PTIMPORT'	, flex: 2},
+				{ header     : 'Tipo de Pago'				,dataIndex : 'TIPOPAGO'	, flex: 2},
+				{ header     : 'Saldo'						,dataIndex : 'SALDO'	, flex: 2}
 			]
 	    	,bbar     :
 	        {
@@ -177,38 +169,117 @@ Ext.onReady(function()
 	        width: 300,
 	        msgTarget: 'side',
 	        allowBlank: false,
-	        buttonText: 'Examinar...'
+	        buttonText: 'Examinar...',
+	        listeners: {
+	        	change: function(uploadButton, value, opts){
+	        		uploadButton.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
+	        			element.disable();
+	        		});
+	        	}
+	        }
 	    },{
 	    	xtype: 'button',
-	    	text : 'Ejecutar Cobranza Masiva',
-	    	tooltip: 'Ejecuta la Cobranza Masiva para el Archivo Seleccionado',
-	    	handler: function(){
+	    	text : 'Aplicar Cobranza Masiva',
+	    	tooltip: 'Aplica la Cobranza Masiva para el Archivo Seleccionado',
+	    	handler: function(btn){
 	    		var form = panelCobranza.getForm();
 	            if(form.isValid()){
 	                form.submit({
 	                    url: _UrlSubirArchivoCobranza,
 	                    waitMsg: 'Subiendo Archivo...',
 	                    success: function(fp, o) {
-	                        Ext.Msg.alert('Exito', 'MEnsaje de Carga');
-	                    }
+	                        mensajeCorrecto('Exito', 'La cobranza del Archivo se ha Cargado Correctamente.');
+	                        btn.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
+	                        	element.enable();
+	    	        		});
+	                    },
+	                    failure: function(form, action) {
+	                		switch (action.failureType) {
+	                            case Ext.form.action.Action.CONNECT_FAILURE:
+	                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+	                                break;
+	                            case Ext.form.action.Action.SERVER_INVALID:
+	                            case Ext.form.action.Action.LOAD_FAILURE:
+	                            	 var msgServer = Ext.isEmpty(action.result.mensajeRespuesta) ? 'Error interno del servidor, consulte a soporte' : action.result.mensajeRespuesta;
+	                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+	                                break;
+	                        }
+	        			}
 	                });
 	            }
 	    	}
 	    }],
 	    buttonAlign: 'center',
 	    buttons: [{
-	        text: 'Ver Cobranza Aplicada',
+	        text: 'Ver Cobranza Cargada',
 	        handler: function() {
-	            
+	        	var cobranzaWindow = Ext.create('Ext.window.Window', {
+	  	          title: 'Cobranza Cargada',
+	  	          modal:true,
+	  	          closeAction: 'hide',
+	  	          items:[gridCobCargada],
+	  	          bodyStyle:'padding:10px;',
+	  	          buttons:[
+	  	           {
+	  	                 text: 'Cerrar',
+	  	                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+	  	                 handler: function() {
+	  	                	cobranzaWindow.close();
+	  	                 }
+	  	           }
+	  	          ]
+	  	        });
+	        	cobranzaWindow.show();
+	        	cargaStorePaginadoLocal(cobCargadaStore, _UrlCobCargada, 'slist1', null, function (options, success, response){
+	        		if(success){
+	                    var jsonResponse = Ext.decode(response.responseText);
+	                    
+	                    if(!jsonResponse.success) {
+	                        showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+	                    }
+	                }else{
+	                    showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+	                }
+	        	}, gridCobCargada);
 	        }
 	    },{
 	        text: 'Ver Remesa Aplicada',
 	        handler: function() {
-	            var form = this.up('form').getForm();
-	            
+	        	var cobranzaWindow = Ext.create('Ext.window.Window', {
+		  	          title: 'Remesa Aplicada',
+		  	          modal:true,
+		  	          closeAction: 'hide',
+		  	          items:[gridRemesaAplicada],
+		  	          bodyStyle:'padding:10px;',
+		  	          buttons:[
+		  	           {
+		  	                 text: 'Cerrar',
+		  	                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+		  	                 handler: function() {
+		  	                	cobranzaWindow.close();
+		  	                 }
+		  	           }
+		  	          ]
+		  	        });
+		        	cobranzaWindow.show();
+		        	cargaStorePaginadoLocal(remesaAplicadaStore, _UrlRemesaAplicada, 'slist1', null, function (options, success, response){
+		        		if(success){
+		                    var jsonResponse = Ext.decode(response.responseText);
+		                    
+		                    if(!jsonResponse.success) {
+		                        showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+		                    }
+		                }else{
+		                    showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		                }
+		        	}, gridRemesaAplicada);
 	        }
 	    }]
 		    
+	});
+	
+	panelCobranza.getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
+		element.disable();
 	});
 	/*///////////////////*/
 	////// contenido //////

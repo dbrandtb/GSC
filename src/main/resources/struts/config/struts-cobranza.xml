@@ -9,11 +9,15 @@
             <result name="success">/jsp-script/proceso/cobranza/cargaCobranza.jsp</result>
         </action>
         
-        <action name="consultarProveedores" class="consultasAction" method="consultarProveedores">
+        <action name="subirArchivoCobranza" class="beanSubirArchivo" method="subirArchivoCobranza">
             <result type="json" />
         </action>
-        
-        <action name="subirArchivoCobranza" class="beanSubirArchivo" method="subirArchivoCobranza">
+
+        <action name="consultaCobranzaAplicada" class="beanSubirArchivo" method="consultaCobranza">
+            <result type="json" />
+        </action>
+
+        <action name="consultaRemesaAplicada" class="beanSubirArchivo" method="consultaRemesa">
             <result type="json" />
         </action>
         

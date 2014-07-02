@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -165,8 +166,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         log.debug("fileContentType "+fileContentType);
         
         File nuevoArchivo = new File(this.getText("ruta.documentos.temporal") + "/" + fileFileName);
-        try
-        {
+        try{
         	//FileInputStream inputFile = new FileInputStream(file);
         	if(file.renameTo(nuevoArchivo)){
     			log.debug("archivo movido");	
@@ -174,15 +174,58 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     			log.debug("archivo NO movido");
     		}
         	
-        	FTPSUtils.subeArchivo("10.1.1.133", "oinstall", "j4v4n3s", "/export/home/oinstall/ice/layout", nuevoArchivo.getParent() , fileFileName);
-        	
+        	FTPSUtils.subeArchivo(this.getText("dominio.server.layouts"), this.getText("user.server.layouts"), this.getText("pass.server.layouts"), this.getText("directorio.server.layouts"), nuevoArchivo);
         	nuevoArchivo.delete();
+        }catch(Exception ex){
+        	log.error("Error al subir el archivo al Disco de BD",ex);
+        	mensajeRespuesta = "Error al subir archivo,";
+        	success= false;
+        	return SUCCESS;
         }
         
-        catch(Exception ex)
+        try{
+        	HashMap<String,String> params = new HashMap<String,String>();
+        	params.put("pv_archivo_i", fileFileName);
+        	kernelManager.cargaCobranzaMasiva(params);
+        }catch(Exception ex)
         {
-        	log.error("Error al subir el archivo al Disco de BD",ex);
-        	
+        	log.error("Error al aplicar la Cobranza",ex);
+        	mensajeRespuesta = "Error al aplicar la cobranza.";
+        	success= false;
+        	return SUCCESS;
+        }
+        
+        success= true;
+        return SUCCESS;
+    }
+    
+    public String consultaCobranza(){
+    	log.debug("Consulta Cobranza Aplicada... ");
+        
+        try{
+        	slist1 = kernelManager.obtieneCobranzaAplicada(new HashMap<String,String>());
+        }catch(Exception ex)
+        {
+        	log.error("Error al Consultar la Cobranza",ex);
+        	mensajeRespuesta = "Error al Consultar la Cobranza.";
+        	success= false;
+        	return SUCCESS;
+        }
+        
+        success= true;
+        return SUCCESS;
+    }
+    
+    
+    public String consultaRemesa(){
+    	log.debug("Consulta Remesa Aplicada... ");
+        
+        try{
+        	slist1 = kernelManager.obtieneRemesaAplicada(new HashMap<String,String>());
+        }catch(Exception ex)
+        {
+        	log.error("Error al Consultar la Remesa",ex);
+        	mensajeRespuesta = "Error al Consultar la Remesa.";
         	success= false;
         	return SUCCESS;
         }
