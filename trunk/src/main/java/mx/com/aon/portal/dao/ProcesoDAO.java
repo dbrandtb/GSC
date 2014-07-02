@@ -157,6 +157,9 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String ACTUALIZA_CDIDEPER = "ACTUALIZA_CDIDEPER";
 	public static final String VALIDA_DATOS_AUTOS = "VALIDA_DATOS_AUTOS";
 	public static final String ACTUALIZA_POLALT = "ACTUALIZA_POLALT";
+	public static final String CARGA_COBRANZA_MASIVA = "CARGA_COBRANZA_MASIVA";
+	public static final String OBTIENE_COBRANZA_APLICADA = "OBTIENE_COBRANZA_APLICADA";
+	public static final String OBTIENE_REMESA_APLICADA = "OBTIENE_REMESA_APLICADA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -262,6 +265,9 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(ACTUALIZA_CDIDEPER, new ActualizaCdIdeper(getDataSource()));
 		addStoredProcedure(VALIDA_DATOS_AUTOS, new ValidaDatosAutos(getDataSource()));
 		addStoredProcedure(ACTUALIZA_POLALT, new ActualizaPolizaExterna(getDataSource()));
+		addStoredProcedure(CARGA_COBRANZA_MASIVA, new CargaCobranzaMasiva(getDataSource()));
+		addStoredProcedure(OBTIENE_COBRANZA_APLICADA, new ObtieneCobranzaAplicada(getDataSource()));
+		addStoredProcedure(OBTIENE_REMESA_APLICADA, new ObtieneRemesaAplicada(getDataSource()));
 	}
 	
 	
@@ -352,6 +358,26 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+			
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+
+	protected class CargaCobranzaMasiva extends CustomStoredProcedure {
+		
+		protected CargaCobranzaMasiva(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_APLICA_COBRANZA_MASIVA");
+			
+			declareParameter(new SqlParameter("pv_archivo_i", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -4987,6 +5013,49 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             
             return result;
         }
+    }
+    
+    
+    protected class ObtieneCobranzaAplicada extends CustomStoredProcedure
+    {
+    	protected ObtieneCobranzaAplicada(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA.P_GET_ZWORKREM");
+            declareParameter(new SqlOutParameter("pv_record_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+    	{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_record_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneRemesaAplicada extends CustomStoredProcedure
+    {
+    	protected ObtieneRemesaAplicada(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA.P_GET_TREMEAPL");
+            declareParameter(new SqlOutParameter("pv_record_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+    	{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_record_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
     }
     
 }
