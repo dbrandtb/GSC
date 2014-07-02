@@ -1006,20 +1006,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             map3.put("pv_porparti_i", "100");
             kernelManagerSustituto.movMPoliage(map3);
             
-            
-            Map<String,String>parameters2=new HashMap<String,String>(0);
-            parameters2.put("pv_cdunieco",   comprarCdunieco);
-            parameters2.put("pv_cdramo",     comprarCdramo);
-            parameters2.put("pv_estado",     "W"); 
-            parameters2.put("pv_nmpoliza",   comprarNmpoliza);
-            parameters2.put("pv_nmsituac",   "0");
-            parameters2.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
-            parameters2.put("pv_cdperson",   userData.getCdperson());
-            parameters2.put("pv_cdasegur",   comprarCdciaaguradora);
-            parameters2.put("pv_cdplan",     comprarCdplan);
-            parameters2.put("pv_cdperpag",   comprarCdperpag);
-            log.debug("mapa en action: "+parameters2);
-            kernelManagerSustituto.comprarCotizacion(parameters2);
+            if(!smap1.containsKey("parche"))
+            {
+	            Map<String,String>parameters2=new HashMap<String,String>(0);
+	            parameters2.put("pv_cdunieco",   comprarCdunieco);
+	            parameters2.put("pv_cdramo",     comprarCdramo);
+	            parameters2.put("pv_estado",     "W"); 
+	            parameters2.put("pv_nmpoliza",   comprarNmpoliza);
+	            parameters2.put("pv_nmsituac",   "0");
+	            parameters2.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
+	            parameters2.put("pv_cdperson",   userData.getCdperson());
+	            parameters2.put("pv_cdasegur",   comprarCdciaaguradora);
+	            parameters2.put("pv_cdplan",     comprarCdplan);
+	            parameters2.put("pv_cdperpag",   comprarCdperpag);
+	            log.debug("mapa en action: "+parameters2);
+	            kernelManagerSustituto.comprarCotizacion(parameters2);
+            }
             
             String ntramite=null;
             String nmPolizaOriginal = comprarNmpoliza;
