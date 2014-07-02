@@ -170,11 +170,26 @@ Ext.onReady(function()
 	        msgTarget: 'side',
 	        allowBlank: false,
 	        buttonText: 'Examinar...',
+	        cAccept  : ['txt','csv'],
 	        listeners: {
-	        	change: function(uploadButton, value, opts){
-	        		uploadButton.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
-	        			element.disable();
-	        		});
+	        	change: function(me, value, opts){
+	        		
+	        		var indexofPeriod = value.lastIndexOf(".");
+                    var uploadedExtension = value.substr(indexofPeriod + 1, value.length - indexofPeriod).toLowerCase();
+                    if (!Ext.Array.contains(this.cAccept, uploadedExtension)){
+                        Ext.MessageBox.show({
+                            title   : 'Error de tipo de archivo',
+                            msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                            buttons : Ext.Msg.OK,
+                            icon    : Ext.Msg.WARNING
+                        });
+                        me.reset();
+                    }else{
+                    	me.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
+    	        			element.disable();
+    	        		});
+                    }
+	        		
 	        	}
 	        }
 	    },{
@@ -189,7 +204,7 @@ Ext.onReady(function()
 	                    url: _UrlSubirArchivoCobranza,
 	                    waitMsg: 'Subiendo Archivo...',
 	                    success: function(fp, o) {
-	                        mensajeCorrecto('Exito', 'La cobranza del Archivo se ha Cargado Correctamente.');
+	                        mensajeCorrecto('Exito', 'La cobranza se ha cargado correctamente.');
 	                        btn.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
 	                        	element.enable();
 	    	        		});
