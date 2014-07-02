@@ -1556,6 +1556,7 @@
    		                                                                                        Ext.Ajax.request(
    		                                                                                        {
    		                                                                                            url     : compleUrlGuardarCartoRechazo
+   		                                                                                         	,method:'GET'
    		                                                                                            ,params :
    		                                                                                            {
    		                                                                                                'map1.ntramite'  : inputNtramite
