@@ -26,6 +26,7 @@ var _p21_urlSubirCenso            = '<s:url namespace="/emision"         action=
 var _p21_urlCotizar               = '<s:url namespace="/emision"         action="cotizarGrupo"                  />';
 var _p21_urlObtenerDetalle        = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
 var _p21_urlComprar               = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
+var _p21_urlVentanaDocumentos     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
 
 var _p21_clasif                   = null;
 var _p21_storeGrupos              = null;
@@ -1462,6 +1463,43 @@ function _p21_comprarClic()
                         _p21_botonComprar().hide();
                         _p21_botonDetalles().hide();
                         _p21_botonEditar().hide();
+                        centrarVentanaIntera(Ext.create('Ext.window.Window',
+                        {
+                            width        : 600
+                            ,height      : 400
+                            ,title       : 'Subir documentos de tu tr&aacute;mite'
+                            ,closable    : false
+                            ,modal       : true
+                            ,buttonAlign : 'center'
+                            ,loadingMask : true
+                            ,loader      :
+                            {
+                                url       : _p21_urlVentanaDocumentos
+                                ,scripts  : true
+                                ,autoLoad : true
+                                ,params   :
+                                {
+                                    'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                    ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                    ,'smap1.estado'   : 'W'
+                                    ,'smap1.nmpoliza' : _p21_fieldNmpoliza().getValue()
+                                    ,'smap1.nmsuplem' : '0'
+                                    ,'smap1.ntramite' : json.comprarNmpoliza
+                                    ,'smap1.tipomov'  : '0'
+                                }
+                            }
+                            ,buttons     :
+                            [
+                                {
+                                    text     : 'Aceptar'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                    ,handler : function()
+                                    {
+                                        this.up().up().destroy();
+                                    }
+                                }
+                            ]
+                        }).show());
                     }
                 }));
             }
