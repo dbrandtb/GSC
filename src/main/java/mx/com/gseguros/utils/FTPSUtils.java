@@ -131,6 +131,7 @@ public class FTPSUtils {
 			SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
 			SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);
 			SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);
+			SftpFileSystemConfigBuilder.getInstance().setPreferredAuthentications(opts, "publickey,keyboard-interactive,password");
 
 			// Create the SFTP URI using the host name, user, password, remote
 			// path and file name
