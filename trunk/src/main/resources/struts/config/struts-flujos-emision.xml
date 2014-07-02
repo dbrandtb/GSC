@@ -10,6 +10,10 @@
             <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
         
+        <action name="cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">
+            <result name="success">/jsp-script/proceso/emision/cotizacionGrupo.jsp</result>
+        </action>
+        
         <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
@@ -37,6 +41,31 @@
            </interceptor-ref>
            <result type="json" />
        </action>
+       
+       <action name="obtenerCoberturasPlan" class="CotizacionAction" method="obtenerCoberturasPlan">
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerTatrigarCoberturas" class="CotizacionAction" method="obtenerTatrigarCoberturas">
+           <result type="json" />
+       </action>
+       
+       <action name="subirCenso" class="CotizacionAction" method="subirCenso">
+           <result type="json" />
+       </action>
+       
+       <action name="cotizarGrupo" class="CotizacionAction" method="cotizarGrupo">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerDetalleCotizacionGrupo" class="CotizacionAction" method="obtenerDetalleCotizacionGrupo">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>
