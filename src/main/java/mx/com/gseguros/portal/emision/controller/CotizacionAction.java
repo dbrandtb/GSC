@@ -2084,7 +2084,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			/*
 			if(exito)
 			{
 				try
@@ -2095,14 +2094,20 @@ public class CotizacionAction extends PrincipalCoreAction
 					exito = censo.renameTo(archivoEnTmp);
 					if(!exito)
 					{
-						throw new Exception("No se pudo copiar del dir temporal al nuevo dir");
+						//throw new Exception("No se pudo copiar del dir temporal al nuevo dir");
+						logger.error("No se pudo copiar del dir temporal al nuevo dir");
+						nombreCenso = null;
+						exito = true;
 					}
 					exito = FTPSUtils.subeArchivo(
 							"10.1.1.133", "oinstall", "j4v4n3s",
 							"ice/layout", archivoEnTmp);
 					if(!exito)
 					{
-						throw new Exception("No se pudo pasar el archivo al servidor");
+						//throw new Exception("No se pudo pasar el archivo al servidor");
+						logger.error("No se pudo pasar el archivo al servidor");
+						nombreCenso = null;
+						exito = true;
 					}
 				}
 				catch(Exception ex)
@@ -2114,7 +2119,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					exito           = false;
 				}
 			}
-			*/
 			
 			//pl censo
 			if(exito)
@@ -2166,7 +2170,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					
 					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-					params.put("param01",null);
+					params.put("param01",nombreCenso);
 					params.put("param02",cdunieco);
 					params.put("param03",cdramo);
 					params.put("param04","W");
