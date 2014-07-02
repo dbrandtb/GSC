@@ -174,11 +174,16 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     			log.debug("archivo NO movido");
     		}
         	
-        	FTPSUtils.subeArchivo(this.getText("dominio.server.layouts"), this.getText("user.server.layouts"), this.getText("pass.server.layouts"), this.getText("directorio.server.layouts"), nuevoArchivo);
+        	success = FTPSUtils.subeArchivo(this.getText("dominio.server.layouts"), this.getText("user.server.layouts"), this.getText("pass.server.layouts"), this.getText("directorio.server.layouts"), nuevoArchivo);
         	nuevoArchivo.delete();
+        	
+        	if(!success){
+        		mensajeRespuesta = "Error al subir archivo.";
+        		return SUCCESS;
+        	}
         }catch(Exception ex){
         	log.error("Error al subir el archivo al Disco de BD",ex);
-        	mensajeRespuesta = "Error al subir archivo,";
+        	mensajeRespuesta = "Error al subir archivo.";
         	success= false;
         	return SUCCESS;
         }
