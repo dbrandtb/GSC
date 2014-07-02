@@ -83,34 +83,37 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
+        		case CATCONCEPTO:
+        		case CAUSA_SINIESTRO:
+        		case DESTINOPAGO:
+        		case FORMAS_ASEGURAMIENTO:
+        		case GIROS:
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
 				case MC_TIPOS_TRAMITE:
 				case MOTIVOS_CANCELACION:
 				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
+				case PENALIZACIONES:
+				case PLANES:
+				case REFERENCIAS_TRAMITE_NUEVO:
+				case RELACION_CONT_ASEG:
 				case ROLES_POLIZA:
 				case SEXO:
 				case STATUS_POLIZA:
+				case TERRORWS:
 				case TIPOS_PAGO_POLIZA:
 				case TIPOS_PAGO_POLIZA_SIN_DXN:
 				case TIPOS_PERSONA:
 				case TIPOS_POLIZA:
 				case TIPOS_POLIZA_AUTO:
-				case TIPO_PAGO_SINIESTROS:
 				case TIPO_ATENCION_SINIESTROS:
 				case TIPO_CONCEPTO_SINIESTROS:
-				case CAUSA_SINIESTRO:
-				case TRATAMIENTOS:
-				case PENALIZACIONES:
-				case PLANES:
 				case TIPO_MONEDA:
 				case TIPO_MENU:
+				case TIPO_PAGO_SINIESTROS:
 				case TIPO_RESIDENCIA:
-				case DESTINOPAGO:
-				case CATCONCEPTO:
-				case REFERENCIAS_TRAMITE_NUEVO:
-				case TERRORWS:
+				case TRATAMIENTOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:
@@ -164,6 +167,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista=new ArrayList<GenericVO>(0);
 					lista.add(new GenericVO("N", "NO"));
 					lista.add(new GenericVO("S", "SI"));
+					break;
+				case PLANES_X_PRODUCTO:
+					LinkedHashMap<String,Object>param=new LinkedHashMap<String,Object>();
+					param.put("param1",params.get("cdramo"));
+					param.put("param2",params.get("cdtipsit"));
+					List<Map<String,String>>listaPlanes=storedProceduresManager.procedureListCall(
+							ObjetoBD.OBTIENE_PLANES_X_PRODUCTO.getNombre(), param, null);
+					lista=new ArrayList<GenericVO>();
+					for(Map<String,String> plan:listaPlanes)
+					{
+						lista.add(new GenericVO(plan.get("CDPLAN"), plan.get("DSPLAN")));
+					}
 					break;
 				case COBERTURAS:
 					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
