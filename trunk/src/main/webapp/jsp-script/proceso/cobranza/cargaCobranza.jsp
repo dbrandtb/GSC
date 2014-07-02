@@ -181,6 +181,7 @@ Ext.onReady(function()
 	    	xtype: 'button',
 	    	text : 'Aplicar Cobranza Masiva',
 	    	tooltip: 'Aplica la Cobranza Masiva para el Archivo Seleccionado',
+	    	icon:_CONTEXT+'/resources/fam3icons/icons/database_go.png',
 	    	handler: function(btn){
 	    		var form = panelCobranza.getForm();
 	            if(form.isValid()){
@@ -212,6 +213,7 @@ Ext.onReady(function()
 	    buttonAlign: 'center',
 	    buttons: [{
 	        text: 'Ver Cobranza Cargada',
+	        icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
 	        handler: function() {
 	        	var cobranzaWindow = Ext.create('Ext.window.Window', {
 	  	          title: 'Cobranza Cargada',
@@ -244,6 +246,7 @@ Ext.onReady(function()
 	        }
 	    },{
 	        text: 'Ver Remesa Aplicada',
+	        icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
 	        handler: function() {
 	        	var cobranzaWindow = Ext.create('Ext.window.Window', {
 		  	          title: 'Remesa Aplicada',
