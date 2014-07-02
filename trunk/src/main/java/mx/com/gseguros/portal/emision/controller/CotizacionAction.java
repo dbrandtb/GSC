@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -1959,6 +1960,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		exito   = true;
 		
 		String timestamp = smap1.get("timestamp");
+		
+		censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+		
 		session.put(timestamp+"_censo"            , censo);
 		session.put(timestamp+"_censoFileName"    , censoFileName);
 		session.put(timestamp+"_censoContentType" , censoContentType);
@@ -1997,13 +2001,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			UserVO usuario     = (UserVO)session.get("USUARIO");
 			String user        = usuario.getUser();
 			String cdelemento  = usuario.getEmpresa().getElementoId();
+			String nombreCenso = null;
+			
+			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 			
 			logger.info("timestamp "+timestamp);
 			logger.info("clasif "   +clasif);
-			
-			censo            = (File)   session.get(timestamp+"_censo");
-			censoFileName    = (String) session.get(timestamp+"_censoFileName");
-			censoContentType = (String) session.get(timestamp+"_censoContentType");
 			
 			logger.info("censo "           +censo);
 			logger.info("censoFileName "   +censoFileName);
@@ -2013,6 +2016,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(exito && StringUtils.isBlank(nmpoliza))
 			{
 				nmpoliza = (String)kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W").getItemMap().get("NUMERO_POLIZA");
+				smap1.put("nmpoliza",nmpoliza);
 			}
 			
 			//mpolizas
@@ -2082,7 +2086,32 @@ public class CotizacionAction extends PrincipalCoreAction
 			//enviar archivo
 			if(exito)
 			{
-				
+				try
+				{					
+					nombreCenso = "censo_"+timestamp+"_"+nmpoliza+".txt";
+					
+					File archivoEnTmp=new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+					exito = censo.renameTo(archivoEnTmp);
+					if(!exito)
+					{
+						throw new Exception("No se pudo copiar del dir temporal al nuevo dir");
+					}
+					exito = FTPSUtils.subeArchivo(
+							"10.1.1.133", "oinstall", "j4v4n3s",
+							"ice/layout", archivoEnTmp);
+					if(!exito)
+					{
+						throw new Exception("No se pudo pasar el archivo al servidor");
+					}
+				}
+				catch(Exception ex)
+				{
+					long etimestamp = System.currentTimeMillis();
+					logger.error(etimestamp+" error mover censo",ex);
+					respuesta       = "Error al procesar censo #"+etimestamp;
+					respuestaOculta = ex.getMessage();
+					exito           = false;
+				}
 			}
 			
 			//pl censo
@@ -2090,7 +2119,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				try
 				{
-					String nombreArchivo = "layout_censo.txt";
 					String cdedo         = smap1.get("cdedo");
 					String cdmunici      = smap1.get("cdmunici");
 					String ptsumaaseg    = (String)olist1.get(0).get("ptsumaaseg");
@@ -2136,7 +2164,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					
 					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-					params.put("param01",nombreArchivo);
+					params.put("param01",nombreCenso);
 					params.put("param02",cdunieco);
 					params.put("param03",cdramo);
 					params.put("param04","W");
@@ -2464,6 +2492,63 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### cotizarGrupo ######"
 				+ "\n##########################"
+				);
+		return SUCCESS;
+	}
+	
+	public String obtenerDetalleCotizacionGrupo()
+	{
+		logger.info(""
+				+ "\n###########################################"
+				+ "\n###### obtenerDetalleCotizacionGrupo ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
+			params.put("param1" , smap1.get("cdunieco"));
+			params.put("param2" , smap1.get("cdramo"));
+			params.put("param3" , smap1.get("estado"));
+			params.put("param4" , smap1.get("nmpoliza"));
+			params.put("param5" , smap1.get("cdplan"));
+			params.put("param6" , smap1.get("cdperpag"));
+			slist1=storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DETALLE_COTI_GRUPO.getNombre(),
+					params, null);
+			for(Map<String,String>detalle:slist1)
+			{
+				String header = detalle.get("NOMBRE")+ " (" + detalle.get("PARENTESCO") +")";
+				String nmsitaux3 = detalle.get("NMSITAUX");
+				if(nmsitaux3.length()==1)
+				{
+					nmsitaux3="00"+nmsitaux3;
+				}
+				else if(nmsitaux3.length()==2)
+				{
+					nmsitaux3="0"+nmsitaux3;
+				}
+				String nmsituac3 = detalle.get("NMSITUAC");
+				if(nmsituac3.length()==1)
+				{
+					nmsituac3="00"+nmsituac3;
+				}
+				else if(nmsituac3.length()==2)
+				{
+					nmsituac3="0"+nmsituac3;
+				}
+				detalle.put("GRUPO",nmsitaux3+"_"+nmsituac3+"_"+header);
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			logger.error(timestamp+" error inesperado al obtener detalle de cotizacion",ex);
+			exito           = false;
+			respuesta       = "Error al obtener detalle #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### obtenerDetalleCotizacionGrupo ######"
+				+ "\n###########################################"
 				);
 		return SUCCESS;
 	}
