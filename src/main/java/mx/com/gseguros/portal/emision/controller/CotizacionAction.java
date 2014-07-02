@@ -2084,6 +2084,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
+			/*
 			if(exito)
 			{
 				try
@@ -2113,6 +2114,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					exito           = false;
 				}
 			}
+			*/
 			
 			//pl censo
 			if(exito)
@@ -2164,7 +2166,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					
 					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-					params.put("param01",nombreCenso);
+					params.put("param01",null);
 					params.put("param02",cdunieco);
 					params.put("param03",cdramo);
 					params.put("param04","W");
