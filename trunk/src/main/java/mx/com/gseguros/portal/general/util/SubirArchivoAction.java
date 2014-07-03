@@ -175,7 +175,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     		}
         	
         	success = FTPSUtils.subeArchivo(this.getText("dominio.server.layouts"), this.getText("user.server.layouts"), this.getText("pass.server.layouts"), this.getText("directorio.server.layouts"), nuevoArchivo);
-        	success = true;
         	nuevoArchivo.delete();
         	
         	if(!success){
