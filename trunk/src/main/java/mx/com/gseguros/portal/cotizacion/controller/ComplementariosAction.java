@@ -1828,7 +1828,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								}else {
 									success = false;
 									retryWS = true;
-									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente";
 									logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
 								} 
 							}else{
@@ -2306,7 +2306,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								}else {
 									success = false;
 									retryWS = true;
-									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente";
 									logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
 								} 
 							}else{
@@ -2663,7 +2663,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}else {
 					success = false;
 					retryWS = true;
-					mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes;
+					mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente";
 					logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
 				} 
 			}else{
