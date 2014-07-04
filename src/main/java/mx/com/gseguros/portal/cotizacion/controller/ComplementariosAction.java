@@ -2615,18 +2615,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String _nmpoliza = this.nmpoliza;
 		String _nmsuplem = this.nmsuplem;
 		String ntramite  = panel1.get("pv_ntramite");
-		String sucursal  = _cdunieco;
+		
+		String nmsolici = panel2.get("pv_nmpoliza");
 		cdtipsit = panel2.get("pv_cdtipsit"); 
+		
+		String sucursal  = _cdunieco;
+		if("1".equals(sucursal)){
+			sucursal = "1000";
+		}
 		String cdRamoGS  = null;
 		
 		String cdIdeperRes = this.cdIdeper;
 		UserVO us          = (UserVO)session.get("USUARIO");
 		String cdusuari    = us.getUser();
-		
-		if("1".equals(sucursal))
-		{
-			sucursal = "1000";
-		}
 		
 		String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
@@ -2824,7 +2825,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						paramsR.put("pv_feinici_i",  new Date());
 						paramsR.put("pv_cddocume_i", urlCaratula + parametros);
 						paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-						paramsR.put("pv_nmsolici_i", nmpoliza);
+						paramsR.put("pv_nmsolici_i", nmsolici);
 						paramsR.put("pv_ntramite_i", ntramite);
 						paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
 						paramsR.put("pv_swvisible_i", Constantes.SI);
