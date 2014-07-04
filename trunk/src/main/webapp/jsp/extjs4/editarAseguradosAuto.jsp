@@ -557,6 +557,7 @@ function _p20_buscarRFC()
             var json=Ext.decode(response.responseText);
             debug('json response:',json);
             if(json && !json.success){
+            	_p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].set("cdrfc","");
 	    		mensajeError("Error al Buscar RFC, Intente nuevamente. Si el problema persiste consulte a soporte t&eacute;cnico.");
 	    		return;
 	    	}
