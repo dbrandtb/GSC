@@ -1527,18 +1527,18 @@
    		                                                            ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
    		                                                            ,handler : function()
    		                                                            {
-   		                                                                if(form.isValid())
+   		                                                                if(true||form.isValid())
    		                                                                {
    		                                                                    var window=this.up().up();
    		                                                                    window.setLoading(true);
-   		                                                                    form.submit({
+   		                                                                    /*form.submit({
    		                                                                        params:{
    		                                                                            'map1.pv_cdunieco' :  inputCdunieco,
    		                                                                            'map1.pv_cdramo' :    inputCdramo,
    		                                                                            'map1.pv_estado' :    inputEstado,
    		                                                                            'map1.pv_nmpoliza' :  inputNmpoliza
    		                                                                        },
-   		                                                                        success:function(){
+   		                                                                        success:function(){*/
    		                                                                            Ext.Ajax.request
    		                                                                            ({
    		                                                                                url     : datComUrlMCUpdateStatus
@@ -1610,7 +1610,7 @@
    		                                                                                        icon: Ext.Msg.ERROR
    		                                                                                    });
    		                                                                                }
-   		                                                                            });
+   		                                                                            });/*
    		                                                                        },
    		                                                                        failure:function(){
    		                                                                            window.setLoading(false);
@@ -1621,7 +1621,7 @@
    		                                                                                icon: Ext.Msg.ERROR
    		                                                                            });
    		                                                                        }
-   		                                                                    });
+   		                                                                    });*/
    		                                                                }
    		                                                                else
    		                                                                {
