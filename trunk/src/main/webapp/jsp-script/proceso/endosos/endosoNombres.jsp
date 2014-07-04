@@ -72,6 +72,11 @@ Ext.onReady(function(){
             ,'NMPOLIEX'
             ,'NSUPLOGI'
             ,'CDTIPSIT'
+            ,'CANALING'
+            ,'CONDUCTO'
+            ,'PTCUMUPR'
+            ,'RESIDENCIA'
+            ,'cdideper'
         ]
     });
 	/*/////////////////*/
@@ -282,6 +287,15 @@ Ext.onReady(function(){
 	                    			    ,apat    : record.get('Apellido_Paterno')
 	                    			    ,amat    : record.get('Apellido_Materno')
 	                    			    ,rfc     : record.get('cdrfc')
+                                        ,cdideper   : record.get('cdideper')
+                                        ,tpersona   : record.get('tpersona')
+                                        ,sexo       : record.get('sexo')
+                                        ,fenacimi   : record.raw.fenacimi
+                                        ,nacional   : record.get('nacional')
+                                        ,CANALING   : record.get('CANALING')
+                                        ,CONDUCTO   : record.get('CONDUCTO')
+                                        ,PTCUMUPR   : record.get('PTCUMUPR')
+                                        ,RESIDENCIA : record.get('RESIDENCIA')
                     				});
                     			});
                     			json['slist1']=slist1;
