@@ -1840,7 +1840,7 @@ Ext.onReady(function()
         {
             debug('>comboTipoValor change');
             itemSumaAsegu.setValue('');
-            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='1x');
+            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
             
             debug('<comboTipoValor change');
         };
