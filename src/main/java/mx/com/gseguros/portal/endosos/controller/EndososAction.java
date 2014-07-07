@@ -14,6 +14,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
@@ -66,6 +67,7 @@ public class EndososAction extends PrincipalCoreAction
 	private CancelacionManager       cancelacionManager;
 	private boolean                  endosoSimple = false;
 	private ConsultasManager         consultasManager;
+	private StoredProceduresManager  storedProceduresManager;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -2953,6 +2955,20 @@ public class EndososAction extends PrincipalCoreAction
 				gc.generaParcial(tatrisit);
 				
 				imap1.put("formulario" , gc.getItems());
+				
+				Map<String,String>paramsTatriper=new HashMap<String,String>();
+				paramsTatriper.put("pv_cdramo_i"   , smap1.get("CDRAMO"));
+				paramsTatriper.put("pv_cdrol_i"    , "2"/*ASEGURADO*/);
+				paramsTatriper.put("pv_cdtipsit_i" , smap1.get("CDTIPSIT"));
+				paramsTatriper.put("pv_cdperson_i" , "0"/*ATRIBUTOS BASICOS SIN TOMAR CUMULO DE ALGUNA PERSONA EXISTENTE*/);
+				List<ComponenteVO>tatriper=kernelManager.obtenerTatriper(paramsTatriper);
+				GeneradorCampos gc2=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc2.setCdramo(smap1.get("CDRAMO"));
+				gc2.setCdtipsit(smap1.get("CDTIPSIT"));
+				gc2.setCdrol("2"/*ASEGURADO*/);
+				gc2.setAuxiliar(true);
+				gc2.generaParcial(tatriper);
+				imap1.put("formularioAtriper" , gc2.getItems());
 				////// campos de tatrisit para individual //////
 				////////////////////////////////////////////////
 			}
@@ -3068,6 +3084,28 @@ public class EndososAction extends PrincipalCoreAction
 			
 			String fechaEndoso    = smap3.get("fecha_endoso");
 			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
+			
+			/*
+			 * Parche para validar que PREVEX tenga 49 y 50 de tvaloper
+			 */
+			if(alta)
+			{
+				LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
+				paramsValues.put("param1",cdunieco);
+				paramsValues.put("param2",cdramo);
+				paramsValues.put("param3",estado);
+				paramsValues.put("param4",nmpoliza);
+				Map<String,String>agente=storedProceduresManager.procedureMapCall(
+						ObjetoBD.OBTIENE_CDAGENTE_POLIZA.getNombre(), paramsValues, null);
+				if(agente.get("CDAGENTE").equals("9759"))
+				{
+					if(StringUtils.isBlank(smap1.get("aux.otvalor49"))
+							||StringUtils.isBlank(smap1.get("aux.otvalor50")))
+					{
+						throw new Exception("Falta complementar c&oacute;digo de cliente externo y clave familiar");
+					}
+				}
+			}
 			
 			DatosUsuario datUsu   = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);//cdperson
 			String cdpersonSesion = datUsu.getCdperson();
@@ -3236,6 +3274,32 @@ public class EndososAction extends PrincipalCoreAction
 				kernelManager.movMpoliper(mapaMpoliper);
 				////// mpoliper //////
 				//////////////////////
+				
+				/*
+				 * INSERCION DE TVALOPER
+				 */
+				Map<String,String>tvaloperParams=new HashMap<String,String>();
+				tvaloperParams.put("pv_cdunieco" , cdunieco);
+				tvaloperParams.put("pv_cdramo"   , cdramo);
+				tvaloperParams.put("pv_estado"   , estado);
+				tvaloperParams.put("pv_nmpoliza" , nmpoliza);
+				tvaloperParams.put("pv_nmsituac" , nmsituac);
+				tvaloperParams.put("pv_nmsuplem" , nmsuplem);
+				tvaloperParams.put("pv_status"   , "V"/*VIVO*/);
+				tvaloperParams.put("pv_cdrol"    , "2"/*ASEGURADO*/);
+				tvaloperParams.put("pv_cdperson" , cdperson);
+				tvaloperParams.put("pv_cdatribu" , null);
+				tvaloperParams.put("pv_cdtipsit" , cdtipsit);
+				for(Entry<String,String>en:smap1.entrySet())
+				{
+					String key=en.getKey();
+					if(key.length()>4
+							&&key.substring(0, 4).equals("aux."))
+					{
+						tvaloperParams.put("pv_otvalor"+key.substring("aux.otvalor".length(), key.length()),en.getValue());
+					}
+				}
+				kernelManager.pMovTvaloper(tvaloperParams);
                 
 				///////////////////////
 				////// clausulas //////
@@ -7464,6 +7528,11 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setConsultasManager(ConsultasManager consultasManager) {
 		this.consultasManager = consultasManager;
+	}
+
+	public void setStoredProceduresManager(
+			StoredProceduresManager storedProceduresManager) {
+		this.storedProceduresManager = storedProceduresManager;
 	}
 	
 }
