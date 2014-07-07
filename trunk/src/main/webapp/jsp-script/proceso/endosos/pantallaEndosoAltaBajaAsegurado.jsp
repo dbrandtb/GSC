@@ -678,6 +678,7 @@ Ext.onReady(function()
 			        	,items       :
 			        	[
 			        	    <s:property value="imap1.formulario" />
+			        	    ,<s:property value="imap1.formularioAtriper" />
 			        	]
 				        ,layout      :
 				        {
