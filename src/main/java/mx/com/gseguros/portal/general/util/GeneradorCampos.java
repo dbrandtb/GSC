@@ -22,6 +22,7 @@ public class GeneradorCampos
 	
 	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
     public static final  String namePrefix            = "parametros.pv_otvalor";
+    public static final  String namePrefixAux         = "aux.otvalor";
     private static final String formatoFecha          = "d/m/Y";
     private static final String xtypeDatecolumn       = "datecolumn";
     private static final int    staticFlex            = 1;
@@ -48,6 +49,7 @@ public class GeneradorCampos
     private boolean conColumn = true;
     private boolean conButton = false;
     private boolean esMovil   = false;
+    private boolean auxiliar  = false; 
     
     public GeneradorCampos(String context)
     {
@@ -324,7 +326,7 @@ public class GeneradorCampos
         	{
         		name = "0" + name;
         	}
-        	name = GeneradorCampos.namePrefix + name;
+        	name = (auxiliar?GeneradorCampos.namePrefixAux:GeneradorCampos.namePrefix) + name;
         }
         
         String value=comp.getValue();
@@ -1064,6 +1066,14 @@ public class GeneradorCampos
 
 	public void setEsMovil(boolean esMovil) {
 		this.esMovil = esMovil;
+	}
+
+	public boolean isAuxiliar() {
+		return auxiliar;
+	}
+
+	public void setAuxiliar(boolean auxiliar) {
+		this.auxiliar = auxiliar;
 	}
     
 }
