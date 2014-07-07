@@ -10,6 +10,7 @@
         <property name="cancelacionManager" ref="cancelacionManagerImpl"/>
         <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
         <property name="consultasManager"   ref="consultasManagerImpl"></property>
+        <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
     </bean>
     
 </beans>
