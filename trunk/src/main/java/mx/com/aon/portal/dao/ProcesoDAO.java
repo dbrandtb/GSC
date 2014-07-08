@@ -1468,7 +1468,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setSwpresen(rs.getString("SWPRESEN"));
             result.setDefaultValue(rs.getString("VALOR"));
             result.setValue(rs.getString("OTVALOR01"));
-            result.setSoloLectura(StringUtils.isNotBlank(rs.getString("SWACTUAL"))&&rs.getString("SWACTUAL").equalsIgnoreCase("S"));
+            result.setSoloLectura(!(StringUtils.isNotBlank(rs.getString("SWACTUAL"))&&rs.getString("SWACTUAL").equalsIgnoreCase("S")));
             
             return result;
         }
