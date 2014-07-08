@@ -101,7 +101,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String montoMaximo;
     private String existePenalizacion;
     private String montoArancel;
-    private String requiereAutServ;
     private String mesesTiempoEspera;
     private String existeDocAutServicio;
     private String autorizarProceso;
@@ -478,7 +477,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 					parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
 					parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
-					parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
 					if(params.get("cmbProveedor").toString().length() > 0){
 						parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 					}
@@ -523,7 +521,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			    		otvalor.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 			    		otvalor.put("pv_otvalor11_i",params.get("cmbProveedor"));
 			    		otvalor.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
-			    		otvalor.put("pv_otvalor20_i",params.get("cmbRamos"));
 						if(params.get("cmbProveedor").toString().length() > 0){
 							otvalor.put("pv_otvalor13_i",Rol.CLINICA.getCdrol());
 						}
@@ -650,7 +647,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
    	logger.debug(" **** Entrando al mï¿½todo de Lista de Poliza ****");
    	logger.debug(params);
    	try {
-				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
+				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
 				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
 			}catch( Exception e){
 				logger.error("Error al obtener los datos de la poliza ",e);
@@ -1504,19 +1501,6 @@ public String generarSiniestroSinAutorizacion()
 	   	return SUCCESS;
  }
    
-   
-   public String obtieneRequiereAutServ(){
-	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
-	   	try {
-	   		requiereAutServ = siniestrosManager.requiereAutorizacionServ(params.get("cobertura"),params.get("subcobertura"));
-	   	}catch( Exception e){
-	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-}
-   
    public String validaAutorizacionProceso(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
 	   	try {
@@ -1858,8 +1842,15 @@ public String generarSiniestroSinAutorizacion()
 	    	String subcobertura = factura.get("CDCONVAL");
 	    	String valorComplementario = "0";
 	    	
-	    	String requiereAutorizacion = siniestrosManager.requiereAutorizacionServ(cobertura, subcobertura);
-	    	if(requiereAutorizacion.equalsIgnoreCase("OP")){
+	    	if(cobertura.equalsIgnoreCase("18HO") || cobertura.equalsIgnoreCase("18PS"))
+	    	{
+	    		if(cobertura.equalsIgnoreCase("18HO") && (subcobertura.equalsIgnoreCase("18HO024")|| subcobertura.equalsIgnoreCase("18HO025")|| subcobertura.equalsIgnoreCase("18HO026")|| subcobertura.equalsIgnoreCase("18HO027"))){
+		    		valorComplementario = "1";
+		    	}
+		    	if(cobertura.equalsIgnoreCase("18PS") && (subcobertura.equalsIgnoreCase("18PS001")||subcobertura.equalsIgnoreCase("18PS002"))){
+		    		valorComplementario = "1";
+			    }
+	    	}else{
 	    		valorComplementario = "1";
 	    	}
 	    	
@@ -2704,7 +2695,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						listaConceptosSiniestro.add(concepto);
     						
     						//hospitalizacion
-    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA") || factura.get("CDGARANT").equalsIgnoreCase("4HOS"))
+    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
     						{
     							logger.debug(">>HOSPITALIZACION");
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
@@ -3042,8 +3033,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    							&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 	    							)
 	    					{
-	    						logger.debug("#####VALOR#######");
-	    						logger.debug(concepto.get("SUBTTDESCUENTO"));
 	    						subttDescuentoSiniestroIte+= Double.valueOf(concepto.get("SUBTTDESCUENTO"));
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
@@ -3450,17 +3439,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	String copagoFinal= null;
     	
     	double copagoOriginalPoliza = 0d;
-    	logger.debug("######copagoOriginal####### "+copagoOriginal);
     	String copagoModificado= copagoOriginal.replaceAll(",", "");
-    	
     	if(copagoOriginal.equalsIgnoreCase("no") || copagoOriginal.equalsIgnoreCase("na")){
     		copagoOriginalPoliza = 0d;
     	}else{
-    		if(copagoOriginal.equalsIgnoreCase("#######")){
-    			copagoOriginalPoliza = 0d;
-    		}else{
-    			copagoOriginalPoliza= Double.parseDouble(copagoModificado);
-    		}
+    		
+    		copagoOriginalPoliza= Double.parseDouble(copagoModificado);
     	}
     	
     	if(causaSiniestro != null)
@@ -3694,15 +3678,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
     						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
     				//4.- Obtenemos la penalización por circulo Hospitalario
-    				
-    				
-    				logger.debug("###### CIRHOSPI ######");
-    				logger.debug(informacionGral.get(0).get("CIRHOSPI"));
-    				logger.debug("###### CIRHOPROV ######");
-    				logger.debug(informacionGral.get(0).get("CIRHOPROV"));
-    				logger.debug("###### CDCAUSA ######");
-    				logger.debug(informacionGral.get(0).get("CDCAUSA"));
-    				
     				double penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
@@ -3811,9 +3786,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//hospitalizacion
     				Map<String,String> hosp = new HashMap<String,String>();
     				lhosp.add(hosp);
-    				hosp.put("PTIMPORT" 	, "0");
-    				hosp.put("DESTO"    	, "0");
-    				hosp.put("IVA"      	, "0");
+    				hosp.put("PTIMPORT" , "0");
+    				hosp.put("DESTO"    , "0");
+    				hosp.put("IVA"      , "0");
     				hosp.put("PRECIO"   	, "0");
     				hosp.put("DESCPRECIO"   , "0");
     				//hospitalizacion
@@ -3846,7 +3821,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						listaConceptosSiniestro.add(concepto);
     						
     						//hospitalizacion
-    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA") || factura.get("CDGARANT").equalsIgnoreCase("4HOS"))
+    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
     						{
     							logger.debug(">>HOSPITALIZACION");
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
@@ -3892,9 +3867,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("base import "+hPTIMPORT);
     							logger.debug("base desto "+hDESTO);
     							logger.debug("base iva "+hIVA);
-    							hPTIMPORT 	+= PTIMPORT;
-    							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-    							hIVA      	+= PTIMPORT*(ivaprov/100d);
+    							hPTIMPORT += PTIMPORT;
+    							hDESTO    += (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
+    							hIVA      += PTIMPORT*(ivaprov/100d);
     							hPRECIO 	+= PTPRECIO;
     							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
@@ -4100,7 +4075,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 								copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionT[1].toString()) + (subttDesto * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
 							}else{
 								//accidente
-								//copagoAplicadoSiniestroIte= 0d;
 								if(tipoCopagoSiniestroIte.equalsIgnoreCase("$"))
 								{
 									copagoAplicadoSiniestroIte = cantidadCopagoSiniestroIte;
@@ -4184,8 +4158,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    							&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 	    							)
 	    					{
-	    						logger.debug("#####VALOR#######");
-	    						logger.debug(concepto.get("SUBTTDESCUENTO"));
 	    						subttDescuentoSiniestroIte+= Double.valueOf(concepto.get("SUBTTDESCUENTO"));
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
@@ -4460,7 +4432,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("<<REEMBOLSO");
     						//pago reembolso
     					}
-    					    					
     				}
     				
     				logger.debug(">>Calculando total factura iterada para WS");
@@ -5848,15 +5819,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setMontoArancel(String montoArancel) {
 		this.montoArancel = montoArancel;
-	}
-
-	public String getRequiereAutServ() {
-		return requiereAutServ;
-	}
-
-
-	public void setRequiereAutServ(String requiereAutServ) {
-		this.requiereAutServ = requiereAutServ;
 	}
 	
 	

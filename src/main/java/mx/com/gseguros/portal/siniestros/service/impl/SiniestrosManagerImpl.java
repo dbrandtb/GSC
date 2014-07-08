@@ -280,9 +280,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException {
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
 		try {
-			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo);
+			return siniestrosDAO.obtieneListadoPoliza(cdperson);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
@@ -1234,16 +1234,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
-		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String requiereAutorizacionServ(String cobertura, String subcobertura) throws Exception {
-		try {
-			return siniestrosDAO.requiereAutorizacionServicio(cobertura, subcobertura);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
