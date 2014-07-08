@@ -150,7 +150,7 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException;
 
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  									  String nmsuplem,String nmsituac, String cdtipsit) throws ApplicationException;
+			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws ApplicationException;
 	
 	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException;
 

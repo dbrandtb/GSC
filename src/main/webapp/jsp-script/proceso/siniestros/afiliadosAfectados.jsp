@@ -241,7 +241,9 @@ function revisarDocumento(grid,rowIndex)
                                     'params.nmpoliza' : record.raw.noPoliza,
                                     'params.nmsuplem' : record.raw.NMSUPLEM,
                                     'params.nmsituac' : record.raw.NMSITUAC,
-                                    'params.cdtipsit' : record.raw.CDTIPSIT
+                                    'params.cdtipsit' : record.raw.CDTIPSIT,
+                                    'params.dateOcurrencia' : record.raw.fechaOcurrencia
+                                    
                                 };
                                 Ext.Ajax.request(
                                 {

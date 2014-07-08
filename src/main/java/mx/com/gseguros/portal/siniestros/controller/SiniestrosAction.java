@@ -887,7 +887,7 @@ public String generarSiniestroSinAutorizacion()
 	{
 		//CREA UN MSINIEST A PARTIR DE TWORKSIN
 		siniestrosManager.getAltaSiniestroSinAutorizacion(params.get("ntramite"),params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
-														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"));
+														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"), params.get("dateOcurrencia"));
 		mensaje = "Se ha generado el siniestro";
 		success=true;
 	}
@@ -2669,9 +2669,11 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//hospitalizacion
     				Map<String,String> hosp = new HashMap<String,String>();
     				lhosp.add(hosp);
-    				hosp.put("PTIMPORT" , "0");
-    				hosp.put("DESTO"    , "0");
-    				hosp.put("IVA"      , "0");
+    				hosp.put("PTIMPORT" 	, "0");
+    				hosp.put("DESTO"    	, "0");
+    				hosp.put("IVA"      	, "0");
+    				hosp.put("PRECIO"   	, "0");
+    				hosp.put("DESCPRECIO"   , "0");
     				//hospitalizacion
     				
     				//reembolso
@@ -2708,6 +2710,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
     							double DESTOPOR=Double.parseDouble(concepto.get("DESTOPOR"));
     							double DESTOIMP=Double.parseDouble(concepto.get("DESTOIMP"));
+    							double PTPRECIO=Double.parseDouble(concepto.get("PTPRECIO"));
     							logger.debug("concepto importe "+PTIMPORT);
     							logger.debug("concepto desto "+DESTOPOR);
     							logger.debug("concepto destoimp "+DESTOIMP);
@@ -2742,12 +2745,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							double hPRECIO      = Double.parseDouble(hosp.get("PRECIO"));
+    							double hDESCPRECIO  = Double.parseDouble(hosp.get("DESCPRECIO"));
     							logger.debug("base import "+hPTIMPORT);
     							logger.debug("base desto "+hDESTO);
     							logger.debug("base iva "+hIVA);
-    							hPTIMPORT += PTIMPORT;
-    							hDESTO    += (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-    							hIVA      += PTIMPORT*(ivaprov/100d);
+    							hPTIMPORT 	+= PTIMPORT;
+    							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
+    							hIVA      	+= PTIMPORT*(ivaprov/100d);
+    							hPRECIO 	+= PTPRECIO;
+    							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
     							logger.debug("new desto "+hDESTO);
     							logger.debug("new iva "+hIVA);
@@ -2755,6 +2762,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hosp.put("PTIMPORT" , hPTIMPORT+"");
     							hosp.put("DESTO"    , hDESTO+"");
     							hosp.put("IVA"      , hIVA+"");
+    							hosp.put("PRECIO"   , hPRECIO+"");
+    							hosp.put("DESCPRECIO", hDESCPRECIO+"");
     							logger.debug("<<HOSPITALIZACION");
     						}
     						//hospitalizacion
@@ -2949,6 +2958,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 								copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionT[1].toString()) + (subttDesto * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
 							}else{
 								//accidente
+								//copagoAplicadoSiniestroIte= 0d;
 								if(tipoCopagoSiniestroIte.equalsIgnoreCase("$"))
 								{
 									copagoAplicadoSiniestroIte = cantidadCopagoSiniestroIte;
@@ -3684,6 +3694,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
     						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
     				//4.- Obtenemos la penalización por circulo Hospitalario
+    				
+    				
+    				logger.debug("###### CIRHOSPI ######");
+    				logger.debug(informacionGral.get(0).get("CIRHOSPI"));
+    				logger.debug("###### CIRHOPROV ######");
+    				logger.debug(informacionGral.get(0).get("CIRHOPROV"));
+    				logger.debug("###### CDCAUSA ######");
+    				logger.debug(informacionGral.get(0).get("CDCAUSA"));
+    				
     				double penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
@@ -3792,9 +3811,11 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//hospitalizacion
     				Map<String,String> hosp = new HashMap<String,String>();
     				lhosp.add(hosp);
-    				hosp.put("PTIMPORT" , "0");
-    				hosp.put("DESTO"    , "0");
-    				hosp.put("IVA"      , "0");
+    				hosp.put("PTIMPORT" 	, "0");
+    				hosp.put("DESTO"    	, "0");
+    				hosp.put("IVA"      	, "0");
+    				hosp.put("PRECIO"   	, "0");
+    				hosp.put("DESCPRECIO"   , "0");
     				//hospitalizacion
     				
     				//reembolso
@@ -3825,12 +3846,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						listaConceptosSiniestro.add(concepto);
     						
     						//hospitalizacion
-    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
+    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA") || factura.get("CDGARANT").equalsIgnoreCase("4HOS"))
     						{
     							logger.debug(">>HOSPITALIZACION");
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
     							double DESTOPOR=Double.parseDouble(concepto.get("DESTOPOR"));
     							double DESTOIMP=Double.parseDouble(concepto.get("DESTOIMP"));
+    							double PTPRECIO=Double.parseDouble(concepto.get("PTPRECIO"));
     							logger.debug("concepto importe "+PTIMPORT);
     							logger.debug("concepto desto "+DESTOPOR);
     							logger.debug("concepto destoimp "+DESTOIMP);
@@ -3865,12 +3887,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							double hPRECIO      = Double.parseDouble(hosp.get("PRECIO"));
+    							double hDESCPRECIO  = Double.parseDouble(hosp.get("DESCPRECIO"));
     							logger.debug("base import "+hPTIMPORT);
     							logger.debug("base desto "+hDESTO);
     							logger.debug("base iva "+hIVA);
-    							hPTIMPORT += PTIMPORT;
-    							hDESTO    += (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-    							hIVA      += PTIMPORT*(ivaprov/100d);
+    							hPTIMPORT 	+= PTIMPORT;
+    							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
+    							hIVA      	+= PTIMPORT*(ivaprov/100d);
+    							hPRECIO 	+= PTPRECIO;
+    							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
     							logger.debug("new desto "+hDESTO);
     							logger.debug("new iva "+hIVA);
@@ -3878,6 +3904,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hosp.put("PTIMPORT" , hPTIMPORT+"");
     							hosp.put("DESTO"    , hDESTO+"");
     							hosp.put("IVA"      , hIVA+"");
+    							hosp.put("PRECIO"   , hPRECIO+"");
+    							hosp.put("DESCPRECIO", hDESCPRECIO+"");
     							logger.debug("<<HOSPITALIZACION");
     						}
     						//hospitalizacion
@@ -3966,7 +3994,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         								{
         									copagoPorc = true;
         								}
-        								scopago=scopago.replace("%", "").replace("$", "");
+        								scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
         								copago=Double.valueOf(scopago);
         								if(copagoPorc)
         								{
@@ -4072,6 +4100,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 								copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionT[1].toString()) + (subttDesto * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
 							}else{
 								//accidente
+								//copagoAplicadoSiniestroIte= 0d;
 								if(tipoCopagoSiniestroIte.equalsIgnoreCase("$"))
 								{
 									copagoAplicadoSiniestroIte = cantidadCopagoSiniestroIte;
@@ -4155,6 +4184,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    							&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 	    							)
 	    					{
+	    						logger.debug("#####VALOR#######");
+	    						logger.debug(concepto.get("SUBTTDESCUENTO"));
 	    						subttDescuentoSiniestroIte+= Double.valueOf(concepto.get("SUBTTDESCUENTO"));
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
@@ -4429,6 +4460,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("<<REEMBOLSO");
     						//pago reembolso
     					}
+    					    					
     				}
     				
     				logger.debug(">>Calculando total factura iterada para WS");
