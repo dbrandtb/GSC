@@ -63,7 +63,7 @@ public interface SiniestrosDAO {
 	
 	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws DaoException;
 	
-	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo) throws DaoException;
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson) throws DaoException;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
@@ -378,6 +378,4 @@ public interface SiniestrosDAO {
 	public void eliminacionDocumentosxTramite(String ntramite) throws Exception;
 	
 	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
-
-	public String requiereAutorizacionServicio(String cobertura,String subcobertura) throws Exception;
 }

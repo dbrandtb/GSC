@@ -199,11 +199,10 @@ Ext.onReady(function()
                 ]
             });
             panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
-            if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
+            if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA')
             {
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
-            	
             	var importe   = (_p12_lhosp[indice].PRECIO*1.0);
             	var descuento = _p12_lhosp[indice].DESCPRECIO*1.0;
             	debug('importe Inicial'   ,_p12_lhosp[indice].PTIMPORT*1.0);
@@ -260,7 +259,6 @@ Ext.onReady(function()
             	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
             	var total = subttDedu - copagoaplica + iva ;
-            	debug('IVA',iva);
             	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -759,7 +757,7 @@ Ext.onReady(function()
             var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             var _facturaIndividual = _p12_slist1[indice];
             
-            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
+            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
            	{
             	if(causaSiniestro !="2"){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
