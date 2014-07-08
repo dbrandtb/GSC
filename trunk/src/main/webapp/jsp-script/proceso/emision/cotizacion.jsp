@@ -1788,9 +1788,23 @@ Ext.onReady(function()
     if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
     {
         _0_gridIncisos.setTitle('Datos del contratante');
+        _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('change',function()
+        {
+            debug('cleaning');
+            _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue('');
+            _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
+            _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue('');
+            _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue('');
+            _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue('');
+        });
         _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('blur',function()
         {
             var vim=this.value;
+            if(!vim||(vim+'x').length!=18)
+            {
+                mensajeWarning('La longitud del n&uacute;mero de serie debe ser 17');
+                return;
+            }
             debug('>llamando a nada:',vim);
             _0_formAgrupados.setLoading(true);
             Ext.Ajax.request(
