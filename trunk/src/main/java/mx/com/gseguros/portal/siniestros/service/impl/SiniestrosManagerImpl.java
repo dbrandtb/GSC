@@ -421,11 +421,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	@Override
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-												  String nmsuplem,String nmsituac, String cdtipsit) throws ApplicationException {
+												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws ApplicationException {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
-					  												nmsuplem, nmsituac, cdtipsit);
+					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}

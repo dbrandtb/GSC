@@ -3007,7 +3007,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit)throws DaoException {
+			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia)throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_cdunieco_i", cdunieco);
@@ -3017,6 +3017,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_nmsituac_i", nmsituac);
 		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_fechaOcurrencia_i", fechaOcurrencia);
 		
 		Map<String, Object> mapResult = ejecutaSP(new GuardaAltaSiniestroSinAutorizacion(this.getDataSource()), params);
 		java.math.BigDecimal msgId = (java.math.BigDecimal)mapResult.get("pv_msg_id_o"); 
@@ -3036,6 +3037,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fechaOcurrencia_i", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

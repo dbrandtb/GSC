@@ -725,6 +725,8 @@ Ext.onReady(function() {
 	    		,labelWidth: 150
                 ,minValue: 0
 	    		,allowBlank:false
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
 		    	,name       : 'params.destopor'
 		    	,listeners: {
 			    		change: calculaImporteConcepto

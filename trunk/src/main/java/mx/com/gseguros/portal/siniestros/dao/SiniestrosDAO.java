@@ -89,7 +89,7 @@ public interface SiniestrosDAO {
 
 	
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit) throws DaoException;
+			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws DaoException;
 	
 	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException;
 
