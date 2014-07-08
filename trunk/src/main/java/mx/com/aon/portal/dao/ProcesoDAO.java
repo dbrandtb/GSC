@@ -1468,6 +1468,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setSwpresen(rs.getString("SWPRESEN"));
             result.setDefaultValue(rs.getString("VALOR"));
             result.setValue(rs.getString("OTVALOR01"));
+            result.setSoloLectura(StringUtils.isNotBlank(rs.getString("SWACTUAL"))&&rs.getString("SWACTUAL").equalsIgnoreCase("S"));
             
             return result;
         }
@@ -4372,7 +4373,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class BuscarRFCMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{"RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","CDIDEPER", "SEXO", "TIPOPERSONA", "NACIONALIDAD", "NOMBRE", "SNOMBRE", "APPAT", "APMAT"};
+			String cols[]=new String[]{
+					"RFCCLI"        , "NOMBRECLI"   , "FENACIMICLI"
+					,"DIRECCIONCLI" , "CLAVECLI"    , "CDIDEPER"
+					,"SEXO"         , "TIPOPERSONA" , "NACIONALIDAD"
+					,"NOMBRE"       , "SNOMBRE"     , "APPAT"
+					,"APMAT"        , "CODPOSTAL"   , "CDEDO"
+					,"CDMUNICI"     , "DSDOMICIL"
+					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
