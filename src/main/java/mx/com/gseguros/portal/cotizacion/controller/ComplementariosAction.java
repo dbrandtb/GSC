@@ -3536,7 +3536,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				replaceAll("ñ", "%C3%B1").
 				replaceAll("Á", "%C3%81").
 				replaceAll("É", "%C3%89").
-				replaceAll("Í", "%C3%A8D").
+				replaceAll("Í", "%C3%8D").
 				replaceAll("Ó", "%C3%93").
 				replaceAll("Ú", "%C3%9A").
 				replaceAll("Ñ", "%C3%91");
