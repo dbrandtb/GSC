@@ -240,7 +240,7 @@ Ext.onReady(function() {
             extraParams: {
                 'catalogo' : _CATALOGO_COBERTURAS,
                 'params.cdramo' : _CDRAMO,
-                'params.cdtipsit' : 'SL'
+                'params.cdtipsit' : _CDTIPSIT
             }
         }
 	});
@@ -948,7 +948,9 @@ Ext.onReady(function() {
 	            		        		'params.nmsuplem'  : _NMSUPLEM,
 	            		        		'params.status'    : _STATUS,
 	            		        		'params.aaapertu'  : _AAAPERTU,
-	            		        		'params.nmsinies'  : _NMSINIES
+	            		        		'params.nmsinies'  : _NMSINIES,
+	            		        		'params.cdtipsit'  : _CDTIPSIT,
+	            		        		'params.operacion'  : _Operacion
 	            		        	},
 	            		        	failure: function(form, action) {
 	            		        		centrarVentanaInterna(mensajeError("Error al guardar la Factura"));

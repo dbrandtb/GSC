@@ -491,7 +491,7 @@ Ext.onReady(function() {
     	                    labelWidth	: 170,										readOnly   : true,		width:500,	hidden:true
     	                },
     	                {
-    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago final',			id  : 'copagofiMS',  name:'copagofiMS',
+    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago final',			id  : 'copagofi',  name:'copagofiMS',
     	                    labelWidth	: 170,										readOnly   : true,		width:500
     	                },
     	                {
@@ -499,7 +499,7 @@ Ext.onReady(function() {
 						    name       : 'porpenal',			labelWidth	: 170,					readOnly   : true
 						},
     				 	{
-    				 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute:n por cambio de zona'						,id       : 'copagofi'
+    				 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute;n por cambio de zona'						,id       : 'copagofiMS'
     			 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona1'
     				 	},
     	                {
@@ -747,7 +747,7 @@ Ext.onReady(function() {
 																				Ext.getCmp('iddsplanAsegurado1').setValue(json.dsplan);
 																				// aqui ya todos tienen sus valores
 																				
-																				var copagoOrig = Ext.getCmp('copago1').getValue() ;
+																				/*var copagoOrig = Ext.getCmp('copago1').getValue() ;
 																				var tipoCopago = Ext.getCmp('tipoCapago1').getValue() ;
 																				
 																				var sumatoria = 0;
@@ -777,7 +777,7 @@ Ext.onReady(function() {
 																			    	sumatoria = + Ext.getCmp('porpenal1').getValue() + +Ext.getCmp('copagofi').getValue() +  +copagoOrig;//.replace("%","");
 																			        Ext.getCmp('copagofiMS').setValue(sumatoria);
 																			        return true;
-																			    }
+																			    }*/
 																				
 
 																			}
