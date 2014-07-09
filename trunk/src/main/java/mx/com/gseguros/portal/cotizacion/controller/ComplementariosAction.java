@@ -3527,7 +3527,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String ntramite    = map1.get("ntramite");
 		String comments    = map1.get("comments");
 		logger.debug(comments);
-		String commentsM   = comments.replaceAll("\n", "%0A").replaceAll("\n", "%0A").
+		String commentsM   = comments.replaceAll("\n", "%0A").
 				replaceAll("á", "%C3%A1").
 				replaceAll("é", "%C3%A9").
 				replaceAll("í", "%C3%AD").
