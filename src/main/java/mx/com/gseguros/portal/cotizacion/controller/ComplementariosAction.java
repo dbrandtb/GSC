@@ -3528,12 +3528,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String comments    = map1.get("comments");
 		logger.debug(comments);
 		String commentsM   = comments.replaceAll("\n", "%0A").
-				replaceAll("Ã¡", "%C3%A1").
-				replaceAll("Ã©", "%C3%A9").
-				replaceAll("Ã­", "%C3%AD").
-				replaceAll("Ã³", "%C3%B3").
-				replaceAll("Ãº", "%C3%BA").
-				replaceAll("Ã±", "%C3%B1");
+				replaceAll("á", "%C3%A1").
+				replaceAll("é", "%C3%A9").
+				replaceAll("í", "%C3%AD").
+				replaceAll("ó", "%C3%B3").
+				replaceAll("ú", "%C3%BA").
+				replaceAll("ñ", "%C3%B1").
+				replaceAll("Á", "%C3%81").
+				replaceAll("É", "%C3%89").
+				replaceAll("Í", "%C3%A8D").
+				replaceAll("Ó", "%C3%93").
+				replaceAll("Ú", "%C3%9A").
+				replaceAll("Ñ", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
