@@ -78,7 +78,7 @@ public interface SiniestrosManager {
 	
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws ApplicationException;
 	
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException;
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException;
 	
 	public void getEliminacionRegistros(String nmautser) throws ApplicationException;
 	
@@ -460,4 +460,5 @@ public interface SiniestrosManager {
 
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
 	
+	public String requiereAutorizacionServ(String cobertura, String subcobertura)throws Exception;
 }

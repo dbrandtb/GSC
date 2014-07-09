@@ -3524,6 +3524,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		logger.info("map1: "+map1);
 		String ntramite    = map1.get("ntramite");
 		String comments    = map1.get("comments");
+		String commentsM   = comments.replaceAll("\n", "%0A");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
@@ -3540,7 +3541,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				+ "&paramform=no"
 				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
 				+ "&p_ntramite="+ntramite
-				+ "&p_comments="+comments;
+				+ "&p_comments="+commentsM;
 		log.debug(""
 				+ "\n#################################"
 				+ "\n###### Se solicita reporte ######"

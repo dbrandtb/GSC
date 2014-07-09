@@ -65,6 +65,9 @@
            
             var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
             
+            var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
+            var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
+            
             var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
             var fechaMaxEmi = Ext.Date.parse('<s:property value="map1.fechamax" />','d/m/Y');
             debug('fechaMinEmi:',fechaMinEmi);
@@ -1465,137 +1468,205 @@
                                     ,handler:function()
                                     {
                                         var form=Ext.getCmp('formPanel');
-                                        //console.log(form.getValues());
-                                        Ext.create('Ext.window.Window',
-                                        {
-                                            title        : 'Guardar detalle'
-                                            ,width       : 600
-                                            ,height      : 400
-                                            ,buttonAlign : 'center'
-                                            ,modal       : true
-                                            ,closable    : false
-                                            ,autoScroll  : true
-                                            ,items       :
-                                            [
-                                                Ext.create('Ext.form.HtmlEditor', {
-                                                    id        : 'inputTextareaCommentsToRechazo'
-                                                    ,width  : 570
-                                                    ,height : 300
-                                                })
-                                            ]
-                                            ,buttons    :
-                                            [
-                                                {
-                                                    text     : 'Rechazar'
-                                                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                                    ,handler : function()
-                                                    {
-                                                        if(true||form.isValid())
-                                                        {
-                                                            var window=this.up().up();
-                                                            window.setLoading(true);
-                                                            /*form.submit({
-                                                                params:{
-                                                                    'map1.pv_cdunieco' :  inputCdunieco,
-                                                                    'map1.pv_cdramo' :    inputCdramo,
-                                                                    'map1.pv_estado' :    inputEstado,
-                                                                    'map1.pv_nmpoliza' :  inputNmpoliza
-                                                                },
-                                                                success:function(){*/
-                                                                    Ext.Ajax.request
-                                                                    ({
-                                                                        url     : datComUrlMCUpdateStatus
-                                                                        ,params : 
-                                                                        {
-                                                                            'smap1.ntramite' : inputNtramite
-                                                                            ,'smap1.status'  : '4'//rechazado
-                                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
-                                                                        }
-                                                                        ,success : function(response)
-                                                                        {
-                                                                            var json=Ext.decode(response.responseText);
-                                                                            if(json.success==true)
-                                                                            {
-                                                                                Ext.Ajax.request(
-                                                                                {
-                                                                                    url     : compleUrlGuardarCartoRechazo
-                                                                                    ,params :
-                                                                                    {
-                                                                                        'map1.ntramite'  : inputNtramite
-                                                                                        ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
-                                                                                        ,'map1.cdsisrol' : sesionDsrol
-                                                                                        ,'map1.cdunieco' : inputCdunieco
-                                                                                        ,'map1.cdramo'   : inputCdramo
-                                                                                        ,'map1.estado'   : inputEstado
-                                                                                        ,'map1.nmpoliza' : inputNmpoliza
-                                                                                    }
-                                                                                });
-                                                                                Ext.create('Ext.form.Panel').submit
-                                                                                ({
-                                                                                    url             : datComUrlMC
-                                                                                    ,standardSubmit : true
-                                                                                    ,params         :
-                                                                                    {
-                                                                                        'smap1.gridTitle':'Tareas',
-                                                                                        'smap2.pv_cdtiptra_i':1,
-                                                                                        'smap1.editable':1
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                window.setLoading(false);
-                                                                                Ext.Msg.show({
-                                                                                    title:'Error',
-                                                                                    msg: 'Error al rechazar',
-                                                                                    buttons: Ext.Msg.OK,
-                                                                                    icon: Ext.Msg.ERROR
-                                                                                });
-                                                                            }
-                                                                        }
-                                                                        ,failure : function()
-                                                                        {
-                                                                            Ext.Msg.show({
-                                                                                title:'Error',
-                                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                                buttons: Ext.Msg.OK,
-                                                                                icon: Ext.Msg.ERROR
-                                                                            });
-                                                                        }
-                                                                    });/*
-                                                                },
-                                                                failure:function(){
-                                                                    window.setLoading(false);
-                                                                    Ext.Msg.show({
-                                                                        title:'Error',
-                                                                        msg: 'Error de comunicaci&oacute;n',
-                                                                        buttons: Ext.Msg.OK,
-                                                                        icon: Ext.Msg.ERROR
-                                                                    });
-                                                                }
-                                                            });*/
-                                                        }
-                                                        else
-                                                        {
-                                                            Ext.Msg.show({
-                                                                title:'Datos incompletos',
-                                                                msg: 'Favor de introducir todos los campos requeridos',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.WARNING
-                                                            });
-                                                        }
-                                                    }
-                                                }
-                                                ,{
-                                                    text  : 'Cancelar'
-                                                    ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                                    ,handler : function()
-                                                    {
-                                                        this.up().up().destroy();
-                                                    }
-                                                }
-                                            ]
-                                        }).show();
+                                        var idClausula;
+                                        
+                                        if(sesionDsrol=='MEDICO'){
+                                        	descripcion = 'CARTA RECHAZO MEDICO';
+                                        }else{
+                                        	descripcion ='CARTA RECHAZO ADMINISTRATIVA';
+                                        }
+                                        
+                                        //Obtengo el valor del ID para obtener el valor de la descripcion
+                                        Ext.Ajax.request(
+                           				{
+                           				    url     : _URL_CONSULTA_CLAUSU
+                           				    ,params : 
+                           				    {
+                           						'params.cdclausu' : null,
+												'params.dsclausu' : descripcion
+                           				    }
+                           				    ,success : function (response)
+                           				    {
+                           				    	var json=Ext.decode(response.responseText);
+                           				    	var claveClausula = json.listaGenerica[0].key;
+                                                
+                           				    	Ext.Ajax.request(
+        										{
+        										    url     : _URL_CONSULTA_CLAUSU_DETALLE
+        										    ,params : 
+        										    {
+        										        'params.cdclausu'  : claveClausula
+        										    }
+        										    ,success : function (response)
+        										    {
+        										    	var json=Ext.decode(response.responseText);
+        										    	txtContenido =json.msgResult;
+        										    	
+        										    	Ext.create('Ext.window.Window',
+   		                                                {
+   		                                                    title        : 'Guardar detalle'
+   		                                                    ,width       : 600
+   		                                                    ,height      : 400
+   		                                                    ,buttonAlign : 'center'
+   		                                                    ,modal       : true
+   		                                                    ,closable    : false
+   		                                                    ,autoScroll  : true
+   		                                                    ,items       :
+   		                                                    [
+   		                                                        Ext.create('Ext.form.field.TextArea', {
+   		                                                            id        : 'inputTextareaCommentsToRechazo'
+   		                                                            ,width  : 570
+   		                                                            ,height : 300
+   		                                                            ,value  : txtContenido
+   		                                                        })
+   		                                                    ]
+   		                                                    ,buttons    :
+   		                                                    [
+   		                                                        {
+   		                                                            text     : 'Rechazar'
+   		                                                            ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+   		                                                            ,handler : function()
+   		                                                            {
+   		                                                                if(true||form.isValid())
+   		                                                                {
+   		                                                                    var window=this.up().up();
+   		                                                                    window.setLoading(true);
+   		                                                                    /*form.submit({
+   		                                                                        params:{
+   		                                                                            'map1.pv_cdunieco' :  inputCdunieco,
+   		                                                                            'map1.pv_cdramo' :    inputCdramo,
+   		                                                                            'map1.pv_estado' :    inputEstado,
+   		                                                                            'map1.pv_nmpoliza' :  inputNmpoliza
+   		                                                                        },
+   		                                                                        success:function(){*/
+   		                                                                            Ext.Ajax.request
+   		                                                                            ({
+   		                                                                                url     : datComUrlMCUpdateStatus
+   		                                                                                ,params : 
+   		                                                                                {
+   		                                                                                    'smap1.ntramite' : inputNtramite
+   		                                                                                    ,'smap1.status'  : '4'//rechazado
+   		                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+   		                                                                                }
+   		                                                                                ,success : function(response)
+   		                                                                                {
+   		                                                                                    var json=Ext.decode(response.responseText);
+   		                                                                                    if(json.success==true)
+   		                                                                                    {
+   		                                                                                        Ext.Ajax.request(
+   		                                                                                        {
+   		                                                                                            url     : compleUrlGuardarCartoRechazo
+   		                                                                                         	,method:'GET'
+   		                                                                                            ,params :
+   		                                                                                            {
+   		                                                                                                'map1.ntramite'  : inputNtramite
+   		                                                                                                ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+   		                                                                                                ,'map1.cdsisrol' : sesionDsrol
+   		                                                                                                ,'map1.cdunieco' : inputCdunieco
+   		                                                                                                ,'map1.cdramo'   : inputCdramo
+   		                                                                                                ,'map1.estado'   : inputEstado
+   		                                                                                                ,'map1.nmpoliza' : inputNmpoliza
+   		                                                                                            }
+		   		                                                                                    ,success : function(response)
+		   	   		                                                                                {
+		   		                                                                                    	Ext.create('Ext.form.Panel').submit
+		   		                                                                                        ({
+		   		                                                                                            url             : datComUrlMC
+		   		                                                                                            ,standardSubmit : true
+		   		                                                                                            ,params         :
+		   		                                                                                            {
+		   		                                                                                                'smap1.gridTitle':'Tareas',
+		   		                                                                                                'smap2.pv_cdtiptra_i':1,
+		   		                                                                                                'smap1.editable':1
+		   		                                                                                            }
+		   		                                                                                        });
+		   	   		                                                                                }
+			   		                                                                                 ,failure : function()
+		    		                                                                                {
+		    		                                                                                    Ext.Msg.show({
+		    		                                                                                        title:'Error',
+		    		                                                                                        msg: 'Error de comunicaci&oacute;n',
+		    		                                                                                        buttons: Ext.Msg.OK,
+		    		                                                                                        icon: Ext.Msg.ERROR
+		    		                                                                                    });
+		    		                                                                                }
+   		                                                                                        });
+   		                                                                                    }else{
+   		                                                                                        window.setLoading(false);
+   		                                                                                        Ext.Msg.show({
+   		                                                                                            title:'Error',
+   		                                                                                            msg: 'Error al rechazar',
+   		                                                                                            buttons: Ext.Msg.OK,
+   		                                                                                            icon: Ext.Msg.ERROR
+   		                                                                                        });
+   		                                                                                    }
+   		                                                                                }
+   		                                                                                ,failure : function()
+   		                                                                                {
+   		                                                                                    Ext.Msg.show({
+   		                                                                                        title:'Error',
+   		                                                                                        msg: 'Error de comunicaci&oacute;n',
+   		                                                                                        buttons: Ext.Msg.OK,
+   		                                                                                        icon: Ext.Msg.ERROR
+   		                                                                                    });
+   		                                                                                }
+   		                                                                            });/*
+   		                                                                        },
+   		                                                                        failure:function(){
+   		                                                                            window.setLoading(false);
+   		                                                                            Ext.Msg.show({
+   		                                                                                title:'Error',
+   		                                                                                msg: 'Error de comunicaci&oacute;n',
+   		                                                                                buttons: Ext.Msg.OK,
+   		                                                                                icon: Ext.Msg.ERROR
+   		                                                                            });
+   		                                                                        }
+   		                                                                    });*/
+   		                                                                }
+   		                                                                else
+   		                                                                {
+   		                                                                    Ext.Msg.show({
+   		                                                                        title:'Datos incompletos',
+   		                                                                        msg: 'Favor de introducir todos los campos requeridos',
+   		                                                                        buttons: Ext.Msg.OK,
+   		                                                                        icon: Ext.Msg.WARNING
+   		                                                                    });
+   		                                                                }
+   		                                                            }
+   		                                                        }
+   		                                                        ,{
+   		                                                            text  : 'Cancelar'
+   		                                                            ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+   		                                                            ,handler : function()
+   		                                                            {
+   		                                                                this.up().up().destroy();
+   		                                                            }
+   		                                                        }
+   		                                                    ]
+   		                                                }).show();
+        										    },
+        										    failure : function ()
+        										    {
+        										        Ext.Msg.show({
+        										            title:'Error',
+        										            msg: 'Error de comunicaci&oacute;n',
+        										            buttons: Ext.Msg.OK,
+        										            icon: Ext.Msg.ERROR
+        										        });
+        										    }
+        										});
+                           				    },
+                           				    failure : function ()
+                           				    {
+                           				        Ext.Msg.show({
+                           				            title:'Error',
+                           				            msg: 'Error de comunicaci&oacute;n',
+                           				            buttons: Ext.Msg.OK,
+                           				            icon: Ext.Msg.ERROR
+                           				        });
+                           				    }
+                           				});
+
                                     }
                                 }
 		                    ]

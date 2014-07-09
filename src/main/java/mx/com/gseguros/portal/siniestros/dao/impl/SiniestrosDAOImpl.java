@@ -659,10 +659,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson)
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo)
 			throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_cdramo_i", cdramo);
 		
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoPoliza(this.getDataSource()), params);
 		return (List<PolizaVigenteVO>) resultadoMap.get("pv_registro_o");
@@ -673,6 +674,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_POLIZAS");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaPoliza()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -3061,7 +3063,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	protected ObtieneMontoArancel(DataSource dataSource) {
     		
     		super(dataSource, "PKG_SINIESTRO.P_GET_ARANCEL");
-    		//declareParameter(new SqlParameter("pv_tipoConcepto_i",   OracleTypes.VARCHAR)); 	// 1.- CPT 2.- HCPT 3.- UB
     		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));		// Id. del proveedor
     		declareParameter(new SqlParameter("pv_cdcpt_i", OracleTypes.VARCHAR));		// Id. del concepto
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
@@ -3109,6 +3110,32 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_MESES_TESPERA");
     		declareParameter(new SqlParameter("pv_cdtabla_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_otclave_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+
+    @Override
+	public String requiereAutorizacionServicio(String cobertura,String subcobertura) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("pv_tipoConcepto_i", tipoConcepto);
+		params.put("pv_cobertura_i", cobertura);
+		params.put("pv_subcobertura_i", subcobertura);
+		
+		Map<String, Object> resultado = ejecutaSP(new ObtieneAutorizacionServicio(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneAutorizacionServicio extends StoredProcedure {
+    	
+    	protected ObtieneAutorizacionServicio(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SINIESTRO.P_GET_REQAUTSERV");
+    		declareParameter(new SqlParameter("pv_cobertura_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_subcobertura_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
