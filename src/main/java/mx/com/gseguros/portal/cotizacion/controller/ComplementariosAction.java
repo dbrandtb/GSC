@@ -3522,9 +3522,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 				+ "\n###### guardarCartaRechazo ######"
 				);
 		logger.info("map1: "+map1);
+		logger.debug("####VALOR DE ENTRADA######");
+		
 		String ntramite    = map1.get("ntramite");
 		String comments    = map1.get("comments");
-		String commentsM   = comments.replaceAll("\n", "%0A");
+		logger.debug(comments);
+		String commentsM   = comments.replaceAll("\n", "%0A").replaceAll("\n", "%0A").
+				replaceAll("á", "%C3%A1").
+				replaceAll("é", "%C3%A9").
+				replaceAll("í", "%C3%AD").
+				replaceAll("ó", "%C3%B3").
+				replaceAll("ú", "%C3%BA").
+				replaceAll("ñ", "%C3%B1");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
