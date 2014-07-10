@@ -476,7 +476,6 @@ public class ProcesoDAO extends AbstractDAO {
 			String cdperson = null;
 			
 			if(map.get("pv_existe_o") != null)   existe   = map.get("pv_existe_o").toString();
-			if(map.get("pv_cdperson_o") != null) cdperson = map.get("pv_cdperson_o").toString();
 			
 			wrapperResultados.setItemMap(new HashMap<String, Object>());
 			wrapperResultados.getItemMap().put("EXISTE_DOMICILIO", existe);
