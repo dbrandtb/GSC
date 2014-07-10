@@ -383,7 +383,7 @@ Ext.onReady(function()
 	          bodyStyle:'padding:15px;',
 	          buttons:[{
 	                 text: 'Guardar',
-	                 icon:_CONTEXT+'/resources/fam3icons/icons/acccept.png',
+	                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 	                 handler: function() {
 	                       if (panelEdicionMenu.form.isValid()) {
 	                    	   
