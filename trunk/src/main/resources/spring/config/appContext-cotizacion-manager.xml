@@ -9,4 +9,8 @@
 	    </property>
 	</bean>
 	
+	<bean id="cotizacionManagerImpl" class="mx.com.gseguros.portal.cotizacion.service.impl.CotizacionManagerImpl">
+        <property name="cotizacionDAO" ref="cotizacionDAOImpl" />
+    </bean>
+	
 </beans>
