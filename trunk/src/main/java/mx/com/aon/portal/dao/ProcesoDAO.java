@@ -457,8 +457,8 @@ public class ProcesoDAO extends AbstractDAO {
 			super(dataSource, "PKG_CONSULTA.P_EXISTE_DAT_MDOMICIL");
 			
 			declareParameter(new SqlParameter("pv_cdideper_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			
-			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
