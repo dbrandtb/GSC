@@ -23,24 +23,30 @@ Ext.override(Ext.form.TextField,
 var _p21_urlObtenerCoberturas     = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
 var _p21_urlObtenerHijosCobertura = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
 var _p21_urlSubirCenso            = '<s:url namespace="/emision"         action="subirCenso"                    />';
-var _p21_urlCotizar               = '<s:url namespace="/emision"         action="cotizarGrupo"                  />';
+var _p21_urlGenerarTramiteGrupo   = '<s:url namespace="/emision"         action="generarTramiteGrupo"           />';
 var _p21_urlObtenerDetalle        = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
 var _p21_urlComprar               = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
 var _p21_urlVentanaDocumentos     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p21_urlBuscarPersonas        = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
+var _p21_urlVentanaDocumentos     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
 
-var _p21_clasif                   = null;
-var _p21_storeGrupos              = null;
-var _p21_tabGrupos                = null;
-var _p21_tabGruposLineal          = null;
-var _p21_tabGruposModifi          = null;
-var _p21_semaforoPlanChange       = true;
-var _p21_gridTarifas              = null;
-var _p21_selectedCdperpag         = null;
-var _p21_selectedCdplan           = null;
-var _p21_selectedDsplan           = null;
-var _p21_selectedNmsituac         = null;
+var _p21_clasif             = null;
+var _p21_storeGrupos        = null;
+var _p21_tabGrupos          = null;
+var _p21_tabGruposLineal    = null;
+var _p21_tabGruposModifi    = null;
+var _p21_semaforoPlanChange = true;
+var _p21_gridTarifas        = null;
+var _p21_selectedCdperpag   = null;
+var _p21_selectedCdplan     = null;
+var _p21_selectedDsplan     = null;
+var _p21_selectedNmsituac   = null;
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+debug('_p21_smap1:',_p21_smap1);
+
+var _p21_hayTramite=!Ext.isEmpty(_p21_smap1.ntramite);
+debug('_p21_hayTramite:',_p21_hayTramite,'dummy');
 
 var _p21_fieldsGrupo =
 [
@@ -48,7 +54,6 @@ var _p21_fieldsGrupo =
     ,'nombre'
     ,'cdplan'
     ,'ptsumaaseg'
-    ,'cdperpag'
     ,'emerextr'
     ,'deducible'
 ];
@@ -59,9 +64,6 @@ debug('_p21_editorPlan:',_p21_editorPlan);
 
 var _p21_editorSumaAseg = <s:property value="imap.editorSumaAsegColumn" />.editor;
 debug('_p21_editorSumaAseg:',_p21_editorSumaAseg);
-
-var _p21_editorCdperpag = <s:property value="imap.editorCdperpagColumn" />.editor;
-debug('_p21_editorCdperpag:',_p21_editorCdperpag);
 
 var _p21_editorEmerextr = <s:property value="imap.editorEmerextrColumn" />.editor;
 debug('_p21_editorEmerextr:',_p21_editorEmerextr);
@@ -98,6 +100,13 @@ Ext.onReady(function()
             ,{name:'IMPORTE',type:'float'}
             ,'GRUPO'
         ]
+    });
+    
+    Ext.define('RFCPersona',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"
+        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT']
     });
     ////// modelos //////
     
@@ -179,16 +188,6 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    header     : 'Forma de pago'
-                    ,dataIndex : 'cdperpag'
-                    ,width     : 100
-                    ,editor    : _p21_editorCdperpag
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'cdperpag');
-                    }
-                }
-                ,{
                     xtype  : 'actioncolumn'
                     ,width : 30
                     ,items :
@@ -261,16 +260,6 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    header     : 'Forma de pago'
-                    ,dataIndex : 'cdperpag'
-                    ,width     : 100
-                    ,editor    : _p21_editorCdperpag
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'cdperpag');
-                    }
-                }
-                ,{
                     xtype  : 'actioncolumn'
                     ,width : 50
                     ,items :
@@ -322,9 +311,14 @@ Ext.onReady(function()
                         ,items :
                         [
                             {
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
-                                ,items : [ <s:property value="imap.itemsContratante" /> ]
+                                xtype   : 'fieldset'
+                                ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
+                                ,layout :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                                ,items  : [ <s:property value="imap.itemsContratante" /> ]
                             }
                             ,{
                                 xtype  : 'fieldset'
@@ -335,6 +329,11 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DE LA P&Oacute;LIZA</span>'
                                 ,defaults : { style : 'margin:5px;' }
+                                ,layout   :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
                                 ,items    :
                                 [
                                     Ext.create('Ext.form.field.Number',
@@ -383,9 +382,14 @@ Ext.onReady(function()
                                 ]
                             }
                             ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">DATOS DEL AGENTE</span>'
-                                ,items : [ <s:property value="imap.itemsAgente" /> ]
+                                xtype   : 'fieldset'
+                                ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL AGENTE</span>'
+                                ,items  : [ <s:property value="imap.itemsAgente" /> ]
+                                ,layout :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
                             }                        
                             ,{
                                 xtype     : 'fieldset'
@@ -450,13 +454,12 @@ Ext.onReady(function()
                         ,buttons     :
                         [
                             {
-                                text     : 'Cotizar'
-                                ,itemId  : '_p21_botonCotizar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-                                ,handler : _p21_cotizarClic
+                                text     : 'Generar tr&aacute;mite'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                ,handler : _p21_generarTramiteClic
                             }
                             ,{
-                                text     : 'Nueva'
+                                text     : 'Limpiar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,handler : _p21_cotizarNueva
                             }
@@ -467,6 +470,10 @@ Ext.onReady(function()
         ]
     });
     ////// contenido //////
+    
+    ////// loaders //////
+    _p21_fieldRfc().addListener('blur',_p21_rfcBlur);
+    ////// loaders //////
 });
 
 ////// funciones //////
@@ -577,8 +584,7 @@ function _p21_renombrarGrupos(sinBorrarPestañas)
     {
         _p21_quitarTabsDetalleGrupo();
     }
-    var letras=['A','B','C','D','E','F','G','H','I','J','K','L',
-    'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    var letras=['1','2','3','4','5','6','7','8','9','91','92','93','94','95','96','97','98','99'];
     var i=0;
     _p21_storeGrupos.each(function(record)
     {
@@ -978,9 +984,9 @@ function _p21_query(regex)
     return Ext.ComponentQuery.query(regex);
 }
 
-function _p21_cotizarClic()
+function _p21_generarTramiteClic()
 {
-    debug('>_p21_cotizarClic');
+    debug('>_p21_generarTramiteClic');
     var valido = true;
     
     if(valido)
@@ -1083,7 +1089,7 @@ function _p21_cotizarClic()
                 }
                 Ext.Ajax.request(
                 {
-                    url       : _p21_urlCotizar
+                    url       : _p21_urlGenerarTramiteGrupo
                     ,timeout  : 180000
                     ,jsonData :
                     {
@@ -1098,7 +1104,39 @@ function _p21_cotizarClic()
                         if(json.exito)
                         {
                             _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                            _p21_fieldNtramite().setValue(json.smap1.ntramite);
+                            _p21_tabpanel().setDisabled(true);
                             
+                            mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                            {
+                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                {
+                                    width        : 600
+                                    ,height      : 400
+                                    ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                    ,closable    : false
+                                    ,modal       : true
+                                    ,loadingMask : true
+                                    ,loader      :
+                                    {
+                                        url       : _p21_urlVentanaDocumentos
+                                        ,scripts  : true
+                                        ,autoLoad : true
+                                        ,params   :
+                                        {
+                                            'smap1.cdunieco'  : json.smap1.cdunieco
+                                            ,'smap1.cdramo'   : json.smap1.cdramo
+                                            ,'smap1.estado'   : 'W'
+                                            ,'smap1.nmpoliza' : '0'
+                                            ,'smap1.nmsuplem' : '0'
+                                            ,'smap1.ntramite' : json.smap1.ntramite
+                                            ,'smap1.tipomov'  : '0'
+                                        }
+                                    }
+                                }).show());
+                            });
+                            
+                            /*
                             _p21_tabConcepto().down('[xtype=form]').setDisabled(true);
                         
                             Ext.define('_p21_modeloTarifa',
@@ -1161,7 +1199,7 @@ function _p21_cotizarClic()
                             });
                             
                             _p21_tabConcepto().add(_p21_gridTarifas);
-                            setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);
+                            setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);*/
                         }
                         else
                         {
@@ -1183,7 +1221,7 @@ function _p21_cotizarClic()
         });
     }
     
-    debug('<_p21_cotizarClic');
+    debug('<_p21_generarTramiteClic');
 }
 
 function _p21_fieldNtramite()
@@ -1515,6 +1553,150 @@ function _p21_comprarClic()
         }
     });
     debug('<_p21_comprarClic');
+}
+
+function _p21_fieldRfc()
+{
+    return Ext.ComponentQuery.query('[name=cdrfc]')[0];
+}
+
+function _p21_fieldByName(name)
+{
+    debug('_p21_fieldByName:',name);
+    return Ext.ComponentQuery.query('[name='+name+']')[0];
+}
+
+function _p21_rfcBlur(field)
+{
+    debug('>_p21_rfcBlur:',field);
+    var value=field.getValue();
+    debug('value:',value);
+    
+    var valido = true;
+    if(valido)
+    {
+        valido = value&&value.length>8&&value.length<14;
+    }
+    
+    if(valido)
+    {
+        _p21_tabpanel().setLoading(true);
+        Ext.Ajax.request
+        ({
+            url     : _p21_urlBuscarPersonas
+            ,params :
+            {
+                'map1.pv_rfc_i'       : value
+                ,'map1.cdtipsit'      : _p21_smap1.cdtipsit
+                ,'map1.pv_cdunieco_i' : _p21_smap1.cdunieco
+                ,'map1.pv_cdramo_i'   : _p21_smap1.cdramo
+                ,'map1.pv_estado_i'   : 'W'
+                ,'map1.pv_nmpoliza_i' : _p21_fieldNmpoliza().getValue()
+                ,'map1.esContratante' : 'S'
+            }
+            ,success:function(response)
+            {
+                _p21_tabpanel().setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('json response:',json);
+                if(json&&json.slist1&&json.slist1.length>0)
+                {
+                    Ext.create('Ext.window.Window',
+                    {
+                        width        : 600
+                        ,height      : 400
+                        ,modal       : true
+                        ,autoScroll  : true
+                        ,title       : 'Coincidencias'
+                        ,items       : Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model     : 'RFCPersona'
+                                ,autoLoad : true
+                                ,proxy :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                    ,data   : json['slist1']
+                                }
+                            })
+                            ,columns :
+                            [
+                                {
+                                    xtype         : 'actioncolumn'
+                                    ,menuDisabled : true
+                                    ,width        : 30
+                                    ,items        :
+                                    [
+                                        {
+                                            icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                            ,tooltip : 'Seleccionar usuario'
+                                            ,handler : function(grid, rowIndex, colIndex)
+                                            {
+                                                var record = grid.getStore().getAt(rowIndex);
+                                                debug('record:',record);
+                                                _p21_fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
+                                                _p21_fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
+                                                _p21_fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
+                                                _p21_fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+                                                _p21_fieldByName('cdedo')    .setValue(record.get('CDEDO'));
+                                                _p21_fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+                                                _p21_fieldByName('cdmunici') .heredar(true);
+                                                _p21_fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
+                                                _p21_fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
+                                                _p21_fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+                                                /*debug('cliente obtenido de WS? ', json.clienteWS);
+                                                gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+                                                if(json.clienteWS)
+                                                {
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+                                                }
+                                                else
+                                                {
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                }
+                                                */
+                                                grid.up().up().destroy();
+                                            }
+                                        }
+                                    ]
+                                }
+                                ,{
+                                    header     : 'RFC'
+                                    ,dataIndex : 'RFCCLI'
+                                    ,flex      : 1
+                                }
+                                ,{
+                                    header     : 'Nombre'
+                                    ,dataIndex : 'NOMBRECLI'
+                                    ,flex      : 1
+                                }
+                                ,{
+                                    header     : 'Direcci&oacute;n'
+                                    ,dataIndex : 'DIRECCIONCLI'
+                                    ,flex      : 3
+                                }
+                            ]
+                        })
+                    }).show();
+                }
+                else
+                {
+                    mensajeWarning('No hay coincidencias de RFC');
+                }
+            }
+            ,failure:function()
+            {
+                _p21_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p21_rfcBlur');
 }
 ////// funciones //////
 </script>
