@@ -636,12 +636,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
 
-    public WrapperResultados existeDomicilioContratante(String cdideper){
+    public WrapperResultados existeDomicilioContratante(String cdideper, String cdperson){
     	log.debug("buscando datos Domicilio para cdideper: " + cdideper);
     	WrapperResultados res = null;
     	try{
     		HashMap<String, String> parameters =  new HashMap<String, String>();
     		parameters.put("pv_cdideper_i", cdideper);
+    		parameters.put("pv_cdperson_i", cdperson);
     		res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_EXISTE_DOMICILIO);
     		
     		log.debug("REsultados de Buscar Domicilio: " + res.getItemMap());

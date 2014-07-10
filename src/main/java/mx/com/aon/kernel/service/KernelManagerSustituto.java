@@ -277,7 +277,7 @@ public interface KernelManagerSustituto {
      * @param cdideper
      * @return
      */
-    public WrapperResultados existeDomicilioContratante(String cdideper);
+    public WrapperResultados existeDomicilioContratante(String cdideper, String cdperson);
     
     public boolean actualizaCdIdeper(Map<String,String> params);
     
