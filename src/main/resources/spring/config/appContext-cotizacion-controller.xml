@@ -21,14 +21,15 @@
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">
-        <property name="catalogosManager"        ref="catalogosManagerImpl"/>
-        <property name="consultasManager"        ref="consultasManagerImpl"/>
-        <property name="kernelManager"           ref="kernelManagerSustituto"/>
-        <property name="pantallasManager"        ref="pantallasManagerImpl"/>
-        <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
-        <property name="nadaService"             ref="nadaServiceImpl"/>
-        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"     />
-        <property name="tipoCambioService"         ref="tipoCambioServiceImpl"     />
+        <property name="catalogosManager"        ref="catalogosManagerImpl"        />
+        <property name="consultasManager"        ref="consultasManagerImpl"        />
+        <property name="kernelManager"           ref="kernelManagerSustituto"      />
+        <property name="pantallasManager"        ref="pantallasManagerImpl"        />
+        <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
+        <property name="nadaService"             ref="nadaServiceImpl"             />
+        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"         />
+        <property name="tipoCambioService"       ref="tipoCambioServiceImpl"       />
+        <property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
     </bean>
     
     <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
