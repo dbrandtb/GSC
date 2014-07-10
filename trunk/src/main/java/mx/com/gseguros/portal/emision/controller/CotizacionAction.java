@@ -18,13 +18,16 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -71,6 +74,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private String                           censoFileName;
 	private String                           censoContentType;
 	private List<Map<String,Object>>         olist1;
+	private CotizacionManager                cotizacionManager;
 	
 	/////////////////////////////////
 	////// cotizacion dinamica //////
@@ -1797,13 +1801,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(columnaEditorSumaAseg, true, false, false, true, true, false);
 				imap.put("editorSumaAsegColumn",gc.getColumns());
 				
-				List<ComponenteVO>columnaEditorCdperpag=pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"COTIZACION_GRUPO", "EDITOR_CDPERPAG", null);
-				gc.generaComponentes(columnaEditorCdperpag, true, false, false, true, true, false);
-				imap.put("editorCdperpagColumn",gc.getColumns());
-				
 				List<ComponenteVO>columnaEditorEmerextr=pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, null,
@@ -1963,10 +1960,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
 		
-		session.put(timestamp+"_censo"            , censo);
-		session.put(timestamp+"_censoFileName"    , censoFileName);
-		session.put(timestamp+"_censoContentType" , censoContentType);
-		
 		logger.info(""
 				+ "\n###### subirCenso ######"
 				+ "\n########################"
@@ -1974,12 +1967,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String cotizarGrupo()
+	public String generarTramiteGrupo()
 	{
 		this.session=ActionContext.getContext().getSession();
 		logger.info(""
-				+ "\n##########################"
-				+ "\n###### cotizarGrupo ######"
+				+ "\n#################################"
+				+ "\n###### generarTramiteGrupo ######"
 				+ "\nsmap1 "+smap1
 				+ "\nolist1 "+olist1
 				);
@@ -2009,8 +2002,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			logger.info("clasif "   +clasif);
 			
 			logger.info("censo "           +censo);
-			logger.info("censoFileName "   +censoFileName);
-			logger.info("censoContentType "+censoContentType);
 			
 			//nmpoliza
 			if(exito && StringUtils.isBlank(nmpoliza))
@@ -2083,6 +2074,24 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 			}
 			
+			//tvalopol
+			if(exito)
+			{
+				Map<String,String>params=new HashMap<String,String>();
+				params.put("pv_cdunieco"  , cdunieco);
+				params.put("pv_cdramo"    , cdramo);
+				params.put("pv_estado"    , "W");
+				params.put("pv_nmpoliza"  , nmpoliza);
+				params.put("pv_nmsuplem"  , "0");
+				params.put("pv_status"    , "V");
+				params.put("pv_otvalor01" , smap1.get("cdgiro"));
+				params.put("pv_otvalor02" , smap1.get("cdrelconaseg"));
+				params.put("pv_otvalor03" , smap1.get("cdformaseg"));
+				params.put("pv_otvalor04" , smap1.get("cdagente"));
+				params.put("pv_otvalor05" , smap1.get("dsagente"));
+				kernelManager.pMovTvalopol(params);
+			}
+			
 			//enviar archivo
 			if(exito)
 			{
@@ -2127,47 +2136,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					String cdedo         = smap1.get("cdedo");
 					String cdmunici      = smap1.get("cdmunici");
-					String ptsumaaseg    = (String)olist1.get(0).get("ptsumaaseg");
-					String deducible     = null;
-					String emerextr      = null;
-					
-					if(clasif.equals(LINEA))
-					{
-						deducible=(String)olist1.get(0).get("deducible");
-					}
-					else
-					{
-						List<Map<String,String>>tvalogars=(List<Map<String, String>>) olist1.get(0).get("tvalogars");
-						if(tvalogars!=null)
-						{
-							for(Map<String,String>iTvalogar:tvalogars)
-							{
-								if(iTvalogar.get("cdgarant").equals("4HOS"))
-								{
-									deducible = iTvalogar.get("parametros.pv_otvalor01");
-								}
-							}
-						}
-					}
-					
-					if(clasif.equals(LINEA))
-					{
-						emerextr=(String)olist1.get(0).get("emerextr");
-					}
-					else
-					{
-						List<Map<String,String>>tvalogars=(List<Map<String, String>>) olist1.get(0).get("tvalogars");
-						if(tvalogars!=null)
-						{
-							for(Map<String,String>iTvalogar:tvalogars)
-							{
-								if(iTvalogar.get("cdgarant").equals("4EE"))
-								{
-									emerextr = iTvalogar.get("amparada");
-								}
-							}
-						}
-					}
 					
 					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
 					params.put("param01",nombreCenso);
@@ -2177,11 +2145,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("param05",nmpoliza);
 					params.put("param06",cdedo);
 					params.put("param07",cdmunici);
-					params.put("param08",ptsumaaseg);
-					params.put("param09",deducible);
-					params.put("param10",emerextr);
-					params.put("param11",null);
-					params.put("param12",null);
 					storedProceduresManager.procedureVoidCall(
 							ObjetoBD.CARGAR_CENSO.getNombre(), params, null);
 				}
@@ -2210,7 +2173,197 @@ public class CotizacionAction extends PrincipalCoreAction
 	            kernelManager.coberturas(mapCoberturas);
 			}
 			
+			//tvalogar
 			if(exito)
+			{
+				for(Map<String,Object>iGrupo:olist1)
+				{
+					//SUMA ASEGURADA
+					String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
+					String cdgrupo  = (String)iGrupo.get("letra");
+					cotizacionManager.movimientoMpolisitTvalositGrupo(cdunieco, cdramo, "W", nmpoliza, cdgrupo, ptsumaaseg, null, null, null, null, null, null, (String)iGrupo.get("nombre"));
+				}
+				
+				if(clasif.equals(LINEA))
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						//HOSPITALIZACION
+						String cdgrupo  = (String)iGrupo.get("letra");
+						String cdgarant = "4HOS";
+						String cdatribu = "01";
+						String valor    = (String)iGrupo.get("deducible");
+						cotizacionManager.movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
+						
+						//EMERGENCIA EXTRANJERO
+						String emerextr = (String)iGrupo.get("emerextr");
+						cdgarant = "4EE";
+						if(emerextr.equalsIgnoreCase("S"))
+						{
+							cotizacionManager.movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+						}
+						else
+						{
+							cotizacionManager.movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+						}
+					}
+				}
+				else
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String cdgrupo=(String)iGrupo.get("letra");
+						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
+						for(Map<String,String>iTvalogar:tvalogars)
+						{
+							boolean amparada=StringUtils.isNotBlank(iTvalogar.get("amparada"))&&iTvalogar.get("amparada").equalsIgnoreCase("S");
+							if(amparada)
+							{
+								String cdgarant=iTvalogar.get("cdgarant");
+								cotizacionManager.movimientoMpoligarGrupo(
+										cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+								//buscar cdatribus
+								boolean hayAtributos=false;
+								Map<String,String>listaCdatribu=new HashMap<String,String>();
+								for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
+								{
+									String key=iAtribTvalogar.getKey();
+									if(key!=null
+											&&key.length()>"parametros.pv_otvalor".length()
+											&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
+									{
+										hayAtributos=true;
+										listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
+									}
+								}
+								if(hayAtributos)
+								{
+									for(Entry<String,String>atributo:listaCdatribu.entrySet())
+									{
+										cotizacionManager.movimientoTvalogarGrupo(
+												cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
+												atributo.getKey(), atributo.getValue());
+									}
+								}
+							}
+							else
+							{
+								String cdgarant=iTvalogar.get("cdgarant");
+								cotizacionManager.movimientoMpoligarGrupo(
+										cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+							}
+						}
+					}
+				}
+			}
+			
+			if(exito)
+			{
+				String cdperson = smap1.get("cdperson");
+				String exiper   = "S";
+				if(StringUtils.isBlank(cdperson))
+				{
+					Map<String,Object>cdpersonMap=storedProceduresManager.procedureParamsCall(
+							ObjetoBD.GENERAR_CDPERSON.getNombre(),
+							new LinkedHashMap<String,Object>(),
+							null,
+							new String[]{"pv_cdperson_o"},
+							null);
+					cdperson = (String)cdpersonMap.get("pv_cdperson_o");
+					exiper   = "N";
+				}
+				
+				if(exiper.equals("N"))
+				{
+					LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+					parametros.put("param01_pv_cdperson_i"    , cdperson);
+					parametros.put("param02_pv_cdtipide_i"    , "1");
+					parametros.put("param03_pv_cdideper_i"    , null);
+					parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
+					parametros.put("param05_pv_cdtipper_i"    , "1");
+					parametros.put("param06_pv_otfisjur_i"    , "M");
+					parametros.put("param07_pv_otsexo_i"      , "H");
+					parametros.put("param08_pv_fenacimi_i"    , new Date());
+					parametros.put("param09_pv_cdrfc_i"       , smap1.get("cdrfc"));
+					parametros.put("param10_pv_dsemail_i"     , "");
+					parametros.put("param11_pv_dsnombre1_i"   , null);
+					parametros.put("param12_pv_dsapellido_i"  , null);
+					parametros.put("param13_pv_dsapellido1_i" , null);
+					parametros.put("param14_pv_feingreso_i"   , new Date());
+					parametros.put("param15_pv_cdnacion_i"    , null);
+					parametros.put("param16"                  , null);
+					parametros.put("param17"                  , null);
+					parametros.put("param18"                  , null);
+					parametros.put("param19"                  , null);
+					parametros.put("param20_pv_accion_i"      , "I");
+					String[] tipos=new String[]{
+							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+							"VARCHAR","VARCHAR","VARCHAR","DATE",
+							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+							"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
+							"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
+					};
+					storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
+				}
+				
+				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+				parametros.put("param01_pv_cdunieco_i" , cdunieco);
+				parametros.put("param02_pv_cdramo_i"   , cdramo);
+				parametros.put("param03_pv_estado_i"   , "W");
+				parametros.put("param04_pv_nmpoliza_i" , nmpoliza);
+				parametros.put("param05_pv_nmsituac_i" , "0");
+				parametros.put("param06_pv_cdrol_i"    , "1");
+				parametros.put("param07_pv_cdperson_i" , cdperson);
+				parametros.put("param08_pv_nmsuplem_i" , "0");
+				parametros.put("param09_pv_status_i"   , "V");
+				parametros.put("param10_pv_nmorddom_i" , "1");
+				parametros.put("param11_pv_swreclam_i" , null);
+				parametros.put("param12_pv_accion_i"   , "I");
+				parametros.put("param13_pv_swexiper_i" , exiper);
+				storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPOLIPER.getNombre(), parametros, null);
+				
+				Map<String,String> paramDomicil = new HashMap<String, String>();
+    			paramDomicil.put("pv_cdperson_i" , cdperson);
+    			paramDomicil.put("pv_nmorddom_i" , "1");
+    			paramDomicil.put("pv_msdomici_i" , smap1.get("dsdomici"));
+    			paramDomicil.put("pv_nmtelefo_i" , null);
+    			paramDomicil.put("pv_cdpostal_i" , smap1.get("codpostal"));
+    			paramDomicil.put("pv_cdedo_i"    , smap1.get("cdedo"));
+    			paramDomicil.put("pv_cdmunici_i" , smap1.get("cdmunici"));
+    			paramDomicil.put("pv_cdcoloni_i" , null);
+    			paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
+    			paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
+    			paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
+    			kernelManager.pMovMdomicil(paramDomicil);
+			}
+			
+			if(exito)
+			{
+				Map<String,Object>params=new HashMap<String,Object>();
+				params.put("pv_cdunieco_i"   , cdunieco);
+				params.put("pv_cdramo_i"     , cdramo);
+				params.put("pv_estado_i"     , "W");
+				params.put("pv_nmpoliza_i"   , nmpoliza);
+				params.put("pv_nmsuplem_i"   , "0");
+				params.put("pv_cdsucadm_i"   , cdunieco);
+				params.put("pv_cdsucdoc_i"   , cdunieco);
+				params.put("pv_cdtiptra_i"   , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+				params.put("pv_ferecepc_i"   , new Date());
+				params.put("pv_cdagente_i"   , null);
+				params.put("pv_referencia_i" , null);
+				params.put("pv_nombre_i"     , null);
+				params.put("pv_festatus_i"   , new Date());
+				params.put("pv_status_i"     , EstatusTramite.PENDIENTE.getCodigo());
+				params.put("pv_comments_i"   , null);
+				params.put("pv_nmsolici_i"   , nmpoliza);
+				params.put("pv_cdtipsit_i"   , cdtipsit);
+				WrapperResultados wr=kernelManager.PMovMesacontrol(params);
+				smap1.put("ntramite",(String)wr.getItemMap().get("ntramite"));
+			}
+			
+			if(false&&exito)
 			{
 				try
 				{
@@ -2236,7 +2389,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 			}
 		            
-			if(exito)
+			if(false&&exito)
 			{
 				try
 				{
@@ -2482,7 +2635,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			if(exito)
 			{
-				respuesta       = "Todo OK";
+				respuesta       = "Se gener&oacute; el tr&aacute;mite "+smap1.get("ntramite");
 				respuestaOculta = "Todo OK";
 			}
 			
@@ -2496,8 +2649,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			exito           = false;
 		}
 		logger.info(""
-				+ "\n###### cotizarGrupo ######"
-				+ "\n##########################"
+				+ "\n###### generarTramiteGrupo ######"
+				+ "\n#################################"
 				);
 		return SUCCESS;
 	}
@@ -2700,6 +2853,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setOlist1(List<Map<String, Object>> olist1) {
 		this.olist1 = olist1;
+	}
+
+	public void setCotizacionManager(CotizacionManager cotizacionManager) {
+		this.cotizacionManager = cotizacionManager;
 	}
 
 }
