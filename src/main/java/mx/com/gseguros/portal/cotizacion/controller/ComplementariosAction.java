@@ -1298,26 +1298,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				);
 		try
 		{
-			
-			try
-			{
-				LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
-				paramsValues.put("param1", cdunieco);
-				paramsValues.put("param2", cdramo);
-				paramsValues.put("param3", "W");
-				paramsValues.put("param4", panel1.get("nmpoliza"));
-				storedProceduresManager.procedureVoidCall(
-						ObjetoBD.VALIDA_DATOS_EMISION_PREVEX.getNombre(),
-						paramsValues,
-						null);
-			}
-			catch(Exception ex)
-			{
-				log.error("error al validar datos obligatorios de prevex",ex);
-				mensajeRespuesta=ex.getMessage();
-				return SUCCESS;
-			}
-			
 			try
 			{
 				HashMap<String, Object> paramsValida = new HashMap<String, Object>();
