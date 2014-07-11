@@ -1379,5 +1379,17 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	public void actualizaPolizaExterna(Map<String,String> params)throws Exception{
 		this.returnBackBoneInvoke(params,ProcesoDAO.ACTUALIZA_POLALT);
 	}
+
+	public void cargaCobranzaMasiva(Map<String,String> params)throws Exception{
+		this.returnBackBoneInvoke(params,ProcesoDAO.CARGA_COBRANZA_MASIVA);
+	}
+	
+	public List<Map<String, String>> obtieneCobranzaAplicada(Map<String,String> params)throws Exception{
+		return this.getAllBackBoneInvoke(params, ProcesoDAO.OBTIENE_COBRANZA_APLICADA);
+	}
+	
+	public List<Map<String, String>> obtieneRemesaAplicada(Map<String,String> params)throws Exception{
+		return this.getAllBackBoneInvoke(params, ProcesoDAO.OBTIENE_REMESA_APLICADA);
+	}
 	
 }
