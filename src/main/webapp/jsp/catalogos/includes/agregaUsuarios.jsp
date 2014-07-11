@@ -27,6 +27,6 @@
         
     </head>
     <body>
-	    <div id="div_usuarios" style="height:400px;"></div>
+	    <div id="div_usuarios" style="height:600px;"></div>
     </body>
 </html>
