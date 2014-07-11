@@ -22,7 +22,6 @@ var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
-
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
@@ -159,7 +158,7 @@ Ext.onReady(function()
                     ,modal       : true
                     ,buttonAlign : 'center'
                     ,width       : 500
-                    ,height      : 450
+                    ,height      : 650
                     ,autoScroll  : true
                     ,loader      :
                     {
@@ -201,7 +200,7 @@ Ext.onReady(function()
                                 ,modal       : true
                                 ,buttonAlign : 'center'
                                 ,width       : 500
-                                ,height      : 450
+                                ,height      : 650
                                 ,autoScroll  : true
                                 ,loader      :
                                 {
@@ -570,6 +569,6 @@ Ext.onReady(function()
 
 </head>
 <body>
-<div id="mainDiv" style="height:400px;"></div>
+<div id="mainDiv" style="height:600px;"></div>
 </body>
 </html>
