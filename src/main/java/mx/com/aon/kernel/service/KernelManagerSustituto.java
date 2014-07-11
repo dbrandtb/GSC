@@ -284,4 +284,10 @@ public interface KernelManagerSustituto {
     public void validaDatosAutos(Map<String,String> params)throws Exception;
     
     public void actualizaPolizaExterna(Map<String,String> params)throws Exception; 
+
+    public void cargaCobranzaMasiva(Map<String,String> params)throws Exception;
+    
+    public List<Map<String, String>> obtieneCobranzaAplicada(Map<String,String>params) throws Exception;
+ 
+    public List<Map<String, String>> obtieneRemesaAplicada(Map<String,String>params) throws Exception;
 }
