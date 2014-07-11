@@ -21,7 +21,13 @@ var pantallaValositInput                 = [];
     pantallaValositInput['endososimple'] = <s:property value="endosoSimple" />;
     pantallaValositInput['fechainicio']  = pantallaValositInput['endososimple'] ? '<s:property value="mensaje" />' : new Date();
     
-var pantallaValositEsTitular         = false;
+var pantallaValositEsTitular        = false;
+var pantallaValositIndiceParentesco = 'parametros.pv_otvalor16';
+if(pantallaValositInput['cdtipsit']=='MS')
+{
+	pantallaValositIndiceParentesco = 'parametros.pv_otvalor03';
+}
+
 debug('input',pantallaValositInput);
 /*///////////////////*/
 ////// variables //////
@@ -37,11 +43,11 @@ function endvalbasSumit(form,confirmar)
         var titularvalido=true;
         var mensajeTitularValido='';
         debug(form.getValues());
-        if(form.getValues()['parametros.pv_otvalor16'])
+        if(form.getValues()[pantallaValositIndiceParentesco])
         {
             if(pantallaValositEsTitular==true)
             {
-                if(form.getValues()['parametros.pv_otvalor16']!='T')
+                if(form.getValues()[pantallaValositIndiceParentesco]!='T')
                 {
                     titularvalido=false;
                     mensajeTitularValido='No se puede quitar el titular';
@@ -49,7 +55,7 @@ function endvalbasSumit(form,confirmar)
             }
             else
             {
-                if(form.getValues()['parametros.pv_otvalor16']=='T')
+                if(form.getValues()[pantallaValositIndiceParentesco]=='T')
                 {
                     titularvalido=false;
                     mensajeTitularValido='Ya existe un titular';
@@ -301,7 +307,7 @@ Ext.onReady(function()
         success: function(resp) {
             //console.log(resp);
             pantallaValositMainContent.loadRecord(resp);
-            if(resp.get("parametros.pv_otvalor16")=='T')
+            if(resp.get(pantallaValositIndiceParentesco)=='T')
             {
             	debug('sin cambiar titular');
             	pantallaValositEsTitular=true;
