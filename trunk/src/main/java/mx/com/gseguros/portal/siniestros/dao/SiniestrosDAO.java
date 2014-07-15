@@ -380,4 +380,6 @@ public interface SiniestrosDAO {
 	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
 
 	public String requiereAutorizacionServicio(String cobertura,String subcobertura) throws Exception;
+
+	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception;
 }

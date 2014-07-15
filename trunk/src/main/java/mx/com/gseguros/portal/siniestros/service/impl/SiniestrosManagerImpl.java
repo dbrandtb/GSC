@@ -1248,4 +1248,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura, String cdramo) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cobertura_i", cobertura);
+		params.put("pv_ramo_i",   cdramo);
+		log.debug("obtieneFormatoCalculo params: "+params);
+		return siniestrosDAO.obtieneFormatoCalculo(params);
+	}
 }
