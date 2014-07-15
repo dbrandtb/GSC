@@ -17,7 +17,9 @@ var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='f
 var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
 
 var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
+var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='false' />; //Informacion de penalizacion
 
+debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
@@ -199,8 +201,8 @@ Ext.onReady(function()
                 ]
             });
             panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
-            if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
-            {
+            //if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
+            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1"){
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             	var importe   = (_p12_lhosp[indice].PRECIO*1.0);
@@ -228,7 +230,7 @@ Ext.onReady(function()
             		
             		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
             	}else{
-            		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+            		/*_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
                 	_p12_slist2[indice].COPAGO = 0;
                 	
                 	if(
@@ -253,7 +255,8 @@ Ext.onReady(function()
                 	else
                 	{
                 		var copagoaplica = 0.0;
-                	}
+                	}*/
+            		var copagoaplica = 0.0;
             	}
             	
             	var iva       = _p12_lhosp[indice].IVA*1.0;
@@ -332,7 +335,7 @@ Ext.onReady(function()
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
-                            ,fieldLabel : 'Copago' //  PAGO DIRECRO
+                            ,fieldLabel : 'Copago' //  PAGO DIRECTO
                             ,value      : copagoaplica
                             ,valueToRaw : function(value)
                             {
@@ -590,7 +593,7 @@ Ext.onReady(function()
     else
     {
     	//PAGO POR REEMBOLSO
-        debug('REEMBOLSO');
+        debug('PAGO POR REEMBOLSO');
         var indice;
         for(indice = 0;indice<_p12_slist1.length;indice++)
         {
@@ -754,13 +757,17 @@ Ext.onReady(function()
             var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             var _facturaIndividual = _p12_slist1[indice];
             
-            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
-           	{
+            //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
+           	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
             	if(causaSiniestro !="2"){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
             		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
             	}else{
+            		var copagoaplica = 0.0;
+            	}
+           	}else{
+           		if(causaSiniestro !="2"){
             		if(tipcopag=='$'){
                         var copagoaplica = copago;
                     }
@@ -770,15 +777,7 @@ Ext.onReady(function()
                     else{
                         var copagoaplica = 0.0;
                     }
-            	}
            	}else{
-           		if(tipcopag=='$'){
-                    var copagoaplica = copago;
-                }
-                else if(tipcopag=='%'){
-                    var copagoaplica = subttdeduc*(copago/100.0);
-                }
-                else{
                     var copagoaplica = 0.0;
                 }
            	}
@@ -1482,7 +1481,8 @@ function _p12_validaAutorizaciones()
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
 	{
-		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
+		//var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
+		var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
 		{
@@ -1564,7 +1564,7 @@ function _p12_validaAutorizaciones()
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
-            if(false && facturaIte.AUTMEDIC!='S')
+            if(facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
