@@ -43,30 +43,24 @@ public class ProcessResultManagerJdbcTemplate {
 
     	String msgId    = res.getMsgId();
     	String msgTitle = res.getMsgTitle();
-    	String msgText  = "";
+    	
     	logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
     	
     	// Obtenemos el msgText a partir del msgId:
-        if(StringUtils.isNotBlank(res.getMsgText()))
-        {
+    	String msgText  = "";
+        if(StringUtils.isNotBlank(res.getMsgText())) {
         	msgText = res.getMsgText();
-        }
-        else if (StringUtils.isNotBlank(msgId))
-        {
+        } else if (StringUtils.isNotBlank(msgId)) {
         	// Buscamos el msgText en properties, sino lo buscamos en BD:
 	    	ActionSupport actionSupport = new ActionSupport();
-	        if (!actionSupport.getText(msgId).equals(msgId))
-	        {
+	        if (!actionSupport.getText(msgId).equals(msgId)) {
 	        	msgText = actionSupport.getText(msgId);
-	        }
-	        else
-	        {
+	        } else {
 	        	msgText = getResultMessage(msgId);
 	        }
 
-            if (StringUtils.isBlank(msgText))
-            {
-            	String msgException = "No se encontrï¿½ el mensaje de respuesta del servicio de datos, verifique los parï¿½metros de salida";
+            if (StringUtils.isBlank(msgText)) {
+            	String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
                 logger.error(msgException);
                 throw new ApplicationException(msgException);
             }
@@ -74,7 +68,7 @@ public class ProcessResultManagerJdbcTemplate {
             logger.info(new StringBuilder("MsgText=").append(msgText));
         }
         
-        // Si msgTitle es de tipo ERROR, lanzamos la excepciï¿½n con el msgText obtenido:
+        // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
         if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
 			logger.error(new StringBuilder("Error de SP: ").append(msgText));
 			throw new ApplicationException(msgText);
