@@ -45,6 +45,11 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	}
 
 	@Override
+	public void cambiaEstatusUsuario(Map<String, String> params) throws Exception {
+		usuarioDAO.cambiaEstatusUsuario(params);
+	}
+
+	@Override
 	public List<UsuarioVO> obtieneUsuarios(Map<String, String> params) throws Exception {
 		return usuarioDAO.obtieneUsuarios(params);
 	}

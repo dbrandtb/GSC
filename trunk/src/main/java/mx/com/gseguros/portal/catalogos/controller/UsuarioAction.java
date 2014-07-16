@@ -6,12 +6,14 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.service.LoginManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -29,6 +31,7 @@ public class UsuarioAction extends PrincipalCoreAction{
 	
 	private UsuarioManager usuarioManager;
 	private PantallasManager pantallasManager;
+	private LoginManager loginManager;
 	
 	private Map<String,String> params;
 	
@@ -40,6 +43,10 @@ public class UsuarioAction extends PrincipalCoreAction{
 	
 	private List<Map<String, String>> loadList;
     private List<Map<String, String>> saveList;
+    
+    private String user;
+    private String password;
+    private String newpassword;
 
 	public String cargaPantallaUsuarios() throws Exception{
 		try
@@ -93,13 +100,64 @@ public class UsuarioAction extends PrincipalCoreAction{
 	public String guardaUsuario() throws Exception {
     	try{
         	usuarioManager.guardaUsuario(params);
+        	
+        	if(Constantes.INSERT_MODE.equalsIgnoreCase(params.get("accion"))){
+        		boolean existsUser = loginManager.validaUsuarioLDAP(true, params.get("cdusuari"), params.get("password"));
+            	
+        		if(!existsUser){
+        			logger.info("No existe usuario, Insertando usuario "+params.get("cdusuari")+"/"+params.get("password")+" en LDAP");
+        			loginManager.insertaUsuarioLDAP(params.get("cdusuari"), params.get("password"));
+        			logger.info("Usuario Creado en LDAP, redireccionando a menu de Roles...");
+        		}else { 
+        			logger.info("Usuario Ya existia en LDAP, Consulte a soporte para modificar Password si es necesario.");
+        		}
+        	}
+    		
         	success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar el usuario. Intente m&aacute;s tarde";
+    		errorMessage = "Error al guardar el usuario." + e.getMessage();
     	}
+		
     	return SUCCESS;
     }
+	
+	public String cambiarPasswordUsuarioLDAP() throws Exception {
+		try {
+			logger.info("... Cambiando Password de Usuario: " + user);
+			
+			boolean existeUsuario = loginManager.validaUsuarioLDAP(true, user, "dummy");
+			if (existeUsuario) {
+				//Cambio de Password
+				success = loginManager.cambiarPasswordUsuarioLDAP(user,newpassword);
+				if (!success) {
+					errorMessage = "No se pudo realizar el cambio de contrase&ntilde;a, intente nuevamente";
+				}
+			} else {
+				logger.info("El usuario "+user+" no existe.");
+				errorMessage = "El usuario no existe.";
+			}
+			return SUCCESS;
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			errorMessage = "Error en el proceso de cambio de Password. Consulte a Soporte T&eacute;cnico.";
+			return SUCCESS;
+		}
+	}
+	
+	public String activaDesactivaUsuario() throws Exception {
+    	try{
+        	usuarioManager.cambiaEstatusUsuario(params);
+    	} catch(Exception e) {
+    		logger.error(e.getMessage(), e);
+    		errorMessage = "Error al cambiar el estatus del usuario." + e.getMessage();
+    	}
+		
+    	success=true;
+    	return SUCCESS;
+    }
+	
     public String obtieneUsuarios() throws Exception {
     	
     	try{
@@ -228,5 +286,33 @@ public class UsuarioAction extends PrincipalCoreAction{
 
 	public void setSaveList(List<Map<String, String>> saveList) {
 		this.saveList = saveList;
+	}
+
+	public void setLoginManager(LoginManager loginManager) {
+		this.loginManager = loginManager;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getNewpassword() {
+		return newpassword;
+	}
+
+	public void setNewpassword(String newpassword) {
+		this.newpassword = newpassword;
 	}
 }

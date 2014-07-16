@@ -17,6 +17,8 @@ public interface UsuarioManager {
 	
 	public GenericVO guardaUsuario(Map<String, String> params) throws Exception;
 
+	public void cambiaEstatusUsuario(Map<String, String> params) throws Exception;
+
 	public List<UsuarioVO> obtieneUsuarios(Map<String, String> params) throws Exception;
 	
 	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws ApplicationException;

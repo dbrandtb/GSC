@@ -57,9 +57,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	public GenericVO guardaUsuario(Map params) throws DaoException {
 		try {
 			HashMap<String, Object> parametros = new HashMap<String, Object>();
-			parametros.put("PV_TIPO_I", Integer.parseInt(params.get("esAgente").toString()));
 			parametros.put("PV_CDUSUARI_I", params.get("cdusuari"));
-			parametros.put("PV_CDAGENTE_I", params.get("cdagente"));
 			parametros.put("PV_DSNOMBRE_I", params.get("dsnombre"));
 			parametros.put("PV_DSNOMBRE1_I", params.get("dsnombre1"));
 			parametros.put("PV_DSAPELLIDO_I", params.get("dsapellido"));
@@ -70,7 +68,12 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_CDRFC_I", params.get("cdrfc"));
 			parametros.put("PV_DSEMAIL_I", params.get("dsemail"));
 			parametros.put("PV_CURP_I", params.get("curp"));
-			parametros.put("pv_cdaccion_i", params.get("accion"));
+			parametros.put("PV_CDMODGRA_I", params.get("cdmodgra"));
+			parametros.put("PV_CDUNIECO_I", params.get("cdunieco"));
+			parametros.put("PV_CDRAMO_I", params.get("cdramo"));
+			parametros.put("PV_FEDESDE_I", params.get("feini"));
+			parametros.put("PV_FEVENLICV_I", params.get("fefin"));
+			parametros.put("PV_ACCION_I", params.get("accion"));
 			
 			Map<String, Object> result = ejecutaSP(new GuardaUsuario(getDataSource()), parametros);
 
@@ -86,10 +89,8 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaUsuario extends StoredProcedure {
 		
 		protected GuardaUsuario(DataSource dataSource){
-			super(dataSource, "PKG_GENERA_USUARIO.MOV_USUARIO");
-			declareParameter(new SqlParameter("PV_TIPO_I", OracleTypes.NUMBER));
+			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_USUARIO");
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSNOMBRE_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSNOMBRE1_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSAPELLIDO_I", OracleTypes.VARCHAR));
@@ -100,7 +101,33 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSEMAIL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CURP_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdaccion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDMODGRA_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_FEDESDE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_FEVENLICV_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public void cambiaEstatusUsuario(Map params) throws DaoException {
+		try {
+			ejecutaSP(new CambiaEstatusUsuario(getDataSource()), params);
+		} catch (Exception e) {
+			throw new DaoException(e.getMessage(), e);
+		}
+	}
+	
+	protected class CambiaEstatusUsuario extends StoredProcedure {
+		
+		protected CambiaEstatusUsuario(DataSource dataSource){
+			super(dataSource, "PKG_GENERA_USUARIO.P_CAMBIA_ESTATUS");
+			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SWACTIVO_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
@@ -206,7 +233,6 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			UsuarioVO usuarioVO = new UsuarioVO();
 			usuarioVO.setCdUsuario(rs.getString("CDUSUARI"));
-			usuarioVO.setDsUsuario(rs.getString("DSUSUARI"));
 			usuarioVO.setDsNombre(rs.getString("DSNOMBRE"));
 			usuarioVO.setDsNombre1(rs.getString("DSNOMBRE1"));
 			usuarioVO.setDsApellido(rs.getString("DSAPELLIDO"));
@@ -216,9 +242,14 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			usuarioVO.setFeNacimi(rs.getString("FENACIMI"));
 			usuarioVO.setCdrfc(rs.getString("CDRFC"));
 			usuarioVO.setDsEmail(rs.getString("DSEMAIL"));
-			//usuarioVO.setCdrol(rs.getString("CDSISROL"));
 			usuarioVO.setCurp(rs.getString("CURP"));
-			usuarioVO.setEsAgente(rs.getString("WSAGENTE"));
+
+			usuarioVO.setCdrol(rs.getString("CDSISROL"));
+			usuarioVO.setEsAdmin(rs.getString("CDMODGRA"));
+			usuarioVO.setCdunieco(rs.getString("CDUNIECO"));
+			usuarioVO.setFeini(rs.getString("FEDESDE"));
+			usuarioVO.setFefinlic(rs.getString("FEVENLICV"));
+			usuarioVO.setSwActivo(rs.getString("SWACTIVO"));
 			
 			return usuarioVO;
         }
