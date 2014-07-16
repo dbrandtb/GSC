@@ -17,10 +17,12 @@ import java.util.Map;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
@@ -215,6 +217,22 @@ public class LoginManagerImpl implements LoginManager {
 		iniDirContext.bind(name, ctx, matchAttrs);
 		return true;
 	}
+	
+	// método para cambiar Password en ldap
+		public boolean cambiarPasswordUsuarioLDAP(String user, String passwordNuevo)
+				throws Exception {
+			DirContext ctx;
+			Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
+					Ldap_security_credentials);
+			logger.debug(env);
+			ctx = new InitialLdapContext(env, null);
+			
+			ModificationItem[] mods = new ModificationItem[1];
+			Attribute mod1 = new BasicAttribute("userpassword", passwordNuevo.getBytes("UTF8"));
+			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
+            ctx.modifyAttributes("cn=" + user +","+ Ldap_base_search, mods);
+	        return true;
+		}
 
 	// Getters and Setters
 

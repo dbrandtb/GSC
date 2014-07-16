@@ -80,4 +80,6 @@ public interface LoginManager {
 	 */
     UserVO obtenerDatosUsuario(String user) throws Exception;
 
+	public boolean cambiarPasswordUsuarioLDAP(String user, String passwordNuevo) throws Exception;
+
 }
