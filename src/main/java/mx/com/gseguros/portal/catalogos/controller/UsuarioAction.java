@@ -134,8 +134,8 @@ public class UsuarioAction extends PrincipalCoreAction{
 					errorMessage = "No se pudo realizar el cambio de contrase&ntilde;a, intente nuevamente";
 				}
 			} else {
-				logger.info("El usuario "+user+" no existe.");
-				errorMessage = "El usuario no existe.";
+				logger.info("El usuario "+user+" no existe en LDAP.");
+				errorMessage = "El usuario no existe en LDAP.";
 			}
 			return SUCCESS;
 

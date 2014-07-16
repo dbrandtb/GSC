@@ -49,7 +49,7 @@ Ext.onReady(function() {
 		style: 'margin:0px',
 		height: 300,
 		columns       :[ { dataIndex  : 'CDSISROL', hidden: true},
-		                 { dataIndex  : 'EXISTE_ROL', xtype: 'checkcolumn', menuDisabled : true },
+		                 { header     : 'Seleccione' ,dataIndex  : 'EXISTE_ROL', xtype: 'checkcolumn', menuDisabled : true },
 		                 { header     : 'Rol del Sistema' ,dataIndex : 'DSSISROL', flex: 1 }
 		 			   ],
 		buttonAlign: 'center', 
