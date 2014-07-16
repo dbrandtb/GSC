@@ -1,6 +1,52 @@
-Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
 Ext.onReady(function() {
+	
+	Ext.apply(Ext.form.field.VTypes, {
+        
+        password: function(val, field) {
+            if (field.initialPassField) {
+                var pwd = field.up('form').down('#' + field.initialPassField);
+                return (val == pwd.getValue());
+            }
+            return true;
+        },
+
+        passwordText: 'Las contrase&ntilde;as no coinciden.'
+    });
+	
+	var dsPassword = new Ext.form.TextField({
+		id:'password',
+    	fieldLabel: 'Contrase&ntilde;a',
+    	inputType: 'password',
+    	name: 'params.password',
+    	allowBlank  : editMode,
+    	hidden      : editMode,
+        blankText:'La contrase&ntilde;a es un dato requerido',
+        minLength: 5,
+		minLengthText: 'La contrase&ntilde;a debe tener almenos 5 caracteres.',
+        listeners:{
+            scope:this,
+            change: function(field) {
+                var confirmField = field.up('form').down('[name=passwordConfirm]');
+                confirmField.validate();
+            }
+        }
+	});
+
+	var confirmPassword = new Ext.form.TextField({
+		id:'confirmPassword',
+		fieldLabel: 'Confirme su Contrase&ntilde;a',
+		inputType: 'password',
+		vtype: 'password',
+		name: 'passwordConfirm',
+		allowBlank  : editMode,
+    	hidden      : editMode,
+		blankText:'La confirmaci&oacute;n de la contrase&ntilde;a es un dato requerido',
+		initialPassField: 'password', // id del campo password inicial
+		listeners:{
+			scope:this
+		}
+	});
 	
     var panelPersona = Ext.create('Ext.form.Panel', {
     	url: _URL_INSERTA_PERSONA,
@@ -10,37 +56,15 @@ Ext.onReady(function() {
 	    items    : [
 					{
 						xtype      : 'hidden',
-						//id       : 'params.accion',
 						name       : 'params.accion',
 						value      : editMode? 'U' : 'I'
-					},{
-						xtype      : 'hidden',
-						//id       : 'params.esAgente',
-						name       : 'params.esAgente'
-					},{
-			        	xtype      : 'hidden',
-			    		//id       : 'params.cdusuari',
-			    		name       : 'params.cdusuari'
-			        },{
-			        	xtype      : 'hidden',
-			    		//id       : 'params.cdagente',
-			    		name       : 'params.cdagente',
-			    		fieldLabel : 'Agente'
-			        },{
-						xtype      : 'textfield',
-						//id       : 'params.usuario',
-						name       : 'params.usuario',
-						fieldLabel : 'Usuario/Agente',
-						allowBlank : false,
-						value      : _parametros.cdusuario,
-						readOnly   : editMode
 					},{
                         xtype         : 'combo',
                         labelWidth    : 100,
                         width         : 400,
                         name          : 'params.cdsisrol',
                         fieldLabel    : 'Rol',
-                        hidden        : editMode,
+                        readOnly      : editMode,
 			    		allowBlank    : editMode,
                         valueField    : 'key',
                         displayField  : 'value',
@@ -58,6 +82,34 @@ Ext.onReady(function() {
 	                                type  : 'json'
 	                                ,root : 'lista'
 	                            }
+	                        },
+	                        listeners: {
+	                        	load: function (){
+	                        		if(editMode){
+	                        			panelPersona.getForm().findField('params.cdsisrol').setValue(_parametros.cdsisrol);
+	                        			
+	                        		   var fieldPer = panelPersona.down('#fieldAgente');
+	                         		   if(ROL_AGENTE != _parametros.cdsisrol){
+	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Usuario');
+	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
+	                         			   panelPersona.getForm().findField('params.cdusuari').regex = /^[a-zA-Z0-9]+$/;
+	                         			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Usuario solo puede contener letras y n&uacute;meros';
+	                         			   
+	                         			   fieldPer.hide();
+	                         			   panelPersona.getForm().findField('params.feini').allowBlank = true;
+	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
+	                         		   }else {
+	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
+	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
+	                         			   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
+	                         			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
+	                         			   
+	                         			   fieldPer.show();
+	                         			   panelPersona.getForm().findField('params.feini').allowBlank = false;
+	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
+	                         		   }
+	                        		}
+	                        	}
 	                        }
                         }),
                        listeners: {
@@ -65,25 +117,191 @@ Ext.onReady(function() {
                     		   var cdrol = records[0].get('key');
                     		   var fieldPer = panelPersona.down('#fieldAgente');
                     		   if(ROL_AGENTE != cdrol){
+                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Usuario');
+                    			   panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
+                    			   panelPersona.getForm().findField('params.cdusuari').regex = /^[a-zA-Z0-9]+$/;
+                    			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Usuario solo puede contener letras y n&uacute;meros';
+                    			   
                     			   fieldPer.hide();
-                    			   panelPersona.getForm().findField('params.otsexo').allowBlank = true;
-                    			   panelPersona.getForm().findField('params.dsapellido').allowBlank = true;
-                    			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.cdramo').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.feini').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
                     		   }else {
+                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
+                    			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
+                    			   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
+                    			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
+                    			   
                     			   fieldPer.show();
-                    			   panelPersona.getForm().findField('params.otsexo').allowBlank = false;
-                    			   panelPersona.getForm().findField('params.dsapellido').allowBlank = false;
-                    			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.cdramo').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.feini').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
                     		   }
                     	   }
                        }
                     },{
+						xtype      : 'textfield',
+						name       : 'params.cdusuari',
+						fieldLabel : 'Usuario',
+						allowBlank : false,
+						//maskRe   : /^[a-zA-Z0-9]+$/,
+						//regex      : /^[a-zA-Z0-9]+$/,
+						//regexText  : 'La clave del Usuario solo puede contener letras y n&uacute;meros',
+						value      : _parametros.cdusuario,
+						readOnly   : editMode
+					},{
+			        	xtype       : 'combo',
+			        	name        : 'params.cdmodgra',
+			        	fieldLabel  : '&iquest;Es Administrador?',
+			        	allowBlank  : false,
+			        	valueField  : 'key',
+						displayField: 'value',
+						forceSelection: true,
+                        queryMode   :'local',
+						store       : Ext.create('Ext.data.Store', {
+							model : 'Generic',
+							autoLoad : true,
+							proxy : {
+								type : 'ajax',
+								url : _URL_CARGA_CATALOGO,
+								extraParams : {
+									catalogo : Cat.Sino
+								},
+								reader : {
+									type : 'json',
+									root : 'lista'
+								}
+							},
+	                        listeners: {
+	                        	load: function (){
+	                        		if(editMode){
+	                        			panelPersona.getForm().findField('params.cdmodgra').setValue(_parametros.cdmodgra);
+	                        		}else {
+	                        			panelPersona.getForm().findField('params.cdmodgra').setValue("N");
+	                        		}
+	                        	}
+	                        }
+						})
+			        },{
+			        	xtype       : 'combo',
+			        	name        : 'params.cdunieco',
+			        	fieldLabel  : 'Sucursal',
+			        	allowBlank  : false,
+			        	valueField  : 'key',
+						displayField: 'value',
+						forceSelection: true,
+                        queryMode   :'local',
+						store       : Ext.create('Ext.data.Store', {
+							model : 'Generic',
+							autoLoad : true,
+							proxy : {
+								type : 'ajax',
+								url : _URL_CARGA_CATALOGO,
+								extraParams : {
+									catalogo : Cat.SucursalesAdminMC
+								},
+								reader : {
+									type : 'json',
+									root : 'lista'
+								}
+							},
+	                        listeners: {
+	                        	load: function (){
+	                        		if(editMode){
+	                        			panelPersona.getForm().findField('params.cdunieco').setValue(_parametros.cdunieco);
+	                        		}
+	                        	}
+	                        }
+						}),
+						listeners : {
+                        	select: function(combo, records){
+                        		panelPersona.down('[name=params.cdramo]').getStore().load({
+        	            			params: {
+        	            				'params.idPadre': records[0].get('key')
+        	            			}
+        	            		});
+        	            	}
+						}
+			        },{
 			        	xtype      : 'textfield',
-			    		//id       : 'params.dsnombre',
 			    		name       : 'params.dsnombre',
 			    		fieldLabel : 'Nombre',
 			    		value      : _parametros.nombre,
 			    		allowBlank : false
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.dsnombre1',
+			    		fieldLabel : 'Segundo Nombre',
+			    		value      : _parametros.snombre
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.dsapellido',
+			    		fieldLabel : 'Apellido paterno',
+			    		allowBlank : false,
+			    		value      : _parametros.appat
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.dsapellido1',
+			    		fieldLabel : 'Apellido materno',
+			    		allowBlank : false,
+			    		value      : _parametros.apmat
+			        },{
+			        	xtype       : 'combo',
+			        	name        : 'params.otsexo',
+			        	fieldLabel  : 'Sexo',
+			        	allowBlank  : false,
+			        	valueField  : 'key',
+						displayField: 'value',
+						forceSelection: true,
+                        queryMode   :'local',
+						store       : Ext.create('Ext.data.Store', {
+							model : 'Generic',
+							autoLoad : true,
+							proxy : {
+								type : 'ajax',
+								url : _URL_CARGA_CATALOGO,
+								extraParams : {
+									catalogo : _SEXO
+								},
+								reader : {
+									type : 'json',
+									root : 'lista'
+								}
+							},
+	                        listeners: {
+	                        	load: function (){
+	                        		if(editMode){
+	                        			panelPersona.getForm().findField('params.otsexo').setValue(_parametros.sexo);
+	                        		}
+	                        	}
+	                        }
+						})
+			        },{
+						xtype      : 'datefield',
+			            name       : 'params.fenacimi',
+			            fieldLabel : 'Fecha de nacimiento',
+			            format     : 'd/m/Y',
+			            //value    : '01/01/1970',
+			            maxValue   :  new Date(),
+			            value      : _parametros.fecnac
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.cdrfc',
+			    		fieldLabel : 'RFC',
+			    		allowBlank : false,
+			    		value      : _parametros.rfc
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.curp',
+			    		fieldLabel : 'CURP',
+			    		value      : _parametros.curp
+			        },{
+			        	xtype      : 'textfield',
+			    		name       : 'params.dsemail',
+			    		allowBlank  : false,
+			    		fieldLabel : 'Email',
+			    		vtype      : 'email',
+			    		value      : _parametros.email
 			        },{
 						xtype      : 'fieldset',
 						itemId     : 'fieldAgente',
@@ -91,86 +309,51 @@ Ext.onReady(function() {
 						border     : false,
 						hidden     : (editMode && _parametros.esAgente == 'N'),
 						items      : [{
-				        	xtype      : 'textfield',
-				    		//id       : 'params.dsnombre1',
-				    		name       : 'params.dsnombre1',
-				    		fieldLabel : 'Segundo Nombre',
-				    		value      : _parametros.snombre
-				        },{
-				        	xtype      : 'textfield',
-				    		//id       : 'params.dsapellido',
-				    		name       : 'params.dsapellido',
-				    		fieldLabel : 'Apellido paterno',
-				    		allowBlank : false,
-				    		value      : _parametros.appat
-				        },{
-				        	xtype      : 'textfield',
-				        	//id       : 'params.dsapellido1',
-				    		name       : 'params.dsapellido1',
-				    		fieldLabel : 'Apellido materno',
-				    		allowBlank : false,
-				    		value      : _parametros.apmat
-				        },{
-				        	xtype       : 'combo',
-				        	//id        : 'params.otsexo',
-				        	name        : 'params.otsexo',
-				        	fieldLabel  : 'Sexo',
-				        	allowBlank  : false,
-				        	valueField  : 'key',
-							displayField: 'value',
-							forceSelection: true,
-	                        queryMode   :'local',
-							store       : Ext.create('Ext.data.Store', {
-								model : 'Generic',
-								autoLoad : true,
-								proxy : {
-									type : 'ajax',
-									url : _URL_CARGA_CATALOGO,
-									extraParams : {
-										catalogo : _SEXO
-									},
-									reader : {
-										type : 'json',
-										root : 'lista'
-									}
-								},
-		                        listeners: {
-		                        	load: function (){
-		                        		if(editMode){
-		                        			panelPersona.getForm().findField('params.otsexo').setValue(_parametros.sexo);
-		                        		}
-		                        	}
-		                        }
-							})
-				        },{
-							xtype      : 'datefield',
-				            //id       : 'params.fenacimi',
-				            name       : 'params.fenacimi',
-				            fieldLabel : 'Fecha de nacimiento',
-				            format     : 'd/m/Y',
-				            //value    : '01/01/1970',
-				            maxValue   :  new Date(),
-				            value      : _parametros.fecnac
-				        },{
-				        	xtype      : 'textfield',
-				        	//id       : 'params.cdrfc',
-				    		name       : 'params.cdrfc',
-				    		fieldLabel : 'RFC',
-				    		value      : _parametros.rfc
-				        },{
-				        	xtype      : 'textfield',
-				    		//id       : 'params.curp',
-				    		name       : 'params.curp',
-				    		fieldLabel : 'CURP',
-				    		value      : _parametros.curp
-				        },{
-				        	xtype      : 'textfield',
-				    		//id       : 'params.dsemail',
-				    		name       : 'params.dsemail',
-				    		fieldLabel : 'Email',
-				    		value      : _parametros.email
-				        }]
-					}
+							        	xtype       : 'combo',
+							        	name        : 'params.cdramo',
+							        	fieldLabel  : 'Producto',
+							        	allowBlank  : editMode,
+							        	hidden      : editMode,
+							        	valueField  : 'key',
+										displayField: 'value',
+										forceSelection: true,
+				                        queryMode   :'local',
+										store       : Ext.create('Ext.data.Store', {
+											model : 'Generic',
+											autoLoad : true,
+											proxy : {
+												type : 'ajax',
+												url : _URL_CARGA_CATALOGO,
+												extraParams : {
+													catalogo : Cat.Ramos
+												},
+												reader : {
+													type : 'json',
+													root : 'lista'
+												}
+											},
+					                        listeners: {
+					                        	load: function (){
+					                        		if(editMode){
+					                        			panelPersona.getForm().findField('params.cdramo').setValue(_parametros.cdramo);
+					                        		}
+					                        	}
+					                        }
+										})
+							        },{
+							        	xtype      : 'datefield',
+							    		name       : 'params.feini',
+							    		fieldLabel : 'Inicio de Vigencia',
+							    		value      : editMode ?  _parametros.feini : new Date()
+							        },{
+							        	xtype      : 'datefield',
+							    		name       : 'params.fefin',
+							    		fieldLabel : 'Fin de Licencia',
+							    		value      : _parametros.fefin
+							        }]
+					},
+					dsPassword,
+					confirmPassword
         ],
         buttonAlign: 'center',
 	    buttons: [{
@@ -189,31 +372,6 @@ Ext.onReady(function() {
      			}
         		
         		if (form.isValid()) {
-        			var usuario = form.findField('params.usuario').getValue();
-        			//Asignamos si es agente o no segun el rol elegido:
-
-        			if(editMode){
-        				if(_parametros.esAgente == 'S'){
-        					
-        					form.findField('params.esAgente').setValue('1');
-                			form.findField('params.cdagente').setValue(usuario);
-        				}else {
-        					form.findField('params.esAgente').setValue('0');
-        				}
-        			}else{
-        				var rol = form.findField('params.cdsisrol').getValue();
-            			switch(rol) {
-                    		case ROL_AGENTE:
-                    			form.findField('params.esAgente').setValue('1');
-                    			form.findField('params.cdagente').setValue(usuario);
-                    			break;
-                    		default:
-                    			form.findField('params.esAgente').setValue('0');
-                    			break;
-                    	}
-        			}
-        			
-        			form.findField('params.cdusuari').setValue(usuario);
         			
         			var msjeConfirmaGuardadoUsuario;
         			if(editMode){
@@ -236,7 +394,7 @@ Ext.onReady(function() {
 			    					success: function(form, action) {
 			    						recargaGridUsuarios();
 			    						windowLoader.close();
-			    						showMessage('\u00C9xito', 'El usuario se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
+			    						mensajeCorrecto('\u00C9xito', 'El usuario se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
 			    						form.reset();
 			    					}
 			    				});

@@ -16,6 +16,8 @@ public interface UsuarioDAO {
 	
 	public GenericVO guardaUsuario(Map params) throws DaoException;
 
+	public void cambiaEstatusUsuario(Map params) throws DaoException;
+
 	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException;
 	
 	public List<Map<String, String>> obtieneRolesUsuario(Map params) throws DaoException;

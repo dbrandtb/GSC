@@ -23,7 +23,7 @@
             debug(_parametros);
             
         </script>
-        <script type="text/javascript" src="${ctx}/js/catalogos/agregaUsuarios.js"></script>
+        <script type="text/javascript" src="${ctx}/js/catalogos/agregaUsuarios.js?${now}"></script>
         
     </head>
     <body>

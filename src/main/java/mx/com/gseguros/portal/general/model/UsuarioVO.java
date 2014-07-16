@@ -34,6 +34,16 @@ public class UsuarioVO implements Serializable {
     private String dsEmail;
     private String cdrol;
     private String esAgente;
+    private String esAdmin;
+    private String cdunieco;
+    
+    /**
+     * Para Agente, inicio vigencia y fin licencia
+     */
+    private String feini;
+    private String fefinlic;
+    
+    private String swActivo;
 
     /**
      * @return the cdUsuario
@@ -164,5 +174,45 @@ public class UsuarioVO implements Serializable {
 
 	public void setEsAgente(String esAgente) {
 		this.esAgente = esAgente;
+	}
+
+	public String getEsAdmin() {
+		return esAdmin;
+	}
+
+	public void setEsAdmin(String esAdmin) {
+		this.esAdmin = esAdmin;
+	}
+
+	public String getCdunieco() {
+		return cdunieco;
+	}
+
+	public void setCdunieco(String cdunieco) {
+		this.cdunieco = cdunieco;
+	}
+
+	public String getFeini() {
+		return feini;
+	}
+
+	public void setFeini(String feini) {
+		this.feini = feini;
+	}
+
+	public String getFefinlic() {
+		return fefinlic;
+	}
+
+	public void setFefinlic(String fefinlic) {
+		this.fefinlic = fefinlic;
+	}
+
+	public String getSwActivo() {
+		return swActivo;
+	}
+
+	public void setSwActivo(String swActivo) {
+		this.swActivo = swActivo;
 	}
 }

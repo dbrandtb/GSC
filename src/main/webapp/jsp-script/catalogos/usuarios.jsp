@@ -12,12 +12,13 @@ var busquedaUsuariosStore;
 var windowLoader;
 var recargaGridUsuarios;
 
-var _UrlBusquedaUsuarios    = '<s:url namespace="/catalogos"    action="busquedaUsuarios" />';
+var _UrlBusquedaUsuarios        = '<s:url namespace="/catalogos"    action="busquedaUsuarios" />';
 var _URL_LOADER_NUEVO_USUARIO   = '<s:url namespace="/catalogos"    action="includes/agregaUsuarios" />';
 var _URL_LOADER_EDITAR_ROLES    = '<s:url namespace="/catalogos"    action="includes/editarRolesUsuario" />';
-var _UrlActualizarUsuario      = '<s:url namespace="/catalogos"    action="guardaUsuario" />';
-var _MSG_SIN_DATOS          = 'No hay datos';
-var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
+var _UrlActivarDesactivarUsuario= '<s:url namespace="/catalogos"    action="activaDesactivaUsuario" />';
+var _UrlCambiaPasswordUsuario   = '<s:url namespace="/catalogos"    action="cambiarPasswordUsuario" />';
+var _MSG_SIN_DATOS              = 'No hay datos';
+var _MSG_BUSQUEDA_SIN_DATOS     = 'No hay datos para la b\u00FAsqueda actual.';
 
 /*///////////////////*/
 ////// variables //////
@@ -35,7 +36,20 @@ Ext.onReady(function()
         mode: 'SINGLE',
         allowDeselect: true
     });
+	
+Ext.apply(Ext.form.field.VTypes, {
+        
+        password: function(val, field) {
+            if (field.initialPassField) {
+                var pwd = field.up('form').down('#' + field.initialPassField);
+                return (val == pwd.getValue());
+            }
+            return true;
+        },
 
+        passwordText: 'Las contrase&ntilde;as no coinciden.'
+    });
+	
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
@@ -131,7 +145,7 @@ Ext.onReady(function()
 	
 	var gridUsuarios = Ext.create('Ext.grid.Panel',
 	    {
-    	title : 'Grid Usuarios'
+    	title : 'Usuarios'
     	,height : 350
     	,selType: 'checkboxmodel'
     	,store : busquedaUsuariosStore
@@ -158,7 +172,7 @@ Ext.onReady(function()
                     ,modal       : true
                     ,buttonAlign : 'center'
                     ,width       : 500
-                    ,height      : 650
+                    ,height      : 670
                     ,autoScroll  : true
                     ,loader      :
                     {
@@ -200,7 +214,7 @@ Ext.onReady(function()
                                 ,modal       : true
                                 ,buttonAlign : 'center'
                                 ,width       : 500
-                                ,height      : 650
+                                ,height      : 670
                                 ,autoScroll  : true
                                 ,loader      :
                                 {
@@ -213,8 +227,10 @@ Ext.onReady(function()
                                     },
                                     params: {
                                     	'params.edit' : 'S',
+                                    	'params.cdsisrol': record.get('cdrol'),
+                                    	'params.cdmodgra': record.get('esAdmin'),
+                                    	'params.cdunieco': record.get('cdunieco'),
                                     	'params.cdusuario': record.get('cdUsuario'),
-                                    	'params.esAgente': record.get('esAgente'),
                                     	'params.nombre': nombre,
                                     	'params.snombre': snombre,
                                     	'params.appat': appat,
@@ -223,7 +239,9 @@ Ext.onReady(function()
                                     	'params.fecnac': record.get('feNacimi'),
                                     	'params.rfc': record.get('cdrfc'),
                                     	'params.curp': record.get('curp'),
-                                    	'params.email': record.get('dsEmail')
+                                    	'params.email': record.get('dsEmail'),
+                                    	'params.feini': record.get('feini'),
+                                    	'params.fefin': record.get('fefinlic')
                                     }
                                 }
                             }).show();
@@ -233,38 +251,38 @@ Ext.onReady(function()
             	}
             }
         },{
-            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-            text    : 'Eliminar usuario',
+            icon    : '${ctx}/resources/fam3icons/icons/flag_yellow.png',
+            text    : 'Alta/Baja de usuario',
             scope   : this,
             handler : function (btn, e){
             	var model =  gridUsuarios.getSelectionModel();
             	if(model.hasSelection()){
-            		
+            		var usuarioActivo = ("S" == model.getLastSelected().get('swActivo') || "s" == model.getLastSelected().get('swActivo')) ? true:false;
             		Ext.Msg.show({
     		            title: 'Aviso',
-    		            msg: '&iquest;Esta seguro que desea eliminar este usuario?',
+    		            msg: usuarioActivo? '&iquest;Esta seguro que desea dar de Baja este usuario?': '&iquest;Esta seguro que desea dar de Alta este usuario?',
     		            buttons: Ext.Msg.YESNO,
     		            fn: function(buttonId, text, opt) {
     		            	if(buttonId == 'yes') {
+    		            		
     		            		Ext.Ajax.request({
-            						url: _UrlActualizarUsuario,
+            						url: _UrlActivarDesactivarUsuario,
             						params: {
-            					    		'params.cdusuari' : model.getLastSelected().get('cdUsuario'),
-            					    		'params.esAgente' : '0',
-            					    		'params.accion'   : 'E'
+            					    		'params.PV_CDUSUARI_I'  : model.getLastSelected().get('cdUsuario'),
+            					    		'params.PV_SWACTIVO_I' : usuarioActivo? 'N':'S'
             						},
             						success: function(response, opt) {
             							var jsonRes=Ext.decode(response.responseText);
 
             							if(jsonRes.success == true){
-            								mensajeCorrecto('Aviso','Se ha eliminado usuario correctamente.');
+            								mensajeCorrecto('Aviso','Se ha cambiado el estatus correctamente.');
     										recargaGridUsuarios();        							
                    						}else {
-                   							mensajeError('No se pudo eliminar el usuario.');
+                   							mensajeError('No se pudo cambiar el estatus del usuario.');
                    						}
             						},
             						failure: function(){
-            							mensajeError('No se pudo eliminar el usuario.');
+            							mensajeError('No se pudo cambiar el estatus del usuario.');
             						}
             					});
     		            	}
@@ -272,6 +290,126 @@ Ext.onReady(function()
     		            animateTarget: btn,
     		            icon: Ext.Msg.QUESTION
         			});
+            		
+            	}else{
+            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+            	}
+            }
+        },'-',{
+            icon    : '${ctx}/resources/fam3icons/icons/key_add.png',
+            text    : 'Cambiar Contrase&ntilde;a',
+            handler : function()
+            {
+            	var model =  gridUsuarios.getSelectionModel();
+            	if(model.hasSelection()){
+            		var record = model.getLastSelected();
+            		
+            		var nuevoPass = new Ext.form.TextField({
+            			id:'newpassword',
+            	    	fieldLabel: 'Nueva Contrase&ntilde;a',
+            	    	inputType: 'password',
+            	    	name: 'newpassword',
+            	    	allowBlank  : false,
+            	        blankText:'La contrase&ntilde;a es un dato requerido',
+            	        minLength: 5,
+            			minLengthText: 'La contrase&ntilde;a debe tener almenos 5 caracteres.',
+            	        listeners:{
+            	            scope:this,
+            	            change: function(field) {
+            	                var confirmField = field.up('form').down('[name=newPasswordConfirm]');
+            	                confirmField.validate();
+            	            }
+            	        }
+            		});
+
+            		var confirmNuevoPass = new Ext.form.TextField({
+            			id:'confirmNewpassword',
+            			fieldLabel: 'Confirme la nueva Contrase&ntilde;a',
+            			inputType: 'password',
+            			vtype: 'password',
+            			name: 'newPasswordConfirm',
+            			allowBlank  : false,
+            			blankText:'La confirmaci&oacute;n de la contrase&ntilde;a es un dato requerido',
+            			initialPassField: 'newpassword', // id del campo password inicial
+            			listeners:{
+            				scope:this
+            			}
+            		});
+            		
+            		var windowPass;
+            		
+            		var panelPassword = Ext.create('Ext.form.Panel', {
+            	    	url: _UrlCambiaPasswordUsuario,
+            			border: false,
+            		    bodyStyle:'padding:5px 0px 0px 40px;',
+            		    items    : [{
+			    						xtype      : 'hidden',
+			    						name       : 'user',
+			    						value      : record.get('cdUsuario')
+			    					},
+            						nuevoPass,
+            						confirmNuevoPass
+            	        ],
+            	        buttonAlign: 'center',
+            		    buttons: [{
+            	        	text: 'Actualizar',
+            	        	icon    : '${ctx}/resources/fam3icons/icons/disk.png',
+            	        	handler: function(btn, e) {
+            	        		var form = this.up('form').getForm();
+            	        		if (form.isValid()) {
+            	        			
+            	        			Ext.Msg.show({
+            	    		            title: 'Confirmar acci&oacute;n',
+            	    		            msg: '&iquest;Esta seguro que desea actualizar la Contrase&ntilde;a de este usuario?',
+            	    		            buttons: Ext.Msg.YESNO,
+            	    		            fn: function(buttonId, text, opt) {
+            	    		            	if(buttonId == 'yes') {
+            	    		            		form.submit({
+            				    		        	waitMsg:'Procesando...',			        	
+            				    		        	failure: function(form, action) {
+            				    		        		showMessage('Error', action.result.errorMessage, Ext.Msg.OK, Ext.Msg.ERROR);
+            				    					},
+            				    					success: function(form, action) {
+            				    						form.reset();
+            				    						windowPass.close();
+            				    						mensajeCorrecto('\u00C9xito', 'La Contrase&ntilde;a se actializ&oacute; correctamente.', Ext.Msg.OK, Ext.Msg.INFO);
+            				    					}
+            				    				});
+            	    		            	}
+            	            			},
+            	    		            animateTarget: btn,
+            	    		            icon: Ext.Msg.QUESTION
+            	        			});
+            	    			} else {
+            	    				Ext.Msg.show({
+            	    					title: 'Aviso',
+            	    		            msg: 'Complete la informaci&oacute;n requerida',
+            	    		            buttons: Ext.Msg.OK,
+            	    		            animateTarget: btn,
+            	    		            icon: Ext.Msg.WARNING
+            	    				});
+            	    			}
+            	        	}
+            	        },
+            	        {
+            	            	text: 'Cancelar',
+            	            	icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+            	            	handler: function(btn, e) {
+            	            		windowPass.close();
+            	            	}
+            	        }]
+            	    });
+            		
+            		windowPass = Ext.create('Ext.window.Window',
+                            {
+                                title        : 'Cambiar Contrase&ntilde;a del usuario: ' + record.get('cdUsuario')
+                                ,modal       : true
+                                ,buttonAlign : 'center'
+                                ,width       : 400
+                                ,height      : 160
+                                ,autoScroll  : true
+                                ,items: [panelPassword]
+                            }).show();
             		
             	}else{
             		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);

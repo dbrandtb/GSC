@@ -109,7 +109,28 @@
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
-                    success
+                    success,
+                    errorMessage
+                </param>
+            </result>
+        </action>
+        
+        <action name="cambiarPasswordUsuario" class="usuarioAction" method="cambiarPasswordUsuarioLDAP">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    errorMessage
+                </param>
+            </result>
+        </action>
+        
+        <action name="activaDesactivaUsuario" class="usuarioAction" method="activaDesactivaUsuario">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    errorMessage
                 </param>
             </result>
         </action>

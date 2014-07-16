@@ -70,10 +70,11 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		}
 		
 		try {
-			/**
-			 * TODO: descomentar cuado ya se vaya a validar el password de los usuarios
-			 */
-			boolean existeUsuario = true;//loginManager.validaUsuarioLDAP(false, user, password);
+			
+			boolean existeUsuario = true;
+			if(new Boolean(getText("login.auth.ldap.activa"))){
+				existeUsuario = loginManager.validaUsuarioLDAP(false, user, password); 
+			}
 			if (existeUsuario) {
 				logger.info("Usuario "+user+" ha sido valido exitosamente en LDAP, creando sesion...");
 				success = creaSesionDeUsuario(user);
@@ -89,32 +90,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			return SUCCESS;
 		}
 	}
-	
-	public String cambiarPasswordUsuarioLDAP() throws Exception {
-		try {
-			/**
-			 * TODO: descomentar cuado ya se vaya a validar el password de los usuarios
-			 */
-			boolean existeUsuario = loginManager.validaUsuarioLDAP(true, user, password);
-			if (existeUsuario) {
-				//Cambio de Password
-				success = loginManager.cambiarPasswordUsuarioLDAP(user,passwordNuevo);
-				if (!success) {
-					errorMessage = "No se pudo realizar el cambio, intente nuevamente";
-				}
-			} else {
-				logger.info("El usuario "+user+" no existe o la clave es incorrecta.");
-				errorMessage = "El usuario no existe o la clave es incorrecta";
-			}
-			return SUCCESS;
-
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			errorMessage = "Error en el proceso de cambio de Password. Consulte a Soporte T&eacute;cnico.";
-			return SUCCESS;
-		}
-	}
-
 	
 	public String autenticaUsuarioAgregaLDAP() throws Exception {
 		try {
