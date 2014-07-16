@@ -28,6 +28,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 	private String user;
 	private String password;
+	private String passwordNuevo;
 	private String decimalSeparator;
 	private String dateFormat;
 	private LoginManager loginManager;
@@ -85,6 +86,31 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			return SUCCESS;
+		}
+	}
+	
+	public String cambiarPasswordUsuarioLDAP() throws Exception {
+		try {
+			/**
+			 * TODO: descomentar cuado ya se vaya a validar el password de los usuarios
+			 */
+			boolean existeUsuario = loginManager.validaUsuarioLDAP(true, user, password);
+			if (existeUsuario) {
+				//Cambio de Password
+				success = loginManager.cambiarPasswordUsuarioLDAP(user,passwordNuevo);
+				if (!success) {
+					errorMessage = "No se pudo realizar el cambio, intente nuevamente";
+				}
+			} else {
+				logger.info("El usuario "+user+" no existe o la clave es incorrecta.");
+				errorMessage = "El usuario no existe o la clave es incorrecta";
+			}
+			return SUCCESS;
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			errorMessage = "Error en el proceso de cambio de Password. Consulte a Soporte T&eacute;cnico.";
 			return SUCCESS;
 		}
 	}
@@ -228,6 +254,16 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	
+	public String getPasswordNuevo() {
+		return passwordNuevo;
+	}
+
+	public void setPasswordNuevo(String passwordNuevo) {
+		this.passwordNuevo = passwordNuevo;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public void setSession(Map session) {
