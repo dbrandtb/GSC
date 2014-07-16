@@ -165,24 +165,20 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         log.debug("fileFileName "+fileFileName);
         log.debug("fileContentType "+fileContentType);
         
-        File nuevoArchivo = new File(this.getText("ruta.documentos.temporal") + "/" + fileFileName);
         try{
-        	//FileInputStream inputFile = new FileInputStream(file);
-        	if(file.renameTo(nuevoArchivo)){
-    			log.debug("archivo movido");	
-    		}else{
-    			log.debug("archivo NO movido");
-    		}
+        	success = FTPSUtils.upload(
+        			this.getText("dominio.server.layouts"), 
+        			this.getText("user.server.layouts"), 
+        			this.getText("pass.server.layouts"), 
+        			file.getAbsolutePath(),
+        			this.getText("directorio.server.layouts")+"/"+fileFileName);
         	
-        	success = FTPSUtils.subeArchivo(this.getText("dominio.server.layouts"), this.getText("user.server.layouts"), this.getText("pass.server.layouts"), this.getText("directorio.server.layouts"), nuevoArchivo);
-        	nuevoArchivo.delete();
-        	
-        	if(!success){
+        	if(!success) {
         		mensajeRespuesta = "Error al subir archivo.";
         		return SUCCESS;
         	}
-        }catch(Exception ex){
-        	log.error("Error al subir el archivo al Disco de BD",ex);
+        }catch(Exception ex) {
+        	log.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts"), ex);
         	mensajeRespuesta = "Error al subir archivo.";
         	success= false;
         	return SUCCESS;
@@ -192,14 +188,12 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         	HashMap<String,String> params = new HashMap<String,String>();
         	params.put("pv_archivo_i", fileFileName);
         	kernelManager.cargaCobranzaMasiva(params);
-        }catch(Exception ex)
-        {
+        } catch(Exception ex) {
         	log.error("Error al aplicar la Cobranza",ex);
         	mensajeRespuesta = "Error al aplicar la cobranza.";
         	success= false;
         	return SUCCESS;
         }
-        
         success= true;
         return SUCCESS;
     }
