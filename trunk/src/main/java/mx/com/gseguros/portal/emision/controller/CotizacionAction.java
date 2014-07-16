@@ -2098,22 +2098,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				try
 				{					
 					nombreCenso = "censo_"+timestamp+"_"+nmpoliza+".txt";
-					
-					File archivoEnTmp=new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
-					exito = censo.renameTo(archivoEnTmp);
+					exito = FTPSUtils.upload(
+							this.getText("dominio.server.layouts"),
+							this.getText("user.server.layouts"),
+							this.getText("pass.server.layouts"),
+							censo.getAbsolutePath(),
+							this.getText("directorio.server.layouts")+"/"+nombreCenso);
 					if(!exito)
 					{
-						//throw new Exception("No se pudo copiar del dir temporal al nuevo dir");
-						logger.error("No se pudo copiar del dir temporal al nuevo dir");
-						nombreCenso = null;
-						exito = true;
-					}
-					exito = FTPSUtils.subeArchivo(
-							"10.1.1.133", "oinstall", "j4v4n3s",
-							"ice/layout", archivoEnTmp);
-					if(!exito)
-					{
-						//throw new Exception("No se pudo pasar el archivo al servidor");
 						logger.error("No se pudo pasar el archivo al servidor");
 						nombreCenso = null;
 						exito = true;
