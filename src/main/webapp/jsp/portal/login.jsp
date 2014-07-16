@@ -21,6 +21,10 @@
 	    <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
 	    <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js"></script>
 	    <script type="text/javascript" src="${ctx}/resources/scripts/portal/login/login.js"></script>
+	    
+	    <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js?${now}"></script>
+        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js?${now}"></script>
+		<script type="text/javascript" src="${ctx}/resources/scripts/util/custom_overrides.js?${now}"></script>
 
     </head>
     <body>
