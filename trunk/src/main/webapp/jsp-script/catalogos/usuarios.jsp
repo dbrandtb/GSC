@@ -426,7 +426,7 @@ Ext.apply(Ext.form.field.VTypes, {
             		
             		windowLoader = Ext.create('Ext.window.Window',
                             {
-                                title        : 'Ver/Editar Roles del usuario: ' + record.get('dsUsuario')
+                                title        : 'Ver/Editar Roles del usuario: ' + record.get('cdUsuario')
                                 ,modal       : true
                                 ,buttonAlign : 'center'
                                 ,width       : 500
