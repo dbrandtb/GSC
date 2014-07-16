@@ -98,6 +98,8 @@ Ext.onReady(function() {
 	                         			   fieldPer.hide();
 	                         			   panelPersona.getForm().findField('params.feini').allowBlank = true;
 	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
+	                         			   panelPersona.getForm().findField('params.dsapellido').allowBlank = false;
+	                         			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
 	                         		   }else {
 	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
 	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
@@ -107,6 +109,8 @@ Ext.onReady(function() {
 	                         			   fieldPer.show();
 	                         			   panelPersona.getForm().findField('params.feini').allowBlank = false;
 	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
+	                         			   panelPersona.getForm().findField('params.dsapellido').allowBlank = true;
+	                         			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = true;
 	                         		   }
 	                        		}
 	                        	}
@@ -126,6 +130,8 @@ Ext.onReady(function() {
                     			   panelPersona.getForm().findField('params.cdramo').allowBlank = true;
                     			   panelPersona.getForm().findField('params.feini').allowBlank = true;
                     			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.dsapellido').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
                     		   }else {
                     			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
                     			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
@@ -136,6 +142,8 @@ Ext.onReady(function() {
                     			   panelPersona.getForm().findField('params.cdramo').allowBlank = false;
                     			   panelPersona.getForm().findField('params.feini').allowBlank = false;
                     			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.dsapellido').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = true;
                     		   }
                     	   }
                        }
@@ -289,11 +297,15 @@ Ext.onReady(function() {
 			    		name       : 'params.cdrfc',
 			    		fieldLabel : 'RFC',
 			    		allowBlank : false,
+			    		regex      : /^[a-zA-Z0-9]+$/,
+						regexText  : 'El RFC solo puede contener letras y n&uacute;meros',
 			    		value      : _parametros.rfc
 			        },{
 			        	xtype      : 'textfield',
 			    		name       : 'params.curp',
 			    		fieldLabel : 'CURP',
+			    		regex      : /^[a-zA-Z0-9]+$/,
+						regexText  : 'El CURP solo puede contener letras y n&uacute;meros',
 			    		value      : _parametros.curp
 			        },{
 			        	xtype      : 'textfield',
