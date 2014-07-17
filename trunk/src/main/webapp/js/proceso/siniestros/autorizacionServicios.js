@@ -451,7 +451,7 @@ Ext.onReady(function() {
 	{
 		colspan	   :2,			fieldLabel   : 'Ramo ',			id        : 'cmbRamos',		allowBlank     : false,	
 	    editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : false,
-	    width	   :500,		labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos'
+	    width	   :350,		labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos'
 	    ,store : storeRamos
 	    ,listeners : {
 	    	'select' : function(combo, record) {
@@ -604,6 +604,7 @@ Ext.onReady(function() {
     
     coberturaAfectada = Ext.create('Ext.form.field.ComboBox',
     {
+    	colspan:2, width:400,
     	fieldLabel :'Cobertura afectada',	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
     	labelWidth: 170,					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',				store : storeCobertura,		triggerAction: 'all',			editable:false,
@@ -637,6 +638,7 @@ Ext.onReady(function() {
     
     subCobertura = Ext.create('Ext.form.field.ComboBox',
     {
+    	colspan:2, 		width:550,
     	fieldLabel : 'Subcobertura',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',		name:'cdconval',
     	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
@@ -892,7 +894,7 @@ Ext.onReady(function() {
 	//SUCURSAL
 	sucursal= Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan		:2,					fieldLabel   : 'Plaza',			id: 'idSucursal',				allowBlank: false,			width:500	
+		colspan		:2,					fieldLabel   : 'Plaza',			id: 'idSucursal',				allowBlank: false,			width:350	
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs'
 		,store : storePlazas
@@ -2373,6 +2375,8 @@ Ext.onReady(function() {
 			Ext.getCmp('idNmSituac').setValue(json.nmsituac);
 			//Ext.getCmp('').getValue()
 			
+			Ext.getCmp('idAaapertu').setValue(json.aaapertu);
+			
 			if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
 			{
 				//Número de autorización
@@ -2428,6 +2432,8 @@ Ext.onReady(function() {
 			Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
 			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
+			
+			Ext.getCmp('idPenalCircHospitalario').setValue(json.porpenal);
 			
 			storePlazas.load();
 			Ext.getCmp('idSucursal').setValue(json.cduniecs);
