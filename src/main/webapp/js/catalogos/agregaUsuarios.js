@@ -100,6 +100,7 @@ Ext.onReady(function() {
 	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
 	                         			   panelPersona.getForm().findField('params.dsapellido').allowBlank = false;
 	                         			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
+	                         			   panelPersona.getForm().findField('params.cdrfc').allowBlank = true;
 	                         		   }else {
 	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
 	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
@@ -111,6 +112,7 @@ Ext.onReady(function() {
 	                         			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
 	                         			   panelPersona.getForm().findField('params.dsapellido').allowBlank = true;
 	                         			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = true;
+	                         			   panelPersona.getForm().findField('params.cdrfc').allowBlank = false;
 	                         		   }
 	                        		}
 	                        	}
@@ -132,6 +134,7 @@ Ext.onReady(function() {
                     			   panelPersona.getForm().findField('params.fefin').allowBlank = true;
                     			   panelPersona.getForm().findField('params.dsapellido').allowBlank = false;
                     			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
+                    			   panelPersona.getForm().findField('params.cdrfc').allowBlank = true;
                     		   }else {
                     			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
                     			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
@@ -144,6 +147,7 @@ Ext.onReady(function() {
                     			   panelPersona.getForm().findField('params.fefin').allowBlank = false;
                     			   panelPersona.getForm().findField('params.dsapellido').allowBlank = true;
                     			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = true;
+                    			   panelPersona.getForm().findField('params.cdrfc').allowBlank = false;
                     		   }
                     	   }
                        }
@@ -296,7 +300,6 @@ Ext.onReady(function() {
 			        	xtype      : 'textfield',
 			    		name       : 'params.cdrfc',
 			    		fieldLabel : 'RFC',
-			    		allowBlank : false,
 			    		regex      : /^[a-zA-Z0-9]+$/,
 						regexText  : 'El RFC solo puede contener letras y n&uacute;meros',
 			    		value      : _parametros.rfc
