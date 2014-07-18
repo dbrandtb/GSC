@@ -79,6 +79,9 @@ var _p21_TARIFA_MODIFICADA = 2;
 
 Ext.onReady(function()
 {
+
+    Ext.Ajax.timeout = 240000;
+
     ////// modelos //////
     Ext.define('_p21_modeloGrupo',
     {
