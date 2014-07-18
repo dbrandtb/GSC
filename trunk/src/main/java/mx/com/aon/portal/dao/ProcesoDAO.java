@@ -1399,6 +1399,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     
     protected class ObtieneTatrisitMapper implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	logger.info("cdatribu: "+rs.getString("CDATRIBU")+" swsuscri: "+rs.getString("SWSUSCRI")+" dsatribu: "+rs.getString("DSATRIBU"));
         	ComponenteVO result=new ComponenteVO();
         	result.setFlagEsAtribu(true);
             result.setType(ComponenteVO.TIPO_TATRISIT);
