@@ -877,7 +877,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	            return consulta;
 	        }
 	    }
-
+		
 		@Override
 		public String rechazarTramite(HashMap<String, String> params)
 				throws DaoException {
@@ -3161,4 +3161,31 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> obtieneListadoRamoSalud() throws DaoException {
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoRamoSalud(this.getDataSource()), new HashMap<String,String>());
+		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerListadoRamoSalud extends StoredProcedure
+	{
+		protected ObtenerListadoRamoSalud(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_LISTA_RAMOS_SALUD");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListadoRamoSalud()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class DatosListadoRamoSalud  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("CDRAMO"));
+        	consulta.setValue(rs.getString("DSRAMO"));
+            return consulta;
+        }
+    }
 }

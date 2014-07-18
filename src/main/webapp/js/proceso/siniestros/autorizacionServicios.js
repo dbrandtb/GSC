@@ -259,20 +259,20 @@ Ext.onReady(function() {
     });
     
     storeRamos = Ext.create('Ext.data.Store', {
-        model:'Generic',
-        autoLoad:true,
-        proxy:
-        {
-            type: 'ajax',
-            url:_URL_CATALOGOS,
-            extraParams : {catalogo:_CAT_RAMOS},
-            reader:
-            {
-                type: 'json',
-                root: 'lista'
-            }
-        }
-    });
+		model:'Generic',
+		autoLoad:true,
+		proxy:
+		{
+			type: 'ajax',
+			url:_UR_LISTA_RAMO_SALUD,
+			reader:
+			{
+				type: 'json',
+				root: 'listadoRamosSalud'
+			}
+		}
+	});
+    
     //DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	storeConceptoAutorizados=new Ext.data.Store(
 	{
@@ -898,7 +898,7 @@ Ext.onReady(function() {
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs'
 		,store : storePlazas
-		,listeners : {
+		/*,listeners : {
 	    	//'select' : function(combo, record) {
 	    	change:function(e){
 	    		//Ext.getCmp('cmbRamos').setValue('');
@@ -908,8 +908,8 @@ Ext.onReady(function() {
 	                }
 	            });
 	    	}
-	    }
-	});	
+	    }*/
+	});
 	
 	
 	
@@ -1958,8 +1958,6 @@ Ext.onReady(function() {
 		 			 	]
 			 	}
 			 	,
-			 	sucursal
-			 	,
 			 	cmbRamos
 			 	,
 			 	asegurado
@@ -2064,6 +2062,7 @@ Ext.onReady(function() {
 				 			 })				
 			 			 ]
 			 	},
+			 	sucursal,
 			 	coberturaAfectada,
 			 	subCobertura,
 			 	proveedor,

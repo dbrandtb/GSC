@@ -52,6 +52,7 @@
             var _URL_MONTO_MAXIMO					= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
             var _URL_Existe_Documentos				= '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
             var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros" action="obtieneMesesTiempoEspera" />';
+            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             console.log(valorAction);
