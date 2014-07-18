@@ -335,8 +335,8 @@
 		                                    allowBlank:false,
 		                                    style:'margin:5px;',
 		                                    format:'d/m/Y',
-		                                    minValue:fechaMinEmi,
-		                                    maxValue:fechaMaxEmi,
+		                                    //minValue:fechaMinEmi,
+		                                    //maxValue:fechaMaxEmi,
 		                                    readOnly:inputCdramo+'x'=='16x'
 		                                },
 		                                {
