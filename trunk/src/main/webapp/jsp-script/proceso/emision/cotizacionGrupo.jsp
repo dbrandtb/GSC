@@ -20,15 +20,21 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// variables //////
-var _p21_urlObtenerCoberturas     = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
-var _p21_urlObtenerHijosCobertura = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
-var _p21_urlSubirCenso            = '<s:url namespace="/emision"         action="subirCenso"                    />';
-var _p21_urlGenerarTramiteGrupo   = '<s:url namespace="/emision"         action="generarTramiteGrupo"           />';
-var _p21_urlObtenerDetalle        = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
-var _p21_urlComprar               = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
-var _p21_urlVentanaDocumentos     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
-var _p21_urlBuscarPersonas        = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p21_urlVentanaDocumentos     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
+var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
+var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                    />';
+var _p21_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo"           />';
+var _p21_urlObtenerDetalle               = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
+var _p21_urlComprar                      = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
+var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p21_urlBuscarPersonas               = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
+var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p21_urlCargarDatosCotizacion        = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo"    />';
+var _p21_urlCargarGrupos                 = '<s:url namespace="/emision"         action="cargarGruposCotizacion"        />';
+var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         action="cargarDatosGrupoLinea"         />';
+var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"          />';
+var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"          />';
+var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -45,18 +51,8 @@ var _p21_selectedNmsituac   = null;
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
 
-var _p21_hayTramite=!Ext.isEmpty(_p21_smap1.ntramite);
-debug('_p21_hayTramite:',_p21_hayTramite,'dummy');
-
-var _p21_fieldsGrupo =
-[
-    'letra'
-    ,'nombre'
-    ,'cdplan'
-    ,'ptsumaaseg'
-    ,'emerextr'
-    ,'deducible'
-];
+var _p21_ntramite = Ext.isEmpty(_p21_smap1.ntramite) ? false : _p21_smap1.ntramite;
+debug('_p21_ntramite:',_p21_ntramite);
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p21_editorPlan.on('change',_p21_editorPlanChange);
@@ -64,6 +60,12 @@ debug('_p21_editorPlan:',_p21_editorPlan);
 
 var _p21_editorSumaAseg = <s:property value="imap.editorSumaAsegColumn" />.editor;
 debug('_p21_editorSumaAseg:',_p21_editorSumaAseg);
+
+var _p21_editorAyudaMater = <s:property value="imap.editorAyudaMaterColumn" />.editor;
+debug('_p21_editorAyudaMater:',_p21_editorAyudaMater);
+
+var _p21_editorAsisInter = <s:property value="imap.editorAsisInterColumn" />.editor;
+debug('_p21_editorAsisInter:',_p21_editorAsisInter);
 
 var _p21_editorEmerextr = <s:property value="imap.editorEmerextrColumn" />.editor;
 debug('_p21_editorEmerextr:',_p21_editorEmerextr);
@@ -81,7 +83,23 @@ Ext.onReady(function()
     Ext.define('_p21_modeloGrupo',
     {
         extend  : 'Ext.data.Model'
-        ,fields : _p21_fieldsGrupo
+        ,fields :
+        [
+            'letra'
+            ,'nombre'
+            ,'cdplan'
+            ,'ptsumaaseg'
+            ,'ayudamater'
+            ,'asisinte'
+            ,'emerextr'
+            ,'deducible'
+            ,'incrinfl'
+            ,'extrreno'
+            ,'cesicomi'
+            ,'pondubic'
+            ,'descbono'
+            ,'porcgast'
+        ]
     });
     
     Ext.define('_p21_modeloDetalleCotizacion',
@@ -99,6 +117,31 @@ Ext.onReady(function()
             ,'DSGARANT'
             ,{name:'IMPORTE',type:'float'}
             ,'GRUPO'
+        ]
+    });
+    
+    Ext.define('_p21_modeloTarifaEdad',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'EDAD'
+            ,'HOMBRES'
+            ,'MUJERES'
+            ,'TARIFA_UNICA_HOMBRES'
+            ,'TARIFA_UNICA_MUJERES'
+            ,'TARIFA_TOTAL_HOMBRES'
+            ,'TARIFA_TOTAL_MUJERES'
+        ]
+    });
+    
+    Ext.define('_p21_modeloTarifaCobertura',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'DSGARANT'
+            ,{type:'float',name:'PRIMA_PROMEDIO'}
         ]
     });
     
@@ -139,7 +182,7 @@ Ext.onReady(function()
                 {
                     header     : 'ID'
                     ,dataIndex : 'letra'
-                    ,width     : 100
+                    ,width     : 40
                 }
                 ,{
                     header     : 'Nombre'
@@ -178,6 +221,26 @@ Ext.onReady(function()
                     }
                 }
                 ,{
+                    header     : 'Ayuda Maternidad'
+                    ,dataIndex : 'ayudamater'
+                    ,width     : 140
+                    ,editor    : _p21_editorAyudaMater
+                    ,renderer  : function(v)
+                    {
+                        return rendererColumnasDinamico(v,'ayudamater');
+                    }
+                }
+                ,{
+                    header     : 'Asis. Inter. Viajes'
+                    ,dataIndex : 'asisinte'
+                    ,width     : 140
+                    ,editor    : _p21_editorAsisInter
+                    ,renderer  : function(v)
+                    {
+                        return rendererColumnasDinamico(v,'asisinte');
+                    }
+                }
+                ,{
                     header     : 'Emergencia extranjero'
                     ,dataIndex : 'emerextr'
                     ,width     : 140
@@ -189,10 +252,16 @@ Ext.onReady(function()
                 }
                 ,{
                     xtype  : 'actioncolumn'
-                    ,width : 30
+                    ,width : 50
                     ,items :
                     [
                         {
+                            tooltip   : 'Editar'
+                            ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
+                            ,handler  : _p21_editarGrupoClic
+                            ,disabled : _p21_ntramite ? false : true
+                        }
+                        ,{
                             tooltip  : 'Borrar subgrupo'
                             ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
                             ,handler : _p21_borrarGrupoClic
@@ -205,7 +274,7 @@ Ext.onReady(function()
             ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
             {
                 clicksToEdit  : 1
-                ,errorSummary : true
+                ,errorSummary : false
             })
         })
     };
@@ -231,7 +300,7 @@ Ext.onReady(function()
                 {
                     header     : 'ID'
                     ,dataIndex : 'letra'
-                    ,width     : 100
+                    ,width     : 40
                 }
                 ,{
                     header     : 'Nombre'
@@ -240,7 +309,7 @@ Ext.onReady(function()
                     ,editor    : 'textfield'
                 }
                 ,{
-                    header     : 'Plan M'
+                    header     : 'Plan'
                     ,dataIndex : 'cdplan'
                     ,width     : 100
                     ,editor    : _p21_editorPlan
@@ -379,6 +448,7 @@ Ext.onReady(function()
                                         ,readOnly   : true
                                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                                     })
+                                    ,<s:property value="imap.comboFormaPago" />
                                 ]
                             }
                             ,{
@@ -395,6 +465,7 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">NÚMERO DE ASEGURADOS</span>'
                                 ,defaults : { style : 'margin:5px;' }
+                                ,hidden   : _p21_ntramite ? true : false
                                 ,items    :
                                 [
                                     {
@@ -415,6 +486,7 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
                                 ,defaults : { style : 'margin:5px;' }
+                                ,hidden   : _p21_ntramite ? true : false
                                 ,items    :
                                 [
                                     {
@@ -422,7 +494,7 @@ Ext.onReady(function()
                                         ,fieldLabel : 'Censo de asegurados'
                                         ,name       : 'censo'
                                         ,buttonText : 'Examinar...'
-                                        ,allowBlank : false
+                                        ,allowBlank : _p21_ntramite ? true : false
                                         ,buttonOnly : false
                                         ,width      : 450
                                         ,cAccept    : ['csv']
@@ -454,14 +526,22 @@ Ext.onReady(function()
                         ,buttons     :
                         [
                             {
+                                text     : 'Guardar / Retarificar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                ,handler : _p21_generarTramiteClic
+                                ,hidden  : _p21_ntramite ? false : true
+                            }
+                            ,{
                                 text     : 'Generar tr&aacute;mite'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/book_next.png'
                                 ,handler : _p21_generarTramiteClic
+                                ,hidden  : _p21_ntramite ? true : false
                             }
                             ,{
                                 text     : 'Limpiar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,handler : _p21_cotizarNueva
+                                ,hidden  : _p21_ntramite ? true : false
                             }
                         ]
                     })
@@ -473,6 +553,202 @@ Ext.onReady(function()
     
     ////// loaders //////
     _p21_fieldRfc().addListener('blur',_p21_rfcBlur);
+    
+    if(_p21_ntramite)
+    {
+        _p21_tabpanel().setLoading(true);
+        Ext.Ajax.request(
+        {
+            url     : _p21_urlCargarDatosCotizacion
+            ,params :
+            {
+                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                ,'smap1.estado'   : _p21_smap1.estado
+                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                ,'smap1.ntramite' : _p21_smap1.ntramite
+            }
+            ,success : function(response)
+            {
+                _p21_tabpanel().setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('json response:',json);
+                if(json.exito)
+                {
+                    for(var prop in json.params)
+                    {
+                        if(prop!='cdmunici'&&prop!='clasif')
+                        {
+                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                        }
+                    }
+                    _p21_fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                    _p21_clasif = json.params['clasif'];
+                    debug('_p21_clasif:',_p21_clasif);
+                    var auxCargarGrupos=function(callback)
+                    {
+                        _p21_tabpanel().setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p21_urlCargarGrupos
+                            ,params  :
+                            {
+                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                ,'smap1.estado'   : _p21_smap1.estado
+                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                            }
+                            ,success : function(response)
+                            {
+                                _p21_tabpanel().setLoading(false);
+                                var json2=Ext.decode(response.responseText);
+                                debug('json response:',json2);
+                                if(json2.exito)
+                                {
+                                    callback(json2);
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _p21_tabpanel().setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    };
+                    if(_p21_clasif==_p21_TARIFA_LINEA)
+                    {
+                        debug('>cargar linea');
+                        auxCargarGrupos(function(resp)
+                        {
+                            debug('>callback linea');
+                            _p21_construirLinea(0,0,true);
+                            var aux=resp.slist1.length;
+                            var aux2=0;
+                            _p21_tabpanel().setLoading(true);
+                            for(var i=0;i<aux;i++)
+                            {
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p21_urlObtenerDatosAdicionalesGrupo
+                                    ,params  :
+                                    {
+                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.estado'   : _p21_smap1.estado
+                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                        ,'smap1.letra'    : resp.slist1[i].letra
+                                        ,'smap1.i'        : i
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        var datosAdic=Ext.decode(response.responseText);
+                                        debug('datosAdic:',datosAdic);
+                                        if(datosAdic.exito)
+                                        {
+                                            aux2=aux2+1;
+                                            var grupo=new _p21_modeloGrupo(resp.slist1[datosAdic.smap1.i]);
+                                            grupo.set('deducible' , datosAdic.params.DEDUCIBLE);
+                                            grupo.set('asisinte'  , datosAdic.params.ASISINTE);
+                                            grupo.set('emerextr'  , datosAdic.params.EMEREXTR);
+                                            _p21_storeGrupos.add(grupo);
+                                            if(aux2==aux)//tenemos todas las respuestas
+                                            {
+                                                _p21_tabpanel().setLoading(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _p21_tabpanel().setLoading(false);
+                                            mensajeError(datosAdic.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _p21_tabpanel().setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            debug('<callback linea');
+                        });
+                        debug('<cargar linea');
+                    }
+                    else
+                    {
+                        debug('>cargar modificada');
+                        auxCargarGrupos(function(resp)
+                        {
+                            debug('>callback modificada');
+                            _p21_construirModificada(0,0,true);
+                            var aux=resp.slist1.length;
+                            var aux2=0;
+                            _p21_tabpanel().setLoading(true);
+                            for(var i=0;i<aux;i++)
+                            {
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p21_urlObtenerTvalogarsGrupo
+                                    ,params  :
+                                    {
+                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.estado'   : _p21_smap1.estado
+                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                        ,'smap1.letra'    : resp.slist1[i].letra
+                                        ,'smap1.i'        : i
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        var tvalogars=Ext.decode(response.responseText);
+                                        debug('tvalogars:',tvalogars);
+                                        if(tvalogars.exito)
+                                        {
+                                            aux2=aux2+1;
+                                            var grupo=new _p21_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
+                                            grupo.tvalogars=tvalogars.slist1;
+                                            grupo.valido=true;
+                                            _p21_storeGrupos.add(grupo);
+                                            if(aux2==aux)//tenemos todas las respuestas
+                                            {
+                                                _p21_tabpanel().setLoading(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _p21_tabpanel().setLoading(false);
+                                            mensajeError(tvalogars.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _p21_tabpanel().setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            debug('<callback modificada');
+                        });
+                        debug('<cargar modificada');
+                    }
+                }
+                else
+                {
+                     mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                _p21_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
     ////// loaders //////
 });
 
@@ -498,6 +774,7 @@ function _p21_agregarTabGrupos()
     }
     
     _p21_agregarTab(_p21_tabGrupos);
+    window.parent.scrollTo(0, 0);
     debug('<_p21_agregarTabGrupos');
 }
 
@@ -507,6 +784,7 @@ function _p21_agregarTab(tab)
     _p21_tabpanel().add(tab);
     debug('active:',Ext.ComponentQuery.query('#'+tab.itemId)[0]);
     _p21_setActiveTab(tab.itemId);
+    window.parent.scrollTo(0, 0);
     debug('<_p21_agregarTab');
 }
 
@@ -606,7 +884,7 @@ function _p21_borrarGrupoClic(grid,rowIndex)
 {
     var record = grid.getStore().getAt(rowIndex);
     debug('>_p21_borrarGrupoClic:',record.data);
-    Ext.Msg.confirm('Borrar grupo','¿Desea borrar el grupo '+record.get('letra')+' y renombrar los grupos en orden alfabético?<br>Esta acci&oacute;n cerrará las pestañas de detalle de subgrupos y podría perder los cambios no guardados.',
+    centrarVentanaInterna(Ext.Msg.confirm('Borrar grupo','¿Desea borrar el grupo '+record.get('letra')+' y renombrar los grupos en orden alfabético?<br>Esta acci&oacute;n cerrará las pestañas de detalle de subgrupos y podría perder los cambios no guardados.',
     function(button){
         debug('clicked:',button);
         if(button=='yes')
@@ -614,7 +892,7 @@ function _p21_borrarGrupoClic(grid,rowIndex)
             _p21_storeGrupos.remove(record);
             _p21_renombrarGrupos();
         }
-    });
+    }));
     debug('<_p21_borrarGrupoClic');
 }
 
@@ -752,7 +1030,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     }
                                                 }
                                                 var datosAnteriores = Ext.create('_p21_modelo'+json.slist1[j].CDGARANT,tvalogar);
-                                                debug('Datos a cargar para '+json.slist1[j].CDGARANT+':',datosAnteriores);
+                                                debug('Datos a cargar para '+json.slist1[j].CDGARANT+':',datosAnteriores,'con:',tvalogar);
                                                 item.valido          = true;
                                                 item.datosAnteriores = datosAnteriores;
                                             }
@@ -764,6 +1042,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             items.push(item);
                                         }
                                         _p21_tabpanel().setLoading(false);
+                                        grid.editingPlugin.cancelEdit();
                                         _p21_agregarTab(
                                         {
                                             title       : 'DETALLE DE SUBGRUPO '+record.get('letra')
@@ -775,14 +1054,253 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             [
                                                 Ext.create('Ext.panel.Panel',
                                                 {
-                                                    title     : 'COBERTURAS DEL SUBGRUPO'
-                                                    ,layout   :
+                                                    title        : 'COBERTURAS DEL SUBGRUPO'
+                                                    ,maxHeight   : 490
+                                                    ,hidden      : _p21_clasif==_p21_TARIFA_LINEA
+                                                    ,autoScroll  : true
+                                                    ,collapsible : true
+                                                    ,layout      :
                                                     {
                                                         type     : 'table'
                                                         ,columns : 2
                                                     }
-                                                    ,defaults : { style : 'margin:5px' }
-                                                    ,items    : items
+                                                    ,defaults    : { style : 'margin:5px' }
+                                                    ,items       : items
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title    : 'FACTORES DEL SUBGRUPO'
+                                                    ,height  : 150
+                                                    ,hidden  : _p21_ntramite ? false : true
+                                                    ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+                                                    {
+                                                        clicksToEdit  : 1
+                                                        ,errorSummary : false
+                                                    })
+                                                    ,columns :
+                                                    [
+                                                        {
+                                                            header     : 'Incremento inflaci&oacute;n'
+                                                            ,dataIndex : 'incrinfl'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Extraprima o renovaci&oacute;n'
+                                                            ,dataIndex : 'extrreno'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Cesi&oacute;n comisi&oacute;n<br/>intermediario'
+                                                            ,dataIndex : 'cesicomi'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Ponderaci&oacute;n ubicaci&oacute;n<br/>geogr&aacute;fica'
+                                                            ,dataIndex : 'pondubic'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Descuento bonos<br/>incentivos'
+                                                            ,dataIndex : 'descbono'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Porcentaje de gastos'
+                                                            ,dataIndex : 'porcgast'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                    ]
+                                                    ,store : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model : '_p21_modeloGrupo'
+                                                        ,data : record
+                                                    })
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title      : 'TARIFA POR EDADES ('
+                                                         +(
+                                                         _p21_ntramite?
+                                                         (_p21_fieldByName('cdperpag').findRecord('key',_p21_fieldByName('cdperpag').getValue()).get('value'))
+                                                         :''
+                                                         )+')'
+                                                    ,minHeight : 100
+                                                    ,hidden    : _p21_ntramite ? false : true
+                                                    ,maxHeight : 250
+                                                    ,store     : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model     : '_p21_modeloTarifaEdad'
+                                                        ,autoLoad : _p21_ntramite ? true : false
+                                                        ,proxy    :
+                                                        {
+                                                            type         : 'ajax'
+                                                            ,extraParams :
+                                                            {
+                                                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                                                ,'smap1.estado'   : _p21_smap1.estado
+                                                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                                                ,'smap1.nmsuplem' : '0'
+                                                                ,'smap1.cdplan'   : record.get('cdplan')
+                                                                ,'smap1.cdgrupo'  : record.get('letra')
+                                                                ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                                                            }
+                                                            ,url         : _p21_urlObtenerTarifaEdad
+                                                            ,reader      :
+                                                            {
+                                                                type  : 'json'
+                                                                ,root : 'slist1'
+                                                            }
+                                                        }
+                                                    })
+                                                    ,columns   :
+                                                    [
+                                                        {
+                                                            header     : 'Edad'
+                                                            ,width     : 60
+                                                            ,dataIndex : 'EDAD'
+                                                        }
+                                                        ,{
+                                                            header     : 'No. Hombres'
+                                                            ,width     : 100
+                                                            ,dataIndex : 'HOMBRES'
+                                                        }
+                                                        ,{
+                                                            header     : 'No. Mujeres'
+                                                            ,width     : 100
+                                                            ,dataIndex : 'MUJERES'
+                                                        }
+                                                        ,{
+                                                            header     : 'Tarifa por hombre'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Tarifa por mujer'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_UNICA_MUJERES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Total hombres'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Total mujeres'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                    ]
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title      : 'PRIMA PROMEDIO ('
+                                                         +(
+                                                         _p21_ntramite?
+                                                         (_p21_fieldByName('cdperpag').findRecord('key',_p21_fieldByName('cdperpag').getValue()).get('value'))
+                                                         :''
+                                                         )+')'
+                                                    ,minHeight : 100
+                                                    ,hidden    : _p21_ntramite ? false : true
+                                                    ,maxHeight : 250
+                                                    ,store     : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model     : '_p21_modeloTarifaCobertura'
+                                                        ,autoLoad : _p21_ntramite ? true : false
+                                                        ,proxy    :
+                                                        {
+                                                            type         : 'ajax'
+                                                            ,extraParams :
+                                                            {
+                                                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                                                ,'smap1.estado'   : _p21_smap1.estado
+                                                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                                                ,'smap1.nmsuplem' : '0'
+                                                                ,'smap1.cdplan'   : record.get('cdplan')
+                                                                ,'smap1.cdgrupo'  : record.get('letra')
+                                                                ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                                                            }
+                                                            ,url         : _p21_urlObtenerTarifaCobertura
+                                                            ,reader      :
+                                                            {
+                                                                type  : 'json'
+                                                                ,root : 'slist1'
+                                                            }
+                                                        }
+                                                    })
+                                                    ,columns   :
+                                                    [
+                                                        {
+                                                            header           : 'Cobertura'
+                                                            ,dataIndex       : 'DSGARANT'
+                                                            ,flex            : 3
+                                                            ,summaryType     : 'count'
+                                                            ,summaryRenderer : function(value, summaryData, dataIndex) 
+                                                            {
+                                                                return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header       : 'Prima'
+                                                            ,flex        : 1
+                                                            ,dataIndex   : 'PRIMA_PROMEDIO'
+                                                            ,renderer    : Ext.util.Format.usMoney
+                                                            ,summaryType : 'sum'
+                                                        }
+                                                    ]
+                                                    ,features  :
+                                                    [
+                                                        {
+                                                            ftype: 'summary'
+                                                        }
+                                                    ]
                                                 })
                                             ]
                                             ,buttonAlign : 'center'
@@ -800,6 +1318,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                         for(var k=0;k<formsValidos.length;k++)
                                         {
                                             var form = formsValidos[k];
+                                            debug('intento cargar:',form,'con:',form.datosAnteriores);
                                             form.loadRecord(form.datosAnteriores);
                                             if(form.datosAnteriores.raw.amparada=='N')
                                             {
@@ -873,27 +1392,30 @@ function _p21_guardarGrupo(panelGrupo)
      
      var tvalogars = [];
      var valido    = true;
-     for(var i=0;i<formsTatrigar.length;i++)
+     if(_p21_clasif==_p21_TARIFA_MODIFICADA)
      {
-         var iFormTatrigar = formsTatrigar[i];
-         valido            = valido && iFormTatrigar.isValid();
-         var tvalogar      = iFormTatrigar.getValues();
-         if(tvalogar.swobliga=='S')
+         for(var i=0;i<formsTatrigar.length;i++)
          {
-              tvalogar['amparada']='S';
-         }
-         else
-         {
-             if(!tvalogar.amparada)
+             var iFormTatrigar = formsTatrigar[i];
+             valido            = valido && iFormTatrigar.isValid();
+             var tvalogar      = iFormTatrigar.getValues();
+             if(tvalogar.swobliga=='S')
              {
-                 tvalogar['amparada']='N';
-             }         
+                 tvalogar['amparada']='S';
+             }
+             else
+             {
+                 if(!tvalogar.amparada)
+                 {
+                     tvalogar['amparada']='N';
+                 }
+             }
+             tvalogars.push(tvalogar);
          }
-         tvalogars.push(tvalogar);
-     }
-     if(!valido)
-     {
-         datosIncompletos();
+         if(!valido)
+         {
+             datosIncompletos();
+         }
      }
      
      if(valido)
@@ -928,6 +1450,7 @@ function _p21_setActiveResumen()
 {
     debug('>_p21_setActiveResumen');
     _p21_setActiveTab(_p21_tabGrupos.itemId);
+    window.parent.scrollTo(0, 0);
     debug('<_p21_setActiveResumen');
 }
 
@@ -935,6 +1458,7 @@ function _p21_setActiveConcepto()
 {
     debug('>_p21_setActiveConcepto');
     _p21_setActiveTab('_p21_tabConcepto');
+    window.parent.scrollTo(0, 0);
     debug('<_p21_setActiveConcepto');
 }
 
@@ -948,6 +1472,7 @@ function _p21_setActiveTab(itemId)
 {
     debug('>_p21_setActiveTab:',itemId);
     _p21_tabpanel().setActiveTab(Ext.ComponentQuery.query('#'+itemId)[0]);
+    window.parent.scrollTo(0, 0);
     debug('<_p21_setActiveTab');
 }
 
@@ -956,7 +1481,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
     if(oldValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_MODIFICADA&&_p21_semaforoPlanChange)
     {
-        Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
+        centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
             if(btn == 'yes')
             {
@@ -973,7 +1498,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 combo.setValue(oldValue);
                 _p21_semaforoPlanChange = true;
             }
-        });
+        }));
     }
     debug('<_p21_editorPlanChange');
 }
@@ -1059,6 +1584,7 @@ function _p21_generarTramiteClic()
             params   :
             {
                 'smap1.timestamp' : timestamp
+                ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : ''
             }
             ,timeout : 180000
             ,success : function()
@@ -1103,38 +1629,58 @@ function _p21_generarTramiteClic()
                         debug('json response:',json);
                         if(json.exito)
                         {
-                            _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
-                            _p21_fieldNtramite().setValue(json.smap1.ntramite);
-                            _p21_tabpanel().setDisabled(true);
-                            
-                            mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                            if(_p21_ntramite)
                             {
-                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                _p21_tabpanel().setLoading(true);
+                                Ext.create('Ext.form.Panel').submit(
                                 {
-                                    width        : 600
-                                    ,height      : 400
-                                    ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
-                                    ,closable    : false
-                                    ,modal       : true
-                                    ,loadingMask : true
-                                    ,loader      :
+                                    standardSubmit : true
+                                    ,params        :
                                     {
-                                        url       : _p21_urlVentanaDocumentos
-                                        ,scripts  : true
-                                        ,autoLoad : true
-                                        ,params   :
-                                        {
-                                            'smap1.cdunieco'  : json.smap1.cdunieco
-                                            ,'smap1.cdramo'   : json.smap1.cdramo
-                                            ,'smap1.estado'   : 'W'
-                                            ,'smap1.nmpoliza' : '0'
-                                            ,'smap1.nmsuplem' : '0'
-                                            ,'smap1.ntramite' : json.smap1.ntramite
-                                            ,'smap1.tipomov'  : '0'
-                                        }
+                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                                        ,'smap1.estado'   : _p21_smap1.estado
+                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                        ,'smap1.ntramite' : _p21_ntramite
                                     }
-                                }).show());
-                            });
+                                });
+                            }
+                            else
+                            {
+                                _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                                _p21_fieldNtramite().setValue(json.smap1.ntramite);
+                                _p21_tabpanel().setDisabled(true);
+                                
+                                mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                                {
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                    {
+                                        width        : 600
+                                        ,height      : 400
+                                        ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                        ,closable    : false
+                                        ,modal       : true
+                                        ,loadingMask : true
+                                        ,loader      :
+                                        {
+                                            url       : _p21_urlVentanaDocumentos
+                                            ,scripts  : true
+                                            ,autoLoad : true
+                                            ,params   :
+                                            {
+                                                'smap1.cdunieco'  : json.smap1.cdunieco
+                                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                                ,'smap1.estado'   : 'W'
+                                                ,'smap1.nmpoliza' : '0'
+                                                ,'smap1.nmsuplem' : '0'
+                                                ,'smap1.ntramite' : json.smap1.ntramite
+                                                ,'smap1.tipomov'  : '0'
+                                            }
+                                        }
+                                    }).show());
+                                });
+                            }
                             
                             /*
                             _p21_tabConcepto().down('[xtype=form]').setDisabled(true);
@@ -1702,6 +2248,6 @@ function _p21_rfcBlur(field)
 </script>
 </head>
 <body>
-<div id="_p21_divpri" style="height:1200px;"></div>
+<div id="_p21_divpri" style="height:1400px;"></div>
 </body>
 </html>
