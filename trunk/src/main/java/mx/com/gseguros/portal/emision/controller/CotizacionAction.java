@@ -1801,6 +1801,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(columnaEditorSumaAseg, true, false, false, true, true, false);
 				imap.put("editorSumaAsegColumn",gc.getColumns());
 				
+				List<ComponenteVO>columnaEditorAyudaMater=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_AYUDAMATER", null);
+				gc.generaComponentes(columnaEditorAyudaMater, true, false, false, true, true, false);
+				imap.put("editorAyudaMaterColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorAsisInterMater=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_ASISINTE", null);
+				gc.generaComponentes(columnaEditorAsisInterMater, true, false, false, true, true, false);
+				imap.put("editorAsisInterColumn",gc.getColumns());
+				
 				List<ComponenteVO>columnaEditorEmerextr=pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, null,
@@ -1839,9 +1853,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				componentesAgente.get(1).setDefaultValue(usuario.getUser());
 				gc.generaComponentes(componentesAgente, true,false,true,false,false,false);
 				imap.put("itemsAgente"  , gc.getItems());
+				
+				List<ComponenteVO>comboFormaPago=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
+				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
+				imap.put("comboFormaPago"  , gc.getItems());
 			}
 			
-			if(exito)
+			if(exito&&StringUtils.isBlank(smap1.get("ntramite")))
 			{
 				UserVO usuario  = (UserVO) session.get("USUARIO");
 				String cdtipsit = smap1.get("cdtipsit");
@@ -1956,9 +1977,13 @@ public class CotizacionAction extends PrincipalCoreAction
 		success = true;
 		exito   = true;
 		
-		String timestamp = smap1.get("timestamp");
-		
-		censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+		String ntramite=smap1.get("ntramite");
+		if(StringUtils.isBlank(ntramite))
+		{
+			String timestamp = smap1.get("timestamp");
+			censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+			logger.info("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
+		}
 		
 		logger.info(""
 				+ "\n###### subirCenso ######"
@@ -1995,6 +2020,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String user        = usuario.getUser();
 			String cdelemento  = usuario.getEmpresa().getElementoId();
 			String nombreCenso = null;
+			String ntramite    = smap1.get("ntramite");
+			boolean hayTramite = StringUtils.isNotBlank(ntramite);
 			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 			
@@ -2087,13 +2114,12 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor01" , smap1.get("cdgiro"));
 				params.put("pv_otvalor02" , smap1.get("cdrelconaseg"));
 				params.put("pv_otvalor03" , smap1.get("cdformaseg"));
-				params.put("pv_otvalor04" , smap1.get("cdagente"));
-				params.put("pv_otvalor05" , smap1.get("dsagente"));
+				params.put("pv_otvalor04" , smap1.get("cdperpag"));
 				kernelManager.pMovTvalopol(params);
 			}
 			
 			//enviar archivo
-			if(exito)
+			if(exito&&!hayTramite)
 			{
 				try
 				{					
@@ -2122,7 +2148,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//pl censo
-			if(exito)
+			if(exito&&!hayTramite)
 			{
 				try
 				{
@@ -2150,6 +2176,78 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 			}
 			
+			//tvalosit
+			if(exito)
+			{
+				if(clasif.equals(LINEA))
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String cdgrupo = (String)iGrupo.get("letra");
+						
+						//SUMA ASEGURADA Y MATERNIDAD
+						String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
+						String ayudamater = (String)iGrupo.get("ayudamater");
+						Object incrinflL  = iGrupo.get("incrinfl");
+						String incrinfl   = incrinflL!=null? incrinflL.toString() : "0";
+						Object extrrenoL  = iGrupo.get("extrreno");
+						String extrreno   = extrrenoL!=null? extrrenoL.toString() : "0";
+						Object cesicomiL  = iGrupo.get("cesicomi");
+						String cesicomi   = cesicomiL!=null? cesicomiL.toString() : "0";
+						Object pondubicL  = iGrupo.get("pondubic");
+						String pondubic   = pondubicL!=null? pondubicL.toString() : "0";
+						Object descbonoL  = iGrupo.get("descbono");
+						String descbono   = descbonoL!=null? descbonoL.toString() : "0";
+						Object porcgastL  = iGrupo.get("porcgast");
+						String porcgast   = porcgastL!=null? porcgastL.toString() : "0";
+						cotizacionManager.movimientoMpolisitTvalositGrupo(
+								cdunieco, cdramo, "W", nmpoliza,
+								cdgrupo, ptsumaaseg, incrinfl, extrreno,
+								cesicomi, pondubic, descbono, porcgast,
+								(String)iGrupo.get("nombre"),ayudamater);
+					}
+				}
+				else
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String cdgrupo = (String)iGrupo.get("letra");
+						
+						//SUMA ASEGURADA y ayuda maternidad
+						String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
+						String ayudamater = null;
+						Object incrinflL  = iGrupo.get("incrinfl");
+						String incrinfl   = incrinflL!=null? incrinflL.toString() : "0";
+						Object extrrenoL  = iGrupo.get("extrreno");
+						String extrreno   = extrrenoL!=null? extrrenoL.toString() : "0";
+						Object cesicomiL  = iGrupo.get("cesicomi");
+						String cesicomi   = cesicomiL!=null? cesicomiL.toString() : "0";
+						Object pondubicL  = iGrupo.get("pondubic");
+						String pondubic   = pondubicL!=null? pondubicL.toString() : "0";
+						Object descbonoL  = iGrupo.get("descbono");
+						String descbono   = descbonoL!=null? descbonoL.toString() : "0";
+						Object porcgastL  = iGrupo.get("porcgast");
+						String porcgast   = porcgastL!=null? porcgastL.toString() : "0";
+						
+						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
+						for(Map<String,String>iTvalogar:tvalogars)
+						{
+							String cdgarant=iTvalogar.get("cdgarant");
+							if(cdgarant.equalsIgnoreCase("4AYM"))
+							{
+								ayudamater=iTvalogar.get("parametros.pv_otvalor01");
+							}
+						}
+						
+						cotizacionManager.movimientoMpolisitTvalositGrupo(
+								cdunieco, cdramo, "W", nmpoliza,
+								cdgrupo, ptsumaaseg, incrinfl, extrreno,
+								cesicomi, pondubic, descbono, porcgast,
+								(String)iGrupo.get("nombre"),ayudamater);
+					}
+				}
+			}
+			
 			//sigsvdef
 			if(exito)
 			{
@@ -2168,24 +2266,32 @@ public class CotizacionAction extends PrincipalCoreAction
 			//tvalogar
 			if(exito)
 			{
-				for(Map<String,Object>iGrupo:olist1)
-				{
-					//SUMA ASEGURADA
-					String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
-					String cdgrupo  = (String)iGrupo.get("letra");
-					cotizacionManager.movimientoMpolisitTvalositGrupo(cdunieco, cdramo, "W", nmpoliza, cdgrupo, ptsumaaseg, null, null, null, null, null, null, (String)iGrupo.get("nombre"));
-				}
 				
 				if(clasif.equals(LINEA))
 				{
 					for(Map<String,Object>iGrupo:olist1)
 					{
-						//HOSPITALIZACION
-						String cdgrupo  = (String)iGrupo.get("letra");
+						String cdgrupo = (String)iGrupo.get("letra");
+						
+						//HOSPITALIZACION (DEDUCIBLE)
 						String cdgarant = "4HOS";
 						String cdatribu = "01";
 						String valor    = (String)iGrupo.get("deducible");
 						cotizacionManager.movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
+						
+						//ASISTENCIA INTERNACIONAL VIAJES
+						String asisinte = (String)iGrupo.get("asisinte");
+						cdgarant = "4AIV";
+						if(asisinte.equalsIgnoreCase("S"))
+						{
+							cotizacionManager.movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+						}
+						else
+						{
+							cotizacionManager.movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+						}
 						
 						//EMERGENCIA EXTRANJERO
 						String emerextr = (String)iGrupo.get("emerextr");
@@ -2206,51 +2312,57 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					for(Map<String,Object>iGrupo:olist1)
 					{
-						String cdgrupo=(String)iGrupo.get("letra");
+						String cdgrupo = (String)iGrupo.get("letra");
+						
 						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
 						for(Map<String,String>iTvalogar:tvalogars)
 						{
-							boolean amparada=StringUtils.isNotBlank(iTvalogar.get("amparada"))&&iTvalogar.get("amparada").equalsIgnoreCase("S");
-							if(amparada)
+							String cdgarant  = iTvalogar.get("cdgarant");
+							boolean amparada = StringUtils.isNotBlank(iTvalogar.get("amparada"))
+									&&iTvalogar.get("amparada").equalsIgnoreCase("S");
+							
+							if(!cdgarant.equalsIgnoreCase("4AYM"))
 							{
-								String cdgarant=iTvalogar.get("cdgarant");
-								cotizacionManager.movimientoMpoligarGrupo(
-										cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
-								//buscar cdatribus
-								boolean hayAtributos=false;
-								Map<String,String>listaCdatribu=new HashMap<String,String>();
-								for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
+								if(amparada)
 								{
-									String key=iAtribTvalogar.getKey();
-									if(key!=null
-											&&key.length()>"parametros.pv_otvalor".length()
-											&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
+									cotizacionManager.movimientoMpoligarGrupo(
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+									//buscar cdatribus
+									boolean hayAtributos=false;
+									Map<String,String>listaCdatribu=new HashMap<String,String>();
+									for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
 									{
-										hayAtributos=true;
-										listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
+										String key=iAtribTvalogar.getKey();
+										if(key!=null
+												&&key.length()>"parametros.pv_otvalor".length()
+												&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
+										{
+											hayAtributos=true;
+											listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
+										}
+									}
+									if(hayAtributos)
+									{
+										for(Entry<String,String>atributo:listaCdatribu.entrySet())
+										{
+											cotizacionManager.movimientoTvalogarGrupo(
+													cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
+													atributo.getKey(), atributo.getValue());
+										}
 									}
 								}
-								if(hayAtributos)
+								else
 								{
-									for(Entry<String,String>atributo:listaCdatribu.entrySet())
-									{
-										cotizacionManager.movimientoTvalogarGrupo(
-												cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
-												atributo.getKey(), atributo.getValue());
-									}
+									cotizacionManager.movimientoMpoligarGrupo(
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
 								}
-							}
-							else
-							{
-								String cdgarant=iTvalogar.get("cdgarant");
-								cotizacionManager.movimientoMpoligarGrupo(
-										cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
 							}
 						}
 					}
 				}
 			}
 			
+			//contratante
 			if(exito)
 			{
 				String cdperson = smap1.get("cdperson");
@@ -2331,13 +2443,14 @@ public class CotizacionAction extends PrincipalCoreAction
     			kernelManager.pMovMdomicil(paramDomicil);
 			}
 			
-			if(exito)
+			//tramite
+			if(exito&&!hayTramite)
 			{
 				Map<String,Object>params=new HashMap<String,Object>();
 				params.put("pv_cdunieco_i"   , cdunieco);
 				params.put("pv_cdramo_i"     , cdramo);
 				params.put("pv_estado_i"     , "W");
-				params.put("pv_nmpoliza_i"   , nmpoliza);
+				params.put("pv_nmpoliza_i"   , "0");
 				params.put("pv_nmsuplem_i"   , "0");
 				params.put("pv_cdsucadm_i"   , cdunieco);
 				params.put("pv_cdsucdoc_i"   , cdunieco);
@@ -2351,11 +2464,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_comments_i"   , null);
 				params.put("pv_nmsolici_i"   , nmpoliza);
 				params.put("pv_cdtipsit_i"   , cdtipsit);
+				params.put("pv_otvalor01"    , smap1.get("cdagente"));
+				params.put("pv_otvalor02"    , smap1.get("dsagente"));
+				params.put("pv_otvalor03"    , clasif);
 				WrapperResultados wr=kernelManager.PMovMesacontrol(params);
 				smap1.put("ntramite",(String)wr.getItemMap().get("ntramite"));
 			}
 			
-			if(false&&exito)
+			//sigsvalipol
+			if(exito)
 			{
 				try
 				{
@@ -2402,13 +2519,13 @@ public class CotizacionAction extends PrincipalCoreAction
 		            String nmsituac="";
 		            for(Map<String,String>res:listaResultados)
 		            {
-		            	String cdperpag = res.get("CDPERPAG");
+		            	String cdperpagqwe = res.get("CDPERPAG");
 		            	String dsperpag = res.get("DSPERPAG");
 		            	String cdplan   = res.get("CDPLAN");
 		            	String dsplan   = res.get("DSPLAN");
-		            	if(!formasPago.containsKey(cdperpag))
+		            	if(!formasPago.containsKey(cdperpagqwe))
 		            	{
-		            		formasPago.put(cdperpag,dsperpag);
+		            		formasPago.put(cdperpagqwe,dsperpag);
 		            	}
 		            	if(!planes.containsKey(cdplan))
 		            	{
@@ -2448,22 +2565,22 @@ public class CotizacionAction extends PrincipalCoreAction
 		            ////// 4. crear primas //////
 		            for(Map<String,String>res:listaResultados)
 		            {
-		            	String cdperpag = res.get("CDPERPAG");
+		            	String cdperpagqwe = res.get("CDPERPAG");
 		            	String mnprima  = res.get("MNPRIMA");
 		            	String cdplan   = res.get("CDPLAN");
 		            	for(Map<String,String>tarifa:tarifas)
 		                {
-		            		if(tarifa.get("CDPERPAG").equals(cdperpag))
+		            		if(tarifa.get("CDPERPAG").equals(cdperpagqwe))
 		            		{
 		            			if(tarifa.containsKey("MNPRIMA"+cdplan))
 		            			{
-		            				log.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
+		            				log.debug("ya hay prima para "+cdplan+" en "+cdperpagqwe+": "+tarifa.get("MNPRIMA"+cdplan));
 		            				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
 		            				log.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
 		            			}
 		            			else
 		            			{
-		            				log.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
+		            				log.debug("primer prima para "+cdplan+" en "+cdperpagqwe+": "+mnprima);
 		            				tarifa.put("MNPRIMA"+cdplan,mnprima);
 		            			}
 		            		}
@@ -2700,6 +2817,216 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### obtenerDetalleCotizacionGrupo ######"
 				+ "\n###########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarDatosCotizacionGrupo()
+	{
+		logger.info(""
+				+ "\n########################################"
+				+ "\n###### cargarDatosCotizacionGrupo ######"
+				+ "\nsmap1 "+smap1
+				);
+		success = true;
+		try
+		{
+			params=cotizacionManager.cargarDatosCotizacionGrupo(
+					smap1.get("cdunieco"), smap1.get("cdramo"),
+					smap1.get("cdtipsit"), smap1.get("estado"),
+					smap1.get("nmpoliza"), smap1.get("ntramite"));
+		    respuesta       = "Todo OK";
+		    respuestaOculta = "Todo OK";
+		    exito           = true;
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("Error al cargar datos de cotizacion grupo "+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarDatosCotizacionGrupo ######"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarGruposCotizacion()
+	{
+		logger.info(""
+				+ "\n####################################"
+				+ "\n###### cargarGruposCotizacion ######"
+				+ "\n smap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			slist1=cotizacionManager.cargarGruposCotizacion(smap1.get("cdunieco"),smap1.get("cdramo"),smap1.get("estado"),smap1.get("nmpoliza"));
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("error al cargar grupos de cotizacion "+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarGruposCotizacion ######"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarDatosGrupoLinea()
+	{
+		logger.info(""
+				+ "\n###################################"
+				+ "\n###### cargarDatosGrupoLinea ######"
+				+ "\n smap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			params=cotizacionManager.cargarDatosGrupoLinea(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("letra")
+					);
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("error al obtener datos de grupo de linea "+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarDatosGrupoLinea ######"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarTvalogarsGrupo()
+	{
+		logger.info(""
+				+ "\n##################################"
+				+ "\n###### cargarTvalogarsGrupo ######"
+				+ "\nsmap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			slist1 = cotizacionManager.cargarTvalogarsGrupo(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("letra"));
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("error al obtener tvalogars grupo #"+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarTvalogarsGrupo ######"
+				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarTarifasPorEdad()
+	{
+		logger.info(""
+				+ "\n##################################"
+				+ "\n###### cargarTarifasPorEdad ######"
+				+ "\nsmap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			slist1=cotizacionManager.cargarTarifasPorEdad(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("nmsuplem")
+					,smap1.get("cdplan")
+					,smap1.get("cdgrupo")
+					,smap1.get("cdperpag"));
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("Error al obtener tarifas por edad #"+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarTarifasPorEdad ######"
+				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarTarifasPorCobertura()
+	{
+		logger.info(""
+				+ "\n#######################################"
+				+ "\n###### cargarTarifasPorCobertura ######"
+				+ "\nsmap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			slist1=cotizacionManager.cargarTarifasPorCobertura(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("nmsuplem")
+					,smap1.get("cdplan")
+					,smap1.get("cdgrupo")
+					,smap1.get("cdperpag"));
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("Error al obtener tarifas por cobertura #"+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarTarifasPorCobertura ######"
+				+ "\n#######################################"
 				);
 		return SUCCESS;
 	}
