@@ -507,13 +507,13 @@ Ext.onReady(function()
                                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
                                                 {
-                                                    Ext.MessageBox.show(
+                                                    centrarVentanaInterna(Ext.MessageBox.show(
                                                     {
                                                         title   : 'Error de tipo de archivo',
                                                         msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
                                                         buttons : Ext.Msg.OK,
                                                         icon    : Ext.Msg.WARNING
-                                                    });
+                                                    }));
                                                     me.reset();
                                                 }
                                             }
@@ -1586,7 +1586,7 @@ function _p21_generarTramiteClic()
                 'smap1.timestamp' : timestamp
                 ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : ''
             }
-            ,timeout : 180000
+            ,timeout : 240000
             ,success : function()
             {
                 var conceptos = form.getValues();
@@ -1616,7 +1616,7 @@ function _p21_generarTramiteClic()
                 Ext.Ajax.request(
                 {
                     url       : _p21_urlGenerarTramiteGrupo
-                    ,timeout  : 180000
+                    ,timeout  : 240000
                     ,jsonData :
                     {
                         smap1   : conceptos
@@ -2147,7 +2147,7 @@ function _p21_rfcBlur(field)
                 debug('json response:',json);
                 if(json&&json.slist1&&json.slist1.length>0)
                 {
-                    Ext.create('Ext.window.Window',
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
                     {
                         width        : 600
                         ,height      : 400
@@ -2227,7 +2227,7 @@ function _p21_rfcBlur(field)
                                 }
                             ]
                         })
-                    }).show();
+                    }).show());
                 }
                 else
                 {
