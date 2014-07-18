@@ -66,6 +66,30 @@
            <result type="json" />
        </action>
        
+       <action name="cargarDatosCotizacionGrupo" class="CotizacionAction" method="cargarDatosCotizacionGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarGruposCotizacion" class="CotizacionAction" method="cargarGruposCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarDatosGrupoLinea" class="CotizacionAction" method="cargarDatosGrupoLinea">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTvalogarsGrupo" class="CotizacionAction" method="cargarTvalogarsGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTarifasPorEdad" class="CotizacionAction" method="cargarTarifasPorEdad">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTarifasPorCobertura" class="CotizacionAction" method="cargarTarifasPorCobertura">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>
