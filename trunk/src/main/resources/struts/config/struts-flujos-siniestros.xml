@@ -212,6 +212,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaRamosSalud" class="siniestrosAction"
+			method="consultaRamosSalud">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listadoRamosSalud.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="consultaListaFacturas" class="siniestrosAction"
 			method="consultaListaFacturas">
 			<result type="json">

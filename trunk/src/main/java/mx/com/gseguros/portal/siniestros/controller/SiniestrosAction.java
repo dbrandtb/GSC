@@ -109,6 +109,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
+    private List<GenericVO> listadoRamosSalud;
     private List<ListaFacturasVO> listaFacturas;
     
     private Item                     item;
@@ -546,6 +547,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	 */
 	public String consultaListaCoberturaPoliza(){
 		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
+		logger.debug(params);
 		try {
 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -631,8 +633,18 @@ public class SiniestrosAction extends PrincipalCoreAction{
     */    
    public String consultaListaSubcobertura(){
    	logger.debug(" **** Entrando al m�todo de Lista de Subcobertura ****");
+   	logger.debug(params);
+   	if(params != null){
+   		logger.debug("####ENTRA ---> ");
+   	}else{
+   		logger.debug("####NO ENTRA ---> ");
+   	}
 	   	try {
-	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"));
+	   		String subcobertura = null;
+	   		if(params.get("cdsubcob") != null){
+	   			subcobertura = params.get("cdsubcob");
+	   		}
+	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),subcobertura);
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
 	   		return SUCCESS;
@@ -824,8 +836,16 @@ public void setMsgResult(String msgResult) {
    //ConsultaPorcentajeVO> listaPorcentaje
    public String consultaListaPorcentaje(){
 		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
+		logger.debug(params);
 		try {
-				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
+				String valorMontoBase ="0";
+				String montoBase= params.get("mtobase");
+				if(montoBase == null){
+					valorMontoBase="21000";
+				}else{
+					valorMontoBase = montoBase;
+				}
+				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),valorMontoBase);
 				if(lista!=null && !lista.isEmpty())	listaPorcentaje = lista;
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de la poliza ",e);
@@ -1530,6 +1550,7 @@ public String generarSiniestroSinAutorizacion()
  }
    public String validaPorcentajePenalizacion(){
 	   	logger.debug(" **** Entrando al metodo de porcentaje de validaci�n ****");
+	   	logger.debug(params);
 	   	try {
 	   		porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"));
 	   	}catch( Exception e){
@@ -5319,6 +5340,22 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	   	success = true;
 	   	return SUCCESS;
  }
+    /**
+     * Funci�n que obtiene la lista del asegurado
+     * @param void sin parametros de entrada
+     * @return Lista GenericVO con la informaci�n de los asegurados
+     */    
+    public String consultaRamosSalud(){
+    	logger.debug(" **** Entrando al metodo para la consulta de Ramos para salud ****");
+ 	   	try {
+ 	   		listadoRamosSalud = siniestrosManager.getConsultaListaRamoSalud();
+ 	   	}catch( Exception e){
+ 	   		logger.error("Error al consultar los ramos para Salud ",e);
+ 	   		return SUCCESS;
+ 	   	}
+ 	   	success = true;
+ 	   	return SUCCESS;
+    }
     
     public String getExistePenalizacion() {
 		return existePenalizacion;
@@ -5973,6 +6010,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setRequiereAutServ(String requiereAutServ) {
 		this.requiereAutServ = requiereAutServ;
+	}
+
+	public List<GenericVO> getListadoRamosSalud() {
+		return listadoRamosSalud;
+	}
+
+	public void setListadoRamosSalud(List<GenericVO> listadoRamosSalud) {
+		this.listadoRamosSalud = listadoRamosSalud;
 	}
 	
 	

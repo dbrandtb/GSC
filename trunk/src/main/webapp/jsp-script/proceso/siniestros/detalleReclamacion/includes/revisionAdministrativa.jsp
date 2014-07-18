@@ -81,7 +81,8 @@ Ext.onReady(function() {
                  {type:'string',    name:'DCTONUEX'},
                  {type:'string',    name:'APLICA_IVA'},
                  {type:'string',    name:'ANTES_DESPUES'},
-                 {type:'string',    name:'CDPRESTA'}
+                 {type:'string',    name:'CDPRESTA'},
+                 {type:'string',    name:'CODRECLAM'}
 				]
     });
 	
@@ -1013,6 +1014,26 @@ Ext.define('EditorFacturas', {
  			store: storeFacturas,
  			columns: 
  				[{
+ 					xtype : 'actioncolumn',
+ 					width : 50,
+ 					sortable : false,
+ 					menuDisabled : true,
+ 					items : [{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
+ 						tooltip : 'Editar Factura',
+ 						scope : this,
+ 						handler : this.onEditClick
+ 					},{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
+ 						tooltip : 'Eliminar Factura',
+ 						scope : this,
+ 						handler : this.onRemoveClick
+ 					}]
+ 				},{
+ 					header : 'C&oacute;digo de Reclamaci&oacute;n',
+ 					dataIndex : 'CODRECLAM',
+ 					width : 150
+ 				},{
  					header : 'No. de Factura',
  					dataIndex : 'NFACTURA',
  					width : 150
@@ -1081,22 +1102,6 @@ Ext.define('EditorFacturas', {
  					dataIndex : 'CDPRESTA',
  					width : 150,
  					hidden: true
- 				},{
- 					xtype : 'actioncolumn',
- 					width : 50,
- 					sortable : false,
- 					menuDisabled : true,
- 					items : [{
- 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
- 						tooltip : 'Editar Factura',
- 						scope : this,
- 						handler : this.onEditClick
- 					},{
- 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
- 						tooltip : 'Eliminar Factura',
- 						scope : this,
- 						handler : this.onRemoveClick
- 					}]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -1335,6 +1340,12 @@ Ext.define('EditorConceptos', {
  			store: storeConceptos,
  			columns: 
  				[{
+ 					xtype : 'actioncolumn',
+ 					width : 80,
+ 					sortable : false,
+ 					menuDisabled : true,
+ 					items : [<s:property value="imap.conceptosButton" />]
+ 				},{
  					dataIndex : 'NMORDINA',
  					width : 20,
  					hidden: true
@@ -1391,12 +1402,6 @@ Ext.define('EditorConceptos', {
  					dataIndex : 'PTMTOARA',
  					width : 150,
  					renderer : Ext.util.Format.usMoney
- 				},{
- 					xtype : 'actioncolumn',
- 					width : 80,
- 					sortable : false,
- 					menuDisabled : true,
- 					items : [<s:property value="imap.conceptosButton" />]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',

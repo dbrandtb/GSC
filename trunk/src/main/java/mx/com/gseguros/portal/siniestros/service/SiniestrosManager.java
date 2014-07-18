@@ -106,7 +106,7 @@ public interface SiniestrosManager {
 	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException;
 
 	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException;
-
+	
 	public String guardaListaFacMesaControl(
 			String ntramite,
 			String nfactura,
@@ -464,4 +464,5 @@ public interface SiniestrosManager {
 	
 	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura,String cdramo) throws Exception;
 	
+	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException;
 }

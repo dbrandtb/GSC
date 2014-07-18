@@ -71,12 +71,11 @@ Ext.onReady(function() {
         proxy:
         {
             type: 'ajax',
-            url:_URL_CATALOGOS,
-            extraParams : {catalogo:_CAT_RAMOS2},
+			url:_UR_LISTA_RAMO_SALUD2,
             reader:
             {
                 type: 'json',
-                root: 'lista'
+				root: 'listadoRamosSalud'
             }
         }
     });

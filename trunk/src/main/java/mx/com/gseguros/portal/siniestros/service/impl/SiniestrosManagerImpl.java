@@ -296,7 +296,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
-
 	
 	@Override
 	public String guardaListaFacMesaControl(
@@ -1256,5 +1255,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_ramo_i",   cdramo);
 		log.debug("obtieneFormatoCalculo params: "+params);
 		return siniestrosDAO.obtieneFormatoCalculo(params);
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoRamoSalud();
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
 	}
 }
