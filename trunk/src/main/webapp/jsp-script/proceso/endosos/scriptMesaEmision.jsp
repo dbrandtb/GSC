@@ -14,6 +14,7 @@ var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComple
 var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion"                />';
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
+var mesConUrlComGrupo     = '<s:url namespace="/emision"     action="cotizacionGrupo"           />';
 
 var ROL_MESA_DE_CONTROL    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
 var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
@@ -69,20 +70,40 @@ function _4_onComplementariosClick(grid,rowIndex)
         		mensajeWarning('Usted no puede realizar esta acci&oacute;n.');
         		return;
         	}
-            Ext.create('Ext.form.Panel').submit(
-            {
-                url             : mesConUrlDatCom
-                ,standardSubmit : true
-                ,params         :
+        	if(record.get('cdtipsit')=='MSC')
+        	{
+        		Ext.create('Ext.form.Panel').submit(
                 {
-                    cdunieco  : record.get('cdunieco')
-                    ,cdramo   : record.get('cdramo')
-                    ,estado   : record.get('estado')
-                    ,nmpoliza : record.get('nmsolici')
-                    ,'map1.ntramite' : record.get('ntramite')
-                    ,cdtipsit : record.get('cdtipsit')
-                }
-            });
+                    url             : mesConUrlComGrupo
+                    ,standardSubmit : true
+                    ,params         :
+                    {
+                        'smap1.cdunieco'  : record.get('cdunieco')
+                        ,'smap1.cdramo'   : record.get('cdramo')
+                        ,'smap1.cdtipsit' : record.get('cdtipsit')
+                        ,'smap1.estado'   : record.get('estado')
+                        ,'smap1.nmpoliza' : record.get('nmsolici')
+                        ,'smap1.ntramite' : record.get('ntramite')
+                    }
+                });
+        	}
+        	else
+        	{
+	            Ext.create('Ext.form.Panel').submit(
+	            {
+	                url             : mesConUrlDatCom
+	                ,standardSubmit : true
+	                ,params         :
+	                {
+	                    cdunieco  : record.get('cdunieco')
+	                    ,cdramo   : record.get('cdramo')
+	                    ,estado   : record.get('estado')
+	                    ,nmpoliza : record.get('nmsolici')
+	                    ,'map1.ntramite' : record.get('ntramite')
+	                    ,cdtipsit : record.get('cdtipsit')
+	                }
+	            });
+        	}
         }
         else
         {
