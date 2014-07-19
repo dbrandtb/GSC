@@ -137,7 +137,6 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"nmpoliza"
 			,"cdperpag"
 			,"cdagente"
-			,"dsagente"
 			,"clasif"
 		};
 		
@@ -357,6 +356,26 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String cargarNombreAgenteTramite(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new CargarNombreAgenteTramite(getDataSource()), params);
+		return (String)resultado.get("pv_nombre_o");
+	}
+	
+	protected class CargarNombreAgenteTramite extends StoredProcedure
+	{
+		protected CargarNombreAgenteTramite(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_NOMBRE_AGENTE_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nombre_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
