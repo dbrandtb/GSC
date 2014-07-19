@@ -275,6 +275,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return datos;
 	}
 	
+	@Override
 	public List<Map<String,String>>cargarTvalogarsGrupo(
 			String cdunieco
 			,String cdramo
@@ -310,6 +311,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return listaTvalogars;
 	}
 	
+	@Override
 	public List<Map<String,String>>cargarTarifasPorEdad(
 			String cdunieco
 			,String cdramo
@@ -354,6 +356,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
+	@Override
 	public List<Map<String,String>>cargarTarifasPorCobertura(
 			String cdunieco
 			,String cdramo
@@ -396,6 +399,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\n#######################################"
 				);
 		return lista;
+	}
+	
+	@Override
+	public String cargarNombreAgenteTramite(String ntramite)throws Exception
+	{
+		logger.info(""
+				+ "\n#######################################"
+				+ "\n###### cargarNombreAgenteTramite ######"
+				+ "\nntramite "+ntramite
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("ntramite",ntramite);
+		String nombre=cotizacionDAO.cargarNombreAgenteTramite(params);
+		logger.info("cargarNombreAgenteTramite nombre: "+nombre);
+		logger.info(""
+				+ "\n###### cargarNombreAgenteTramite ######"
+				+ "\n#######################################"
+				);
+		return nombre;
 	}
 	
 	///////////////////////////////
