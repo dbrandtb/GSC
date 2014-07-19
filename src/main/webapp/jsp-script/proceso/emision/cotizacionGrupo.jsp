@@ -54,6 +54,9 @@ debug('_p21_smap1:',_p21_smap1);
 var _p21_ntramite = Ext.isEmpty(_p21_smap1.ntramite) ? false : _p21_smap1.ntramite;
 debug('_p21_ntramite:',_p21_ntramite);
 
+var _p21_ntramiteVacio = Ext.isEmpty(_p21_smap1.ntramiteVacio) ? false : _p21_smap1.ntramiteVacio;
+debug('_p21_ntramiteVacio:',_p21_ntramiteVacio);
+
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p21_editorPlan.on('change',_p21_editorPlanChange);
 debug('_p21_editorPlan:',_p21_editorPlan);
@@ -535,7 +538,7 @@ Ext.onReady(function()
                                 ,hidden  : _p21_ntramite ? false : true
                             }
                             ,{
-                                text     : 'Generar tr&aacute;mite'
+                                text     : _p21_ntramiteVacio ? 'Complementar tr&aacute;mite' : 'Generar tr&aacute;mite'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/book_next.png'
                                 ,handler : _p21_generarTramiteClic
                                 ,hidden  : _p21_ntramite ? true : false
@@ -557,7 +560,11 @@ Ext.onReady(function()
     ////// loaders //////
     _p21_fieldRfc().addListener('blur',_p21_rfcBlur);
     
-    if(_p21_ntramite)
+    if(_p21_ntramiteVacio)
+    {
+        _p21_fieldByName('ntramite').setValue(_p21_ntramiteVacio);
+    }
+    else if(_p21_ntramite)
     {
         _p21_tabpanel().setLoading(true);
         Ext.Ajax.request(
@@ -802,13 +809,13 @@ function _p21_construirLinea(button,event,confirmado)
         valido=confirmado==true;
         if(!valido)
         {
-            Ext.MessageBox.confirm('Confirmar', 'Se borrarán los subgrupos existentes<br>¿Desea continuar?', function(btn)
+            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrarán los subgrupos existentes<br>¿Desea continuar?', function(btn)
             {
                 if(btn === 'yes')
                 {
                     _p21_construirLinea(button,event,true);
                 }
-            });
+            }));
         }
     }
     
@@ -833,13 +840,13 @@ function _p21_construirModificada(button,event,confirmado)
         valido=confirmado==true;
         if(!valido)
         {
-            Ext.MessageBox.confirm('Confirmar', 'Se borrarán los subgrupos existentes<br>¿Desea continuar?', function(btn)
+            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrarán los subgrupos existentes<br>¿Desea continuar?', function(btn)
             {
                 if(btn === 'yes')
                 {
                     _p21_construirModificada(button,event,true);
                 }
-            });
+            }));
         }
     }
     debug('<_p21_construirModificada');
@@ -1593,11 +1600,12 @@ function _p21_generarTramiteClic()
             ,success : function()
             {
                 var conceptos = form.getValues();
-                conceptos['timestamp'] = timestamp;
-                conceptos['clasif']    = _p21_clasif;
-                conceptos['cdunieco']  = _p21_smap1.cdunieco;
-                conceptos['cdramo']    = _p21_smap1.cdramo;
-                conceptos['cdtipsit']  = _p21_smap1.cdtipsit;
+                conceptos['timestamp']     = timestamp;
+                conceptos['clasif']        = _p21_clasif;
+                conceptos['cdunieco']      = _p21_smap1.cdunieco;
+                conceptos['cdramo']        = _p21_smap1.cdramo;
+                conceptos['cdtipsit']      = _p21_smap1.cdtipsit;
+                conceptos['ntramiteVacio'] = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
                 var grupos = [];
                 if(_p21_clasif==_p21_TARIFA_LINEA)
                 {
@@ -1632,7 +1640,7 @@ function _p21_generarTramiteClic()
                         debug('json response:',json);
                         if(json.exito)
                         {
-                            if(_p21_ntramite)
+                            if(_p21_ntramite||_p21_ntramiteVacio)
                             {
                                 _p21_tabpanel().setLoading(true);
                                 Ext.create('Ext.form.Panel').submit(
@@ -1644,8 +1652,9 @@ function _p21_generarTramiteClic()
                                         ,'smap1.cdramo'   : _p21_smap1.cdramo
                                         ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
                                         ,'smap1.estado'   : _p21_smap1.estado
-                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                                        ,'smap1.ntramite' : _p21_ntramite
+                                        ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                        ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
+                                        ,'smap1.cdagente' : _p21_fieldByName('cdagente').getValue()
                                     }
                                 });
                             }
