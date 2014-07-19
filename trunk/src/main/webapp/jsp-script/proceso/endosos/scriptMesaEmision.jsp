@@ -84,6 +84,7 @@ function _4_onComplementariosClick(grid,rowIndex)
                         ,'smap1.estado'   : record.get('estado')
                         ,'smap1.nmpoliza' : record.get('nmsolici')
                         ,'smap1.ntramite' : record.get('ntramite')
+                        ,'smap1.cdagente' : record.get('cdagente')
                     }
                 });
         	}
@@ -108,18 +109,39 @@ function _4_onComplementariosClick(grid,rowIndex)
         else
         {
             debug('cotizar');
-            Ext.create('Ext.form.Panel').submit(
+            if(record.get('cdtipsit')=='MSC')
             {
-                url             : mesConUrlCotizar
-                ,standardSubmit : true
-                ,params         :
+                Ext.create('Ext.form.Panel').submit(
                 {
-                    'smap1.ntramite'  : record.get('ntramite')
-                    ,'smap1.cdunieco' : record.get('cdunieco')
-                    ,'smap1.cdramo'   : record.get('cdramo')
-                    ,'smap1.cdtipsit' : record.get('cdtipsit')
-                }
-            });
+                    url             : mesConUrlComGrupo
+                    ,standardSubmit : true
+                    ,params         :
+                    {
+                        'smap1.cdunieco'       : record.get('cdunieco')
+                        ,'smap1.cdramo'        : record.get('cdramo')
+                        ,'smap1.cdtipsit'      : record.get('cdtipsit')
+                        ,'smap1.estado'        : record.get('estado')
+                        ,'smap1.nmpoliza'      : ''
+                        ,'smap1.ntramiteVacio' : record.get('ntramite')
+                        ,'smap1.cdagente'      : record.get('cdagente')
+                    }
+                });
+            }
+            else
+            {
+	            Ext.create('Ext.form.Panel').submit(
+	            {
+	                url             : mesConUrlCotizar
+	                ,standardSubmit : true
+	                ,params         :
+	                {
+	                    'smap1.ntramite'  : record.get('ntramite')
+	                    ,'smap1.cdunieco' : record.get('cdunieco')
+	                    ,'smap1.cdramo'   : record.get('cdramo')
+	                    ,'smap1.cdtipsit' : record.get('cdtipsit')
+	                }
+	            });
+            }
         }
     }
     else
