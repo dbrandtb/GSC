@@ -97,4 +97,6 @@ public interface CotizacionManager
 			,String cdgrupo
 			,String cdperpag)throws Exception;
 	
+	public String cargarNombreAgenteTramite(String ntramite)throws Exception;
+	
 }
