@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -75,6 +76,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private String                           censoContentType;
 	private List<Map<String,Object>>         olist1;
 	private CotizacionManager                cotizacionManager;
+	private SiniestrosManager                siniestrosManager;
 	
 	/////////////////////////////////
 	////// cotizacion dinamica //////
@@ -1777,14 +1779,42 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			success = true;
 			exito   = true;
+			imap    = new HashMap<String,Item>();
 			
-			imap=new HashMap<String,Item>();
+			GeneradorCampos gc            = null;
+			String          ntramite      = null;
+			String          ntramiteVacio = null;
+			String          nombreAgente  = null;
+			String          cdAgente      = null;
 			
-			GeneradorCampos gc = null;
+			UserVO usuario  = (UserVO) session.get("USUARIO");
 			
 			if(exito)
 			{
-				UserVO usuario=(UserVO)session.get("USUARIO");
+				ntramite      = smap1.get("ntramite");
+				ntramiteVacio = smap1.get("ntramiteVacio");
+				
+				//si entran por agente
+				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
+				{
+					String cdtipsit = smap1.get("cdtipsit");
+					DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
+	        		String cdunieco = datUsu.getCdunieco();
+	        		smap1.put("cdunieco",cdunieco);
+	        		
+	        		cdAgente     = datUsu.getCdagente();
+	        		nombreAgente = usuario.getName();
+				}
+				//si entran por tramite o tramite vacio
+				else if(StringUtils.isNotBlank(ntramite)||StringUtils.isNotBlank(ntramiteVacio))
+				{
+					cdAgente     = smap1.get("cdagente");
+					nombreAgente = cotizacionManager.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
+				}
+			}
+			
+			if(exito)
+			{
 				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
@@ -1849,8 +1879,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "AGENTE", null);
-				componentesAgente.get(0).setDefaultValue(usuario.getName());
-				componentesAgente.get(1).setDefaultValue(usuario.getUser());
+				componentesAgente.get(0).setDefaultValue(nombreAgente);
+				componentesAgente.get(1).setDefaultValue(cdAgente);
 				gc.generaComponentes(componentesAgente, true,false,true,false,false,false);
 				imap.put("itemsAgente"  , gc.getItems());
 				
@@ -1860,15 +1890,6 @@ public class CotizacionAction extends PrincipalCoreAction
 						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
 				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
 				imap.put("comboFormaPago"  , gc.getItems());
-			}
-			
-			if(exito&&StringUtils.isBlank(smap1.get("ntramite")))
-			{
-				UserVO usuario  = (UserVO) session.get("USUARIO");
-				String cdtipsit = smap1.get("cdtipsit");
-				DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
-        		String cdunieco = datUsu.getCdunieco();
-        		smap1.put("cdunieco",cdunieco);
 			}
 			
 			if(exito)
@@ -2006,22 +2027,24 @@ public class CotizacionAction extends PrincipalCoreAction
 			success = true;
 			exito   = true;
 			
-			String timestamp   = smap1.get("timestamp");
-			String clasif      = smap1.get("clasif");
-			String cdunieco    = smap1.get("cdunieco");
-			String cdramo      = smap1.get("cdramo");
-			String cdtipsit    = smap1.get("cdtipsit");
-			String nmpoliza    = smap1.get("nmpoliza");
-			Date   fechaHoy    = new Date();
-			String feini       = smap1.get("feini");
-			String fefin       = smap1.get("fefin");
-			final String LINEA = "1";
-			UserVO usuario     = (UserVO)session.get("USUARIO");
-			String user        = usuario.getUser();
-			String cdelemento  = usuario.getEmpresa().getElementoId();
-			String nombreCenso = null;
-			String ntramite    = smap1.get("ntramite");
-			boolean hayTramite = StringUtils.isNotBlank(ntramite);
+			String timestamp        = smap1.get("timestamp");
+			String clasif           = smap1.get("clasif");
+			String cdunieco         = smap1.get("cdunieco");
+			String cdramo           = smap1.get("cdramo");
+			String cdtipsit         = smap1.get("cdtipsit");
+			String nmpoliza         = smap1.get("nmpoliza");
+			Date   fechaHoy         = new Date();
+			String feini            = smap1.get("feini");
+			String fefin            = smap1.get("fefin");
+			final String LINEA      = "1";
+			UserVO usuario          = (UserVO)session.get("USUARIO");
+			String user             = usuario.getUser();
+			String cdelemento       = usuario.getEmpresa().getElementoId();
+			String nombreCenso      = null;
+			String ntramite         = smap1.get("ntramite");
+			String ntramiteVacio    = smap1.get("ntramiteVacio");
+			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
+			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
 			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 			
@@ -2119,7 +2142,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			if(exito&&!hayTramite)
+			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
 				try
 				{					
@@ -2148,7 +2171,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//pl censo
-			if(exito&&!hayTramite)
+			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
 				try
 				{
@@ -2444,31 +2467,41 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//tramite
-			if(exito&&!hayTramite)
+			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
-				Map<String,Object>params=new HashMap<String,Object>();
-				params.put("pv_cdunieco_i"   , cdunieco);
-				params.put("pv_cdramo_i"     , cdramo);
-				params.put("pv_estado_i"     , "W");
-				params.put("pv_nmpoliza_i"   , "0");
-				params.put("pv_nmsuplem_i"   , "0");
-				params.put("pv_cdsucadm_i"   , cdunieco);
-				params.put("pv_cdsucdoc_i"   , cdunieco);
-				params.put("pv_cdtiptra_i"   , TipoTramite.POLIZA_NUEVA.getCdtiptra());
-				params.put("pv_ferecepc_i"   , new Date());
-				params.put("pv_cdagente_i"   , null);
-				params.put("pv_referencia_i" , null);
-				params.put("pv_nombre_i"     , null);
-				params.put("pv_festatus_i"   , new Date());
-				params.put("pv_status_i"     , EstatusTramite.PENDIENTE.getCodigo());
-				params.put("pv_comments_i"   , null);
-				params.put("pv_nmsolici_i"   , nmpoliza);
-				params.put("pv_cdtipsit_i"   , cdtipsit);
-				params.put("pv_otvalor01"    , smap1.get("cdagente"));
-				params.put("pv_otvalor02"    , smap1.get("dsagente"));
-				params.put("pv_otvalor03"    , clasif);
-				WrapperResultados wr=kernelManager.PMovMesacontrol(params);
-				smap1.put("ntramite",(String)wr.getItemMap().get("ntramite"));
+				if(!hayTramite)
+				{
+					Map<String,Object>params=new HashMap<String,Object>();
+					params.put("pv_cdunieco_i"   , cdunieco);
+					params.put("pv_cdramo_i"     , cdramo);
+					params.put("pv_estado_i"     , "W");
+					params.put("pv_nmpoliza_i"   , "0");
+					params.put("pv_nmsuplem_i"   , "0");
+					params.put("pv_cdsucadm_i"   , cdunieco);
+					params.put("pv_cdsucdoc_i"   , cdunieco);
+					params.put("pv_cdtiptra_i"   , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+					params.put("pv_ferecepc_i"   , new Date());
+					params.put("pv_cdagente_i"   , smap1.get("cdagente"));
+					params.put("pv_referencia_i" , null);
+					params.put("pv_nombre_i"     , null);
+					params.put("pv_festatus_i"   , new Date());
+					params.put("pv_status_i"     , EstatusTramite.PENDIENTE.getCodigo());
+					params.put("pv_comments_i"   , null);
+					params.put("pv_nmsolici_i"   , nmpoliza);
+					params.put("pv_cdtipsit_i"   , cdtipsit);
+					params.put("pv_otvalor01"    , clasif);
+					WrapperResultados wr=kernelManager.PMovMesacontrol(params);
+					smap1.put("ntramite",(String)wr.getItemMap().get("ntramite"));
+				}
+				else
+				{
+					kernelManager.mesaControlUpdateSolici(ntramiteVacio, nmpoliza);
+					Map<String,Object>params=new HashMap<String,Object>();
+					params.put("pv_ntramite_i"  , ntramiteVacio);
+					params.put("pv_otvalor01_i" , clasif);
+					siniestrosManager.actualizaOTValorMesaControl(params);
+				}
+				
 			}
 			
 			//sigsvalipol
@@ -3176,6 +3209,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setCotizacionManager(CotizacionManager cotizacionManager) {
 		this.cotizacionManager = cotizacionManager;
+	}
+
+	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
+		this.siniestrosManager = siniestrosManager;
 	}
 
 }
