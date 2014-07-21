@@ -27,6 +27,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -1646,7 +1647,7 @@ public class EndososAction extends PrincipalCoreAction
 			log.debug("se puso pv_ en el anterior");
 			
 			String cdtipsit=smap1.get("cdtipsit");
-			if(cdtipsit.equals("SL"))
+			if(cdtipsit.equals(TipoSituacion.SALUD_VITAL.getCdtipsit()))
 			{
 				//agregar los nuevos al leido
 				if(atriCober.get("OTVALOR09")!=null&&atriCober.get("OTVALOR09").length()>0)
@@ -1666,7 +1667,7 @@ public class EndososAction extends PrincipalCoreAction
 					valositAsegurado.put("pv_otvalor15",atriCober.get("OTVALOR15"));
 				}
 			}
-			else if(cdtipsit.equals("MS"))
+			else if(cdtipsit.equals(TipoSituacion.MULTISALUD.getCdtipsit()))
 			{
 				//agregar los nuevos al leido
 				if(atriCober.get("OTVALOR08")!=null&&atriCober.get("OTVALOR08").length()>0)
@@ -1674,7 +1675,7 @@ public class EndososAction extends PrincipalCoreAction
 					valositAsegurado.put("pv_otvalor08",atriCober.get("OTVALOR08"));
 				}
 			}
-			else if(cdtipsit.equals("MSC"))
+			else if(cdtipsit.equals(TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit()))
 			{
 				//agregar los nuevos al leido
 				if(atriCober.get("OTVALOR16")!=null&&atriCober.get("OTVALOR16").length()>0)
