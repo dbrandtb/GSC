@@ -244,11 +244,14 @@
             <version>2.0</version>
         </dependency>
         
+        <!-- Apache POI para el manejo de documentos Microsoft -->
+        <dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>3.10-FINAL</version>
+		</dependency>
         
-        <!-- Envio de mails -->
-        
-        
-        <!-- Para conexiones seguras -->
+        <!-- Para realizar conexiones seguras -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
