@@ -1,10 +1,13 @@
 package mx.com.gseguros.portal.emision.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,10 @@ import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -2145,13 +2152,91 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
 				try
-				{					
-					nombreCenso = "censo_"+timestamp+"_"+nmpoliza+".txt";
+				{	
+					FileInputStream input    = new FileInputStream(censo);
+					XSSFWorkbook    workbook = new XSSFWorkbook(input);
+					XSSFSheet       sheet    = workbook.getSheetAt(0);
+					
+					nombreCenso        = "censo_"+timestamp+"_"+nmpoliza+".txt";
+					
+					File        archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+					PrintStream output     = new PrintStream(archivoTxt);
+					
+					//Iterate through each rows one by one
+					logger.info(""
+							+ "\n##############################################"
+							+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+							);
+		            Iterator<Row> rowIterator = sheet.iterator();
+		            while (rowIterator.hasNext()) 
+		            {
+		                Row row        = rowIterator.next();
+		                Date   auxDate = null;
+		                Cell   auxCell = null;
+		                
+		                auxCell=row.getCell(0);
+		                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                
+		                auxCell=row.getCell(1);
+		                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                
+		                auxCell=row.getCell(2);
+		                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                
+		                auxCell=row.getCell(3);
+		                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+		                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+		                
+		                auxDate=row.getCell(4).getDateCellValue();
+		                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+		                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+		                
+		                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
+		                output.print(row.getCell(5).getStringCellValue()+"|");
+		                
+		                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
+		                output.print(row.getCell(6).getStringCellValue()+"|");
+		                
+		                auxCell=row.getCell(7);
+		                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		               
+		                auxCell=row.getCell(8);
+		                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+		                
+		                auxCell=row.getCell(9);
+		                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+		                
+		                auxCell=row.getCell(10);
+		                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+		                
+		                auxCell=row.getCell(11);
+		                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+		                
+		                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+		                output.print(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+		                
+		                output.println("");
+		                logger.info("** NUEVA_FILA **");
+		            }
+		            input.close();
+		            logger.info(""
+		            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+							+ "\n##############################################"
+							);
+					
 					exito = FTPSUtils.upload(
 							this.getText("dominio.server.layouts"),
 							this.getText("user.server.layouts"),
 							this.getText("pass.server.layouts"),
-							censo.getAbsolutePath(),
+							archivoTxt.getAbsolutePath(),
 							this.getText("directorio.server.layouts")+"/"+nombreCenso);
 					if(!exito)
 					{
@@ -2177,6 +2262,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					String cdedo         = smap1.get("cdedo");
 					String cdmunici      = smap1.get("cdmunici");
+					String cdplanes[]    = new String[5];
+					
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String  cdgrupo      = (String)iGrupo.get("letra");
+						String  cdplan       = (String)iGrupo.get("cdplan");
+						Integer indGrupo     = Integer.valueOf(cdgrupo);
+						cdplanes[indGrupo-1] = cdplan;
+					}
 					
 					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
 					params.put("param01",nombreCenso);
@@ -2186,6 +2280,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("param05",nmpoliza);
 					params.put("param06",cdedo);
 					params.put("param07",cdmunici);
+					params.put("param08",cdplanes[0]);
+					params.put("param09",cdplanes[1]);
+					params.put("param10",cdplanes[2]);
+					params.put("param11",cdplanes[3]);
+					params.put("param12",cdplanes[4]);
 					storedProceduresManager.procedureVoidCall(
 							ObjetoBD.CARGAR_CENSO.getNombre(), params, null);
 				}

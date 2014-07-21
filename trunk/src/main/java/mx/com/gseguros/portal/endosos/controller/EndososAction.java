@@ -1645,22 +1645,50 @@ public class EndososAction extends PrincipalCoreAction
 			valositAsegurado=valositAseguradoIterado;
 			log.debug("se puso pv_ en el anterior");
 			
-			//agregar los nuevos al leido
-			if(atriCober.get("OTVALOR09")!=null&&atriCober.get("OTVALOR09").length()>0)
+			String cdtipsit=smap1.get("cdtipsit");
+			if(cdtipsit.equals("SL"))
 			{
-				valositAsegurado.put("pv_otvalor09",atriCober.get("OTVALOR09"));
+				//agregar los nuevos al leido
+				if(atriCober.get("OTVALOR09")!=null&&atriCober.get("OTVALOR09").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor09",atriCober.get("OTVALOR09"));
+				}
+				if(atriCober.get("OTVALOR10")!=null&&atriCober.get("OTVALOR10").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor10",atriCober.get("OTVALOR10"));
+				}
+				if(atriCober.get("OTVALOR14")!=null&&atriCober.get("OTVALOR14").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor14",atriCober.get("OTVALOR14"));
+				}
+				if(atriCober.get("OTVALOR15")!=null&&atriCober.get("OTVALOR15").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor15",atriCober.get("OTVALOR15"));
+				}
 			}
-			if(atriCober.get("OTVALOR10")!=null&&atriCober.get("OTVALOR10").length()>0)
+			else if(cdtipsit.equals("MS"))
 			{
-				valositAsegurado.put("pv_otvalor10",atriCober.get("OTVALOR10"));
+				//agregar los nuevos al leido
+				if(atriCober.get("OTVALOR08")!=null&&atriCober.get("OTVALOR08").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor08",atriCober.get("OTVALOR08"));
+				}
 			}
-			if(atriCober.get("OTVALOR14")!=null&&atriCober.get("OTVALOR14").length()>0)
+			else if(cdtipsit.equals("MSC"))
 			{
-				valositAsegurado.put("pv_otvalor14",atriCober.get("OTVALOR14"));
-			}
-			if(atriCober.get("OTVALOR15")!=null&&atriCober.get("OTVALOR15").length()>0)
-			{
-				valositAsegurado.put("pv_otvalor15",atriCober.get("OTVALOR15"));
+				//agregar los nuevos al leido
+				if(atriCober.get("OTVALOR16")!=null&&atriCober.get("OTVALOR16").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor16",atriCober.get("OTVALOR16"));
+				}
+				if(atriCober.get("OTVALOR17")!=null&&atriCober.get("OTVALOR17").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor17",atriCober.get("OTVALOR17"));
+				}
+				if(atriCober.get("OTVALOR18")!=null&&atriCober.get("OTVALOR18").length()>0)
+				{
+					valositAsegurado.put("pv_otvalor18",atriCober.get("OTVALOR18"));
+				}
 			}
 			log.debug("se agregaron los nuevos");
 			

@@ -503,7 +503,7 @@ Ext.onReady(function()
                                         ,allowBlank : _p21_ntramite ? true : false
                                         ,buttonOnly : false
                                         ,width      : 450
-                                        ,cAccept    : ['csv']
+                                        ,cAccept    : ['xls','xlsx']
                                         ,msgTarget  : 'side'
                                         ,listeners  :
                                         {
