@@ -60,8 +60,10 @@
 		<pattern>/pantallaValosit.action</pattern>
         <pattern>/jsp/extjs4/pantallaValosit.jsp</pattern>
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
+		<pattern>/catalogos/pantallaDocumentosPersona.action*</pattern>
 		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
+		<pattern>/jsp/extjs4/ventanaDocumentosPersona.jsp</pattern>
 		<pattern>/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</pattern>
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
@@ -88,6 +90,7 @@
 		<pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
 
 		<pattern>/subirArchivo.action</pattern>
+		<pattern>/subirArchivoPersona.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
 
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
