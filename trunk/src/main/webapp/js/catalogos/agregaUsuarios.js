@@ -66,6 +66,7 @@ Ext.onReady(function() {
                         fieldLabel    : 'Rol',
                         readOnly      : editMode,
 			    		allowBlank    : editMode,
+			    		hidden        : editMode,
                         valueField    : 'key',
                         displayField  : 'value',
                         forceSelection: true,
