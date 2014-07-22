@@ -2964,7 +2964,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
 
-		String tipoMov = "1";
+		String tipoMov = map1.get("tipmov");
 		
 		// Ejecutamos el Web Service de Recibos:
 		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
