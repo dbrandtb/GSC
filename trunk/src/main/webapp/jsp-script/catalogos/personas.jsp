@@ -8,11 +8,12 @@
 ////// overrides //////
 
 ////// variables //////
-var _p22_urlObtenerPersonas  = '<s:url namespace="/catalogos" action="obtenerPersonasPorRFC"              />';
-var _p22_urlGuardar          = '<s:url namespace="/catalogos" action="guardarPantallaPersonas"            />';
-var _p22_urlObtenerDomicilio = '<s:url namespace="/catalogos" action="obtenerDomicilioPorCdperson"        />';
-var _p22_urlTatriperTvaloper = '<s:url namespace="/catalogos" action="obtenerTatriperTvaloperPorCdperson" />';
-var _p22_urlGuadarTvaloper   = '<s:url namespace="/catalogos" action="guardarDatosTvaloper"               />';
+var _p22_urlObtenerPersonas    = '<s:url namespace="/catalogos" action="obtenerPersonasPorRFC"              />';
+var _p22_urlGuardar            = '<s:url namespace="/catalogos" action="guardarPantallaPersonas"            />';
+var _p22_urlObtenerDomicilio   = '<s:url namespace="/catalogos" action="obtenerDomicilioPorCdperson"        />';
+var _p22_urlTatriperTvaloper   = '<s:url namespace="/catalogos" action="obtenerTatriperTvaloperPorCdperson" />';
+var _p22_urlGuadarTvaloper     = '<s:url namespace="/catalogos" action="guardarDatosTvaloper"               />';
+var _p22_urlPantallaDocumentos = '<s:url namespace="/catalogos" action="pantallaDocumentosPersona"          />';
 
 var _p22_storeGrid;
 ////// variables //////
@@ -107,6 +108,11 @@ Ext.onReady(function()
 	        	        ,icon    : '${ctx}/resources/fam3icons/icons/application_form_add.png'
 	        	        ,handler : function(){_p22_guardarClic(_p22_datosAdicionalesClic);}
 	        	    }
+	        	    ,{
+                        text     : 'Documentos'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                        ,handler : function(){_p22_guardarClic(_p22_documentosClic);}
+                    }
 	        	]
 	        	,items       :
 	        	[
@@ -609,6 +615,31 @@ function _p22_formDatosAdicionales()
 {
     debug('>_p22_formDatosAdicionales<');
     return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[0];
+}
+
+function _p22_documentosClic()
+{
+    debug('>_p22_documentosClic');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Documentos'
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 600
+        ,height      : 400
+        ,autoScroll  : true
+        ,loader      :
+        {
+            url       : _p22_urlPantallaDocumentos
+            ,params   :
+            {
+                'smap1.cdperson'  : _p22_fieldCdperson().getValue()
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show());
+    debug('<_p22_documentosClic');
 }
 ////// funciones //////
 </script>

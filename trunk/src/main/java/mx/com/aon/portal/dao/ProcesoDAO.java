@@ -114,6 +114,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
     public static final String EMITIR = "EMITIR";
     public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
+    public static final String GUARDAR_ARCHIVO_PERSONA = "GUARDAR_ARCHIVO_PERSONA";
     public static final String OBTENER_TIPOS_CLAUSULAS_EXCLUSION = "OBTENER_TIPOS_CLAUSULAS_EXCLUSION";
     public static final String LOAD_MESA_CONTROL = "LOAD_MESA_CONTROL";
     public static final String LOAD_MESA_CONTROL_USUARIO = "LOAD_MESA_CONTROL_USUARIO";
@@ -218,6 +219,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_MOV_MPOLICOT, new PMovMpolicot(getDataSource()));
         addStoredProcedure(EMITIR, new Emitir(getDataSource()));
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
+        addStoredProcedure(GUARDAR_ARCHIVO_PERSONA, new GuardarArchivoPersona(getDataSource()));
         addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL_USUARIO, new ObtenerMesaControlUsuario(getDataSource()));
@@ -3319,6 +3321,29 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*/////////////////////////*/
 	////// guardar archivo //////
 	/////////////////////////////
+	
+	protected class GuardarArchivoPersona extends CustomStoredProcedure
+	{
+	
+		protected GuardarArchivoPersona(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_DOCUMENTOS_PERSONA");
+			declareParameter(new SqlParameter("cdperson"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddocume"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsdocume"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinici"   , OracleTypes.DATE));
+	
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+	
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
 	
 	//////////////////////////////////////////////
 	////// obtiene documentos de poliza //////////

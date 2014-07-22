@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.catalogos.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface PersonasManager
@@ -75,4 +76,5 @@ public interface PersonasManager
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
 			,long timestamp
 			) throws Exception;
+	public List<Map<String,String>>cargarDocumentosPersona(String cdperson)throws Exception;
 }

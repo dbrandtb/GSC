@@ -80,4 +80,6 @@ public interface PersonasDAO
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
 			)throws Exception;
+	
+	public List<Map<String,String>>cargarDocumentosPersona(Map<String,String> params)throws Exception;
 }

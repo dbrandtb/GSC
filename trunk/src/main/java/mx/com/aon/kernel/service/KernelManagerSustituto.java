@@ -124,6 +124,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados pMovMdomicil(Map<String, String> paramDomicil) throws ApplicationException;
 	public WrapperResultados emitir(Map<String, Object> paramEmi) throws ApplicationException;
 	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados guardarArchivoPersona(String cdperson, Date fecha, String cddocume, String dsdocume) throws ApplicationException;
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>params) throws ApplicationException;
 	public List<Map<String, String>> obtenerListaDocumentos(Map<String, String> paramsGetDoc) throws ApplicationException;
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException;

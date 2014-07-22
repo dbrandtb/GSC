@@ -12,6 +12,7 @@ import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -446,6 +447,34 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_otvalor50" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public List<Map<String,String>>cargarDocumentosPersona(Map<String,String> params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new CargarDocumentosPersona(getDataSource()), params);
+		return (List<Map<String,String>>)resultado.get("pv_registro_o");
+	}
+	
+	protected class CargarDocumentosPersona extends StoredProcedure
+	{
+		private String columnas[]=new String[]{
+				"cddocume"
+				,"dsdocume"
+				,"cdperson"
+				,"feinici"
+				,"liga"
+		};
+		
+    	protected CargarDocumentosPersona(DataSource dataSource)
+    	{
+            super(dataSource,"PKG_CONSULTA.P_GET_DOCUMENTOS_PERSONA");
+            declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
     	}
     }
