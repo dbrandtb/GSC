@@ -572,6 +572,29 @@ public class PersonasManagerImpl implements PersonasManager
 		return result;
 	}
 	
+	@Override
+	public List<Map<String,String>>cargarDocumentosPersona(String cdperson)throws Exception
+	{
+		logger.info(""
+				+ "\n#####################################"
+				+ "\n###### cargarDocumentosPersona ######"
+				+ "\ncdperson: "+cdperson
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdperson",cdperson);
+		List<Map<String,String>>lista=personasDAO.cargarDocumentosPersona(params);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		logger.info("lista size: "+lista.size());
+		logger.info(""
+				+ "\n###### cargarDocumentosPersona ######"
+				+ "\n#####################################"
+				);
+		return lista;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

@@ -148,6 +148,9 @@
         <action name="subirArchivo" class="beanSubirArchivo" method="subirArchivo">
             <result name="success">/jsp/extjs4/subirArchivoReceptor.jsp</result>
         </action>
+        <action name="subirArchivoPersona" class="beanSubirArchivo" method="subirArchivoPersona">
+            <result name="success">/jsp/extjs4/subirArchivoReceptor.jsp</result>
+        </action>
         <action name="subirArchivoMostrarBarra" class="beanSubirArchivo" method="mostrarBarra">
             <result name="success">/jsp/extjs4/subirArchivoBarra.jsp</result>
         </action>

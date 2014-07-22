@@ -765,6 +765,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
+	public WrapperResultados guardarArchivoPersona(String cdperson, Date fecha, String cddocume, String dsdocume) throws ApplicationException
+	{
+		Map<String,Object>param=new HashMap<String,Object>();
+		param.put("cdperson" , cdperson);
+		param.put("feinici"  , fecha);
+		param.put("cddocume" , cddocume);
+		param.put("dsdocume" , dsdocume);
+		log.debug("### kernel sustituto guardarArchivo map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.GUARDAR_ARCHIVO_PERSONA);
+        log.debug("### kernel sustituto guardarArchivo id:"+res.getMsgId());
+        log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
+        return res;
+	}
+	
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>parameters) throws ApplicationException
 	{
 		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);

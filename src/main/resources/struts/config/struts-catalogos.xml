@@ -281,6 +281,14 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="pantallaDocumentosPersona" class="personasAction" method="pantallaDocumentosPersona">
+            <result name="success">/jsp/extjs4/ventanaDocumentosPersona.jsp</result>
+        </action>
+        
+        <action name="cargarDocumentosPersona" class="personasAction" method="cargarDocumentosPersona">
+            <result type="json" />
+        </action>
 
 	</package>
 

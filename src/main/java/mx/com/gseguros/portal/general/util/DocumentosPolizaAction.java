@@ -77,6 +77,47 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+	
+	public String descargaDocumentoPersona() {
+		
+		logger.debug("Parametros de entrada para la descarga del archivo");
+		logger.debug("cdperson: " + idPoliza);
+		logger.debug("filename: " + filename);
+		logger.debug("url: " + url);
+		logger.debug("contentType: " + contentType);
+		logger.debug("Ruta: " + this.getText("ruta.documentos.persona"));
+		
+		try {
+		
+			if(StringUtils.isNotBlank(url) && StringUtils.isNotBlank(contentType)) {
+				fileInputStream = HttpUtil.obtenInputStream(url);
+			} else {
+				logger.debug(this.getText("ruta.documentos.persona")+"/"+idPoliza+"/"+filename);
+				fileInputStream = new FileInputStream(new File(this.getText("ruta.documentos.persona")+"/"+idPoliza+"/"+filename));
+	
+				String fileType = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
+				fileType = fileType.trim();
+				
+				// Se asigna el contentType asociado al tipo de archivo, si no existe le asignamos uno por default:
+				for (TipoArchivo tipoArch : TipoArchivo.values()) {
+					if(tipoArch.toString().equalsIgnoreCase(fileType)) {
+						contentType = tipoArch.getContentType();
+						break;
+					}
+			    }
+				if(contentType == null) {
+					contentType = TipoArchivo.DEFAULT.getContentType();
+				}
+				
+			}
+
+		} catch (Exception e) {
+			addActionError(e.getMessage());
+		}
+
+		success = true;
+		return SUCCESS;
+	}
 
 	public String ventanaDocumentosPoliza()
 	{

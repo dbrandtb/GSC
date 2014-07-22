@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -332,6 +333,42 @@ public class PersonasAction extends PrincipalCoreAction
 		logger.info(timestamp+""
 				+ "\n###### guardarDatosTvaloper ######"
 				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String pantallaDocumentosPersona()
+	{
+		logger.info(""
+				+ "\n###########################################"
+				+ "\n######## pantallaDocumentosPersona ########"
+				);
+		logger.info(""
+				+ "\n######## pantallaDocumentosPersona ########"
+				+ "\n###########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarDocumentosPersona()
+	{
+		logger.info(""
+				+ "\n#####################################"
+				+ "\n###### cargarDocumentosPersona ######"
+				+ "\nsmap1 "+smap1
+				);
+		try
+		{
+		    slist1=personasManager.cargarDocumentosPersona(smap1.get("cdperson"));
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al obtener documentos de persona",ex);
+			slist1=new ArrayList<Map<String,String>>();
+		}
+		logger.info(""
+				+ "\n###### cargarDocumentosPersona ######"
+				+ "\n#####################################"
 				);
 		return SUCCESS;
 	}

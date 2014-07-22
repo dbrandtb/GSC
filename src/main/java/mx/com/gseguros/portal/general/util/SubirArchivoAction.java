@@ -158,6 +158,60 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         }
         return SUCCESS;
     }
+    
+    public String subirArchivoPersona()
+    {
+    	log.debug("smap1 "+smap1);
+        log.debug("file "+file);
+        log.debug("fileFileName "+fileFileName);
+        log.debug("fileContentType "+fileContentType);
+        
+        try
+        {
+        	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
+        	String nuevaRuta=this.getText("ruta.documentos.persona")+"/"+smap1.get("cdperson")+"/"
+                +nombreArchivo;
+        	String antiguaRuta=file.getAbsolutePath();
+        	log.debug("se movera desde::: "+antiguaRuta);
+            log.debug("se movera a    ::: "+nuevaRuta);
+            
+            String rutaCarpeta=this.getText("ruta.documentos.persona")+"/"+smap1.get("cdperson");
+            File carpeta = new File(rutaCarpeta);
+            if(!carpeta.exists())
+            {
+            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	carpeta.mkdir();
+            	if(carpeta.exists())
+            	{
+            		log.debug("carpeta creada");
+            	}
+            	else
+            	{
+            		log.debug("carpeta NO creada");
+            	}
+            }
+            else
+            {
+            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            }
+            if(file.renameTo(new File(nuevaRuta)))
+    		{
+    			log.debug("archivo movido");	
+    		}
+    		else
+    		{
+    			log.debug("archivo NO movido");
+    		}
+            
+            kernelManager.guardarArchivoPersona(smap1.get("cdperson"),renderFechas.parse(smap1.get("fecha")),nombreArchivo,smap1.get("descripcion"));
+        }
+        
+        catch(Exception ex)
+        {
+        	log.error("error al mover el archivo",ex);
+        }
+        return SUCCESS;
+    }
 
     public String subirArchivoCobranza(){
     	log.debug("Subiendo Archivo de Cobranza ... ");
