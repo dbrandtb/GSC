@@ -217,9 +217,9 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class ObtieneUsuarios extends StoredProcedure {
 
 		protected ObtieneUsuarios(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.p_get_usuarios");
+			super(dataSource, "PKG_GENERA_USUARIO.P_GET_USUARIOS");
+			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NOMBRE_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSEMAIL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneUsuariosMapper()));
