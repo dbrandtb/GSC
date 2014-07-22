@@ -248,10 +248,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		
 		String columnas[]=new String[]{
-				 "OTVALOR09"
+				"OTVALOR08"
+				,"OTVALOR09"
 				,"OTVALOR10"      
 				,"OTVALOR14"      
-				,"OTVALOR15"};
+				,"OTVALOR15"      
+				,"OTVALOR16"};
 		
 		/*
 		pv_cdunieco_i

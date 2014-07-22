@@ -1624,6 +1624,7 @@ public class EndososAction extends PrincipalCoreAction
 	        paramsObtAtriCober.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 	        List<Map<String,String>>listaTempAtributosCober=endososManager.obtenerAtributosCoberturas(paramsObtAtriCober);
 	        Map<String,String>atriCober=listaTempAtributosCober.get(0);
+	        logger.info("atriCober: "+atriCober);
 
         	//cargar anterior valosit
 			Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
@@ -1682,14 +1683,14 @@ public class EndososAction extends PrincipalCoreAction
 				{
 					valositAsegurado.put("pv_otvalor16",atriCober.get("OTVALOR16"));
 				}
-				if(atriCober.get("OTVALOR17")!=null&&atriCober.get("OTVALOR17").length()>0)
+				/*if(atriCober.get("OTVALOR17")!=null&&atriCober.get("OTVALOR17").length()>0)
 				{
 					valositAsegurado.put("pv_otvalor17",atriCober.get("OTVALOR17"));
 				}
 				if(atriCober.get("OTVALOR18")!=null&&atriCober.get("OTVALOR18").length()>0)
 				{
 					valositAsegurado.put("pv_otvalor18",atriCober.get("OTVALOR18"));
-				}
+				}*/
 			}
 			log.debug("se agregaron los nuevos");
 			
