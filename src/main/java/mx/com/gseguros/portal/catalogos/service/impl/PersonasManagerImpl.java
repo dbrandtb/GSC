@@ -533,6 +533,10 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
+				Map<String,String>paramsValidarDocumentos=new HashMap<String,String>();
+				paramsValidarDocumentos.put("cdperson",cdperson);
+				personasDAO.validarDocumentosPersona(paramsValidarDocumentos);
+				
 				personasDAO.movimientosTvaloper("1",cdperson,
 						otvalor01, otvalor02, otvalor03, otvalor04, otvalor05,
 						otvalor06, otvalor07, otvalor08, otvalor09, otvalor10,
@@ -593,6 +597,27 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n#####################################"
 				);
 		return lista;
+	}
+	
+	@Override
+	public String cargarNombreDocumentoPersona(String cdperson,String codidocu)throws Exception
+	{
+		logger.info(""
+				+ "\n##########################################"
+				+ "\n###### cargarNombreDocumentoPersona ######"
+				+ "\ncdperson "+cdperson
+				+ "\ncodidocu "+codidocu
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdperson",cdperson);
+		params.put("codidocu",codidocu);
+		String nombre=personasDAO.cargarNombreDocumentoPersona(params);
+		logger.info("nombre: "+nombre);
+		logger.info(""
+				+ "\n###### cargarNombreDocumentoPersona ######"
+				+ "\n##########################################"
+				);
+		return nombre;
 	}
 	
 	/*

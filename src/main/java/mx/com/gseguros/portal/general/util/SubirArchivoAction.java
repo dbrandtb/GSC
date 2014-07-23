@@ -203,7 +203,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     			log.debug("archivo NO movido");
     		}
             
-            kernelManager.guardarArchivoPersona(smap1.get("cdperson"),renderFechas.parse(smap1.get("fecha")),nombreArchivo,smap1.get("descripcion"));
+            kernelManager.guardarArchivoPersona(smap1.get("cdperson"),renderFechas.parse(smap1.get("fecha")),nombreArchivo,smap1.get("descripcion"),smap1.get("codidocu"));
         }
         
         catch(Exception ex)

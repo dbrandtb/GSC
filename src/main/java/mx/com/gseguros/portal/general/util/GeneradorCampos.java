@@ -644,6 +644,21 @@ public class GeneradorCampos
         }
         ////// combo //////
         
+        if(comp.getType()==ComponenteVO.TIPO_TATRIPER)
+        {
+        	////// para identificar si pide archivo
+        	if(StringUtils.isNotBlank(comp.getCodidocu()))
+        	{
+        		log.debug("Se agrega codidocu "+comp.getCodidocu()+" a "+comp.getNameCdatribu());
+        		item.add("codidocu",comp.getCodidocu());
+        	}
+        	else
+        	{
+        		log.debug("No es documento "+comp.getNameCdatribu());
+        	}
+        	////// para identificar si pide archivo
+        }
+        
         return item;
     }
     

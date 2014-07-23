@@ -478,4 +478,43 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+	
+	@Override
+	public void validarDocumentosPersona(Map<String,String> params)throws Exception
+	{
+		ejecutaSP(new ValidarDocumentosPersona(getDataSource()), params);
+	}
+	
+	protected class ValidarDocumentosPersona extends StoredProcedure
+	{
+    	protected ValidarDocumentosPersona(DataSource dataSource)
+    	{
+            super(dataSource,"PKG_SATELITES.P_VALIDA_DOCTOS_OBLIGATORIOS");
+            declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public String cargarNombreDocumentoPersona(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new CargarNombreDocumentoPersona(getDataSource()), params);
+		return (String)resultado.get("pv_cddocume_o");
+	}
+	
+	protected class CargarNombreDocumentoPersona extends StoredProcedure
+	{
+    	protected CargarNombreDocumentoPersona(DataSource dataSource)
+    	{
+            super(dataSource,"PKG_CONSULTA.P_GET_NOMBRE_CDDOCUME_PERSONA");
+            declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("codidocu" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_cddocume_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

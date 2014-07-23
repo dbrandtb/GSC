@@ -77,4 +77,6 @@ public interface PersonasManager
 			,long timestamp
 			) throws Exception;
 	public List<Map<String,String>>cargarDocumentosPersona(String cdperson)throws Exception;
+	
+	public String cargarNombreDocumentoPersona(String cdperson,String codidocu)throws Exception;
 }
