@@ -286,7 +286,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaRolUsuario extends StoredProcedure {
 
 		protected GuardaRolUsuario(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_SISROL");
+			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_SISROL_USUARIO");
 			
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDUSUARIO_I", OracleTypes.VARCHAR));
