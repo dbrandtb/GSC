@@ -373,6 +373,45 @@ public class PersonasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarNombreDocumentoPersona()
+	{
+		logger.info(""
+				+ "\n##########################################"
+				+ "\n###### cargarNombreDocumentoPersona ######"
+				+ "\nsmap1 "+smap1
+				);
+		try
+		{
+			String nombre = personasManager.cargarNombreDocumentoPersona(smap1.get("cdperson"),smap1.get("codidocu"));
+			if(StringUtils.isNotBlank(nombre))
+			{
+				smap1.put("cddocume",nombre);
+				exito           = true;
+				respuesta       = "Todo OK";
+				respuestaOculta = "Todo OK";
+			}
+			else
+			{
+				exito           = false;
+				respuesta       = "No hay documento";
+				respuestaOculta = "Sin respuesta oculta";
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("error al obtener nombre de archivo para persona #"+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error al obtener archivo #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### cargarNombreDocumentoPersona ######"
+				+ "\n##########################################"
+				);
+		return SUCCESS;
+	}
+	
 	private String obtenerCdsisrolSesion()
 	{
 		UserVO usuario=(UserVO)session.get("USUARIO");

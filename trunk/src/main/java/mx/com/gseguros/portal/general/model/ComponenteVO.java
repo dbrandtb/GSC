@@ -57,6 +57,7 @@ public class ComponenteVO
 	private String swsuscri = null;
 	private String swtarifi = null;
 	private String swpresen = null;
+	private String codidocu = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -424,5 +425,13 @@ public class ComponenteVO
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+
+	public String getCodidocu() {
+		return codidocu;
+	}
+
+	public void setCodidocu(String codidocu) {
+		this.codidocu = codidocu;
 	}
 }

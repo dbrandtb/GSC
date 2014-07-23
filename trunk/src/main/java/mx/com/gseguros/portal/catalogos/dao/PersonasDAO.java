@@ -82,4 +82,8 @@ public interface PersonasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarDocumentosPersona(Map<String,String> params)throws Exception;
+	
+	public void validarDocumentosPersona(Map<String,String> params)throws Exception;
+	
+	public String cargarNombreDocumentoPersona(Map<String,String>params)throws Exception;
 }

@@ -8,14 +8,19 @@
 ////// overrides //////
 
 ////// variables //////
-var _p22_urlObtenerPersonas    = '<s:url namespace="/catalogos" action="obtenerPersonasPorRFC"              />';
-var _p22_urlGuardar            = '<s:url namespace="/catalogos" action="guardarPantallaPersonas"            />';
-var _p22_urlObtenerDomicilio   = '<s:url namespace="/catalogos" action="obtenerDomicilioPorCdperson"        />';
-var _p22_urlTatriperTvaloper   = '<s:url namespace="/catalogos" action="obtenerTatriperTvaloperPorCdperson" />';
-var _p22_urlGuadarTvaloper     = '<s:url namespace="/catalogos" action="guardarDatosTvaloper"               />';
-var _p22_urlPantallaDocumentos = '<s:url namespace="/catalogos" action="pantallaDocumentosPersona"          />';
+var _p22_urlObtenerPersonas     = '<s:url namespace="/catalogos"  action="obtenerPersonasPorRFC"              />';
+var _p22_urlGuardar             = '<s:url namespace="/catalogos"  action="guardarPantallaPersonas"            />';
+var _p22_urlObtenerDomicilio    = '<s:url namespace="/catalogos"  action="obtenerDomicilioPorCdperson"        />';
+var _p22_urlTatriperTvaloper    = '<s:url namespace="/catalogos"  action="obtenerTatriperTvaloperPorCdperson" />';
+var _p22_urlGuadarTvaloper      = '<s:url namespace="/catalogos"  action="guardarDatosTvaloper"               />';
+var _p22_urlPantallaDocumentos  = '<s:url namespace="/catalogos"  action="pantallaDocumentosPersona"          />';
+var _p22_urlSubirArchivo        = '<s:url namespace="/"           action="subirArchivoPersona"                />';
+var _p22_UrlUploadPro           = '<s:url namespace="/"           action="subirArchivoMostrarBarra"           />';
+var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInlinePersona"           />';
+var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargarNombreDocumentoPersona"       />';
 
 var _p22_storeGrid;
+var _p22_windowAgregarDocu;
 ////// variables //////
 
 Ext.onReady(function()
@@ -512,6 +517,7 @@ function _p22_datosAdicionalesClic()
                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                 {
                     title   : 'Datos adicionales'
+                    ,itemId : '_p22_ventanaDatosAdicionales'
                     ,width  : 600
                     ,height : 400
                     ,autoScroll : true
@@ -544,6 +550,48 @@ function _p22_datosAdicionalesClic()
                     ]
                 }).show());
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
+                var itemsDocumento=Ext.ComponentQuery.query('[codidocu]');
+                debug('itemsDocumento:',itemsDocumento);
+                for(var i=0;i<itemsDocumento.length;i++)
+                {
+                    itemDocumento=itemsDocumento[i];
+                    itemDocumento.up().add(
+                    {
+                        xtype    : 'panel'
+                        ,layout  : 'hbox'
+                        ,border  : 0
+                        ,items   :
+                        [
+                            {
+                                xtype       : 'displayfield'
+                                ,labelWidth : 180
+                                ,fieldLabel : itemDocumento.fieldLabel + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
+                            }
+                            ,{
+                                xtype     : 'button'
+                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
+                                ,tooltip  : 'Subir nuevo'
+                                ,codidocu : itemDocumento.codidocu
+                                ,descrip  : itemDocumento.fieldLabel
+                                ,handler  : function(button)
+                                {
+                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+                                }
+                            },{
+                                xtype     : 'button'
+                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
+                                ,tooltip  : 'Descargar'
+                                ,codidocu : itemDocumento.codidocu
+                                ,descrip  : itemDocumento.fieldLabel
+                                ,handler  : function(button)
+                                {
+                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+                                }
+                            }
+                        ]
+                    });
+                    itemDocumento.destroy();
+                }
             }
             else
             {
@@ -640,6 +688,200 @@ function _p22_documentosClic()
         }
     }).show());
     debug('<_p22_documentosClic');
+}
+
+function _p22_subirArchivo(cdperson,codidocu,descrip)
+{
+    debug('>_p22_subirArchivo',cdperson,codidocu,descrip);
+    _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
+            {
+                id           : '_p22_WinPopupAddDoc'
+                ,title       : 'Agregar documento'
+                ,closable    : false
+                ,modal       : true
+                ,width       : 500
+                //,height   : 700
+                ,bodyPadding : 5
+                ,items       :
+                [
+                    panelSeleccionDocumento= Ext.create('Ext.form.Panel',
+                    {
+                        border       : 0
+                        ,url         : _p22_urlSubirArchivo
+                        ,buttonAlign : 'center'
+                        ,items       :
+                        [
+                            {
+                                xtype       : 'datefield'
+                                ,readOnly   : true
+                                ,format     : 'd/m/Y'
+                                ,name       : 'smap1.fecha'
+                                ,value      : new Date()
+                                ,fieldLabel : 'Fecha'
+                            }
+                            ,{
+                                xtype       : 'textfield'
+                                ,fieldLabel : 'Descripci&oacute;n'
+                                ,name       : 'smap1.descripcion'
+                                ,value      : descrip
+                                ,readOnly   : true
+                                ,width      : 450
+                            }
+                            ,{
+                                xtype       : 'filefield'
+                                ,fieldLabel : 'Documento'
+                                ,buttonText : 'Examinar...'
+                                ,buttonOnly : false
+                                ,width      : 450
+                                ,name       : 'file'
+                                ,cAccept    : ['jpg','png','gif','zip','pdf','rar','jpeg','doc','docx','xls','xlsx','ppt','pptx']
+                                ,listeners  :
+                                {
+                                    change : function(me)
+                                    {
+                                        var indexofPeriod = me.getValue().lastIndexOf("."),
+                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                        if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                        {
+                                            Ext.MessageBox.show(
+                                            {
+                                                title   : 'Error de tipo de archivo',
+                                                msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                                buttons : Ext.Msg.OK,
+                                                icon    : Ext.Msg.WARNING
+                                            });
+                                            me.reset();
+                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(true);
+                                        }
+                                        else
+                                        {
+                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+                                        }
+                                    }
+                                }
+                            }
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                html    :'<iframe id="_p22_IframeUploadDoc" name="_p22_IframeUploadDoc"></iframe>'
+                                ,hidden : true
+                            })
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                border  : 0
+                                ,html   :'<iframe id="_p22_IframeUploadPro" name="_p22_IframeUploadPro" width="100%" height="30" src="'+_p22_UrlUploadPro+'" frameborder="0"></iframe>'
+                                ,hidden : false
+                            })
+                        ]
+                        ,buttons     :
+                        [
+                            {
+                                id        : '_p22_botGuaDoc'
+                                ,text     : 'Agregar'
+                                ,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
+                                ,disabled : true
+                                ,handler  : function (button,e)
+                                {
+                                    debug(button.up().up().getForm().getValues());
+                                    button.setDisabled(true);
+                                    Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
+                                    Ext.create('Ext.form.Panel').submit(
+                                    {
+                                        url             : _p22_UrlUploadPro
+                                        ,standardSubmit : true
+                                        ,target         : '_p22_IframeUploadPro'
+                                        ,params         :
+                                        {
+                                            uploadKey : '1'
+                                        }
+                                    });
+                                    button.up().up().getForm().submit(
+                                    {
+                                        standardSubmit : true
+                                        ,target        : '_p22_IframeUploadDoc'
+                                        ,params        :
+                                        {
+                                            'smap1.cdperson'  : cdperson
+                                            ,'smap1.codidocu' : codidocu
+                                        }
+                                    });
+                                }
+                            }
+                            ,{
+                                id       : '_p22_BotCanDoc'
+                                ,text    : 'Cancelar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                ,handler : function (button,e)
+                                {
+                                    _p22_windowAgregarDocu.destroy();
+                                }
+                            }
+                        ]
+                    })
+                ]
+            }).show();
+            centrarVentanaInterna(_p22_windowAgregarDocu);
+    debug('<_p22_subirArchivo');
+}
+
+function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
+{
+    debug('>_p22_cargarArchivo',cdperson,codidocu,dsdocume);
+    Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p22_urlCargarNombreArchivo
+        ,params  :
+        {
+            'smap1.cdperson'  : cdperson
+            ,'smap1.codidocu' : codidocu
+        }
+        ,success : function(response)
+        {
+            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(false);
+            var json=Ext.decode(response.responseText);
+            debug('json response:',json);
+            if(json.exito)
+            {
+                var numRand=Math.floor((Math.random()*100000)+1);
+                debug('numRand a: ',numRand);
+                var windowVerDocu=Ext.create('Ext.window.Window',
+                {
+                    title          : dsdocume
+                    ,width         : 700
+                    ,height        : 500
+                    ,collapsible   : true
+                    ,titleCollapse : true
+                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                     +'src="'+_p22_urlViewDoc+'?idPoliza='+cdperson+'&filename='+json.smap1.cddocume+'">'
+                                     +'</iframe>'
+                    ,listeners     :
+                    {
+                        resize : function(win,width,height,opt){
+                            debug(width,height);
+                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                        }
+                    }
+                }).show();
+                centrarVentanaInterna(windowVerDocu);
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(false);
+            errorComunicacion();
+        }
+    });
+    
+    debug('<_p22_cargarArchivo');
+}
+
+function panDocSubido()
+{
+    _p22_windowAgregarDocu.destroy();
 }
 ////// funciones //////
 </script>

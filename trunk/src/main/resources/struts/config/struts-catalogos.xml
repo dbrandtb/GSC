@@ -289,6 +289,10 @@
         <action name="cargarDocumentosPersona" class="personasAction" method="cargarDocumentosPersona">
             <result type="json" />
         </action>
+        
+        <action name="cargarNombreDocumentoPersona" class="personasAction" method="cargarNombreDocumentoPersona">
+            <result type="json" />
+        </action>
 
 	</package>
 

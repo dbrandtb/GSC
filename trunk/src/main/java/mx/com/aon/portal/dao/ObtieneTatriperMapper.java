@@ -7,10 +7,13 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 
 public class ObtieneTatriperMapper implements RowMapper
 {
+	private final Logger logger=Logger.getLogger(ObtieneTatriperMapper.class);
+	
 	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ComponenteVO result=new ComponenteVO();
 		result.setFlagEsAtribu(true);
@@ -74,6 +77,10 @@ public class ObtieneTatriperMapper implements RowMapper
         	isDepend = true;
         }
         result.setDependiente(isDepend);
+        
+        result.setCodidocu(rs.getString("codigo"));
+        
+        logger.debug("CDATRIBU "+rs.getString("CDATRIBU")+" DSATRIBU: "+rs.getString("DSATRIBU")+" CODIDOCU: "+rs.getString("codigo"));
 		
 		return result;
 	}
