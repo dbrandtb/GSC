@@ -323,7 +323,6 @@ Ext.onReady(function() {
 						itemId     : 'fieldAgente',
 						padding    :  0,
 						border     : false,
-						hidden     : (editMode && _parametros.esAgente == 'N'),
 						items      : [{
 							        	xtype       : 'combo',
 							        	name        : 'params.cdramo',
@@ -377,15 +376,6 @@ Ext.onReady(function() {
         	icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
         	handler: function(btn, e) {
         		var form = this.up('form').getForm();
-        		
-        		if(editMode){
-     			   if(_parametros.esAgente == 'N'){
-     				  
-     				  form.findField('params.otsexo').allowBlank = true;
-     				  form.findField('params.dsapellido').allowBlank = true;
-     				  form.findField('params.dsapellido1').allowBlank = true;
-     			   }
-     			}
         		
         		if (form.isValid()) {
         			
