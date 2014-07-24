@@ -44,6 +44,13 @@
     </appender>
     
 
+    <logger name="com.peritaje">
+        <level value="DEBUG" />
+        <appender-ref ref="app" />
+        <appender-ref ref="dev" />
+        <appender-ref ref="stdout" />
+    </logger>
+
 	<logger name="mx">
         <level value="DEBUG" />
         <appender-ref ref="app" />
