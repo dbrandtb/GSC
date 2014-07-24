@@ -154,9 +154,9 @@ public class ArbolProductosAction extends Padre{
 				RamaVO productoActual=listaProductos.get(Integer.parseInt(posicionProducto));
 				//productoActual.setExpanded(true);
 				productoActual =llenandoProductoMetodo(productoActual);
-				if(isDebugEnabled){
-					log.debug(productoActual);
-				}
+				//if(isDebugEnabled){
+					//log.debug(productoActual);
+				//}
 				listaProductos.set(Integer.parseInt(posicionProducto), productoActual);					
 				removerLlavesSession(Integer.parseInt(nivel));				
 				session.put("CODIGO_NIVEL0", codigos.get(0).getKey());
