@@ -148,7 +148,11 @@
 
    	</decorator>
 	
-	
+	<decorator name="senchatouch" page="decorator_sencha_touch.jsp">
+        <pattern>/peritaje/*.action</pattern>
+        <pattern>/jsp/peritaje/*.jsp</pattern>
+    </decorator>
+    
 	<decorator name="roles" page="decorator_roles.jsp">
         <pattern>/seguridad/ArbolRolCliente.action</pattern>
         <pattern>/seleccionaRolCliente.action</pattern>

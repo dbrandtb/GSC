@@ -30,6 +30,8 @@
     <include file="struts/config/struts-reportes.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
     
+    <include file="struts/config/struts-peritaje.xml"/>
+    
     <include file="struts/config/struts-wizard.xml"/>
 	<include file="struts/config/struts-wizard-atributosVariables.xml"/>
 	<include file="struts/config/struts-wizard-definicion.xml"/>
