@@ -1516,9 +1516,15 @@
    		                                                        Ext.create('Ext.form.field.TextArea', {
    		                                                            id        : 'inputTextareaCommentsToRechazo'
    		                                                            ,width  : 570
-   		                                                            ,height : 300
+   		                                                            ,height : 200
    		                                                            ,value  : txtContenido
-   		                                                        })
+   		                                                        }),
+   		                                                     	Ext.create('Ext.form.field.TextArea', {
+		                                                            id        : 'inputTextareaComments'
+		                                                            ,width  : 570
+		                                                            ,height : 100
+		                                                        })
+   		                                                        
    		                                                    ]
    		                                                    ,buttons    :
    		                                                    [
@@ -1546,7 +1552,7 @@
    		                                                                                {
    		                                                                                    'smap1.ntramite' : inputNtramite
    		                                                                                    ,'smap1.status'  : '4'//rechazado
-   		                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+   		                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
    		                                                                                }
    		                                                                                ,success : function(response)
    		                                                                                {
