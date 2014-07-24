@@ -1,0 +1,64 @@
+ items :[{
+ 		border:false,
+        width:100,
+        layout:'form',
+        labelWidth : 40,
+        items:[{
+        		xtype:'textfield',
+		        fieldLabel: 'Poliza',
+		        width:55,
+		        disabled:true,
+		        name:'poliza'
+        	  }]
+        	  
+       },{	  
+        border:false,
+        width:100,
+        layout:'form',
+        labelWidth : 1,
+        items:[{
+        		xtype:'textfield',
+		        fieldLabel: ' ',
+		        labelSeparator : ' ',
+		        width:95,
+		        disabled:true,
+		        name:'poliza1'
+        	  }]
+       },{	  
+        border:false,
+        width:100,
+        layout:'form',
+        labelWidth : 1,
+        items:[{
+        		xtype:'textfield',
+		        fieldLabel: ' ',
+		        labelSeparator : ' ',
+		        width:95,
+		        disabled:true,
+		        name:'poliza2'
+        	  }]
+        },{	  
+        border:false,
+        width:150,
+        layout:'form',
+        labelWidth : 1,
+        items:[{
+        		xtype:'textfield',
+		        fieldLabel: ' ',
+		        labelSeparator : ' ',
+		        width:95,
+		        disabled:true,
+		        name:'poliza3'
+        	  }]
+	},{
+		border:false,
+		layout:'form',
+		width:350,
+        labelWidth : 90,		
+		items: [{
+				xtype:"textfield",
+				fieldLabel: 'Poliza Externa',
+				width:200,
+				name:'polizaExterna' 
+	 }]
+}]    

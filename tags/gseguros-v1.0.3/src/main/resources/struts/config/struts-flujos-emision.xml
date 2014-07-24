@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="emision" namespace="/emision" extends="default" >
+        
+        <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
+            <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
+        </action>
+        
+        <action name="cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">
+            <result name="success">/jsp-script/proceso/emision/cotizacionGrupo.jsp</result>
+        </action>
+        
+        <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
+        </action>
+        
+        <action name="cotizar" class="CotizacionAction" method="cotizar">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+       
+       <action name="cargarCotizacion" class="CotizacionAction" method="cargarCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="webServiceNada" class="CotizacionAction" method="webServiceNada">
+           <result type="json" />
+       </action>
+       
+       <action name="guardarSituacionesAuto" class="CotizacionAction" method="guardarSituacionesAuto">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerCoberturasPlan" class="CotizacionAction" method="obtenerCoberturasPlan">
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerTatrigarCoberturas" class="CotizacionAction" method="obtenerTatrigarCoberturas">
+           <result type="json" />
+       </action>
+       
+       <action name="subirCenso" class="CotizacionAction" method="subirCenso">
+           <result type="json" />
+       </action>
+       
+       <action name="generarTramiteGrupo" class="CotizacionAction" method="generarTramiteGrupo">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerDetalleCotizacionGrupo" class="CotizacionAction" method="obtenerDetalleCotizacionGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarDatosCotizacionGrupo" class="CotizacionAction" method="cargarDatosCotizacionGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarGruposCotizacion" class="CotizacionAction" method="cargarGruposCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarDatosGrupoLinea" class="CotizacionAction" method="cargarDatosGrupoLinea">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTvalogarsGrupo" class="CotizacionAction" method="cargarTvalogarsGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTarifasPorEdad" class="CotizacionAction" method="cargarTarifasPorEdad">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarTarifasPorCobertura" class="CotizacionAction" method="cargarTarifasPorCobertura">
+           <result type="json" />
+       </action>
+       
+    </package>
+    
+</struts>

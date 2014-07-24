@@ -1,0 +1,199 @@
+items :[{
+               layout:'column',
+               border:false, 
+               items :[{
+                        columnWidth:.4,
+                        layout: 'form',
+                        border: false,
+                        labelWidth : 60, 
+                        items: [{
+                                    xtype:"combo",
+                                    emptyText:"Seleccione...",
+                                    store: storeProducto,
+                                    hiddenName:"producto",
+                                    fieldLabel: "Producto",
+                                    name: "producto",
+                                    //id:"producto",
+                                    width: "100", 
+                                    allowBlank:true,
+                                    mode:'local',
+                                    editable: true,
+                                    triggerAction: "all",
+                                    valueField: "value",
+                                    typeAhead: true,
+                                    displayField:"label"
+                               },{
+                                 xtype:"textfield",
+                                 fieldLabel: 'Póliza',
+                                 anchor:'84%',
+                                 name:'poliza',
+                                 id: 'poliza'
+                                },{
+                                 xtype:"textfield",
+                                 //fieldLabel: 'Nombre de Asegurado',
+                                 fieldLabel: 'Asegurado',
+                                 anchor:'84%',
+                                 name:'nombreAsegurado'
+								},{
+									xtype:"textfield",
+									fieldLabel: 'Inciso',
+									achor:'84%',
+									name:'cdInciso'
+                               }]//items columna1
+                     },{
+                        columnWidth:.5,
+                        layout: 'form',
+                        bodyStyle:'padding:5px 5px 0',
+                        border: false,
+                        labelWidth : 100,
+                        items: [{
+                                 fieldLabel:"Aseguradora",
+                                 emptyText:"Seleccione...",
+                                 xtype:"combo",   
+                                 hiddenName:"aseguradora",     
+                                 name:"aseguradora",
+                                 //hiddenName:"haseguradora",
+                                 id:"idAseguradora",
+                                 store: storeAseguradoras,
+                                 displayField:"label",
+                                 valueField:"value", 
+                                 triggerAction: "all",
+                                 anchor:'100%', 
+                                 mode:'local',
+                                 typeAhead: true,
+                                 editable:true
+                              },{
+                                    xtype:"combo",
+                                    emptyText:"Seleccione...",
+                                    store: storeFecha,
+                                    name: "fechaInicioFin",
+                                    hiddenName:"fechaInicioFin",
+                                    valueField: "id",
+                                    displayField:"texto",
+                                    fieldLabel: "Vigencia",
+                                    width:"50", 
+                                    anchor:"100%",
+                                    allowBlank:false,
+                                    id: "inicioFin",
+                                    mode:'local',
+                                    editable:true,
+                                    triggerAction: "all",
+                                    typeAhead: true,
+                                    value:'I'
+                                },
+                              {
+                                border:false,
+                                layout:'column',
+                                items:[/*{
+                                        columnWidth:.4,
+                                        layout: 'form',
+                                        border:false,
+                                        labelWidth : 100,
+                                        items: [{
+                                                xtype:"combo",
+                                                emptyText:"Seleccione...",
+                                                store: storeFecha,
+                                                fieldLabel: "Vigencia",
+                                                name: "fechaInicioFin",
+                                                width:"50", 
+                                                anchor:"100%",
+                                                allowBlank:true,
+                                                id: "inicioFin",
+                                                mode:'local',
+                                                editable:true,
+                                                triggerAction: "all",
+                                                valueField: "id",
+                                                typeAhead: true,
+                                                displayField:"texto",
+                                        }]
+                                    },*/{
+                                        columnWidth:.58,
+                                        layout: 'form',
+                                        border: false,
+                                        labelWidth : 100,
+                                        items:[{
+                                            xtype:'datefield',
+                                            fieldLabel: 'Desde',
+                                            name: 'inicioVigencia',
+                                            width:'120', 
+                                            anchor:'100%',
+                                            allowBlank: true,
+                                            format: 'd/m/Y',
+                                            id: 'inicioVigencia'
+                                        }]
+                                    },{
+                                        columnWidth:.42,
+                                        layout: 'form',
+                                        border:false,
+                                        labelWidth : 40,
+                                        items: [{
+                                                xtype:'datefield',
+                                                fieldLabel: ' Hasta',
+                                                name: 'finVigencia',
+                                                allowBlank:true,
+                                                width:'95', 
+                                                anchor:'100%',
+                                                format: 'd/m/Y',
+                                                id: 'finVigencia'
+                                        }]
+                                }]   //items fecha
+                               },{ 
+                                 fieldLabel:"Estatus de Póliza",
+                                 emptyText:"Seleccione...",
+                                 xtype:"combo",        
+                                 name:"statusPoliza",
+                                 hiddenName:"statusPoliza",
+                                 id:"idStatusPoliza",
+                                 store: storeStatusPoliza,
+                                 displayField:"label",
+                                 valueField:"value", 
+                                 triggerAction: "all",
+                                 mode:'local',
+                                 anchor:'100%', 
+                                 typeAhead: true,
+                                 editable:true
+                               }/*,{ 
+                                 fieldLabel:"Status de Pago",
+                                 emptyText:"Seleccione...",
+                                 xtype:"combo",        
+                                 name:"statusPago",
+                                 hiddenName:"hstatusPago",
+                                 id:"idStatusPago",
+                                 store: storeProceso,
+                                 displayField:"label",
+                                 valueField:"value", 
+                                 triggerAction: "all",
+                                 anchor:'100%', 
+                                 mode:'local',
+                                 typeAhead: true,
+                                 editable:true
+                               }*/]//items columna2
+                }]//items layout column                   
+        }],////end items FieldSet
+        buttons:[{                                  
+                 text:'Buscar',  
+                 handler: function() {
+                     if (filterAreaForm.form.isValid()) {
+                             filterAreaForm.form.submit({      
+                             waitTitle:'Espere',           
+                             waitMsg:'Procesando...',
+                                         
+                             failure: function(form, action) {
+                              	 Ext.MessageBox.alert('Busqueda Finalizada', 'No se encontraron registros');
+                                 storeGrid.load();
+                             },
+                             success: function(form, action) {
+	                             storeGrid.load();
+	                         }
+                         });                   
+                         } else{
+                                Ext.MessageBox.alert('Error', 'Se produjo error');
+                        }  
+                  }      //end handler                                                 
+              },{
+                 text:'Cancelar',
+                 handler: function() {
+                                     filterAreaForm.form.reset();
+                                    }
+             }]//end buttons FieldSet
+  }]//end items
