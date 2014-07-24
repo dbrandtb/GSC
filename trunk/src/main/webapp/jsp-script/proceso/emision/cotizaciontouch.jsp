@@ -446,9 +446,14 @@ function _mcotiza_imprimir()
             + "&ACCESSIBLE=YES"
             + "&report="        + _mcotiza_reporteCotizacion
             + "&paramform=no";
-    debug(urlRequestImpCotiza);
-    document.getElementById("hiddenPdfFormUrlField").value=urlRequestImpCotiza;
-    document.getElementById("hiddenPdfForm").submit();
+    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+    
+    var numRand=Math.floor((Math.random()*100000)+1);
+    $('<form action="<s:url namespace="/documentos" action="descargaDocInline" />?'+numRand+'" target="_blank" method="post">'
+               +'<input type="text" name="url" value="'+urlRequestImpCotiza+'"/>'
+               +'<input type="text" name="contentType" value="application/pdf" />'
+               +'<input type="submit" id="e'+numRand+'" />'
+               +'</form>').submit();
 }
 
 function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
@@ -668,6 +673,9 @@ function _mcotiza_cotiza()
 	////// factor convenido //////
 	if((_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')&&valido)
 	{
+	    debug("_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getValue():",_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getValue());
+	    debug("_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMinValue():",_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMinValue());
+	    debug("_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMaxValue():",_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMaxValue());
 	    var value=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getValue()-0;
 	    var minval=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMinValue()-0;
 	    var maxval=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMaxValue()-0;
@@ -1366,7 +1374,7 @@ Ext.setup({onReady:function()
         {
             debug('>comboTipoValor change');
             itemSumaAsegu.setValue('');
-            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='1x');
+            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
             debug('<comboTipoValor change');
         };
         comboTipoValor.addListener('change',changeFunction);
@@ -1524,9 +1532,5 @@ function _mcotiza_getBotonCorreo()
 </script>
 </head>
 <body>
-<form id="hiddenPdfForm" action="<s:url namespace="/documentos" action="descargaDocInline" />" target="_blank" method="post">
-<input type="text" name="url"         id="hiddenPdfFormUrlField" hidden="true" />
-<input type="text" name="contentType" value="application/pdf"    hidden="true" />
-</form>
 </body>
 </html>
