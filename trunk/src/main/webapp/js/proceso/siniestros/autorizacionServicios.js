@@ -560,6 +560,7 @@ Ext.onReady(function() {
     
     coberturaAfectada = Ext.create('Ext.form.field.ComboBox',
     {
+    	colspan:2, width:400,
     	fieldLabel :'Cobertura afectada',	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
     	labelWidth: 170,					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',				store : storeCobertura,		triggerAction: 'all',			editable:false,
@@ -593,6 +594,7 @@ Ext.onReady(function() {
     
     subCobertura = Ext.create('Ext.form.field.ComboBox',
     {
+    	colspan:2, 		width:550,
     	fieldLabel : 'Subcobertura',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',		name:'cdconval',
     	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
@@ -641,7 +643,7 @@ Ext.onReady(function() {
                                    title: 'Error',
                                    msg: mensajeInicial +tiempo,
                                    buttons: Ext.Msg.OK,
-                                   icon: Ext.Msg.ERROR
+                                   icon: Ext.Msg.WARNING
                                 }));
 			    			}
     	                }
@@ -701,7 +703,7 @@ Ext.onReady(function() {
                                    title: 'Error',
                                    msg: mensajeInicial +tiempo,
                                    buttons: Ext.Msg.OK,
-                                   icon: Ext.Msg.ERROR
+                                   icon: Ext.Msg.WARNING
                                 }));
     	                	}
     	                }//else{
@@ -793,7 +795,7 @@ Ext.onReady(function() {
                                     title: 'Error',
                                     msg: mensajeInicial+tiempo,
                                     buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.ERROR
+                                    icon: Ext.Msg.WARNING
                                 }));
 							}
     	                }//else{
