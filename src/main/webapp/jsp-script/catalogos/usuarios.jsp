@@ -204,10 +204,6 @@ Ext.apply(Ext.form.field.VTypes, {
             		var appat = record.get('dsApellido');
             		var apmat = record.get('dsApellido1');
             		
-            		if(record.get('esAgente') == 'N'){
-            			nombre = dsusuario;
-            		}
-            		
             		windowLoader = Ext.create('Ext.window.Window',
                             {
                                 title        : 'Editar Usuario'
@@ -443,7 +439,7 @@ Ext.apply(Ext.form.field.VTypes, {
                                     },
                                     params: {
                                     	'params.cdusuario': record.get('cdUsuario'),
-                                    	'params.esAgente': record.get('esAgente')
+                                    	'params.esAgente':  ('EJECUTIVOCUENTA' == record.get('cdrol')) ? 'S':'N'
                                     }
                                 }
                             }).show();
