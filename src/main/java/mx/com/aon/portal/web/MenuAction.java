@@ -189,7 +189,7 @@ public class MenuAction extends PrincipalCoreAction {
 			usuario = user.getUser();
 			listaMenuVertical = menuPrincipalManagerJdbcTemplate.getListaMenuVertical(claveCliente,claveRol, usuario);
 			
-			logger.debug("listaMenuVertical->" + listaMenuVertical);
+			//logger.debug("listaMenuVertical->" + listaMenuVertical);
 			logger.debug("esMovil" + session.get("ES_MOVIL"));
 			if(listaMenuVertical != null){
 			logger.debug("listaMenuVertical size: " + listaMenuVertical.size() );
