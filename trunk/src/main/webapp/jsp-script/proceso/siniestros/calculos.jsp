@@ -713,7 +713,7 @@ Ext.onReady(function()
             var sDeducible  = _p12_slist2[indice].DEDUCIBLE;
             var deducible   = 0;
             var _facturaIndividual = _p12_slist1[indice];
-            
+            var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             
             if(
                     !(!sDeducible
@@ -725,7 +725,7 @@ Ext.onReady(function()
                 
                 if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
                	{
-                	if(causaSiniestro ="2"){
+                	if(causaSiniestro =="2"){
                 		deducible = 0;
                 	}
                	}
@@ -745,7 +745,7 @@ Ext.onReady(function()
             }
             var copago      = _p12_slist2[indice].COPAGO*1.0;
             var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
-            var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
+            //var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             //var _facturaIndividual = _p12_slist1[indice];
             
             if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
