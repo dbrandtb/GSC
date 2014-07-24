@@ -151,7 +151,7 @@ Ext.onReady(function() {
             {name: 'nlogisus'},
             {name: 'nsuplogi', type:'int'},
             {name: 'ptpritot', type : 'float'}
-        ],
+        ]
     });
     
     
