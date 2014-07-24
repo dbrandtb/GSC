@@ -747,15 +747,7 @@ Ext.onReady(function()
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
             		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
             	}else{
-            		if(tipcopag=='$'){
-                        var copagoaplica = copago;
-                    }
-                    else if(tipcopag=='%'){
-                        var copagoaplica = subttdeduc*(copago/100.0);
-                    }
-                    else{
-                        var copagoaplica = 0.0;
-                    }
+            		var copagoaplica = 0.0;
             	}
            	}else{
            		if(tipcopag=='$'){
