@@ -94,7 +94,6 @@ Ext.onReady(function(){
 	var pRcb_grdRecibos = Ext.create('Ext.grid.Panel', {
 		store:   pRcb_storeRecibos,
 		selType: 'checkboxmodel',
-		autoscroll:true,
 		tbar: [{
 			xtype   : 'button',
 			text    : 'Ver detalle',
@@ -154,7 +153,7 @@ Ext.onReady(function(){
 			  xtype: 'grid',
 			  store: pRcb_storeDetalleRecibo,
 			  height:285,
-			  autoscroll:true,
+			  autoScroll:true,
 		      columns: [
 	             {text: 'Tipo de concepto', dataIndex:'dstipcon', width:300},
 	             {text: 'Importe', dataIndex:'ptimport', width:100, align:'right'}
@@ -170,4 +169,4 @@ Ext.onReady(function(){
 	
 });
 </script>
-<div id="dvRecibos" style="height:500px;"></div>
+<div id="dvRecibos" style="height:350px;"></div>
