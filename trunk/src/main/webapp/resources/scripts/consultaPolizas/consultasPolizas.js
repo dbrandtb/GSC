@@ -741,6 +741,7 @@ Ext.onReady(function() {
         }, {
         	id: 'tbRecibos',
         	title: 'RECIBOS',
+        	autoScroll: true,
         	loader: {
         		url: _URL_LOADER_RECIBOS,
         		scripts: true,
