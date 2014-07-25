@@ -837,7 +837,7 @@ Ext.onReady(function() {
     var totalMontoRecibos = Ext.create('Ext.toolbar.Toolbar',{
         buttonAlign:'center',
         width   : 450,
-        style:'color:white;',
+        style:'color:white;font-weight:bold;',
         items:
         [
             {xtype: 'label', text: 'Monto Total '},
@@ -850,14 +850,14 @@ Ext.onReady(function() {
     var consultaRecibosAgente = Ext.create('Ext.grid.Panel', {
         title   : 'Ver desglose de coberturas:',
         store   : storeRecibosAgente,
-        autoScroll :true,
-        isExpanded : true,
+        //autoScroll :true,
+        //isExpanded : true,
         collapsible: true,
         collapsed:true,
         width   : 450,
-        height: 250,
+        //height: 250,
         columns: [                   
-            {header: 'N&uacute;mero de Recibo',dataIndex: 'nmrecibo', width:150},
+            {header: 'N&uacute;mero de Recibo',dataIndex: 'nmrecibo', width:200},
             {header: 'Importe', dataIndex:'ptimport', width:250 , align:'right', renderer: Ext.util.Format.usMoney, summaryType: 'sum',summaryRenderer: function(value){ return Ext.String.format('Total     {0}',Ext.util.Format.usMoney( value)); }}
         ],
         features: [{ groupHeaderTpl: '{name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})', ftype:'groupingsummary', summaryType: 'sum', startCollapsed :true }]
@@ -865,12 +865,16 @@ Ext.onReady(function() {
     
         
     var tabPanelAgentes = Ext.create('Ext.tab.Panel', {
+    	border : false,
+    	defaults: {
+    		border:false
+    	},
         items: [{
             title : 'DATOS DEL AGENTE',
-            border:false,
             items:[panelDatosAgente]
         }, {
             title: 'RECIBOS DEL AGENTE',
+            autoScroll:true,
             items:[totalMontoRecibos, consultaRecibosAgente]
             
         }]
