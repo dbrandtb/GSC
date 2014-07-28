@@ -37,6 +37,11 @@ var _URL_Existe_Documentos =     '<s:url namespace="/siniestros" action="validaD
 
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
+var compleUrlGuardarCartoRechazo = '<s:url namespace="/siniestros" action="guardarCartaRechazoAutServ" />';
+var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
+var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
+
+
 //UserVO usuario  = (UserVO)session.get("USUARIO");
 //String cdrol    = usuario.getRolActivo().getObjeto().getValue();
 
@@ -352,94 +357,172 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 		return;
 	}
 	else{
-		
-		var comentariosText = Ext.create('Ext.form.field.TextArea', {
-	        fieldLabel: 'Observaciones'
-	        ,labelWidth: 150
-	        ,width: 600
-	        ,name:'smap1.comments'
-	        ,height: 250
-	    });
-	    
-	    windowLoader = Ext.create('Ext.window.Window',{
-	        modal       : true,
-	        buttonAlign : 'center',
-	        width       : 663,
-	        height      : 400,
-	        autoScroll  : true,
-	        items       : [
-	                        Ext.create('Ext.form.Panel', {
-	                        title: 'Rechazar autorizaci&oacute;n de servicio',
-	                        width: 650,
-	                        url: _URL_ActualizaStatusTramite,
-	                        bodyPadding: 5,
-	                        items: [comentariosText],
-	                        buttonAlign:'center',
-	                        buttons: [{
-	                            text: 'Rechazar',
-	                            icon    : '${ctx}/resources/fam3icons/icons/accept.png',
-	                            buttonAlign : 'center',
-	                            handler: function() {
-	    	            	    	if (this.up().up().form.isValid()) {
-	    	            	    		this.up().up().form.submit({
-	    	            		        	waitMsg:'Procesando...',
-	    	            		        	params: {
-	    	            		        		'smap1.ntramite' : record.get('ntramite'), 
-	    	            		        		'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
-	    	            		        	},
-	    	            		        	failure: function(form, action) {
-	    	            		        		mensajeError('No se pudo rechazar.');
-	    	            					},
-	    	            					success: function(form, action) {
-	    	            						
-	    	            						Ext.Ajax.request(
-   	            								{
-   	            									url     : _URL_ActualizaStatusMAUTSERV
-   	            								    ,params:{
-   	            								    	'params.nmautser' :  record.get('parametros.pv_otvalor01'),
-   	 	    	            		        			'params.status'   : _STATUS_TRAMITE_RECHAZADO,
-   	            								    }
-   	            								    ,success : function (response)
-   	            								    {
-   	            								    	mensajeCorrecto('Aviso','Se ha rechazado con &eacute;xito.');
-	   	 	    	            						loadMcdinStore();
-	   	 	    	            						windowLoader.close();
-   	            								    },
-   	            								    failure : function ()
-   	            								    {
-   	            								        me.up().up().setLoading(false);
-   	            								        Ext.Msg.show({
-   	            								            title:'Error',
-   	            								            msg: 'Error de comunicaci&oacute;n',
-   	            								            buttons: Ext.Msg.OK,
-   	            								            icon: Ext.Msg.ERROR
-   	            								        });
-   	            								    }
-   	            								});
-	    	            					}
-	    	            				});
-	    	            			} else {
-	    	            				Ext.Msg.show({
-	    	            	                   title: 'Aviso',
-	    	            	                   msg: 'Complete la informaci&oacute;n requerida',
-	    	            	                   buttons: Ext.Msg.OK,
-	    	            	                   icon: Ext.Msg.WARNING
-	    	            	               });
-	    	            			}
-	    	            		}
-	                        },{
-	                            text: 'Cancelar',
-	                            icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
-	                            buttonAlign : 'center',
-	                            handler: function() {
-	                                windowLoader.close();
-	                            }
-	                        }
-	                        ]
-	                    })  
-	                ]
-	    }).show();
-	    centrarVentana(windowLoader);	
+		//Obtengo el valor del ID para obtener el valor de la descripcion
+		Ext.Ajax.request(
+		{
+			url     : _URL_CONSULTA_CLAUSU
+			,params : 
+			{
+				'params.cdclausu' : null,
+				'params.dsclausu' : 'CARTA RECHAZO AUT SERV'
+			}
+			,success : function (response)
+			{
+				var json=Ext.decode(response.responseText);
+				var claveClausula = json.listaGenerica[0].key;
+
+				Ext.Ajax.request(
+				{
+					url     : _URL_CONSULTA_CLAUSU_DETALLE
+					,params : 
+					{
+						'params.cdclausu'  : claveClausula
+					}
+					,success : function (response)
+					{
+						var json=Ext.decode(response.responseText);
+						txtContenido =json.msgResult;
+						 
+						windowLoader = Ext.create('Ext.window.Window',{
+						modal       : true,
+						buttonAlign : 'center',
+						width       : 663,
+						height      : 400,
+						autoScroll  : true,
+						items       : [
+							Ext.create('Ext.form.Panel', {
+								title: 'Rechazar autorizaci&oacute;n de servicio',
+								width: 650,
+								url: _URL_ActualizaStatusTramite,
+								bodyPadding: 5,
+								items: [
+									Ext.create('Ext.form.field.TextArea', {
+										id        : 'inputTextareaCommentsToRechazo'
+										,width  : 570
+										,height : 200
+										,value  : txtContenido
+									}),
+									Ext.create('Ext.form.field.TextArea', {
+									id        : 'inputTextareaComments'
+									,width  : 570
+									,height : 100
+								})],
+						buttonAlign:'center',
+						buttons: [{
+							text: 'Rechazar',
+							icon    : '${ctx}/resources/fam3icons/icons/accept.png',
+							buttonAlign : 'center',
+							handler: function() {
+								if (this.up().up().form.isValid()) {
+									this.up().up().form.submit({
+										waitMsg:'Procesando...',
+										params: {
+											'smap1.ntramite' : record.get('ntramite'), 
+											'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
+											'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
+										},
+										failure: function(form, action) {
+											mensajeError('No se pudo rechazar.');
+										},
+										success: function(form, action) {
+											Ext.Ajax.request(
+											{
+												url     : compleUrlGuardarCartoRechazo
+												,method:'GET'
+												,params :
+												{
+													'map1.ntramite'  : record.get('ntramite')
+													,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+													,'map1.cdsisrol' : 'MEDICO'
+													,'map1.cdunieco' : record.get('cdunieco')
+													,'map1.cdramo'   : record.get('cdramo')
+													,'map1.estado'   : record.get('estado')
+													,'map1.nmpoliza' : record.get('nmpoliza')
+												}
+												,success : function(response)
+												{
+													// YA NO REALIZA NADA PORQUE YA SE GENERO EL ARCHIVO
+												}
+												,failure : function()
+												{
+													Ext.Msg.show({
+														title:'Error',
+														msg: 'Error de comunicaci&oacute;n',
+														buttons: Ext.Msg.OK,
+														icon: Ext.Msg.ERROR
+													});
+												}
+											});
+											Ext.Ajax.request(
+											{
+												url     : _URL_ActualizaStatusMAUTSERV
+												,params:{
+													'params.nmautser' :  record.get('parametros.pv_otvalor01'),
+													'params.status'   : _STATUS_TRAMITE_RECHAZADO
+												}
+												,success : function (response)
+												{
+													mensajeCorrecto('Aviso','Se ha rechazado con &eacute;xito.');
+													loadMcdinStore();
+													windowLoader.close();
+												},
+												failure : function ()
+												{
+													me.up().up().setLoading(false);
+													Ext.Msg.show({
+														title:'Error',
+														msg: 'Error de comunicaci&oacute;n',
+														buttons: Ext.Msg.OK,
+														icon: Ext.Msg.ERROR
+													});
+												}
+											});
+										}
+									});
+								} else {
+									Ext.Msg.show({
+										title: 'Aviso',
+										msg: 'Complete la informaci&oacute;n requerida',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.WARNING
+									});
+								}
+							}
+						},{
+				text: 'Cancelar',
+				icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+				buttonAlign : 'center',
+				handler: function() {
+				windowLoader.close();
+				}
+				}
+				]
+				})  
+				]
+				}).show();
+				centrarVentana(windowLoader);
+				},
+				failure : function ()
+				{
+				Ext.Msg.show({
+				title:'Error',
+				msg: 'Error de comunicaci&oacute;n',
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.ERROR
+				});
+				}
+				});
+				},
+				failure : function ()
+				{
+				Ext.Msg.show({
+				title:'Error',
+				msg: 'Error de comunicaci&oacute;n',
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.ERROR
+				});
+				}
+				});
 	}
 }
 

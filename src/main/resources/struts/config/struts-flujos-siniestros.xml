@@ -749,6 +749,10 @@
 			</result>
 		</action>
 		
+		<action name="guardarCartaRechazoAutServ" class="siniestrosAction" method="guardarCartaRechazoAutServ">
+            <result type="json" />
+        </action>
+		
     </package>
 
 </struts>
