@@ -1232,7 +1232,7 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.getForm().reset();
  		
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(true);
- 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(true);
+ 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(false); // true
  		panelEdicionFacturas.down('[name="params.nfactura"]').setValue(record.get('NFACTURA'));
  		panelEdicionFacturas.down('[name="params.fefactura"]').setValue(record.get('FFACTURA'));
  		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
@@ -1453,6 +1453,19 @@ Ext.define('EditorConceptos', {
  			_Operacion = 'I';
  			
  			var record = gridFacturas.getSelectionModel().getSelection()[0];
+ 			
+ 			if(record.get('CDPRESTA') =="0"){
+ 				centrarVentanaInterna(Ext.Msg.show({
+					title: 'Error',
+					msg: "Favor de verificar el proveedor",
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+	           	}));
+	           	
+	           	return false;
+ 			}
+ 			
+ 			
  			//Validamos el tipo de moneda  Pesos 	 --> No aparecer el campo de tipo cambio 
  			//							   Diferente --> Que aparezca el tipo de cambio
  			panelEdicionConceptos.down('[name="params.tasacamb1"]').setReadOnly(false);
