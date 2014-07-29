@@ -93,21 +93,21 @@ Ext.onReady(function() {
                                         //Mostrar seccion de agentes:
                                         tabPanelAgentes.show();
                                     
-                                        //console.log('Params busqueda de agente=');console.log(panelBusqueda.down('form').getForm().getValues());
-                                        storeDatosAgente.load({
-                                            params: panelBusqueda.down('form').getForm().getValues(),
-                                            callback: function(records, operation, success) {
-                                                if(success){
-                                                    if(records.length > 0){
-                                                        panelDatosAgente.getForm().loadRecord(records[0]);  
-                                                    }else {
-                                                        showMessage('Error', 'El Agente no existe, verifique la clave', Ext.Msg.OK, Ext.Msg.ERROR);
-                                                    }
-                                                }else {
+                                        //Agentes de la poliza
+                                        storeAgentesPol.load({
+                                        	params: {
+                                        		'params.PV_CDUNIECO_I' : panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
+                                        		'params.PV_CDRAMO_I'   : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                                        		'params.PV_ESTADO_I'   : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
+                                        		'params.PV_NMPOLIZA_I' : panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                                        		'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+                                        	},
+                                        	callback: function(records, operation, success) {
+                                                if(!success){
                                                     showMessage('Error', 'Error al obtener los datos del agente, intente m\u00E1s tarde',
-                                                    Ext.Msg.OK, Ext.Msg.ERROR);
+                                                            Ext.Msg.OK, Ext.Msg.ERROR);
                                                 }
-                                            }
+                                             }
                                         });
                                         
                                         // Obtenemos los recibos de los agentes:
@@ -764,48 +764,51 @@ Ext.onReady(function() {
     });
     
     
-    // DATOS DEL AGENTE:
+    
+    /**INFORMACION DE AGENTES EN POLIZA**/
     // Modelo
-    Ext.define('DatosAgenteModel', {
+    Ext.define('AgentesPolModel', {
         extend: 'Ext.data.Model',
         fields: [
-            {type:'string',        name:'cdagente'      },
-            {type:'string',        name:'cdideper'      },
-            {type: 'date',      name: 'fedesde' , dateFormat: 'd/m/Y' },
-            {type:'string',        name:'nombre'        }
+            {type:'string', name:'CDAGENTE'},
+            {type:'string', name:'NOMBRE'},
+            {type:'string', name:'CDTIPOAG'},
+            {type:'string', name:'DESCRIPL'},
+            {type:'string', name:'PORREDAU'},
+            {type:'string', name:'PORPARTI'}
         ]
-    });
-    // Store
-    var storeDatosAgente = new Ext.data.Store({
-        model: 'DatosAgenteModel',
-        proxy: {
-            type: 'ajax',
-            url : _URL_CONSULTA_DATOS_AGENTE,
-            reader:{
-                type: 'json',
-                root: 'datosAgente'
-            }
-        }
     });
     
-    // Panel Info Agente
-    var panelDatosAgente = Ext.create('Ext.form.Panel', {
-        title   : 'INFORMACION DEL AGENTE',
-        model   : 'DatosAgenteModel',
-        //width      : 750,
-        //height     : 100,
-        border: false,
-        defaults: {
-            bodyPadding: 5
-        },
-        items:[
-            {xtype:'textfield', name:'cdideper', fieldLabel: 'RFC', readOnly: true, labelWidth: 120},
-            {xtype:'textfield', name:'cdagente', fieldLabel: 'C&oacute;digo', readOnly: true, labelWidth: 120},
-            {xtype:'textfield', name:'nombre',   fieldLabel: 'Nombre', readOnly: true, labelWidth: 120, width: 400},
-            {xtype: 'datefield',name:'fedesde',  fieldLabel: 'Fecha de ingreso', format: 'd/m/Y', readOnly: true, labelWidth: 120}
+    // Store
+    var storeAgentesPol = new Ext.data.Store({
+     model: 'AgentesPolModel',
+     proxy:
+     {
+          type: 'ajax',
+          url : _URL_CONSULTA_AGENTES_POLIZA,
+      reader:
+      {
+           type: 'json',
+           root: 'loadList'
+      }
+     }
+    });
+    
+    
+    var gridAgentesPoliza = Ext.create('Ext.grid.Panel', {
+        title   : 'Agentes en la P&oacute;liza',
+        store   : storeAgentesPol,
+//        width   : 830,
+//        autoScroll:true,
+        columns: [
+            {text:'Agente',dataIndex:'CDAGENTE', flex:1},
+            {text:'Nombre',dataIndex:'NOMBRE', flex:2},
+            {text:'Tipo Agente',dataIndex:'DESCRIPL',flex:1},
+            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'PORREDAU',flex:1},
+            {text:'Participaci&oacute;n',dataIndex:'PORPARTI',flex:1}
         ]
     });
-
+    
     // INFORMACION DEL GRID DE CONSULTA DE RECIBOS DEL AGENTE:
     //Modelo
     Ext.define('RecibosAgenteModel',{
@@ -871,7 +874,7 @@ Ext.onReady(function() {
     	},
         items: [{
             title : 'DATOS DEL AGENTE',
-            items:[panelDatosAgente]
+            items:[gridAgentesPoliza]
         }, {
             title: 'RECIBOS DEL AGENTE',
             autoScroll:true,

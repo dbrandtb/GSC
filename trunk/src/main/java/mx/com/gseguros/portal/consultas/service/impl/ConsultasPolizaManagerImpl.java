@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.consultas.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
@@ -162,6 +164,12 @@ public class ConsultasPolizaManagerImpl extends
 				ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE);
 
 		return result;
+	}
+	
+	public List<Map<String, String>> consultaAgentesPoliza(Map<String, String> params) throws Exception{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.OBTIENE_AGENTES_POLIZA);
+		return (List<Map<String, String>>) result.getItemList();
 	}
 
 	public WrapperResultados consultaDatosAsegurado(String cdunieco,

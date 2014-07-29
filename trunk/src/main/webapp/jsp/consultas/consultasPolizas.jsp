@@ -15,7 +15,7 @@
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurado" />';
             var _URL_CONSULTA_POLIZAS_ASEGURADO   = '<s:url namespace="/consultasPoliza" action="consultaPolizasAsegurado" />';
-            var _URL_CONSULTA_DATOS_AGENTE        = '<s:url namespace="/consultasPoliza" action="consultaDatosAgente" />';
+            var _URL_CONSULTA_AGENTES_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaAgentesPoliza" />';
             var _URL_CONSULTA_RECIBOS_AGENTE      = '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
             var _URL_CONSULTA_COPAGOS_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';

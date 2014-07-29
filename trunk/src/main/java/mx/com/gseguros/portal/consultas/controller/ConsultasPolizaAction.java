@@ -73,6 +73,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<CopagoVO> datosCopagosPoliza;
 
     private Map<String,Item> itemMap;
+    
+    private List<Map<String, String>> loadList;
 
     public String execute() throws Exception {
     	return SUCCESS;
@@ -322,6 +324,18 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
         success = true;
         return SUCCESS;
     }
+    
+    public String consultaAgentesPoliza() throws Exception {
+       	try {
+       		loadList = consultasPolizaManager.consultaAgentesPoliza(params);
+       	}catch( Exception e){
+       		logger.error("Error en consultaAgentesPoliza",e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+       	success = true;
+       	return SUCCESS;
+	}
     
     
     /**
@@ -594,6 +608,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setMensajeRes(String mensajeRes) {
 		this.mensajeRes = mensajeRes;
+	}
+
+	public List<Map<String, String>> getLoadList() {
+		return loadList;
+	}
+
+	public void setLoadList(List<Map<String, String>> loadList) {
+		this.loadList = loadList;
 	}
 
 }

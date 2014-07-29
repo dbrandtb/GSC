@@ -1,5 +1,8 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.util.List;
+import java.util.Map;
+
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 
@@ -124,7 +127,14 @@ public interface ConsultasPolizaManager {
 	 * @throws         ApplicationException
 	 */
 	public WrapperResultados consultaAgente(String cdagente)throws ApplicationException;
-	
+
+	/**
+	 * Consulta todos los agentes asociados a una poliza
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> consultaAgentesPoliza(Map<String, String> params) throws Exception;
 	
 	/**
 	 * Obtiene los datos de un asegurado de acuerdo a los datos de la poliza 
