@@ -377,12 +377,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_accion_i", operacion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			try {
-				paramsFacMesaCtrl.put("pv_ffactura_i",DateUtils.parseDate(fefactura, Constantes.FORMATO_FECHA));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}//fefactura);
+			paramsFacMesaCtrl.put("pv_ffactura_i",DateUtils.parseDate(fefactura, Constantes.FORMATO_FECHA));
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
@@ -396,6 +391,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
+		} catch (ParseException parseExc) {
+			throw new ApplicationException(parseExc.getMessage(), parseExc);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
