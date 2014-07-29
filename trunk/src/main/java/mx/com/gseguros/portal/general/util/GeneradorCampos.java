@@ -407,6 +407,7 @@ public class GeneradorCampos
         	
         	////// typeAhead, displayField, valueField, matchFieldWidth //////
         	item.add("typeAhead"       , true);
+        	item.add("anyMatch"        , true);
         	item.add("displayField"    , "value");
             item.add("valueField"      , "key");
             item.add("matchFieldWidth" , false);
