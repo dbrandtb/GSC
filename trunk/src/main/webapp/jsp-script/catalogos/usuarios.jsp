@@ -451,6 +451,7 @@ Ext.apply(Ext.form.field.VTypes, {
         },'->',{
             icon    : '${ctx}/resources/fam3icons/icons/award_star_silver_2.png',
             text    : 'Creaci&oacute;n de Roles',
+            hidden  : true,
             handler : function(){
             			crearEditarRoles();
             		}
