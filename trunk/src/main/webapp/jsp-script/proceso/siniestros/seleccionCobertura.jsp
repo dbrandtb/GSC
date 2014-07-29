@@ -87,6 +87,10 @@
                             ,'params.cdtipsit' : _selCobForm.items.items[2].getValue()
                             ,'params.ntramite'  : _selCobParams.ntramite
                             ,'params.tipopago'  :_selCobParams.tipopago
+                            ,'params.estado'  : _selCobParams.estado
+                            ,'params.cdunieco'  : _selCobParams.cdunieco
+                            ,'params.nmpoliza'  : _selCobParams.nmpoliza
+                            ,'params.nmsituac'  : _selCobParams.nmsituac
                         }
                     });
                 });
@@ -102,6 +106,10 @@
                             ,'params.cdtipsit' : _selCobForm.items.items[2].getValue()
                             ,'params.ntramite'  : _selCobParams.ntramite
                             ,'params.tipopago'  :_selCobParams.tipopago
+                            ,'params.estado'    : _selCobParams.estado
+                            ,'params.cdunieco'  : _selCobParams.cdunieco
+                            ,'params.nmpoliza'  : _selCobParams.nmpoliza
+                            ,'params.nmsituac'  : _selCobParams.nmsituac
                         }
                     });
                 });

@@ -513,17 +513,14 @@ var msgWindow;
 			                   if(Ext.decode(response.responseText).listaAltaTramite != null)
 				    		{
 					    		var json=Ext.decode(response.responseText).listaAltaTramite;
-					    		var totalAsegurados = json.length;
-					    		if(totalAsegurados > 1){
-					    			params['params.cdramo']    = json[0].cdramo;
-									params['params.cdtipsit']  = json[0].cdtipsit;
-					    		}else{
-					    			params['params.cdramo']    = record.get('cdramo');
-									params['params.cdtipsit']  = record.get('cdtipsit');
-					    		}
-					    		
-					    		
-					    		urlDestino = _urlSeleccionCobertura;
+					    		params['params.cdramo']    = json[0].cdramo;
+								params['params.cdtipsit']  = json[0].cdtipsit;
+								params['params.cdunieco']    = json[0].cdunieco;
+								params['params.estado']    = json[0].estado;
+								params['params.nmpoliza']    = json[0].nmpoliza;
+								params['params.nmsituac']    = json[0].nmsituac;
+								
+								urlDestino = _urlSeleccionCobertura;
 								params['params.cdunieco']  = record.get('cdsucdoc');
 								params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
 								debug('urlDestino_3 :',urlDestino);
