@@ -3101,8 +3101,6 @@ public class EndososAction extends PrincipalCoreAction
 			String nombre   = smap1.get("nombre");
 			String nombre2  = smap1.get("nombre2");
 			String tpersona = smap1.get("tpersona");
-			String sexo     = smap1.get("parametros.pv_otvalor01");
-			String fenacimi = smap1.get("parametros.pv_otvalor02");
 			String apat     = smap1.get("apat");
 			String amat     = smap1.get("amat");
 			String cdnacion = smap1.get("cdnacion");
@@ -3257,6 +3255,33 @@ public class EndososAction extends PrincipalCoreAction
                 
                 ////// valosit //////
                 /////////////////////
+                
+                //atributos
+                LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+            	p.put("cdtipsit",cdtipsit);
+            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
+            	
+            	String llaveSexo = null;
+            	if(atributos.get("SEXO") != null) {
+            		llaveSexo=atributos.get("SEXO");
+            		if(llaveSexo.length()==1) {
+                		llaveSexo="0"+llaveSexo;
+                	}
+                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
+            	}
+            	String sexo = smap1.get(llaveSexo);
+
+    			
+            	String llaveFenacimi=null;
+            	if(atributos.get("FENACIMI") != null) {
+            		llaveFenacimi=atributos.get("FENACIMI");
+                	if(llaveFenacimi.length()==1) {
+                		llaveFenacimi="0"+llaveFenacimi;
+                	}
+                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+            	}
+            	String fenacimi = smap1.get(llaveFenacimi);
+                //atributos
                 
                 //////////////////////
                 ////// mpersona //////
