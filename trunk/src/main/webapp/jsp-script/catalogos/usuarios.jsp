@@ -171,8 +171,8 @@ Ext.apply(Ext.form.field.VTypes, {
                     title        : 'Agregar Usuario'
                     ,modal       : true
                     ,buttonAlign : 'center'
-                    ,width       : 500
-                    ,height      : 670
+                    ,width       : 510
+                    ,height      : 680
                     ,autoScroll  : true
                     ,loader      :
                     {
@@ -209,8 +209,8 @@ Ext.apply(Ext.form.field.VTypes, {
                                 title        : 'Editar Usuario'
                                 ,modal       : true
                                 ,buttonAlign : 'center'
-                                ,width       : 500
-                                ,height      : 670
+                                ,width       : 510
+                                ,height      : 680
                                 ,autoScroll  : true
                                 ,loader      :
                                 {
@@ -401,8 +401,8 @@ Ext.apply(Ext.form.field.VTypes, {
                                 title        : 'Cambiar Contrase&ntilde;a del usuario: ' + record.get('cdUsuario')
                                 ,modal       : true
                                 ,buttonAlign : 'center'
-                                ,width       : 400
-                                ,height      : 160
+                                ,width       : 410
+                                ,height      : 170
                                 ,autoScroll  : true
                                 ,items: [panelPassword]
                             }).show();
