@@ -282,9 +282,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException {
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
 		try {
-			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo);
+			return siniestrosDAO.obtieneListadoPoliza(cdperson);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
@@ -298,6 +298,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
 	
 	@Override
 	public String guardaListaFacMesaControl(
@@ -1245,34 +1246,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
-		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String requiereAutorizacionServ(String cobertura, String subcobertura) throws Exception {
-		try {
-			return siniestrosDAO.requiereAutorizacionServicio(cobertura, subcobertura);
-		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura, String cdramo) throws Exception {
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cobertura_i", cobertura);
-		params.put("pv_ramo_i",   cdramo);
-		log.debug("obtieneFormatoCalculo params: "+params);
-		return siniestrosDAO.obtieneFormatoCalculo(params);
-	}
-	
-	@Override
-	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException {
-		try {
-			return siniestrosDAO.obtieneListadoRamoSalud();
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
