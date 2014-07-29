@@ -155,7 +155,7 @@ Ext.onReady(function() {
                     },{
 						xtype      : 'textfield',
 						name       : 'params.cdusuari',
-						fieldLabel : 'Usuario',
+						fieldLabel : 'Id Usuario',
 						allowBlank : false,
 						//maskRe   : /^[a-zA-Z0-9]+$/,
 						//regex      : /^[a-zA-Z0-9]+$/,
@@ -204,6 +204,7 @@ Ext.onReady(function() {
 						displayField: 'value',
 						forceSelection: true,
                         queryMode   :'local',
+                        anyMatch    : true,
 						store       : Ext.create('Ext.data.Store', {
 							model : 'Generic',
 							autoLoad : true,
