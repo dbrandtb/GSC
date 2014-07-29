@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.siniestros.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
@@ -327,7 +329,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_accion_i", accion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			try {
+				paramsFacMesaCtrl.put("pv_ffactura_i",DateUtils.parseDate(fefactura, Constantes.FORMATO_FECHA));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//fefactura);
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
@@ -369,7 +376,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_accion_i", operacion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			try {
+				paramsFacMesaCtrl.put("pv_ffactura_i",DateUtils.parseDate(fefactura, Constantes.FORMATO_FECHA));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//fefactura);
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
