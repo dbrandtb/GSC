@@ -83,37 +83,34 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
-        		case CATCONCEPTO:
-        		case CAUSA_SINIESTRO:
-        		case DESTINOPAGO:
-        		case FORMAS_ASEGURAMIENTO:
-        		case GIROS:
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
 				case MC_TIPOS_TRAMITE:
 				case MOTIVOS_CANCELACION:
 				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
-				case PENALIZACIONES:
-				case PLANES:
-				case REFERENCIAS_TRAMITE_NUEVO:
-				case RELACION_CONT_ASEG:
 				case ROLES_POLIZA:
 				case SEXO:
 				case STATUS_POLIZA:
-				case TERRORWS:
 				case TIPOS_PAGO_POLIZA:
 				case TIPOS_PAGO_POLIZA_SIN_DXN:
 				case TIPOS_PERSONA:
 				case TIPOS_POLIZA:
 				case TIPOS_POLIZA_AUTO:
+				case TIPO_PAGO_SINIESTROS:
 				case TIPO_ATENCION_SINIESTROS:
 				case TIPO_CONCEPTO_SINIESTROS:
+				case CAUSA_SINIESTRO:
+				case TRATAMIENTOS:
+				case PENALIZACIONES:
+				case PLANES:
 				case TIPO_MONEDA:
 				case TIPO_MENU:
-				case TIPO_PAGO_SINIESTROS:
 				case TIPO_RESIDENCIA:
-				case TRATAMIENTOS:
+				case DESTINOPAGO:
+				case CATCONCEPTO:
+				case REFERENCIAS_TRAMITE_NUEVO:
+				case TERRORWS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:
@@ -168,18 +165,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista.add(new GenericVO("N", "NO"));
 					lista.add(new GenericVO("S", "SI"));
 					break;
-				case PLANES_X_PRODUCTO:
-					LinkedHashMap<String,Object>param=new LinkedHashMap<String,Object>();
-					param.put("param1",params.get("cdramo"));
-					param.put("param2",params.get("cdtipsit"));
-					List<Map<String,String>>listaPlanes=storedProceduresManager.procedureListCall(
-							ObjetoBD.OBTIENE_PLANES_X_PRODUCTO.getNombre(), param, null);
-					lista=new ArrayList<GenericVO>();
-					for(Map<String,String> plan:listaPlanes)
-					{
-						lista.add(new GenericVO(plan.get("CDPLAN"), plan.get("DSPLAN")));
-					}
-					break;
 				case COBERTURAS:
 					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
 					break;
@@ -194,22 +179,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 							paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
 							paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
 							paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
-							
 							List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
 							lista=new ArrayList<GenericVO>(0);
 							for(CoberturaPolizaVO nombre:listaCobertura) {
 								lista.add(new GenericVO(nombre.getCdgarant(), nombre.getDsgarant()));
 							}
 							break;
-							
 						}else{
 							String ntramite = params.get("ntramite");
 							Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
-							
 							for(Entry<String,String>en:paramsRes.entrySet()){
 								params.put(en.getKey().toLowerCase(),en.getValue());
 							}
-							
 							HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 							paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
 							paramCobertura.put("pv_estado_i",params.get("estado"));
@@ -217,7 +198,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 							paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
 							paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
 							paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
-							
 							List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
 							lista=new ArrayList<GenericVO>(0);
 							for(CoberturaPolizaVO nombre:listaCobertura) {
