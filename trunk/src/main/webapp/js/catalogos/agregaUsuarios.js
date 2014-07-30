@@ -396,7 +396,16 @@ Ext.onReady(function() {
     		            		form.submit({
 			    		        	waitMsg:'Procesando...',			        	
 			    		        	failure: function(form, action) {
-			    		        		showMessage('Error', action.result.errorMessage, Ext.Msg.OK, Ext.Msg.ERROR);
+			    		        		switch (action.failureType) {
+				    	                    case Ext.form.action.Action.CONNECT_FAILURE:
+				    	                	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+				    	                        break;
+				    	                    case Ext.form.action.Action.SERVER_INVALID:
+				    	                    case Ext.form.action.Action.LOAD_FAILURE:
+				    	                    	 var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+				    	                         Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+				    	                        break;
+				    	                }
 			    					},
 			    					success: function(form, action) {
 			    						recargaGridUsuarios();
