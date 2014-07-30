@@ -223,7 +223,7 @@
      */
     public CotizacionIndividualWSServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://gswas.com.mx:80/cotizadoremisorautos-wsDesa/soap/cotizacionIndividualWS" );
+                    this(configurationContext,"https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
                 
     }
 
@@ -232,7 +232,7 @@
      */
     public CotizacionIndividualWSServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://gswas.com.mx:80/cotizadoremisorautos-wsDesa/soap/cotizacionIndividualWS" );
+                    this("https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
                 
     }
 
@@ -3192,7 +3192,7 @@
         }
         return false;
     }
-     //http://gswas.com.mx:80/cotizadoremisorautos-wsDesa/soap/cotizacionIndividualWS
+     //https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS
         public static class Version
         implements org.apache.axis2.databinding.ADBBean{
         /* This type was generated from the piece of schema that had
@@ -12206,6 +12206,36 @@
                             
 
                         /**
+                        * field for Id_estado
+                        */
+
+                        
+                                    protected int localId_estado ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getId_estado(){
+                               return localId_estado;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Id_estado
+                               */
+                               public void setId_estado(int param){
+                            
+                                            this.localId_estado=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Modelo
                         */
 
@@ -12230,6 +12260,36 @@
                                public void setModelo(int param){
                             
                                             this.localModelo=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Version
+                        */
+
+                        
+                                    protected int localVersion ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getVersion(){
+                               return localVersion;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Version
+                               */
+                               public void setVersion(int param){
+                            
+                                            this.localVersion=param;
                                     
 
                                }
@@ -12538,6 +12598,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"id_estado", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"id_estado");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("id_estado");
+                                    }
+                                
+                                               if (localId_estado==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("id_estado cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId_estado));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"modelo", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -12556,6 +12645,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localModelo));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"version", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"version");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("version");
+                                    }
+                                
+                                               if (localVersion==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("version cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVersion));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -12768,10 +12886,22 @@
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoVehiculo));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "id_estado"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId_estado));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "modelo"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localModelo));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "version"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVersion));
                             
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
@@ -12984,11 +13114,49 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","id_estado").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setId_estado(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","modelo").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setModelo(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","version").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setVersion(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -14825,6 +14993,36 @@
                             
 
                         /**
+                        * field for IdAgenteCompartido
+                        */
+
+                        
+                                    protected int localIdAgenteCompartido ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdAgenteCompartido(){
+                               return localIdAgenteCompartido;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdAgenteCompartido
+                               */
+                               public void setIdAgenteCompartido(int param){
+                            
+                                            this.localIdAgenteCompartido=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for IdCliente
                         */
 
@@ -14965,6 +15163,36 @@
 
                              }
                              
+
+                        /**
+                        * field for PorcenComisionAgente2
+                        */
+
+                        
+                                    protected int localPorcenComisionAgente2 ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getPorcenComisionAgente2(){
+                               return localPorcenComisionAgente2;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param PorcenComisionAgente2
+                               */
+                               public void setPorcenComisionAgente2(int param){
+                            
+                                            this.localPorcenComisionAgente2=param;
+                                    
+
+                               }
+                            
 
      /**
      * isReaderMTOMAware
@@ -15129,6 +15357,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"idAgenteCompartido", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idAgenteCompartido");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idAgenteCompartido");
+                                    }
+                                
+                                               if (localIdAgenteCompartido==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idAgenteCompartido cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdAgenteCompartido));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"idCliente", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -15242,6 +15499,35 @@
                                         
                                     }
                                  }
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"porcenComisionAgente2", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"porcenComisionAgente2");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("porcenComisionAgente2");
+                                    }
+                                
+                                               if (localPorcenComisionAgente2==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("porcenComisionAgente2 cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPorcenComisionAgente2));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
                     xmlWriter.writeEndElement();
                
 
@@ -15423,6 +15709,12 @@
                                         }
                                     }
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idAgenteCompartido"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdAgenteCompartido));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "idCliente"));
                                  
                                 elementList.add(
@@ -15459,6 +15751,12 @@
                              }
 
                         }
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "porcenComisionAgente2"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPorcenComisionAgente2));
+                            
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -15534,7 +15832,7 @@
                     
                     reader.next();
                 
-                        java.util.ArrayList list5 = new java.util.ArrayList();
+                        java.util.ArrayList list6 = new java.util.ArrayList();
                     
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
@@ -15573,6 +15871,25 @@
                                         
                                     }
                                 
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idAgenteCompartido").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdAgenteCompartido(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -15622,14 +15939,14 @@
                                     
                                                           nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                           if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                              list5.add(null);
+                                                              list6.add(null);
                                                               reader.next();
                                                           } else {
-                                                        list5.add(Inciso.Factory.parse(reader));
+                                                        list6.add(Inciso.Factory.parse(reader));
                                                                 }
                                                         //loop until we find a start element that is not part of this array
-                                                        boolean loopDone5 = false;
-                                                        while(!loopDone5){
+                                                        boolean loopDone6 = false;
+                                                        while(!loopDone6){
                                                             // We should be at the end element, but make sure
                                                             while (!reader.isEndElement())
                                                                 reader.next();
@@ -15640,19 +15957,19 @@
                                                                 reader.next();
                                                             if (reader.isEndElement()){
                                                                 //two continuous end elements means we are exiting the xml structure
-                                                                loopDone5 = true;
+                                                                loopDone6 = true;
                                                             } else {
                                                                 if (new javax.xml.namespace.QName("","incisos").equals(reader.getName())){
                                                                     
                                                                       nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                                       if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                                          list5.add(null);
+                                                                          list6.add(null);
                                                                           reader.next();
                                                                       } else {
-                                                                    list5.add(Inciso.Factory.parse(reader));
+                                                                    list6.add(Inciso.Factory.parse(reader));
                                                                         }
                                                                 }else{
-                                                                    loopDone5 = true;
+                                                                    loopDone6 = true;
                                                                 }
                                                             }
                                                         }
@@ -15661,14 +15978,33 @@
                                                         object.setIncisos((Inciso[])
                                                             org.apache.axis2.databinding.utils.ConverterUtil.convertToArray(
                                                                 Inciso.class,
-                                                                list5));
+                                                                list6));
                                                             
                               }  // End of if for expected property start element
                                 
                                     else {
                                         
                                     }
-                                  
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","porcenComisionAgente2").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setPorcenComisionAgente2(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                              
                             while (!reader.isStartElement() && !reader.isEndElement())
                                 reader.next();
                             
@@ -42344,6 +42680,36 @@
                             
 
                         /**
+                        * field for IdOrigenSolicitud
+                        */
+
+                        
+                                    protected int localIdOrigenSolicitud ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdOrigenSolicitud(){
+                               return localIdOrigenSolicitud;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdOrigenSolicitud
+                               */
+                               public void setIdOrigenSolicitud(int param){
+                            
+                                            this.localIdOrigenSolicitud=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Incisos
                         * This was an Array!
                         */
@@ -43161,6 +43527,35 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"idOrigenSolicitud", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idOrigenSolicitud");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idOrigenSolicitud");
+                                    }
+                                
+                                               if (localIdOrigenSolicitud==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idOrigenSolicitud cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdOrigenSolicitud));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
                               if (localIncisosTracker){
                                        if (localIncisos!=null){
                                             for (int i = 0;i < localIncisos.length;i++){
@@ -43678,6 +44073,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdIncisoActual));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idOrigenSolicitud"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdOrigenSolicitud));
                              if (localIncisosTracker){
                              if (localIncisos!=null) {
                                  for (int i = 0;i < localIncisos.length;i++){
@@ -43845,7 +44246,7 @@
                     
                     reader.next();
                 
-                        java.util.ArrayList list15 = new java.util.ArrayList();
+                        java.util.ArrayList list16 = new java.util.ArrayList();
                     
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
@@ -44101,6 +44502,25 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idOrigenSolicitud").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdOrigenSolicitud(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","incisos").equals(reader.getName())){
                                 
                                     
@@ -44109,14 +44529,14 @@
                                     
                                                           nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                           if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                              list15.add(null);
+                                                              list16.add(null);
                                                               reader.next();
                                                           } else {
-                                                        list15.add(Inciso.Factory.parse(reader));
+                                                        list16.add(Inciso.Factory.parse(reader));
                                                                 }
                                                         //loop until we find a start element that is not part of this array
-                                                        boolean loopDone15 = false;
-                                                        while(!loopDone15){
+                                                        boolean loopDone16 = false;
+                                                        while(!loopDone16){
                                                             // We should be at the end element, but make sure
                                                             while (!reader.isEndElement())
                                                                 reader.next();
@@ -44127,19 +44547,19 @@
                                                                 reader.next();
                                                             if (reader.isEndElement()){
                                                                 //two continuous end elements means we are exiting the xml structure
-                                                                loopDone15 = true;
+                                                                loopDone16 = true;
                                                             } else {
                                                                 if (new javax.xml.namespace.QName("","incisos").equals(reader.getName())){
                                                                     
                                                                       nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                                       if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                                          list15.add(null);
+                                                                          list16.add(null);
                                                                           reader.next();
                                                                       } else {
-                                                                    list15.add(Inciso.Factory.parse(reader));
+                                                                    list16.add(Inciso.Factory.parse(reader));
                                                                         }
                                                                 }else{
-                                                                    loopDone15 = true;
+                                                                    loopDone16 = true;
                                                                 }
                                                             }
                                                         }
@@ -44148,7 +44568,7 @@
                                                         object.setIncisos((Inciso[])
                                                             org.apache.axis2.databinding.utils.ConverterUtil.convertToArray(
                                                                 Inciso.class,
-                                                                list15));
+                                                                list16));
                                                             
                               }  // End of if for expected property start element
                                 
