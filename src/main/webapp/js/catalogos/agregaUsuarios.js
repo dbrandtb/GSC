@@ -402,7 +402,7 @@ Ext.onReady(function() {
 				    	                        break;
 				    	                    case Ext.form.action.Action.SERVER_INVALID:
 				    	                    case Ext.form.action.Action.LOAD_FAILURE:
-				    	                    	 var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+				    	                    	 var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, verifique su sesi&oacute;n' : action.result.errorMessage;
 				    	                         Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
 				    	                        break;
 				    	                }
