@@ -2050,6 +2050,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nombreCenso      = null;
 			String ntramite         = smap1.get("ntramite");
 			String ntramiteVacio    = smap1.get("ntramiteVacio");
+			String tipoCenso        = smap1.get("tipoCenso");
+			boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
 			
@@ -2162,75 +2164,111 @@ public class CotizacionAction extends PrincipalCoreAction
 					File        archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 					PrintStream output     = new PrintStream(archivoTxt);
 					
-					//Iterate through each rows one by one
-					logger.info(""
-							+ "\n##############################################"
-							+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
-							);
-		            Iterator<Row> rowIterator = sheet.iterator();
-		            while (rowIterator.hasNext()) 
-		            {
-		                Row row        = rowIterator.next();
-		                Date   auxDate = null;
-		                Cell   auxCell = null;
-		                
-		                auxCell=row.getCell(0);
-		                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                
-		                auxCell=row.getCell(1);
-		                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                
-		                auxCell=row.getCell(2);
-		                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                
-		                auxCell=row.getCell(3);
-		                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-		                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-		                
-		                auxDate=row.getCell(4).getDateCellValue();
-		                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-		                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-		                
-		                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
-		                output.print(row.getCell(5).getStringCellValue()+"|");
-		                
-		                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
-		                output.print(row.getCell(6).getStringCellValue()+"|");
-		                
-		                auxCell=row.getCell(7);
-		                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		               
-		                auxCell=row.getCell(8);
-		                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-		                
-		                auxCell=row.getCell(9);
-		                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-		                
-		                auxCell=row.getCell(10);
-		                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-		                
-		                auxCell=row.getCell(11);
-		                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-		                
-		                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
-		                output.print(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
-		                
-		                output.println("");
-		                logger.info("** NUEVA_FILA **");
-		            }
-		            input.close();
-		            logger.info(""
-		            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
-							+ "\n##############################################"
-							);
+					if(esCensoSolo)
+					{
+						//Iterate through each rows one by one
+						logger.info(""
+								+ "\n##############################################"
+								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+								);
+			            Iterator<Row> rowIterator = sheet.iterator();
+			            while (rowIterator.hasNext()) 
+			            {
+			                Row row        = rowIterator.next();
+			                Date   auxDate = null;
+			                Cell   auxCell = null;
+			                
+			                auxCell=row.getCell(0);
+			                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                
+			                auxCell=row.getCell(1);
+			                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                
+			                auxCell=row.getCell(2);
+			                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                
+			                auxCell=row.getCell(3);
+			                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+			                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+			                
+			                auxDate=row.getCell(4).getDateCellValue();
+			                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+			                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+			                
+			                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
+			                output.print(row.getCell(5).getStringCellValue()+"|");
+			                
+			                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
+			                output.print(row.getCell(6).getStringCellValue()+"|");
+			                
+			                auxCell=row.getCell(7);
+			                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			               
+			                auxCell=row.getCell(8);
+			                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                
+			                auxCell=row.getCell(9);
+			                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                
+			                auxCell=row.getCell(10);
+			                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                
+			                auxCell=row.getCell(11);
+			                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                
+			                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+			                output.print(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+			                
+			                output.println("");
+			                logger.info("** NUEVA_FILA **");
+			            }
+			            input.close();
+			            logger.info(""
+			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+								+ "\n##############################################"
+								);
+					}
+					else //censo agrupado
+					{
+						//Iterate through each rows one by one
+						logger.info(""
+								+ "\n##############################################"
+								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+								);
+			            Iterator<Row> rowIterator = sheet.iterator();
+			            while (rowIterator.hasNext()) 
+			            {
+			                Row row = rowIterator.next();
+			                
+			                logger.info("EDAD: "+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+			                output.print(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+			                
+			                logger.info("SEXO: "+row.getCell(1).getStringCellValue()+"|");
+			                output.print(row.getCell(1).getStringCellValue()+"|");
+			                
+			                logger.info("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+			                output.print(String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+			                
+			                logger.info("GRUPO: "+String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+			                output.print(String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+			                
+			                output.println("");
+			                logger.info("** NUEVA_FILA **");
+			            }
+			            input.close();
+			            logger.info(""
+			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+								+ "\n##############################################"
+								);
+					}
 					
 					exito = FTPSUtils.upload(
 							this.getText("dominio.server.layouts"),
@@ -2272,21 +2310,42 @@ public class CotizacionAction extends PrincipalCoreAction
 						cdplanes[indGrupo-1] = cdplan;
 					}
 					
-					LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-					params.put("param01",nombreCenso);
-					params.put("param02",cdunieco);
-					params.put("param03",cdramo);
-					params.put("param04","W");
-					params.put("param05",nmpoliza);
-					params.put("param06",cdedo);
-					params.put("param07",cdmunici);
-					params.put("param08",cdplanes[0]);
-					params.put("param09",cdplanes[1]);
-					params.put("param10",cdplanes[2]);
-					params.put("param11",cdplanes[3]);
-					params.put("param12",cdplanes[4]);
-					storedProceduresManager.procedureVoidCall(
-							ObjetoBD.CARGAR_CENSO.getNombre(), params, null);
+					if(esCensoSolo)
+					{
+						LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
+						params.put("param01",nombreCenso);
+						params.put("param02",cdunieco);
+						params.put("param03",cdramo);
+						params.put("param04","W");
+						params.put("param05",nmpoliza);
+						params.put("param06",cdedo);
+						params.put("param07",cdmunici);
+						params.put("param08",cdplanes[0]);
+						params.put("param09",cdplanes[1]);
+						params.put("param10",cdplanes[2]);
+						params.put("param11",cdplanes[3]);
+						params.put("param12",cdplanes[4]);
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.CARGAR_CENSO.getNombre(), params, null);
+					}
+					else
+					{
+						LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
+						params.put("param01",nombreCenso);
+						params.put("param02",cdunieco);
+						params.put("param03",cdramo);
+						params.put("param04","W");
+						params.put("param05",nmpoliza);
+						params.put("param06",cdedo);
+						params.put("param07",cdmunici);
+						params.put("param08",cdplanes[0]);
+						params.put("param09",cdplanes[1]);
+						params.put("param10",cdplanes[2]);
+						params.put("param11",cdplanes[3]);
+						params.put("param12",cdplanes[4]);
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.CARGAR_CENSO_AGRUPADO.getNombre(), params, null);
+					}
 				}
 				catch(Exception ex)
 				{

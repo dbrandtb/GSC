@@ -604,16 +604,19 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usuario=(UserVO) this.session.get("USUARIO");
 			username=usuario.getUser();
 			
-			String cdtiptra      = smap2.get("pv_cdtiptra_i");
-			String cdramo        = smap1.get("cdramo");
-			String cdtipsit      = smap1.get("cdtipsit");
-			rol           = usuario.getRolActivo().getObjeto().getValue();
-			String pantalla            = "TATRIMC";
-			String seccionForm         = "FORMULARIO";
-			String seccionGrid         = "TATRIMC";
-			String seccionFiltro       = "FILTRO";
-			String seccionActionColumn = "ACTIONCOLUMN";
-			String seccionGridButtons   = "GRIDBUTTONS";
+			String cdtiptra                  = smap2.get("pv_cdtiptra_i");
+			String cdramo                    = smap1.get("cdramo");
+			String cdtipsit                  = smap1.get("cdtipsit");
+			String pantalla                  = "TATRIMC";
+			String seccionForm               = "FORMULARIO";
+			String seccionGrid               = "TATRIMC";
+			String seccionFiltro             = "FILTRO";
+			String seccionActionColumn       = "ACTIONCOLUMN";
+			String seccionActionColumnStatus = "STATUSCOLUMNS";
+			String seccionGridButtons        = "GRIDBUTTONS";
+			String seccionBotonesTramite     = "BOTONES_TRAMITE";
+			
+			rol = usuario.getRolActivo().getObjeto().getValue();
 			
 			////// obtener valores del formulario //////
 			List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
@@ -639,11 +642,22 @@ public class MesaControlAction extends PrincipalCoreAction
 					cdtipsit, null, rol,
 					pantalla, seccionActionColumn, null);
 			
+			////// obtener botones del action column por status//////
+			List<ComponenteVO>ltactioncolumnstatus=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionActionColumnStatus, null);
+			
 			////// obtener botones del grid //////
 			List<ComponenteVO>ltgridbuttons=pantallasManager.obtenerComponentes(
 					cdtiptra, null, cdramo,
 					cdtipsit, null, rol,
 					pantalla, seccionGridButtons, null);
+			
+			List<ComponenteVO>ltBotonesTramite=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionBotonesTramite, null);
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
@@ -664,8 +678,14 @@ public class MesaControlAction extends PrincipalCoreAction
 			gc.generaComponentes(ltactioncolumn, true, false, false, false, false, true);
 			imap1.put("actionColumns",gc.getButtons());
 			
+			gc.generaComponentes(ltactioncolumnstatus, true, false, false, true, false, false);
+			imap1.put("statusColumns",gc.getColumns());
+			
 			gc.generaComponentes(ltgridbuttons, true, false, false, false, false, true);
 			imap1.put("gridbuttons",gc.getButtons());
+			
+			gc.generaComponentes(ltBotonesTramite, true, false, false, false, false, true);
+			imap1.put("botonesTramite",gc.getButtons());
 			
 			///////////////////////////////////////
 			////// para poner -1 por defecto //////

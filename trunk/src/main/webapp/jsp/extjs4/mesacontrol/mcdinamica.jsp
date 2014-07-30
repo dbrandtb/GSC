@@ -15,10 +15,10 @@
 /*///////////////////*/
 var mcdinInput     = [];
 var mcdinSesion    = [];
-var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
-var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"     />';
-var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"             />';
-var _4_urlReporte  = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
+var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico"  />';
+var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"      />';
+var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"              />';
+var _4_urlReporte  = '<s:url namespace="/reportes"    action="procesoObtencionReporte" />';
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _4_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -59,18 +59,11 @@ var _4_botones=
 	]
 };
 
+var _4_statusColumns = [<s:property value="imap1.statusColumns" escapeHtml="false" />];
+
 var _4_botonesGrid =
 [
-	<s:if test='%{getSmap1().get("editable")!=null&&getSmap1().get("editable").length()>0}'>
-	{
-	    text     : 'Agregar tr&aacute;mite'
-	    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-	    ,handler : function()
-	    {
-	        mcdinFormNuevo.show();
-	    }
-	}
-	</s:if>
+	<s:property value="imap1.gridbuttons" />
 ];
 /*///////////////////*/
 ////// variables //////
@@ -97,6 +90,26 @@ _4_botones.width = (_4_botones.items.length*20)+10;
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _4_imagenStatus(record,imagen,texto,estados,funcion,row)
+{
+	debug('record:'  , record);
+	debug('imagen:'  , imagen);
+	debug('texto:'   , texto);
+	debug('estados:' , estados);
+	debug('funcion:' , funcion);
+	debug('row:'     , row);
+	var indice   = $.inArray(record.get('status'),estados);
+	debug('indice: ',indice);
+	if(indice>=0)
+	{
+	    return '<a href="#" onclick="'+funcion+'('+row+'); return false;"><img src="${ctx}/resources/fam3icons/icons/'+imagen+'.png" data-qtip="'+texto+'" /></a>';
+	}
+	else
+	{
+		return 'a';
+	}
+}
+
 function _4_cambiarTiptra(cdtiptra)
 {
 	var editable = '';
@@ -205,17 +218,32 @@ Ext.onReady(function()
     	,initComponent : function()
     	{
     		debug('initComponent instance of McdinGrid');
+    		var columnas =
+    	    [
+    	        <s:property value="imap1.gridColumns" />
+    	    ];
+    		if(_4_statusColumns.length>0)
+    		{
+    			for(var i=0;i<_4_statusColumns.length;i++)
+    			{
+    				var col=_4_statusColumns[i];
+    				col.flex         = 0;
+    				col.width        = 20;
+    				col.xtype        = 'actioncolumn';
+    				col.text         = '';
+    				col.sortable     = false;
+    				col.menuDisabled = true;
+    				columnas.push(col);
+    			}
+    		}
+    		columnas.push(_4_botones);
     		Ext.apply(this,
     		{
     			title      : '<s:property value="smap1.gridTitle" />'
     			,store     : mcdinStore
     			,minHeight : 200
-    			,selType: 'checkboxmodel'
-    			,columns   :
-    			[
-    			    <s:property value="imap1.gridColumns" />
-    			    ,_4_botones
-    			]
+    			,selType   : 'checkboxmodel'
+    			,columns   : columnas
     			,tbar      : _4_botonesGrid
     			,bbar      :
     	        {
@@ -258,51 +286,7 @@ Ext.onReady(function()
 		    	]
 		    	,tbar          :
 		    	[
-					{
-					    text      : 'Emisi&oacute;n'
-					    ,icon     : '${ctx}/resources/fam3icons/icons/star.png'
-					    ,disabled : mcdinInput['tiptra']=='1'
-					    ,handler  : function()
-					    {
-					    	_4_cambiarTiptra(1);
-					    }
-					}
-                    ,{
-                        text      : 'Auto. Emisiones'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/book_key.png'
-                        ,disabled : mcdinInput['tiptra']=='17'
-                        ,handler  : function()
-                            {
-                                _4_cambiarTiptra(17);
-                            }
-                    }
-					,{
-                        text      : 'Endosos'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/overlays.png'
-                        ,disabled : mcdinInput['tiptra']=='15'
-                        ,handler  : function()
-                        {
-                        	_4_cambiarTiptra(15);
-                        }
-                    }
-					,{
-                        text      : 'Auto. Servicios'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/page_go.png'
-                        ,disabled : mcdinInput['tiptra']=='14'
-                        ,handler  : function()
-                            {
-                                _4_cambiarTiptra(14);
-                            }
-                    }
-					,{
-                        text      : 'Siniestros'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/flag_red.png'
-                        ,disabled : mcdinInput['tiptra']=='16'
-                        ,handler  : function()
-                            {
-                            	_4_cambiarTiptra(16);
-                            }
-                    }
+		    	    <s:property value="imap1.botonesTramite" />
 		    	]
 		    	,buttons       :
 		    	[

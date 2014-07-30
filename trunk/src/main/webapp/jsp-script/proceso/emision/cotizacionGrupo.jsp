@@ -496,6 +496,27 @@ Ext.onReady(function()
                                 ,items    :
                                 [
                                     {
+                                        xtype        : 'fieldcontainer'
+                                        ,fieldLabel  : 'Tipo de censo'
+                                        ,defaultType : 'radiofield'
+                                        ,defaults    : { style : 'margin : 5px;' }
+                                        ,layout      : 'hbox'
+                                        ,items       :
+                                        [
+                                            {
+                                                boxLabel    : 'Por asegurado'
+                                                ,name       : 'tipoCenso'
+                                                ,inputValue : 'solo'
+                                                ,checked    : true
+                                            }
+                                            ,{
+                                                boxLabel    : 'Agrupado por edad'
+                                                ,name       : 'tipoCenso'
+                                                ,inputValue : 'grupo'
+                                            }
+                                        ]
+                                    }
+                                    ,{
                                         xtype       : 'filefield'
                                         ,fieldLabel : 'Censo de asegurados'
                                         ,name       : 'censo'
