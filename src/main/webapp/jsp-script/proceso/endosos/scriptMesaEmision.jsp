@@ -15,6 +15,7 @@ var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion"
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
 var mesConUrlComGrupo     = '<s:url namespace="/emision"     action="cotizacionGrupo"           />';
+var mesConUrlUpdateStatus = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"   />';
 
 var ROL_MESA_DE_CONTROL    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
 var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
@@ -24,10 +25,10 @@ var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util
 
 ///////////////////////
 ////// funciones //////
-function _4_onFolderClick(grid,rowIndex)
+function _4_onFolderClick(rowIndex)
 {
     debug(rowIndex);
-    var record=grid.getStore().getAt(rowIndex);
+    var record=mcdinStore.getAt(rowIndex);
     debug(record);
     Ext.create('Ext.window.Window',
     {
@@ -57,10 +58,80 @@ function _4_onFolderClick(grid,rowIndex)
     }).show();
 }
 
-function _4_onComplementariosClick(grid,rowIndex)
+function _4_onSuscripcionClick(row)
+{
+	debug('>_4_onSuscripcionClick',row);
+	var record = mcdinStore.getAt(row);
+	debug('record:',record);
+	var ventana=Ext.create('Ext.window.Window',
+    {
+        title        : 'Turnar a suscripci&oacute;n'
+        ,width       : 500
+        ,height      : 300
+        ,modal       : true
+        ,items       :
+        [
+            {
+                xtype       : 'textarea'
+                ,labelAlign : 'top'
+                ,fieldLabel : 'Comentarios'
+                ,itemId     : 'mesConObsSus'
+                ,width      : 480
+                ,height     : 200
+            }
+        ]
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Turnar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function(button)
+                {
+                    ventana.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : mesConUrlUpdateStatus
+                        ,params :
+                        {
+                            'smap1.status'    : 13
+                            ,'smap1.ntramite' : record.get('ntramite')
+                            ,'smap1.comments' : Ext.ComponentQuery.query('#mesConObsSus')[0].getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            ventana.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response:',json);
+                            if(json.success)
+                            {
+                                mensajeCorrecto('Turnado','Tr&aacute;mite turnado');
+                                button.up().up().destroy();
+                                loadMcdinStore();
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            ventana.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        ]
+    }).show();
+	centrarVentanaInterna(ventana);
+	debug('<_4_onSuscripcionClick');
+}
+
+function _4_onComplementariosClick(rowIndex)
 {
     debug(rowIndex);
-    var record=grid.getStore().getAt(rowIndex);
+    var record=mcdinStore.getAt(rowIndex);
     debug(record);
     if(record.get('estado')=='W'&&record.get('status')!='4'&&record.get('status')!='11')
     {
@@ -156,9 +227,9 @@ function _4_onComplementariosClick(grid,rowIndex)
     }
 }
 
-function _4_onClockClick(grid,rowIndex)
+function _4_onClockClick(rowIndex)
 {
-    var record=grid.getStore().getAt(rowIndex);
+    var record=mcdinStore.getAt(rowIndex);
     debug(record);
     var window=Ext.create('Ext.window.Window',
     {

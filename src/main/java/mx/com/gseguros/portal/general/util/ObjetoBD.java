@@ -6,6 +6,7 @@ public enum ObjetoBD {
 	
 	BORRAR_MPOLIPER                 ("PKG_SATELITES.P_BORRA_MPOLIPER"            , "SP"),
 	CARGAR_CENSO                    ("PKG_SATELITES.P_LAYOUT_CENSO_MS_COLECTIVO" , "SP"),
+	CARGAR_CENSO_AGRUPADO           ("PKG_SATELITES.P_LAYOUT_CENSO_MS_COLECTIVO2" , "SP"),
 	GENERAR_CDPERSON                ("PKG_COTIZA.P_GET_CDPERSON"                 , "SP"),
 	MOV_MPERSONA                    ("PKG_SATELITES.P_MOV_MPERSONA"              , "SP"),
 	MOV_MPOLIPER                    ("PKG_SATELITES.P_MOV_MPOLIPER"              , "SP"),
