@@ -29,6 +29,14 @@ public interface CatalogosManager {
 	
 	public List<GenericVO> obtieneRolesSistema(String dsRol) throws Exception;
 	
+	/**
+	 * Obtiene las sucursales
+	 * @param cdunieco Sucursal administradora por la que se filtra
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception;
+	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 	
 	/**

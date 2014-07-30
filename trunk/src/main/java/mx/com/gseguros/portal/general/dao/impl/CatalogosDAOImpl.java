@@ -378,6 +378,31 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
     	}
     }
+	
+	@Override
+	public List<GenericVO> obtieneSucursales(String cdunieco) throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_suc_admon_i", cdunieco);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneSucursales(getDataSource()), params);
+		return (List<GenericVO>) resultado.get("pv_registro_o");
+	}
+	
+	protected class ObtieneSucursales extends StoredProcedure {
+    	protected ObtieneSucursales(DataSource dataSource) {
+            super(dataSource,"PKG_LISTAS.P_GET_SUCURSALES");
+            declareParameter(new SqlParameter("pv_suc_admon_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneSucursalesMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	protected class ObtieneSucursalesMapper implements RowMapper<GenericVO> {
+		public GenericVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPC"));
+		}
+	}
 
 	
 	@Override

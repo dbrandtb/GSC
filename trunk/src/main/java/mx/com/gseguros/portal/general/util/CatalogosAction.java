@@ -88,8 +88,6 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case DESTINOPAGO:
         		case FORMAS_ASEGURAMIENTO:
         		case GIROS:
-				case MC_SUCURSALES_ADMIN:
-				case MC_SUCURSALES_DOCUMENTO:
 				case MC_TIPOS_TRAMITE:
 				case MOTIVOS_CANCELACION:
 				case MOTIVOS_REEXPEDICION:
@@ -116,6 +114,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TRATAMIENTOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
+				case MC_SUCURSALES_ADMIN:
+				case MC_SUCURSALES_DOCUMENTO:
+					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):null);
+					break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;

@@ -79,6 +79,10 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		return catalogosDAO.obtieneRolesSistema(dsRol);
 	}
 	
+	@Override
+	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception {
+		return catalogosDAO.obtieneSucursales(cdunieco);
+	}
 	
 	@Override
 	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception {
