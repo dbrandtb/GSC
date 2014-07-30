@@ -224,6 +224,7 @@ Ext.onReady(function()
     		    	          [
     		    	              {
     		    	            	  text     : 'Confirmar endoso'
+    		    	            	  ,itemId  : '_1_botonConfirmar'
     		    	            	  ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
     		    	            	  ,handler : _1_confirmar
     		    	              }
@@ -240,10 +241,24 @@ Ext.onReady(function()
     _1_editor=Ext.create('Ext.form.DateField',
     {
     	format     : 'd/m/Y'
-    	,listeners :
-    	{
-    		blur : _1_validar
-    	}
+        ,listeners :
+        {
+            focus : function()
+            {
+                debug('focus');
+                _1_form.down('#_1_botonConfirmar').setDisabled(true);
+            }
+            ,blur : function()
+            {
+                debug('blur');
+                setTimeout(function()
+                {
+                	debug('timeout');
+	                _1_validar();
+	                _1_form.down('#_1_botonConfirmar').setDisabled(false);
+                },500);
+            }
+        }
     });
     
     _1_grid=new _1_Grid();
