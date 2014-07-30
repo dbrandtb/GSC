@@ -664,7 +664,7 @@ Ext.onReady(function()
 			Ext.apply(this,
 			{
 				title        : 'Agregar asegurado'
-		        ,icon        : '${ctx}/resources/fam3icons/icons/add.png'
+		        //,icon        : '${ctx}/resources/fam3icons/icons/add.png'
 		        ,width       : 700
 		        ,modal       : true
 		        ,height      : 400
@@ -744,7 +744,7 @@ Ext.onReady(function()
             Ext.apply(this,
             {
                 title      : 'Alta de asegurados'
-                ,icon      : '${ctx}/resources/fam3icons/icons/add.png'
+                //,icon      : '${ctx}/resources/fam3icons/icons/add.png'
                 ,store     : panEndAltBajAseStoreAltas
                 ,minHeight : 100
                 ,hidden    : panendabaseguInputSmap2.alta=='no'
@@ -782,7 +782,7 @@ Ext.onReady(function()
             Ext.apply(this,
             {
                 title      : 'Baja de asegurados'
-                ,icon      : '${ctx}/resources/fam3icons/icons/delete.png'
+                //,icon      : '${ctx}/resources/fam3icons/icons/delete.png'
                 ,store     : panEndAltBajAseStoreBajas
                 ,minHeight : 100
                 ,hidden    : panendabaseguInputSmap2.alta=='si'
