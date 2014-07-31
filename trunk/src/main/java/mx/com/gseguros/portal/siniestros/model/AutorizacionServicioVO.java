@@ -48,6 +48,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String dsnotas;
 	private String fesistem;
 	private String cduser;
+	private String especialidadMedico;
 	
 	
 	public String getCopagofi() {
@@ -341,6 +342,14 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public String getEspecialidadMedico() {
+		return especialidadMedico;
+	}
+
+	public void setEspecialidadMedico(String especialidadMedico) {
+		this.especialidadMedico = especialidadMedico;
 	}	
 	
 }
