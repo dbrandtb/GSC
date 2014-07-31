@@ -110,6 +110,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setDsnotas(rs.getString("DSNOTAS"));
         	consulta.setFesistem(Utilerias.formateaFecha(rs.getString("FESISTEM")));
         	consulta.setCduser(rs.getString("CDUSER"));
+        	consulta.setEspecialidadMedico(rs.getString("ESPECMED"));
             return consulta;
         }
     }
@@ -475,7 +476,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_dsobserv_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsnotas_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fesistem_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombmedi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_especmed_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGuardardoAutorizacionServicioMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -511,7 +514,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_cdctp_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_precio_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombprov_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();

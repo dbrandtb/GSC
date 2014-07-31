@@ -305,7 +305,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_dsnotas_i",params.get("dsnotas"));
 					paramsR.put("pv_fesistem_i",params.get("fesistem")); 
 					paramsR.put("pv_cduser_i",usuario.getUser());
-					
+					paramsR.put("pv_nombmedi_i",params.get("medicoPExt"));
+					paramsR.put("pv_especmed_i",params.get("especialidadPExt"));
 					//ELIMINACION DE LOS REGISTROS EN LA TABLA
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 					
@@ -324,6 +325,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
 							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
 							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
+							paramsTDeTauts.put("pv_nombprov_i",datosTablas.get(i).get("nombreMedico"));
 							//GUARDADO DE LOS DATOS PARA LAS TABLAS
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				   		}

@@ -532,12 +532,23 @@ Ext.onReady(function() {
 	
 	medico = Ext.create('Ext.form.field.ComboBox',
     {
-    	fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
+    	colspan:2,fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
     	id				: 'idMedico',				labelWidth   : 170,			    valueField   : 'cdpresta',				forceSelection : true,
     	matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
-    	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,
+    	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,		width:500,
 		listeners : {
 			change:function(e){
+				
+				if(e.getValue() =='0'){
+	    			Ext.getCmp('medicoPExt').show();
+	    			Ext.getCmp('especialidadPExt').show();
+	    			Ext.getCmp('idEspecialidad').hide();
+	    		}else{
+	    			Ext.getCmp('medicoPExt').hide();
+	    			Ext.getCmp('especialidadPExt').hide();
+	    			Ext.getCmp('idEspecialidad').show();
+	    		}
+	    		
 				Ext.getCmp('idEspecialidad').setValue('');
 	    		Ext.Ajax.request(
 					{
@@ -569,23 +580,6 @@ Ext.onReady(function() {
     		}
         }
     });
-    
-    medicoConAutorizado = Ext.create('Ext.form.field.ComboBox',
-    {
-		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
-		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
-	});
-    
-    medicoEqQuirurg = Ext.create('Ext.form.field.ComboBox',
-    {
-		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
-		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
-		
-	});
     
     proveedor = Ext.create('Ext.form.field.ComboBox',
     {
@@ -987,7 +981,26 @@ Ext.onReady(function() {
 		,bodyStyle:'padding:5px;'
 		,items :
 		[   			
-		 	medicoConAutorizado,
+		 	{
+    			xtype       : 'combo',
+    			fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
+				labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
+				matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+				minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
+    			,listeners : {
+			    	'select' : function(combo, record) {
+			    		if(this.getValue() =='0'){
+			    			Ext.getCmp('medicoExt').show();
+			    		}else{
+			    			Ext.getCmp('medicoExt').hide();
+			    		}
+			    	}
+			    }
+		    },
+			{
+				id		: 'medicoExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre',					labelWidth: 100,
+				width	:450,							name   :'medicoExt', hidden: true
+			},
 		 	cptConAutorizado,
 			{
 				id		: 'precioConAutorizado',		xtype  : 'textfield',			fieldLabel 	: 'Precio',					labelWidth: 100,
@@ -1069,7 +1082,26 @@ Ext.onReady(function() {
 		,bodyStyle:'padding:5px;'
 		,items :
 		[ 
-		 	medicoEqQuirurg,
+		 	{
+    			xtype       : 'combo',
+    			fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
+				labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
+				matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+				triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
+    			,listeners : {
+			    	'select' : function(combo, record) {
+			    		if(this.getValue() =='0'){
+			    			Ext.getCmp('medicoExtEqQ').show();
+			    		}else{
+			    			Ext.getCmp('medicoExtEqQ').hide();
+			    		}
+			    	}
+			    }
+		    },
+			{
+				id		: 'medicoExtEqQ',		xtype  : 'textfield',			fieldLabel 	: 'Nombre',					labelWidth: 100,
+				width	:450,							name   :'medicoExtEqQ', hidden: true
+			},
 		 	tipoMedico
 		 	,
 		 	{
@@ -1128,10 +1160,17 @@ Ext.onReady(function() {
 	        	handler: function() {
 	        		if (panelConceptosAutorizados.form.isValid()) {			
 	        			var datos=panelConceptosAutorizados.form.getValues();
+	        			var nombreProveedor;
+	        			
+	        			if(datos.idmedicoConAutorizado =='0'){
+	        				nombreProveedor = datos.medicoExt;
+	        			}else{
+	        				nombreProveedor = Ext.getCmp('idmedicoConAutorizado').getRawValue();
+	        			}
 	        			
 	        			var rec = new modelListadoTablas({
 	        					cdmedico: datos.idmedicoConAutorizado,
-	        					nombreMedico: medicoConAutorizado.rawValue,
+	        					nombreMedico: nombreProveedor,
 	        					cdcpt: datos.cptConAutorizado,
 	        					desccpt:cptConAutorizado.rawValue,
 	        					precio: datos.precioConAutorizado,
@@ -1232,9 +1271,15 @@ Ext.onReady(function() {
 				
 				if (panelEquipoQuirurgico.form.isValid()){
 					var datos=panelEquipoQuirurgico.form.getValues();
-					var rec = new modelListadoTablas({
+					var nombreProveedor;
+	    			if(datos.idmedicoEqQuirurg =='0'){
+	    				nombreProveedor = datos.medicoExtEqQ;
+	    			}else{
+	    				nombreProveedor = Ext.getCmp('idmedicoEqQuirurg').getRawValue();
+	    			}
+	    			var rec = new modelListadoTablas({
 						cdmedico: datos.idmedicoEqQuirurg,
-						nombreMedico:medicoEqQuirurg.rawValue,
+						nombreMedico:nombreProveedor,//medicoEqQuirurg.rawValue,
 						cantporc: datos.porcentajeEqQuirurg,
 						ptimport: datos.importeEqQuirurg,
 						cdtipmed:datos.idTipoMedico,
@@ -1330,6 +1375,7 @@ Ext.onReady(function() {
     	   this.callParent();
 	   },
 	   onAddClick: function(btn, e){
+	   		Ext.getCmp('medicoExt').hide();
 		   ventanaConceptosAutorizado.animateTarget=btn;
 		   ventanaConceptosAutorizado.showAt(150,750);
 	   },
@@ -1482,6 +1528,7 @@ Ext.onReady(function() {
        },
 	
        onAddClick: function(btn, e){
+       	   Ext.getCmp('medicoExtEqQ').hide();
     	   ventanaEqQuirurgico.animateTarget=btn;
     	   ventanaEqQuirurgico.showAt(150,1220);
        },
@@ -2072,7 +2119,25 @@ Ext.onReady(function() {
 			 	proveedor,
 			 	medico,
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Especialidad'				,id       : 'idEspecialidad',		name:'idEspecialidad'
+					colspan:2, id		: 'medicoPExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre M&eacute;dico',					labelWidth: 170,
+					width	:350,		width:500,					name   :'medicoPExt', hidden: false,
+					listeners:{
+						afterrender: function(){
+							this.hide();
+						}
+					}
+				},
+				{
+					colspan:2, id		: 'especialidadPExt',		xtype  : 'textfield',			fieldLabel 	: 'Especialidad',					labelWidth: 170,
+					width	:350,		width:500,					name   :'especialidadPExt', hidden: false,
+					listeners:{
+						afterrender: function(){
+							this.hide();
+						}
+					}
+				},
+			 	{
+			 		colspan:2,xtype       : 'textfield'				,fieldLabel : 'Especialidad'				,id       : 'idEspecialidad',		name:'idEspecialidad'
 		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
 			 	},
 			 	{
@@ -2293,12 +2358,17 @@ Ext.onReady(function() {
 		    	if(Ext.decode(response.responseText).listaConsultaTablas != null)
         		{
 		    		var json=Ext.decode(response.responseText);
-			        for(var i=0;i<json.listaConsultaTablas.length;i++)
+		    		for(var i=0;i<json.listaConsultaTablas.length;i++)
                     {
                         /*OBTENEMOS LOS VALORES*/
 			        	if(json.listaConsultaTablas[i].cdtipaut==1)
                     	{
-                    		var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		if(json.listaConsultaTablas[i].cdmedico == 0){
+                    			var medicoCompleto= json.listaConsultaTablas[i].nombreMedico;
+                    		}else{
+                    			var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		}
+                    		
                     		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
                         	var rec = new modelListadoTablas({
                         		nmautser: json.listaConsultaTablas[i].nmautser,
@@ -2317,7 +2387,13 @@ Ext.onReady(function() {
                     	}
                         else
                     	{
-                        	var medicoCompleto = json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                        	//var medicoCompleto = json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		
+                    		if(json.listaConsultaTablas[i].cdmedico == 0){
+                    			var medicoCompleto= json.listaConsultaTablas[i].nombreMedico;
+                    		}else{
+                    			var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		}
                     		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
                         	
                         	var rec = new modelListadoTablas({
@@ -2422,6 +2498,11 @@ Ext.onReady(function() {
 			
 			//Médico
 			Ext.getCmp('idMedico').setValue(json.cdmedico);
+			
+			if(json.cdmedico == '0'){
+				Ext.getCmp('medicoPExt').setValue(json.nombreMedico);
+				Ext.getCmp('especialidadPExt').setValue(json.especialidadMedico);
+			}
 			
 			//Tratamiento
 			Ext.getCmp('tratamiento').setValue(json.dstratam);
@@ -2634,7 +2715,8 @@ Ext.onReady(function() {
             	precio: record.get('precio'),
             	cantporc: record.get('cantporc'),
             	ptimport: record.get('ptimport'),
-            	cdtipmed: record.get('cdtipmed')
+            	cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
             	
             });
            });
@@ -2646,7 +2728,8 @@ Ext.onReady(function() {
             	precio: record.get('precio'),
             	cantporc: record.get('cantporc')/100,
             	ptimport: record.get('ptimport'),
-            	cdtipmed: record.get('cdtipmed')
+            	cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
             	
             });
        });
@@ -2658,7 +2741,8 @@ Ext.onReady(function() {
 				precio: record.get('precio'),
 				cantporc: record.get('cantporc')/100,
 				ptimport: record.get('ptimport'),
-				cdtipmed: record.get('cdtipmed')
+				cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
 		        });
 		   });
 		
