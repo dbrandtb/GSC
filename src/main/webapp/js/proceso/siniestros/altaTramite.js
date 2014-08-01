@@ -379,7 +379,15 @@ Ext.onReady(function() {
     	minChars  : 2,					store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
     	listeners : {
 			'select' : function(combo, record) {
-				Ext.getCmp('idnombreBeneficiarioProv').setValue(cmbProveedor.rawValue);
+				if(this.getValue() =='0'){
+					Ext.getCmp('idnombreBeneficiarioProv').setValue('');
+					Ext.getCmp('idnombreBeneficiarioProv').show();
+				}else{
+					Ext.getCmp('idnombreBeneficiarioProv').setValue(cmbProveedor.rawValue);
+					Ext.getCmp('idnombreBeneficiarioProv').hide();
+				}
+				
+				
 			}
     	}
     });
@@ -1051,10 +1059,6 @@ Ext.onReady(function() {
 					    ,labelWidth: 170,	hidden:true
 					},
 					{
-					    xtype       : 'textfield',			fieldLabel : 'Proveedor/Beneficiario'			,id       : 'idnombreBeneficiarioProv',	name       : 'idnombreBeneficiarioProv'
-					    ,labelWidth: 170,	hidden:true
-					},
-					{
 					    xtype       : 'textfield',			fieldLabel : 'NumTramite'			,id       : 'idNumTramite',	name       : 'idNumTramite'
 					    ,labelWidth: 170,	hidden:true
 					},
@@ -1116,6 +1120,15 @@ Ext.onReady(function() {
 	            	,
 	            	cmbProveedor
 	        	    ,
+	        	    {
+					    xtype       : 'textfield',			fieldLabel : 'Nombre Proveedor'			,id       : 'idnombreBeneficiarioProv',	name       : 'idnombreBeneficiarioProv'
+					    ,labelWidth : 250,width		: 500,	hidden:true,
+					    listeners:{
+							afterrender: function(){
+								this.hide();
+							}
+						}
+					},
 	        	    {
 		            	id:'txtNoFactura'
 		                ,xtype      : 'textfield'
@@ -1418,7 +1431,12 @@ Ext.onReady(function() {
 			    			Ext.getCmp('txtNoFactura').setValue(json.otvalor08mc);
 			    			Ext.getCmp('txtImporte').setValue(json.otvalor03mc);
 			    			Ext.getCmp('dtFechaFactura').setValue(json.otvalor06mc);
-			    			
+			    			Ext.getCmp('idnombreBeneficiarioProv').setValue(json.otvalor15mc);
+			    			if(json.otvalor11mc =='0'){
+			    				Ext.getCmp('idnombreBeneficiarioProv').show();
+			    			}else{
+			    				Ext.getCmp('idnombreBeneficiarioProv').hide();
+			    			}
 			    		}else{
 			    			//VALORES DE PAGO POR REEMBOLSO
 			    			console.log("PAGO POR REEMBOLSO");
@@ -1471,8 +1489,8 @@ Ext.onReady(function() {
 	    				    		
 	    				    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
 	    				    			// PAGO DIRECTO
-	    				    			var nombreProveedor= json[0].cdpresta +" "+ json[0].dspresta;
-	    				    			Ext.getCmp('idnombreBeneficiarioProv').setValue(nombreProveedor);
+	    				    			//var nombreProveedor= json[0].cdpresta +" "+ json[0].dspresta;
+	    				    			//Ext.getCmp('idnombreBeneficiarioProv').setValue('ALBERTO');
 	    				    			Ext.getCmp('cmbTipoMoneda').setValue(json[0].cdmoneda);
 	    				    			for(var i = 0; i < json.length; i++){
 		    				    			var rec = new modelListAsegPagDirecto({
