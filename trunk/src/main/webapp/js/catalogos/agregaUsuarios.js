@@ -51,6 +51,9 @@ Ext.onReady(function() {
     var panelPersona = Ext.create('Ext.form.Panel', {
     	url: _URL_INSERTA_PERSONA,
 		border: false,
+		defaults: {
+			width: 350
+		},
 	    renderTo : 'div_usuarios',
 	    bodyStyle:'padding:5px 0px 0px 40px;',
 	    items    : [
@@ -60,8 +63,7 @@ Ext.onReady(function() {
 						value      : editMode? 'U' : 'I'
 					},{
                         xtype         : 'combo',
-                        labelWidth    : 100,
-                        width         : 400,
+                        //labelWidth    : 100,
                         name          : 'params.cdsisrol',
                         fieldLabel    : 'Rol',
                         readOnly      : editMode,
@@ -324,6 +326,9 @@ Ext.onReady(function() {
 						itemId     : 'fieldAgente',
 						padding    :  0,
 						border     : false,
+						defaults: {
+							width: 350
+						},
 						items      : [{
 							        	xtype       : 'combo',
 							        	name        : 'params.cdramo',
