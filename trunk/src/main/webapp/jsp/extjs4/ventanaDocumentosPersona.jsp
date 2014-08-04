@@ -122,15 +122,17 @@ Ext.onReady(function()
 	    ,dockedItems :
 	    [
 	        {
-	            xtype  : 'toolbar'
-	            ,dock  : 'top'
-	            ,items :
+	            xtype   : 'toolbar'
+	            ,dock   : 'top'
+	            ,hidden : true
+	            ,items  :
 	            [
 	                {
 	                    xtype    : 'button'
 	                    ,text    : 'Agregar'
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
 	                    ,handler : _p23_onAddClick
+	                    ,hidden  : true
 	                }
 	            ]
 	        }
