@@ -302,6 +302,11 @@ Ext.onReady(function()
 	    	errorComunicacion();
 	    }
 	});
+	
+	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
     ////// loader //////
     ////////////////////
 });
