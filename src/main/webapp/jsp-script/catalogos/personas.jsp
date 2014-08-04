@@ -78,16 +78,17 @@ Ext.onReady(function()
 	        	     ,columns : 2
 	        	 }
 	        	 ,defaults    : { style : 'margin:5px;' }
-	        	 ,items       :
+	        	 ,items       : [ <s:property value="imap.BUSQUEDA" /> ]
+	        	 ,buttonAlign : 'center'
+	        	 ,buttons     :
 	        	 [
-	        	     <s:property value="imap.BUSQUEDA" />
-	        	     ,{
+	        	     {
                          text     : 'Buscar'
                          ,xtype   : 'button'
                          ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                          ,handler : _p22_buscarClic
                      }
-	        	 ]
+                 ]
 	        })
 	        ,Ext.create('Ext.grid.Panel',
 	        {
@@ -170,6 +171,13 @@ Ext.onReady(function()
 	////// loaders //////
 	_p22_comboCodPostal().addListener('blur',_p22_heredarColonia);
 	_p22_fieldTipoPersona().addListener('change',_p22_tipoPersonaChange);
+	_fieldByName('CDNACION').addListener('change',_p22_nacionalidadChange);
+	_p22_tipoPersonaChange(_p22_fieldTipoPersona(),'F');
+	_p22_nacionalidadChange(_fieldByName('CDNACION'),'001');
+	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
+	_fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
 	////// loaders //////
 });
 
@@ -195,7 +203,10 @@ function _p22_buscarClic()
 		{
 			params :
 			{
-				'smap1.rfc' : _p22_formBusqueda().down('[name=rfc]').getValue()
+				'smap1.rfc'     : _p22_formBusqueda().down('[name=rfc]').getValue()
+				,'smap1.nombre' : _p22_formBusqueda().down('[name=nombre]').getValue()
+                ,'smap1.apat'   : _p22_formBusqueda().down('[name=apat]').getValue()
+                ,'smap1.amat'   : _p22_formBusqueda().down('[name=amat]').getValue()
 			}
 		});
 	}
@@ -241,6 +252,24 @@ function _p22_heredarColonia()
     debug('<_p22_heredarColonia');
 }
 
+function _p22_nacionalidadChange(combo,value)
+{
+    debug('>_p22_nacionalidadChange',value);
+    if(value!='001')//extranjero
+    {
+        _fieldByName('RESIDENTE').show();
+        _fieldByName('RESIDENTE').allowBlank = false;
+        _fieldByName('RESIDENTE').validate();
+    }
+    else//nacional
+    {
+        _fieldByName('RESIDENTE').hide();
+        _fieldByName('RESIDENTE').allowBlank = true;
+        _fieldByName('RESIDENTE').validate();
+    }
+    debug('<_p22_nacionalidadChange');
+}
+
 function _p22_tipoPersonaChange(combo,value)
 {
     debug('>_p22_tipoPersonaChange',value);
@@ -250,6 +279,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldApat().hide();
         _p22_fieldAmat().hide();
         _p22_fieldSexo().hide();
+        _fieldByName('DSNOMBRE').setFieldLabel('Raz&oacute;n social');
+        _fieldByName('FENACIMI').setFieldLabel('Fecha de constituci&oacute;n');
     }
     else
     {
@@ -257,6 +288,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldApat().show();
         _p22_fieldAmat().show();
         _p22_fieldSexo().show();
+        _fieldByName('DSNOMBRE').setFieldLabel('Nombre');
+        _fieldByName('FENACIMI').setFieldLabel('Fecha de nacimiento');
     }
     debug('<_p22_tipoPersonaChange');
 }
@@ -549,6 +582,11 @@ function _p22_datosAdicionalesClic()
                         ,'->'
                     ]
                 }).show());
+                fieldMail=_fieldByLabel('Correo electrónico');
+                if(fieldMail)
+                {
+                    fieldMail.regex = /^[_A-Z0-9-]+(\.[_A-Z0-9-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/;
+                }
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
                 var itemsDocumento=Ext.ComponentQuery.query('[codidocu]');
                 debug('itemsDocumento:',itemsDocumento);
@@ -741,7 +779,7 @@ function _p22_subirArchivo(cdperson,codidocu,descrip)
                                     {
                                         var indexofPeriod = me.getValue().lastIndexOf("."),
                                         uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                        if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                        if (false&&!Ext.Array.contains(this.cAccept, uploadedExtension))
                                         {
                                             Ext.MessageBox.show(
                                             {
