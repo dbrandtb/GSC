@@ -4,6 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+.valorNoOriginal
+{
+    background : #FFFF99;
+}
+</style>
 <script>
 ////// overrides //////
 Ext.override(Ext.form.TextField,
@@ -994,6 +1000,45 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                         var items = [];
                                         for(var j=0;j<numCoberturas;j++)
                                         {
+                                            var hijos = json.slist1[j].hijos;
+                                            for(var k=0;k<hijos.length;k++)
+                                            {
+                                                var hijo = hijos[k];
+                                                if(hijo.maxValue&&hijo.maxValue<999999999)
+                                                {
+                                                    hijo.on('change',function(comp,value)
+                                                    {
+                                                        debug('change:',value,comp.maxValue,comp);
+                                                        if(value!=comp.maxValue)
+                                                        {
+                                                            comp.addCls('valorNoOriginal');
+                                                        }
+                                                        else
+                                                        {
+                                                            comp.removeCls('valorNoOriginal');
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            if(!_p21_ntramite&&!_p21_ntramiteVacio&&hijos&&hijos.length>0)
+                                            {
+                                                debug('se quitaran los factores de la cobertura');
+                                                for(var k=0;k<hijos.length;k++)
+                                                {
+                                                    var hijo=hijos[k];
+                                                    debug('revisando hijo:',hijo.fieldLabel);
+                                                    if(hijo.fieldLabel=='FACTOR RENOVACIÓN (%)'
+                                                     ||hijo.fieldLabel=='FACTOR RENOVACIÓN'
+                                                     ||hijo.fieldLabel=='FACTOR RENOVACIÓN '
+                                                     ||hijo.fieldLabel=='FACTOR INFLACIÓN (%)'
+                                                     ||hijo.fieldLabel=='FACTOR INFLACIÓN')
+                                                    {
+                                                        debug('ocultar');
+                                                        hijo.hidden     = true;
+                                                        hijo.allowBlank = true;
+                                                    }
+                                                }
+                                            } 
                                             var item = Ext.create('Ext.form.Panel',
                                             {
                                                 width       : 440
@@ -1001,7 +1046,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 ,height     : 140
                                                 ,autoScroll : true
                                                 ,defaults   : { style : 'margin:5px;', labelWidth : 100 }
-                                                ,items      : json.slist1[j].hijos
+                                                ,items      : hijos
                                                 ,cdgarant   : json.slist1[j].CDGARANT
                                                 ,tbar       :
                                                 [
