@@ -53,6 +53,7 @@ public class ComponenteVO
 	private String  paramValue5   = null;
 	private boolean comboVacio    = false;
 	private String  defaultValue  = null;
+	private String  maxValue      = null;
 	
 	private String swsuscri = null;
 	private String swtarifi = null;
@@ -433,5 +434,13 @@ public class ComponenteVO
 
 	public void setCodidocu(String codidocu) {
 		this.codidocu = codidocu;
+	}
+
+	public String getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(String maxValue) {
+		this.maxValue = maxValue;
 	}
 }
