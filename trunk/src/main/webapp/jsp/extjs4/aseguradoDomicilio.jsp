@@ -571,6 +571,11 @@ Ext.onReady(function(){
     }
     ////// usa valores del padre //////
     
+    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
     /*//////////////////*/
     ////// cargador //////
     //////////////////////
