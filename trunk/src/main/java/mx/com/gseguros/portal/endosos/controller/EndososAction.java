@@ -6179,6 +6179,7 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				// C R E D E N C I A L _ X X X X X X . P D F
 				//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+				logger.debug("descripc: "+descripc+" descripc.lastIndexOf(_): "+descripc.lastIndexOf("_"));
 				url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 			}
 			log.debug(""
