@@ -1666,6 +1666,13 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             	isDepend = true;
             }
             result.setDependiente(isDepend);
+            
+            String maximo=rs.getString("MAXIMO");
+            if(StringUtils.isNotBlank(maximo))
+            {
+                result.setValue(maximo);
+                result.setMaxValue(maximo);
+            }
 			
 			return result;
 		}
