@@ -945,7 +945,7 @@ debug("validarYGuardar flag:2");
                                     debug(json);
                                     if(json&&json.slist1&&json.slist1.length>0)
                                     {
-                                        Ext.create('Ext.window.Window',
+                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
                                             width        : 600
                                             ,height      : 400
@@ -1013,7 +1013,7 @@ debug("validarYGuardar flag:2");
                                                                    }
                                                                ]
                                                            })
-                                        }).show();
+                                        }).show());
                                     }
                                     else
                                     {
@@ -1084,7 +1084,7 @@ debug("validarYGuardar flag:2");
 		            		    	}
 		            		    	if(json&&json.slist1&&json.slist1.length>0)
 		            		    	{
-		            		    		Ext.create('Ext.window.Window',
+		            		    		centrarVentanaInterna(Ext.create('Ext.window.Window',
 		            		    		{
 		            		    			width        : 600
 		            		    			,height      : 400
@@ -1151,7 +1151,7 @@ debug("validarYGuardar flag:2");
 		            		    		    	                   }
 		            		    		    	               ]
 		            		    		    		       })
-		            		    		}).show();
+		            		    		}).show());
 		            		    	}
 		            		    	else
 		            		    	{
