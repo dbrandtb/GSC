@@ -129,7 +129,7 @@ public class PersonasManagerImpl implements PersonasManager
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
 	 */
 	@Override
-	public Map<String,Object> obtenerPersonasPorRFC(String rfc,long timestamp) throws Exception
+	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String apat,String amat,long timestamp) throws Exception
 	{
 		Map<String,Object>result=new HashMap<String,Object>();
 		logger.info(timestamp
@@ -146,7 +146,12 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				listaPersonas=personasDAO.obtenerPersonasPorRFC(rfc);
+				Map<String,String>params=new HashMap<String,String>();
+				params.put("rfc"    , rfc);
+				//params.put("nombre" , nombre);
+				//params.put("apat"   , apat);
+				//params.put("amat"   , amat);
+				listaPersonas=personasDAO.obtenerPersonasPorRFC(params);
 			}
 			catch(Exception ex)
 			{

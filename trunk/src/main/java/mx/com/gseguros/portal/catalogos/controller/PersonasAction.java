@@ -81,7 +81,12 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		try
 		{
-			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(smap1.get("rfc"),timestamp);
+			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(
+					smap1.get("rfc"),
+					smap1.get("nombre"),
+					smap1.get("apat"),
+					smap1.get("amat"),
+					timestamp);
 			exito           = (Boolean)managerResult.get("exito");
 			respuesta       = (String)managerResult.get("respuesta");
 			respuestaOculta = (String)managerResult.get("respuestaOculta");

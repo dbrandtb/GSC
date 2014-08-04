@@ -34,10 +34,8 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	 * @throws Exception
 	 */
 	@Override
-	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc) throws Exception
+	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception
 	{
-		Map<String,Object>params=new HashMap<String,Object>();
-		params.put("rfc",rfc);
 		Map<String, Object> resultado = ejecutaSP(new ObtenerPersonasPorRFC(getDataSource()), params);
 		List<Map<String,String>>listaPersonas=(List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaPersonas==null)
