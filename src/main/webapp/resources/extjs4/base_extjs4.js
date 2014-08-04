@@ -347,8 +347,23 @@ function consultaDinamica(accion,inParams,form,callback)
 	    }
 	});
 	debug('<consultaDinamica');
-}	
+}
 
+function _fieldByName(name)
+{
+    debug('_fieldByName:',name);
+    var comp=Ext.ComponentQuery.query('[name='+name+']')[Ext.ComponentQuery.query('[name='+name+']').length-1];
+    debug('_fieldByName comp:',comp);
+    return comp;
+}
+
+function _fieldByLabel(label)
+{
+    debug('_fieldByLabel:',label);
+    var comp=Ext.ComponentQuery.query('[fieldLabel='+label+']')[Ext.ComponentQuery.query('[fieldLabel='+label+']').length-1];
+    debug('_fieldByLabel comp:',comp);
+    return comp;
+}
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
