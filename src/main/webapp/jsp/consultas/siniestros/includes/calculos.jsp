@@ -522,7 +522,7 @@ Ext.onReady(function()
 	                layout    :
 	                {
 	                    type     : 'table'
-	                    ,columns : 2
+	                    ,columns : 1
 	                }
 	                ,border   : 0
 	                ,width    : 800
@@ -532,6 +532,26 @@ Ext.onReady(function()
 	                }
 	                ,items    :
 	                [
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'SUBTOTAL'
+	                        ,labelWidth : 200
+	                        ,value      : (_p12_lpdir[indice].total) -( _p12_lpdir[indice].ivaTotalMostrar)
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'IVA'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].ivaTotalMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
 	                    {
 	                        xtype       : 'displayfield'
 	                        ,fieldLabel : 'TOTAL'
