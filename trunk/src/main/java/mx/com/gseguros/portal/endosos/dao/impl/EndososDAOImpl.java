@@ -1273,4 +1273,25 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         }
 	}
 	
+	@Override
+	public void validaEstadoCodigoPostal(Map<String, String> params) throws Exception{
+		ejecutaSP(new ValidaEstadoCodigoPostal(getDataSource()),params);
+	}
+	
+	protected class ValidaEstadoCodigoPostal extends StoredProcedure
+	{
+		protected ValidaEstadoCodigoPostal(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_VALIDA_CODPOS");
+			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codpos_i"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_messages_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
 }

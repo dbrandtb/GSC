@@ -250,4 +250,6 @@ public interface EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza) throws Exception;
+	
+	public void validaEstadoCodigoPostal(Map<String,String>params) throws Exception;
 }
