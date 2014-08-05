@@ -712,4 +712,9 @@ public class EndososManagerImpl implements EndososManager
 	{
 		return endososDAO.habilitaRecibosSubsecuentes(fechaDeInicio,fechaDeFin,cdunieco,cdramo,estado,nmpoliza);
 	}
+	
+	@Override
+	public void validaEstadoCodigoPostal(Map<String,String>params) throws Exception{
+		endososDAO.validaEstadoCodigoPostal(params);
+	}
 }
