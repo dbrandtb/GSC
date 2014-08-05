@@ -17,9 +17,7 @@ var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='f
 var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
 
 var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
-var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='false' />; //Informacion de penalizacion
 
-debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
@@ -201,11 +199,10 @@ Ext.onReady(function()
                 ]
             });
             panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
-            //if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
-            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1"){
+            if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA')
+            {
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
-            	
             	var importe   = (_p12_lhosp[indice].PRECIO*1.0);
             	var descuento = _p12_lhosp[indice].DESCPRECIO*1.0;
             	debug('importe Inicial'   ,_p12_lhosp[indice].PTIMPORT*1.0);
@@ -215,16 +212,18 @@ Ext.onReady(function()
             	debug('subttDesc' , subttDesc);
             	var deducible = 0;
             	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
-                if(causaSiniestro !="2"){
-                        if(
-                                !(!sDeducible
-                                ||sDeducible.toLowerCase()=='na'
-                                ||sDeducible.toLowerCase()=='no')
-                                )
-                        {
-                            deducible = sDeducible.replace(',','')*1.0;
-                        }
-                }
+            	
+            	if(causaSiniestro !="2"){
+            		if(
+                			!(!sDeducible
+                			||sDeducible.toLowerCase()=='na'
+                			||sDeducible.toLowerCase()=='no')
+                			)
+                	{
+                		deducible = sDeducible.replace(',','')*1.0;
+                	}
+            	}
+            	
             	var subttDedu = subttDesc - deducible;
             	
             	if(causaSiniestro !="2"){
@@ -233,7 +232,7 @@ Ext.onReady(function()
             		
             		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
             	}else{
-            		var copagoaplica = 0.0;
+                	var copagoaplica = 0.0;
             	}
             	
             	var iva       = _p12_lhosp[indice].IVA*1.0;
@@ -527,7 +526,7 @@ Ext.onReady(function()
 	                layout    :
 	                {
 	                    type     : 'table'
-	                    ,columns : 2
+	                    ,columns : 1
 	                }
 	                ,border   : 0
 	                ,width    : 800
@@ -537,6 +536,26 @@ Ext.onReady(function()
 	                }
 	                ,items    :
 	                [
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'SUBTOTAL'
+	                        ,labelWidth : 200
+	                        ,value      : (_p12_lpdir[indice].total) -( _p12_lpdir[indice].ivaTotalMostrar)
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'IVA'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].ivaTotalMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
 	                    {
 	                        xtype       : 'displayfield'
 	                        ,fieldLabel : 'TOTAL'
@@ -715,6 +734,7 @@ Ext.onReady(function()
             var deducible   = 0;
             var _facturaIndividual = _p12_slist1[indice];
             var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
+            
             if(
                     !(!sDeducible
                     ||sDeducible.toLowerCase()=='na'
@@ -722,14 +742,16 @@ Ext.onReady(function()
                     )
             {
                 deducible = sDeducible.replace(',','')*1.0;
-                //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
-               	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1')
-                {
+                
+                if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+               	{
                 	if(causaSiniestro =="2"){
                 		deducible = 0;
                 	}
                	}
             }
+            
+            
             var subttdeduc  = subttdesc-deducible;
             _p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
             _p12_slist2[indice].COPAGO = 0;
@@ -746,27 +768,25 @@ Ext.onReady(function()
             //var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             //var _facturaIndividual = _p12_slist1[indice];
             
-            //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
-           	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
+            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+           	{
             	if(causaSiniestro !="2"){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
-            		alert(copagoPesos);
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
-            		alert(copagoPorcentajes);
             		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
             	}else{
             		var copagoaplica = 0.0;
             	}
            	}else{
-           			if(tipcopag=='$'){
-                        var copagoaplica = copago;
-                    }
-                    else if(tipcopag=='%'){
-                        var copagoaplica = subttdeduc*(copago/100.0);
-                    }
-                    else{
-            		var copagoaplica = 0.0;
-            	}
+           		if(tipcopag=='$'){
+                    var copagoaplica = copago;
+                }
+                else if(tipcopag=='%'){
+                    var copagoaplica = subttdeduc*(copago/100.0);
+                }
+                else{
+                    var copagoaplica = 0.0;
+                }
            	}
             var total = subttdeduc - copagoaplica;
             _p12_slist1[indice]['TOTALFACTURA']=total;
@@ -864,7 +884,7 @@ Ext.onReady(function()
                         xtype       : 'displayfield'
                         ,labelWidth : 200
                         ,value      : copagoaplica
-                        ,fieldLabel : 'Copago --> '  // PAGO POR REEMBOLSO
+                        ,fieldLabel : 'Copago'  // PAGO POR REEMBOLSO
                         ,valueToRaw : function(value)
                         {
                             return Ext.util.Format.usMoney(value);
@@ -1504,8 +1524,7 @@ function _p12_validaAutorizaciones()
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
 	{
-		//var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
-		var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
+		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
 		{
