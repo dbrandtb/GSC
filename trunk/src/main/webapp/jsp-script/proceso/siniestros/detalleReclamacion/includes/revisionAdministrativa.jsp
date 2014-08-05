@@ -81,8 +81,7 @@ Ext.onReady(function() {
                  {type:'string',    name:'DCTONUEX'},
                  {type:'string',    name:'APLICA_IVA'},
                  {type:'string',    name:'ANTES_DESPUES'},
-                 {type:'string',    name:'CDPRESTA'},
-                 {type:'string',    name:'CODRECLAM'}
+                 {type:'string',    name:'CDPRESTA'}
 				]
     });
 	
@@ -241,7 +240,7 @@ Ext.onReady(function() {
             extraParams: {
                 'catalogo' : _CATALOGO_COBERTURAS,
                 'params.cdramo' : _CDRAMO,
-                'params.cdtipsit' : _CDTIPSIT
+                'params.cdtipsit' : 'SL'
             }
         }
 	});
@@ -650,7 +649,7 @@ Ext.onReady(function() {
 			,decimalSeparator: '.'
 			,minValue: 0
 			,name       : 'params.ptprecioArancel'
-			,readOnly: (Ext.isEmpty(_CDROL) || _CDROL != _ROL_ACTIVO)
+			//,readOnly: (Ext.isEmpty(_CDROL) || _CDROL != _ROL_ACTIVO)
    		},
    		{
 	        xtype      : 'numberfield'
@@ -949,9 +948,7 @@ Ext.onReady(function() {
 	            		        		'params.nmsuplem'  : _NMSUPLEM,
 	            		        		'params.status'    : _STATUS,
 	            		        		'params.aaapertu'  : _AAAPERTU,
-	            		        		'params.nmsinies'  : _NMSINIES,
-	            		        		'params.cdtipsit'  : _CDTIPSIT,
-	            		        		'params.operacion'  : _Operacion
+	            		        		'params.nmsinies'  : _NMSINIES
 	            		        	},
 	            		        	failure: function(form, action) {
 	            		        		centrarVentanaInterna(mensajeError("Error al guardar la Factura"));
@@ -1014,26 +1011,6 @@ Ext.define('EditorFacturas', {
  			store: storeFacturas,
  			columns: 
  				[{
- 					xtype : 'actioncolumn',
- 					width : 50,
- 					sortable : false,
- 					menuDisabled : true,
- 					items : [{
- 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
- 						tooltip : 'Editar Factura',
- 						scope : this,
- 						handler : this.onEditClick
- 					},{
- 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
- 						tooltip : 'Eliminar Factura',
- 						scope : this,
- 						handler : this.onRemoveClick
- 					}]
- 				},{
- 					header : 'C&oacute;digo de Reclamaci&oacute;n',
- 					dataIndex : 'CODRECLAM',
- 					width : 150
- 				},{
  					header : 'No. de Factura',
  					dataIndex : 'NFACTURA',
  					width : 150
@@ -1102,6 +1079,22 @@ Ext.define('EditorFacturas', {
  					dataIndex : 'CDPRESTA',
  					width : 150,
  					hidden: true
+ 				},{
+ 					xtype : 'actioncolumn',
+ 					width : 50,
+ 					sortable : false,
+ 					menuDisabled : true,
+ 					items : [{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
+ 						tooltip : 'Editar Factura',
+ 						scope : this,
+ 						handler : this.onEditClick
+ 					},{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
+ 						tooltip : 'Eliminar Factura',
+ 						scope : this,
+ 						handler : this.onRemoveClick
+ 					}]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -1232,7 +1225,7 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.getForm().reset();
  		
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(true);
- 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(false); // true
+ 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(true);
  		panelEdicionFacturas.down('[name="params.nfactura"]').setValue(record.get('NFACTURA'));
  		panelEdicionFacturas.down('[name="params.fefactura"]').setValue(record.get('FFACTURA'));
  		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
@@ -1340,12 +1333,6 @@ Ext.define('EditorConceptos', {
  			store: storeConceptos,
  			columns: 
  				[{
- 					xtype : 'actioncolumn',
- 					width : 80,
- 					sortable : false,
- 					menuDisabled : true,
- 					items : [<s:property value="imap.conceptosButton" />]
- 				},{
  					dataIndex : 'NMORDINA',
  					width : 20,
  					hidden: true
@@ -1402,6 +1389,12 @@ Ext.define('EditorConceptos', {
  					dataIndex : 'PTMTOARA',
  					width : 150,
  					renderer : Ext.util.Format.usMoney
+ 				},{
+ 					xtype : 'actioncolumn',
+ 					width : 80,
+ 					sortable : false,
+ 					menuDisabled : true,
+ 					items : [<s:property value="imap.conceptosButton" />]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -1453,19 +1446,6 @@ Ext.define('EditorConceptos', {
  			_Operacion = 'I';
  			
  			var record = gridFacturas.getSelectionModel().getSelection()[0];
- 			
- 			if(record.get('CDPRESTA') =="0"){
- 				centrarVentanaInterna(Ext.Msg.show({
-					title: 'Error',
-					msg: "Favor de verificar el proveedor",
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-	           	}));
-	           	
-	           	return false;
- 			}
- 			
- 			
  			//Validamos el tipo de moneda  Pesos 	 --> No aparecer el campo de tipo cambio 
  			//							   Diferente --> Que aparezca el tipo de cambio
  			panelEdicionConceptos.down('[name="params.tasacamb1"]').setReadOnly(false);
