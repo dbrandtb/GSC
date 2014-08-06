@@ -2923,7 +2923,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			            		}else{
     			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    			            			ptimportauto      = subtotalImpuestos+ivaaplicado;; //++
+    			            			ptimportauto      = subtotalImpuestos+ivaaplicado; //++
             							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}
     			            	}else{
@@ -4109,7 +4109,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			            		}else{
     			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    			            			ptimportauto      = subtotalImpuestos+ivaaplicado;; //++
+    			            			ptimportauto      = subtotalImpuestos+ivaaplicado; //++
             							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}
     			            	}else{
