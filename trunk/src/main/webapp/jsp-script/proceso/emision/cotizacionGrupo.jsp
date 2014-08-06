@@ -9,6 +9,10 @@
 {
     background : #FFFF99;
 }
+._p21_editorLectura
+{
+    visibility : hidden;
+}
 </style>
 <script>
 ////// overrides //////
@@ -240,6 +244,16 @@ Ext.onReady(function()
                     }
                 }
                 ,{
+                    header     : 'Suma asegurada'
+                    ,dataIndex : 'ptsumaaseg'
+                    ,width     : 120
+                    ,editor    : _p21_editorSumaAseg
+                    ,renderer  : function(v)
+                    {
+                        return rendererColumnasDinamico(v,'ptsumaaseg');
+                    }
+                }
+                ,{
                     header     : 'Deducible'
                     ,dataIndex : 'deducible'
                     ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
@@ -248,16 +262,6 @@ Ext.onReady(function()
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'deducible');
-                    }
-                }
-                ,{
-                    header     : 'Suma asegurada'
-                    ,dataIndex : 'ptsumaaseg'
-                    ,width     : 120
-                    ,editor    : _p21_editorSumaAseg
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'ptsumaaseg');
                     }
                 }
                 ,{
@@ -319,6 +323,17 @@ Ext.onReady(function()
             {
                 clicksToEdit  : 1
                 ,errorSummary : false
+                ,listeners    :
+                {
+                    beforeedit : function(editor,context)
+                    {
+                        debug('beforeedit:',context.record.get('cdplan'));
+                        if(context.record.get('cdplan')+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
+                        {
+                            _p21_estiloEditores(context.record.get('cdplan'));
+                        }
+                    }
+                }
             })
         })
         ,buttonAlign : 'center'
@@ -1694,6 +1709,10 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
             }
         }));
     }
+    if(newValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
+    {
+        _p21_estiloEditores(newValue);
+    }
     debug('<_p21_editorPlanChange');
 }
 
@@ -2539,6 +2558,102 @@ function _p21_rfcBlur(field)
     }
     
     debug('<_p21_rfcBlur');
+}
+
+function _p21_estiloEditores(cdplan)
+{
+    debug('>_p21_estiloEditores:',cdplan);
+    Ext.Ajax.request(
+    {
+        url      : _p21_urlObtenerCoberturas
+        ,params  :
+        {
+            'smap1.cdramo'    : _p21_smap1.cdramo
+            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+            ,'smap1.cdplan'   : cdplan
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            if(json.exito)
+            {
+                var _4HOS = false;
+                var _4AYM = false;
+                var _4AIV = false;
+                var _4EE  = false;
+                $.each(json.slist1,function(i,cob)
+                {
+                    debug('iterando:',cob.CDGARANT);
+                    if(cob.CDGARANT=='4HOS')
+                    {
+                        debug('_4HOS found');
+                        _4HOS=true;
+                    }
+                    if(cob.CDGARANT=='4AYM')
+                    {
+                        debug('_4AYM found');
+                        _4AYM=true;
+                    }
+                    if(cob.CDGARANT=='4AIV')
+                    {
+                        debug('_4AIV found');
+                        _4AIV=true;
+                    }
+                    if(cob.CDGARANT=='4EE')
+                    {
+                        debug('_4EE found');
+                        _4EE=true;
+                    }
+                });
+                if(!_4HOS)
+                {
+                    _p21_editorDeducible.setValue('0');
+                    _p21_editorDeducible.addCls('_p21_editorLectura');
+                }
+                else
+                {
+                    _p21_editorDeducible.removeCls('_p21_editorLectura');
+                }
+                _p21_editorDeducible.setReadOnly(!_4HOS);
+                if(!_4AYM)
+                {
+                    _p21_editorAyudaMater.setValue('0');
+                    _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                }
+                else
+                {
+                    _p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                }
+                _p21_editorAyudaMater.setReadOnly(!_4AYM);
+                if(!_4AIV)
+                {
+                    _p21_editorAsisInter.setValue('N');
+                    _p21_editorAsisInter.addCls('_p21_editorLectura');
+                }
+                else
+                {
+                    _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                }
+                _p21_editorAsisInter.setReadOnly(!_4AIV);
+                if(!_4EE)
+                {
+                    _p21_editorEmerextr.setValue('N');
+                    _p21_editorEmerextr.addCls('_p21_editorLectura');
+                }
+                else
+                {
+                    _p21_editorEmerextr.removeCls('_p21_editorLectura');
+                }
+                _p21_editorEmerextr.setReadOnly(!_4EE);
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : errorComunicacion
+    });
+    debug('<_p21_estiloEditores');
 }
 ////// funciones //////
 </script>
