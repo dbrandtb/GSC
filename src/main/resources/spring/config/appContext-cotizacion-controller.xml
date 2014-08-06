@@ -59,8 +59,9 @@
     </bean>
     
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">
-        <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="kernelManager"    ref="kernelManagerSustituto"/>
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
+        <property name="endososManager"   ref="endososManagerImpl"/>
     </bean>
     
     <!-- datos de Agentes -->
