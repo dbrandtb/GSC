@@ -52,12 +52,6 @@
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
     </bean>
     
-    <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">
-        <property name="kernelManager" ref="kernelManagerSustituto"/>
-        <property name="pantallasManager" ref="pantallasManagerImpl"/>
-        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
-    </bean>
-    
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">
         <property name="kernelManager"    ref="kernelManagerSustituto"/>
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
