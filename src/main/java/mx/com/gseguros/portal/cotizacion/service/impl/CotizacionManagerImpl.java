@@ -420,6 +420,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return nombre;
 	}
 	
+	@Override
+	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception
+	{
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### cargarPermisosPantallaGrupo ######"
+				+ "\ncdsisrol "+cdsisrol
+				+ "\nstatus "+status
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("status"   , status);
+		Map<String,String>res=cotizacionDAO.cargarPermisosPantallaGrupo(params);
+		logger.info(""
+				+ "\nresponse "+res
+				+ "\n###### cargarPermisosPantallaGrupo ######"
+				+ "\n#########################################"
+				);
+		return res;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

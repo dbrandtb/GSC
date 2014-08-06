@@ -99,4 +99,6 @@ public interface CotizacionManager
 	
 	public String cargarNombreAgenteTramite(String ntramite)throws Exception;
 	
+	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception;
+	
 }

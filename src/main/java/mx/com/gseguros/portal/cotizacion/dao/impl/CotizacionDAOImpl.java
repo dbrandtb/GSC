@@ -379,4 +379,31 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new CargarPermisosPantallaGrupo(getDataSource()), params);
+		List<Map<String,String>>listaDatos=(List<Map<String,String>>)resultado.get("pv_registro_o");
+		Map<String,String>datos=new HashMap<String,String>();
+		if(listaDatos!=null&&listaDatos.size()>0)
+		{
+			datos=listaDatos.get(0);
+		}
+		return datos;
+	}
+	
+	protected class CargarPermisosPantallaGrupo extends StoredProcedure
+	{
+		protected CargarPermisosPantallaGrupo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PERMISOS_PANTALLA_GRUPO");
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
