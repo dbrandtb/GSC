@@ -96,9 +96,18 @@ public interface EndososManager
 	public void                      actualizarFenacimi(Map<String, String> params)           throws Exception;
 	public void                      actualizarSexo(Map<String, String> params)               throws Exception;
 	public List<Map<String, String>> obtenerCdpersonMpoliper(Map<String, String> params)      throws Exception;
-	public String                    obtenerNtramiteEmision(
-			                             String cdunieco,String cdramo,
-			                             String estado,String nmpoliza)                       throws Exception;
+	
+	/**
+	 * Obtiene el N&uacute;mero de Tr&aacute;mite de Emisi&oacute;n de una p&oacute;liza
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @return
+	 * @throws Exception
+	 */
+	public String obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	
 	public void                      validaEndosoAnterior(Map<String, String> params)         throws Exception;
 	public void                      actualizaDeducibleValosit(
 			String cdunieco
