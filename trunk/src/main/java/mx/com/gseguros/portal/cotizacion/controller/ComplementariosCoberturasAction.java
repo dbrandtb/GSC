@@ -14,6 +14,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -27,6 +28,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	private KernelManagerSustituto kernelManager;
 	private PantallasManager pantallasManager;
+	private EndososManager   endososManager;
 	private Map<String,String>smap1;
 	private Map<String,String>smap2;
 	private Map<String,String>smap3;
@@ -843,6 +845,17 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			log.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
 			
+			
+			/**
+			 * Validar que el Codigo Postal pertenezca al Estado correcto
+			 */
+			if(smap1!=null&&smap1.size()>0 && smap1.containsKey("cdtipsit") && TipoSituacion.MULTISALUD.getCdtipsit().equalsIgnoreCase(smap1.get("cdtipsit"))){
+				HashMap<String,String> params =  new HashMap<String, String>();
+				params.put("pv_estado_i", smap1.get("CDEDO"));
+				params.put("pv_codpos_i", smap1.get("CODPOSTAL"));
+				endososManager.validaEstadoCodigoPostal(params);
+			}
+			
 			/*
 			pv_cdunieco    smap1  ready!
 			pv_cdramo      smap1  ready!
@@ -1567,6 +1580,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+	public void setEndososManager(EndososManager endososManager) {
+		this.endososManager = endososManager;
 	}
 	
 }

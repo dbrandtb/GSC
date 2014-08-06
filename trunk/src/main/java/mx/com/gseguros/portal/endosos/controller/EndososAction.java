@@ -124,6 +124,36 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	public String validarCP()
+	{
+		log.debug(""
+				+ "\n############################"
+				+ "\n############################"
+				+ "\n###### validarCP ######"
+				+ "\n######                ######"
+				);
+		
+		try
+		{
+			endososManager.validaEstadoCodigoPostal(parametros);
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("Error en Valida CP",ex);
+			this.mensaje = ex.getMessage();
+			
+		}
+		log.debug(""
+				+ "\n######                ######"
+				+ "\n###### validarCP ######"
+				+ "\n############################"
+				+ "\n############################"
+				);
+		success=true;
+		return SUCCESS;
+	}
 	/*/////////////////////////*/
 	////// obtener endosos //////
 	/////////////////////////////
@@ -975,6 +1005,18 @@ public class EndososAction extends PrincipalCoreAction
 			log.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			
+			/**
+			 * Validar que el Codigo Postal pertenezca al Estado correcto
+			 */
+			if(smap1!=null&&smap1.size()>0 && smap1!=null&&smap1.size()>0 && smap2.containsKey("cdtipsit") && TipoSituacion.MULTISALUD.getCdtipsit().equalsIgnoreCase(smap2.get("cdtipsit"))){
+				HashMap<String,String> params =  new HashMap<String, String>();
+				params.put("pv_estado_i", smap1.get("CDEDO"));
+				params.put("pv_codpos_i", smap1.get("CODPOSTAL"));
+				endososManager.validaEstadoCodigoPostal(params);
+			}
+			
 			/*
 			 * pv_cdunieco_i
 			 * pv_cdramo_i
@@ -1233,6 +1275,17 @@ public class EndososAction extends PrincipalCoreAction
 			log.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			/**
+			 * Validar que el Codigo Postal pertenezca al Estado correcto
+			 */
+			if(smap1!=null&&smap1.size()>0 && smap1!=null&&smap1.size()>0 && smap2.containsKey("cdtipsit") && TipoSituacion.MULTISALUD.getCdtipsit().equalsIgnoreCase(smap2.get("cdtipsit"))){
+				HashMap<String,String> params =  new HashMap<String, String>();
+				params.put("pv_estado_i", smap1.get("CDEDO"));
+				params.put("pv_codpos_i", smap1.get("CODPOSTAL"));
+				endososManager.validaEstadoCodigoPostal(params);
+			}
+			
 			/*
 			 * pv_cdunieco_i
 			 * pv_cdramo_i
@@ -5210,6 +5263,16 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup     = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 			String proceso      = "END";
 			String ntramite     = smap1.get("NTRAMITE");
+			
+			/**
+			 * Validar que el Codigo Postal pertenezca al Estado correcto
+			 */
+			if(smap1!=null&&smap1.size()>0 && smap1.containsKey("CDTIPSIT") && TipoSituacion.MULTISALUD.getCdtipsit().equalsIgnoreCase(smap1.get("CDTIPSIT"))){
+				HashMap<String,String> params =  new HashMap<String, String>();
+				params.put("pv_estado_i", smap2.get("CDEDO"));
+				params.put("pv_codpos_i", smap2.get("CODPOSTAL"));
+				endososManager.validaEstadoCodigoPostal(params);
+			}
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String> resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado
