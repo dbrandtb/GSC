@@ -156,6 +156,7 @@ function _4_onComplementariosClick(rowIndex)
                         ,'smap1.nmpoliza' : record.get('nmsolici')
                         ,'smap1.ntramite' : record.get('ntramite')
                         ,'smap1.cdagente' : record.get('cdagente')
+                        ,'smap1.status'   : record.get('status')
                     }
                 });
         	}
@@ -195,6 +196,7 @@ function _4_onComplementariosClick(rowIndex)
                         ,'smap1.nmpoliza'      : ''
                         ,'smap1.ntramiteVacio' : record.get('ntramite')
                         ,'smap1.cdagente'      : record.get('cdagente')
+                        ,'smap1.status'        : record.get('status')
                     }
                 });
             }
