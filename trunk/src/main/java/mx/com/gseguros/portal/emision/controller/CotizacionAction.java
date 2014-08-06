@@ -1793,13 +1793,21 @@ public class CotizacionAction extends PrincipalCoreAction
 			String          ntramiteVacio = null;
 			String          nombreAgente  = null;
 			String          cdAgente      = null;
+			String          status        = null;
 			
 			UserVO usuario  = (UserVO) session.get("USUARIO");
+			String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
 			
 			if(exito)
 			{
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
+				status        = smap1.get("status");
+				if(StringUtils.isBlank(status))
+				{
+					status="0";
+				}
+				smap1.put("cdsisrol",cdsisrol);
 				
 				//si entran por agente
 				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
@@ -1897,6 +1905,27 @@ public class CotizacionAction extends PrincipalCoreAction
 						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
 				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
 				imap.put("comboFormaPago"  , gc.getItems());
+				
+				List<ComponenteVO>botones=pantallasManager.obtenerComponentes(
+						null, null, status,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "BOTONES", null);
+				if(botones!=null&&botones.size()>0)
+				{
+					gc.generaComponentes(botones, true, false, false, false, false, true);
+					imap.put("botones" , gc.getButtons());
+				}
+				else
+				{
+					imap.put("botones" , null);
+				}	
+			}
+			
+			//obtener permisos
+			if(exito)
+			{
+				smap1.put("status",status);
+				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
 			}
 			
 			if(exito)
@@ -2036,6 +2065,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			String timestamp        = smap1.get("timestamp");
 			String clasif           = smap1.get("clasif");
+			String LINEA_EXTENDIDA  = smap1.get("LINEA_EXTENDIDA");
 			String cdunieco         = smap1.get("cdunieco");
 			String cdramo           = smap1.get("cdramo");
 			String cdtipsit         = smap1.get("cdtipsit");
@@ -2231,6 +2261,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                logger.info("** NUEVA_FILA **");
 			            }
 			            input.close();
+			            output.close();
 			            logger.info(""
 			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								+ "\n##############################################"
@@ -2264,6 +2295,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                logger.info("** NUEVA_FILA **");
 			            }
 			            input.close();
+			            output.close();
 			            logger.info(""
 			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								+ "\n##############################################"
@@ -2360,7 +2392,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			//tvalosit
 			if(exito)
 			{
-				if(clasif.equals(LINEA))
+				if(clasif.equals(LINEA)&&LINEA_EXTENDIDA.equals("S"))
 				{
 					for(Map<String,Object>iGrupo:olist1)
 					{
@@ -2448,7 +2480,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(exito)
 			{
 				
-				if(clasif.equals(LINEA))
+				if(clasif.equals(LINEA)&&LINEA_EXTENDIDA.equals("S"))
 				{
 					for(Map<String,Object>iGrupo:olist1)
 					{
@@ -2526,9 +2558,12 @@ public class CotizacionAction extends PrincipalCoreAction
 									{
 										for(Entry<String,String>atributo:listaCdatribu.entrySet())
 										{
-											cotizacionManager.movimientoTvalogarGrupo(
+											if(StringUtils.isNotBlank(atributo.getValue()))
+											{
+											    cotizacionManager.movimientoTvalogarGrupo(
 													cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
 													atributo.getKey(), atributo.getValue());
+											}
 										}
 									}
 								}
@@ -2627,7 +2662,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			//tramite
 			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
-				if(!hayTramite)
+				if(!hayTramite)//es agente
 				{
 					Map<String,Object>params=new HashMap<String,Object>();
 					params.put("pv_cdunieco_i"   , cdunieco);
@@ -2643,7 +2678,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_referencia_i" , null);
 					params.put("pv_nombre_i"     , null);
 					params.put("pv_festatus_i"   , new Date());
-					params.put("pv_status_i"     , EstatusTramite.PENDIENTE.getCodigo());
+					params.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
 					params.put("pv_comments_i"   , null);
 					params.put("pv_nmsolici_i"   , nmpoliza);
 					params.put("pv_cdtipsit_i"   , cdtipsit);
@@ -2659,7 +2694,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_otvalor01_i" , clasif);
 					siniestrosManager.actualizaOTValorMesaControl(params);
 				}
-				
 			}
 			
 			//sigsvalipol
@@ -2688,7 +2722,10 @@ public class CotizacionAction extends PrincipalCoreAction
 					exito           = false;
 				}
 			}
-		            
+			
+			/*
+			 * CODIGO PARA GENERAR TARIFICACION DE COLECTIVO QUE PUEDE USARSE DESPUES 
+			 *
 			if(false&&exito)
 			{
 				try
@@ -2798,7 +2835,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		        	
 		        	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
 		        	mapaCdperpag.put("OTVALOR10","CDPERPAG");
-		        	tatriCdperpag.setMapa(mapaCdperpag);*/
+		        	tatriCdperpag.setMapa(mapaCdperpag);*----
 		        	tatriPlanes.add(tatriCdperpag);
 		        	
 		        	ComponenteVO tatriDsperpag=new ComponenteVO();
@@ -2811,7 +2848,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		        	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
 		        	mapaDsperpag.put("OTVALOR08","S");
 		        	mapaDsperpag.put("OTVALOR10","DSPERPAG");
-		        	tatriDsperpag.setMapa(mapaDsperpag);*/
+		        	tatriDsperpag.setMapa(mapaDsperpag);*----
 		        	tatriPlanes.add(tatriDsperpag);
 		        	////// 1. forma de pago //////
 		        	
@@ -2824,7 +2861,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		        	
 		        	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
 		        	mapaNmsituac.put("OTVALOR10","NMSITUAC");
-		        	tatriNmsituac.setMapa(mapaNmsituac);*/
+		        	tatriNmsituac.setMapa(mapaNmsituac);*----
 		        	tatriPlanes.add(tatriNmsituac);
 		        	////// 2. nmsituac //////
 		        	
@@ -2873,7 +2910,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            	mapaPlan.put("OTVALOR08","S");
 		            	mapaPlan.put("OTVALOR09","MONEY");
 		            	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
-		            	tatriPrima.setMapa(mapaPlan);*/
+		            	tatriPrima.setMapa(mapaPlan);*----
 		            	tatriPlanes.add(tatriPrima);
 		            	
 		            	////// cdplan
@@ -2887,7 +2924,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		             	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
 		             	//mapaCdplan.put("OTVALOR08","H");
 		             	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
-		             	tatriCdplan.setMapa(mapaCdplan);*/
+		             	tatriCdplan.setMapa(mapaCdplan);*----
 		             	tatriPlanes.add(tatriCdplan);
 		             	
 		             	////// dsplan
@@ -2900,7 +2937,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		             	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
 		             	//mapaDsplan.put("OTVALOR08","H");
 		             	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
-		             	tatriDsplan.setMapa(mapaDsplan);*/
+		             	tatriDsplan.setMapa(mapaDsplan);*----
 		             	tatriPlanes.add(tatriDsplan);
 		            }
 		            ////// 2. planes //////
@@ -2932,11 +2969,15 @@ public class CotizacionAction extends PrincipalCoreAction
 					exito           = false;
 				}
 			}
+	        */
 			
 			if(exito)
 			{
-				respuesta       = "Se gener&oacute; el tr&aacute;mite "+smap1.get("ntramite");
-				respuestaOculta = "Todo OK";
+				if(StringUtils.isBlank(respuesta))
+				{
+					respuesta       = "Se gener&oacute; el tr&aacute;mite "+smap1.get("ntramite");
+				    respuestaOculta = "Todo OK";
+				}
 			}
 			
 		}

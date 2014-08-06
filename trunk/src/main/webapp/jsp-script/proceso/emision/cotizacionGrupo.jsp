@@ -41,6 +41,8 @@ var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         
 var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"          />';
 var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"          />';
 var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
+var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
+var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -53,6 +55,31 @@ var _p21_selectedCdperpag   = null;
 var _p21_selectedCdplan     = null;
 var _p21_selectedDsplan     = null;
 var _p21_selectedNmsituac   = null;
+var _p21_semaforo           = true;
+var _p21_incrinflAux        = null;
+var _p21_extrrenoAux        = null;
+
+var _p21_arrayNombresFactores =
+[
+    'FACTOR RENOVACIÓN (%)'
+    ,'FACTOR RENOVACIÓN'
+    ,'FACTOR RENOVACIÓN '
+    ,'FACTOR INFLACIÓN (%)'
+    ,'FACTOR INFLACIÓN'
+];
+
+var _p21_arrayNombresIncrinfl =
+[
+    'FACTOR INFLACIÓN (%)'
+    ,'FACTOR INFLACIÓN'
+];
+
+var _p21_arrayNombresExtrreno =
+[
+   'FACTOR RENOVACIÓN (%)'
+    ,'FACTOR RENOVACIÓN'
+    ,'FACTOR RENOVACIÓN '
+];
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
@@ -215,6 +242,7 @@ Ext.onReady(function()
                 ,{
                     header     : 'Deducible'
                     ,dataIndex : 'deducible'
+                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 100
                     ,editor    : _p21_editorDeducible
                     ,renderer  : function(v)
@@ -235,6 +263,7 @@ Ext.onReady(function()
                 ,{
                     header     : 'Ayuda Maternidad'
                     ,dataIndex : 'ayudamater'
+                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
                     ,renderer  : function(v)
@@ -245,6 +274,7 @@ Ext.onReady(function()
                 ,{
                     header     : 'Asis. Inter. Viajes'
                     ,dataIndex : 'asisinte'
+                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
                     ,renderer  : function(v)
@@ -255,6 +285,7 @@ Ext.onReady(function()
                 ,{
                     header     : 'Emergencia extranjero'
                     ,dataIndex : 'emerextr'
+                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorEmerextr
                     ,renderer  : function(v)
@@ -271,12 +302,13 @@ Ext.onReady(function()
                             tooltip   : 'Editar'
                             ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
                             ,handler  : _p21_editarGrupoClic
-                            ,disabled : _p21_ntramite ? false : true
+                            ,disabled : _p21_smap1.DETALLE_LINEA=='N'
                         }
                         ,{
-                            tooltip  : 'Borrar subgrupo'
-                            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
-                            ,handler : _p21_borrarGrupoClic
+                            tooltip   : 'Borrar subgrupo'
+                            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+                            ,handler  : _p21_borrarGrupoClic
+                            ,disabled : _p21_ntramite ? true : false
                         }
                     ]
                 }
@@ -289,6 +321,18 @@ Ext.onReady(function()
                 ,errorSummary : false
             })
         })
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Continuar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    _p21_setActiveConcepto();
+                }
+            }
+        ]
     };
     
     _p21_tabGruposModifi =
@@ -305,6 +349,7 @@ Ext.onReady(function()
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                     ,handler : _p21_agregarGrupoClic
+                    ,hidden  : _p21_ntramite ? true : false
                 }
             ]
             ,columns :
@@ -351,9 +396,10 @@ Ext.onReady(function()
                             ,handler : _p21_editarGrupoClic
                         }
                         ,{
-                            tooltip  : 'Borrar subgrupo'
-                            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
-                            ,handler : _p21_borrarGrupoClic
+                            tooltip   : 'Borrar subgrupo'
+                            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+                            ,handler  : _p21_borrarGrupoClic
+                            ,disabled : _p21_ntramite ? true : false
                         }
                     ]
                 }
@@ -366,6 +412,18 @@ Ext.onReady(function()
                 ,errorSummary : true
             })
         })
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Continuar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    _p21_setActiveConcepto();
+                }
+            }
+        ]
     };
     ////// componentes //////
     
@@ -558,19 +616,10 @@ Ext.onReady(function()
                         ,buttonAlign : 'center'
                         ,buttons     :
                         [
+                            <s:if test='%{getImap().get("botones")!=null}'>
+                                <s:property value="imap.botones" />,
+                            </s:if>
                             {
-                                text     : 'Guardar / Retarificar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                                ,handler : _p21_generarTramiteClic
-                                ,hidden  : _p21_ntramite ? false : true
-                            }
-                            ,{
-                                text     : _p21_ntramiteVacio ? 'Complementar tr&aacute;mite' : 'Generar tr&aacute;mite'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                ,handler : _p21_generarTramiteClic
-                                ,hidden  : _p21_ntramite ? true : false
-                            }
-                            ,{
                                 text     : 'Limpiar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,handler : _p21_cotizarNueva
@@ -657,7 +706,7 @@ Ext.onReady(function()
                             }
                         });
                     };
-                    if(_p21_clasif==_p21_TARIFA_LINEA)
+                    if(_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
                     {
                         debug('>cargar linea');
                         auxCargarGrupos(function(resp)
@@ -721,7 +770,14 @@ Ext.onReady(function()
                         auxCargarGrupos(function(resp)
                         {
                             debug('>callback modificada');
-                            _p21_construirModificada(0,0,true);
+                            if(_p21_clasif==_p21_TARIFA_LINEA)
+                            {
+                                _p21_construirLinea(0,0,true);
+                            }
+                            else
+                            {
+                                _p21_construirModificada(0,0,true);
+                            }
                             var aux=resp.slist1.length;
                             var aux2=0;
                             _p21_tabpanel().setLoading(true);
@@ -785,6 +841,11 @@ Ext.onReady(function()
             }
         });
     }
+    
+    _fieldByName('nmnumero').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     ////// loaders //////
 });
@@ -1020,23 +1081,22 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     });
                                                 }
                                             }
-                                            if(!_p21_ntramite&&!_p21_ntramiteVacio&&hijos&&hijos.length>0)
+                                            if(_p21_smap1.FACTORES_EN_COBERTURAS=='N'&&hijos&&hijos.length>0)
                                             {
                                                 debug('se quitaran los factores de la cobertura');
                                                 for(var k=0;k<hijos.length;k++)
                                                 {
                                                     var hijo=hijos[k];
-                                                    debug('revisando hijo:',hijo.fieldLabel);
-                                                    if(hijo.fieldLabel=='FACTOR RENOVACIÓN (%)'
-                                                     ||hijo.fieldLabel=='FACTOR RENOVACIÓN'
-                                                     ||hijo.fieldLabel=='FACTOR RENOVACIÓN '
-                                                     ||hijo.fieldLabel=='FACTOR INFLACIÓN (%)'
-                                                     ||hijo.fieldLabel=='FACTOR INFLACIÓN')
+                                                    debug('revisando hijo:',"'"+hijo.fieldLabel+"'");
+                                                    $.each(_p21_arrayNombresFactores,function(a,nombre)
                                                     {
-                                                        debug('ocultar');
-                                                        hijo.hidden     = true;
-                                                        hijo.allowBlank = true;
-                                                    }
+                                                        if(hijo.fieldLabel==nombre)
+                                                        {
+                                                            debug('ocultar:',"'"+hijo.fieldLabel+"'");
+                                                            hijo.hidden     = true;
+                                                            hijo.allowBlank = true;
+                                                        }
+                                                    });
                                                 }
                                             } 
                                             var item = Ext.create('Ext.form.Panel',
@@ -1061,7 +1121,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
                                                         ,checked    : true
-                                                        ,disabled   : json.slist1[j].SWOBLIGA=='S'
+                                                        ,disabled   : _p21_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
@@ -1132,7 +1192,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title        : 'COBERTURAS DEL SUBGRUPO'
                                                     ,maxHeight   : 490
-                                                    ,hidden      : _p21_clasif==_p21_TARIFA_LINEA
+                                                    ,hidden      : _p21_smap1.COBERTURAS=='N'
                                                     ,autoScroll  : true
                                                     ,collapsible : true
                                                     ,layout      :
@@ -1147,17 +1207,74 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title    : 'FACTORES DEL SUBGRUPO'
                                                     ,height  : 150
-                                                    ,hidden  : _p21_ntramite ? false : true
+                                                    ,hidden  : _p21_smap1.FACTORES=='N'
                                                     ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
                                                     {
                                                         clicksToEdit  : 1
                                                         ,errorSummary : false
+                                                        ,listeners    :
+                                                        {
+                                                            beforeedit : function(editor)
+                                                            {
+                                                                centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el factor de incremento de inflaci&oacute;n<br/>y/o el factor de extraprima o renovaci&oacute;n entonces<br/>se cambiar&aacute; para todas las coberturas<br/>¿Desea continuar?', function(btn)
+                                                                {
+                                                                    if(btn=='yes')
+                                                                    {
+                                                                        _p21_incrinflAux = record.get('incrinfl');
+                                                                        _p21_extrrenoAux = record.get('extrreno');
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        editor.cancelEdit();
+                                                                    }
+                                                                }));
+                                                            }
+                                                            ,edit : function(editor,e)
+                                                            {
+                                                                var letraGrupo  = e.record.get('letra');
+                                                                var incrinfl    = e.record.get('incrinfl');
+                                                                var extrreno    = e.record.get('extrreno');
+                                                                debug('letraGrupo:',letraGrupo);
+                                                                debug('_p21_incrinflAux:',_p21_incrinflAux,'incrinfl:',incrinfl);
+                                                                debug('_p21_extrrenoAux:',_p21_extrrenoAux,'extrreno:',extrreno);
+                                                                if(_p21_incrinflAux!=incrinfl)
+                                                                {
+                                                                    var pestania=Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    debug('pestania:',pestania);
+                                                                    $.each(_p21_arrayNombresIncrinfl,function(i,nombre)
+                                                                    {
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        debug('componentes para poner factor incrinfl:',componentes);
+                                                                        $.each(componentes,function(i,comp)
+                                                                        {
+                                                                            debug('poniendo valor en:',comp);
+                                                                            comp.setValue(incrinfl);
+                                                                        });
+                                                                    });
+                                                                }
+                                                                if(_p21_extrrenoAux!=extrreno)
+                                                                {
+                                                                    var pestania=Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    debug('pestania:',pestania);
+                                                                    $.each(_p21_arrayNombresExtrreno,function(i,nombre)
+                                                                    {
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        debug('componentes para poner factor extrreno:',componentes);
+                                                                        $.each(componentes,function(i,comp)
+                                                                        {
+                                                                            debug('poniendo valor en:',comp);
+                                                                            comp.setValue(extrreno);
+                                                                        });
+                                                                    });
+                                                                }
+                                                            }
+                                                        }
                                                     })
                                                     ,columns :
                                                     [
                                                         {
-                                                            header     : 'Incremento inflaci&oacute;n'
-                                                            ,dataIndex : 'incrinfl'
+                                                            header     : 'Extraprima o renovaci&oacute;n'
+                                                            ,dataIndex : 'extrreno'
                                                             ,flex      : 1
                                                             ,editor    :
                                                             {
@@ -1168,8 +1285,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                         }
                                                         ,{
-                                                            header     : 'Extraprima o renovaci&oacute;n'
-                                                            ,dataIndex : 'extrreno'
+                                                            header     : 'Incremento inflaci&oacute;n'
+                                                            ,dataIndex : 'incrinfl'
                                                             ,flex      : 1
                                                             ,editor    :
                                                             {
@@ -1386,6 +1503,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                                     ,handler : function(button){_p21_guardarGrupo(button.up().up());}
+                                                    ,hidden  : _p21_smap1.COBERTURAS=='N'
                                                 }
                                             ]
                                         });
@@ -1468,14 +1586,14 @@ function _p21_guardarGrupo(panelGrupo)
      
      var tvalogars = [];
      var valido    = true;
-     if(_p21_clasif==_p21_TARIFA_MODIFICADA)
+     if(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
          {
              var iFormTatrigar = formsTatrigar[i];
              valido            = valido && iFormTatrigar.isValid();
              var tvalogar      = iFormTatrigar.getValues();
-             if(tvalogar.swobliga=='S')
+             if(tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
              }
@@ -1555,7 +1673,7 @@ function _p21_setActiveTab(itemId)
 function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 {
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
-    if(oldValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_MODIFICADA&&_p21_semaforoPlanChange)
+    if(oldValue+'x'!='x'&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
     {
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
@@ -1585,7 +1703,7 @@ function _p21_query(regex)
     return Ext.ComponentQuery.query(regex);
 }
 
-function _p21_generarTramiteClic()
+function _p21_generarTramiteClic(callback)
 {
     debug('>_p21_generarTramiteClic');
     var valido = true;
@@ -1666,13 +1784,15 @@ function _p21_generarTramiteClic()
             ,success : function()
             {
                 var conceptos = form.getValues();
-                conceptos['timestamp']     = timestamp;
-                conceptos['clasif']        = _p21_clasif;
-                conceptos['cdunieco']      = _p21_smap1.cdunieco;
-                conceptos['cdramo']        = _p21_smap1.cdramo;
-                conceptos['cdtipsit']      = _p21_smap1.cdtipsit;
-                conceptos['ntramiteVacio'] = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
+                conceptos['timestamp']       = timestamp;
+                conceptos['clasif']          = _p21_clasif;
+                conceptos['LINEA_EXTENDIDA'] = _p21_smap1.LINEA_EXTENDIDA;
+                conceptos['cdunieco']        = _p21_smap1.cdunieco;
+                conceptos['cdramo']          = _p21_smap1.cdramo;
+                conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
+                conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
                 var grupos = [];
+                /*
                 if(_p21_clasif==_p21_TARIFA_LINEA)
                 {
                     _p21_storeGrupos.each(function(record)
@@ -1682,14 +1802,14 @@ function _p21_generarTramiteClic()
                     });
                 }
                 else
-                {
+                {*/
                     _p21_storeGrupos.each(function(record)
                     {
                         var grupo = record.data;
                         grupo['tvalogars']=record.tvalogars;
                         grupos.push(grupo);
                     });
-                }
+                /*}*/
                 Ext.Ajax.request(
                 {
                     url       : _p21_urlGenerarTramiteGrupo
@@ -1708,21 +1828,14 @@ function _p21_generarTramiteClic()
                         {
                             if(_p21_ntramite||_p21_ntramiteVacio)
                             {
-                                _p21_tabpanel().setLoading(true);
-                                Ext.create('Ext.form.Panel').submit(
+                                if(callback)
                                 {
-                                    standardSubmit : true
-                                    ,params        :
-                                    {
-                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
-                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
-                                        ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
-                                        ,'smap1.estado'   : _p21_smap1.estado
-                                        ,'smap1.nmpoliza' : json.smap1.nmpoliza
-                                        ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
-                                        ,'smap1.cdagente' : _p21_fieldByName('cdagente').getValue()
-                                    }
-                                });
+                                    callback(json);
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta+'<br/>Se guard&oacute; la informaci&oacute;n pero no hay callback');
+                                }
                             }
                             else
                             {
@@ -1846,6 +1959,111 @@ function _p21_generarTramiteClic()
     }
     
     debug('<_p21_generarTramiteClic');
+}
+
+function _p21_reload(json)
+{
+    _p21_tabpanel().setLoading(true);
+    Ext.create('Ext.form.Panel').submit(
+    {
+        standardSubmit : true
+        ,params        :
+        {
+            'smap1.cdunieco'  : _p21_smap1.cdunieco
+            ,'smap1.cdramo'   : _p21_smap1.cdramo
+            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+            ,'smap1.estado'   : _p21_smap1.estado
+            ,'smap1.nmpoliza' : json.smap1.nmpoliza
+            ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
+            ,'smap1.cdagente' : _p21_fieldByName('cdagente').getValue()
+            ,'smap1.status'   : _p21_smap1.status
+        }
+    });
+}
+
+function _p21_mesacontrol(json)
+{
+    _p21_tabpanel().setLoading(true);
+    Ext.create('Ext.form.Panel').submit(
+    {
+        standardSubmit : true
+        ,url           : _p21_urlMesaControl
+        ,params        :
+        {
+            'smap1.gridTitle'      : 'Tareas'
+            ,'smap2.pv_cdtiptra_i' : 1
+        }
+    });
+}
+
+function _p21_turnar(status)
+{
+    debug('>_p21_turnar:',status);
+    var ventana=Ext.create('Ext.window.Window',
+    {
+        title        : 'Turnar tr&aacute;mite'
+        ,width       : 500
+        ,height      : 300
+        ,modal       : true
+        ,items       :
+        [
+            {
+                xtype       : 'textarea'
+                ,labelAlign : 'top'
+                ,fieldLabel : 'Comentarios'
+                ,itemId     : '_p21_turnarCommentsItem'
+                ,width      : 480
+                ,height     : 200
+            }
+        ]
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Turnar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function(button)
+                {
+                    ventana.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : _p21_urlActualizarStatus
+                        ,params :
+                        {
+                            'smap1.status'    : status
+                            ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
+                            ,'smap1.comments' : Ext.ComponentQuery.query('#_p21_turnarCommentsItem')[0].getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            ventana.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response:',json);
+                            if(json.success)
+                            {
+                                mensajeCorrecto('Turnado','Tr&aacute;mite turnado',function()
+                                {
+                                    button.up().up().destroy();
+                                    _p21_mesacontrol();
+                                });
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            ventana.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        ]
+    }).show();
+    centrarVentanaInterna(ventana);
+    debug('<_p21_turnar');
 }
 
 function _p21_fieldNtramite()
