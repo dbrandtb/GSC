@@ -347,17 +347,31 @@ Ext.onReady(function()
 		    	    	{
 		    	    		if(this.up().up().isValid())
 		    	    		{
-			    	    		this.up().up().submit(
-			    	    		{
-			    	    			standardSubmit : true
-			    	    			,params        :
-			    	    			{
-			    	    				'smap1.cdramo'         : _4_smap1.cdramo
-			    	    	            ,'smap1.cdtipsit'      : _4_smap1.cdtipsit
-			    	    	            ,'smap1.gridTitle'     : _4_smap1.gridTitle
-			    	    	            ,'smap2.pv_cdtiptra_i' : mcdinInput['tiptra']
-			    	    			}
-			    	    		});
+		    	    			var params=
+		    	    			{
+		    	    				'smap1.pv_cdunieco_i'  : _fieldByName('smap2.pv_cdunieco_i').getValue()
+		    	    			    ,'smap1.pv_cdramo_i'   : _fieldByName('smap2.pv_cdramo_i').getValue()
+		    	                    ,'smap1.pv_cdtipsit_i' : _fieldByName('smap2.pv_cdtipsit_i').getValue()
+		    	                    ,'smap1.pv_estado_i'   : _fieldByName('smap2.pv_estado_i').getValue()
+		    	    			    ,'smap1.pv_nmpoliza_i' : _fieldByName('smap2.pv_nmpoliza_i').getValue()
+		    	                    ,'smap1.pv_cdagente_i' : _fieldByName('smap2.pv_cdagente_i').getValue()
+		    	    			    ,'smap1.pv_ntramite_i' : _fieldByName('smap2.pv_ntramite_i').getValue()
+		    	                    ,'smap1.pv_status_i'   : _fieldByName('smap2.pv_status_i').getValue()
+		    	                    ,'smap1.pv_fedesde_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_fehasta_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+		    	    			};
+		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
+		    	    	            if(success){
+		    	    	                var jsonResponse = Ext.decode(response.responseText);
+		    	    	                
+		    	    	                if(!jsonResponse.success) {
+		    	    	                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+		    	    	                }
+		    	    	            }else{
+		    	    	                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		    	    	            }
+		    	    	        }, mcdinGrid);
 		    	    		}
 		    	    		else
 		    	    		{
@@ -421,7 +435,7 @@ Ext.onReady(function()
                                     success  : function(form2, action)
                                     {
                                         form.setLoading(false);
-                                        Ext.Msg.show(
+                                        centrarVentanaInterna(Ext.Msg.show(
                                         {
                                             title    : 'Cambios guardados'
                                             ,msg     : 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ action.result.msgResult
@@ -430,7 +444,7 @@ Ext.onReady(function()
                                             {
                                             	_4_cambiarTiptra(mcdinInput['tiptra']);
                                             }
-                                        });    
+                                        }));
                                     }
                                     ,failure : function()
                                     {
