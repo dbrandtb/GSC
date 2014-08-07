@@ -1670,7 +1670,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             String maximo=rs.getString("MAXIMO");
             if(StringUtils.isNotBlank(maximo))
             {
-                result.setValue(maximo);
+            	if(StringUtils.isNotBlank(result.getCatalogo()))
+            	{
+            		result.setValue("'"+maximo+"'");
+            	}
+            	else
+                {
+            		result.setValue(maximo);
+                }
                 result.setMaxValue(maximo);
             }
 			
