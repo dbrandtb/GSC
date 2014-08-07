@@ -94,6 +94,13 @@ debug('_p21_ntramite:',_p21_ntramite);
 var _p21_ntramiteVacio = Ext.isEmpty(_p21_smap1.ntramiteVacio) ? false : _p21_smap1.ntramiteVacio;
 debug('_p21_ntramiteVacio:',_p21_ntramiteVacio);
 
+var _p21_editorNombreGrupo=
+{
+    xtype       : 'textfield'
+    ,allowBlank : false
+    ,minLength  : 3
+};
+
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p21_editorPlan.on('change',_p21_editorPlanChange);
 debug('_p21_editorPlan:',_p21_editorPlan);
@@ -218,6 +225,7 @@ Ext.onReady(function()
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                     ,handler : _p21_agregarGrupoClic
+                    ,hidden  : _p21_ntramite ? true : false
                 }
             ]
             ,columns :
@@ -231,7 +239,7 @@ Ext.onReady(function()
                     header     : 'Nombre'
                     ,dataIndex : 'nombre'
                     ,width     : 150
-                    ,editor    : 'textfield'
+                    ,editor    : _p21_editorNombreGrupo
                 }
                 ,{
                     header     : 'Plan'
@@ -378,7 +386,7 @@ Ext.onReady(function()
                     header     : 'Nombre'
                     ,dataIndex : 'nombre'
                     ,width     : 150
-                    ,editor    : 'textfield'
+                    ,editor    : _p21_editorNombreGrupo
                 }
                 ,{
                     header     : 'Plan'
@@ -650,6 +658,26 @@ Ext.onReady(function()
     
     ////// loaders //////
     _p21_fieldRfc().addListener('blur',_p21_rfcBlur);
+    
+    if(_p21_smap1.BLOQUEO_CONCEPTO=='S')
+    {
+        var items=Ext.ComponentQuery.query('[name]',_p21_tabConcepto());
+        $.each(items,function(i,item)
+        {
+            item.setReadOnly(true);
+        });
+    }
+    
+    if(_p21_smap1.BLOQUEO_EDITORES=='S')
+    {
+        _p21_editorNombreGrupo.readOnly=true;
+        _p21_editorPlan.setReadOnly(true);
+        _p21_editorSumaAseg.setReadOnly(true);
+        _p21_editorAyudaMater.setReadOnly(true);
+        _p21_editorAsisInter.setReadOnly(true);
+        _p21_editorEmerextr.setReadOnly(true);
+        _p21_editorDeducible.setReadOnly(true);
+    }
     
     if(_p21_ntramiteVacio)
     {
@@ -1770,7 +1798,7 @@ function _p21_generarTramiteClic(callback)
         }
     }
     
-    if(valido&&_p21_clasif==_p21_TARIFA_MODIFICADA)
+    if(valido&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
     {
         var mensajeDeError = 'Falta definir o guardar el detalle para el(los) grupo(s): ';
         _p21_storeGrupos.each(function(record)
@@ -2434,6 +2462,12 @@ function _p21_rfcBlur(field)
     debug('value:',value);
     
     var valido = true;
+    
+    if(valido)
+    {
+        valido = _p21_smap1.BLOQUEO_CONCEPTO=='N';
+    }
+    
     if(valido)
     {
         valido = value&&value.length>8&&value.length<14;
