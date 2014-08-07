@@ -58,6 +58,81 @@ function _4_onFolderClick(rowIndex)
     }).show();
 }
 
+function _4_solicitarEmision(row)
+{
+    _4_turnar(row,18,'Solicitar emisi&oacute;n');
+}
+
+function _4_turnar(row,status,titulo)
+{
+    debug('>_4_turnar',row,status,titulo);
+    var record = mcdinStore.getAt(row);
+    debug('record:',record);
+    var ventana=Ext.create('Ext.window.Window',
+    {
+        title        : titulo
+        ,width       : 500
+        ,height      : 300
+        ,modal       : true
+        ,items       :
+        [
+            {
+                xtype       : 'textarea'
+                ,labelAlign : 'top'
+                ,fieldLabel : 'Comentarios'
+                ,itemId     : 'mesConObsSus'
+                ,width      : 480
+                ,height     : 200
+            }
+        ]
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Turnar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function(button)
+                {
+                    ventana.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : mesConUrlUpdateStatus
+                        ,params :
+                        {
+                            'smap1.status'    : status
+                            ,'smap1.ntramite' : record.get('ntramite')
+                            ,'smap1.comments' : Ext.ComponentQuery.query('#mesConObsSus')[0].getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            ventana.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response:',json);
+                            if(json.success)
+                            {
+                                mensajeCorrecto('Turnado','Tr&aacute;mite turnado');
+                                button.up().up().destroy();
+                                loadMcdinStore();
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            ventana.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        ]
+    }).show();
+    centrarVentanaInterna(ventana);
+    debug('<_4_turnar');
+}
+
 function _4_onSuscripcionClick(row)
 {
 	debug('>_4_onSuscripcionClick',row);
