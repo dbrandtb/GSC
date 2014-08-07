@@ -16,12 +16,13 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.struts2.ServletActionContext;
@@ -50,6 +51,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private PantallasManager               pantallasManager;
 	private String                         mensaje;
 	private String                         errorMessage;
+	private MesaControlManager             mesaControlManager;
 	
 	private Map<String,Object>             params;
 	private String						   tmpNtramite;
@@ -697,6 +699,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				smap2.put("pv_status_i","-1");
 			}
+			if(rol.equals(RolSistema.AGENTE.getCdsisrol()))
+			{
+				smap2.put("pv_cdagente_i",mesaControlManager.cargarCdagentePorCdusuari(username));
+			}
 			////// para poner -1 por defecto //////
 			///////////////////////////////////////
 		}
@@ -982,6 +988,10 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setTmpNtramite(String tmpNtramite) {
 		this.tmpNtramite = tmpNtramite;
+	}
+
+	public void setMesaControlManager(MesaControlManager mesaControlManager) {
+		this.mesaControlManager = mesaControlManager;
 	}
 	
 }
