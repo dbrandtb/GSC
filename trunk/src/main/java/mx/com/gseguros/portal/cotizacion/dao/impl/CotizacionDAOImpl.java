@@ -406,4 +406,33 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarCensoCompleto(Map<String,String>params)throws Exception
+	{
+		ejecutaSP(new GuardarCensoCompleto(getDataSource()),params);
+	}
+	
+	protected class GuardarCensoCompleto extends StoredProcedure
+	{
+		protected GuardarCensoCompleto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_LAYOUT_CENSO_MS_COLEC_DEF");
+			declareParameter(new SqlParameter("censo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor04" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor05" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan1"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan2"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan3"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan4"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan5"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

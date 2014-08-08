@@ -2049,6 +2049,252 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String subirCensoCompleto()
+	{
+		logger.info(""
+				+ "\n################################"
+				+ "\n###### subirCensoCompleto ######"
+				+ "\n censo "+censo+""
+				+ "\n censoFileName "+censoFileName+""
+				+ "\n censoContentType "+censoContentType+""
+				+ "\n smap1 "+smap1
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = smap1.get("cdunieco");
+		String cdramo   = smap1.get("cdramo");
+		String estado   = smap1.get("estado");
+		String nmpoliza = smap1.get("nmpoliza");
+		String cdedo    = smap1.get("cdedo");
+		String cdmunici = smap1.get("cdmunici");
+		String cdplan1  = smap1.get("cdplan1");
+		String cdplan2  = smap1.get("cdplan2");
+		String cdplan3  = smap1.get("cdplan3");
+		String cdplan4  = smap1.get("cdplan4");
+		String cdplan5  = smap1.get("cdplan5");
+		
+		if(exito)
+		{
+			try
+			{	
+				FileInputStream input       = new FileInputStream(censo);
+				XSSFWorkbook    workbook    = new XSSFWorkbook(input);
+				XSSFSheet       sheet       = workbook.getSheetAt(0);
+				Long            timestamp   = System.currentTimeMillis();
+				String          nombreCenso = "censo_"+timestamp+"_"+nmpoliza+".txt";
+				
+				File        archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+				PrintStream output     = new PrintStream(archivoTxt);
+				
+				//Iterate through each rows one by one
+				logger.info(""
+						+ "\n##############################################"
+						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+						);
+	            Iterator<Row> rowIterator = sheet.iterator();
+	            while (rowIterator.hasNext()) 
+	            {
+	                Row row        = rowIterator.next();
+	                Date   auxDate = null;
+	                Cell   auxCell = null;
+	                
+	                logger.info("GRUPO: "+(
+	                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+	                		));
+	                output.print(
+	                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+	                		);
+	                
+	                logger.info("PARENTESCO: "+(
+	                		row.getCell(1).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(1).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("PATERNO: "+(
+	                		row.getCell(2).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(2).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("MATERNO: "+(
+	                		row.getCell(3).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(3).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("NOMBRE: "+(
+	                		row.getCell(4).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(4).getStringCellValue()+"|"
+	                		);
+	                
+	                auxCell=row.getCell(5);
+	                logger.info("SEGUNDO NOMBRE: "+(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		));
+	                output.print(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		);
+	                
+	                logger.info("SEXO: "+(
+	                		row.getCell(6).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(6).getStringCellValue()+"|"
+	                		);
+	                
+	                auxDate=row.getCell(7).getDateCellValue();
+	                logger.info("FECHA NACIMIENTO: "+(
+	                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+	                			));
+	                output.print(
+	                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+	                			);
+	                
+	                logger.info("COD POSTAL: "+(
+	                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+	                		));
+	                output.print(
+	                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+	                		);
+	                
+	                logger.info("ESTADO: "+(
+	                		row.getCell(9).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(9).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("MUNICIPIO: "+(
+	                		row.getCell(10).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(10).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("COLONIA: "+(
+	                		row.getCell(11).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(11).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("CALLE: "+(
+	                		row.getCell(12).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(12).getStringCellValue()+"|"
+	                		);
+	                
+	                logger.info("NUM EXT: "+(
+	                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+	                		));
+	                output.print(
+	                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+	                		);
+	                
+	                auxCell=row.getCell(14);
+	                logger.info("NUM INT: "+(
+	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+	                		));
+	                output.print(
+	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+	                		);
+	                
+	                logger.info("RFC: "+(
+	                		row.getCell(15).getStringCellValue()+"|"
+	                		));
+	                output.print(
+	                		row.getCell(15).getStringCellValue()+"|"
+	                		);
+	                
+	                auxCell=row.getCell(16);
+	                logger.info("CORREO: "+(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		));
+	                output.print(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		);
+	                
+	                auxCell=row.getCell(17);
+	                logger.info("TELEFONO: "+(
+	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+	                		));
+	                output.print(
+	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+	                		);
+	                
+	                auxCell=row.getCell(18);
+	                logger.info("IDENTIDAD: "+(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		));
+	                output.print(
+	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+	                		);
+	                
+	                output.println("");
+	                logger.info("** NUEVA_FILA **");
+	            }
+	            input.close();
+	            output.close();
+	            logger.info(""
+	            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+						+ "\n##############################################"
+						);
+				
+				exito = FTPSUtils.upload(
+						this.getText("dominio.server.layouts"),
+						this.getText("user.server.layouts"),
+						this.getText("pass.server.layouts"),
+						archivoTxt.getAbsolutePath(),
+						this.getText("directorio.server.layouts")+"/"+nombreCenso);
+				if(!exito)
+				{
+					logger.error("No se pudo pasar el archivo al servidor");
+					nombreCenso = null;
+					exito = true;
+				}
+				
+				if(exito)
+				{
+					cotizacionManager.guardarCensoCompleto(nombreCenso,
+							cdunieco  , cdramo  , estado
+							,nmpoliza , cdedo   , cdmunici
+							,cdplan1  , cdplan2 , cdplan3
+							,cdplan4  , cdplan5
+							);
+				}
+			}
+			catch(Exception ex)
+			{
+				long etimestamp = System.currentTimeMillis();
+				logger.error(etimestamp+" error mover censo",ex);
+				respuesta       = "Error al procesar censo #"+etimestamp;
+				respuestaOculta = ex.getMessage();
+				exito           = false;
+			}
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Se han complementado los asegurados";
+			respuestaOculta = "Todo OK";
+		}
+		
+		logger.info(""
+				+ "\n###### subirCensoCompleto ######"
+				+ "\n################################"
+				);
+		return SUCCESS;
+	}
+	
 	public String generarTramiteGrupo()
 	{
 		this.session=ActionContext.getContext().getSession();
