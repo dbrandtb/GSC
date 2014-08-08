@@ -441,6 +441,57 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return res;
 	}
 	
+	@Override
+	public void guardarCensoCompleto(
+			String  nombreCenso
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdedo
+			,String cdmunici
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5)throws Exception
+	{
+		logger.info(""
+				+ "\n##################################"
+				+ "\n###### guardarCensoCompleto ######"
+				+ "\nnombreCenso "+nombreCenso
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nmpoliza "+nmpoliza
+				+ "\ncdedo "+cdedo
+				+ "\ncdmunici "+cdmunici
+				+ "\ncdplan1 "+cdplan1
+				+ "\ncdplan2 "+cdplan2
+				+ "\ncdplan3 "+cdplan3
+				+ "\ncdplan4 "+cdplan4
+				+ "\ncdplan5 "+cdplan5
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("censo"     , nombreCenso);
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("otvalor04" , cdedo);
+		params.put("otvalor05" , cdmunici);
+		params.put("cdplan1"   , cdplan1);
+		params.put("cdplan2"   , cdplan2);
+		params.put("cdplan3"   , cdplan3);
+		params.put("cdplan4"   , cdplan4);
+		params.put("cdplan5"   , cdplan5);
+		cotizacionDAO.guardarCensoCompleto(params);
+		logger.info(""
+				+ "\n###### guardarCensoCompleto ######"
+				+ "\n##################################"
+				);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

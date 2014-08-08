@@ -33,6 +33,7 @@ Ext.override(Ext.form.TextField,
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                    />';
+var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"            />';
 var _p21_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo"           />';
 var _p21_urlObtenerDetalle               = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
 var _p21_urlComprar                      = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
@@ -654,6 +655,39 @@ Ext.onReady(function()
             }
         ]
     });
+    
+    if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
+    {
+        Ext.create('Ext.window.Window',
+        {
+            title           : 'Documentos del tr&aacute;mite ' + _p21_ntramite
+            ,closable       : false
+            ,width          : 300
+            ,height         : 300
+            ,autoScroll     : true
+            ,collapsible    : true
+            ,titleCollapse  : true
+            ,startCollapsed : true
+            ,resizable      : false
+            ,loader         :
+            {
+                scripts   : true
+                ,autoLoad : true
+                ,url      : _p21_urlVentanaDocumentos
+                ,params   :
+                {
+                    'smap1.cdunieco'  : _p21_smap1.cdunieco
+                    ,'smap1.cdramo'   : _p21_smap1.cdramo
+                    ,'smap1.estado'   : 'W'
+                    ,'smap1.nmpoliza' : '0'
+                    ,'smap1.nmsuplem' : '0'
+                    ,'smap1.nmsolici' : '0'
+                    ,'smap1.ntramite' : _p21_ntramite
+                    ,'smap1.tipomov'  : '0'
+                }
+            }
+        }).showAt(700, 0);
+    }
     ////// contenido //////
     
     ////// loaders //////
@@ -756,6 +790,7 @@ Ext.onReady(function()
                         {
                             debug('>callback linea');
                             _p21_construirLinea(0,0,true);
+                            _p21_setActiveConcepto();
                             var aux=resp.slist1.length;
                             var aux2=0;
                             _p21_tabpanel().setLoading(true);
@@ -816,13 +851,16 @@ Ext.onReady(function()
                             if(_p21_clasif==_p21_TARIFA_LINEA)
                             {
                                 _p21_construirLinea(0,0,true);
+                                _p21_setActiveConcepto();
                             }
                             else
                             {
                                 _p21_construirModificada(0,0,true);
+                                _p21_setActiveConcepto();
                             }
                             var aux=resp.slist1.length;
                             var aux2=0;
+                            debug('cargar:',aux);
                             _p21_tabpanel().setLoading(true);
                             for(var i=0;i<aux;i++)
                             {
@@ -845,6 +883,7 @@ Ext.onReady(function()
                                         if(tvalogars.exito)
                                         {
                                             aux2=aux2+1;
+                                            debug('cargadas:',aux2);
                                             var grupo=new _p21_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
                                             grupo.tvalogars=tvalogars.slist1;
                                             grupo.valido=true;
@@ -2043,15 +2082,16 @@ function _p21_mesacontrol(json)
     });
 }
 
-function _p21_turnar(status)
+function _p21_turnar(status,titulo,closable)
 {
     debug('>_p21_turnar:',status);
     var ventana=Ext.create('Ext.window.Window',
     {
-        title        : 'Turnar tr&aacute;mite'
+        title        : titulo ? titulo : 'Turnar tr&aacute;mite'
         ,width       : 500
         ,height      : 300
         ,modal       : true
+        ,closable    : closable==undefined ? true : closable
         ,items       :
         [
             {
@@ -2688,6 +2728,135 @@ function _p21_estiloEditores(cdplan)
         ,failure : errorComunicacion
     });
     debug('<_p21_estiloEditores');
+}
+
+function _p21_subirDetallePersonas()
+{
+    debug('>_p21_subirDetallePersonas');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title   : 'Cargar archivo de personas'
+        ,width  : 400
+        ,modal  : true
+        ,items  :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                url          : _p21_urlSubirCensoCompleto
+                ,items       :
+                [
+                    {
+                        xtype       : 'filefield'
+                        ,fieldLabel : 'Archivo'
+                        ,buttonText : 'Examinar...'
+                        ,buttonOnly : false
+                        ,name       : 'censo'
+                        ,labelAlign : 'top'
+                        ,width      : 330
+                        ,style      : 'margin:5px;'
+                        ,allowBlank : false
+                        ,msgTarget  : 'side'
+                        ,cAccept    : ['xls','xlsx']
+                        ,listeners  :
+                        {
+                            change : function(me)
+                            {
+                                var indexofPeriod = me.getValue().lastIndexOf("."),
+                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                {
+                                    centrarVentanaInterna(Ext.MessageBox.show(
+                                    {
+                                        title   : 'Error de tipo de archivo',
+                                        msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                        buttons : Ext.Msg.OK,
+                                        icon    : Ext.Msg.WARNING
+                                    }));
+                                    me.reset();
+                                }
+                            }
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Cargar archivo'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                        ,handler : function(button)
+                        {
+                            var form=button.up().up();
+                            
+                            var valido=form.isValid();
+                            if(!valido)
+                            {
+                                datosIncompletos();
+                            }
+                            
+                            if(valido)
+                            {
+                                
+                                var params=
+                                {
+                                    'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                    ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                    ,'smap1.estado'   : _p21_smap1.estado
+                                    ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                    ,'smap1.cdedo'    : _fieldByName('cdedo').getValue()
+                                    ,'smap1.cdmunici' : _fieldByName('cdmunici').getValue()
+                                };
+                                
+                                _p21_storeGrupos.each(function(record)
+                                {
+                                    params['smap1.cdplan'+record.get('letra')]=record.get('cdplan');
+                                });
+                                
+                                debug('parametros a enviar para censo completo:',params);
+                            
+                                form.setLoading(true);
+                                form.submit(
+                                {
+                                    params   : params
+                                    ,success : function(action,response)
+                                    {
+                                        form.setLoading(false);
+                                        var json=Ext.decode(response.response.responseText);
+                                        debug('json response:',json);
+                                        if(json.exito)
+                                        {
+                                            mensajeCorrecto('Datos guardados'
+                                                ,json.respuesta+'<br/>El tr&aacute;mite ahora pasar&aacute; a status "Completo"'
+                                                ,function()
+                                                {
+                                                    _p21_turnar(19,'Completar tr&aacute;mite',false);
+                                                }
+                                            );
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        form.setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                ]
+            })
+        ]
+    }).show());
+    debug('<_p21_subirDetallePersonas');
+}
+
+function _p21_emitir()
+{
+    mensajeWarning('En construcci&oacute;n');
 }
 ////// funciones //////
 </script>

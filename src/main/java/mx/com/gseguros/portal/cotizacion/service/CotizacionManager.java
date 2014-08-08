@@ -101,4 +101,17 @@ public interface CotizacionManager
 	
 	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception;
 	
+	public void guardarCensoCompleto(
+			String  nombreCenso
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdedo
+			,String cdmunici
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5)throws Exception;
 }
