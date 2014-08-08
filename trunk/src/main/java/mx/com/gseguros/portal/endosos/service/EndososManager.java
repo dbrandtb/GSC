@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.general.model.RespuestaVO;
+
 public interface EndososManager
 {
     public List<Map<String,String>>  obtenerEndosos(Map<String,String>params)                 throws Exception;
@@ -108,7 +110,17 @@ public interface EndososManager
 	 */
 	public String obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 	
-	public void                      validaEndosoAnterior(Map<String, String> params)         throws Exception;
+	/**
+	 * Valida si existe un endoso anterior pendiente
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param cdtipsup
+	 * @return
+	 */
+	public RespuestaVO validaEndosoAnterior(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsup);
+	
 	public void                      actualizaDeducibleValosit(
 			String cdunieco
 			,String cdramo
