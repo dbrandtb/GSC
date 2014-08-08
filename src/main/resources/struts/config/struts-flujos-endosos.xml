@@ -82,7 +82,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="endosoValositBasico" class="EndososAction" method="endosoValositBasico">
+        <action name="entrarEndosoValositBasico" class="EndososAction" method="entrarEndosoValositBasico">
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
         </action>
@@ -91,7 +91,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="endosoValositBasicoSimple" class="EndososAction" method="endosoValositBasicoSimple">
+        <action name="entrarEndosoValositBasicoSimple" class="EndososAction" method="entrarEndosoValositBasicoSimple">
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
         </action>

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 import org.apache.log4j.Logger;
 
@@ -332,13 +333,29 @@ public class EndososManagerImpl implements EndososManager
 		return ntramite;
 	}
 	
+	
 	@Override
-	public void validaEndosoAnterior(Map<String, String> params) throws Exception
-	{
-		log.debug("EndososManager validaEndosoAnterior params: "+params);
-		endososDAO.validaEndosoAnterior(params);
-		log.debug("EndososManager validaEndosoAnterior end");
+	public RespuestaVO validaEndosoAnterior(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsup) {
+		
+		RespuestaVO resp = new RespuestaVO();
+		try {
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("pv_cdunieco_i", cdunieco);
+			params.put("pv_cdramo_i"  , cdramo);
+			params.put("pv_estado_i"  , estado);
+			params.put("pv_nmpoliza_i", nmpoliza);
+			params.put("pv_cdtipsup_i", cdtipsup);
+			log.debug(new StringBuilder("EndososManager validaEndosoAnterior params: ").append(params).toString());
+			endososDAO.validaEndosoAnterior(params);
+			resp.setSuccess(true);
+		} catch(Exception ex) {
+			log.error(new StringBuilder().append("Error tratando de acceder a pantalla de endoso: ").append(cdtipsup).toString(), ex);
+			//resp.setSuccess(false); //No es necesario asignarle valor, un atributo boolean de una clase por default es false
+			resp.setMensaje(ex.getMessage());
+		}
+		return resp;
 	}
+	
 	
 	//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
 	@Override

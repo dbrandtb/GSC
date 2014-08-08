@@ -1100,7 +1100,7 @@ Ext.onReady(function()
                 }
 				,{
                     texto    : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
-                    ,liga    : '<s:url namespace="/endosos" action="endosoValositBasicoSimple" />'
+                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
                 }
                 ,{
@@ -1115,7 +1115,7 @@ Ext.onReady(function()
                 }
                 ,{
                     texto    : '4'//valosit
-                    ,liga    : '<s:url namespace="/endosos" action="endosoValositBasico" />'
+                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasico" />'
                     ,funcion : 'endosovalositbasico'
                 }
                 ,{
