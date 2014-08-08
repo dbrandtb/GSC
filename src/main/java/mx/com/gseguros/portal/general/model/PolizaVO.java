@@ -11,18 +11,39 @@ public class PolizaVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Unidad econ&oacute;mica de la p&oacute;liza
+	 */
 	private String cdunieco;
 	
+	/**
+	 * Ramo de la p&oacute;liza
+	 */
 	private String cdramo;
 	
+	/**
+	 * Estatus de la p&oacute;liza
+	 */
 	private String estado;
 	
+	/**
+	 * N&uacute;mero de p&oacute;liza
+	 */
 	private String nmpoliza;
 	
+	/**
+	 * N&uacute;mero de suplemento (imagen) de la p&oacute;liza 
+	 */
 	private String nmsuplem;
 	
+	/**
+	 * Tipo de situaci&oacute;n
+	 */
 	private String cdtipsit;
 	
+	/**
+	 * N&uacute;mero de situaci&oacute;n
+	 */
 	private String nmsituac;
 	
 	
@@ -54,7 +75,7 @@ public class PolizaVO implements Serializable {
 	
 	
 	//Getters and setters:
-
+	
 	public String getCdunieco() {
 		return cdunieco;
 	}
