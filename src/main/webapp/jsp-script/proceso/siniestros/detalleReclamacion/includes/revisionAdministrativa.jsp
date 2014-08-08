@@ -30,6 +30,7 @@ var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.ge
 var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 
 var _URL_MONTO_ARANCEL		= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
+var _URL_LISTA_COBERTURA 	= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
 
 var _Operacion;
 var _Nmordina;
@@ -228,20 +229,29 @@ Ext.onReady(function() {
     });
 	storeProveedor.load();
 
+ 
+ 	Ext.define('modelListadoCobertura',{
+        extend: 'Ext.data.Model',
+        fields: [	{type:'string',    name:'cdgarant'},			{type:'string',    name:'dsgarant'},              	{type:'string',    name:'ptcapita'}		]
+    });
+    
 	var storeCoberturas = Ext.create('Ext.data.Store',{
-        model: 'Generic',
+        model: 'modelListadoCobertura',
         autoLoad: true,
         proxy: {
             type: 'ajax',
-            url: _URL_CATALOGOS,
+            url: _URL_LISTA_COBERTURA,
             reader: {
                 type: 'json',
-                root: 'lista'
+                root: 'listaCoberturaPoliza'
             },
             extraParams: {
-                'catalogo' : _CATALOGO_COBERTURAS,
-                'params.cdramo' : _CDRAMO,
-                'params.cdtipsit' : _CDTIPSIT
+                'params.cdunieco'  : _CDUNIECO,
+	    		'params.estado'    : _ESTADO,
+	    		'params.cdramo'    : _CDRAMO,
+	    		'params.nmpoliza'  : _NMPOLIZA,
+	    		'params.nmsituac'  : _NMSITUAC,
+	            'params.cdgarant'  : null
             }
         }
 	});
@@ -391,8 +401,8 @@ Ext.onReady(function() {
             	xtype       : 'combo',
             	name        : 'params.cdgarant',
             	fieldLabel  : 'Cobertura',
-            	displayField: 'value',
-            	valueField  : 'key',
+            	displayField: 'dsgarant',
+            	valueField  : 'cdgarant',
             	allowBlank  : true,
                 forceSelection : true,
                 matchFieldWidth: false,
@@ -402,7 +412,7 @@ Ext.onReady(function() {
                 triggerAction  : 'all',
                 listeners: {
                 	select: function (combo, records, opts){
-                		var cdGarant =  records[0].get('key');
+                		var cdGarant =  records[0].get('cdgarant');
                 		storeSubcoberturas.load({
                 			params: {
                 				'params.cdgarant' : cdGarant
