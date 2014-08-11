@@ -119,6 +119,7 @@ var TipoTramite = {
     CancelacionPorPagoImprocedente : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@CANCELACION_POR_PAGO_IMPROCEDENTE.cdtiptra" />',
     CancelacionProrrata            : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@CANCELACION_PRORRATA.cdtiptra" />',
     EndosoParadoPorAutorizacion    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@ENDOSO_PARADO_POR_AUTORIZACION.cdtiptra" />',
+    EmisionEnEspera                : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@EMISION_EN_ESPERA.cdtiptra" />',
     ModificatorioAlta              : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@MODIFICATORIO_ALTA.cdtiptra" />',
     ModificatorioBaja              : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@MODIFICATORIO_BAJA.cdtiptra" />',
     PolizaNueva                    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@POLIZA_NUEVA.cdtiptra" />',

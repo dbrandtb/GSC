@@ -115,27 +115,27 @@ function _4_cambiarTiptra(cdtiptra)
 	var editable = '';
 	var titulo   = '';
 	
-	if(cdtiptra=='1')
+	if(cdtiptra == TipoTramite.PolizaNueva)
 	{
 		editable = 'si';
 		titulo   = 'Tareas';
 	}
-	else if(cdtiptra=='14')
+	else if(cdtiptra == TipoTramite.AutorizacionServicios)
     {
         editable = '';
         titulo   = 'Autorizaciones de servicios';
     }
-	else if(cdtiptra=='15')
+	else if(cdtiptra == TipoTramite.EndosoParadoPorAutorizacion)
     {
         editable = '';
         titulo   = 'Endosos en espera';
     }
-	else if(cdtiptra=='16')
+	else if(cdtiptra == TipoTramite.Siniestro)
     {
         editable = '';
         titulo   = 'Reclamaciones en proceso';
     }
-	else if(cdtiptra=='17')
+	else if(cdtiptra == TipoTramite.EmisionEnEspera)
     {
         editable = '';
         titulo   = 'Emisiones en espera';
