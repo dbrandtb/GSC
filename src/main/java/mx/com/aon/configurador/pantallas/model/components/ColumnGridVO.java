@@ -6,6 +6,7 @@ package mx.com.aon.configurador.pantallas.model.components;
 import java.io.Serializable;
 
 import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -20,55 +21,40 @@ import org.apache.log4j.Logger;
  */
 public class ColumnGridVO implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -4607527332222066663L;
     protected final transient Logger logger = Logger.getLogger(ColumnGridVO.class);
     
-    /**
-     * 
-     */
     private String header;
     
-    /**
-     * 
-     */
     private String dataIndex;
     
-    /**
-     * 
-     */
     private int width;
     
-    /**
-     * 
-     */
     private Boolean sortable;
     
-    /**
-     * 
-     */
     private String id;
     
-    /**
-     * 
-     */
     private boolean hidden;
     
    
-//Constructors
+    //Constructors
     
     @Override
     public String toString() {
         
         String jsonResult = JSONObject.fromObject(this).toString();
         
-       if (StringUtils.isBlank(header)) {
+        if (StringUtils.isBlank(header)) {
             return jsonResult;
         }
-        String jsonResult1 = "\"header\":\"" +  getHeader() + "\"" ;
-        String jsonResult2 = "\"header\":" + "'<span title=\"Detalle del plan\"; style=\"color:white;font-size:11px;font-family:Arial,Helvetica,sans-serif;\">' + ' ? ' + ' ' +'</span>' + '<span style=\"color:white;font-size:11px; text-decoration:underline; font-family:Arial,Helvetica,sans-serif;\">' + \" "  + getHeader() + " \" " + "+ '</span>'";
+        
+        String jsonResult1 = new StringBuilder("\"header\":\"").append(getHeader()).append("\"").toString();
+        
+        String jsonResult2 = new StringBuilder("\"header\":")
+        			.append("'<span title=\"Detalle del plan\"; style=\"color:white;font-size:11px;font-family:Arial,Helvetica,sans-serif;\">' + ' ? ' + ' ' +'</span>' + '<span style=\"color:white;font-size:11px; text-decoration:underline; font-family:Arial,Helvetica,sans-serif;\">' + \" ")
+        			.append(getHeader())
+        			.append(" \" ")
+        			.append("+ '</span>'").toString();
        
         jsonResult = jsonResult.replace(jsonResult1, jsonResult2);
         
@@ -90,7 +76,6 @@ public class ColumnGridVO implements Serializable {
         }
 
         return jsonResult.replace( "\"width\":100", "\"width\":"+ factor );
-        
     }
 
 
@@ -102,8 +87,7 @@ public class ColumnGridVO implements Serializable {
     }
     
     public ColumnGridVO(String header, String dataIndex, int width, 
-            Boolean sortable, String id, boolean hidden
-             ){
+            Boolean sortable, String id, boolean hidden) {
        
         this.header = header;
         this.dataIndex = dataIndex;
@@ -111,13 +95,7 @@ public class ColumnGridVO implements Serializable {
         this.sortable = sortable;
         this.id = id;
         this.hidden = hidden;
-        
-        
-        
     }
-    
-    
-    
 
     public String getDataIndex() {
         return dataIndex;
@@ -166,7 +144,5 @@ public class ColumnGridVO implements Serializable {
     public void setSortable(Boolean sortable) {
         this.sortable = sortable;
     }
-
-
 
 }
