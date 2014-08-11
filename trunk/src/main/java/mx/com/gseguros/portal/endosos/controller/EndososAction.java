@@ -4660,15 +4660,12 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			switch (enumTipoEndoso) {
+			case CORRECCION_DATOS_ASEGURADOS:
 			case CORRECCION_NOMBRE_Y_RFC:
 			case CAMBIO_DOMICILIO:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
-				
-				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, ntramiteEmi, cdtipsup);
-				
 				break;
 							
 			case ALTA_COBERTURAS:
