@@ -1970,14 +1970,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , "M");
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplemEmitida);
-				paramsGetDoc.put("pv_ntramite_i" , ntramite);
-				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,ntramite
+						,cdusuari
+						);
 				
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
@@ -2454,14 +2455,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , "M");
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplemEmitida);
-				paramsGetDoc.put("pv_ntramite_i" , ntramite);
-				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,ntramite
+						,cdusuari
+						);
 				
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
@@ -2765,14 +2767,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				try
 				{
-					Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-					paramsGetDoc.put("pv_cdunieco_i" , _cdunieco);
-					paramsGetDoc.put("pv_cdramo_i"   , _cdramo);
-					paramsGetDoc.put("pv_estado_i"   , "M");
-					paramsGetDoc.put("pv_nmpoliza_i" , _nmpoliza);
-					paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
-					paramsGetDoc.put("pv_ntramite_i" , ntramite);
-					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+							_cdunieco
+							,_cdramo
+							,"M"
+							,_nmpoliza
+							,_nmsuplem
+							,ntramite
+							,cdusuari
+							);
 					
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu)
@@ -3528,18 +3531,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String comments    = map1.get("comments");
 		logger.debug(comments);
 		String commentsM   = comments.replaceAll("\n", "%0A").
-				replaceAll("á", "%C3%A1").
-				replaceAll("é", "%C3%A9").
-				replaceAll("í", "%C3%AD").
-				replaceAll("ó", "%C3%B3").
-				replaceAll("ú", "%C3%BA").
-				replaceAll("ñ", "%C3%B1").
-				replaceAll("Á", "%C3%81").
-				replaceAll("É", "%C3%89").
-				replaceAll("Í", "%C3%8D").
-				replaceAll("Ó", "%C3%93").
-				replaceAll("Ú", "%C3%9A").
-				replaceAll("Ñ", "%C3%91");
+				replaceAll("ï¿½", "%C3%A1").
+				replaceAll("ï¿½", "%C3%A9").
+				replaceAll("ï¿½", "%C3%AD").
+				replaceAll("ï¿½", "%C3%B3").
+				replaceAll("ï¿½", "%C3%BA").
+				replaceAll("ï¿½", "%C3%B1").
+				replaceAll("ï¿½", "%C3%81").
+				replaceAll("ï¿½", "%C3%89").
+				replaceAll("ï¿½", "%C3%8D").
+				replaceAll("ï¿½", "%C3%93").
+				replaceAll("ï¿½", "%C3%9A").
+				replaceAll("ï¿½", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");

@@ -126,7 +126,15 @@ public interface KernelManagerSustituto {
 	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados guardarArchivoPersona(String cdperson, Date fecha, String cddocume, String dsdocume,String codidocu) throws ApplicationException;
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>params) throws ApplicationException;
-	public List<Map<String, String>> obtenerListaDocumentos(Map<String, String> paramsGetDoc) throws ApplicationException;
+	public List<Map<String, String>> obtenerListaDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite
+			,String cdusuari
+			) throws ApplicationException;
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException;
 	public WrapperResultados movMPoliage(Map<String, Object> param) throws ApplicationException;
 	public List<Map<String, String>> cargarTiposClausulasExclusion() throws ApplicationException;

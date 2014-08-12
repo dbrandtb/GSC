@@ -3440,15 +3440,16 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected ObtenerListaDocPolizaNueva(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_Imp_documentos");
-			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ntramite_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerListDocPolizaNuevaMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtenerListDocPolizaNuevaMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception

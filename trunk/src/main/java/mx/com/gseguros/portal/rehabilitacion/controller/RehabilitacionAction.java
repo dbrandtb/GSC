@@ -266,7 +266,8 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			String  estado         = smap1.get("pv_estado_i");
 			String  nmpoliza       = smap1.get("pv_nmpoliza_i");
 			String  fereinst       = smap1.get("pv_fereinst_i");
-			
+			UserVO  usuario        = (UserVO)session.get("USUARIO");
+			String  cdusuari       = usuario.getUser();
 			
 			Map<String,Object> resRehab = rehabilitacionManager.rehabilitarPoliza(smap1);
 			String nmsuplemRehab = (String)resRehab.get("pv_nmsuplem_o");
@@ -280,7 +281,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			String ntramite = null;
 			
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup,cdusuari);
 			
 			for(Map<String,String> docu:listaDocu)
 			{

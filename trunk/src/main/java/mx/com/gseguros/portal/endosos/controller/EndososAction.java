@@ -568,14 +568,15 @@ public class EndososAction extends PrincipalCoreAction
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-				paramsGetDoc.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-				paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-				paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-				paramsGetDoc.put("pv_nmsuplem_i" , respuestaEndosoNombres.get("pv_nmsuplem_o"));
-				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
-			    List<Map<String,String>>listaDocu = endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu = endososManager.reimprimeDocumentos(
+			    		(String)omap1.get("pv_cdunieco_i")
+			    		,(String)omap1.get("pv_cdramo_i")
+			    		,(String)omap1.get("pv_estado_i")
+			    		,(String)omap1.get("pv_nmpoliza_i")
+			    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
+			    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
+			    		,usuario.getUser()
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
@@ -734,7 +735,8 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
+				this.regeneraDocumentos(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
 				
 				// Ejecutamos el Web Service de Cliente Salud:
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
@@ -856,14 +858,15 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
-				    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-					paramsGetDoc.put("pv_cdunieco_i" , smap1.get("pv_cdunieco_i"));
-					paramsGetDoc.put("pv_cdramo_i"   , smap1.get("pv_cdramo_i"));
-					paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado_i"));
-					paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
-					paramsGetDoc.put("pv_nmsuplem_i" , resEnd.get("pv_nmsuplem_o"));
-					paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
-				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+				    		smap1.get("pv_cdunieco_i")
+				    		,smap1.get("pv_cdramo_i")
+				    		,smap1.get("pv_estado_i")
+				    		,smap1.get("pv_nmpoliza_i")
+				    		,resEnd.get("pv_nmsuplem_o")
+				    		,TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString()
+				    		,usuario.getUser()
+				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
@@ -1098,14 +1101,15 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , smap1.get("pv_cdunieco"));
-				paramsGetDoc.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
-				paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado"));
-				paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza"));
-				paramsGetDoc.put("pv_nmsuplem_i" , resEndDomi.get("pv_nmsuplem_o"));
-				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+			    		smap1.get("pv_cdunieco")
+			    		,smap1.get("pv_cdramo")
+			    		,smap1.get("pv_estado")
+			    		,smap1.get("pv_nmpoliza")
+			    		,resEndDomi.get("pv_nmsuplem_o")
+			    		,TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString()
+			    		,usuario.getUser()
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
@@ -1343,7 +1347,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// guardar persona datos fijos //////
 			/////////////////////////////////////////
 			
-			this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
+			this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, cdtipsit);
@@ -1751,18 +1755,21 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
-				    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-					paramsGetDoc.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-					paramsGetDoc.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-					paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-					paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-					paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+					String auxTipMov = null;
 					if(smap1.get("altabaja").equalsIgnoreCase("alta")) {
-						paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
+						auxTipMov = TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString();
 					} else {
-						paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
+						auxTipMov = TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString();
 					}
-				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+				    		(String)omap1.get("pv_cdunieco_i")
+				    		,(String)omap1.get("pv_cdramo_i")
+				    		,(String)omap1.get("pv_estado_i")
+				    		,(String)omap1.get("pv_nmpoliza_i")
+				    		,respEndCob.get("pv_nmsuplem_o")
+				    		,auxTipMov
+				    		,usuario.getUser()
+				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
@@ -2178,14 +2185,15 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
-				    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-					paramsGetDoc.put("pv_cdunieco_i" , smap1.get("cdunieco"));
-					paramsGetDoc.put("pv_cdramo_i"   , smap1.get("cdramo"));
-					paramsGetDoc.put("pv_estado_i"   , smap1.get("estado"));
-					paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
-					paramsGetDoc.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
-					paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
-				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+				    		smap1.get("cdunieco")
+				    		,smap1.get("cdramo")
+				    		,smap1.get("estado")
+				    		,smap1.get("nmpoliza")
+				    		,respEnd.get("pv_nmsuplem_o")
+				    		,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString()
+				    		,usuario.getUser()
+				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
@@ -2425,7 +2433,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
+				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
 				
 				// Ejecutamos el Web Service de Cliente Salud:
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
@@ -3582,16 +3590,17 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , estado);
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-				paramsGetDoc.put("pv_tipmov_i"   , alta 
-						? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
-						: TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,alta
+			    		    ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
+			    		    : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
+			    		,cdusuari
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -3982,14 +3991,15 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , estado);
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-				paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,cdtipsup
+			    		,cdusuari
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -4340,14 +4350,15 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , estado);
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-				paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,cdtipsup
+			    		,cdusuari
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -4574,6 +4585,8 @@ public class EndososAction extends PrincipalCoreAction
 			String ntramiteEnd = smap1.get("ntramiteend");
 			String status      = smap1.get("status");
 			String coment      = smap1.get("observacion");
+			UserVO usuario     = (UserVO)session.get("USUARIO");
+			String cdusuari    = usuario.getUser();
 			
 			kernelManager.mesaControlUpdateStatus(ntramiteEnd, status);
 			
@@ -4591,14 +4604,15 @@ public class EndososAction extends PrincipalCoreAction
 			///////////////////////////////////////
 		    ////// re generar los documentos //////
 		    /*///////////////////////////////////*/
-		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-			paramsGetDoc.put("pv_estado_i"   , estado);
-			paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-			paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-			paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
-		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+		    		cdunieco
+		    		,cdramo
+		    		,estado
+		    		,nmpoliza
+		    		,nmsuplem
+		    		,cdtipsup
+		    		,cdusuari
+		    		);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
 		    String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramiteEmi;
@@ -5063,14 +5077,15 @@ public class EndososAction extends PrincipalCoreAction
 				///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
-			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-				paramsGetDoc.put("pv_estado_i"   , estado);
-				paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString()
+			    		,cdusuari
+			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -5419,7 +5434,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
@@ -5714,7 +5729,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
@@ -5766,22 +5781,24 @@ public class EndososAction extends PrincipalCoreAction
 			,String nmpoliza
 			,String nmsuplem
 			,String cdtipsup
-			,String ntramite) throws Exception
+			,String ntramite
+			,String cdusuari) throws Exception
 	{
 		String nmsolici = null;
 		///////////////////////////////////////
 	    ////// re generar los documentos //////
 	    /*///////////////////////////////////*/
-	    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-		paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-		paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-		paramsGetDoc.put("pv_estado_i"   , estado);
-		paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
-		paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-		paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
 		
 		//PKG_CONSULTA.P_reImp_documentos
-	    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+	    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+	    		cdunieco
+	    		,cdramo
+	    		,estado
+	    		,nmpoliza
+	    		,nmsuplem
+	    		,cdtipsup
+	    		,cdusuari
+	    		);
 	    log.debug("documentos que se regeneran: "+listaDocu);
 	    
 	    if(StringUtils.isBlank(ntramite))
@@ -6034,7 +6051,7 @@ public class EndososAction extends PrincipalCoreAction
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
-				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup,cdusuari);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -6390,7 +6407,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
@@ -6622,7 +6639,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				// Regeneramos los documentos:
-				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
@@ -6938,7 +6955,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 	   			
 				// Regeneramos los documentos:
-	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 	   			
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
