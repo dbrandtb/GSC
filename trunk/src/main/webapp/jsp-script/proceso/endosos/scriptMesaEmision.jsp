@@ -58,6 +58,11 @@ function _4_onFolderClick(rowIndex)
     }).show();
 }
 
+function _4_rechazar(row)
+{
+    _4_turnar(row,4,'Rechazar tr&aacute;mite');
+}
+
 function _4_solicitarEmision(row)
 {
     _4_turnar(row,18,'Solicitar emisi&oacute;n');
@@ -89,7 +94,7 @@ function _4_turnar(row,status,titulo)
         ,buttons     :
         [
             {
-                text     : 'Turnar'
+                text     : 'Aceptar'
                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                 ,handler : function(button)
                 {
@@ -110,7 +115,7 @@ function _4_turnar(row,status,titulo)
                             debug('json response:',json);
                             if(json.success)
                             {
-                                mensajeCorrecto('Turnado','Tr&aacute;mite turnado');
+                                mensajeCorrecto('Tr&aacute;mite guardado','Tr&aacute;mite guardado');
                                 button.up().up().destroy();
                                 loadMcdinStore();
                             }
