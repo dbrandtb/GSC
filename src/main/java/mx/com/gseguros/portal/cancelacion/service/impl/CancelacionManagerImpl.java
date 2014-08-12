@@ -159,7 +159,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
 	 */
 	@Override
-	public List<Map<String, String>> reimprimeDocumentos(String cdunieco,String cdramo,String estado,String nmpoliza,String tipmov) throws Exception
+	public List<Map<String, String>> reimprimeDocumentos(String cdunieco,String cdramo,String estado,String nmpoliza,String tipmov,String cdusuari) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("PV_CDUNIECO_I" , cdunieco);
@@ -167,6 +167,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 		params.put("PV_ESTADO_I"   , estado);
 		params.put("PV_NMPOLIZA_I" , nmpoliza);
 		params.put("PV_TIPMOV_I"   , tipmov);
+		params.put("PV_CDUSUARI_I" , cdusuari);
 		log.debug("CancelacionManager reimprimeDocumentos params: "+params);
 		
 		List<Map<String,String>> lista = cancelacionDAO.reimprimeDocumentos(params);

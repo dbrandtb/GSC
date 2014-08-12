@@ -60,8 +60,24 @@ public class EndososManagerImpl implements EndososManager
 	 * PKG_CONSULTA.P_reImp_documentos
 	 */
 	@Override
-	public List<Map<String, String>> reimprimeDocumentos(Map<String, String> params) throws Exception
+	public List<Map<String, String>> reimprimeDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String tipmov
+			,String cdusuari
+			)throws Exception
 	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_tipmov_i"   , tipmov);
+		params.put("pv_cdusuari_i" , cdusuari);
 		log.debug("EndososManager reimprimeDocumentos params: "+params);
 		List<Map<String,String>> lista=endososDAO.reimprimeDocumentos(params);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);

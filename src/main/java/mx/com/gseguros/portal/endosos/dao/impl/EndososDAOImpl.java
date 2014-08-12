@@ -174,12 +174,13 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ReimprimeDocumentos(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_reImp_documentos");
-			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tipmov_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipmov_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

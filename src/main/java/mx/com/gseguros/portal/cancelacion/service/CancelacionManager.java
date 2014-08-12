@@ -48,5 +48,6 @@ public interface CancelacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String tipmov) throws Exception;
+			,String tipmov
+			,String cdusuari) throws Exception;
 }

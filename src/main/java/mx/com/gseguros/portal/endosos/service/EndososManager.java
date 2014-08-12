@@ -15,7 +15,15 @@ public interface EndososManager
     /**
      * PKG_CONSULTA.P_reImp_documentos
      */
-    public List<Map<String, String>> reimprimeDocumentos(Map<String, String> params)          throws Exception;
+    public List<Map<String, String>> reimprimeDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String tipmov
+			,String cdusuari
+			)          throws Exception;
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     public Map<String,String>        guardarEndosoCoberturas(Map<String,Object>params)        throws Exception;
 	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params)   throws Exception;
