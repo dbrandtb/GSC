@@ -55,6 +55,10 @@
        </action>
        
        <action name="subirCensoCompleto" class="CotizacionAction" method="subirCensoCompleto">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
            <result type="json" />
        </action>
        
@@ -91,6 +95,10 @@
        </action>
        
        <action name="cargarTarifasPorCobertura" class="CotizacionAction" method="cargarTarifasPorCobertura">
+           <result type="json" />
+       </action>
+       
+       <action name="emitirColectivo" class="CotizacionAction" method="emitirColectivo">
            <result type="json" />
        </action>
        

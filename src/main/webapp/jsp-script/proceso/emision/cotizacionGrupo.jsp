@@ -48,6 +48,12 @@ var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         
 var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
 var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
 var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
+var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"               />';
+var _p21_urlViewDoc                      = '<s:url namespace ="/documentos"     action="descargaDocInline"             />';
+
+var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
+var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
+var _p21_reportsServerUser       = '<s:text name="pass.servidor.reports"     />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -128,7 +134,7 @@ var _p21_TARIFA_MODIFICADA = 2;
 Ext.onReady(function()
 {
 
-    Ext.Ajax.timeout = 240000;
+    Ext.Ajax.timeout = 600000;
 
     ////// modelos //////
     Ext.define('_p21_modeloGrupo',
@@ -862,6 +868,10 @@ Ext.onReady(function()
                             var aux2=0;
                             debug('cargar:',aux);
                             _p21_tabpanel().setLoading(true);
+                            if(aux==0)
+                            {
+                                mensajeError('No hay grupos para cargar');
+                            }
                             for(var i=0;i<aux;i++)
                             {
                                 Ext.Ajax.request(
@@ -1866,7 +1876,6 @@ function _p21_generarTramiteClic(callback)
                 'smap1.timestamp' : timestamp
                 ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : ''
             }
-            ,timeout : 240000
             ,success : function()
             {
                 var conceptos = form.getValues();
@@ -1899,7 +1908,6 @@ function _p21_generarTramiteClic(callback)
                 Ext.Ajax.request(
                 {
                     url       : _p21_urlGenerarTramiteGrupo
-                    ,timeout  : 240000
                     ,jsonData :
                     {
                         smap1   : conceptos
@@ -2087,7 +2095,7 @@ function _p21_turnar(status,titulo,closable)
     debug('>_p21_turnar:',status);
     var ventana=Ext.create('Ext.window.Window',
     {
-        title        : titulo ? titulo : 'Turnar tr&aacute;mite'
+        title        : !Ext.isEmpty(titulo) ? titulo : 'Turnar tr&aacute;mite'
         ,width       : 500
         ,height      : 300
         ,modal       : true
@@ -2107,7 +2115,7 @@ function _p21_turnar(status,titulo,closable)
         ,buttons     :
         [
             {
-                text     : 'Turnar'
+                text     : 'Aceptar'
                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                 ,handler : function(button)
                 {
@@ -2128,7 +2136,7 @@ function _p21_turnar(status,titulo,closable)
                             debug('json response:',json);
                             if(json.success)
                             {
-                                mensajeCorrecto('Turnado','Tr&aacute;mite turnado',function()
+                                mensajeCorrecto('Tr&aacute;mite guardado','Tr&aacute;mite guardado',function()
                                 {
                                     button.up().up().destroy();
                                     _p21_mesacontrol();
@@ -2742,7 +2750,7 @@ function _p21_subirDetallePersonas()
         [
             Ext.create('Ext.form.Panel',
             {
-                url          : _p21_urlSubirCensoCompleto
+                url          : _p21_urlSubirCenso
                 ,items       :
                 [
                     {
@@ -2796,47 +2804,65 @@ function _p21_subirDetallePersonas()
                             
                             if(valido)
                             {
-                                
-                                var params=
-                                {
-                                    'smap1.cdunieco'  : _p21_smap1.cdunieco
-                                    ,'smap1.cdramo'   : _p21_smap1.cdramo
-                                    ,'smap1.estado'   : _p21_smap1.estado
-                                    ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                                    ,'smap1.cdedo'    : _fieldByName('cdedo').getValue()
-                                    ,'smap1.cdmunici' : _fieldByName('cdmunici').getValue()
-                                };
-                                
-                                _p21_storeGrupos.each(function(record)
-                                {
-                                    params['smap1.cdplan'+record.get('letra')]=record.get('cdplan');
-                                });
-                                
-                                debug('parametros a enviar para censo completo:',params);
-                            
                                 form.setLoading(true);
+                                var timestamp = new Date().getTime();
                                 form.submit(
                                 {
-                                    params   : params
-                                    ,success : function(action,response)
+                                    params   :
                                     {
-                                        form.setLoading(false);
-                                        var json=Ext.decode(response.response.responseText);
-                                        debug('json response:',json);
-                                        if(json.exito)
+                                        'smap1.timestamp' : timestamp
+                                        ,'smap1.ntramite' : ''
+                                    }
+                                    ,success : function()
+                                    {
+                                        var conceptos = _p21_tabConcepto().down('[xtype=form]').getValues();
+                                        conceptos['timestamp']       = timestamp;
+                                        conceptos['clasif']          = _p21_clasif;
+                                        conceptos['LINEA_EXTENDIDA'] = _p21_smap1.LINEA_EXTENDIDA;
+                                        conceptos['cdunieco']        = _p21_smap1.cdunieco;
+                                        conceptos['cdramo']          = _p21_smap1.cdramo;
+                                        conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
+                                        conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
+                                        var grupos = [];
+                                        _p21_storeGrupos.each(function(record)
                                         {
-                                            mensajeCorrecto('Datos guardados'
-                                                ,json.respuesta+'<br/>El tr&aacute;mite ahora pasar&aacute; a status "Completo"'
-                                                ,function()
+                                            var grupo = record.data;
+                                            grupo['tvalogars']=record.tvalogars;
+                                            grupos.push(grupo);
+                                        });
+                                        Ext.Ajax.request(
+                                        {
+                                            url       : _p21_urlSubirCensoCompleto
+                                            ,jsonData :
+                                            {
+                                                smap1   : conceptos
+                                                ,olist1 : grupos
+                                            }
+                                            ,success  : function(response)
+                                            {
+                                                form.setLoading(false);
+                                                var json=Ext.decode(response.responseText);
+                                                debug('subir censo completo response:',json);
+                                                if(json.exito)
                                                 {
-                                                    _p21_turnar(19,'Completar tr&aacute;mite',false);
+                                                    mensajeCorrecto('Datos guardados','Los datos de asegurados se guardaron y ahora<br/>'
+                                                           +'el tr&aacute;mite pasar&aacute; a status Completo'
+                                                    ,function()
+                                                    {
+                                                        _p21_turnar(19,'Tr&aacute;mite completo',false);
+                                                    });
                                                 }
-                                            );
-                                        }
-                                        else
-                                        {
-                                            mensajeError(json.respuesta);
-                                        }
+                                                else
+                                                {
+                                                    mensajeError(json.respuesta);
+                                                }
+                                            }
+                                            ,failure  : function()
+                                            {
+                                                form.setLoading(false);
+                                                errorComunicacion();
+                                            }
+                                        });
                                     }
                                     ,failure : function()
                                     {
@@ -2856,7 +2882,85 @@ function _p21_subirDetallePersonas()
 
 function _p21_emitir()
 {
-    mensajeWarning('En construcci&oacute;n');
+    var params =
+    {
+        'smap1.cdunieco'  : _p21_smap1.cdunieco
+        ,'smap1.cdramo'   : _p21_smap1.cdramo
+        ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+        ,'smap1.estado'   : _p21_smap1.estado
+        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+        ,'smap1.ntramite' : _p21_ntramite
+    };
+    debug('parametros para emitir:',params);
+    _p21_tabpanel().setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p21_urlEmitir
+        ,params  : params
+        ,success : function(response)
+        {
+            _p21_tabpanel().setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('emision json response:',json);
+        }
+        ,failure : function()
+        {
+            _p21_tabpanel().setLoading(false);
+            errorComunicacion();
+        }
+    });
+}
+
+function _p21_imprimir()
+{
+    debug('>_p21_imprimir');
+    var urlRequestImpCotiza = _p21_urlImprimirCotiza
+            + '?p_unieco='      + _p21_smap1.cdunieco
+            + '&p_ramo='        + _p21_smap1.cdramo
+            + '&p_estado=W'
+            + '&p_poliza='      + _p21_smap1.nmpoliza
+            + '&p_suplem=0'
+            + '&p_cdplan='
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p21_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p21_nombreReporteCotizacion
+            + "&paramform=no";
+    debug(urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p21_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p21_imprimir');
 }
 ////// funciones //////
 </script>
