@@ -25,7 +25,6 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 
@@ -33,6 +32,7 @@ import org.apache.log4j.Logger;
  *
  * @author Jair
  */
+@Deprecated
 public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvoke implements KernelManagerSustituto
 {
     

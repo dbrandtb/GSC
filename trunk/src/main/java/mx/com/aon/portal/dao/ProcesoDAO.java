@@ -47,6 +47,7 @@ import org.springframework.jdbc.core.SqlParameter;
  * @see AbstractDAO
  * 
  */
+@Deprecated
 public class ProcesoDAO extends AbstractDAO {
 
 	private static Logger logger = Logger.getLogger(ProcesoDAO.class);
