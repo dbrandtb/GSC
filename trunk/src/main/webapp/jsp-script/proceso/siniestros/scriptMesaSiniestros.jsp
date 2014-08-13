@@ -521,7 +521,7 @@ var msgWindow;
 								params['params.nmsituac']    = json[0].nmsituac;
 								
 								urlDestino = _urlSeleccionCobertura;
-								params['params.cdunieco']  = record.get('cdsucdoc');
+								//params['params.cdunieco']  = record.get('cdsucdoc');
 								params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
 								debug('urlDestino_3 :',urlDestino);
 								debug('params_3 :',params);
