@@ -83,7 +83,8 @@ Ext.onReady(function() {
                  {type:'string',    name:'APLICA_IVA'},
                  {type:'string',    name:'ANTES_DESPUES'},
                  {type:'string',    name:'CDPRESTA'},
-                 {type:'string',    name:'CODRECLAM'}
+                 {type:'string',    name:'CODRECLAM'},
+                 {type:'string',    name:'IVARETENIDO'}
 				]
     });
 	
@@ -340,12 +341,16 @@ Ext.onReady(function() {
 	    		afterrender : function(){
 	    			var aplicaIva= panelEdicionFacturas.items.items[13];
 	    			var Antes_despues= panelEdicionFacturas.items.items[14];
+	    			var iva_aplicado = panelEdicionFacturas.items.items[15];
+	    			
 	    			aplicaIva.on('change',function(){
                     	if(this.value == "S")
                    		{
-                    		Antes_despues.show();
+                   			Antes_despues.show();
+                    		iva_aplicado.show();
                    		}else{
                    			Antes_despues.hide();
+                   			iva_aplicado.hide();
                    		}
                     })
 	       	}
@@ -1100,13 +1105,19 @@ Ext.define('EditorFacturas', {
  				},{
  					header : 'Aplica IVa',
  					dataIndex : 'APLICA_IVA',
- 					width : 150,
- 					hidden: true
+ 					width : 150
+ 					,hidden: true
  				},{
  					header : 'Antes_DEspues',
  					dataIndex : 'ANTES_DESPUES',
- 					width : 150,
- 					hidden: true
+ 					width : 150
+ 					,hidden: true
+ 				},
+ 				{
+ 					header : 'IVA Retenido',
+ 					dataIndex : 'IVARETENIDO',
+ 					width : 150
+ 					,hidden: true
  				},{
  					header : 'CDPRESTA',
  					dataIndex : 'CDPRESTA',
@@ -1161,6 +1172,7 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
  		panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue("S");
 		panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue("D");
+ 		panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
  		//xca<<<<
  		//panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
  		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue('0');
@@ -1256,15 +1268,24 @@ Ext.define('EditorFacturas', {
  		if(record.get('APLICA_IVA') == null || record.get('APLICA_IVA') ==""){
  			panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue("S");
  			panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue("D");
+ 			panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
  		}else{
  			panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue(record.get('APLICA_IVA'));
  	 		panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue(record.get('ANTES_DESPUES'));
+ 	 		panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue(record.get('IVARETENIDO'));
  	 		
  	 		panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
+ 	 		panelEdicionFacturas.query('combo[name=parametros.pv_otvalor03]')[0].show();
  	 		if(record.get('APLICA_IVA') =="S"){
+ 	 			if(record.get('IVARETENIDO')== null || record.get('IVARETENIDO') ==''){
+ 	 				panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
+ 	 			}
  	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
+ 	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor03]')[0].show();
  	 		}else{
+ 	 			panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
  	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].hide();
+ 	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor03]')[0].hide();
  	 		}
  		}
  		

@@ -462,6 +462,12 @@ Ext.onReady(function()
                             ,flex      : 1
                         }
             		    ,{
+                            header     : 'IVA RETENIDO'
+                            ,dataIndex : 'IVARETENIDO'
+                            ,renderer  : Ext.util.Format.usMoney
+                            ,flex      : 1
+                        }
+            		    ,{
                             header     : 'Importe autom&aacute;tico'
                             ,dataIndex : 'PTIMPORTAUTO'
                             ,renderer  : Ext.util.Format.usMoney
@@ -540,7 +546,7 @@ Ext.onReady(function()
 	                        xtype       : 'displayfield'
 	                        ,fieldLabel : 'SUBTOTAL'
 	                        ,labelWidth : 200
-	                        ,value      : (_p12_lpdir[indice].total) -( _p12_lpdir[indice].ivaTotalMostrar)
+	                        ,value      : ((_p12_lpdir[indice].total)*1) + ((_p12_lpdir[indice].iSRMostrar)*1) + ((_p12_lpdir[indice].ivaRetenidoMostrar)*1) - ((_p12_lpdir[indice].ivaTotalMostrar)*1)
 	                        ,valueToRaw : function(value)
 	                        {
 	                        	return Ext.util.Format.usMoney(value);
@@ -551,6 +557,27 @@ Ext.onReady(function()
 	                        ,fieldLabel : 'IVA'
 	                        ,labelWidth : 200
 	                        ,value      : _p12_lpdir[indice].ivaTotalMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'IVA Retenido'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].ivaRetenidoMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'ISR'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].iSRMostrar
 	                        ,valueToRaw : function(value)
 	                        {
 	                        	return Ext.util.Format.usMoney(value);

@@ -2545,6 +2545,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double penalizacionCirculoHosp =0d;
     				String aplicaIVA= "S";
 					String seleccionAplica= "D";
+					String ivaRetenido= "N";
 					double deducibleSiniestroIte      = 0d;
     				double copagoAplicadoSiniestroIte = 0d;
     				double cantidadCopagoSiniestroIte = 0d;
@@ -2616,10 +2617,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				
     				//5.- Obtenemos información adicional de las facturas, para realizar la validación de aplica IVA o No
     				List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
-    				
     				if(listaFactura.get(0).get("APLICA_IVA") != null){
     					aplicaIVA= listaFactura.get(0).get("APLICA_IVA");
     					seleccionAplica =listaFactura.get(0).get("ANTES_DESPUES");
+    					ivaRetenido =listaFactura.get(0).get("IVARETENIDO");
     				}
     				
     				String sDeducibleSiniestroIte     = copagoDeducibleSiniestroIte.get("DEDUCIBLE").replace(",","");
@@ -2710,6 +2711,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				mpdir.put("total","0");
     				mpdir.put("totalcedular","0");
     				mpdir.put("ivaTotalMostrar","0");
+    				mpdir.put("ivaRetenidoMostrar","0");
+    				mpdir.put("iSRMostrar","0");
 					lpdir.add(mpdir);
     				//PAGO DIRECTO --> CONCEPTOS
     				for(Map<String,String>concepto : conceptos)
@@ -2860,8 +2863,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			            		if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
     			            			double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);//++
     			            			row.put("IVAAPLICA",iVaaplicaAntes+"");
-    			            			//subtotalDescuento=subtotalDescuento - iVaaplicaAntes;//++
-    			            			//row.put("SUBTTDESCUENTO",subtotalDescuento +"");
     			            		}
     			            	}
     							
@@ -2903,6 +2904,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double subtotalImpuestos = subtotalCopago-(israplicado+0d);//cedularaplicado);//++
     							logger.debug("subtotalImpuestos "+subtotalImpuestos);
     							
+    							double totalISRMostrar = Double.parseDouble(mpdir.get("iSRMostrar"));
+    							logger.debug("base totalISRMostrar"+totalISRMostrar);
+    							totalISRMostrar += israplicado;
+    							//logger.debug("new totalISRMostrar"+totalISRMostrar);
+    							mpdir.put("iSRMostrar",totalISRMostrar+"");
+    							
     							////// modificado
     							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
     							logger.debug("cedularaplicado "+cedularaplicado);
@@ -2913,31 +2920,59 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
     							
     			            	double ivaaplicado =0d;
+    			            	double ivaRetenidos =0d;
     			            	double ptimportauto =0d;
+    			            	//logger.debug("#####...aplicaIVA.....--->"+aplicaIVA);
+    			            	
     			            	if(aplicaIVA.equalsIgnoreCase("S")){
-    			            		if(seleccionAplica.equalsIgnoreCase("D")){ 
-    			            			ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
+    			            		if(seleccionAplica.equalsIgnoreCase("D")){
+    			            			ivaaplicado       = subtotalCopago*(ivaprov/100d);//++
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    	    							ptimportauto      = subtotalImpuestos+ivaaplicado;//++
+    			            			//logger.debug("#####...ivaRetenido.....--->"+ivaRetenido);
+    			            			if(ivaRetenido.equalsIgnoreCase("S")){
+    			            				ivaRetenidos      = ((2d * ivaaplicado)/3);
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}else{
+    										ivaRetenidos      = 0d;
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}
+    			            			ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado;//++
     	    							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}else{
     			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    			            			ptimportauto      = subtotalImpuestos+ivaaplicado; //++
+    			            			if(ivaRetenido.equalsIgnoreCase("S")){
+    			            				ivaRetenidos      = ((2d * ivaaplicado)/3);
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}else{
+    										ivaRetenidos      = 0d;
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}
+    			            			ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado; //++
             							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}
     			            	}else{
     			            		ivaaplicado       = 0d;//++
+    			            		ivaRetenidos      = 0d;
         							row.put("IVAAPLICA",ivaaplicado+"");
-        							ptimportauto      = subtotalImpuestos+ivaaplicado;//++
+        							row.put("IVARETENIDO",ivaRetenidos+"");
+        							ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado;//++
         							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            	}
-    							
+    			            	
+    			            	
 								double totalIVAMostrar = Double.parseDouble(mpdir.get("ivaTotalMostrar"));
     							logger.debug("base totalIVAMostrar"+totalIVAMostrar);
     							totalIVAMostrar += ivaaplicado;
     							logger.debug("new totalIVAMostrar"+totalIVAMostrar);
     							mpdir.put("ivaTotalMostrar",totalIVAMostrar+"");
+    							
+    							
+    							double totalIVARetenidoMostrar = Double.parseDouble(mpdir.get("ivaRetenidoMostrar"));
+    							logger.debug("base totalIVARetenidoMostrar"+totalIVARetenidoMostrar);
+    							totalIVARetenidoMostrar += ivaRetenidos;
+    							logger.debug("new totalIVAMostrar"+totalIVARetenidoMostrar);
+    							mpdir.put("ivaRetenidoMostrar",totalIVARetenidoMostrar+"");
     							
     							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
     							logger.debug("ptimport "+ptimport);
@@ -3085,6 +3120,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
 	    						ivaSiniestroIte+= Double.valueOf(concepto.get("IVAAPLICA"));
+	    						isrSiniestroIte += ((2 * Double.valueOf(concepto.get("IVAAPLICA")))/3);
 	    					}
 	    				}
 						
@@ -3094,12 +3130,20 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 							}else{
 								importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttDescuentoSiniestroIte)).toString());
 							}
+							//logger.debug("####VALOR DE IVA RETENIDO ##### ---> "+ivaRetenido);
+							if(ivaRetenido.equalsIgnoreCase("S")){
+								importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(isrSiniestroIte)    ).toString());
+							}else{
+								importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(0d)    ).toString());
+							}
+							
 						}else{
 							importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttcopagototalSiniestroIte)).toString());
+							importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(0d)    ).toString());
 						}
 						
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
-						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
+						//importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(subttISRSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
 						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
