@@ -49,7 +49,8 @@ var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         
 var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
 var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"               />';
-var _p21_urlViewDoc                      = '<s:url namespace ="/documentos"     action="descargaDocInline"             />';
+var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"             />';
+var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"   />';
 
 var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -208,6 +209,12 @@ Ext.onReady(function()
         ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"
         ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT']
     });
+    
+    Ext.define('_p21_modeloExtraprima',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : [ <s:property value='%{getImap().containsKey("extraprimasFields")?getImap().get("extraprimasFields").toString():""}' /> ]
+    });
     ////// modelos //////
     
     ////// stores //////
@@ -218,6 +225,34 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+    var botoneslinea = [];
+    if(_p21_smap1.DETALLE_LINEA=='S')
+    {
+        botoneslinea.push(
+        {
+            tooltip   : 'Editar'
+            ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
+            ,handler  : _p21_editarGrupoClic
+        });
+    }
+    if(!_p21_ntramite)
+    {
+        botoneslinea.push(
+        {
+            tooltip  : 'Borrar subgrupo'
+            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler : _p21_borrarGrupoClic
+        });
+    }
+    if(_p21_smap1.EXTRAPRIMAS=='S')
+    {
+        botoneslinea.push(
+        {
+            tooltip  : 'Revisar asegurados'
+            ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+            ,handler : _p21_revisarAseguradosClic
+        });
+    }
     _p21_tabGruposLineal =
     {
         title     : 'RESUMEN SUBGRUPOS'
@@ -313,23 +348,11 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    xtype  : 'actioncolumn'
-                    ,width : 50
-                    ,items :
-                    [
-                        {
-                            tooltip   : 'Editar'
-                            ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
-                            ,handler  : _p21_editarGrupoClic
-                            ,disabled : _p21_smap1.DETALLE_LINEA=='N'
-                        }
-                        ,{
-                            tooltip   : 'Borrar subgrupo'
-                            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
-                            ,handler  : _p21_borrarGrupoClic
-                            ,disabled : _p21_ntramite ? true : false
-                        }
-                    ]
+                    xtype         : 'actioncolumn'
+                    ,sortable     : false
+                    ,menuDisabled : true
+                    ,width        : (botoneslinea.length*20) + 10
+                    ,items        : botoneslinea
                 }
             ]
             ,store   : _p21_storeGrupos
@@ -365,6 +388,23 @@ Ext.onReady(function()
         ]
     };
     
+    var botonesModificada =
+    [
+        {
+            tooltip  : 'Editar'
+            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+            ,handler : _p21_editarGrupoClic
+        }
+    ];
+    if(!_p21_ntramite)
+    {
+        botonesModificada.push(
+        {
+            tooltip   : 'Borrar subgrupo'
+            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler  : _p21_borrarGrupoClic
+        });
+    }
     _p21_tabGruposModifi =
     {
         title     : 'RESUMEN SUBGRUPOS'
@@ -416,22 +456,11 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    xtype  : 'actioncolumn'
-                    ,width : 50
-                    ,items :
-                    [
-                        {
-                            tooltip  : 'Editar'
-                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-                            ,handler : _p21_editarGrupoClic
-                        }
-                        ,{
-                            tooltip   : 'Borrar subgrupo'
-                            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
-                            ,handler  : _p21_borrarGrupoClic
-                            ,disabled : _p21_ntramite ? true : false
-                        }
-                    ]
+                    xtype         : 'actioncolumn'
+                    ,sortable     : false
+                    ,menuDisabled : true
+                    ,width        : (botonesModificada.length*20) + 10
+                    ,items        : botonesModificada
                 }
             ]
             ,store   : _p21_storeGrupos
@@ -1643,6 +1672,20 @@ function _p21_editarGrupoClic(grid,rowIndex)
     }
     
     debug('<_p21_editarGrupoClic');
+}
+
+function _p21_quitarTabExtraprima(letra)
+{
+    debug('>_p21_quitarTabExtraprima letra:',letra);
+    var tabsExtraprima = Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']');
+    if(tabsExtraprima.length>0)
+    {
+        for(var i=0;i<tabsExtraprima.length;i++)
+        {
+            tabsExtraprima[i].destroy();
+        }
+    }
+    debug('<_p21_quitarTabExtraprima');
 }
 
 function _p21_quitarTabsDetalleGrupo(letraGrupo)
@@ -2961,6 +3004,60 @@ function _p21_imprimir()
         }
     }).show());
     debug('<_p21_imprimir');
+}
+
+function _p21_revisarAseguradosClic(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p21_revisarAseguradosClic record:',record);
+    _p21_quitarTabExtraprima(record.get('letra'));
+    _p21_agregarTab(
+    {
+        title                 : 'REVISI&Oacute;N DE SUBGRUPO '+record.get('letra')
+        ,itemId               : 'id'+(new Date().getTime())
+        ,extraprimaLetraGrupo : record.get('letra')
+        ,defaults             : { style : 'margin:5px;' }
+        ,border               : 0
+        ,items                :
+        [
+            Ext.create('Ext.grid.Panel',
+            {
+                columns    : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
+                ,minHeight : 150
+                ,plugins   : Ext.create('Ext.grid.plugin.RowEditing',
+                {
+                    clicksToEdit  : 1
+                    ,errorSummary : false
+                })
+                ,store     : Ext.create('Ext.data.Store',
+                {
+                    model     : '_p21_modeloExtraprima'
+                    ,autoLoad : true
+                    ,proxy    :
+                    {
+                        type         : 'ajax'
+                        ,url         : _p21_urlCargarAseguradosExtraprimas
+                        ,extraParams :
+                        {
+                            'smap1.cdunieco'  : _p21_smap1.cdunieco
+                            ,'smap1.cdramo'   : _p21_smap1.cdramo
+                            ,'smap1.estado'   : _p21_smap1.estado
+                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                            ,'smap1.nmsuplem' : '0'
+                            ,'smap1.cdgrupo'  : record.get('letra')
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
+                        }
+                    }
+                })
+                ,viewConfig : viewConfigAutoSize
+            })
+        ]
+    });
+    debug('<_p21_revisarAseguradosClic');
 }
 ////// funciones //////
 </script>

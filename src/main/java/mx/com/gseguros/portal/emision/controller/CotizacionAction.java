@@ -2011,6 +2011,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
 			}
 			
+			//campos para extraprimas
+			if(exito && smap1.containsKey("EXTRAPRIMAS")
+					 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
+					 && smap1.get("EXTRAPRIMAS").equals("S"))
+			{
+				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+				imap.put("extraprimasColumns" , gc.getColumns());
+				imap.put("extraprimasFields"  , gc.getFields());
+			}
+			
 			if(exito)
 			{
 				respuesta       = "Todo OK";
@@ -3733,6 +3747,46 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### cargarTarifasPorCobertura ######"
 				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarAseguradosExtraprimas()
+	{
+		logger.debug(""
+				+ "\n#########################################"
+				+ "\n###### cargarAseguradosExtraprimas ######"
+				+ "\nsmap1: "+smap1
+				);
+		success = true;
+		exito   = true;
+		
+		if(exito)
+		{
+			try
+			{
+			    slist1=cotizacionManager.cargarAseguradosExtraprimas(
+			    		smap1.get("cdunieco")
+			    		,smap1.get("cdramo")
+			    		,smap1.get("estado")
+			    		,smap1.get("nmpoliza")
+			    		,smap1.get("nmsuplem")
+			    		,smap1.get("cdgrupo")
+			    		);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar extraprimas #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.debug(""
+				+ "\n###### cargarAseguradosExtraprimas ######"
+				+ "\n#########################################"
 				);
 		return SUCCESS;
 	}

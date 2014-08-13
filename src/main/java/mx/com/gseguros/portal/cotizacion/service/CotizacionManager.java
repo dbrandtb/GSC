@@ -114,4 +114,12 @@ public interface CotizacionManager
 			,String cdplan3
 			,String cdplan4
 			,String cdplan5)throws Exception;
+	
+	public List<Map<String,String>>cargarAseguradosExtraprimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo)throws Exception;
 }

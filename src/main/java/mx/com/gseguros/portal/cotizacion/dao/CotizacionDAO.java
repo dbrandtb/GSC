@@ -17,4 +17,5 @@ public interface CotizacionDAO
 	public String cargarNombreAgenteTramite(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception;
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
+	public List<Map<String,String>>cargarAseguradosExtraprimas(Map<String,String>params)throws Exception;
 }

@@ -102,6 +102,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarAseguradosExtraprimas" class="CotizacionAction" method="cargarAseguradosExtraprimas">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>
