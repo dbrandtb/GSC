@@ -168,7 +168,7 @@
 							                                            + '?cdreporte=REPEXC008'
 							                                            + '&params.pv_feproces_i=' + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
 							                                            + '&params.pv_cdunieco_i=' + json.stringMap.cdunieco,
-				                                        nombreArchivo : 'recibos_habilitados_' + Ext.Date.format(new Date(),'Y-m-d_g_i_s_u') + '.xls'
+				                                        nombreArchivo : 'recibos_habilitados_(' +json.stringMap.cdunieco +')_'+ Ext.Date.format(new Date(),'Y-m-d_(g_i_s_u)') + '.xls'
 				                                    },
 				                                    callback : function(options,success,response) {
 				                                    	
