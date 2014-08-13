@@ -2439,6 +2439,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			Date   fechaHoy         = new Date();
 			String feini            = smap1.get("feini");
 			String fefin            = smap1.get("fefin");
+			String cdperpag         = smap1.get("cdperpag");
 			final String LINEA      = "1";
 			UserVO usuario          = (UserVO)session.get("USUARIO");
 			String user             = usuario.getUser();
@@ -2499,7 +2500,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_swtarifi"  , "A");
 		            mapaMpolizas.put("pv_swabrido"  , null);
 		            mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
-		            mapaMpolizas.put("pv_cdperpag"  , "12");
+		            mapaMpolizas.put("pv_cdperpag"  , cdperpag);
 		            mapaMpolizas.put("pv_nmpoliex"  , null);
 		            mapaMpolizas.put("pv_nmcuadro"  , "P1");
 		            mapaMpolizas.put("pv_porredau"  , "100");
@@ -3162,7 +3163,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvdef
-		if(resp.exito)
+		if(resp.exito&&(!hayTramite||hayTramiteVacio))
 		{
 			try
 			{
@@ -3454,7 +3455,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaTarificacion.put("pv_nmsituac_i" , "0");
 	            mapaTarificacion.put("pv_nmsuplem_i" , "0");
 	            mapaTarificacion.put("pv_cdtipsit_i" , cdtipsit);
-	            kernelManager.ejecutaASIGSVALIPOL(mapaTarificacion);
+	            kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
 			}
 			catch(Exception ex)
 			{
