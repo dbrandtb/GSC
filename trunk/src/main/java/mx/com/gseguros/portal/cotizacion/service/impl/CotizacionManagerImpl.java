@@ -492,6 +492,43 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 	}
 	
+	@Override
+	public List<Map<String,String>>cargarAseguradosExtraprimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo)throws Exception
+	{
+		logger.debug(""
+				+ "\n#########################################"
+				+ "\n###### cargarAseguradosExtraprimas ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\nnmsuplem "+nmsuplem
+				+ "\ncdgrupo "+cdgrupo
+				);
+		
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdgrupo"  , cdgrupo);
+		List<Map<String,String>>lista=cotizacionDAO.cargarAseguradosExtraprimas(params);
+		
+		logger.debug(""
+				+ "\nlista size "+lista.size()
+				+ "\n###### cargarAseguradosExtraprimas ######"
+				+ "\n#########################################"
+				);
+		return lista;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
