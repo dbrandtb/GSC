@@ -29,6 +29,7 @@
 	var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
 	var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
 	var _URL_LOADER_CONSULTA_DOCUMENTOS     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+	var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
     var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
     var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
 
@@ -322,7 +323,35 @@
 			                           			});
 			                           		}
 			                           	}
-		                           }, {
+		                           },
+		                           {
+		                               //id: 'tbDocumentos',
+		                               title : 'DOCUMENTACION',
+		                               width: '350',
+		                               loader : {
+		                                   url : _URL_CONSULTA_DOCUMENTOS,
+		                                   scripts : true,
+		                                   autoLoad : false
+		                               },
+		                               listeners : {
+		                                   activate : function(tab) {
+		                                       tab.loader.load({
+		                                           params : {
+		                                               'smap1.readOnly': true,
+		                                               'smap1.nmpoliza': _NMPOLIZA,
+		                                               'smap1.cdunieco': _CDUNIECO,
+		                                               'smap1.cdramo'  : _CDRAMO,
+		                                               'smap1.estado'  : _ESTADO,
+		                                               'smap1.nmsuplem': _NMSUPLEM,
+		                                               'smap1.ntramite': _NTRAMITE,
+		                                               'smap1.tipomov' : '0'
+		                                           }
+		                                       });
+		                                   }
+		                               }
+		                           }
+		                           
+		                           /*{
 		                               title : 'DOCUMENTACION',
 		                               width: '350',
 		                               loader : {
@@ -350,7 +379,7 @@
 		                                       });
 		                                   }
 		                               }
-		                           }, {
+		                           }*/, {
 		                           	title: 'RECIBOS',
 		                           	loader: {
 		                           		url: _URL_LOADER_RECIBOS,
