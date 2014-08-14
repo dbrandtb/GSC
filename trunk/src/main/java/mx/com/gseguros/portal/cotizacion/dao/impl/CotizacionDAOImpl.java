@@ -490,4 +490,32 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception
+	{
+		ejecutaSP(new GuardarExtraprimaAsegurado(getDataSource()),params);
+	}
+	
+	protected class GuardarExtraprimaAsegurado extends StoredProcedure
+	{
+		protected GuardarExtraprimaAsegurado(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_TVALOSIT_DAT_ADIC");
+			declareParameter(new SqlParameter("cdunieco"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"              , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"              , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ocupacion"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("extraprimaOcupacion" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("peso"                , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estatura"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("extraprimaSobrepeso" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

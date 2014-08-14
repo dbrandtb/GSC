@@ -51,6 +51,8 @@ var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"               />';
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"             />';
 var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"   />';
+var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"  />';
+var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"            />';
 
 var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -248,8 +250,8 @@ Ext.onReady(function()
     {
         botoneslinea.push(
         {
-            tooltip  : 'Revisar asegurados'
-            ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+            tooltip  : 'Revisar extraprimas'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group_error.png'
             ,handler : _p21_revisarAseguradosClic
         });
     }
@@ -3013,7 +3015,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
     _p21_quitarTabExtraprima(record.get('letra'));
     _p21_agregarTab(
     {
-        title                 : 'REVISI&Oacute;N DE SUBGRUPO '+record.get('letra')
+        title                 : 'EXTRAPRIMAS DE SUBGRUPO '+record.get('letra')
         ,itemId               : 'id'+(new Date().getTime())
         ,extraprimaLetraGrupo : record.get('letra')
         ,defaults             : { style : 'margin:5px;' }
@@ -3022,18 +3024,20 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
         [
             Ext.create('Ext.grid.Panel',
             {
-                columns    : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
-                ,minHeight : 150
-                ,plugins   : Ext.create('Ext.grid.plugin.RowEditing',
+                columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
+                ,minHeight  : 150
+                ,maxHeight  : 500
+                ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
                 {
                     clicksToEdit  : 1
                     ,errorSummary : false
                 })
-                ,store     : Ext.create('Ext.data.Store',
+                ,store      : Ext.create('Ext.data.Store',
                 {
-                    model     : '_p21_modeloExtraprima'
-                    ,autoLoad : true
-                    ,proxy    :
+                    model       : '_p21_modeloExtraprima'
+                    ,groupField : 'AGRUPADOR'
+                    ,autoLoad   : true
+                    ,proxy      :
                     {
                         type         : 'ajax'
                         ,url         : _p21_urlCargarAseguradosExtraprimas
@@ -3053,11 +3057,184 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         }
                     }
                 })
-                ,viewConfig : viewConfigAutoSize
+                ,viewConfig :
+                {
+                    listeners :
+                    {
+                        refresh : function(dataview)
+                        {
+                            Ext.each(dataview.panel.columns, function(column)
+                            {
+                                if(column.text=='Peso')
+                                {
+                                    column.flex  = 0
+                                    column.width = 70;
+                                }
+                                else if(column.text=='Estatura')
+                                {
+                                    column.flex  = 0
+                                    column.width = 70;
+                                }
+                                else if(column.text=='Ocupación')
+                                {
+                                    column.flex  = 0
+                                    column.width = 140;
+                                }
+                                else if(column.text=='Nombre')
+                                {
+                                    column.flex  = 0
+                                    column.width = 200;
+                                }
+                                else
+                                {
+                                    column.autoSize();
+                                }
+                            });
+                        }
+                    }
+                }
+                ,features   :
+                [
+                    {
+                        groupHeaderTpl :
+                        [
+                            '{name:this.formatName}'
+                            ,{
+                                formatName : function(name)
+                                {
+                                    return name.split("_")[1];
+                                }
+                            }
+                        ]
+                        ,ftype          : 'groupingsummary'
+                        ,startCollapsed : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : function()
+                        {
+                            _p21_guardarExtraprimas(record.get('letra'));
+                        }
+                    }
+                ]
             })
         ]
     });
     debug('<_p21_revisarAseguradosClic');
+}
+
+function _p21_guardarExtraprimas(letra)
+{
+    debug('>_p21_guardarExtraprimas:',letra);
+    var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
+    debug('tab a guardar:',tab);
+    var grid=tab.down('[xtype=grid]');
+    debug('grid a guardar:',grid);
+    var store=grid.getStore();
+    debug('store a guardar:',store);
+    var records=store.getModifiedRecords();
+    debug('records a guardar:',records);
+    if(records.length==0)
+    {
+        mensajeWarning('No hay cambios');
+    }
+    else
+    {
+        var asegurados = [];
+        $.each(records,function(i,record)
+        {
+            var asegurado =
+            {
+                cdunieco          : _p21_smap1.cdunieco
+                ,cdramo           : _p21_smap1.cdramo
+                ,estado           : _p21_smap1.estado
+                ,nmpoliza         : _p21_smap1.nmpoliza
+                ,nmsuplem         : '0'
+                ,nmsituac         : record.get('NMSITUAC')
+                ,ocupacion        : record.get('OCUPACION')
+                ,extpri_ocupacion : record.get('EXTPRI_OCUPACION')
+                ,peso             : record.get('PESO')
+                ,estatura         : record.get('ESTATURA')
+                ,extpri_estatura  : record.get('EXTPRI_ESTATURA')
+            };
+            asegurados.push(asegurado);
+        });
+        tab.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p21_urlGuardarExtraprimas
+            ,jsonData :
+            {
+                slist1 : asegurados
+            }
+            ,success  : function(response)
+            {
+                tab.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('respuesta del guardado de extraprimas:',json);
+                if(json.exito)
+                {
+                    store.commitChanges();
+                    mensajeCorrecto('Datos guardados',json.respuesta);
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                tab.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    debug('<_p21_guardarExtraprimas');
+}
+
+function _p21_sigsvalipol(callback)
+{
+    debug('>_p21_sigsvalipol');
+    _p21_tabpanel().setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p21_urlSigsvalipol
+        ,params  :
+        {
+            'smap1.cdunieco'  : _p21_smap1.cdunieco
+            ,'smap1.cdramo'   : _p21_smap1.cdramo
+            ,'smap1.estado'   : _p21_smap1.estado
+            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+            ,'smap1.nmsituac' : '0'
+            ,'smap1.nmsuplem' : '0'
+            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            _p21_tabpanel().setLoading(false);
+            var json=Ext.decode(response.responseText);
+            debug('respuesta json sigsvalipol:',json);
+            if(json.exito)
+            {
+                callback();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            _p21_tabpanel().setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p21_sigsvalipol');
 }
 ////// funciones //////
 </script>

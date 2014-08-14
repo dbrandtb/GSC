@@ -538,6 +538,55 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
+	@Override
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String ocupacion
+			,String extraprimaOcupacion
+			,String peso
+			,String estatura
+			,String extraprimaSobrepeso
+			)throws Exception
+	{
+		logger.info(""
+				+ "\n########################################"
+				+ "\n###### guardarExtraprimaAsegurado ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\nnmsuplem "+nmsuplem
+				+ "\nnmsituac "+nmsituac
+				+ "\nocupacion "+ocupacion
+				+ "\nextraprimaOcupacion "+extraprimaOcupacion
+				+ "\npeso "+peso
+				+ "\nestatura "+estatura
+				+ "\nextraprimaSobrepeso "+extraprimaSobrepeso
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco"            , cdunieco);
+		params.put("cdramo"              , cdramo);
+		params.put("estado"              , estado);
+		params.put("nmpoliza"            , nmpoliza);
+		params.put("nmsuplem"            , nmsuplem);
+		params.put("nmsituac"            , nmsituac);
+		params.put("ocupacion"           , ocupacion);
+		params.put("extraprimaOcupacion" , extraprimaOcupacion);
+		params.put("peso"                , peso);
+		params.put("estatura"            , estatura);
+		params.put("extraprimaSobrepeso" , extraprimaSobrepeso);
+		cotizacionDAO.guardarExtraprimaAsegurado(params);
+		logger.info(""
+				+ "\n###### guardarExtraprimaAsegurado ######"
+				+ "\n########################################"
+				);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
