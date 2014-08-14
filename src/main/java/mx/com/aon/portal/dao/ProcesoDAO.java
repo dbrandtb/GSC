@@ -3687,7 +3687,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
 			String cols[]=new String[]{"ntramite","cdunieco","cdramo","estado","nmpoliza",
-					"nmsolici","cdsucadm","cdsucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
+					"nmsolici","cdsucadm","dssucadm","cdsucdoc","dssucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
 					"Nombre_agente","referencia","nombre","fecstatu","status","comments","cdtipsit","comi","prima_neta","prima_total","nmsuplem",
 					"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10",
 					"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20",
