@@ -55,7 +55,10 @@ Ext.onReady(function() {
         {
             type: 'ajax',
             url:_URL_CATALOGOS,
-            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
+            extraParams : {
+            	catalogo:_CATALOGO_OFICINA_RECEP,
+            	'params.idPadre' : '1000'
+            },
             reader:
             {
                 type: 'json',
@@ -71,7 +74,9 @@ Ext.onReady(function() {
         {
             type: 'ajax',
             url:_URL_CATALOGOS,
-            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
+            extraParams : {
+            	catalogo:_CATALOGO_OFICINA_RECEP,
+            	'params.idPadre' : '1000'},
             reader:
             {
                 type: 'json',
