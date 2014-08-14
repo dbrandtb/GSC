@@ -41,12 +41,12 @@ public class DeviceInterceptor implements Interceptor {
 		Map session = invocation.getInvocationContext().getSession();
 		if(session != null) {
 			String ua = request.getHeader("User-Agent").toLowerCase();
-			logger.debug("user agent: "+ua);
+			logger.debug(new StringBuilder("USER-AGENT = ").append(ua));
 			if(Utilerias.esSesionMovil(ua)) {
-			    logger.info("peticion desde movil");
+			    logger.info("Peticion desde MOVIL");
 			    session.put("ES_MOVIL", true);
 			} else {
-			    logger.info("peticion desde desktop");
+			    logger.info("peticion desde DESKTOP");
 			    session.put("ES_MOVIL", false);
 			}	
 		}
