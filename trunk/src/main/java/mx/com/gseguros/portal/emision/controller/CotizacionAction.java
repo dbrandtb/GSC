@@ -344,6 +344,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		VehicleValue_Struc datosAuto = null;
 		String cdramo                = null;
 		String cdtipsit              = null;
+		String tipoVehiculo          = null;
+		String codigoPostal          = null;
 		
 		//revisar numero de serie
 		if(success)
@@ -352,6 +354,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"))
 					&&StringUtils.isNotBlank(cdramo=smap1.get("cdramo"))
 					&&StringUtils.isNotBlank(cdtipsit=smap1.get("cdtipsit"))
+					&&StringUtils.isNotBlank(tipoVehiculo=smap1.get("tipoveh"))
+					&&StringUtils.isNotBlank(codigoPostal=smap1.get("codpos"))
 					;
 			if(!success)
 			{
@@ -400,13 +404,37 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		int tipoValorVehiculo = 3;
+		
+		if(success){
+			
+			try{
+				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(codigoPostal,tipoVehiculo);
+				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
+			}catch(Exception ex){
+				log.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
+				success = false;
+			}
+		}
+		
 		//datos regresados
 		if(success)
 		{
 			smap1.put("AUTO_ANIO"        , datosAuto.getVehicleYear()+"");
 			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr()+" "+datosAuto.getBodyDescr());
-			smap1.put("AUTO_PRECIO"      , datosAuto.getAvgTradeIn().toString());
-			smap1.put("AUTO_MARCA"       , datosAuto.getMakeDescr());
+			
+			logger.debug("AvgTradeIn:" + datosAuto.getAvgTradeIn().toString());
+			logger.debug("TradeIn:"    + datosAuto.getAvgTradeIn().toString());
+			
+			String precioAuto = null;
+			if(tipoValorVehiculo == 1 || tipoValorVehiculo == 0){
+				precioAuto = datosAuto.getAvgTradeIn().toString();
+			} else if(tipoValorVehiculo == 2){
+				precioAuto = datosAuto.getTradeIn().toString();				
+			}
+				
+			smap1.put("AUTO_PRECIO", precioAuto);
+			smap1.put("AUTO_MARCA", datosAuto.getMakeDescr());
 		}
 		
 		log.info(""

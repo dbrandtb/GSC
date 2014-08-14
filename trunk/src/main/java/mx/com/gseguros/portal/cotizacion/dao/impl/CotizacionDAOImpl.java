@@ -407,6 +407,30 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+
+	@Override
+	public Map<String,String>obtieneTipoValorAutomovil(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new ObtieneTipoValorAutomovil(getDataSource()), params);
+		
+		Map<String,String>datos=new HashMap<String,String>();
+		datos.put("pv_etiqueta_o", (String) resultado.get("pv_etiqueta_o"));
+		return datos;
+	}
+	
+	protected class ObtieneTipoValorAutomovil extends StoredProcedure
+	{
+		protected ObtieneTipoValorAutomovil(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_VALAUT_X_CP");
+			declareParameter(new SqlParameter("pv_cdpostal_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipveh_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_etiqueta_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception

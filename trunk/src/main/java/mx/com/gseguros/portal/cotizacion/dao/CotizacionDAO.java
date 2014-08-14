@@ -16,6 +16,7 @@ public interface CotizacionDAO
 	public List<Map<String,String>>cargarTarifasPorCobertura(Map<String,String>params)throws Exception;
 	public String cargarNombreAgenteTramite(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception;
+	public Map<String,String>obtieneTipoValorAutomovil(Map<String,String>params)throws Exception;
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosExtraprimas(Map<String,String>params)throws Exception;
 }

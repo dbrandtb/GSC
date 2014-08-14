@@ -10,8 +10,8 @@ import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetToken;
 import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetTokenRequest;
 import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetTokenResponse;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub;
-import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetDefaultVehicleAndValueByVin;
-import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetDefaultVehicleAndValueByVinResponse;
+import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetHighVehicleAndValueByVin;
+import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetHighVehicleAndValueByVinResponse;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetVehicleValuesByVinRequest;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleTypes;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
@@ -140,14 +140,14 @@ public class NadaServiceImpl implements NadaService {
 		getVehicleValuesByVinRequest.setPeriod(period);
 		getVehicleValuesByVinRequest.setRegion(region);
 		
-		GetDefaultVehicleAndValueByVin getDefaultVehicleAndValueByVin =  new GetDefaultVehicleAndValueByVin();
-		getDefaultVehicleAndValueByVin.setVehicleRequest(getVehicleValuesByVinRequest);
+		GetHighVehicleAndValueByVin getHighVehicleAndValueByVin12 =  new GetHighVehicleAndValueByVin();
+		getHighVehicleAndValueByVin12.setVehicleRequest(getVehicleValuesByVinRequest);
 		
-		GetDefaultVehicleAndValueByVinResponse  getDefaultVehicleAndValueByVinResponse = null;
+		GetHighVehicleAndValueByVinResponse  getHighVehicleAndValueByVinResponse = null;
 		
 		try {
-			getDefaultVehicleAndValueByVinResponse = stubGS.getDefaultVehicleAndValueByVin(getDefaultVehicleAndValueByVin);
-			datosVehiculo = getDefaultVehicleAndValueByVinResponse.getGetDefaultVehicleAndValueByVinResult();
+			getHighVehicleAndValueByVinResponse = stubGS.getHighVehicleAndValueByVin(getHighVehicleAndValueByVin12);
+			datosVehiculo = getHighVehicleAndValueByVinResponse.getGetHighVehicleAndValueByVinResult();
 			resultWS.setResultadoWS(datosVehiculo);
 			resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			

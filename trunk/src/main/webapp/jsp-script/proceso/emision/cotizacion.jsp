@@ -1797,8 +1797,21 @@ Ext.onReady(function()
             _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue('');
             _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue('');
         });
+        _0_formAgrupados.down('[name=parametros.pv_otvalor31]').addListener('change',function()
+        {
+            _0_formAgrupados.down('[name=parametros.pv_otvalor03]').setValue('');
+        });
+        _0_formAgrupados.down('[name=parametros.pv_otvalor08]').addListener('change',function()
+        {
+        	_0_formAgrupados.down('[name=parametros.pv_otvalor03]').setValue('');
+        });
         _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('blur',function()
         {
+        	if(Ext.isEmpty(_0_formAgrupados.down('[name=parametros.pv_otvalor08]').getValue()) || !_0_formAgrupados.down('[name=parametros.pv_otvalor08]').isValid()){
+        		mensajeWarning('Debe de capturar primero el C&oacute;digo Postal');
+                return;
+        	}
+        	
             var vim=this.value;
             if(!vim||(vim+'x').length!=18)
             {
@@ -1815,6 +1828,8 @@ Ext.onReady(function()
                     'smap1.vim'       : vim
                     ,'smap1.cdramo'   : _0_smap1.cdramo
                     ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                    ,'smap1.tipoveh'  : _0_formAgrupados.down('[name=parametros.pv_otvalor31]').getValue()
+                    ,'smap1.codpos'   : _0_formAgrupados.down('[name=parametros.pv_otvalor08]').getValue()
                 }
                 ,success : function(response)
                 {
