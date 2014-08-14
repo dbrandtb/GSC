@@ -114,6 +114,8 @@ public interface CotizacionManager
 			,String cdplan3
 			,String cdplan4
 			,String cdplan5)throws Exception;
+
+	public int obtieneTipoValorAutomovil(String codigoPostal, String tipoVehiculo)throws Exception;
 	
 	public List<Map<String,String>>cargarAseguradosExtraprimas(
 			String cdunieco

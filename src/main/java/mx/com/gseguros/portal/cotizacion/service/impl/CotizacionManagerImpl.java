@@ -492,6 +492,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 	}
 	
+	
+	public int obtieneTipoValorAutomovil(String codigoPostal, String tipoVehiculo)throws Exception{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdpostal_i"     , codigoPostal);
+		params.put("pv_cdtipveh_i"  , tipoVehiculo);
+		Map<String,String>res = cotizacionDAO.obtieneTipoValorAutomovil(params);
+		return Integer.parseInt(res.get("pv_etiqueta_o"));
+	}
+	
 	@Override
 	public List<Map<String,String>>cargarAseguradosExtraprimas(
 			String cdunieco
