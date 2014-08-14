@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.cancelacion.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +47,5 @@ public interface CancelacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String tipmov
-			,String cdusuari) throws Exception;
+			,String tipmov) throws Exception;
 }

@@ -575,7 +575,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,(String)omap1.get("pv_nmpoliza_i")
 			    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
 			    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
-			    		,usuario.getUser()
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -865,7 +864,6 @@ public class EndososAction extends PrincipalCoreAction
 				    		,smap1.get("pv_nmpoliza_i")
 				    		,resEnd.get("pv_nmsuplem_o")
 				    		,TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString()
-				    		,usuario.getUser()
 				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
@@ -1108,7 +1106,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,smap1.get("pv_nmpoliza")
 			    		,resEndDomi.get("pv_nmsuplem_o")
 			    		,TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString()
-			    		,usuario.getUser()
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -1768,7 +1765,6 @@ public class EndososAction extends PrincipalCoreAction
 				    		,(String)omap1.get("pv_nmpoliza_i")
 				    		,respEndCob.get("pv_nmsuplem_o")
 				    		,auxTipMov
-				    		,usuario.getUser()
 				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
@@ -2192,7 +2188,6 @@ public class EndososAction extends PrincipalCoreAction
 				    		,smap1.get("nmpoliza")
 				    		,respEnd.get("pv_nmsuplem_o")
 				    		,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString()
-				    		,usuario.getUser()
 				    		);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
@@ -3599,7 +3594,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,alta
 			    		    ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 			    		    : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
-			    		,cdusuari
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -3998,7 +3992,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmpoliza
 			    		,nmsuplem
 			    		,cdtipsup
-			    		,cdusuari
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -4357,7 +4350,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmpoliza
 			    		,nmsuplem
 			    		,cdtipsup
-			    		,cdusuari
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -4611,7 +4603,6 @@ public class EndososAction extends PrincipalCoreAction
 		    		,nmpoliza
 		    		,nmsuplem
 		    		,cdtipsup
-		    		,cdusuari
 		    		);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
@@ -5084,7 +5075,6 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmpoliza
 			    		,nmsuplem
 			    		,TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString()
-			    		,cdusuari
 			    		);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -5797,7 +5787,6 @@ public class EndososAction extends PrincipalCoreAction
 	    		,nmpoliza
 	    		,nmsuplem
 	    		,cdtipsup
-	    		,cdusuari
 	    		);
 	    log.debug("documentos que se regeneran: "+listaDocu);
 	    
@@ -6051,7 +6040,7 @@ public class EndososAction extends PrincipalCoreAction
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
-				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup,cdusuari);
+				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;

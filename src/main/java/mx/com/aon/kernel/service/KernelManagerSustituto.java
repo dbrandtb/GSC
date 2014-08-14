@@ -133,7 +133,6 @@ public interface KernelManagerSustituto {
 			,String nmpoliza
 			,String nmsuplem
 			,String ntramite
-			,String cdusuari
 			) throws ApplicationException;
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException;
 	public WrapperResultados movMPoliage(Map<String, Object> param) throws ApplicationException;
