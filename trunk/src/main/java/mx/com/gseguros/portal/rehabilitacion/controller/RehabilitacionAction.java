@@ -281,7 +281,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			String ntramite = null;
 			
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup,cdusuari);
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			for(Map<String,String> docu:listaDocu)
 			{

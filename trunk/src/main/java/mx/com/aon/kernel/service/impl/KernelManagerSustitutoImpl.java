@@ -796,7 +796,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			,String nmpoliza
 			,String nmsuplem
 			,String ntramite
-			,String cdusuari
 			) throws ApplicationException
 	{
 		Map<String,String>params=new HashMap<String,String>();
@@ -806,7 +805,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsuplem_i" , nmsuplem);
 		params.put("pv_ntramite_i" , ntramite);
-		params.put("pv_cdusuari_i" , cdusuari);
 		log.debug("### kernel sustituto obtenerListaDocumentos parameters: "+params);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_LISTA_DOC_POLIZA_NUEVA);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);

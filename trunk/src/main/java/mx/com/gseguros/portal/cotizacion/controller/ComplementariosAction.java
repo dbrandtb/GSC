@@ -1977,7 +1977,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,nmpolizaEmitida
 						,nmsuplemEmitida
 						,ntramite
-						,cdusuari
 						);
 				
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
@@ -2462,7 +2461,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,nmpolizaEmitida
 						,nmsuplemEmitida
 						,ntramite
-						,cdusuari
 						);
 				
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
@@ -2774,7 +2772,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,_nmpoliza
 							,_nmsuplem
 							,ntramite
-							,cdusuari
 							);
 					
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl

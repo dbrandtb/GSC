@@ -248,7 +248,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
 			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup,usuario.getUser());
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			for(Map<String,String> docu:listaDocu)
 			{

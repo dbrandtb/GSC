@@ -67,7 +67,6 @@ public class EndososManagerImpl implements EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String tipmov
-			,String cdusuari
 			)throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
@@ -77,7 +76,6 @@ public class EndososManagerImpl implements EndososManager
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsuplem_i" , nmsuplem);
 		params.put("pv_tipmov_i"   , tipmov);
-		params.put("pv_cdusuari_i" , cdusuari);
 		log.debug("EndososManager reimprimeDocumentos params: "+params);
 		List<Map<String,String>> lista=endososDAO.reimprimeDocumentos(params);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
