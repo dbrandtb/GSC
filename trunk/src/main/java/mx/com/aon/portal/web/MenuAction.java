@@ -199,8 +199,8 @@ public class MenuAction extends PrincipalCoreAction {
 			session.put("USUARIO", user);
 		}else{
 			this.listaMenuVertical = user.getListaMenuVertical();
-			logger.debug("user.getListaMenuVertical()=" + user.getListaMenuVertical());
-			logger.debug("user.getListaMenuVertical size= " + user.getListaMenuVertical().size());
+			//logger.debug("user.getListaMenuVertical()=" + user.getListaMenuVertical());
+			//logger.debug("user.getListaMenuVertical size= " + user.getListaMenuVertical().size());
 		}
 		
 		success = true;
