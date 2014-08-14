@@ -118,6 +118,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarAseguradosGrupo" class="CotizacionAction" method="cargarAseguradosGrupo">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

@@ -20,4 +20,5 @@ public interface CotizacionDAO
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosExtraprimas(Map<String,String>params)throws Exception;
 	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception;
+	public List<Map<String,String>>cargarAseguradosGrupo(Map<String,String>params)throws Exception;
 }

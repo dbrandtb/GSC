@@ -53,6 +53,7 @@ var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      
 var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"   />';
 var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"  />';
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"            />';
+var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"         />';
 
 var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -217,6 +218,12 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields : [ <s:property value='%{getImap().containsKey("extraprimasFields")?getImap().get("extraprimasFields").toString():""}' /> ]
     });
+    
+    Ext.define('_p21_modeloAsegurados',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : [ <s:property value='%{getImap().containsKey("aseguradosFields")?getImap().get("aseguradosFields").toString():""}' /> ]
+    });
     ////// modelos //////
     
     ////// stores //////
@@ -244,6 +251,15 @@ Ext.onReady(function()
             tooltip  : 'Borrar subgrupo'
             ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
             ,handler : _p21_borrarGrupoClic
+        });
+    }
+    if(_p21_smap1.ASEGURADOS=='S')
+    {
+        botoneslinea.push(
+        {
+            tooltip  : 'Asegurados'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
+            ,handler : _p21_aseguradosClic
         });
     }
     if(_p21_smap1.EXTRAPRIMAS=='S')
@@ -405,6 +421,24 @@ Ext.onReady(function()
             tooltip   : 'Borrar subgrupo'
             ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
             ,handler  : _p21_borrarGrupoClic
+        });
+    }
+    if(_p21_smap1.ASEGURADOS=='S')
+    {
+        botonesModificada.push(
+        {
+            tooltip  : 'Asegurados'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
+            ,handler : _p21_aseguradosClic
+        });
+    }
+    if(_p21_smap1.EXTRAPRIMAS=='S')
+    {
+        botonesModificada.push(
+        {
+            tooltip  : 'Revisar extraprimas'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group_error.png'
+            ,handler : _p21_revisarAseguradosClic
         });
     }
     _p21_tabGruposModifi =
@@ -1688,6 +1722,20 @@ function _p21_quitarTabExtraprima(letra)
         }
     }
     debug('<_p21_quitarTabExtraprima');
+}
+
+function _p21_quitarTabAsegurados(letra)
+{
+    debug('>_p21_quitarTabAsegurados letra:',letra);
+    var tabsAsegurados = Ext.ComponentQuery.query('[aseguradosLetraGrupo='+letra+']');
+    if(tabsAsegurados.length>0)
+    {
+        for(var i=0;i<tabsAsegurados.length;i++)
+        {
+            tabsAsegurados[i].destroy();
+        }
+    }
+    debug('<_p21_quitarTabAsegurados');
 }
 
 function _p21_quitarTabsDetalleGrupo(letraGrupo)
@@ -3027,11 +3075,11 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
                 ,minHeight  : 150
                 ,maxHeight  : 500
-                ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
+                ,plugins    : _p21_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
                 {
                     clicksToEdit  : 1
                     ,errorSummary : false
-                })
+                }) : null
                 ,store      : Ext.create('Ext.data.Store',
                 {
                     model       : '_p21_modeloExtraprima'
@@ -3116,6 +3164,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     {
                         text     : 'Guardar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,hidden  : _p21_smap1.EXTRAPRIMAS_EDITAR=='N'
                         ,handler : function()
                         {
                             _p21_guardarExtraprimas(record.get('letra'));
@@ -3126,6 +3175,100 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
         ]
     });
     debug('<_p21_revisarAseguradosClic');
+}
+
+function _p21_aseguradosClic(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p21_aseguradosClic record:',record);
+    _p21_quitarTabAsegurados(record.get('letra'));
+    var columnas =
+    [
+        <s:property value='%{getImap().containsKey("aseguradosColumns")?getImap().get("aseguradosColumns").toString():""}' escapeHtml='false' />
+    ];
+    if(_p21_smap1.ASEGURADOS_EDITAR=='S')
+    {
+        columnas.push(
+        {
+            xtype         : 'actioncolumn'
+            ,width        : 30
+            ,sortable     : false
+            ,menuDisabled : true
+            ,items        :
+            [
+                {
+                    text  : 'Editar'
+                    ,icon : '${ctx}/resources/fam3icons/icons/pencil.png'
+                }
+            ]
+        });
+    }
+    _p21_agregarTab(
+    {
+        title                 : 'ASEGURADOS DE SUBGRUPO '+record.get('letra')
+        ,itemId               : 'id'+(new Date().getTime())
+        ,aseguradosLetraGrupo : record.get('letra')
+        ,defaults             : { style : 'margin:5px;' }
+        ,border               : 0
+        ,items                :
+        [
+            Ext.create('Ext.grid.Panel',
+            {
+                columns     : columnas
+                ,minHeight  : 150
+                ,maxHeight  : 500
+                ,plugins    : _p21_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
+                {
+                    clicksToEdit  : 1
+                    ,errorSummary : false
+                }) : null
+                ,store      : Ext.create('Ext.data.Store',
+                {
+                    model       : '_p21_modeloAsegurados'
+                    ,groupField : 'AGRUPADOR'
+                    ,autoLoad   : true
+                    ,proxy      :
+                    {
+                        type         : 'ajax'
+                        ,url         : _p21_urlCargarAseguradosGrupo
+                        ,extraParams :
+                        {
+                            'smap1.cdunieco'  : _p21_smap1.cdunieco
+                            ,'smap1.cdramo'   : _p21_smap1.cdramo
+                            ,'smap1.estado'   : _p21_smap1.estado
+                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                            ,'smap1.nmsuplem' : '0'
+                            ,'smap1.cdgrupo'  : record.get('letra')
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
+                        }
+                    }
+                })
+                ,viewConfig : viewConfigAutoSize
+                ,features   :
+                [
+                    {
+                        groupHeaderTpl :
+                        [
+                            '{name:this.formatName}'
+                            ,{
+                                formatName : function(name)
+                                {
+                                    return name.split("_")[1];
+                                }
+                            }
+                        ]
+                        ,ftype          : 'groupingsummary'
+                        ,startCollapsed : false
+                    }
+                ]
+            })
+        ]
+    });
+    debug('<_p21_aseguradosClic');
 }
 
 function _p21_guardarExtraprimas(letra)

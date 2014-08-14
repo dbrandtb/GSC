@@ -138,4 +138,12 @@ public interface CotizacionManager
 			,String estatura
 			,String extraprimaSobrepeso
 			)throws Exception;
+	
+	public List<Map<String,String>>cargarAseguradosGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo)throws Exception;
 }
