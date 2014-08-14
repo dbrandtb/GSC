@@ -158,6 +158,10 @@ public class ConsultasPolizaDAO extends AbstractDAO {
         	consulta.setCdramo(rs.getString("cdramo"));
         	consulta.setCdunieco(rs.getString("cdunieco"));
         	consulta.setNmpolant(rs.getString("nmpolant"));
+        	consulta.setDsunieco(rs.getString("dsunieco"));
+        	consulta.setDsramo(rs.getString("dsramo"));
+        	consulta.setDsplan(rs.getString("dsplan"));
+        	consulta.setDstipsit(rs.getString("dstipsit"));
         	
             return consulta;
         }

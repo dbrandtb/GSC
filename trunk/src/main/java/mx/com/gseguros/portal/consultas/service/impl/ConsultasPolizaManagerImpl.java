@@ -207,16 +207,22 @@ public class ConsultasPolizaManagerImpl extends
 		ArrayList<CopagoVO> copagos = (ArrayList<CopagoVO>) result.getItemList();
 		String agrupador = null;
 		
+		logger.debug("****** copagos:" + copagos);
+		
 		Iterator<CopagoVO> itCopagos = copagos.iterator();
 		while (itCopagos.hasNext()) {
 			CopagoVO copagoVO = itCopagos.next();
-			if( StringUtils.isBlank(agrupador) || StringUtils.isBlank(copagoVO.getValor()) ) {
+			// TODO: Modificar para que el SP devuelva un campos agrupador y no busquemos " "
+			if( StringUtils.isBlank(agrupador) || !copagoVO.getDescripcion().startsWith(" ")) {
 				agrupador = copagoVO.getDescripcion();
+				logger.debug("****** AGRUPADOR:" + agrupador);
 			}
 			if(StringUtils.isBlank(copagoVO.getValor())) {
+				logger.debug("****** REMOVIENDO:" + copagoVO);
 				itCopagos.remove();
 			}
 			copagoVO.setAgrupador(agrupador);
+			logger.debug("****** ELEMENTO FINAL:" + copagoVO);
 		}
 
 		return result;
