@@ -2039,6 +2039,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
 			}
 			
+			//campos para asegurados
+			if(exito && smap1.containsKey("ASEGURADOS")
+					 && StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
+					 && smap1.get("ASEGURADOS").equals("S"))
+			{
+				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "ASEGURADOS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+				imap.put("aseguradosColumns" , gc.getColumns());
+				imap.put("aseguradosFields"  , gc.getFields());
+			}
+			
 			//campos para extraprimas
 			if(exito && smap1.containsKey("EXTRAPRIMAS")
 					 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
@@ -3917,6 +3931,44 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### ejecutaSigsvalipol ######"
 				+ "\n################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarAseguradosGrupo()
+	{
+		logger.info(""
+				+ "\n###################################"
+				+ "\n###### cargarAseguradosGrupo ######"
+				+ "\nsmap1 "+smap1
+				);
+		success = true;
+		exito   = true;
+		if(exito)
+		{
+			try
+			{
+				slist1=cotizacionManager.cargarAseguradosGrupo(
+						smap1.get("cdunieco")
+						,smap1.get("cdramo")
+						,smap1.get("estado")
+						,smap1.get("nmpoliza")
+						,smap1.get("nmsuplem")
+						,smap1.get("cdgrupo")
+						);				
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar los asegurados del grupo #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.info(""
+				+ "\n###### cargarAseguradosGrupo ######"
+				+ "\n###################################"
 				);
 		return SUCCESS;
 	}
