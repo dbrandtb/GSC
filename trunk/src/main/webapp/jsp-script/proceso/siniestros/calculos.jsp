@@ -237,7 +237,8 @@ Ext.onReady(function()
             	
             	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
-            	var total = subttDedu - copagoaplica + iva ;
+            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
+            	var total = subttDedu - copagoaplica + iva - ivaRetenido;
             	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -335,7 +336,16 @@ Ext.onReady(function()
                             {
                                 return Ext.util.Format.usMoney(value);
                             }
-                        }
+                        },{
+                            xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'IVA Retenido' //IVA PAGO DIRECTO HOSPI
+                                ,value      : ivaRetenido
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
