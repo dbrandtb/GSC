@@ -19,4 +19,5 @@ public interface CotizacionDAO
 	public Map<String,String>obtieneTipoValorAutomovil(Map<String,String>params)throws Exception;
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosExtraprimas(Map<String,String>params)throws Exception;
+	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception;
 }

@@ -124,4 +124,18 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo)throws Exception;
+	
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String ocupacion
+			,String extraprimaOcupacion
+			,String peso
+			,String estatura
+			,String extraprimaSobrepeso
+			)throws Exception;
 }

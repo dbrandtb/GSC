@@ -3801,6 +3801,16 @@ public class CotizacionAction extends PrincipalCoreAction
 			    		,smap1.get("nmsuplem")
 			    		,smap1.get("cdgrupo")
 			    		);
+			    int grupo=0;
+			    for(Map<String,String>iAsegurado:slist1)
+			    {
+			    	String parentesco=iAsegurado.get("PARENTESCO");
+			    	if(parentesco.equals("T"))
+			    	{
+			    		grupo = grupo + 1;
+			    	}
+			    	iAsegurado.put("AGRUPADOR",new StringBuilder().append(grupo).append("_").append("Familia ").append(grupo).toString());
+			    }
 			}
 			catch(Exception ex)
 			{
@@ -3815,6 +3825,98 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug(""
 				+ "\n###### cargarAseguradosExtraprimas ######"
 				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarExtraprimasAsegurados()
+	{
+		logger.info(""
+				+ "\n##########################################"
+				+ "\n###### guardarExtraprimasAsegurados ######"
+				+ "\nslist1: "+slist1
+				);
+		success = true;
+		exito   = true;
+		if(exito)
+		{
+			try
+			{
+				for(Map<String,String>iAsegurado:slist1)
+				{
+					cotizacionManager.guardarExtraprimaAsegurado(
+							iAsegurado.get("cdunieco")
+							,iAsegurado.get("cdramo")
+							,iAsegurado.get("estado")
+							,iAsegurado.get("nmpoliza")
+							,iAsegurado.get("nmsuplem")
+							,iAsegurado.get("nmsituac")
+							,iAsegurado.get("ocupacion")
+							,iAsegurado.get("extpri_ocupacion")
+							,iAsegurado.get("peso")
+							,iAsegurado.get("estatura")
+							,iAsegurado.get("extpri_estatura")
+							);
+				}
+				respuesta       = "Se guardaron todos los datos";
+				respuestaOculta = "Todo OK";
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al guardar extraprimas #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.info(""
+				+ "\n###### guardarExtraprimasAsegurados ######"
+				+ "\n##########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String ejecutaSigsvalipol()
+	{
+		logger.info(""
+				+ "\n################################"
+				+ "\n###### ejecutaSigsvalipol ######"
+				+ "\nsmap1: "+smap1
+				);
+		exito   = true;
+		success = true;
+		if(exito)
+		{
+			try
+			{
+				UserVO usuario  = (UserVO)session.get("USUARIO");
+				String cdusuari = usuario.getUser();
+				String cdelemen = usuario.getEmpresa().getElementoId();
+				Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+	            mapaTarificacion.put("pv_cdusuari_i" , cdusuari);
+	            mapaTarificacion.put("pv_cdelemen_i" , cdelemen);
+	            mapaTarificacion.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+	            mapaTarificacion.put("pv_cdramo_i"   , smap1.get("cdramo"));
+	            mapaTarificacion.put("pv_estado_i"   , smap1.get("estado"));
+	            mapaTarificacion.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+	            mapaTarificacion.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+	            mapaTarificacion.put("pv_nmsuplem_i" , smap1.get("nmsuplem"));
+	            mapaTarificacion.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
+	            kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al tarificar #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.info(""
+				+ "\n###### ejecutaSigsvalipol ######"
+				+ "\n################################"
 				);
 		return SUCCESS;
 	}
