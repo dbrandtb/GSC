@@ -41,7 +41,11 @@ public class AuthenticationInterceptor implements Interceptor {
 		Map session = actionInvocation.getInvocationContext().getSession();
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
-		logger.debug("usuario en sesion: "+user);
+		if(user != null) {
+			logger.info(new StringBuilder("Usuario en sesion: ").append(user.getUser()));
+		} else {
+			logger.info("No hay usuario en sesion");
+		}
 		
 		boolean esMovil     = false;
 		String  sufijoMovil = "";
@@ -59,10 +63,10 @@ public class AuthenticationInterceptor implements Interceptor {
 			} else {
 				boolean rolAsignado = false;
 				if(user.getRolActivo()!=null) {
-					logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
-					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
-					{
+					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
 						rolAsignado = true;
+						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
+								.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
 					}
 				}
 				if(!rolAsignado) {
@@ -78,32 +82,25 @@ public class AuthenticationInterceptor implements Interceptor {
 			}
 		} else if(actionInvocation.getInvocationContext().getName().equalsIgnoreCase("seleccionaRolCliente")) {
 			//se mando al arbol o quiere entrar desde el arbol
-			logger.info("TREE");
+			logger.info("TREE (Arbol de seleccion de rol)");
 			if (user == null) {
 				//no hay usuario en sesion, se redirige a login (no al loginform)
 				logger.info("return tree login");
 			    return Action.LOGIN;
 			} else {
-				boolean rolAsignado = false;
-				if(user.getRolActivo()!=null) {
-					logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
-					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
-						rolAsignado = true;
-					}
-				}
-				if(!rolAsignado) {
-					//quiere acceder pero no selecciono rol
-					logger.info("return tree invoke (jsp)");
-					if(!esMovil) {
-						return actionInvocation.invoke();
-					} else {
-						return "tree_movil";
-					}
-				} else {
-					//entro al login pero ya tenia usuario y rol
+				//boolean rolAsignado = false;
+				if (user.getRolActivo() != null && user.getRolActivo().getObjeto() != null
+						&& StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
+					//rolAsignado = true;
 					logger.info("-->Ya Contiene un Rol Asignado<--");
-					logger.info("return tree load;");
-				    return "load"+sufijoMovil;
+					logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
+							.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
+				}
+				logger.info("return tree invoke (jsp)");
+				if(!esMovil) {
+					return actionInvocation.invoke();
+				} else {
+					return "tree_movil";
 				}
 			}
 		} else { //quiere acceder a otra url
@@ -115,9 +112,10 @@ public class AuthenticationInterceptor implements Interceptor {
 			} else {
 				boolean rolAsignado = false;
 				if(user.getRolActivo()!=null) {
-					logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
 					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
 						rolAsignado = true;
+						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
+								.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
 					}
 				}
 				if(!rolAsignado) {
