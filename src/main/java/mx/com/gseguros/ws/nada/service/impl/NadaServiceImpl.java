@@ -10,6 +10,8 @@ import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetToken;
 import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetTokenRequest;
 import mx.com.gseguros.ws.nada.client.axis2.SecureLoginStub.GetTokenResponse;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub;
+import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetDefaultVehicleAndValueByVin;
+import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetDefaultVehicleAndValueByVinResponse;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetHighVehicleAndValueByVin;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetHighVehicleAndValueByVinResponse;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.GetVehicleValuesByVinRequest;
@@ -111,6 +113,7 @@ public class NadaServiceImpl implements NadaService {
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();
 		VehicleValue_Struc datosVehiculo = null;
+		VehicleValue_Struc datosVehiculoDefault = null;
 		VehicleStub stubGS = null;
 		
 		try {
@@ -145,17 +148,29 @@ public class NadaServiceImpl implements NadaService {
 		
 		GetHighVehicleAndValueByVinResponse  getHighVehicleAndValueByVinResponse = null;
 		
+		GetDefaultVehicleAndValueByVin getDefaultVehicleAndValueByVin =  new GetDefaultVehicleAndValueByVin();
+		getDefaultVehicleAndValueByVin.setVehicleRequest(getVehicleValuesByVinRequest);
+		
+		GetDefaultVehicleAndValueByVinResponse  getDefaultVehicleAndValueByVinResponse = null;
+		
 		try {
 			getHighVehicleAndValueByVinResponse = stubGS.getHighVehicleAndValueByVin(getHighVehicleAndValueByVin12);
 			datosVehiculo = getHighVehicleAndValueByVinResponse.getGetHighVehicleAndValueByVinResult();
+			
+			getDefaultVehicleAndValueByVinResponse = stubGS.getDefaultVehicleAndValueByVin(getDefaultVehicleAndValueByVin);
+			datosVehiculoDefault = getDefaultVehicleAndValueByVinResponse.getGetDefaultVehicleAndValueByVinResult();
+			
+			
+			if( datosVehiculo != null){
+				datosVehiculo.setAvgTradeIn(datosVehiculoDefault.getAvgTradeIn());
+			}else{
+				logger.error("Respuesta de WS NADA Nula.");
+			}
+			
 			resultWS.setResultadoWS(datosVehiculo);
 			resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
 			logger.debug("Xml enviado para obtener los datos del auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-			
-			if( datosVehiculo == null){
-				logger.error("Respuesta de WS NADA Nula.");
-			}
 			
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
