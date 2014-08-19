@@ -1,8 +1,6 @@
 <%@ page language="java"%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <script type="text/javascript">
-/* ********** VARIABLES GLOBALES ************** */
-var _global_urlConsultaDinamica = '<s:url namespace="/consultas" action="consultaDinamica" />';
 
 /* ********** CATALOGOS JS ******************** */
 

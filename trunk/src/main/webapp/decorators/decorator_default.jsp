@@ -8,11 +8,13 @@
     	<!-- TENER CUIDADO CON EL ORDEN EN QUE SE INCLUYEN LOS SIGUIENTES FICHEROS -->
     
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
-        <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />
+        
+        <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" />
+        <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/extra-custom-theme.css" />
         <script type="text/javascript" src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js"></script>
+        <%@ include file="/resources/jsp-script/util/variablesGlobales.jsp"%>
         <%@ include file="/resources/jsp-script/util/catalogos.jsp"%>
         <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js?${now}"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js?${now}"></script>
