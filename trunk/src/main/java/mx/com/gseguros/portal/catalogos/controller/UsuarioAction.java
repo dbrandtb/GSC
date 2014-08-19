@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
