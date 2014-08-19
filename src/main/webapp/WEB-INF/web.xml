@@ -172,7 +172,7 @@
 
     <!-- How long the sessions will stick around for -->
     <session-config>
-        <session-timeout>60</session-timeout>
+        <session-timeout>6</session-timeout>
     </session-config>
 
 </web-app>

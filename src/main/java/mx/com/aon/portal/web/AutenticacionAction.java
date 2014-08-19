@@ -176,6 +176,16 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	}
 	
 	
+	/**
+	 * Petici&oacute;n para mantener la sesi&oacute;n del servidor 
+	 * @return
+	 * @throws Exception
+	 */
+	public String mantenerSesionActiva() throws Exception {
+		return SUCCESS;
+	}
+	
+	
 	/*
 	 * Action temporal para GSeguros, que redirigira a la pantalla de cotizacion
 	 * Salud Vital
