@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     
     
     <bean id="principalCotizacion" class="mx.com.aon.flujos.cotizacion.web.PrincipalCotizacionAction" abstract="true"/>
@@ -21,15 +21,16 @@
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">
-        <property name="catalogosManager"        ref="catalogosManagerImpl"/>
-        <property name="consultasManager"        ref="consultasManagerImpl"/>
-        <property name="kernelManager"           ref="kernelManagerSustituto"/>
-        <property name="pantallasManager"        ref="pantallasManagerImpl"/>
-        <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
-        <property name="nadaService"             ref="nadaServiceImpl"/>
-        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"     />
-        <property name="tipoCambioService"         ref="tipoCambioServiceImpl"     />
-		<property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
+        <property name="catalogosManager"        ref="catalogosManagerImpl"        />
+        <property name="consultasManager"        ref="consultasManagerImpl"        />
+        <property name="kernelManager"           ref="kernelManagerSustituto"      />
+        <property name="pantallasManager"        ref="pantallasManagerImpl"        />
+        <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
+        <property name="nadaService"             ref="nadaServiceImpl"             />
+        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"         />
+        <property name="tipoCambioService"       ref="tipoCambioServiceImpl"       />
+        <property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
+        <property name="siniestrosManager"       ref="siniestrosManagerImpl"       />
     </bean>
     
     <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
@@ -51,15 +52,10 @@
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
     </bean>
     
-    <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">
-        <property name="kernelManager" ref="kernelManagerSustituto"/>
-        <property name="pantallasManager" ref="pantallasManagerImpl"/>
-        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
-    </bean>
-    
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">
-        <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="kernelManager"    ref="kernelManagerSustituto"/>
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
+        <property name="endososManager"   ref="endososManagerImpl"/>
     </bean>
     
     <!-- datos de Agentes -->
