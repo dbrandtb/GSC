@@ -860,7 +860,7 @@ if(edita){
         			baseCls: 'x-plain',
         			border: false,
             				items:[{
-				                columnWidth:.32,
+				                columnWidth:.30,
                 				layout: 'form',
                 				baseCls: 'x-plain',
                 				border: false,
@@ -875,7 +875,7 @@ if(edita){
                 						})
 				                ]
         					},{
-               					columnWidth:.45,
+               					columnWidth:.42,
 			                	layout: 'form',
 			                	baseCls: 'x-plain',
 			                	border: false,
@@ -889,16 +889,16 @@ if(edita){
     								})   
                					]
 				    		},{
-               					columnWidth:.23,
+               					columnWidth:.28,
 			                	layout: 'form',
 			                	baseCls: 'x-plain',			                	
 			                	border: false,
                					items: [
                						new Ext.form.TextField({
-        							name: 'numero',
-        							fieldLabel: 'N\u00FAmero',       		 						
-									disabled:true,
-        							width: 30  
+            							name: 'numero',
+            							fieldLabel: 'N\u00FAmero',       		 						
+    									disabled:true,
+            							width: 80
     								})
                					]
 				            }]
