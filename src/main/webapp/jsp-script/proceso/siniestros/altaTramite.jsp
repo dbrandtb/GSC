@@ -29,6 +29,7 @@
             var _URL_CONSULTA_GRID_ALTA_TRAMITE     = '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             
             var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
+            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
