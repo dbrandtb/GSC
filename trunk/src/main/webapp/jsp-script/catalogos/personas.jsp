@@ -19,12 +19,27 @@ var _p22_UrlUploadPro           = '<s:url namespace="/"           action="subirA
 var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInlinePersona"           />';
 var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargarNombreDocumentoPersona"       />';
 
+/* PARA EL LOADER */
+var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
+/* PARA EL LOADER */
+
 var _p22_storeGrid;
 var _p22_windowAgregarDocu;
 
 var windowAccionistas;
 var accionistasStore;
 var gridAccionistas;
+
+/* PARA LOADER */
+var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+debug('_p22_smap1:',_p21_smap1);
+var _p22_cdperson = false;
+if(!Ext.isEmpty(_p22_smap1.cdperson))
+{
+    _p22_cdperson = _p22_smap1.cdperson;
+}
+debug('_p22_cdperson:',_p22_cdperson);
+/* PARA LOADER */
 
 ////// variables //////
 
@@ -77,6 +92,7 @@ Ext.onReady(function()
 	        {
 	        	 title        : 'Buscar por RFC'
 	        	 ,itemId      : '_p22_formBusqueda'
+	        	 ,hidden      : _p22_cdperson!=false
 	        	 ,layout      :
 	        	 {
 	        	     type     : 'table'
@@ -98,6 +114,7 @@ Ext.onReady(function()
 	        ,Ext.create('Ext.grid.Panel',
 	        {
 	        	title      : 'Personas encontradas'
+                ,hidden    : _p22_cdperson!=false
 	        	,height    : 200
 	        	,border    : 0
 	        	,columns   : [ <s:property value="imap.gridColumns" /> ]
@@ -174,6 +191,14 @@ Ext.onReady(function()
 	////// contenido //////
 	
 	////// loaders //////
+	
+	/* PARA EL LOADER */
+	if(_p22_cdperson!=false)
+	{
+	    _p22_loadRecordCdperson();
+	}
+	/* PARA EL LOADER */
+	
 	_p22_comboCodPostal().addListener('blur',_p22_heredarColonia);
 	_p22_fieldTipoPersona().addListener('change',_p22_tipoPersonaChange);
 	_fieldByName('CDNACION').addListener('change',_p22_nacionalidadChange);
@@ -309,7 +334,7 @@ function _p22_comboColonias()
 function _p22_comboCodPostal()
 {
     debug('>_p22_comboCodPostal<');
-    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[0];
+    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];
 }
 
 function _p22_fieldSegundoNombre()
@@ -339,14 +364,49 @@ function _p22_fieldSexo()
 function _p22_fieldTipoPersona()
 {
     debug('>_p22_fieldTipoPersona<');
-    return Ext.ComponentQuery.query('[name=OTFISJUR]')[0];
+    return Ext.ComponentQuery.query('[name=OTFISJUR]')[Ext.ComponentQuery.query('[name=OTFISJUR]').length-1];
 }
 
 function _p22_formDatosGenerales()
 {
     debug('>_p22_formDatosGenerales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[0];
+    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[Ext.ComponentQuery.query('#_p22_formDatosGenerales').length-1];
 }
+
+/* PARA EL LOADER */
+function _p22_loadRecordCdperson()
+{
+    debug('>_p22_loadRecordCdperson');
+    _p22_tabPanel().setLoading(true);
+    Ext.Ajax.request(
+    {
+        url     : _p22_urlCargarPersonaCdperson
+        ,params :
+        {
+            'smap1.cdperson' : _p22_cdperson
+        }
+        ,success : function(response)
+        {
+            _p22_tabPanel().setLoading(false);
+            var json=Ext.decode(response.responseText);
+            if(json.exito)
+            {
+                _p22_itemclick(null,new _p22_modeloGrid(json.smap2));
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            _p22_tabPanel().setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p22_loadRecordCdperson');
+}
+/* PARA EL LOADER */
 
 function _p22_itemclick(grid,record)
 {
@@ -388,7 +448,7 @@ function _p22_itemclick(grid,record)
 function _p22_tabPanel()
 {
     debug('>_p22_tabPanel<');
-    return Ext.ComponentQuery.query('#_p22_tabPanel')[0];
+    return Ext.ComponentQuery.query('#_p22_tabPanel')[Ext.ComponentQuery.query('#_p22_tabPanel').length-1];
 }
 
 function _p22_guardarClic(callback)
@@ -503,13 +563,13 @@ function _p22_ponerActivo(indice)
 function _p22_formDomicilio()
 {
     debug('>_p22_formDomicilio<');
-    return Ext.ComponentQuery.query('#_p22_formDomicilio')[0];
+    return Ext.ComponentQuery.query('#_p22_formDomicilio')[Ext.ComponentQuery.query('#_p22_formDomicilio').length-1];
 }
 
 function _p22_fieldRFC()
 {
     debug('>_p22_fieldRFC<');
-    return Ext.ComponentQuery.query('[name=CDRFC]')[0];
+    return Ext.ComponentQuery.query('[name=CDRFC]')[Ext.ComponentQuery.query('[name=CDRFC]').length-1];
 }
 
 function _p22_fieldCdperson()
@@ -557,7 +617,7 @@ function _p22_datosAdicionalesClic()
                 {
                     title   : 'Datos adicionales'
                     ,itemId : '_p22_ventanaDatosAdicionales'
-                    ,width  : 600
+                    ,width  : 900
                     ,height : 400
                     ,autoScroll : true
                     ,modal  : true
@@ -1014,6 +1074,7 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		            {
 		                text     : 'Agregar'
 		                ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+		                ,hidden  : _p22_cdperson!=false
 		                ,handler : function(){
 		                	accionistasStore.add(new modeloAccionistas());
 		                }
