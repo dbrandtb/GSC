@@ -205,7 +205,8 @@ function revisarDocumento(grid,rowIndex)
         }
         ,success : function (response)
         {
-            var requiereAutorizacion = Ext.decode(response.responseText).requiereAutServ;
+        	var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+        	var requiereAutorizacion = json.REQAUTSERV//Ext.decode(response.responseText).requiereAutServ;
             if(requiereAutorizacion == "SI"){ //Requiere autorizacion de servicio
                 //var valido = true;
                 //var nAut = record.get('NoAutorizacion');
@@ -367,7 +368,8 @@ function _11_editar(grid,rowindex)
         }
         ,success : function (response)
         {
-            var requiereAutorizacion = Ext.decode(response.responseText).requiereAutServ;
+        	var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+        	var requiereAutorizacion = json.REQAUTSERV//Ext.decode(response.responseText).requiereAutServ;
             if(requiereAutorizacion == "SI"){ //Requiere autorizacion de servicio
                 //var valido = true;
                 //var nAut = record.get('NoAutorizacion');

@@ -743,8 +743,9 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-					success,
-					requiereAutServ
+					
+					datosInformacionAdicional.*,
+					success
 				</param>
 			</result>
 		</action>

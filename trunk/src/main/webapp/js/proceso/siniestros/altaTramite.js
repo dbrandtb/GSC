@@ -223,20 +223,19 @@ Ext.onReady(function() {
     });
     
     storeRamos = Ext.create('Ext.data.Store', {
-        model:'Generic',
-        autoLoad:true,
-        proxy:
-        {
-            type: 'ajax',
-            url:_URL_CATALOGOS,
-            extraParams : {catalogo:_CAT_RAMOS},
-            reader:
-            {
-                type: 'json',
-                root: 'lista'
-            }
-        }
-    });
+		model:'Generic',
+		autoLoad:true,
+		proxy:
+		{
+			type: 'ajax',
+			url:_UR_LISTA_RAMO_SALUD,
+			reader:
+			{
+				type: 'json',
+				root: 'listadoRamosSalud'
+			}
+		}
+	});
     
     var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',
 	{
@@ -268,7 +267,7 @@ Ext.onReady(function() {
 	
     cmbRamos = Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan	   :2,			fieldLabel   : 'Ramo ',			id        : 'cmbRamos',		allowBlank     : false,	
+		colspan	   :2,			fieldLabel   : 'Producto',			id        : 'cmbRamos',		allowBlank     : false,	
 	    editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : false,
 	    width	   :500,		labelWidth   : 250,				queryMode :'local',			name           :'cmbRamos'
 	    ,store : storeRamos
@@ -284,8 +283,8 @@ Ext.onReady(function() {
 	    	}
 	    }
 	});
-    
-    var comboTipoAte= Ext.create('Ext.form.ComboBox',
+	
+	var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
         id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo atenci&oacute;n',				queryMode:'local',
         displayField: 'value',	   valueField: 'key',					editable:false,							allowBlank : false,
@@ -1086,11 +1085,11 @@ Ext.onReady(function() {
 		               width		 : 500,
 		               value:'PENDIENTE'
 		            },
+		            cmbRamos
+	            	,
 		            cmbOficinaReceptora
 		            ,
 		            cmbOficinaEmisora
-	            	,
-	            	cmbRamos
 	            	,
 	            	{
 		            	id:'dtFechaRecepcion'

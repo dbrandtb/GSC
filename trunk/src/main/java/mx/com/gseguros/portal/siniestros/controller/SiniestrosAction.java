@@ -131,6 +131,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<Map<String,String>> datosCoberturaxCal;
     private List<List<Map<String,String>>> llist1;
     private Map<String, String> map1;
+    private List<Map<String,String>>  datosInformacionAdicional;
     
 	/**
      * Funciï¿½n para la visualizaciï¿½n de la autorizacion de servicio 
@@ -1512,7 +1513,10 @@ public String generarSiniestroSinAutorizacion()
    public String obtieneRequiereAutServ(){
 	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
 	   	try {
-	   		requiereAutServ = siniestrosManager.requiereAutorizacionServ(params.get("cobertura"),params.get("subcobertura"));
+	   		//List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
+	   		datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"));
+	   		//requiereAutServ = DatosInformacionAdicional.get(0).get("REQAUTSERV");//será otvalor8
+	   		//requiereAutServ = siniestrosManager.requiereAutorizacionServ(params.get("cobertura"),params.get("subcobertura"));
 	   	}catch( Exception e){
 	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
 	   		return SUCCESS;
@@ -1862,7 +1866,9 @@ public String generarSiniestroSinAutorizacion()
 	    	String subcobertura = factura.get("CDCONVAL");
 	    	String valorComplementario = "0";
 	    	
-	    	String requiereAutorizacion = siniestrosManager.requiereAutorizacionServ(cobertura, subcobertura);
+	    	List<Map<String,String>>  DatosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(cobertura,subcobertura);
+	    	String requiereAutorizacion = DatosInformacionAdicional.get(0).get("REQAUTSERV");//será otvalor8
+	    	//String requiereAutorizacion = siniestrosManager.requiereAutorizacionServ(cobertura, subcobertura);
 	    	if(requiereAutorizacion.equalsIgnoreCase("OP")){
 	    		valorComplementario = "1";
 	    	}
@@ -2567,18 +2573,26 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
     				
     				//2.- Obtenemos la información parametrizable con respecto al valor de tipo del formato del calculo y si requiere penalizaciones
-    				List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
-    		   		String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
+    				//List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
+    		   		//String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
     		   		
     		   		//3.- Guardamos los valores en calculosPenalizaciones
-    		   		String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
-    		   		calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
-					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
-    				datosCoberturaxCal.add(calcxCobe);
+    		   		//String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
+    		   		//calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
+					//calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
+    				//datosCoberturaxCal.add(calcxCobe);
     				//4.- Obtenemos los valores de los Deducibles y copagos
+    				//logger.debug("&&&&VALORES DE ENTRADA&&&&&-->cdunieco "+cdunieco+" cdramo "+cdramo+" Estado "+estado+ "nmpoliza "+nmpoliza+" nmsuplem"+nmsuplem+" nmsituac"+nmsituac+" aaapertu"+aaapertu+" status"+status+" nmsinies"+nmsinies+" nmsuplem"+nmsuplem);
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
-    				
+    				//logger.debug("%%%%RESPUESTA%%%%"+copagoDeducibleSiniestroIte);
+    				//copagoDeducibleSiniestroIte.get("TIPOCOPAGO");
+    				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
+    				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
+    				calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
+					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
+					datosCoberturaxCal.add(calcxCobe);
+					
     				//4.- Verificamos si va a necesitar calculos de penalizaciones
     				if(calculosPenalizaciones.equalsIgnoreCase("1")){
     		   			
@@ -6155,6 +6169,17 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public Map<String, String> getMap1() {
 		return map1;
+	}
+
+
+	public List<Map<String, String>> getDatosInformacionAdicional() {
+		return datosInformacionAdicional;
+	}
+
+
+	public void setDatosInformacionAdicional(
+			List<Map<String, String>> datosInformacionAdicional) {
+		this.datosInformacionAdicional = datosInformacionAdicional;
 	}
 
 

@@ -3121,7 +3121,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
 
-    @Override
+    /*@Override
 	public String requiereAutorizacionServicio(String cobertura,String subcobertura) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		//params.put("pv_tipoConcepto_i", tipoConcepto);
@@ -3145,7 +3145,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
     	}
-    }
+    }*/
 	
 	@Override
 	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception {
@@ -3192,4 +3192,23 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             return consulta;
         }
     }
+
+	@Override
+	public List<Map<String, String>> obtieneDatosAdicionales(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneDatosAdicionales(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneDatosAdicionales extends StoredProcedure {
+		protected ObtieneDatosAdicionales(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_GET_REQAUTSERV");
+			declareParameter(new SqlParameter("pv_cobertura_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_subcobertura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -1245,7 +1245,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 	
-	@Override
+	/*@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
 	public String requiereAutorizacionServ(String cobertura, String subcobertura) throws Exception {
 		try {
@@ -1253,7 +1253,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
-	}
+	}*/
 	
 	@Override
 	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura, String cdramo) throws Exception {
@@ -1271,5 +1271,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
+	}
+
+	
+	@Override
+	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cobertura_i", cobertura);
+		params.put("pv_subcobertura_i",   subcobertura);
+		log.debug("requiereInformacionAdicional params: "+params);
+		return siniestrosDAO.obtieneDatosAdicionales(params);
 	}
 }
