@@ -54,9 +54,9 @@
             var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros" action="obtieneMesesTiempoEspera" />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             
+            var _URL_MONTO_DISP_PROVEEDOR           = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
+            
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
-            console.log(valorAction);
-            //debug(valorAction);
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js?${now}"></script>

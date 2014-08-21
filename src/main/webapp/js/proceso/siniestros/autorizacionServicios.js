@@ -397,7 +397,7 @@ Ext.onReady(function() {
 					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
 					
 					//Verificamos el CDTIPSIT del Asegurado para saber si es Salud Vital ó Multisalud
-					if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
+					/*if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
 						Ext.getCmp('idCopagoFin').show();
 						Ext.getCmp('idPenalCircHospitalario').show();
 						Ext.getCmp('idPenalCambioZona').show();
@@ -406,7 +406,7 @@ Ext.onReady(function() {
 						Ext.getCmp('idCopagoFin').hide();
 						Ext.getCmp('idPenalCircHospitalario').hide();
 						Ext.getCmp('idPenalCambioZona').hide();
-					}
+					}*/
 					
 					Ext.getCmp('idMesesAsegurado').setValue(record.get('mesesAsegurado'));
 					storeCobertura.load({
@@ -615,17 +615,6 @@ Ext.onReady(function() {
 	                	'params.cdgarant' :this.getValue()
 	                }
 	            });
-	        	
-	        	if(Ext.getCmp('idCobAfectada').getValue() =="18MA"){
-	        		if(+ Ext.getCmp('idMesesAsegurado').getValue() < 10 ){
-	        			centrarVentanaInterna(Ext.Msg.show({
-	  		               title: 'Error',
-	  		               msg: 'El n&uacute;mero de meses es menor al m&iacute;nimo requerido',
-	  		               buttons: Ext.Msg.OK,
-	  		               icon: Ext.Msg.ERROR
-	  		           	}));
-        			}
-	        	}
 	        }
         }
     });
@@ -639,6 +628,47 @@ Ext.onReady(function() {
 		listeners : {
 					change:function(e){
 						obtieneInformacion();
+						//aqui se va a ser el llamado al pl porque se tiene que obtener e
+							Ext.getCmp('idSalarioMin').setValue('');
+							Ext.getCmp('idReqPenalizacion').setValue('');
+							Ext.getCmp('idValMaternidad').setValue('');
+						    Ext.Ajax.request(
+						    {
+						        url    : _URL_MONTO_DISP_PROVEEDOR
+						        ,params:{
+						            'params.cobertura': Ext.getCmp('idCobAfectada').getValue(),
+						            'params.subcobertura': Ext.getCmp('idSubcobertura').getValue()
+						        }
+						        ,success : function (response)
+						        {
+						        	var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+						        	var montoDisponible = json.SUMADISP;
+						        	
+						        	Ext.getCmp('idSalarioMin').setValue(montoDisponible);
+						        	Ext.getCmp('idReqPenalizacion').setValue(json.REQPENALIZACION);
+						        	Ext.getCmp('idValMaternidad').setValue(json.VALMATERNIDAD);
+						        	
+						        	if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+						        		if(+ Ext.getCmp('idMesesAsegurado').getValue() < 10 ){
+						        			centrarVentanaInterna(Ext.Msg.show({
+						  		               title: 'Error',
+						  		               msg: 'El n&uacute;mero de meses es menor al m&iacute;nimo requerido',
+						  		               buttons: Ext.Msg.OK,
+						  		               icon: Ext.Msg.ERROR
+						  		           	}));
+					        			}
+						        	}
+						        },
+						        failure : function ()
+						        {
+						            Ext.Msg.show({
+						                title:'Error',
+						                msg: 'Error de comunicaci&oacute;n',
+						                buttons: Ext.Msg.OK,
+						                icon: Ext.Msg.ERROR
+						            });
+						        }
+						    });
 		    		}
 		        }
     	
@@ -951,7 +981,8 @@ Ext.onReady(function() {
 	    labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'cdcausa',
 	    store : storeCausaSinestro,
 	    listeners : {
-			change:function(e){
+			'select' :function(e){
+				Ext.getCmp('sumDisponible').setValue('');
 				switch (this.getValue()) {
 			        case '1': //ENFERMEDAD
 			        	Ext.getCmp('notaInterna').setValue('');
@@ -964,7 +995,7 @@ Ext.onReady(function() {
 			        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			        	Ext.getCmp('idPenalCambioZona').setValue('0');
 			        	if(e.getValue() == "3"){
-			        		Ext.getCmp('sumDisponible').setValue("25000");
+			        		Ext.getCmp('sumDisponible').setValue(Ext.getCmp('idSalarioMin').getValue());
 			        	}
 			        	break;
 			        default: 
@@ -1286,6 +1317,13 @@ Ext.onReady(function() {
 						descTipMed:tipoMedico.rawValue,
 						cdtipaut:'3'
 					});
+					
+					if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+						var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+						sumaDisponible = Ext.getCmp('sumDisponible').getValue() - datos.importeEqQuirurg;
+						Ext.getCmp('sumDisponible').setValue(sumaDisponible);
+					}
+					
 					storeQuirurgico.add(rec);
 					panelEquipoQuirurgico.getForm().reset();
 					ventanaEqQuirurgico.close();
@@ -1534,6 +1572,12 @@ Ext.onReady(function() {
        },
        onRemoveClick: function(grid, rowIndex){
     	   var record=this.getStore().getAt(rowIndex);
+    	   var importeEliminar = record.get("ptimport");
+    	   if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+    	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+    	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
+    	   }
+    	   
     	   this.getStore().removeAt(rowIndex);
        }
 	});
@@ -1741,9 +1785,9 @@ Ext.onReady(function() {
 								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
 								
 								//Selección de tipo de Autorización:- Aparecerá oculto los valores al inicio
-								Ext.getCmp('idCopagoFin').hide();
-	        					Ext.getCmp('idPenalCircHospitalario').hide();
-	        					Ext.getCmp('idPenalCambioZona').hide();
+								//Ext.getCmp('idCopagoFin').hide();
+	        					//Ext.getCmp('idPenalCircHospitalario').hide();
+	        					//Ext.getCmp('idPenalCambioZona').hide();
 	        					
 	        					if(closedStatusSelectedID !=1){
 									Ext.getCmp('panelbusqueda').show();
@@ -1957,6 +2001,21 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'MesesTmpEsperaCPT'		,id       : 'idTiempoEsperaCPT', 	name:'idTiempoEsperaCPT',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'ReqPenalizacion'		,id       : 'idReqPenalizacion', 	name:'idReqPenalizacion',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'ValMaternidad'		,id       : 'idValMaternidad', 	name:'idValMaternidad',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'SalarioMinimo'		,id       : 'idSalarioMin', 	name:'idSalarioMin',
 					 labelWidth: 170,					hidden:true
 	 			}
 	 			,
@@ -2513,6 +2572,7 @@ Ext.onReady(function() {
 			//Nota Interes
 			Ext.getCmp('notaInterna').setValue(json.dsnotas);
 			
+			debug("VALOR DEL json.mtsumadp -->"+json.mtsumadp);
 			Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
 			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
@@ -2616,7 +2676,6 @@ Ext.onReady(function() {
 			
 			//Proveedor
 			Ext.getCmp('idProveedor').setValue(json.cdprovee);
-			
 			
 			//Causa Siniestro
 			storeCausaSinestro.load();
@@ -2875,7 +2934,7 @@ Ext.onReady(function() {
 		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 		            	Ext.getCmp('idCopago').setValue(json.copago);
 		            	
-						if(Ext.getCmp('idCobAfectada').getValue() == "18HO"){
+						if(Ext.getCmp('idReqPenalizacion').getValue() == "1"){
 							Ext.Ajax.request(
 			    					{
 			    					    url     : _URL_CATALOGOS
