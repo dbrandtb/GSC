@@ -65,6 +65,11 @@
             </result>
         </action>
         
+        
+        <action name="codigosPostales" class="usuarioAction">
+            <result>/jsp-script/catalogos/codigosPostales.jsp</result>
+        </action>
+        
         <action name="includes/agregaUsuarios" class="usuarioAction">
             <result>/jsp/catalogos/includes/agregaUsuarios.jsp</result>
         </action>
@@ -291,6 +296,14 @@
         </action>
         
         <action name="cargarNombreDocumentoPersona" class="personasAction" method="cargarNombreDocumentoPersona">
+            <result type="json" />
+        </action>
+
+        <action name="obtieneAccionistas" class="personasAction" method="obtieneAccionistas">
+            <result type="json" />
+        </action>
+
+        <action name="guardaAccionista" class="personasAction" method="guardaAccionista">
             <result type="json" />
         </action>
 

@@ -112,6 +112,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_PAGO_SINIESTROS:
 				case TIPO_RESIDENCIA:
 				case TRATAMIENTOS:
+				case TCUMULOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:

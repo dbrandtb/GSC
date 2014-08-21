@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.catalogos.dao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,4 +87,8 @@ public interface PersonasDAO
 	public void validarDocumentosPersona(Map<String,String> params)throws Exception;
 	
 	public String cargarNombreDocumentoPersona(Map<String,String>params)throws Exception;
+
+	public String guardaAccionista(Map<String,String>params)throws Exception;
+	
+	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception;
 }

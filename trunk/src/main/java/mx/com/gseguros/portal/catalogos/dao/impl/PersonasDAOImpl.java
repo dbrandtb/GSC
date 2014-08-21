@@ -50,7 +50,11 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
     	protected ObtenerPersonasPorRFC(DataSource dataSource) {
             super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA");
-            declareParameter(new SqlParameter("rfc",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdrfc_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsnombre_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsnombre1_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsapellido_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsapellido1_i",OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -477,6 +481,30 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	}
     }
 	
+	
+	@Override
+	public List<Map<String,String>>obtieneAccionistas(Map<String,String> params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new ObtieneAccionistas(getDataSource()), params);
+		return (List<Map<String,String>>)resultado.get("pv_registro_o");
+	}
+	
+	protected class ObtieneAccionistas extends StoredProcedure
+	{
+		
+		protected ObtieneAccionistas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ESTRUC_CORPORATIVA");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtpesco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	@Override
 	public void validarDocumentosPersona(Map<String,String> params)throws Exception
 	{
@@ -515,4 +543,30 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+
+	@Override
+	public String guardaAccionista(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new GuardaAccionista(getDataSource()), params);
+		return (String)resultado.get("pv_msg_id_o");
+	}
+	
+	protected class GuardaAccionista extends StoredProcedure
+	{
+		protected GuardaAccionista(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_TESCOPER");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtpesco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnacion_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_porparti_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

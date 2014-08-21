@@ -21,6 +21,11 @@ var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargar
 
 var _p22_storeGrid;
 var _p22_windowAgregarDocu;
+
+var windowAccionistas;
+var accionistasStore;
+var gridAccionistas;
+
 ////// variables //////
 
 Ext.onReady(function()
@@ -205,6 +210,7 @@ function _p22_buscarClic()
 			{
 				'smap1.rfc'     : _p22_formBusqueda().down('[name=rfc]').getValue()
 				,'smap1.nombre' : _p22_formBusqueda().down('[name=nombre]').getValue()
+				,'smap1.snombre' : _p22_formBusqueda().down('[name=snombre]').getValue()
                 ,'smap1.apat'   : _p22_formBusqueda().down('[name=apat]').getValue()
                 ,'smap1.amat'   : _p22_formBusqueda().down('[name=amat]').getValue()
 			}
@@ -587,12 +593,48 @@ function _p22_datosAdicionalesClic()
                 {
                     fieldMail.regex = /^[_A-Z0-9-]+(\.[_A-Z0-9-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/;
                 }
+                
+				var fieldEstCorp = _fieldByLabel('Estructura corporativa');
+				if(fieldEstCorp){
+					var panelDatAdic = fieldEstCorp.up();
+					var indEstCorp = panelDatAdic.items.findIndex('fieldLabel', 'Estructura corporativa');
+					
+					panelDatAdic.insert(indEstCorp,{
+            	    	layout: 'column',
+            	    	border: false,
+            	    	html:'<br/>'
+            	    });
+					panelDatAdic.insert(indEstCorp+2,{
+                        	 xtype    : 'button'
+                        	,text     : 'Ver/Editar Accionistas'
+                            ,icon     : '${ctx}/resources/fam3icons/icons/award_star_add.png'
+                            ,tooltip  : 'Ver/Editar Accionostas'
+                            ,handler  : function(button)
+                            {
+                               verEditarAccionistas(_p22_fieldCdperson().getValue(), fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length), fieldEstCorp.getValue());
+                            }
+					});
+				}
+				
+				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
                 var itemsDocumento=Ext.ComponentQuery.query('[codidocu]');
                 debug('itemsDocumento:',itemsDocumento);
+                
                 for(var i=0;i<itemsDocumento.length;i++)
                 {
                     itemDocumento=itemsDocumento[i];
+                    
+                    if(i==0){
+                    	itemDocumento.up().add({
+                	    	layout: 'column',
+                	    	border: false,
+                	    	html:'<br/>'
+                	     });
+                    }
+                    
+                    itemDocumento.up().add(Ext.clone(itemDocumento));
+                    
                     itemDocumento.up().add(
                     {
                         xtype    : 'panel'
@@ -603,7 +645,7 @@ function _p22_datosAdicionalesClic()
                             {
                                 xtype       : 'displayfield'
                                 ,labelWidth : 180
-                                ,fieldLabel : itemDocumento.fieldLabel + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
+                                ,fieldLabel : 'Documento ' + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
                             }
                             ,{
                                 xtype     : 'button'
@@ -628,7 +670,8 @@ function _p22_datosAdicionalesClic()
                             }
                         ]
                     });
-                    itemDocumento.destroy();
+                    //itemDocumento.destroy();
+                    itemDocumento.allowBlank = true;
                 }
             }
             else
@@ -921,6 +964,142 @@ function panDocSubido()
 {
     _p22_windowAgregarDocu.destroy();
 }
+
+
+function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
+	
+	var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
+	var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
+	
+	
+	
+	if(!windowAccionistas){
+		Ext.define('modeloAccionistas',{
+	        extend  : 'Ext.data.Model'
+	        ,fields :
+	        [
+	            'NMORDINA'
+	            ,'DSNOMBRE'
+	            ,'CDNACION'
+	            ,'PORPARTI'
+	        ]
+		});
+		
+		accionistasStore = Ext.create('Ext.data.Store',
+			    {
+					pageSize : 20,
+			        autoLoad : true
+			        ,model   : 'modeloAccionistas'
+			        ,proxy   :
+			        {
+			            type         : 'memory'
+			            ,enablePaging : true
+			            ,reader      : 'json'
+			            ,data        : []
+			        }
+			    });
+		
+		gridAccionistas = Ext.create('Ext.grid.Panel',
+		    {
+		    title    : 'Accionistas'
+		    ,height  : 200
+		    ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+		    {
+		        clicksToEdit  : 1
+		        ,errorSummary : false
+		        
+		    })
+		    ,tbar     :
+		        [
+		            {
+		                text     : 'Agregar'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+		                ,handler : function(){
+		                	accionistasStore.add(new modeloAccionistas());
+		                }
+		            }
+		        ]
+		    ,columns :
+		    [
+		        {
+		            header     : 'Accionista'
+		            ,dataIndex : 'DSNOMBRE'
+		            ,flex      : 1
+		            ,editor    :
+		            {
+		                xtype             : 'textfield'
+		                ,allowBlank       : false
+		            }
+		        }
+		        ,{
+		            header     : 'Nacionalidad'
+		            ,dataIndex : 'CDNACION'
+		            ,flex      : 1
+		            ,editor    :
+		            {
+		                xtype             : 'combobox'
+		                ,allowBlank       : false
+		            }
+		        }
+		        ,{
+		            header     : 'Porcentaje Participaci&oacute;n'
+		            ,dataIndex : 'PORPARTI'
+		            ,flex      : 1
+		            ,editor    :
+		            {
+		                xtype             : 'numberfield'
+		                ,allowBlank       : false
+		                ,allowDecimals    : true
+		                ,decimalSeparator : '.'
+		            }
+		        }
+		    ]
+		    ,store : accionistasStore
+		});
+		
+		windowAccionistas = Ext.create('Ext.window.Window', {
+	          title: 'Accionistas',
+	          closeAction: 'close',
+	          modal:true,
+	          height : 320,
+	          width  : 800,
+		      items: [gridAccionistas],
+	          bodyStyle:'padding:15px;',
+	          buttons:[
+	           {
+	                 text: 'Aceptar',
+	                 icon:'${ctx}/resources/fam3icons/icons/accept.png',
+	                 handler: function() {
+	                	 windowAccionistas.close();
+	                 }
+	           }
+	          ]
+	        });
+		
+		var params = {
+				'params.pv_cdperson_i' : cdperson,
+				'params.pv_cdatribu_i' : cdatribu,
+				'params.pv_cdtpesco_i' : cdestructcorp
+			};
+			
+			cargaStorePaginadoLocal(accionistasStore, _UrlCargaAccionistas, 'slist1', params, function (options, success, response){
+	    		if(success){
+	                var jsonResponse = Ext.decode(response.responseText);
+	                
+	                if(!jsonResponse.success) {
+	                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+	                }
+	            }else{
+	                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+	            }
+	    	}, gridAccionistas);
+	}
+	
+			windowAccionistas.show();
+			
+}
+
+
 ////// funciones //////
 </script>
 </head>

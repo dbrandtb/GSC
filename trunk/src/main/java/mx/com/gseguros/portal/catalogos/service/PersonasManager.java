@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.catalogos.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public interface PersonasManager
 	 * Buscar personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
 	 */
-	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String apat,String amat,long timestamp) throws Exception;
+	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String snombre,String apat,String amat,long timestamp) throws Exception;
 	/**
 	 * Guardar pantalla de personas
 	 * @return exito,respuesta,respuestaOculta,cdpersonNuevo
@@ -79,4 +80,8 @@ public interface PersonasManager
 	public List<Map<String,String>>cargarDocumentosPersona(String cdperson)throws Exception;
 	
 	public String cargarNombreDocumentoPersona(String cdperson,String codidocu)throws Exception;
+
+	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception;
+	
+	public String guardaAccionista(Map<String, String> params)throws Exception;
 }
