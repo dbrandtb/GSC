@@ -57,7 +57,8 @@ public enum Catalogos {
 	TIPO_MENU("TIPOMENU"),
 	DESTINOPAGO("TCVIMPCH"),
 	CATCONCEPTO("TCONCPAG"),
-	TERRORWS("TERRORWS");
+	TERRORWS("TERRORWS"),
+	TCUMULOS("TCUMULOS");
 
 	private String cdTabla;
 

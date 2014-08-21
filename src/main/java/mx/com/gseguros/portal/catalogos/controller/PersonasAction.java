@@ -27,6 +27,7 @@ public class PersonasAction extends PrincipalCoreAction
 	private String                   respuestaOculta  = null;
 	private static final long        serialVersionUID = -5438595581905207477L;
 	private List<Map<String,String>> slist1;
+	private Map<String,String>       params;
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
 	private Map<String,String>       smap3;
@@ -84,6 +85,7 @@ public class PersonasAction extends PrincipalCoreAction
 			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(
 					smap1.get("rfc"),
 					smap1.get("nombre"),
+					smap1.get("snombre"),
 					smap1.get("apat"),
 					smap1.get("amat"),
 					timestamp);
@@ -342,6 +344,36 @@ public class PersonasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtieneAccionistas()
+	{
+		exito = false;
+		
+		try{
+			slist1 =personasManager.obtieneAccionistas(params);
+			exito = true;
+		}catch(Exception ex){
+			logger.error("Error al obtener los accionistas",ex);
+			respuesta = ex.getMessage();
+		}
+		
+		return SUCCESS;
+	}
+
+	public String guardaAccionista()
+	{
+		exito = false;
+		
+		try{
+			personasManager.guardaAccionista(params);
+			exito = true;
+		}catch(Exception ex){
+			logger.error("Error al obtener los guardaAccionista",ex);
+			respuesta = ex.getMessage();
+		}
+		
+		return SUCCESS;
+	}
+	
 	public String pantallaDocumentosPersona()
 	{
 		logger.info(""
@@ -496,6 +528,14 @@ public class PersonasAction extends PrincipalCoreAction
 
 	public void setSmap3(Map<String, String> smap3) {
 		this.smap3 = smap3;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 	
 }

@@ -129,7 +129,7 @@ public class PersonasManagerImpl implements PersonasManager
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
 	 */
 	@Override
-	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String apat,String amat,long timestamp) throws Exception
+	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String snombre,String apat,String amat,long timestamp) throws Exception
 	{
 		Map<String,Object>result=new HashMap<String,Object>();
 		logger.info(timestamp
@@ -147,10 +147,11 @@ public class PersonasManagerImpl implements PersonasManager
 			try
 			{
 				Map<String,String>params=new HashMap<String,String>();
-				params.put("rfc"    , rfc);
-				//params.put("nombre" , nombre);
-				//params.put("apat"   , apat);
-				//params.put("amat"   , amat);
+				params.put("pv_cdrfc_i"    , rfc);
+				params.put("pv_dsnombre_i" , nombre);
+				params.put("pv_dsnombre1_i" , snombre);
+				params.put("pv_dsapellido_i"   , apat);
+				params.put("pv_dsapellido1_i"   , amat);
 				listaPersonas=personasDAO.obtenerPersonasPorRFC(params);
 			}
 			catch(Exception ex)
@@ -623,6 +624,16 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n##########################################"
 				);
 		return nombre;
+	}
+
+	@Override
+	public String guardaAccionista(Map<String, String> params)throws Exception
+	{
+		return personasDAO.guardaAccionista(params);
+	}
+	
+	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception{
+		return personasDAO.obtieneAccionistas(params);
 	}
 	
 	/*
