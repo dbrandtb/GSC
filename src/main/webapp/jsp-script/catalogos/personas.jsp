@@ -177,6 +177,7 @@ Ext.onReady(function()
 	        	    {
 	        	        text     : 'Nuevo'
                         ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                        ,hidden  : _p22_cdperson!=false
                         ,handler : _p22_nuevoClic
 	        	    }
 	        		,{
@@ -1074,7 +1075,6 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		            {
 		                text     : 'Agregar'
 		                ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-		                ,hidden  : _p22_cdperson!=false
 		                ,handler : function(){
 		                	accionistasStore.add(new modeloAccionistas());
 		                }
