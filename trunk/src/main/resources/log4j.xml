@@ -3,33 +3,36 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
     <!-- Application appender -->
-	<appender name="app" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="Threshold" value="INFO" />
+	<appender name="app" class="org.apache.log4j.RollingFileAppender">
+        <param name="Threshold" value="INFO" />
         <param name="File" value="/u01/wlserver/wllogs/gseguros/application.log" />
-		<param name="append" value="true" />
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
-		</layout>
-	</appender>
+        <param name="Append" value="true" />
+        <param name="MaxFileSize" value="50MB"/>
+        <param name="MaxBackupIndex" value="6"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
 	
 	<!-- Developer Appender -->
-	<appender name="dev" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="dev" class="org.apache.log4j.RollingFileAppender">
 		<param name="Threshold" value="TRACE" />
         <param name="File" value="/u01/wlserver/wllogs/gseguros/dev.log" />
-		<param name="append" value="true" />
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="50MB"/>
+		<param name="MaxBackupIndex" value="6"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
 		</layout>
 	</appender>
 	
 	<!-- SQL Appender -->
-    <appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="sql" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="TRACE" />
         <param name="File" value="/u01/wlserver/wllogs/gseguros/sql.log" />
-        <param name="append" value="true" />
-        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <param name="Append" value="true" />
+        <param name="MaxFileSize" value="50MB"/>
+        <param name="MaxBackupIndex" value="6"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
