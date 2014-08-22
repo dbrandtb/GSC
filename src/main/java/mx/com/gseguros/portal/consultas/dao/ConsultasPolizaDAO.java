@@ -620,7 +620,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		copago.setOrden(rs.getInt("ORDEN"));
     		copago.setDescripcion(rs.getString("DESCRIPCION"));
     		copago.setValor(rs.getString("VALOR"));
-    		
+    		copago.setNivel(rs.getInt("NIVEL"));
     		return copago;
     	}
     }
