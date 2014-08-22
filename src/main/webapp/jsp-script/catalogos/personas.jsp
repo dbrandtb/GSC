@@ -19,6 +19,9 @@ var _p22_UrlUploadPro           = '<s:url namespace="/"           action="subirA
 var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInlinePersona"           />';
 var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargarNombreDocumentoPersona"       />';
 
+var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
+var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
+
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
 /* PARA EL LOADER */
@@ -26,9 +29,10 @@ var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obten
 var _p22_storeGrid;
 var _p22_windowAgregarDocu;
 
-var windowAccionistas;
+var windowAccionistas = undefined;
 var accionistasStore;
 var gridAccionistas;
+var fieldEstCorp;
 
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -134,7 +138,10 @@ Ext.onReady(function()
 	        	    {
 	        	        text     : 'Datos adicionales'
 	        	        ,icon    : '${ctx}/resources/fam3icons/icons/application_form_add.png'
-	        	        ,handler : function(){_p22_guardarClic(_p22_datosAdicionalesClic);}
+	        	        ,handler : function(){
+	        	        		 windowAccionistas = undefined;
+	        	        		_p22_guardarClic(_p22_datosAdicionalesClic);
+	        	        }
 	        	    }
 	        	    ,{
                         text     : 'Documentos'
@@ -655,7 +662,7 @@ function _p22_datosAdicionalesClic()
                     fieldMail.regex = /^[_A-Z0-9-]+(\.[_A-Z0-9-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/;
                 }
                 
-				var fieldEstCorp = _fieldByLabel('Estructura corporativa');
+				fieldEstCorp = _fieldByLabel('Estructura corporativa');
 				if(fieldEstCorp){
 					var panelDatAdic = fieldEstCorp.up();
 					var indEstCorp = panelDatAdic.items.findIndex('fieldLabel', 'Estructura corporativa');
@@ -674,6 +681,34 @@ function _p22_datosAdicionalesClic()
                             {
                                verEditarAccionistas(_p22_fieldCdperson().getValue(), fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length), fieldEstCorp.getValue());
                             }
+					});
+					
+					fieldEstCorp.addListener('beforeselect',function (combo){
+						if(windowAccionistas){
+							
+							var valorAnterior = combo.getValue();
+							
+							Ext.Msg.show({
+		    		            title: 'Confirmar acci&oacute;n',
+		    		            msg  : 'Si cambia la Estructura Coorporativa perder&aacute; la lista de Accionistas guardada. &iquest;Desea continuar?',
+		    		            buttons: Ext.Msg.YESNO,
+		    		            fn: function(buttonId, text, opt) {
+		    		            	if(buttonId == 'yes') {
+		    		            		/**
+		    		            		*TODO: Llamar a PL que elimina todo (dos tipos) en BD.
+		    		            		*/
+		    		            		windowAccionistas = undefined;
+		    		            		
+		    		            	}else{
+		    		            		combo.setValue(valorAnterior);
+		    		            	}
+		            			},
+		    		            icon: Ext.Msg.QUESTION
+		        			});	
+						}else {
+							return true;
+						}
+						
 					});
 				}
 				
@@ -753,6 +788,66 @@ function _p22_guardarDatosAdicionalesClic()
 {
     debug('>_p22_guardarDatosAdicionalesClic');
     
+    var saveList = [];
+    var updateList = [];
+    var deleteList = [];
+    
+    if(windowAccionistas){
+    	accionistasStore.getRemovedRecords().forEach(function(record,index,arr){
+        	deleteList.push(record.data);
+    	});
+        accionistasStore.getNewRecords().forEach(function(record,index,arr){
+    		if(record.dirty) saveList.push(record.data);
+    	});
+        accionistasStore.getUpdatedRecords().forEach(function(record,index,arr){
+    		updateList.push(record.data);
+    	});
+    }
+	
+    debug('Accionistas Removed: ' , deleteList);
+    debug('Accionistas Added: '   , saveList);
+    debug('Accionistas Updated: ' , updateList);
+    
+    if(deleteList.length > 0 || saveList.length > 0 || updateList.length > 0){
+    	_p22_formDatosAdicionales().setLoading(true);
+    	
+    	Ext.Ajax.request(
+    	        {
+    	            url       : _UrlGuardaAccionista
+    	            ,jsonData :
+    	            {
+    	            	params: {
+    	            		'pv_cdperson_i':   _p22_fieldCdperson().getValue(),
+        	            	'pv_cdatribu_i':  fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length),
+        	            	'pv_cdtpesco_i':  fieldEstCorp.getValue()
+    	            	},
+    	                'saveList'   : saveList,
+    	                'deleteList' : deleteList,
+    	                'updateList' : updateList
+    	            }
+    	            ,success  : function(response)
+    	            {
+    	                _p22_formDatosAdicionales().setLoading(false);
+    	                var json = Ext.decode(response.responseText);
+    	                debug('response text:',json);
+    	                if(json.exito)
+    	                {
+    	                	windowAccionistas = undefined;
+    	                    mensajeCorrecto('Aviso','Datos de Accionistas guardados correctamente.');
+    	                }
+    	                else
+    	                {
+    	                    mensajeError(json.respuesta);
+    	                }
+    	            }
+    	            ,failure  : function()
+    	            {
+    	                _p22_formDatosAdicionales().setLoading(false);
+    	                errorComunicacion();
+    	            }
+    	});
+	}
+    
     var valido=true;
     
     if(valido)
@@ -796,6 +891,7 @@ function _p22_guardarDatosAdicionalesClic()
                 errorComunicacion();
             }
         });
+        
     }
     
     debug('<_p22_guardarDatosAdicionalesClic');
@@ -1029,10 +1125,11 @@ function panDocSubido()
 
 function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 	
-	var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
-	var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
 	
-	
+	if(Ext.isEmpty(cdestructcorp)){
+		mensajeWarning('Debe seleccionar una Estructura Coorporativa.');
+		return;
+	}
 	
 	if(!windowAccionistas){
 		Ext.define('modeloAccionistas',{
@@ -1062,11 +1159,11 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		
 		gridAccionistas = Ext.create('Ext.grid.Panel',
 		    {
-		    title    : 'Accionistas'
+		    title    : 'Para Editar un Accionista de Doble Clic en la fila deseada.'
 		    ,height  : 200
 		    ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
 		    {
-		        clicksToEdit  : 1
+		        clicksToEdit  : 2
 		        ,errorSummary : false
 		        
 		    })
@@ -1078,7 +1175,13 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		                ,handler : function(){
 		                	accionistasStore.add(new modeloAccionistas());
 		                }
-		            }
+		            },{
+		                text     : 'Eliminar'
+			                ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+			                ,handler : function(){
+			                	accionistasStore.remove(gridAccionistas.getSelectionModel().getSelection());
+			                }
+			            }
 		        ]
 		    ,columns :
 		    [
@@ -1137,7 +1240,7 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 	          ]
 	        });
 		
-		var params = {
+			var params = {
 				'params.pv_cdperson_i' : cdperson,
 				'params.pv_cdatribu_i' : cdatribu,
 				'params.pv_cdtpesco_i' : cdestructcorp

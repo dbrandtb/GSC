@@ -27,6 +27,9 @@ public class PersonasAction extends PrincipalCoreAction
 	private String                   respuestaOculta  = null;
 	private static final long        serialVersionUID = -5438595581905207477L;
 	private List<Map<String,String>> slist1;
+	private List<Map<String,String>> saveList;
+	private List<Map<String,String>> updateList;
+	private List<Map<String,String>> deleteList;
 	private Map<String,String>       params;
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
@@ -364,7 +367,45 @@ public class PersonasAction extends PrincipalCoreAction
 		exito = false;
 		
 		try{
-			personasManager.guardaAccionista(params);
+			logger.debug("Guardando lista de accionistas: ");
+			logger.debug("Params: " + params);
+			logger.debug("DeleteList: " + deleteList);
+			logger.debug("SaveList: " + saveList);
+			logger.debug("UpdateList: " + updateList);
+			
+			for(Map<String,String> del : deleteList){
+				params.put("pv_accion_i"  , "D");
+				
+				params.put("pv_nmordina_i", del.get("NMORDINA"));
+				params.put("pv_dsnombre_i", del.get("DSNOMBRE"));
+				params.put("pv_cdnacion_i", del.get("CDNACION"));
+				params.put("pv_porparti_i", del.get("PORPARTI"));
+				
+				personasManager.guardaAccionista(params);
+			}
+			
+			for(Map<String,String> up : updateList){
+				params.put("pv_accion_i"  , "U");
+				
+				params.put("pv_nmordina_i", up.get("NMORDINA"));
+				params.put("pv_dsnombre_i", up.get("DSNOMBRE"));
+				params.put("pv_cdnacion_i", up.get("CDNACION"));
+				params.put("pv_porparti_i", up.get("PORPARTI"));
+				
+				personasManager.guardaAccionista(params);
+			}
+			
+			for(Map<String,String> save : saveList){
+				params.put("pv_accion_i"  , "I");
+				
+				params.put("pv_nmordina_i", save.get("NMORDINA"));
+				params.put("pv_dsnombre_i", save.get("DSNOMBRE"));
+				params.put("pv_cdnacion_i", save.get("CDNACION"));
+				params.put("pv_porparti_i", save.get("PORPARTI"));
+				
+				personasManager.guardaAccionista(params);
+			}
+			
 			exito = true;
 		}catch(Exception ex){
 			logger.error("Error al obtener los guardaAccionista",ex);
@@ -536,6 +577,30 @@ public class PersonasAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
+	}
+
+	public List<Map<String, String>> getSaveList() {
+		return saveList;
+	}
+
+	public void setSaveList(List<Map<String, String>> saveList) {
+		this.saveList = saveList;
+	}
+
+	public List<Map<String, String>> getDeleteList() {
+		return deleteList;
+	}
+
+	public void setDeleteList(List<Map<String, String>> deleteList) {
+		this.deleteList = deleteList;
+	}
+
+	public List<Map<String, String>> getUpdateList() {
+		return updateList;
+	}
+
+	public void setUpdateList(List<Map<String, String>> updateList) {
+		this.updateList = updateList;
 	}
 	
 }
