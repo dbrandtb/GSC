@@ -3887,7 +3887,15 @@ public class EndososAction extends PrincipalCoreAction
                 ////// 3. copiar los otvalor del original a la base //////
                 
                 ////// 4. sustituir los otvalor por los nuevos del form //////
-                mapaValosit.put("pv_otvalor02",fenacimiIte);
+                LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
+				parametrosAtributos.put("cdtipsit",cdtipsit);
+				Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
+				String cdatribuFenacimi = atributos.get("FENACIMI");
+				if(cdatribuFenacimi.length()==1)
+				{
+					cdatribuFenacimi = "0"+cdatribuFenacimi;
+				}
+                mapaValosit.put("pv_otvalor"+cdatribuFenacimi,fenacimiIte);
                 ////// 4. sustituir los otvalor por los nuevos del form //////
                 
                 kernelManager.insertaValoresSituaciones(mapaValosit);
