@@ -203,26 +203,21 @@ public class ConsultasPolizaManagerImpl extends
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ConsultasPolizaDAO.OBTIENE_COPAGOS);
 		
-		//Agregamos un campo que agrupe los resultados:
+		// Agregamos un campo que agrupe los resultados:
 		ArrayList<CopagoVO> copagos = (ArrayList<CopagoVO>) result.getItemList();
 		String agrupador = null;
-		
-		logger.debug("****** copagos:" + copagos);
 		
 		Iterator<CopagoVO> itCopagos = copagos.iterator();
 		while (itCopagos.hasNext()) {
 			CopagoVO copagoVO = itCopagos.next();
-			// TODO: Modificar para que el SP devuelva un campos agrupador y no busquemos " "
-			if( StringUtils.isBlank(agrupador) || !copagoVO.getDescripcion().startsWith(" ")) {
+			// Si el copago tiene Nivel Padre se asigna como agrupador:
+			if(copagoVO.getNivel() == 1) {
 				agrupador = copagoVO.getDescripcion();
-				logger.debug("****** AGRUPADOR:" + agrupador);
 			}
 			if(StringUtils.isBlank(copagoVO.getValor())) {
-				logger.debug("****** REMOVIENDO:" + copagoVO);
 				itCopagos.remove();
 			}
 			copagoVO.setAgrupador(agrupador);
-			logger.debug("****** ELEMENTO FINAL:" + copagoVO);
 		}
 
 		return result;
