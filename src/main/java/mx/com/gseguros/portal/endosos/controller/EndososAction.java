@@ -3090,10 +3090,7 @@ public class EndososAction extends PrincipalCoreAction
             	
             	String llaveSexo = null;
             	if(atributos.get("SEXO") != null) {
-            		llaveSexo=atributos.get("SEXO");
-            		if(llaveSexo.length()==1) {
-                		llaveSexo="0"+llaveSexo;
-                	}
+            		llaveSexo=StringUtils.leftPad(atributos.get("SEXO"),2,"0");
                 	llaveSexo="parametros.pv_otvalor"+llaveSexo;
             	}
             	String sexo = smap1.get(llaveSexo);
@@ -3101,10 +3098,7 @@ public class EndososAction extends PrincipalCoreAction
     			
             	String llaveFenacimi=null;
             	if(atributos.get("FENACIMI") != null) {
-            		llaveFenacimi=atributos.get("FENACIMI");
-                	if(llaveFenacimi.length()==1) {
-                		llaveFenacimi="0"+llaveFenacimi;
-                	}
+            		llaveFenacimi=StringUtils.leftPad(atributos.get("FENACIMI"),2,"0");
                 	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
             	}
             	String fenacimi = smap1.get(llaveFenacimi);
@@ -3890,11 +3884,7 @@ public class EndososAction extends PrincipalCoreAction
                 LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
 				parametrosAtributos.put("cdtipsit",cdtipsit);
 				Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
-				String cdatribuFenacimi = atributos.get("FENACIMI");
-				if(cdatribuFenacimi.length()==1)
-				{
-					cdatribuFenacimi = "0"+cdatribuFenacimi;
-				}
+				String cdatribuFenacimi = StringUtils.leftPad(atributos.get("FENACIMI"),2,"0");
                 mapaValosit.put("pv_otvalor"+cdatribuFenacimi,fenacimiIte);
                 ////// 4. sustituir los otvalor por los nuevos del form //////
                 
@@ -4256,11 +4246,7 @@ public class EndososAction extends PrincipalCoreAction
                 LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
 				parametrosAtributos.put("cdtipsit",cdtipsit);
 				Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
-				String cdatribuSexo = atributos.get("SEXO");
-				if(cdatribuSexo.length()==1)
-				{
-					cdatribuSexo = "0"+cdatribuSexo;
-				}
+				String cdatribuSexo = StringUtils.leftPad(atributos.get("SEXO"),2,"0");
                 mapaValosit.put("pv_otvalor"+cdatribuSexo,sexo);
                 ////// 4. sustituir los otvalor por los nuevos del form //////
                 
