@@ -146,4 +146,11 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo)throws Exception;
+	
+	public void borrarMpoliperGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdgrupo)throws Exception;
 }

@@ -2048,7 +2048,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						null  , null , null
 						,null , null , cdsisrol
 						,"COTIZACION_GRUPO", "ASEGURADOS", null);
-				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
 				imap.put("aseguradosColumns" , gc.getColumns());
 				imap.put("aseguradosFields"  , gc.getFields());
 			}
@@ -2065,6 +2065,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
 				imap.put("extraprimasColumns" , gc.getColumns());
 				imap.put("extraprimasFields"  , gc.getFields());
+			}
+			
+			//campos para recuperados (asegurados)
+			if(exito && smap1.containsKey("ASEGURADOS_EDITAR")
+					 && StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
+					 && smap1.get("ASEGURADOS_EDITAR").equals("S"))
+			{
+				List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "RECUPERADOS", null);
+				gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+				imap.put("recuperadosColumns" , gc.getColumns());
+				imap.put("recuperadosFields"  , gc.getFields());
 			}
 			
 			if(exito)
@@ -3956,6 +3970,16 @@ public class CotizacionAction extends PrincipalCoreAction
 						,smap1.get("nmsuplem")
 						,smap1.get("cdgrupo")
 						);				
+			    int grupo=0;
+			    for(Map<String,String>iAsegurado:slist1)
+			    {
+			    	String parentesco=iAsegurado.get("PARENTESCO");
+			    	if(parentesco.equals("T"))
+			    	{
+			    		grupo = grupo + 1;
+			    	}
+			    	iAsegurado.put("AGRUPADOR",new StringBuilder().append(grupo).append("_").append("Familia ").append(grupo).toString());
+			    }
 			}
 			catch(Exception ex)
 			{
@@ -3969,6 +3993,69 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### cargarAseguradosGrupo ######"
 				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarAseguradosCotizacion()
+	{
+		this.session=ActionContext.getContext().getSession();
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### guardarAseguradosCotizacion ######"
+				+ "\nsmap1 "+smap1
+				+ "\nslist1 "+slist1
+				);
+		success = true;
+		exito   = true;
+		
+		if(exito)
+		{
+			try
+			{
+				String cdunieco = smap1.get("cdunieco");
+				String cdramo   = smap1.get("cdramo");
+				String estado   = smap1.get("estado");
+				String nmpoliza = smap1.get("nmpoliza");
+				String cdgrupo  = smap1.get("cdgrupo");
+				
+				cotizacionManager.borrarMpoliperGrupo(cdunieco,cdramo,estado,nmpoliza,cdgrupo);
+				
+				for(Map<String,String>aseg:slist1)
+				{
+					Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+					parametros=new LinkedHashMap<String,Object>(0);
+					parametros.put("pv_cdunieco_i",	cdunieco);
+					parametros.put("pv_cdramo_i",	cdramo);
+					parametros.put("pv_estado_i",	estado);
+					parametros.put("pv_nmpoliza_i",	nmpoliza);
+					parametros.put("pv_nmsituac_i",	(String)aseg.get("nmsituac"));
+					parametros.put("pv_cdrol_i", 	(String)aseg.get("cdrol"));
+					parametros.put("pv_cdperson_i",	(String)aseg.get("cdperson"));
+					parametros.put("pv_nmsuplem_i",	"0");
+					parametros.put("pv_status_i",	"V");
+					parametros.put("pv_nmorddom_i",	"1");
+					parametros.put("pv_swreclam_i",	null);
+					parametros.put("pv_accion_i",	"I");
+					parametros.put("pv_swexiper_i", (String)aseg.get("swexiper"));
+					kernelManager.movMpoliper(parametros);
+				}
+				
+				respuesta       = "Se han guardado los asegurados";
+				respuestaOculta = "Todo OK";
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al guardar las personas #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.info(""
+				+ "\n###### guardarAseguradosCotizacion ######"
+				+ "\n#########################################"
 				);
 		return SUCCESS;
 	}
