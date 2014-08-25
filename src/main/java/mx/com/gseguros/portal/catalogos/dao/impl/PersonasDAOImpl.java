@@ -569,4 +569,24 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public String eliminaAccionistas(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new EliminaAccionistas(getDataSource()), params);
+		return (String)resultado.get("pv_msg_id_o");
+	}
+	
+	protected class EliminaAccionistas extends StoredProcedure
+	{
+		protected EliminaAccionistas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_ELIMINA_TESCOPER");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

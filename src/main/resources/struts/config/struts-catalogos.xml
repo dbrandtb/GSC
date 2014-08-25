@@ -303,6 +303,10 @@
             <result type="json" />
         </action>
 
+        <action name="eliminaAccionistas" class="personasAction" method="eliminaAccionistas">
+            <result type="json" />
+        </action>
+
         <action name="guardaAccionista" class="personasAction" method="guardaAccionista">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>

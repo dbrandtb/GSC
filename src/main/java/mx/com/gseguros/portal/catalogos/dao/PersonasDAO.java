@@ -89,6 +89,8 @@ public interface PersonasDAO
 	public String cargarNombreDocumentoPersona(Map<String,String>params)throws Exception;
 
 	public String guardaAccionista(Map<String,String>params)throws Exception;
+
+	public String eliminaAccionistas(Map<String,String>params)throws Exception;
 	
 	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception;
 }

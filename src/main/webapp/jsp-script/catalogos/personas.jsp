@@ -19,8 +19,12 @@ var _p22_UrlUploadPro           = '<s:url namespace="/"           action="subirA
 var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInlinePersona"           />';
 var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargarNombreDocumentoPersona"       />';
 
+var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+var _CAT_NACIONALIDAD  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@NACIONALIDAD"/>';
+
 var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
 var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
+var _UrlEliminaAccionistas = '<s:url namespace="/catalogos" action="eliminaAccionistas" />';
 
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
@@ -36,9 +40,9 @@ var fieldEstCorp;
 
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
-debug('_p22_smap1:',_p21_smap1);
+debug('_p22_smap1:',_p22_smap1);
 var _p22_cdperson = false;
-if(!Ext.isEmpty(_p22_smap1.cdperson))
+if(_p22_smap1!=null && !Ext.isEmpty(_p22_smap1.cdperson))
 {
     _p22_cdperson = _p22_smap1.cdperson;
 }
@@ -694,10 +698,37 @@ function _p22_datosAdicionalesClic()
 		    		            buttons: Ext.Msg.YESNO,
 		    		            fn: function(buttonId, text, opt) {
 		    		            	if(buttonId == 'yes') {
-		    		            		/**
-		    		            		*TODO: Llamar a PL que elimina todo (dos tipos) en BD.
-		    		            		*/
+		    		            		
 		    		            		windowAccionistas = undefined;
+		    		            		
+		    		            		Ext.Ajax.request(
+		    		                	        {
+		    		                	            url       : _UrlEliminaAccionistas
+		    		                	            ,params: {
+	    		                	            		'params.pv_cdperson_i':   _p22_fieldCdperson().getValue(),
+	    		                    	            	'params.pv_cdatribu_i':  fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length)
+	    		                	            	}
+		    		                	            ,success  : function(response)
+		    		                	            {
+		    		                	                _p22_formDatosAdicionales().setLoading(false);
+		    		                	                var json = Ext.decode(response.responseText);
+		    		                	                debug('response text:',json);
+		    		                	                if(json.exito)
+		    		                	                {
+		    		                	                    mensajeCorrecto('Aviso','Datos de Accionistas eliminados correctamente.');
+		    		                	                }
+		    		                	                else
+		    		                	                {
+		    		                	                    mensajeError(json.respuesta);
+		    		                	                }
+		    		                	            }
+		    		                	            ,failure  : function()
+		    		                	            {
+		    		                	                _p22_formDatosAdicionales().setLoading(false);
+		    		                	                errorComunicacion();
+		    		                	            }
+		    		                	});
+		    		            	
 		    		            		
 		    		            	}else{
 		    		            		combo.setValue(valorAnterior);
@@ -808,46 +839,6 @@ function _p22_guardarDatosAdicionalesClic()
     debug('Accionistas Added: '   , saveList);
     debug('Accionistas Updated: ' , updateList);
     
-    if(deleteList.length > 0 || saveList.length > 0 || updateList.length > 0){
-    	_p22_formDatosAdicionales().setLoading(true);
-    	
-    	Ext.Ajax.request(
-    	        {
-    	            url       : _UrlGuardaAccionista
-    	            ,jsonData :
-    	            {
-    	            	params: {
-    	            		'pv_cdperson_i':   _p22_fieldCdperson().getValue(),
-        	            	'pv_cdatribu_i':  fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length),
-        	            	'pv_cdtpesco_i':  fieldEstCorp.getValue()
-    	            	},
-    	                'saveList'   : saveList,
-    	                'deleteList' : deleteList,
-    	                'updateList' : updateList
-    	            }
-    	            ,success  : function(response)
-    	            {
-    	                _p22_formDatosAdicionales().setLoading(false);
-    	                var json = Ext.decode(response.responseText);
-    	                debug('response text:',json);
-    	                if(json.exito)
-    	                {
-    	                	windowAccionistas = undefined;
-    	                    mensajeCorrecto('Aviso','Datos de Accionistas guardados correctamente.');
-    	                }
-    	                else
-    	                {
-    	                    mensajeError(json.respuesta);
-    	                }
-    	            }
-    	            ,failure  : function()
-    	            {
-    	                _p22_formDatosAdicionales().setLoading(false);
-    	                errorComunicacion();
-    	            }
-    	});
-	}
-    
     var valido=true;
     
     if(valido)
@@ -893,6 +884,46 @@ function _p22_guardarDatosAdicionalesClic()
         });
         
     }
+    
+    if(valido && (deleteList.length > 0 || saveList.length > 0 || updateList.length > 0)){
+    	_p22_formDatosAdicionales().setLoading(true);
+    	
+    	Ext.Ajax.request(
+    	        {
+    	            url       : _UrlGuardaAccionista
+    	            ,jsonData :
+    	            {
+    	            	params: {
+    	            		'pv_cdperson_i':   _p22_fieldCdperson().getValue(),
+        	            	'pv_cdatribu_i':  fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length),
+        	            	'pv_cdtpesco_i':  fieldEstCorp.getValue()
+    	            	},
+    	                'saveList'   : saveList,
+    	                'deleteList' : deleteList,
+    	                'updateList' : updateList
+    	            }
+    	            ,success  : function(response)
+    	            {
+    	                _p22_formDatosAdicionales().setLoading(false);
+    	                var json = Ext.decode(response.responseText);
+    	                debug('response text:',json);
+    	                if(json.exito)
+    	                {
+    	                	windowAccionistas = undefined;
+    	                    debug('Datos de Accionistas guardados correctamente.');
+    	                }
+    	                else
+    	                {
+    	                    mensajeError(json.respuesta);
+    	                }
+    	            }
+    	            ,failure  : function()
+    	            {
+    	                _p22_formDatosAdicionales().setLoading(false);
+    	                errorComunicacion();
+    	            }
+    	});
+	}
     
     debug('<_p22_guardarDatosAdicionalesClic');
 }
@@ -1199,10 +1230,34 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		            header     : 'Nacionalidad'
 		            ,dataIndex : 'CDNACION'
 		            ,flex      : 1
+		            ,renderer  : function(valor){
+		            	return rendererColumnasDinamico(valor,'CDNACION'); 
+		            }
 		            ,editor    :
 		            {
-		                xtype             : 'combobox'
-		                ,allowBlank       : false
+		                xtype         : 'combobox',
+		                allowBlank    : false,
+		                name          : 'CDNACION',
+		                valueField    : 'key',
+		                displayField  : 'value',
+		                forceSelection: true,
+		                typeAhead     : true,
+		                anyMatch      : true,
+		                store         : Ext.create('Ext.data.Store', {
+		                    model     : 'Generic',
+		                    autoLoad  : true,
+		                    proxy     : {
+		                        type        : 'ajax'
+		                        ,url        : _URL_CARGA_CATALOGO
+		                        ,extraParams: {catalogo:_CAT_NACIONALIDAD}
+		                        ,reader     :
+		                        {
+		                            type  : 'json'
+		                            ,root : 'lista'
+		                        }
+		                    }
+		                })
+		               
 		            }
 		        }
 		        ,{

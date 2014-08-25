@@ -362,6 +362,21 @@ public class PersonasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	public String eliminaAccionistas()
+	{
+		exito = false;
+		
+		try{
+			personasManager.eliminaAccionistas(params);
+			exito = true;
+		}catch(Exception ex){
+			logger.error("Error al eliminaAccionistas",ex);
+			respuesta = ex.getMessage();
+		}
+		
+		return SUCCESS;
+	}
+
 	public String guardaAccionista()
 	{
 		exito = false;
