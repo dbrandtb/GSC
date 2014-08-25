@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.catalogos.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,9 @@ public interface PersonasManager
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
 	 */
 	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String snombre,String apat,String amat,long timestamp) throws Exception;
+	
+	public Map<String,Object> obtenerPersonaPorCdperson(String cdperson,long timestamp) throws Exception;
+	
 	/**
 	 * Guardar pantalla de personas
 	 * @return exito,respuesta,respuestaOculta,cdpersonNuevo

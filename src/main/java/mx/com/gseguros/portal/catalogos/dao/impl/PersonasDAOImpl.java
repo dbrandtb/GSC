@@ -61,6 +61,30 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+	@Override
+	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception
+	{
+		Map<String, Object> resultado         = ejecutaSP(new ObtenerPersonaPorCdperson(getDataSource()), params);
+		List<Map<String,String>>listaPersonas = (List<Map<String,String>>)resultado.get("pv_registro_o");
+		if(listaPersonas==null||listaPersonas.size()==0)
+		{
+			throw new Exception("No se encuentra la persona");
+		}
+		logger.debug("listaPersonas size: "+listaPersonas.size());
+		return listaPersonas.get(0);
+	}
+	
+	protected class ObtenerPersonaPorCdperson extends StoredProcedure
+	{
+    	protected ObtenerPersonaPorCdperson(DataSource dataSource) {
+            super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON");
+            declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 	
 	/**
 	 * Guarda mpersona con PKG_SATELITES.P_MOV_MPERSONA
