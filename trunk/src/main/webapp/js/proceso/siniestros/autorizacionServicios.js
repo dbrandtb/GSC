@@ -39,7 +39,8 @@ Ext.onReady(function() {
 	Ext.define('modelListadoAsegurado',{
         extend: 'Ext.data.Model',
         fields: [  	{type:'string',    name:'nmautser'},       		{type:'string',    name:'nmautant'},               	{type:'string',    name:'fesolici'},
-					{type:'string',    name:'polizaafectada'},		{type:'string',    name:'cdprovee'},				{type:'string',    name:'nombreProveedor'}	]
+					{type:'string',    name:'polizaafectada'},		{type:'string',    name:'cdprovee'},				{type:'string',    name:'nombreProveedor'},
+					{type:'string',    name:'statusTramite'},		{type:'string',    name:'descICD'}]
     });
 	
 	Ext.define('modelListadoPoliza',{
@@ -1684,6 +1685,12 @@ Ext.onReady(function() {
 			 }
 			 ,
 			 {
+				 header     : 'Estatus <br/> Tr&aacute;mite'
+				 ,dataIndex : 'statusTramite'
+				 ,width     : 200
+			 }
+			 ,
+			 {
 				 header     : 'Fecha Solicitud'
 				 ,dataIndex : 'fesolici'
 				 ,width     : 100
@@ -1705,6 +1712,12 @@ Ext.onReady(function() {
 				 ,dataIndex : 'nombreProveedor'
 				 ,width	   : 200
 			 }
+			 ,
+			 {
+				 header     : 'ICD'
+				 ,dataIndex : 'descICD'
+				 ,width	   : 200
+			 }
 		 ],
 		 bbar     :
 		 {
@@ -1716,14 +1729,14 @@ Ext.onReady(function() {
 		listeners: {
 	        itemclick: function(dv, record, item, index, e) {
 	        	idTipoAutorizacion= Ext.getCmp('tipoAutorizacion').getValue();
-	           	if(idTipoAutorizacion !=3)
+	           	/*if(idTipoAutorizacion !=3)
 				{
 					Ext.getCmp('idNumeroAnterior').hide();
 					Ext.getCmp('btnBuscar').hide();
 				}else{
 					Ext.getCmp('idNumeroAnterior').show();
 					Ext.getCmp('btnBuscar').show();
-				}
+				}*/
 	           	
 				if(idTipoAutorizacion !=1)
 				{
@@ -1784,12 +1797,7 @@ Ext.onReady(function() {
 								closedStatusSelectedID = this.getValue();
 								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
 								
-								//Selección de tipo de Autorización:- Aparecerá oculto los valores al inicio
-								//Ext.getCmp('idCopagoFin').hide();
-	        					//Ext.getCmp('idPenalCircHospitalario').hide();
-	        					//Ext.getCmp('idPenalCambioZona').hide();
-	        					
-	        					if(closedStatusSelectedID !=1){
+								if(closedStatusSelectedID !=1){
 									Ext.getCmp('panelbusqueda').show();
 									Ext.getCmp('clausulasGridId').show();
 									
@@ -2329,7 +2337,7 @@ Ext.onReady(function() {
 												    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
 												    		{
 													    		
-													    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
+													    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue()!=null )
 											 					{
 												 					Ext.getCmp('idstatus').setValue("2");
 												 					guardadoAutorizacionServicio(_Existe);

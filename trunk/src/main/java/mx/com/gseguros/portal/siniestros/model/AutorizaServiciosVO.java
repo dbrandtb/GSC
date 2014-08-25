@@ -18,6 +18,8 @@ public class AutorizaServiciosVO implements Serializable{
 	private String polizaafectada;
 	private String cdprovee;
 	private String nombreProveedor;
+	private String statusTramite;
+	private String descICD;
 
 	public String getNmautser() {
 		return nmautser;
@@ -65,6 +67,22 @@ public class AutorizaServiciosVO implements Serializable{
 
 	public void setNombreProveedor(String nombreProveedor) {
 		this.nombreProveedor = nombreProveedor;
+	}
+
+	public String getStatusTramite() {
+		return statusTramite;
+	}
+
+	public void setStatusTramite(String statusTramite) {
+		this.statusTramite = statusTramite;
+	}
+
+	public String getDescICD() {
+		return descICD;
+	}
+
+	public void setDescICD(String descICD) {
+		this.descICD = descICD;
 	}
 
 	public String toString(){
