@@ -621,6 +621,36 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 		return lista;
 	}
+
+	@Override
+	public void borrarMpoliperGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdgrupo)throws Exception
+	{
+		logger.info(""
+				+ "\n#################################"
+				+ "\n###### borrarMpoliperGrupo ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\ncdgrupo "+cdgrupo
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdgrupo"  , cdgrupo);
+		cotizacionDAO.borrarMpoliperGrupo(params);
+		logger.info(""
+				+ "\n###### borrarMpoliperGrupo ######"
+				+ "\n#################################"
+				);
+	}
 	
 	///////////////////////////////
 	////// getters y setters //////

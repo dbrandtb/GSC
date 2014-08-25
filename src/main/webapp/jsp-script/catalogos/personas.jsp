@@ -541,6 +541,10 @@ function _p22_guardarClic(callback)
                     {
                         mensajeCorrecto('Datos guardados',json.respuesta);
                     }
+                    if(_p22_cdperson!=false&&_p22_parentCallback)
+                    {
+                        _p22_parentCallback();
+                    }
                 }
                 else
                 {

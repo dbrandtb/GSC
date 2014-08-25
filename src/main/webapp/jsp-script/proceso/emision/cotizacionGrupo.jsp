@@ -54,6 +54,10 @@ var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         
 var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"  />';
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"            />';
 var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"         />';
+var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
+var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="personasLoader"                />';
+var _p21_urlEditarCoberturas             = '<s:url namespace="/"                action="editarCoberturas"              />';
+var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
 
 var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -74,12 +78,16 @@ var _p21_semaforo           = true;
 var _p21_incrinflAux        = null;
 var _p21_extrrenoAux        = null;
 
+var _p22_parentCallback     = false;
+
 var _p21_arrayNombresFactores =
 [
     'FACTOR RENOVACIÓN (%)'
+    ,'FACTOR RENOVACION (%)'
     ,'FACTOR RENOVACIÓN'
     ,'FACTOR RENOVACIÓN '
     ,'FACTOR INFLACIÓN (%)'
+    ,'FACTOR INFLACION (%)'
     ,'FACTOR INFLACIÓN'
 ];
 
@@ -87,13 +95,15 @@ var _p21_arrayNombresIncrinfl =
 [
     'FACTOR INFLACIÓN (%)'
     ,'FACTOR INFLACIÓN'
+    ,'FACTOR INFLACION (%)'
 ];
 
 var _p21_arrayNombresExtrreno =
 [
    'FACTOR RENOVACIÓN (%)'
-    ,'FACTOR RENOVACIÓN'
-    ,'FACTOR RENOVACIÓN '
+   ,'FACTOR RENOVACION (%)'
+   ,'FACTOR RENOVACIÓN'
+   ,'FACTOR RENOVACIÓN '
 ];
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -223,6 +233,12 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : [ <s:property value='%{getImap().containsKey("aseguradosFields")?getImap().get("aseguradosFields").toString():""}' /> ]
+    });
+    
+    Ext.define('_p21_modeloRecuperados',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : [ <s:property value='%{getImap().containsKey("recuperadosFields")?getImap().get("recuperadosFields").toString():""}' /> ]
     });
     ////// modelos //////
     
@@ -3191,14 +3207,24 @@ function _p21_aseguradosClic(grid,rowIndex)
         columnas.push(
         {
             xtype         : 'actioncolumn'
-            ,width        : 30
             ,sortable     : false
             ,menuDisabled : true
             ,items        :
             [
                 {
-                    text  : 'Editar'
-                    ,icon : '${ctx}/resources/fam3icons/icons/pencil.png'
+                    tooltip  : 'Recuperar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/vcard_edit.png'
+                    ,handler : _p21_recuperarAsegurado
+                }
+                ,{
+                    tooltip  : 'Editar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                    ,handler : _p21_editarAsegurado
+                }
+                ,{
+                    tooltip  : 'Editar coberturas'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/text_list_bullets.png'
+                    ,handler : _p21_editarCoberturas
                 }
             ]
         });
@@ -3217,7 +3243,7 @@ function _p21_aseguradosClic(grid,rowIndex)
                 columns     : columnas
                 ,minHeight  : 150
                 ,maxHeight  : 500
-                ,plugins    : _p21_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
+                ,plugins    : false && _p21_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
                 {
                     clicksToEdit  : 1
                     ,errorSummary : false
@@ -3263,6 +3289,19 @@ function _p21_aseguradosClic(grid,rowIndex)
                         ]
                         ,ftype          : 'groupingsummary'
                         ,startCollapsed : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,hidden  : _p21_smap1.ASEGURADOS_EDITAR!='S'
+                        ,handler : function()
+                        {
+                            _p21_guardarAsegurados(this.up().up());
+                        }
                     }
                 ]
             })
@@ -3378,6 +3417,272 @@ function _p21_sigsvalipol(callback)
         }
     });
     debug('<_p21_sigsvalipol');
+}
+
+function _p21_recuperarAsegurado(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p21_recuperarAsegurado:',record.data);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title     : 'Recuperar asegurado'
+        ,width    : 600
+        ,height   : 370
+        ,modal    : true
+        ,defaults : { style : 'margin:5px;' }
+        ,items    :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                border    : 0
+                ,layout   : 'hbox'
+                ,defaults : { style : 'margin:5px;' }
+                ,items    :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,name       : 'rfc'
+                        ,fieldLabel : 'RFC'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype    : 'button'
+                        ,text    : 'Buscar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                        ,handler : function(button)
+                        {
+                            var form=button.up('[xtype=form]');
+                            var valido = true;
+                            
+                            if(valido)
+                            {
+                                valido = form.isValid();
+                                if(!valido)
+                                {
+                                    datosIncompletos();
+                                }
+                            }
+                            
+                            if(valido)
+                            {
+                                cargaStorePaginadoLocal(form.up('[xtype=window]').down('[xtype=grid]').getStore()
+                                    ,_p21_urlRecuperarPersona
+                                    ,'slist1'
+                                    ,{
+                                        'map1.pv_rfc_i' : form.down('[name=rfc]').getValue()
+                                    });
+                            }
+                        }
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                height      : 250
+                ,viewConfig : viewConfigAutoSize
+                ,columns    :
+                [
+                    {
+                        xtype         : 'actioncolumn'
+                        ,width        : 20
+                        ,menuDisabled : true
+                        ,sortable     : false
+                        ,items        :
+                        [
+                            {
+                                tooltip  : 'Recuperar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                ,handler : function(grid2,row)
+                                {
+                                    grid2.up('[xtype=window]').setLoading(true);
+                                    var record2=grid2.getStore().getAt(row);
+                                    debug('recuperar a:',record2.data);
+                                    record.set('RFC',record2.get('RFCCLI'));
+                                    record.set('NOMBRE',record2.get('NOMBRE'));
+                                    record.set('SEGUNDO_NOMB',record2.get('SNOMBRE'));
+                                    record.set('APELLIDO_PATERNO',record2.get('APPAT'));
+                                    record.set('APELLIDO_MATERNO',record2.get('APMAT'));
+                                    record.set('CDIDEPER',record2.get('CDIDEPER'));
+                                    record.set('CDPERSON',record2.get('CLAVECLI'));
+                                    record.set('SWEXIPER','S');
+                                    grid.refresh();
+                                    grid2.up('[xtype=window]').destroy();
+                                }
+                            }
+                        ]
+                    }
+                    <s:property value='%{getImap().containsKey("recuperadosColumns")?","+getImap().get("recuperadosColumns").toString():""}' />
+                ]
+                ,store      : Ext.create('Ext.data.Store',
+                {
+                    model : '_p21_modeloRecuperados'
+                })
+            })
+        ]
+    }).show());
+    debug('<_p21_recuperarAsegurado');
+}
+
+function _p21_editarAsegurado(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p21_editarAsegurado:',record.data);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title   : 'Editar persona '+record.get('NOMBRE')
+        ,width  : 900
+        ,height : 500
+        ,modal  : true
+        ,loader :
+        {
+            url       : _p21_urlPantallaPersonas
+            ,params   :
+            {
+                'smap1.cdperson' : record.get('CDPERSON')
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show());
+    debug('<_p21_editarAsegurado');
+}
+
+function _p21_guardarAsegurados(grid,callback)
+{
+    debug('>_p21_guardarAsegurados grid:',grid);
+    var store=grid.getStore();
+    
+    var valido = true;
+    
+    if(valido)
+    {
+        var error = '';
+        store.each(function(record)
+        {
+            if(Ext.isEmpty(record.get('RFC')))
+            {
+                valido = false;
+                error = error + 'Faltan los datos de la situaci&oacute;n '+record.get('NMSITUAC')+'<BR/>';
+            }
+        });
+        if(!valido)
+        {
+            mensajeError(error);
+        }
+    }
+    
+    var asegurados = [];
+    
+    if(valido)
+    {
+        asegurados = store.getModifiedRecords();
+        valido     = asegurados.length>0||callback!=undefined;
+        if(!valido)
+        {
+            mensajeError('No hay cambios');
+        }
+    }
+    
+    if(valido&&asegurados.length>0)
+    {
+        debug('guardar:',asegurados);
+        var slist1 = [];
+        $.each(asegurados,function(i,irecord)
+        {
+            debug('iterando para guardar:',irecord);
+            slist1.push(
+            {
+                nmsituac  : irecord.get('NMSITUAC')
+                ,cdrol    : irecord.get('CDROL')
+                ,cdperson : irecord.get('CDPERSON')
+                ,swexiper : Ext.isEmpty(irecord.get('SWEXIPER'))?'N':irecord.get('SWEXIPER')
+                ,cdideper : irecord.get('CDIDEPER')
+            });
+        });
+        debug('slist1:',slist1);
+        grid.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p21_urlGuardarAsegurados
+            ,jsonData :
+            {
+                slist1 : slist1
+                ,smap1 :
+                {
+                    cdunieco  : _p21_smap1.cdunieco
+                    ,cdramo   : _p21_smap1.cdramo
+                    ,cdtipsit : _p21_smap1.cdtipsit
+                    ,estado   : _p21_smap1.estado
+                    ,nmpoliza : _p21_smap1.nmpoliza
+                    ,cdgrupo  : grid.up('[aseguradosLetraGrupo]').aseguradosLetraGrupo
+                }
+            }
+            ,success : function(response)
+            {
+                grid.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('json response guardar asegurados:',json);
+                if(json.exito)
+                {
+                    if(callback!=undefined)
+                    {
+                        callback();
+                    }
+                    else
+                    {
+                        mensajeCorrecto('Datos guardados',json.respuesta);
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                grid.setLoading(false);
+            }
+        });
+    }
+    
+    if(valido&&asegurados.length==0)
+    {
+        callback();
+    }
+    
+    debug('<_p21_guardarAsegurados');
+}
+
+function _p21_editarCoberturas(grid,row)
+{
+    var record=grid.getStore().getAt(row);
+    debug('>_p21_editarCoberturas record:',record.data);
+    _p21_guardarAsegurados(grid,function()
+    {
+        centrarVentanaInterna(Ext.create('Ext.window.Window',
+        {
+            title   : 'Editar coberturas de '+record.get('NOMBRE')
+            ,width  : 900
+            ,height : 500
+            ,modal  : true
+            ,loader :
+            {
+                url       : _p21_urlEditarCoberturas
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'  : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'   : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'   : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza' : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac' : record.get('NMSITUAC')
+                    ,'smap1.pv_cdperson' : record.get('CDPERSON')
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        }).show());
+    });
+    debug('<_p21_editarCoberturas');
 }
 ////// funciones //////
 </script>

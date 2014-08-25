@@ -548,4 +548,28 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void borrarMpoliperGrupo(Map<String,String>params)throws Exception
+	{
+		ejecutaSP(new BorrarMpoliperGrupo(getDataSource()),params);
+	}
+	
+
+	
+	protected class BorrarMpoliperGrupo extends StoredProcedure
+	{
+		protected BorrarMpoliperGrupo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER_GRUPO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
