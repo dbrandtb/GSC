@@ -631,6 +631,12 @@ public class PersonasManagerImpl implements PersonasManager
 	{
 		return personasDAO.guardaAccionista(params);
 	}
+
+	@Override
+	public String eliminaAccionistas(Map<String, String> params)throws Exception
+	{
+		return personasDAO.eliminaAccionistas(params);
+	}
 	
 	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception{
 		return personasDAO.obtieneAccionistas(params);
