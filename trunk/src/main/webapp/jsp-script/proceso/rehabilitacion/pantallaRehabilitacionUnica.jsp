@@ -96,7 +96,7 @@ Ext.onReady(function(){
                                 debug(action);
                                 var json = Ext.decode(action.response.responseText);
                                 debug(json);
-                                if(json.success==true)
+                                if(json.exito)
                                 {
                                     debug('ok');
                                     Ext.Msg.show({
@@ -108,13 +108,7 @@ Ext.onReady(function(){
                                 }
                                 else
                                 {
-                                    Ext.Msg.show(
-                                    {
-                                        title    : 'Error'
-                                        ,msg     : 'Error al rehabilitar la p&oacute;liza'
-                                        ,icon    : Ext.Msg.ERROR
-                                        ,buttons : Ext.Msg.OK
-                                    });
+                                    mensajeError(json.respuesta);
                                 }
                             }
                             ,failure : function()

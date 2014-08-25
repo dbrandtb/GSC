@@ -23,10 +23,14 @@ import org.apache.struts2.ServletActionContext;
 public class RehabilitacionAction extends PrincipalCoreAction
 {
 
-	private static final long              serialVersionUID = 5306848466443116067L;
-	private static org.apache.log4j.Logger log              = org.apache.log4j.Logger.getLogger(RehabilitacionAction.class);
-	private boolean                        success          = false;
-	SimpleDateFormat                       renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private static final long serialVersionUID  = 5306848466443116067L;
+	private static org.apache.log4j.Logger log  = org.apache.log4j.Logger.getLogger(RehabilitacionAction.class);
+	private final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private boolean exito           = false;
+	private boolean success         = false;
+	private String  respuesta       = null;
+	private String  respuestaOculta = null;
 	
 	private Map<String,String>       smap1;
 	private List<Map<String,String>> slist1;
@@ -255,8 +259,8 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				+ "\n##########################################"
 				+ "\n###### rehabilitacion unica proceso ######"
 				+ "\n######                              ######"
-				);
-		log.debug("smap1: "+smap1);
+				+ "\nsmap1: "+smap1);
+		success = true;
 		try
 		{
 			boolean algunAntiguo   = smap1.get("pv_algunoantiguo_i")!=null && smap1.get("pv_algunoantiguo_i").equalsIgnoreCase("S");
@@ -269,81 +273,100 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			UserVO  usuario        = (UserVO)session.get("USUARIO");
 			String  cdusuari       = usuario.getUser();
 			
-			Map<String,Object> resRehab = rehabilitacionManager.rehabilitarPoliza(smap1);
-			String nmsuplemRehab = (String)resRehab.get("pv_nmsuplem_o");
+			exito = true;
 			
-			if(algunAntiguo && !seConservaAnti)
+			Map<String,Object> resRehab = null;
+			try
 			{
-				rehabilitacionManager.borraAntiguedad(cdunieco, cdramo, estado, nmpoliza, nmsuplemRehab, fereinst);
+				rehabilitacionManager.rehabilitarPoliza(smap1);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = ex.getMessage();
+				respuestaOculta = ex.getMessage();
+				log.error("Error al rehabilitar #"+timestamp,ex);
 			}
 			
-			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
-			
-			String ntramite = null;
-			
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			
-			for(Map<String,String> docu:listaDocu)
+			if(exito)
 			{
-				log.debug("docu iterado: "+docu);
-				String descripc = docu.get("descripc");
-				String descripl = docu.get("descripl");
-				String nmsuplem = docu.get("nmsuplem");
-				ntramite = docu.get("ntramite");
+				String nmsuplemRehab = (String)resRehab.get("pv_nmsuplem_o");
 				
-				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
-				
-				String url=this.getText("ruta.servidor.reports")
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+cdunieco
-						+ "&p_ramo="+cdramo
-						+ "&p_estado="+estado
-						+ "&p_poliza="+nmpoliza
-						+ "&p_suplem="+nmsuplem
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				if(algunAntiguo && !seConservaAnti)
 				{
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					rehabilitacionManager.borraAntiguedad(cdunieco, cdramo, estado, nmpoliza, nmsuplemRehab, fereinst);
 				}
-				log.debug(""
-						+ "\n#################################"
-						+ "\n###### Se solicita reporte ######"
-						+ "\na "+url+""
-						+ "\n#################################");
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
-						+ "\n######                    ######"
-						+ "\n###### reporte solicitado ######"
-						+ "\na "+url+""
-						+ "\n################################"
-						+ "\n################################"
-						+ "");
+				
+				String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
+				
+				String ntramite = null;
+				
+				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+				
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String descripc = docu.get("descripc");
+					String descripl = docu.get("descripl");
+					String nmsuplem = docu.get("nmsuplem");
+					ntramite = docu.get("ntramite");
+					
+					String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+					
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado="+estado
+							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url+""
+							+ "\n#################################");
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\na "+url+""
+							+ "\n################################"
+							+ "\n################################"
+							+ "");
+				}
+				
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplemRehab, null, 
+						sucursal, "", ntramite, 
+						true, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
 			}
-			
-			String sucursal = cdunieco;
-			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-			
-			// Ejecutamos el Web Service de Recibos:
-			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-					estado, nmpoliza, 
-					nmsuplemRehab, null, 
-					sucursal, "", ntramite, 
-					true, cdtipsup, 
-					(UserVO) session.get("USUARIO"));
-			
-			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("error al rehabilitar poliza",ex);
-			success=false;
+			long timestamp  = System.currentTimeMillis();
+			exito           = false; 
+			respuesta       = "Error al rehabilitar #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			log.error(respuesta,ex);
 		}
 		log.debug(""
 				+ "\n######                              ######"
@@ -407,6 +430,30 @@ public class RehabilitacionAction extends PrincipalCoreAction
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
 	}
 
 }
