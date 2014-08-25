@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.catalogos.dao;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +12,8 @@ public interface PersonasDAO
 	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 */
 	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception;
+	
+	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
 	/**
 	 * Guarda mpersona con PKG_SATELITES.P_MOV_MPERSONA
 	 */

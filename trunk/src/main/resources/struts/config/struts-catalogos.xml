@@ -259,7 +259,16 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
         </action>
         
+        <action name="personasLoader" class="personasAction" method="pantallaPersonas">
+            <result name="success">/jsp-script/catalogos/personas.jsp</result>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+        </action>
+        
         <action name="obtenerPersonasPorRFC" class="personasAction" method="obtenerPersonasPorRFC">
+            <result type="json" />
+        </action>
+        
+        <action name="obtenerPersonaPorCdperson" class="personasAction" method="obtenerPersonaPorCdperson">
             <result type="json" />
         </action>
         

@@ -182,6 +182,56 @@ public class PersonasManagerImpl implements PersonasManager
 		return result;
 	}
 	
+	@Override
+	public Map<String,Object> obtenerPersonaPorCdperson(String cdperson,long timestamp) throws Exception
+	{
+		Map<String,Object>result=new HashMap<String,Object>();
+		logger.info(timestamp
+				+ "\n#######################################"
+				+ "\n###### obtenerPersonaPorCdperson ######"
+				+ "\ncdperson: "+cdperson
+				);
+		boolean exito             = true;
+		String  respuesta         = null;
+		String  respuestaOculta   = null;
+		Map<String,String>persona = null;
+		
+		if(exito)
+		{
+			try
+			{
+				Map<String,String>params=new HashMap<String,String>();
+				params.put("pv_cdperson_i" , cdperson);
+				persona=personasDAO.obtenerPersonaPorCdperson(params);
+			}
+			catch(Exception ex)
+			{
+				logger.error(timestamp+" error al obtener persona por cdperson",ex);
+				exito           = false;
+				respuesta       = "Error al obtener datos de persona #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				persona         = new HashMap<String,String>();
+			}
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		
+		result.put("exito"           , exito);
+		result.put("respuesta"       , respuesta);
+		result.put("respuestaOculta" , respuestaOculta);
+		result.put("persona"         , persona);
+		logger.info(timestamp+""
+				+ "\nresult"+result
+				+ "\n###### obtenerPersonaPorCdperson ######"
+				+ "\n#######################################"
+				);
+		return result;
+	}
+	
 	/**
 	 * Guardar pantalla de personas
 	 * @return exito,respuesta,respuestaOculta,cdpersonNuevo

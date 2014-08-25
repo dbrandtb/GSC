@@ -46,6 +46,7 @@ public class PersonasAction extends PrincipalCoreAction
 		logger.info(timestamp
 				+ "\n##############################"
 				+ "\n###### pantallaPersonas ######"
+				+ "\nsmap1 "+smap1
 				);
 		try
 		{
@@ -107,6 +108,37 @@ public class PersonasAction extends PrincipalCoreAction
 		logger.info(timestamp
 				+ "\n###### obtenerPersonasPorRFC ######"
 				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	public String obtenerPersonaPorCdperson()
+	{
+		long timestamp=System.currentTimeMillis();
+		logger.info(timestamp
+				+ "\n#######################################"
+				+ "\n###### obtenerPersonaPorCdperson ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(
+					smap1.get("cdperson"),
+					timestamp);
+			exito           = (Boolean)managerResult.get("exito");
+			respuesta       = (String)managerResult.get("respuesta");
+			respuestaOculta = (String)managerResult.get("respuestaOculta");
+			smap2           = (Map<String,String>)managerResult.get("persona");
+		}
+		catch(Exception ex)
+		{
+			logger.error(timestamp+" error inesperado al obtener datos de persona",ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(timestamp
+				+ "\n###### obtenerPersonaPorCdperson ######"
+				+ "\n#######################################"
 				);
 		return SUCCESS;
 	}
