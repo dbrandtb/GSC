@@ -39,6 +39,7 @@
         <pattern>/emision/mcotizacion.action*</pattern>
         
         <pattern>/*/includes/*.action</pattern>
+        <pattern>/catalogos/personasLoader.action*</pattern>
         
 	</excludes>
 
