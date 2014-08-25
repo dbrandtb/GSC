@@ -139,7 +139,7 @@ Ext.onReady(function() {
     
     var gridDatosTarificacion = Ext.create('Ext.grid.Panel', {
         //width   : 780,
-        height: 200,
+        height: 400,
         title   : 'Reclamaciones',
         store   : storeDatosTarificacion,
         autoScroll:true,
@@ -354,5 +354,7 @@ Ext.onReady(function() {
     	        }*/
     	    ]
     	    }); 
+    	    _fieldByName('OTVALOR11').forceSelection=true;
+    	    _fieldByName('OTVALOR11').setEditable(true);
     //gridIncisos
 });

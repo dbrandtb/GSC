@@ -182,6 +182,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setPolizaafectada(rs.getString("POLIZAAFECTADA"));
         	consulta.setCdprovee(rs.getString("CDPROVEE"));
         	consulta.setNombreProveedor(rs.getString("NOMBREPROVEEDOR"));
+        	consulta.setStatusTramite(rs.getString("STATUS"));
+        	consulta.setDescICD(rs.getString("DESICD"));
             return consulta;
         }
     }
