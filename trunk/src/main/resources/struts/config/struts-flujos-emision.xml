@@ -130,6 +130,10 @@
            <result type="json" />
        </action>
        
+       <action name="guardarReporteCotizacionGrupo" class="CotizacionAction" method="guardarReporteCotizacionGrupo">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>
