@@ -3551,7 +3551,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 {
     var record=grid.getStore().getAt(rowIndex);
     debug('>_p21_editarAsegurado:',record.data);
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    var ventana = Ext.create('Ext.window.Window',
     {
         title   : 'Editar persona '+record.get('NOMBRE')
         ,width  : 900
@@ -3567,7 +3567,19 @@ function _p21_editarAsegurado(grid,rowIndex)
             ,scripts  : true
             ,autoLoad : true
         }
-    }).show());
+    }).show()
+    centrarVentanaInterna(ventana);
+    _p22_parentCallback = function(json)
+    {
+        record.set('RFC'              , json.smap1.CDRFC);
+        record.set('NOMBRE'           , json.smap1.DSNOMBRE);
+        record.set('SEGUNDO_NOMBRE'   , json.smap1.DSNOMBRE1);
+        record.set('APELLIDO_PATERNO' , json.smap1.DSAPELLIDO);
+        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+        record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
+        record.set('NACIONALIDAD'     , json.smap1.CDNACION);
+    };
     debug('<_p21_editarAsegurado');
 }
 
