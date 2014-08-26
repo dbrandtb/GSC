@@ -55,7 +55,7 @@ var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"            />';
 var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"         />';
 var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="personasLoader"                />';
+var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="includes/personasLoader"       />';
 var _p21_urlEditarCoberturas             = '<s:url namespace="/"                action="editarCoberturas"              />';
 var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
 
