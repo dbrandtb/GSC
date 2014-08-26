@@ -21,8 +21,8 @@ public class HttpUtil {
 	
 	/**
 	 * Obtiene un archivo a partir de su URL y lo genera en una ruta destino
-	 * @param urlOrigen   URL de donde se obtendrá el flujo de datos del archivo a guardar 
-	 * @param rutaDestino Ruta y nombre del archivo donde se almacenará el archivo con el flujo de datos
+	 * @param urlOrigen   URL de donde se obtendrï¿½ el flujo de datos del archivo a guardar 
+	 * @param rutaDestino Ruta y nombre del archivo donde se almacenarï¿½ el archivo con el flujo de datos
 	 * @return true si gener&oacute; el archivo, false si fall&oacute;
 	 */
 	public static boolean generaArchivo(String urlOrigen, String rutaDestino) {
@@ -35,6 +35,19 @@ public class HttpUtil {
 		OutputStream outputStream = null;
 		
 		try {
+			
+			//Creacion de carpeta
+			File carpeta=new File(new File(rutaDestino).getParent());
+			if(!carpeta.exists())
+			{
+				logger.debug("no existe la carpeta "+carpeta);
+				if(!carpeta.mkdir())
+				{
+					throw new Exception("Error al crear la carpeta "+carpeta);
+				}
+				logger.debug("Carpeta creada "+carpeta);
+			}
+			//Creacion de carpeta
 			
 			URL obj = new URL(urlOrigen);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -86,8 +99,8 @@ public class HttpUtil {
 	
 	/**
 	 * Obtiene un archivo a partir de su URL y lo genera en una ruta destino
-	 * @param urlOrigen   URL de donde se obtendrá el flujo de datos del archivo a guardar 
-	 * @param rutaDestino Ruta y nombre del archivo donde se almacenará el archivo con el flujo de datos
+	 * @param urlOrigen   URL de donde se obtendrï¿½ el flujo de datos del archivo a guardar 
+	 * @param rutaDestino Ruta y nombre del archivo donde se almacenarï¿½ el archivo con el flujo de datos
 	 * @return objeto File que hace referencia al archivo creado, null si no se cre&oacute;
 	 */
 	public static File generaYObtenArchivo(String urlOrigen, String rutaDestino) {
@@ -104,7 +117,7 @@ public class HttpUtil {
 	
 	/**
 	 * Obtiene un flujo archivo a partir de una URL
-	 * @param urlOrigen   URL de donde se obtendrá el flujo de datos 
+	 * @param urlOrigen   URL de donde se obtendrï¿½ el flujo de datos 
 	 * @return InputStream o null en caso de que no existan datos
 	 */
 	public static InputStream obtenInputStream(String urlOrigen) {
@@ -148,7 +161,7 @@ public class HttpUtil {
 		if (responseCode != CODIGO_RESPUESTA_OK) {
 			throw new Exception("Codigo de respuesta erroneo: " + responseCode);
 		}
-		// Se lee la información de la respuesta:
+		// Se lee la informaciï¿½n de la respuesta:
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				con.getInputStream()));
 		StringBuffer response = new StringBuffer();
