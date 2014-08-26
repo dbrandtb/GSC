@@ -3523,7 +3523,7 @@ function _p21_recuperarAsegurado(grid,rowIndex)
                                     debug('recuperar a:',record2.data);
                                     record.set('RFC',record2.get('RFCCLI'));
                                     record.set('NOMBRE',record2.get('NOMBRE'));
-                                    record.set('SEGUNDO_NOMB',record2.get('SNOMBRE'));
+                                    record.set('SEGUNDO_NOMBRE',record2.get('SNOMBRE'));
                                     record.set('APELLIDO_PATERNO',record2.get('APPAT'));
                                     record.set('APELLIDO_MATERNO',record2.get('APMAT'));
                                     record.set('CDIDEPER',record2.get('CDIDEPER'));
@@ -3734,7 +3734,7 @@ function _p21_editarExclusiones(grid,row)
                     ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
                     ,'smap1.pv_cdperson'     : record.get('CDPERSON')
                     ,'smap1.pv_cdrol'        : record.get('CDROL')
-                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMB')?record.get('SEGUNDO_NOMB')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
+                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
                     ,'smap1.cdrfc'           : record.get('RFC')
                 }
                 ,scripts  : true
