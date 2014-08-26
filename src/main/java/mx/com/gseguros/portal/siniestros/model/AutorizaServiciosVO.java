@@ -20,6 +20,8 @@ public class AutorizaServiciosVO implements Serializable{
 	private String nombreProveedor;
 	private String statusTramite;
 	private String descICD;
+	private String cobertura;
+	private String subcobertura;
 
 	public String getNmautser() {
 		return nmautser;
@@ -83,6 +85,22 @@ public class AutorizaServiciosVO implements Serializable{
 
 	public void setDescICD(String descICD) {
 		this.descICD = descICD;
+	}
+
+	public String getCobertura() {
+		return cobertura;
+	}
+
+	public void setCobertura(String cobertura) {
+		this.cobertura = cobertura;
+	}
+
+	public String getSubcobertura() {
+		return subcobertura;
+	}
+
+	public void setSubcobertura(String subcobertura) {
+		this.subcobertura = subcobertura;
 	}
 
 	public String toString(){
