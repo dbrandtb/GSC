@@ -278,7 +278,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			Map<String,Object> resRehab = null;
 			try
 			{
-				rehabilitacionManager.rehabilitarPoliza(smap1);
+				resRehab = rehabilitacionManager.rehabilitarPoliza(smap1);
 			}
 			catch(Exception ex)
 			{
