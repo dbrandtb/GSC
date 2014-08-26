@@ -58,6 +58,8 @@ var _p21_urlRecuperarPersona             = '<s:url namespace="/"                
 var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="includes/personasLoader"       />';
 var _p21_urlEditarCoberturas             = '<s:url namespace="/"                action="editarCoberturas"              />';
 var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
+var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"             />';
+var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
 
 var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -79,6 +81,7 @@ var _p21_incrinflAux        = null;
 var _p21_extrrenoAux        = null;
 
 var _p22_parentCallback     = false;
+var expande                 = function(){};
 
 var _p21_arrayNombresFactores =
 [
@@ -2229,6 +2232,22 @@ function _p21_turnar(status,titulo,closable)
                 ,handler : function(button)
                 {
                     ventana.setLoading(true);
+                    if(status+'x'=='17x')
+                    {
+                        Ext.Ajax.request(
+                        {
+                            url     : _p21_guardarReporteCotizacion
+                            ,params :
+                            {
+                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                ,'smap1.estado'   : _p21_smap1.estado
+                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                                ,'smap1.ntramite' : _p21_smap1.ntramite
+                            }
+                        });
+                    }
                     Ext.Ajax.request(
                     {
                         url     : _p21_urlActualizarStatus
@@ -3226,6 +3245,11 @@ function _p21_aseguradosClic(grid,rowIndex)
                     ,icon    : '${ctx}/resources/fam3icons/icons/text_list_bullets.png'
                     ,handler : _p21_editarCoberturas
                 }
+                ,{
+                    tooltip  : 'Editar exclusiones'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
+                    ,handler : _p21_editarExclusiones
+                }
             ]
         });
     }
@@ -3579,7 +3603,7 @@ function _p21_guardarAsegurados(grid,callback)
         valido     = asegurados.length>0||callback!=undefined;
         if(!valido)
         {
-            mensajeError('No hay cambios');
+            mensajeWarning('No hay cambios');
         }
     }
     
@@ -3624,6 +3648,7 @@ function _p21_guardarAsegurados(grid,callback)
                 debug('json response guardar asegurados:',json);
                 if(json.exito)
                 {
+                    grid.getStore().commitChanges();
                     if(callback!=undefined)
                     {
                         callback();
@@ -3683,6 +3708,46 @@ function _p21_editarCoberturas(grid,row)
         }).show());
     });
     debug('<_p21_editarCoberturas');
+}
+
+function _p21_editarExclusiones(grid,row)
+{
+    var record=grid.getStore().getAt(row);
+    debug('>_p21_editarExclusiones record:',record.data);
+    _p21_guardarAsegurados(grid,function()
+    {
+        var ventana=Ext.create('Ext.window.Window',
+        {
+            title   : 'Editar exclusiones de '+record.get('NOMBRE')
+            ,width  : 900
+            ,height : 500
+            ,modal  : true
+            ,loader :
+            {
+                url       : _p21_urlEditarExclusiones
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'       : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
+                    ,'smap1.pv_cdperson'     : record.get('CDPERSON')
+                    ,'smap1.pv_cdrol'        : record.get('CDROL')
+                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMB')?record.get('SEGUNDO_NOMB')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
+                    ,'smap1.cdrfc'           : record.get('RFC')
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        }).show()
+        centrarVentanaInterna(ventana);
+        expande = function()
+        {
+            ventana.destroy();
+        }
+    });
+    debug('<_p21_editarExclusiones');
 }
 ////// funciones //////
 </script>

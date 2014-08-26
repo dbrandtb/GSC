@@ -34,6 +34,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -4056,6 +4057,76 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### guardarAseguradosCotizacion ######"
 				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarReporteCotizacionGrupo()
+	{
+		logger.info(""
+				+ "\n###########################################"
+				+ "\n###### guardarReporteCotizacionGrupo ######"
+				+ "\nsmap1 "+smap1
+				);
+		success = true;
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String cdtipsit = smap1.get("cdtipsit");
+			String ntramite = smap1.get("ntramite");
+			
+			String urlReporteCotizacion=""
+					+ getText("ruta.servidor.reports")
+					+ "?p_unieco="      + cdunieco
+					+ "&p_ramo="        + cdramo
+					+ "&p_estado="      + estado
+					+ "&p_poliza="      + nmpoliza
+					+ "&p_suplem=0"
+					+ "&p_cdplan="
+                    + "&destype=cache"
+                    + "&desformat=PDF"
+                    + "&userid="        + getText("pass.servidor.reports")
+                    + "&ACCESSIBLE=YES"
+                    + "&report="        + getText("rdf.cotizacion.nombre."+cdtipsit)
+                    + "&paramform=no"
+                    ;
+			String nombreArchivoCotizacion="cotizacion.pdf";
+			String pathArchivoCotizacion=""
+					+ getText("ruta.documentos.poliza")
+					+ "/"+ntramite
+					+ "/"+nombreArchivoCotizacion
+					;
+			HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
+
+			Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+			mapArchivo.put("pv_cdunieco_i"  , cdunieco);
+			mapArchivo.put("pv_cdramo_i"    , cdramo);
+			mapArchivo.put("pv_estado_i"    , estado);
+			mapArchivo.put("pv_nmpoliza_i"  , "0");
+			mapArchivo.put("pv_nmsuplem_i"  , "0");
+			mapArchivo.put("pv_feinici_i"   , new Date());
+			mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
+			mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+			mapArchivo.put("pv_ntramite_i"  , ntramite);
+			mapArchivo.put("pv_nmsolici_i"  , nmpoliza);
+			mapArchivo.put("pv_tipmov_i"    , "1");
+			mapArchivo.put("pv_swvisible_i" , null);
+			kernelManager.guardarArchivo(mapArchivo);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = "Error al guardar reporte #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		logger.info(""
+				+ "\n###### guardarReporteCotizacionGrupo ######"
+				+ "\n###########################################"
 				);
 		return SUCCESS;
 	}
