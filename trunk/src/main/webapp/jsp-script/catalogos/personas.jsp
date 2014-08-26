@@ -543,7 +543,7 @@ function _p22_guardarClic(callback)
                     }
                     if(_p22_cdperson!=false&&_p22_parentCallback)
                     {
-                        _p22_parentCallback();
+                        _p22_parentCallback(json);
                     }
                 }
                 else
