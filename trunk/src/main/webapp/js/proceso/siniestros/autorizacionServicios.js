@@ -40,7 +40,8 @@ Ext.onReady(function() {
         extend: 'Ext.data.Model',
         fields: [  	{type:'string',    name:'nmautser'},       		{type:'string',    name:'nmautant'},               	{type:'string',    name:'fesolici'},
 					{type:'string',    name:'polizaafectada'},		{type:'string',    name:'cdprovee'},				{type:'string',    name:'nombreProveedor'},
-					{type:'string',    name:'statusTramite'},		{type:'string',    name:'descICD'}]
+					{type:'string',    name:'statusTramite'},		{type:'string',    name:'descICD'},					{type:'string',    name:'cobertura'},
+					{type:'string',    name:'subcobertura'}]
     });
 	
 	Ext.define('modelListadoPoliza',{
@@ -630,9 +631,7 @@ Ext.onReady(function() {
 					change:function(e){
 						obtieneInformacion();
 						//aqui se va a ser el llamado al pl porque se tiene que obtener e
-							Ext.getCmp('idSalarioMin').setValue('');
-							Ext.getCmp('idReqPenalizacion').setValue('');
-							Ext.getCmp('idValMaternidad').setValue('');
+							
 						    Ext.Ajax.request(
 						    {
 						        url    : _URL_MONTO_DISP_PROVEEDOR
@@ -642,6 +641,10 @@ Ext.onReady(function() {
 						        }
 						        ,success : function (response)
 						        {
+						        	Ext.getCmp('idSalarioMin').setValue('');
+									Ext.getCmp('idReqPenalizacion').setValue('');
+									Ext.getCmp('idValMaternidad').setValue('');
+						        	
 						        	var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
 						        	var montoDisponible = json.SUMADISP;
 						        	
@@ -1714,8 +1717,18 @@ Ext.onReady(function() {
 			 }
 			 ,
 			 {
-				 header     : 'ICD'
+				 header     : 'Internamiento'
 				 ,dataIndex : 'descICD'
+				 ,width	   : 200
+			 },
+			 {
+				 header     : 'Cobertura'
+				 ,dataIndex : 'cobertura'
+				 ,width	   : 200
+			 },
+			 {
+				 header     : 'Subcobertura'
+				 ,dataIndex : 'subcobertura'
 				 ,width	   : 200
 			 }
 		 ],
@@ -1756,9 +1769,8 @@ Ext.onReady(function() {
 						
 					}
 				}
-	           	modificacionClausula.hide();
-	           	
-	        }			     	
+				modificacionClausula.hide();
+	        }
 	    }
 		
 			
@@ -1796,7 +1808,7 @@ Ext.onReady(function() {
 						'select' : function(combo, record) {
 								closedStatusSelectedID = this.getValue();
 								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
-								
+								Ext.getCmp('idEstatusTramite').setValue('0');
 								if(closedStatusSelectedID !=1){
 									Ext.getCmp('panelbusqueda').show();
 									Ext.getCmp('clausulasGridId').show();
@@ -2024,6 +2036,11 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'SalarioMinimo'		,id       : 'idSalarioMin', 	name:'idSalarioMin',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'estatusTramite'		,id       : 'idEstatusTramite', 	name:'idEstatusTramite',
 					 labelWidth: 170,					hidden:true
 	 			}
 	 			,
@@ -2519,6 +2536,7 @@ Ext.onReady(function() {
 			Ext.getCmp('idEstado').setValue(json.estado);
 			Ext.getCmp('idcdRamo').setValue(json.cdramo);
 			Ext.getCmp('idNmSituac').setValue(json.nmsituac);
+			Ext.getCmp('idEstatusTramite').setValue(json.status);
 			//Ext.getCmp('').getValue()
 			
 			Ext.getCmp('idAaapertu').setValue(json.aaapertu);
@@ -2580,7 +2598,6 @@ Ext.onReady(function() {
 			//Nota Interes
 			Ext.getCmp('notaInterna').setValue(json.dsnotas);
 			
-			debug("VALOR DEL json.mtsumadp -->"+json.mtsumadp);
 			Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
 			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
@@ -2611,6 +2628,34 @@ Ext.onReady(function() {
 			var dateFechaAutorizacion= json.feautori;
 			
 			//OBTENEMOS LA INFORMACION DE LA POLIZA EN ESPECIFICO PARA OBTENER LOS VALORES QUE SE NECESITARAN PARA LAS VALIDACIONES DE PENALIZACION
+		    Ext.Ajax.request(
+		    {
+		        url    : _URL_MONTO_DISP_PROVEEDOR
+		        ,params:{
+		            'params.cobertura': json.cdgarant,
+		            'params.subcobertura': json.cdconval
+		        }
+		        ,success : function (response)
+		        {
+		        	var jsonRes=Ext.decode(response.responseText).datosInformacionAdicional[0];
+		        	var montoDisponible = json.SUMADISP;
+		        	
+		        	Ext.getCmp('idSalarioMin').setValue(jsonRes.SUMADISP);
+		        	Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);
+		        	Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);
+		        },
+		        failure : function ()
+		        {
+		            Ext.Msg.show({
+		                title:'Error',
+		                msg: 'Error de comunicaci&oacute;n',
+		                buttons: Ext.Msg.OK,
+		                icon: Ext.Msg.ERROR
+		            });
+		        }
+		    });
+	        
+	        
 	        Ext.Ajax.request(
 	        {
 	            url     : _URL_POLIZA_UNICA
@@ -2942,7 +2987,7 @@ Ext.onReady(function() {
 		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 		            	Ext.getCmp('idCopago').setValue(json.copago);
 		            	
-						if(Ext.getCmp('idReqPenalizacion').getValue() == "1"){
+		            	if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('idEstatusTramite').getValue() != "2"){
 							Ext.Ajax.request(
 			    					{
 			    					    url     : _URL_CATALOGOS
@@ -2979,6 +3024,10 @@ Ext.onReady(function() {
 								Ext.getCmp('idCopagoFin').setValue('0');
 							}else{
 								Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopago').getValue());
+							}
+							
+							if(Ext.getCmp('idEstatusTramite').getValue() == "2"){
+								Ext.getCmp('idCopagoFin').setValue('0');
 							}
 							Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				        	Ext.getCmp('idPenalCambioZona').setValue('0');
