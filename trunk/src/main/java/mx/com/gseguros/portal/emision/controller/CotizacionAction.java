@@ -60,6 +60,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static final long       serialVersionUID = 3237792502541753915L;
 	private static Logger           log              = Logger.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
+	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
 	private transient CatalogosManager       catalogosManager;
 	private ConsultasManager                 consultasManager;
@@ -468,7 +469,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmpoliza = smap1.get("nmpoliza");
 		String cdperpag = smap1.get("cdperpag");
 		String ntramite = smap1.get("ntramite");
+		String fechaIni = smap1.get("feini");
+		String fechaFin = smap1.get("fefin");
 		
+		//obtener cdperson sesion
 		if(exito)
 		{
 			try
@@ -486,6 +490,104 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		//validar direccion
+		if(exito)
+		{
+			try
+			{
+				List<Map<String,String>>lisUsuSinDir=null;
+				try
+				{
+					Map<String,String>paramValidar=new LinkedHashMap<String,String>(0);
+					paramValidar.put("pv_cdunieco" , cdunieco);
+					paramValidar.put("pv_cdramo"   , cdramo);
+					paramValidar.put("pv_estado"   , "W");
+					paramValidar.put("pv_nmpoliza" , nmpoliza);
+					lisUsuSinDir=kernelManager.PValInfoPersonas(paramValidar);
+				}
+				catch(Exception ex)
+				{
+					log.error("Error sin impacto funcional al validar domicilios: ",ex);
+					lisUsuSinDir=null;
+				}
+				
+				if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
+				{
+					exito           = false;
+					respuestaOculta = "Faltan direcciones";
+					respuesta       = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+					// f a v o r
+					//0 1 2 3 4 5
+					if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
+					{
+						respuesta=lisUsuSinDir.get(0).get("nombre");
+					}
+					else
+					{
+						for(int i=0;i<lisUsuSinDir.size();i++)
+						{
+							respuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+						}					
+					}
+					log.debug("Se va a terminar el proceso porque faltan direcciones");
+				}
+			}
+			catch(Exception ex)
+			{
+				long  timestamp = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al revisar domicilios #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//maestro historico
+		if(exito)
+		{
+			try
+			{
+	            Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
+	            map2.put("pv_cdunieco_i"  , cdunieco);
+	            map2.put("pv_cdramo_i"    , cdramo);
+	            map2.put("pv_estado_i"    , estado);
+	            map2.put("pv_nmpoliza_i"  , nmpoliza);
+	            map2.put("pv_nmsuplem_i"  , "0");
+	            map2.put("pv_feINival_i"  , renderFechas.parse(fechaIni));
+	            map2.put("pv_hhinival_i"  , renderHora.format(new Date()));
+	            map2.put("pv_fefINval_i"  , renderFechas.parse(fechaFin));
+	            map2.put("pv_hhfinval_i"  , renderHora.format(new Date()));
+	            map2.put("pv_swanula_i"   , null);
+	            map2.put("pv_nsuplogi_i"  , "0");
+	            map2.put("pv_nsupusua_i"  , null);
+	            map2.put("pv_nsupsess_i"  , null);
+	            map2.put("pv_fesessio_i"  , null);
+	            map2.put("pv_swconfir_i"  , null);
+	            map2.put("pv_nmrenova_i"  , null);
+	            map2.put("pv_nsuplori_i"  , null);
+	            map2.put("pv_cdorddoc_i"  , null);
+	            map2.put("pv_swpolfro_i"  , null);
+	            map2.put("pv_pocofron_i"  , null);
+	            map2.put("pv_swpoldec_i"  , null);
+	            map2.put("pv_tippodec_i"  , null);
+	            map2.put("pv_accion_i"    , "I");
+	            kernelManager.insertaMaestroHistoricoPoliza(map2);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al emitir #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		String nmpolizaEmi = null;
+		String nmpoliexEmi = null;
+		String nmsuplemEmi = null;
+		
+		//emitir
 		if(exito)
 		{
 			try
@@ -507,9 +609,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramEmi.put("pv_ntramite"  , ntramite);
 				WrapperResultados wr=kernelManager.emitir(paramEmi);
 				
-				String nmpolizaEmi = (String)wr.getItemMap().get("nmpoliza");
-				String nmpoliexEmi = (String)wr.getItemMap().get("nmpoliex");
-				String nmsuplemEmi = (String)wr.getItemMap().get("nmsuplem");
+				nmpolizaEmi = (String)wr.getItemMap().get("nmpoliza");
+				nmpoliexEmi = (String)wr.getItemMap().get("nmpoliex");
+				nmsuplemEmi = (String)wr.getItemMap().get("nmsuplem");
+				
+				smap1.put("nmpolizaEmi" , nmpolizaEmi);
+				smap1.put("nmpoliexEmi" , nmpoliexEmi);
+				smap1.put("nmsuplemEmi" , nmsuplemEmi);
 			}
 			catch(Exception ex)
 			{
@@ -519,6 +625,116 @@ public class CotizacionAction extends PrincipalCoreAction
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
+		}
+		
+		//documentos
+		if(exito)
+		{
+			try
+			{
+				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+				File   carpeta     = new File(rutaCarpeta);
+	            if(!carpeta.exists())
+	            {
+	            	logger.info("Se va a crear la carpeta "+carpeta);
+	            	if(!carpeta.mkdir())
+	            	{
+	            		throw new Exception("No se pudo crear la carpeta para los documentos");
+	            	}
+	            }
+	            
+	            List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmi
+						,nmsuplemEmi
+						,ntramite
+						);
+				
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=new StringBuilder()
+							.append(this.getText("ruta.servidor.reports"))
+							.append("?destype=cache")
+							.append("&desformat=PDF")
+							.append("&userid=")       .append(this.getText("pass.servidor.reports"))
+							.append("&report=")       .append(descripl)
+							.append("&paramform=no")
+							.append("&ACCESSIBLE=YES")
+							.append("&p_unieco=")     .append(cdunieco)
+							.append("&p_ramo=")       .append(cdramo)
+							.append("&p_estado='M'")
+							.append("&p_poliza=")     .append(nmpolizaEmi)
+							.append("&p_suplem=")     .append(nmsuplemEmi)
+							.append("&desname=")      .append(rutaCarpeta).append("/").append(descripc)
+							.toString();
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url = new StringBuilder(url).append("&p_cdperson=").append(descripc.substring(11, descripc.lastIndexOf("."))).toString();
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url);
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\n################################"
+							+ "");
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al crear los documentos #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//detalle
+		if(exito)
+		{
+			try
+			{
+				log.debug("se inserta detalle nuevo para emision");
+	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	        	parDmesCon.put("pv_feinicio_i"   , new Date());
+	        	parDmesCon.put("pv_cdclausu_i"   , null);
+	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
+	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	kernelManager.movDmesacontrol(parDmesCon);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al guardar detalle #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//exito
+		if(exito)
+		{
+			respuesta       = new StringBuilder().append("Se ha emitido la p&oacute;liza ")
+					                  .append(nmpolizaEmi)
+					                  .append(" [")
+					                  .append(nmpoliexEmi)
+					                  .append("]")
+					                  .toString();
+			respuestaOculta = "Todo OK";
 		}
 		
 		logger.debug("\n"
@@ -3272,7 +3488,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//HOSPITALIZACION (DEDUCIBLE)
 						String cdgarant = "4HOS";
-						String cdatribu = "01";
+						String cdatribu = "01";//TODO
 						String valor    = (String)iGrupo.get("deducible");
 						cotizacionManager.movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
 						

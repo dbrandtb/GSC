@@ -38,8 +38,8 @@ var _p21_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         
 var _p21_urlObtenerDetalle               = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
 var _p21_urlComprar                      = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
 var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p21_urlVentanaDocumentosClon        = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"   />';
 var _p21_urlBuscarPersonas               = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
 var _p21_urlCargarDatosCotizacion        = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo"    />';
 var _p21_urlCargarGrupos                 = '<s:url namespace="/emision"         action="cargarGruposCotizacion"        />';
 var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         action="cargarDatosGrupoLinea"         />';
@@ -751,6 +751,7 @@ Ext.onReady(function()
         Ext.create('Ext.window.Window',
         {
             title           : 'Documentos del tr&aacute;mite ' + _p21_ntramite
+            ,ventanaDocu    : true
             ,closable       : false
             ,width          : 300
             ,height         : 300
@@ -3018,6 +3019,8 @@ function _p21_emitir()
         ,'smap1.estado'   : _p21_smap1.estado
         ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
         ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+        ,'smap1.feini'    : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+        ,'smap1.fefin'    : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
         ,'smap1.ntramite' : _p21_ntramite
     };
     debug('parametros para emitir:',params);
@@ -3029,10 +3032,51 @@ function _p21_emitir()
         ,success : function(response)
         {
             _p21_tabpanel().setLoading(false);
-            var json = Ext.decode(response.responseText);
-            debug('emision json response:',json);
+            var json=Ext.decode(response.responseText);
+            debug('json response emitir:',json);
+            if(json.exito)
+            {
+                mensajeCorrecto('P&oacute;liza emitida',json.respuesta,function()
+                {
+                    if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
+                    {
+                        Ext.ComponentQuery.query('[ventanaDocu]')[0].destroy();
+                        debug('ventana de documentos destruida');
+                    }
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    {
+                        title       : 'Documentos de la p&oacute;liza ' + json.smap1.nmpolizaEmi + ' [' + json.smap1.nmpoliexEmi + ']'
+                        ,closable   : false
+                        ,width      : 500
+                        ,height     : 400
+                        ,autoScroll : true
+                        ,modal      : true
+                        ,loader     :
+                        {
+                            scripts   : true
+                            ,autoLoad : true
+                            ,url      : _p21_urlVentanaDocumentosClon
+                            ,params   :
+                            {
+                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                ,'smap1.estado'   : 'M'
+                                ,'smap1.nmpoliza' : json.smap1.nmpolizaEmi
+                                ,'smap1.nmsuplem' : json.smap1.nmsuplemEmi
+                                ,'smap1.nmsolici' : json.smap1.nmpoliza
+                                ,'smap1.ntramite' : _p21_ntramite
+                                ,'smap1.tipomov'  : '0'
+                            }
+                        }
+                    }).show());
+                });
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
         }
-        ,failure : function()
+        ,failure:function()
         {
             _p21_tabpanel().setLoading(false);
             errorComunicacion();
