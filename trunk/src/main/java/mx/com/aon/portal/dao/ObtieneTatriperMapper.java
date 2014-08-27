@@ -79,6 +79,12 @@ public class ObtieneTatriperMapper implements RowMapper
         result.setDependiente(isDepend);
         
         result.setCodidocu(rs.getString("codigo"));
+
+        try{
+        	result.setTieneDocu(rs.getString("DATDOC"));
+        }catch(Exception esql){
+        	logger.debug("NO se encontro DATDOC");
+        }
         
         logger.debug("CDATRIBU "+rs.getString("CDATRIBU")+" DSATRIBU: "+rs.getString("DSATRIBU")+" CODIDOCU: "+rs.getString("codigo"));
 		
