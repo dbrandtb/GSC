@@ -4046,15 +4046,15 @@ public class CotizacionAction extends PrincipalCoreAction
 			    		,smap1.get("nmsuplem")
 			    		,smap1.get("cdgrupo")
 			    		);
-			    int grupo=0;
 			    for(Map<String,String>iAsegurado:slist1)
 			    {
-			    	String parentesco=iAsegurado.get("PARENTESCO");
-			    	if(parentesco.equals("T"))
-			    	{
-			    		grupo = grupo + 1;
-			    	}
-			    	iAsegurado.put("AGRUPADOR",new StringBuilder().append(grupo).append("_").append("Familia ").append(grupo).toString());
+			    	iAsegurado.put("AGRUPADOR",
+			    			new StringBuilder()
+			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	            .append("_")
+			    	            .append("Familia ")
+			    	            .append(iAsegurado.get("FAMILIA"))
+			    	            .toString());
 			    }
 			}
 			catch(Exception ex)
@@ -4186,16 +4186,16 @@ public class CotizacionAction extends PrincipalCoreAction
 						,smap1.get("nmpoliza")
 						,smap1.get("nmsuplem")
 						,smap1.get("cdgrupo")
-						);				
-			    int grupo=0;
-			    for(Map<String,String>iAsegurado:slist1)
+						);
+				for(Map<String,String>iAsegurado:slist1)
 			    {
-			    	String parentesco=iAsegurado.get("PARENTESCO");
-			    	if(parentesco.equals("T"))
-			    	{
-			    		grupo = grupo + 1;
-			    	}
-			    	iAsegurado.put("AGRUPADOR",new StringBuilder().append(grupo).append("_").append("Familia ").append(grupo).toString());
+			    	iAsegurado.put("AGRUPADOR",
+			    			new StringBuilder()
+			    	             .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	             .append("_")
+			    	             .append("Familia ")
+			    	             .append(iAsegurado.get("FAMILIA"))
+			    	             .toString());
 			    }
 			}
 			catch(Exception ex)
