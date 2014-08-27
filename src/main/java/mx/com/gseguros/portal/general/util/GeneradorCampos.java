@@ -661,6 +661,16 @@ public class GeneradorCampos
         	{
         		log.debug("No es documento "+comp.getNameCdatribu());
         	}
+        	
+        	if(StringUtils.isNotBlank(comp.getTieneDocu()))
+        	{
+        		log.debug("Se agrega getTieneDocu "+comp.getTieneDocu()+" a "+comp.getNameCdatribu());
+        		item.add("tieneDocu",comp.getTieneDocu());
+        	}
+        	else
+        	{
+        		log.debug("No es se genera campo para subir documento "+comp.getNameCdatribu());
+        	}
         	////// para identificar si pide archivo
         }
         

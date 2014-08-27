@@ -59,6 +59,7 @@ public class ComponenteVO
 	private String swtarifi = null;
 	private String swpresen = null;
 	private String codidocu = null;
+	private String tieneDocu = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -442,5 +443,13 @@ public class ComponenteVO
 
 	public void setMaxValue(String maxValue) {
 		this.maxValue = maxValue;
+	}
+
+	public String getTieneDocu() {
+		return tieneDocu;
+	}
+
+	public void setTieneDocu(String tieneDocu) {
+		this.tieneDocu = tieneDocu;
 	}
 }

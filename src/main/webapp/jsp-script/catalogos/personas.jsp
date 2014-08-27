@@ -194,7 +194,7 @@ Ext.onReady(function()
 	        		,{
 	        			text     : 'Guardar'
 	        			,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-	        			,handler : function(){_p22_guardarClic();}
+	        			,handler : function(){_p22_guardarClic(_recargaBusqueda);}
 	        		}
 	        	]
 	        })
@@ -609,6 +609,11 @@ function _p22_nuevoClic()
     debug('<_p22_nuevoClic');
 }
 
+function _recargaBusqueda(){
+	debug('Recargando Busqueda');
+	_p22_storeGrid.reload();
+}
+
 function _p22_datosAdicionalesClic()
 {
     debug('>_p22_datosAdicionalesClic');
@@ -766,41 +771,48 @@ function _p22_datosAdicionalesClic()
                     
                     itemDocumento.up().add(Ext.clone(itemDocumento));
                     
-                    itemDocumento.up().add(
-                    {
-                        xtype    : 'panel'
-                        ,layout  : 'hbox'
-                        ,border  : 0
-                        ,items   :
-                        [
-                            {
-                                xtype       : 'displayfield'
-                                ,labelWidth : 180
-                                ,fieldLabel : 'Documento ' + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
-                            }
-                            ,{
-                                xtype     : 'button'
-                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
-                                ,tooltip  : 'Subir nuevo'
-                                ,codidocu : itemDocumento.codidocu
-                                ,descrip  : itemDocumento.fieldLabel
-                                ,handler  : function(button)
-                                {
-                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
-                                }
-                            },{
-                                xtype     : 'button'
-                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
-                                ,tooltip  : 'Descargar'
-                                ,codidocu : itemDocumento.codidocu
-                                ,descrip  : itemDocumento.fieldLabel
-                                ,handler  : function(button)
-                                {
-                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
-                                }
-                            }
-                        ]
-                    });
+                    if('DOC' == itemDocumento.tieneDocu){
+	                    itemDocumento.up().add({
+	                        xtype    : 'panel'
+	                        ,layout  : 'hbox'
+	                        ,border  : 0
+	                        ,items   :
+	                        [
+	                            {
+	                                xtype       : 'displayfield'
+	                                ,labelWidth : 180
+	                                ,fieldLabel : 'Documento ' + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
+	                            }
+	                            ,{
+	                                xtype     : 'button'
+	                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
+	                                ,tooltip  : 'Subir nuevo'
+	                                ,codidocu : itemDocumento.codidocu
+	                                ,descrip  : itemDocumento.fieldLabel
+	                                ,handler  : function(button)
+	                                {
+	                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+	                                }
+	                            },{
+	                                xtype     : 'button'
+	                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
+	                                ,tooltip  : 'Descargar'
+	                                ,codidocu : itemDocumento.codidocu
+	                                ,descrip  : itemDocumento.fieldLabel
+	                                ,handler  : function(button)
+	                                {
+	                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+	                                }
+	                            }
+	                        ]
+	                    });
+	                }else{
+	                	itemDocumento.up().add({
+                	    	layout: 'column',
+                	    	border: false,
+                	    	html:'<br/>'
+                	     });
+	                }
                     //itemDocumento.destroy();
                     itemDocumento.allowBlank = true;
                 }
