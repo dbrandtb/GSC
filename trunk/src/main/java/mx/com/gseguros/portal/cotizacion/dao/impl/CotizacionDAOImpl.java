@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -235,64 +236,24 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	protected class CargarTvalogarsGrupo extends StoredProcedure
 	{
-		private String[] columnas=new String[]{
-				"amparada"
-				,"cdgarant"
-				,"swobliga"
-				,"parametros.pv_otvalor01"
-				,"parametros.pv_otvalor02"
-				,"parametros.pv_otvalor03"
-				,"parametros.pv_otvalor04"
-				,"parametros.pv_otvalor05"
-				,"parametros.pv_otvalor06"
-				,"parametros.pv_otvalor07"
-				,"parametros.pv_otvalor08"
-				,"parametros.pv_otvalor09"
-				,"parametros.pv_otvalor10"
-				,"parametros.pv_otvalor11"
-				,"parametros.pv_otvalor12"
-				,"parametros.pv_otvalor13"
-				,"parametros.pv_otvalor14"
-				,"parametros.pv_otvalor15"
-				,"parametros.pv_otvalor16"
-				,"parametros.pv_otvalor17"
-				,"parametros.pv_otvalor18"
-				,"parametros.pv_otvalor19"
-				,"parametros.pv_otvalor20"
-				,"parametros.pv_otvalor21"
-				,"parametros.pv_otvalor22"
-				,"parametros.pv_otvalor23"
-				,"parametros.pv_otvalor24"
-				,"parametros.pv_otvalor25"
-				,"parametros.pv_otvalor26"
-				,"parametros.pv_otvalor27"
-				,"parametros.pv_otvalor28"
-				,"parametros.pv_otvalor29"
-				,"parametros.pv_otvalor30"
-				,"parametros.pv_otvalor31"
-				,"parametros.pv_otvalor32"
-				,"parametros.pv_otvalor33"
-				,"parametros.pv_otvalor34"
-				,"parametros.pv_otvalor35"
-				,"parametros.pv_otvalor36"
-				,"parametros.pv_otvalor37"
-				,"parametros.pv_otvalor38"
-				,"parametros.pv_otvalor39"
-				,"parametros.pv_otvalor40"
-				,"parametros.pv_otvalor41"
-				,"parametros.pv_otvalor42"
-				,"parametros.pv_otvalor43"
-				,"parametros.pv_otvalor44"
-				,"parametros.pv_otvalor45"
-				,"parametros.pv_otvalor46"
-				,"parametros.pv_otvalor47"
-				,"parametros.pv_otvalor48"
-				,"parametros.pv_otvalor49"
-				,"parametros.pv_otvalor50"
-			};
+		private List<String> columnas=new ArrayList<String>();
 		protected CargarTvalogarsGrupo(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_TVALOGARS_GRUPO");
+			
+			columnas.add("amparada");
+			columnas.add("cdgarant");
+			columnas.add("swobliga");
+			for(int i=1;i<=640;i++)
+			{
+				columnas.add(
+						new StringBuilder()
+						    .append("parametros.pv_otvalor")
+						    .append(StringUtils.leftPad(String.valueOf(i),3,"0"))
+						    .toString()
+						    );
+			}
+			
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));

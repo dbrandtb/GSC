@@ -26,6 +26,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -545,14 +546,19 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     
     public WrapperResultados pMovTvalogar(Map<String, String> parameters) throws ApplicationException
     {
-    	String[] inputKeys=new String[]{
-				"pv_cdunieco","pv_cdramo","pv_estado","pv_nmpoliza","pv_nmsituac","pv_cdgarant","pv_nmsuplem","pv_status",
-                "pv_otvalor01","pv_otvalor02","pv_otvalor03","pv_otvalor04","pv_otvalor05","pv_otvalor06","pv_otvalor07","pv_otvalor08","pv_otvalor09","pv_otvalor10",
-                "pv_otvalor11","pv_otvalor12","pv_otvalor13","pv_otvalor14","pv_otvalor15","pv_otvalor16","pv_otvalor17","pv_otvalor18","pv_otvalor19","pv_otvalor20",
-                "pv_otvalor21","pv_otvalor22","pv_otvalor23","pv_otvalor24","pv_otvalor25","pv_otvalor26","pv_otvalor27","pv_otvalor28","pv_otvalor29","pv_otvalor30",
-                "pv_otvalor31","pv_otvalor32","pv_otvalor33","pv_otvalor34","pv_otvalor35","pv_otvalor36","pv_otvalor37","pv_otvalor38","pv_otvalor39","pv_otvalor40",
-                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50"
-		};
+    	List<String>inputKeys=new ArrayList<String>();
+    	inputKeys.add("pv_cdunieco");
+    	inputKeys.add("pv_cdramo");
+    	inputKeys.add("pv_estado");
+    	inputKeys.add("pv_nmpoliza");
+    	inputKeys.add("pv_nmsituac");
+    	inputKeys.add("pv_cdgarant");
+    	inputKeys.add("pv_nmsuplem");
+    	inputKeys.add("pv_status");
+    	for(int i=1;i<=640;i++)
+    	{
+    		inputKeys.add(new StringBuilder().append("pv_otvalor").append(StringUtils.leftPad(String.valueOf(i),3,"0")).toString());
+    	}
     	for(String key:inputKeys)
     	{
     		if(!parameters.containsKey(key))

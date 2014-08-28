@@ -3488,7 +3488,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//HOSPITALIZACION (DEDUCIBLE)
 						String cdgarant = "4HOS";
-						String cdatribu = "01";//TODO
+						String cdatribu = "001";
 						String valor    = (String)iGrupo.get("deducible");
 						cotizacionManager.movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
 						

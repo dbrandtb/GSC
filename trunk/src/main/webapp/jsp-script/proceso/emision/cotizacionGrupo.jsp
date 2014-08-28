@@ -3757,6 +3757,7 @@ function _p21_editarCoberturas(grid,row)
                     ,'smap1.pv_nmpoliza' : _p21_smap1.nmpoliza
                     ,'smap1.pv_nmsituac' : record.get('NMSITUAC')
                     ,'smap1.pv_cdperson' : record.get('CDPERSON')
+                    ,'smap1.pv_cdtipsit' : _p21_smap1.cdtipsit
                 }
                 ,scripts  : true
                 ,autoLoad : true
