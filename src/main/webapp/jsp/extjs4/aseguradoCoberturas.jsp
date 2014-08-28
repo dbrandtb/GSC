@@ -23,6 +23,7 @@
 	var inputNmpolizap3 = '<s:property value="smap1.pv_nmpoliza" />';
 	var inputNmsituacp3 = '<s:property value="smap1.pv_nmsituac" />';
 	var inputCdpersonap3 = '<s:property value="smap1.pv_cdperson" />';
+	var inputCdtipsitp3 = '<s:property value="smap1.pv_cdtipsit" />';
 	var urlGuardarCoberturasp3 = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
 	var panelAdicionalesp3;
 	var urlTatrip3 = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
@@ -211,7 +212,8 @@
 																url : urlTatrip3,
 																params : {
 																	'smap1.pv_cdramo_i' : inputCdramop3,
-																	'smap1.pv_cdgarant_i' : record.get('GARANTIA')
+																	'smap1.pv_cdgarant_i' : record.get('GARANTIA'),
+																	'smap1.pv_cdtipsit_i' : inputCdtipsitp3
 																},
 																success : function(response,opts) {
 																	var json = Ext.decode(response.responseText);

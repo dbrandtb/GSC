@@ -2244,57 +2244,15 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdgarant",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_status",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor01", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor02", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor03", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor04", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor05", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor06", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor07", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor08", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor09", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor10", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor11", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor12", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor13", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor14", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor15", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor16", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor17", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor18", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor19", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor20", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor21", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor22", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor23", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor24", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor25", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor26", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor27", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor28", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor29", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor30", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor31", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor32", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor33", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor34", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor35", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor36", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor37", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor38", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor39", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor40", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor41", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor42", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor43", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor44", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor45", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor46", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor47", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor48", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
-			
+			for(int i=1;i<=640;i++)
+			{
+				declareParameter(new SqlParameter(
+						new StringBuilder()
+						    .append("pv_otvalor")
+						    .append(StringUtils.leftPad(String.valueOf(i),3,"0"))
+						    .toString()
+						,OracleTypes.VARCHAR));
+			}
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			
@@ -2475,14 +2433,24 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PGetTvalogarMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Map<String,Object> m=new HashMap<String,Object>(0);
-			String columnas[]=new String[]{
-					"cdunieco","cdramo","estado","nmpoliza","nmsituac","cdgarant","nmsuplem","status",
-					"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10",
-					"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20",
-					"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30",
-					"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40",
-					"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
-			};
+			List<String> columnas=new ArrayList<String>();
+			columnas.add("cdunieco");
+			columnas.add("cdramo");
+			columnas.add("estado");
+			columnas.add("nmpoliza");
+			columnas.add("nmsituac");
+			columnas.add("cdgarant");
+			columnas.add("nmsuplem");
+			columnas.add("status");
+			for(int i=1;i<=640;i++)
+			{
+			    columnas.add(
+			    		new StringBuilder()
+			    		.append("otvalor")
+			    		.append(StringUtils.leftPad(String.valueOf(i),3,"0"))
+			    		.toString()
+			    		);
+			}
 			for(String columna:columnas)
 			{
 				m.put(columna,rs.getString(columna));

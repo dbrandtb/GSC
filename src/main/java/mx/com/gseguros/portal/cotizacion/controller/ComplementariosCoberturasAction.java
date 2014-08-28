@@ -269,18 +269,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String obtenerCamposTatrigar()
 	{
+		log.info(""
+				+ "\n###################################"
+				+ "\n###### obtenerCamposTatrigar ######"
+				+ "\nsmap1 "+smap1
+				);
 		log.debug(smap1);
 		try
 		{
-			UserVO usuSes=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser(),null);//cdtipsit
-			
-			/*
-			pv_cdramo_i       smap1 ready!
-            pv_cdtipsit_i     NOT!
-            pv_cdgarant_i     smap1 ready!
-			*/
-			smap1.put("pv_cdtipsit_i",datUsu.getCdtipsit());
 			List<ComponenteVO>listTatri=kernelManager.obtenerTatrigar(smap1);
 			GeneradorCampos genCam=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			genCam.setCdgarant(smap1.get("pv_cdgarant_i"));
@@ -300,12 +296,21 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			log.error("error al obtener los campos tatrigar",ex);
 			success=false;
 		}
+
+		log.info(""
+				+ "\n###### obtenerCamposTatrigar ######"
+				+ "\n###################################"
+				);
 		return SUCCESS;
 	}
 	
 	public String obtenerValoresTatrigar()
 	{
-		log.debug(smap1);
+		log.info(""
+				+ "\n####################################"
+				+ "\n###### obtenerValoresTatrigar ######"
+				+ "\nsmap1 "+smap1
+				);
 		try
 		{
 			/*
@@ -332,6 +337,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			log.error("error al obtener los valores de tatrigar",ex);
 			success=true;
 		}
+		log.info(""
+				+ "\n###### obtenerValoresTatrigar ######"
+				+ "\n####################################"
+				);
 		return SUCCESS;
 	}
 	

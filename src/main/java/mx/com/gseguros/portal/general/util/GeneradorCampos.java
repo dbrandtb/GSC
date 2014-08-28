@@ -322,10 +322,12 @@ public class GeneradorCampos
         }
         if(comp.isFlagEsAtribu())
         {
-        	if(name.length()<2)
-        	{
-        		name = "0" + name;
-        	}
+        	int size = 2;
+    		if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
+    		{
+    			size=3;
+    		}
+        	name = StringUtils.leftPad(name,size,"0");
         	name = (auxiliar?GeneradorCampos.namePrefixAux:GeneradorCampos.namePrefix) + name;
         }
         
@@ -705,10 +707,12 @@ public class GeneradorCampos
     	if(comp.isFlagEsAtribu())
     	{
     		String cdatribu = comp.getNameCdatribu();
-    		if(cdatribu.length()<2)
+    		int size=2;
+    		if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
     		{
-    			cdatribu = "0" + cdatribu;
+    			size=3;
     		}
+    		cdatribu = StringUtils.leftPad(cdatribu,size,"0");
     		name    = GeneradorCampos.namePrefix + cdatribu;
     	}
     	
@@ -789,10 +793,12 @@ public class GeneradorCampos
 	    	if(comp.isFlagEsAtribu())
 	    	{
 	    		String cdatribu = comp.getNameCdatribu();
-	    		if(cdatribu.length()<2)
+	    		int size=2;
+	    		if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
 	    		{
-	    			cdatribu = "0" + cdatribu;
+	    			size=3;
 	    		}
+	    		cdatribu=StringUtils.leftPad(cdatribu,size,"0");
 	    		dataIndex = GeneradorCampos.namePrefix + cdatribu;
 	    	}
 	    	

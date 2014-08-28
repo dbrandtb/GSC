@@ -1561,7 +1561,8 @@ debug("validarYGuardar flag:2");
 	                        'smap1.pv_estado'   : inputEstadop2,
 	                        'smap1.pv_nmpoliza' : inputNmpolizap2,
 	                        'smap1.pv_nmsituac' : record.get('nmsituac'),
-	                        'smap1.pv_cdperson' : record.get('cdperson')
+	                        'smap1.pv_cdperson' : record.get('cdperson'),
+	                        'smap1.pv_cdtipsit' : inputCdtipsitp2
 	                    }
        					,autoLoad:true
        					,scripts:true
