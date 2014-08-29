@@ -11,7 +11,10 @@
             var _CONTEXT = '${ctx}';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _selCobUrlAvanza              = '<s:url namespace="/siniestros" action="afiliadosAfectados"/>';
-            
+            var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
+            var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+            var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
+            var _URL_ELIMINAR_ASEGURADO				= '<s:url namespace="/siniestros" 		action="eliminarAsegurado" />';
             // Obtenemos el contenido en formato JSON de la propiedad solicitada:
             var _11_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
             
@@ -89,7 +92,7 @@
 								{
 									xtype         : 'actioncolumn'
 									,menuDisabled : true
-									,width        : 50
+									,width        : 70
 									,align        : 'center'
 									,items        :
 									[
@@ -102,6 +105,11 @@
 									    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
 									    	,tooltip : 'Capturar Detalle'
 									    	,handler : revisarDocumento
+									    }
+									    ,{
+									    	icon     : '${ctx}/resources/fam3icons/icons/cancel.png'
+									    	,tooltip : 'Eliminar'
+									    	,handler : eliminarAsegurado
 									    }
 									]//,flex:1
 								},
@@ -190,6 +198,65 @@
             ////// variables //////
             
 ////// funciones //////
+
+function eliminarAsegurado(grid,rowIndex)
+{
+	var record = grid.getStore().getAt(rowIndex);
+	debug('record.eliminarAsegurado:',record.raw);
+	centrarVentanaInterna(Ext.Msg.show({
+        title: 'Aviso',
+        msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
+        buttons: Ext.Msg.YESNO,
+        icon: Ext.Msg.QUESTION,
+        fn: function(buttonId, text, opt){
+        	if(buttonId == 'yes'){
+        		debug("VALOR DEL RECORD");
+        		debug(record);
+        		Ext.Ajax.request({
+        			url: _URL_ELIMINAR_ASEGURADO,
+        			params: {
+        		    		'params.nmtramite'  : _11_params.NTRAMITE,
+                               'params.cdunieco'   : record.get('CDUNIECO'),
+          		        		'params.cdramo'     : record.get('CDRAMO'),
+          		        		'params.estado'     : record.get('ESTADO'),
+          		        		'params.nmpoliza'   : record.get('noPoliza'),
+                               'params.nmsuplem'   : record.get('NMSUPLEM'),
+          		        		'params.nmsituac'   : record.get('NMSITUAC'),
+                               'params.cdtipsit'   : _11_form.items.items[3].getValue(),//record.get('CDTIPSIT'),
+                               'params.cdperson'   : record.get('codAfiliado'),
+                               'params.feocurre'   : record.get('fechaOcurrencia')
+        			},
+        			success: function(response) {
+        				var res = Ext.decode(response.responseText);
+        				if(res.success){
+        					//centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.'));
+                            mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    standardSubmit :true
+                                    ,params        :
+                                    {
+                                        'params.ntramite' : _11_params.NTRAMITE
+                                    }
+                                });
+                            });
+        					
+    	    				//storeFacturas.reload();
+        				}else {
+        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+        				}
+        			},
+        			failure: function(){
+        				//gridFacturas.setLoading(false);
+        				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+        			}
+        		});
+        	}
+        	
+        }
+    }));
+}
+
 function revisarDocumento(grid,rowIndex)
 {
 	var record = grid.getStore().getAt(rowIndex);

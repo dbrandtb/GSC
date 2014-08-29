@@ -467,4 +467,6 @@ public interface SiniestrosManager {
 	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException;
 
 	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception;
+
+	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 }
