@@ -93,7 +93,7 @@ Ext.onReady(function() {
 	                        			
 	                        		   var fieldPer = panelPersona.down('#fieldAgente');
 	                         		   if(ROL_AGENTE != _parametros.cdsisrol){
-	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Usuario');
+	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Usuario');
 	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
 	                         			   panelPersona.getForm().findField('params.cdusuari').regex = /^[a-zA-Z0-9]+$/;
 	                         			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Usuario solo puede contener letras y n&uacute;meros';
@@ -105,7 +105,7 @@ Ext.onReady(function() {
 	                         			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
 	                         			   panelPersona.getForm().findField('params.cdrfc').allowBlank = true;
 	                         		   }else {
-	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
+	                         			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Agente');
 	                         			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
 	                         			   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
 	                         			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
@@ -126,7 +126,7 @@ Ext.onReady(function() {
                     		   var cdrol = records[0].get('key');
                     		   var fieldPer = panelPersona.down('#fieldAgente');
                     		   if(ROL_AGENTE != cdrol){
-                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Usuario');
+                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Usuario');
                     			   panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
                     			   panelPersona.getForm().findField('params.cdusuari').regex = /^[a-zA-Z0-9]+$/;
                     			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Usuario solo puede contener letras y n&uacute;meros';
@@ -139,7 +139,7 @@ Ext.onReady(function() {
                     			   panelPersona.getForm().findField('params.dsapellido1').allowBlank = false;
                     			   panelPersona.getForm().findField('params.cdrfc').allowBlank = true;
                     		   }else {
-                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Agente');
+                    			   panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Agente');
                     			   panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
                     			   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
                     			   panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
