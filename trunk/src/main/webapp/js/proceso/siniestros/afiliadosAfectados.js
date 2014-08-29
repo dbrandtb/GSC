@@ -464,8 +464,17 @@ Ext.onReady(function() {
                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                 handler: function() {
                     if (panelListadoAsegurado.form.isValid()) {
+                    	var datos=panelListadoAsegurado.form.getValues();
                     	
-                        var datos=panelListadoAsegurado.form.getValues();
+                    	if(datos.cmbAseguradoAfect==''|| datos.cmbAseguradoAfect== null && datos.dtfechaOcurrencias==''|| datos.dtfechaOcurrencias== null )
+                    	{
+                    		Ext.Msg.show({
+	                            title: 'Aviso',
+	                            msg: 'Complete la informaci&oacute;n requerida',
+	                            buttons: Ext.Msg.OK,
+	                            icon: Ext.Msg.WARNING
+	                        });
+                    	}else{
                         panelListadoAsegurado.form.submit({
            		        	waitMsg:'Procesando...',
            		        	//standardSubmit : true,
@@ -507,6 +516,7 @@ Ext.onReady(function() {
                         //limpiarRegistros();
                         panelListadoAsegurado.getForm().reset();
                         ventanaAgregarAsegurado.close();
+                    }
                     } else {
                         Ext.Msg.show({
                             title: 'Aviso',
