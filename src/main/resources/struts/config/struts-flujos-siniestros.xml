@@ -753,6 +753,16 @@
 		<action name="guardarCartaRechazoAutServ" class="siniestrosAction" method="guardarCartaRechazoAutServ">
             <result type="json" />
         </action>
+        
+        <action name="guardaTworksin" class="siniestrosAction" method="guardaTworksin">
+            <result type="json"></result>
+        </action>
+        
+        <action name="eliminarAsegurado" class="siniestrosAction" method="eliminarAsegurado">
+            <result type="json"></result>
+        </action>
+        
+        
 		
     </package>
 
