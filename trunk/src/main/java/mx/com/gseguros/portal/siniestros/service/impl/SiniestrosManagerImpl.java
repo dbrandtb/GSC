@@ -1282,4 +1282,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("requiereInformacionAdicional params: "+params);
 		return siniestrosDAO.obtieneDatosAdicionales(params);
 	}
+
+	@Override
+	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.eliminarAsegurado(paramsTworkSin);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

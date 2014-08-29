@@ -3215,4 +3215,29 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+	@Override
+	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new eliminaAseguradoRegistrado(getDataSource()), paramsTworkSin);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class eliminaAseguradoRegistrado extends StoredProcedure {
+		protected eliminaAseguradoRegistrado(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_ELIMINA_ASEGURADO");
+			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

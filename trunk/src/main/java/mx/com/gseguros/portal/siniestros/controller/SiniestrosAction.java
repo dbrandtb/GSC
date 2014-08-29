@@ -5503,6 +5503,98 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		return SUCCESS;
 	}
     
+    public String guardaTworksin()
+    {
+    	logger.debug(""
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			+ "\n###### guardaTworksin ######"
+    			+ "\n######                ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+				paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
+                paramsTworkSin.put("pv_cdunieco_i",params.get("cdunieco"));
+                paramsTworkSin.put("pv_cdramo_i",params.get("cdramo"));
+                paramsTworkSin.put("pv_estado_i",params.get("estado"));
+                paramsTworkSin.put("pv_nmpoliza_i",params.get("nmpoliza"));
+                paramsTworkSin.put("pv_nmsolici_i",params.get("nmsolici"));
+                paramsTworkSin.put("pv_nmsuplem_i",params.get("nmsuplem"));
+                paramsTworkSin.put("pv_nmsituac_i",params.get("nmsituac"));
+                paramsTworkSin.put("pv_cdtipsit_i",params.get("cdtipsit"));
+                paramsTworkSin.put("pv_cdperson_i",params.get("cdperson"));
+                paramsTworkSin.put("pv_feocurre_i",params.get("feocurre"));
+                paramsTworkSin.put("pv_nmautser_i",null);
+                
+				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+    		mensaje = "Asegurado guardado";
+    		success = true;
+    		
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.debug("error al guardar tworksin",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                 ######"
+    			+ "\n###### guardaTworksin  ######"
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			);
+    	return SUCCESS;
+    }
+    
+    
+    public String eliminarAsegurado()
+    {
+    	logger.debug(""
+    			+ "\n###############################"
+    			+ "\n###############################"
+    			+ "\n###### eliminarAsegurado ######"
+    			+ "\n######                   ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		String fechaOcurrencia = params.get("feocurre");
+			String feOcurrencia= fechaOcurrencia.substring(8,10)+"/"+fechaOcurrencia.substring(5,7)+"/"+fechaOcurrencia.substring(0,4);
+			
+			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+    			paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
+                paramsTworkSin.put("pv_cdunieco_i",params.get("cdunieco"));
+                paramsTworkSin.put("pv_cdramo_i",params.get("cdramo"));
+                paramsTworkSin.put("pv_estado_i",params.get("estado"));
+                paramsTworkSin.put("pv_nmpoliza_i",params.get("nmpoliza"));
+                paramsTworkSin.put("pv_nmsuplem_i",params.get("nmsuplem"));
+                paramsTworkSin.put("pv_nmsituac_i",params.get("nmsituac"));
+                paramsTworkSin.put("pv_cdtipsit_i",params.get("cdtipsit"));
+                paramsTworkSin.put("pv_cdperson_i",params.get("cdperson"));
+                paramsTworkSin.put("pv_feocurre_i",feOcurrencia);
+                
+				siniestrosManager.eliminarAsegurado(paramsTworkSin);
+    		mensaje = "Asegurado eliminado";
+    		success = true;
+    		
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.debug("error al eliminar registro",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                    ######"
+    			+ "\n###### eliminarAsegurado  ######"
+    			+ "\n################################"
+    			+ "\n################################"
+    			);
+    	return SUCCESS;
+    }
+	
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}
