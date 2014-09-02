@@ -49,4 +49,8 @@ public interface CatalogosManager {
      * @throws Exception
      */
     public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception;
+    
+    public List<GenericVO> cargarAgentesPorPromotor(String cdusuari)throws Exception;
+    
+    public List<GenericVO> cargarServicioPublicoAutos(String substring)throws Exception;
 }

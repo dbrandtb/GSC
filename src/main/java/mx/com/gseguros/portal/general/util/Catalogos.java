@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.general.util;
 public enum Catalogos {
 	
 	AGENTES(""),
+	AGENTES_POR_PROMOTOR(""),
 	CAUSA_SINIESTRO("TCAUSASSV"),
 	COBERTURAS(""),
 	COBERTURASXTRAMITE(""),
@@ -32,6 +33,7 @@ public enum Catalogos {
 	ROLES_POLIZA("TROLES"),
 	ROLES_RAMO(""),
 	ROLES_SISTEMA(""),
+	SERVICIO_PUBLICO_AUTOS(""),
 	SEXO("TSEXO"),
 	SINO(""),
 	STATUS_POLIZA("STATUSPOL"),

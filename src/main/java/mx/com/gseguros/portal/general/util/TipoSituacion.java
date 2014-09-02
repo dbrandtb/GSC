@@ -2,12 +2,14 @@ package mx.com.gseguros.portal.general.util;
 
 public enum TipoSituacion {
 	
-	AUTOS_FRONTERIZOS    ("AF"),
-	AUTOS_PICK_UP        ("PU"),
-	MULTISALUD           ("MS"),
-	MULTISALUD_COLECTIVO ("MSC"),
-	SALUD_NOMINA         ("SN"),
-	SALUD_VITAL          ("SL")
+	AUTOS_FRONTERIZOS      ("AF"),
+	AUTOS_PICK_UP          ("PU"),
+	MULTISALUD             ("MS"),
+	MULTISALUD_COLECTIVO   ("MSC"),
+	SALUD_NOMINA           ("SN"),
+	SALUD_VITAL            ("SL"),
+	SERVICIO_PUBLICO_AUTO  ("AT"),
+	SERVICIO_PUBLICO_MICRO ("MC")
 	;
 
 	private String cdtipsit;

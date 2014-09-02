@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -431,6 +433,64 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		declareParameter(new SqlOutParameter("pv_cantidad_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    @Override
+    public List<GenericVO> cargarAgentesPorPromotor(Map<String,String> params) throws Exception
+    {
+    	Map<String,Object>respuestaProcedure=ejecutaSP(new CargarAgentesPorPromotor(getDataSource()), params);
+    	List<GenericVO>listaResp=new ArrayList<GenericVO>();
+    	List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+    	if(lista!=null&&lista.size()>0)
+    	{
+    		for(Map<String,String>iAgente:lista)
+    		{
+    			listaResp.add(new GenericVO(iAgente.get("CDAGENTE"),iAgente.get("DSAGENTE")));
+    		}
+    	}
+    	return listaResp;
+    }
+	
+    protected class CargarAgentesPorPromotor extends StoredProcedure {
+    	
+    	protected CargarAgentesPorPromotor(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_CONSULTA.P_GET_AGENTES_X_PROMOTOR");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    @Override
+    public List<GenericVO> cargarServicioPublicoAutos(Map<String,String> params) throws Exception
+    {
+    	Map<String,Object>respuestaProcedure=ejecutaSP(new CargarServicioPublicoAutos(getDataSource()), params);
+    	List<GenericVO>listaResp=new ArrayList<GenericVO>();
+    	List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+    	if(lista!=null&&lista.size()>0)
+    	{
+    		for(Map<String,String>iAgente:lista)
+    		{
+    			listaResp.add(new GenericVO(iAgente.get("CDAGENTE"),iAgente.get("DSAGENTE")));
+    		}
+    	}
+    	return listaResp;
+    }
+	
+    protected class CargarServicioPublicoAutos extends StoredProcedure {
+    	
+    	protected CargarServicioPublicoAutos(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_CONSULTA.P_GET_SERVICIO_PUBLICO_AUTOS");
+			declareParameter(new SqlParameter("substring" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
     		compile();
     	}
     }

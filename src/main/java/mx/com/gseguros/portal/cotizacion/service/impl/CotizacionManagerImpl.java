@@ -673,6 +673,31 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return respuesta;
 	}
 	
+	@Override
+	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\ncdagente ")
+				.append(cdagente)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdagente",cdagente);
+		String cdunieco=cotizacionDAO.cargarCduniecoAgenteAuto(params);
+		logger.info(
+				new StringBuilder()
+				.append("\ncdunieco ")
+				.append(cdunieco)
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return cdunieco;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

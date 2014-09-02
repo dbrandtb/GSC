@@ -80,6 +80,9 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case AGENTES:
         			lista = catalogosManager.obtieneAgentes(params!=null?params.get("agente"):null);
         			break;
+        		case AGENTES_POR_PROMOTOR:
+        			lista = catalogosManager.cargarAgentesPorPromotor(params.get("cdusuari"));
+        			break;
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
@@ -353,6 +356,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						lista.add(new GenericVO(iElem.get("CDROL"),iElem.get("DSROL")));
 					}
+					break;
+				case SERVICIO_PUBLICO_AUTOS:
+					lista=catalogosManager.cargarServicioPublicoAutos(params.get("substr"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

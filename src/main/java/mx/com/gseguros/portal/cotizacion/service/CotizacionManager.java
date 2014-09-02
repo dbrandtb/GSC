@@ -155,4 +155,6 @@ public interface CotizacionManager
 			,String cdgrupo)throws Exception;
 	
 	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
+	
+	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception;
 }

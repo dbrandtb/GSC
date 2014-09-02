@@ -560,4 +560,24 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>respuestaProcedure=ejecutaSP(new CargarCduniecoAgenteAuto(getDataSource()),params);
+		return (String)respuestaProcedure.get("pv_cdunieco_o");
+	}
+	
+	protected class CargarCduniecoAgenteAuto extends StoredProcedure
+	{
+		protected CargarCduniecoAgenteAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CDUNIECO_X_AGENTE_AUTO");
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdunieco_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

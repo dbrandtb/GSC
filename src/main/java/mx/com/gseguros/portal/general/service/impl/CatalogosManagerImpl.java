@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.general.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +14,12 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 public class CatalogosManagerImpl implements CatalogosManager {
 	
 	private CatalogosDAO catalogosDAO;
+	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
 	
 	@Override
@@ -104,5 +108,49 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		return catalogosDAO.obtieneCantidadMaxima(cdramo, cdtipsit, tipoTramite, rango, validacion);
 	}
 	
-
+	@Override
+	public List<GenericVO> cargarAgentesPorPromotor(String cdusuari)throws Exception
+	{
+		logger.info(""
+				+ "\n######################################"
+				+ "\n###### cargarAgentesPorPromotor ######"
+				+ "\ncdusuari "+cdusuari
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdusuari",cdusuari);
+		List<GenericVO>lista=catalogosDAO.cargarAgentesPorPromotor(params);
+		if(lista==null)
+		{
+			lista=new ArrayList<GenericVO>();
+		}
+		logger.info(""
+				+ "\nlista size "+lista.size()
+				+ "\n###### cargarAgentesPorPromotor ######"
+				+ "\n######################################"
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> cargarServicioPublicoAutos(String substring)throws Exception
+	{
+		logger.info(""
+				+ "\n########################################"
+				+ "\n###### cargarServicioPublicoAutos ######"
+				+ "\nsubstring "+substring
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("substring",substring);
+		List<GenericVO>lista=catalogosDAO.cargarServicioPublicoAutos(params);
+		if(lista==null)
+		{
+			lista=new ArrayList<GenericVO>();
+		}
+		logger.info(""
+				+ "\nlista size "+lista.size()
+				+ "\n###### cargarServicioPublicoAutos ######"
+				+ "\n########################################"
+				);
+		return lista;
+	}
 }
