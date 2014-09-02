@@ -1292,4 +1292,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public List<Map<String, String>> obtenerDatosAdicionalesCobertura(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneDatosAdicionalesCobertura(params);
+	}
+
 }

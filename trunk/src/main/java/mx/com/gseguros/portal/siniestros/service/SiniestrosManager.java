@@ -469,4 +469,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception;
 
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
+
+	public List<Map<String, String>> obtenerDatosAdicionalesCobertura(String ntramite) throws Exception;
 }
