@@ -62,6 +62,7 @@ debug('_0_necesitoIncisos:',_0_necesitoIncisos);
 
 var _0_panelPri;
 var _0_formAgrupados;
+var _0_formAvisos;
 var _0_gridIncisos;
 var _0_botonera;
 var _0_storeIncisos;
@@ -191,8 +192,9 @@ function _0_comprar()
                     	    }
                     	]
                     }).show();
-                    if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
+                    if(_0_smap1.SITUACION=='AUTO')
                     {
+                        debug("_0_smap1.SITUACION=='AUTO'");
                         var msg = Ext.Msg.show(
                         {
                             title    : 'Tr&aacute;mite actualizado'
@@ -292,7 +294,7 @@ function _0_imprimir()
             + '&p_plan='        + _0_selectedCdplan
             + '&p_perpag='      + _0_selectedCdperpag
             + '&p_ntramite='    + _0_smap1.ntramite
-            + '&p_cdusuari='    + _0_smap1.user
+            + '&p_cdusuari='    + _0_smap1.cdusuari
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _0_reportsServerUser
@@ -387,7 +389,7 @@ function _0_mail()
                                              + '&p_plan='        + _0_selectedCdplan
                                              + '&p_perpag='      + _0_selectedCdperpag
                                              + '&p_ntramite='    + _0_smap1.ntramite
-                                             + '&p_cdusuari='    + _0_smap1.user
+                                             + '&p_cdusuari='    + _0_smap1.cdusuari
                                              + '&destype=cache'
                                              + "&desformat=PDF"
                                              + "&userid="        + _0_reportsServerUser
@@ -773,8 +775,9 @@ function _0_cargar()
                     	    _0_limpiar();
                             for(var i=0;i<json.slist1.length;i++)
                             {
-                                if(_0_smap1.cdtipsit=='AF'||_0_smap1.cdtipsit=='PU')
+                                if(_0_smap1.SITUACION=='AUTO')
                                 {
+                                    debug("_0_smap1.SITUACION=='AUTO'");
                                     if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
                                     {
                             	        _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
@@ -1206,7 +1209,7 @@ Ext.onReady(function()
         return true;
     };
     <s:if test='%{getImap().get("validacionCustomButton")!=null}'>
-	    var botonValidacionCustom = <s:property value="imap.validacionCustomButton" escapeHtml="false"/>;
+	    var botonValidacionCustom = <s:property value="imap.validacionCustomButton" escapeHtml='false' />;
 	     _0_validacion_custom=botonValidacionCustom.handler;
     </s:if>
     
@@ -1629,7 +1632,8 @@ Ext.onReady(function()
    		        }
    		        ,items    :
    		        [
-   		            _0_formAgrupados
+   		            _0_formAvisos
+   		            ,_0_formAgrupados
    		            ,_0_gridIncisos
    		            ,_0_botonera
    		        ]
@@ -1644,6 +1648,40 @@ Ext.onReady(function()
     ///////////////////////
     ////// contenido //////
     /*///////////////////*/
+    var auxItemsAvisos = [];
+    <s:if test='%{getActionErrors()!=null&&getActionErrors().size()>0}' >
+        <s:iterator value="actionErrors" var="iError">
+            auxItemsAvisos.push(
+            {
+                xtype     : 'panel'
+                ,layout   : 'hbox'
+                ,border   : 0
+                ,defaults : { style : 'margin : 5px;' }
+                ,items    :
+                [
+                    {
+                        xtype   : 'image'
+                        ,src    : '${ctx}/resources/fam3icons/icons/error.png'
+                        ,width  : 16
+                        ,height : 16
+                    }
+                    ,{
+                        xtype  : 'label'
+                        ,text  : '<s:property value="iError" />'
+                        ,style : 'color:red;margin:5px;'
+                    }
+                ]
+            });
+        </s:iterator>
+    </s:if>
+    _0_formAvisos=Ext.create('Ext.panel.Panel',
+    {
+        hidden    : <s:property value='%{getActionErrors()!=null&&getActionErrors().size()>0?false:true}' />
+        ,defaults : { style : 'margin : 5px;'}
+        ,border   : 0
+        ,items    : auxItemsAvisos
+    });
+    
     _0_windowAyudaCobertura = new Ext.Window(
     {
     	title        : 'Detalle de cobertura'
@@ -1785,6 +1823,8 @@ Ext.onReady(function()
     
     _0_formAgrupados = new _0_FormAgrupados();
     _0_gridIncisos   = new _0_GridIncisos();
+    
+    //[parche] para AF y PU
     if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
     {
         _0_gridIncisos.setTitle('Datos del contratante');
@@ -1892,6 +1932,8 @@ Ext.onReady(function()
              }
         });
     }
+    //fin [parche]
+    
     <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
         var items=_0_formAgrupados.items.items;
         debug('items a reordenar:',items);
@@ -1945,6 +1987,7 @@ Ext.onReady(function()
     ////// cargador //////
     //////////////////////
     
+    //[parche] para SL
     if(_0_smap1.cdtipsit=='SL')
     {
         Ext.create('Ext.window.Window',

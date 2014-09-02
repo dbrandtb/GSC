@@ -652,6 +652,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 	}
 	
+	@Override
+	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception
+	{
+		logger.info(""
+				+ "\n#################################"
+				+ "\n###### cargarTipoSituacion ######"
+				+ "\ncdramo "+cdramo
+				+ "\ncdtipsit "+cdtipsit
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdramo",cdramo);
+		params.put("cdtipsit",cdtipsit);
+		Map<String,String>respuesta=cotizacionDAO.cargarTipoSituacion(params);
+		logger.info(""
+				+ "\nrespuesta "+respuesta
+				+ "\n###### cargarTipoSituacion ######"
+				+ "\n#################################"
+				);
+		return respuesta;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

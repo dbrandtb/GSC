@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -58,7 +59,7 @@ public class CotizacionAction extends PrincipalCoreAction
 {
 
 	private static final long       serialVersionUID = 3237792502541753915L;
-	private static Logger           log              = Logger.getLogger(CotizacionAction.class);
+	private final Logger            logger           = Logger.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
@@ -93,211 +94,339 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String pantallaCotizacion()
 	{
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
-				+ "\n################################"
+		logger.info("\n"
 				+ "\n################################"
 				+ "\n###### pantallaCotizacion ######"
-				+ "\n######                    ######"
+				+ "\nsmap1: "+smap1
+				+ "\nsession!=null: "+(session!=null)
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("session: "+session);
 		
-		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		success = true;
+		exito   = true;
+		
+		UserVO usuario     = null;
+		String cdunieco    = null;
+		String cdramo      = null;
+		String cdtipsit    = null;
+		String situacion   = null;
+		String agrupacion  = null;
+		String cdagente    = null;
+		GeneradorCampos gc = null;
+		String cdusuari    = null;
+		String cdsisrol    = null;
+		
+		//instanciar el generador de campos
+    	gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 		gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
 		if(!gc.isEsMovil() && smap1.containsKey("movil"))
 		{
 			gc.setEsMovil(true);
 		}
 		
-		UserVO usuario  = (UserVO) session.get("USUARIO");
-		String cdtipsit = smap1.get("cdtipsit");
+		//datos de entrada
+		if(exito)
+		{
+		    try
+		    {
+		    	usuario  = (UserVO) session.get("USUARIO");
+		    	cdusuari = usuario.getUser();
+		    	cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+		        cdramo   = smap1.get("cdramo");
+		        cdtipsit = smap1.get("cdtipsit");
+		        
+		        smap1.put("cdusuari" , cdusuari);
+		        smap1.put("cdsisrol" , cdsisrol);
+				gc.setCdtipsit(cdtipsit);
+		    }
+		    catch(Exception ex)
+		    {
+		    	long timestamp  = System.currentTimeMillis();
+		    	exito           = false;
+		    	respuesta       = "No hay datos suficientes #"+timestamp;
+		    	respuestaOculta = ex.getMessage();
+		    	logger.error(respuesta,ex);
+		    }
+		}
 		
-		String ntramite;
-		String cdunieco=null;
-		String cdramo=null;
-		
-		smap1.put("user",usuario.getUser());
-		
-		/////////////////////////////////////////////////////////
-		////// poner valores a ntramite, cdunieco y cdramo //////
-        if(smap1.get("ntramite")!=null)
-        //cuando viene ntramite tambien vienen cdunieco y cdramo
-        {
-        	ntramite = smap1.get("ntramite");
-        	cdunieco = smap1.get("cdunieco");
-        	cdramo   = smap1.get("cdramo");
-        }
-        else
-        //cuando no hay ntramite es porque esta cotizando un agente por fuera,
-        //y se obtiene cdunieco y cdramo por medio de ese agente
-        {
-        	try
-        	{
-        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdramo
-        		ntramite="";
-        		cdunieco=datUsu.getCdunieco();
-        		if(StringUtils.isBlank(smap1.get("cdramo")))
-        		{
-        			cdramo=datUsu.getCdramo();
-        		}
-        		else
-        		{
-        			cdramo=smap1.get("cdramo");
-        		}
-        		smap1.put("ntramite","");
-        		smap1.put("cdunieco",cdunieco);
-        		smap1.put("cdramo",cdramo);
-        	}
-        	catch(Exception ex)
-        	{
-        		log.error("error al obtener los datos del agente",ex);
-        	}
-        }
-		////// poner valores a ntramite, cdunieco y cdramo //////
-        /////////////////////////////////////////////////////////
-        
-        ////////////////////////////////////////
-        ////// obtener campos de tatrisit //////
-        gc.setCdtipsit(cdtipsit);
-        
-        List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
-        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
-        
-        imap = new HashMap<String,Item>();
-        
-        try
-        {
-	        List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,usuario.getUser());
-        	
-	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
-	        for(ComponenteVO tatriIte:tatrisit)
-			{
-	        	if(tatriIte.getValue()==null&&tatriIte.getDefaultValue()==null)
-	        	{
-	        		tatriIte.setComboVacio(true);
-	        	}
-	        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
-	        	{
-	        		temp.add(tatriIte);
-	        	}
-	        	else
-	        	{
-	        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())||
-	        				cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-	        		{
-	        			if(tatriIte.getNameCdatribu().equalsIgnoreCase("26"))
-	        			{
-	        				tatriIte.setOculto(true);
-	        				temp.add(tatriIte);
-	        			}
-	        		}
-	        	}
-	        	if(
-	        			(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-	        			||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-	        			)
-	        			&&tatriIte.getNameCdatribu().equalsIgnoreCase("24")
-	        			)
-	        	{
-	        		ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-	        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
-	        		{
-	        			tatriIte.setOculto(true);
-	        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
-	        		}
-	        	}
-			}
-	        tatrisit=temp;
-	        
-			for(ComponenteVO tatriIte:tatrisit)
-			{
-				////////////////////
-				////// custom //////
-				if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
-				{
-					if(tatriIte.getCatalogo()!=null&&
-							(tatriIte.getCatalogo().equalsIgnoreCase("2CODPOS")
-									||tatriIte.getCatalogo().equalsIgnoreCase("2CODPOSN")))//codigo postal
-					{
-						tatriIte.setCatalogo("");
-					}
-				}
-				////// custom //////
-				////////////////////
-					
-				if(tatriIte.getSwsuscri().equalsIgnoreCase("S"))//S=individual
-				{
-					tatriIte.setColumna(Constantes.SI);
-					camposIndividuales.add(tatriIte);
-				}
-				else
-				{
-					camposAgrupados.add(tatriIte);
-				}
-			}
-
-			gc.generaParcial(camposAgrupados);
-			imap.put("camposAgrupados" , gc.getItems());
-			imap.put("fieldsAgrupados" , gc.getFields());
-			
-			if(camposIndividuales.size()>0)
-			{
-				gc.generaParcialConEditor(camposIndividuales);
-				imap.put("itemsIndividuales"  , gc.getItems());
-				imap.put("camposIndividuales" , gc.getColumns());
-				imap.put("fieldsIndividuales" , gc.getFields());
-			}
-			else
-			{
-				imap.put("itemsIndividuales"  , null);
-				imap.put("camposIndividuales" , null);
-				imap.put("fieldsIndividuales" , null);
-			}
-			
-			List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
-					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
-			if(validaciones.size()>0)
-			{
-				gc.generaComponentes(validaciones, true, false, false, false, false, true);
-				imap.put("validacionCustomButton" , gc.getButtons());
-			}
-			else
-			{
-				imap.put("validacionCustomButton" , null);
-			}
-			
-			List<ComponenteVO>modeloExtra = pantallasManager.obtenerComponentes(
-					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", "MODELO", null);
-			gc.generaComponentes(modeloExtra, true, true, true, true, true, false);
-			if(modeloExtra.size()>0)
-			{
-				imap.put("modeloExtraFields"  , gc.getFields());
-				imap.put("modeloExtraColumns" , gc.getColumns());
-				imap.put("modeloExtraItems"   , gc.getItems());
-			}
-			else
-			{
-				imap.put("modeloExtraFields"  , null);
-				imap.put("modeloExtraColumns" , null);
-				imap.put("modeloExtraItems"   , null);
-			}
-        }
-        catch(Exception ex)
-        {
-        	log.error("error al obtener los campos de cotizacion",ex);
-        }
-        
-		log.debug("camposAgrupados: "+camposAgrupados);
-		log.debug("camposIndividuales: "+camposIndividuales);
-        ////// obtener campos de tatrisit //////
-        ////////////////////////////////////////
-        
-		////// parches por situacion //////
-		if(cdtipsit.equalsIgnoreCase("AF")||cdtipsit.equalsIgnoreCase("PU"))
+		//poner valores a ntramite, cdunieco y cdramo
+		if(exito)
 		{
 			try
 			{
-				List<ComponenteVO>cdatribusDerechos=pantallasManager.obtenerComponentes(null, null, cdramo, cdtipsit, null, null, "COTIZACION_CUSTOM", "CDATRIBU_DERECHO", null);
+				//cuando viene ntramite tambien vienen cdunieco y cdramo 
+		        if(StringUtils.isNotBlank(smap1.get("ntramite")))
+		        {
+		        	cdunieco = smap1.get("cdunieco");
+		        }
+		        //cuando no hay ntramite es porque esta cotizando un agente por fuera,
+		        //y se obtiene cdunieco por medio de ese agente
+		        else
+		        {
+	        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
+	        		cdunieco=datUsu.getCdunieco();
+	        		smap1.put("ntramite" , "");
+	        		smap1.put("cdunieco" , cdunieco);
+	        		
+	        		//recuperamos agente de ser el que esta en sesion
+	        		if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+	        		{
+	        			cdagente = datUsu.getCdagente();
+	        		}
+	        		smap1.put("cdagente" , cdagente);
+		        }
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Usted no puede cotizar este producto #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+        
+        //obtener tipo situacion
+		if(exito)
+		{
+	        try
+	        {
+	            Map<String,String>tipoSituacion=cotizacionManager.cargarTipoSituacion(cdramo,cdtipsit);
+	            if(tipoSituacion!=null)
+	            {
+	            	smap1.putAll(tipoSituacion);
+	            }
+	            else
+	            {
+	            	throw new Exception("No se ha parametrizado la situacion en ttipram");
+	            }
+	        }
+	        catch(Exception ex)
+	        {
+	        	long timestamp  = System.currentTimeMillis();
+	        	respuesta       = "Error al cargar tipo de situacion #"+timestamp;
+	        	respuestaOculta = ex.getMessage();
+	        	logger.error(respuesta,ex);
+	        	
+	        	this.addActionError("No se ha parametrizado el tipo de situaci&oacute;n para el producto #"+timestamp);
+	        	smap1.put("SITUACION"  , "PERSONA");
+	        	smap1.put("AGRUPACION" , "SOLO");
+	        }
+	        finally
+	        {
+	        	situacion  = smap1.get("SITUACION");
+	        	agrupacion = smap1.get("AGRUPACION");
+	        }
+		}
+		
+		// obtener campos de tatrisit
+        if(exito)
+        {	
+	        List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
+	        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
+	        
+	        imap  = new HashMap<String,Item>();
+	        
+	        try
+	        {
+		        List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,usuario.getUser());
+		        List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+		        
+		        //iteracion para descartar componentes
+		        for(ComponenteVO tatriIte:tatrisit)
+				{
+		        	//para permitir edicion cuando no tienen valor
+		        	if(tatriIte.getValue()==null&&tatriIte.getDefaultValue()==null)
+		        	{
+		        		tatriIte.setComboVacio(true);
+		        	}
+		        	
+		        	//para presentar en pantalla
+		        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
+		        	{
+		        		temp.add(tatriIte);
+		        	}
+		        	//cuanto no van en pantalla
+		        	else
+		        	{
+		        		//[parche] para poner para AF y PU
+		        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())||
+		        				cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+		        		{
+		        			if(tatriIte.getNameCdatribu().equalsIgnoreCase("26"))
+		        			{
+		        				tatriIte.setOculto(true);
+		        				temp.add(tatriIte);
+		        			}
+		        		}
+		        	}
+		        	
+		        	//[parche] para AF y PU
+		        	if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+		        			||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+		        	{
+		        		if(tatriIte.getNameCdatribu().equalsIgnoreCase("24"))
+		        		{
+			        		ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
+			        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+			        		{
+			        			tatriIte.setOculto(true);
+			        			tatriIte.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
+			        		}
+		        		}
+		        	}
+					//[parche] para ramo 6
+					else if(cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()))
+					{
+						//cuando el rol es agente se pone su cdagente
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("17")
+								&&StringUtils.isNotBlank(cdagente)
+								&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+						{
+							tatriIte.setValue(cdagente);
+							logger.debug(
+									new StringBuilder()
+									.append("\n@@@@@@ parche pone cdagente=")
+									.append(cdagente)
+									.append(" @@@@@@")
+									.toString()
+									);
+						}
+						//cuando es agente no captur folio
+						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16")
+								&&StringUtils.isNotBlank(cdagente)
+								&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+						{
+							tatriIte.setOculto(true);
+							logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
+						}
+					}
+				}
+		        tatrisit=temp;
+		        
+		        //segunda ronda para separar los individuales de los agrupados
+				for(ComponenteVO tatriIte:tatrisit)
+				{
+					if(tatriIte.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+					{
+						tatriIte.setColumna(Constantes.SI);
+						camposIndividuales.add(tatriIte);
+					}
+					else
+					{
+						camposAgrupados.add(tatriIte);
+					}
+					
+					//[parche] para SL y SN
+					if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
+					{
+						if(tatriIte.getCatalogo()!=null&&
+								(tatriIte.getCatalogo().equalsIgnoreCase("2CODPOS")
+										||tatriIte.getCatalogo().equalsIgnoreCase("2CODPOSN")))//codigo postal
+						{
+							tatriIte.setCatalogo("");
+						}
+					}
+				}
+	
+				gc.generaComponentes(camposAgrupados,true,true,true,false,false,false);
+				imap.put("fieldsAgrupados" , gc.getFields());
+				imap.put("camposAgrupados" , gc.getItems());
+				
+				if(camposIndividuales.size()>0)
+				{
+					gc.generaComponentes(camposIndividuales,true,true,false,true,true,false);
+					imap.put("camposIndividuales" , gc.getColumns());
+					imap.put("fieldsIndividuales" , gc.getFields());
+				}
+				else
+				{
+					imap.put("camposIndividuales" , null);
+					imap.put("fieldsIndividuales" , null);
+				}
+				
+				logger.debug("camposAgrupados: "+camposAgrupados);
+				logger.debug("camposIndividuales: "+camposIndividuales);
+	        }
+	        catch(Exception ex)
+	        {
+	        	long timestamp  = System.currentTimeMillis();
+	        	exito           = false;
+	        	respuesta       = "Error al obtener componentes #"+timestamp;
+	        	respuestaOculta = ex.getMessage();
+	        	logger.error(respuesta,ex);
+	        }
+        }
+        
+        //obtener validaciones de situaciones
+        if(exito)
+        {
+        	try
+        	{
+        		List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
+						null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
+				if(validaciones.size()>0)
+				{
+					gc.generaComponentes(validaciones, true, false, false, false, false, true);
+					imap.put("validacionCustomButton" , gc.getButtons());
+				}
+				else
+				{
+					throw new Exception(
+							new StringBuilder()
+							.append("No se han definido las validaciones en VALIDACIONES_COTIZA>")
+							.append(gc.isEsMovil()?"MOVIL":"DESKTOP")
+							.toString()
+							);
+				}
+        	}
+        	catch(Exception ex)
+        	{
+        		long timestamp  = System.currentTimeMillis();
+        		respuesta       = "Error al cargar las validaciones para el producto #"+timestamp;
+        		respuestaOculta = ex.getMessage();
+        		logger.error(respuesta,ex);
+        		
+        		this.addActionError("No se han definido las validaciones para el producto #"+timestamp);
+        		imap.put("validacionCustomButton" , null);
+        	}
+        }
+        
+        //obtener atributos extras de situacion
+        if(exito)
+        {
+        	try
+        	{
+        		List<ComponenteVO>modeloExtra = pantallasManager.obtenerComponentes(
+						null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", "MODELO", null);
+				gc.generaComponentes(modeloExtra, true, true, false, true, true, false);
+				if(modeloExtra.size()>0)
+				{
+					imap.put("modeloExtraFields"  , gc.getFields());
+					imap.put("modeloExtraColumns" , gc.getColumns());
+				}
+				else
+				{
+					imap.put("modeloExtraFields"  , null);
+					imap.put("modeloExtraColumns" , null);
+				}
+	        }
+	        catch(Exception ex)
+	        {
+	        	long timestamp  = System.currentTimeMillis();
+	        	exito           = false;
+	        	respuesta       = "Error al obtener los atributos extras de la situaci&oacute;n #"+timestamp;
+	        	respuestaOculta = ex.getMessage();
+	        	logger.error(respuesta,ex);
+	        }
+        }
+        
+        //atributos derechos para auto
+		if(exito&&situacion.equals("AUTO"))
+		{
+			try
+			{
+				List<ComponenteVO>cdatribusDerechos=pantallasManager.obtenerComponentes(
+						null, null, cdramo, cdtipsit, null, null, "COTIZACION_CUSTOM", "CDATRIBU_DERECHO", null);
 				if(cdatribusDerechos.size()>0)
 				{
 					String cdatribusConcatenados="";
@@ -313,33 +442,62 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					smap1.put("CDATRIBU_DERECHO",null);
+					throw new Exception("No se han definido atributos en COTIZACION_CUSTOM>CDATRIBU_DERECHO");
 				}
 			}
 			catch(Exception ex)
 			{
-				log.error("error al obtener CDATRIBU_DERECHO para AF",ex);
+				long timestamp  = System.currentTimeMillis();
+				respuesta       = "Error al cargar los CDATRIBU_DERECHO #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+				
+				this.addActionError("No se han definido los atributos de coberturas para el producto #"+timestamp);
 				smap1.put("CDATRIBU_DERECHO",null);
 			}
 		}
-		////// parches por situacion //////
 		
-		log.debug("\n"
-				+ "\n######                    ######"
+		//respuesta
+		String respuesta = null;
+		if(exito)
+		{
+			if(gc.isEsMovil())
+			{
+				respuesta = "success_mobile";
+			}
+			else
+			{
+				respuesta = SUCCESS;
+			}
+		}
+		else
+		{
+			if(gc.isEsMovil())
+			{
+				respuesta = "error_mobile";
+			}
+			else
+			{
+				respuesta = ERROR;
+			}
+		}
+		
+		logger.info(""
+				+ "\nrespuesta: "+respuesta
 				+ "\n###### pantallaCotizacion ######"
 				+ "\n################################"
-				+ "\n################################"
 				);
-		return gc.isEsMovil() ? "success_mobile" : SUCCESS;
+		
+		return respuesta;
 	}
 	
 	public String webServiceNada()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n############################"
 				+ "\n###### webServiceNada ######"
 				);
-		log.info("smap1: "+smap1);
+		logger.info("smap1: "+smap1);
 		
 		String  vim                  = null;
 		success                      = true;
@@ -362,7 +520,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(!success)
 			{
 				error="No se recibi&oacute; el n&uacute;mero de serie";
-				log.error(error);
+				logger.error(error);
 			}
 		}
 		
@@ -380,7 +538,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
+				logger.error("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
 				smap1.put("FACTOR_MIN","0");
 				smap1.put("FACTOR_MAX","0");
 			}
@@ -394,7 +552,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(!success)
 			{
 				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
-				log.error(error);
+				logger.error(error);
 				/*parche
 				datosAuto = new VehicleValue_Struc();
 				datosAuto.setVehicleYear(1);
@@ -414,7 +572,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(codigoPostal,tipoVehiculo);
 				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
 			}catch(Exception ex){
-				log.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
+				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
 				success = false;
 			}
 		}
@@ -439,7 +597,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("AUTO_MARCA", datosAuto.getMakeDescr());
 		}
 		
-		log.info(""
+		logger.info(""
 				+ "\n###### webServiceNada ######"
 				+ "\n############################"
 				);
@@ -507,7 +665,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					log.error("Error sin impacto funcional al validar domicilios: ",ex);
+					logger.error("Error sin impacto funcional al validar domicilios: ",ex);
 					lisUsuSinDir=null;
 				}
 				
@@ -529,7 +687,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							respuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
 						}					
 					}
-					log.debug("Se va a terminar el proceso porque faltan direcciones");
+					logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				}
 			}
 			catch(Exception ex)
@@ -654,7 +812,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				for(Map<String,String> docu:listaDocu)
 				{
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=new StringBuilder()
@@ -678,12 +836,12 @@ public class CotizacionAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url = new StringBuilder(url).append("&p_cdperson=").append(descripc.substring(11, descripc.lastIndexOf("."))).toString();
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url);
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\n################################"
@@ -705,7 +863,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				log.debug("se inserta detalle nuevo para emision");
+				logger.debug("se inserta detalle nuevo para emision");
 	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
@@ -746,14 +904,14 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public String pantallaCotizacionDemo() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n####################################"
 				+ "\n####################################"
 				+ "\n###### pantallaCotizacionDemo ######"
 				+ "\n######                        ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("session: "+session);
+		logger.debug("smap1: "+smap1);
+		logger.debug("session: "+session);
 		
 		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 		gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
@@ -804,7 +962,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	}
         	catch(Exception ex)
         	{
-        		log.error("error al obtener los datos del agente",ex);
+        		logger.error("error al obtener los datos del agente",ex);
         	}
         }
 		////// poner valores a ntramite, cdunieco y cdramo //////
@@ -828,7 +986,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		try {
 			result = pantallasManager.obtienePantalla(params);
 		} catch (Exception e) {
-			log.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
+			logger.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
 		}
 		
 		smap1.put("variablesGeneradas", result.get("COMPONENTES"));
@@ -952,15 +1110,15 @@ public class CotizacionAction extends PrincipalCoreAction
         }
         catch(Exception ex)
         {
-        	log.error("error al obtener los campos de cotizacion",ex);
+        	logger.error("error al obtener los campos de cotizacion",ex);
         }
         
-		log.debug("camposAgrupados: "+camposAgrupados);
-		log.debug("camposIndividuales: "+camposIndividuales);
+		logger.debug("camposAgrupados: "+camposAgrupados);
+		logger.debug("camposIndividuales: "+camposIndividuales);
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
         
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                        ######"
 				+ "\n###### pantallaCotizacionDemo ######"
 				+ "\n####################################"
@@ -977,14 +1135,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////*/
 	public String cotizar()
 	{
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n###############################"
 				+ "\n###############################"
 				+ "\n######      cotizar      ######"
 				+ "\n######                   ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("slist1: "+slist1);
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -1115,7 +1273,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
 	            	}
 	            } catch(Exception ex){
-	            	log.error("error al obtener atributos", ex);
+	            	logger.error("error al obtener atributos", ex);
 	            }
 	            ////// 1. indicar para la situacion el indice //////
 	            
@@ -1337,7 +1495,7 @@ public class CotizacionAction extends PrincipalCoreAction
             mapaDuroResultados.put("pv_cdelemen_i" , cdelemento);
             mapaDuroResultados.put("pv_cdtipsit_i" , cdtipsit);
             List<Map<String,String>> listaResultados=kernelManager.obtenerResultadosCotizacion2(mapaDuroResultados);
-            log.debug("listaResultados: "+listaResultados);
+            logger.debug("listaResultados: "+listaResultados);
             /*///////////////////////////////*/
             ////// Generacion cotizacion //////
             ///////////////////////////////////
@@ -1386,8 +1544,8 @@ public class CotizacionAction extends PrincipalCoreAction
             	}
             	nmsituac=res.get("NMSITUAC");
             }
-            log.debug("formas de pago: "+formasPago);
-            log.debug("planes: "+planes);
+            logger.debug("formas de pago: "+formasPago);
+            logger.debug("planes: "+planes);
             ////// 1. encontrar planes y formas de pago //////
             
             ////// 2. crear formas de pago //////
@@ -1400,7 +1558,7 @@ public class CotizacionAction extends PrincipalCoreAction
             	tarifa.put("NMSITUAC",nmsituac);
             	tarifas.add(tarifa);
             }
-            log.debug("tarifas despues de formas de pago: "+tarifas);
+            logger.debug("tarifas despues de formas de pago: "+tarifas);
             ////// 2. crear formas de pago //////
             
             ////// 3. crear planes //////
@@ -1412,7 +1570,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 	tarifa.put("DSPLAN"+plan.getKey(),plan.getValue());
                 }
             }
-            log.debug("tarifas despues de planes: "+tarifas);
+            logger.debug("tarifas despues de planes: "+tarifas);
             ////// 3. crear planes //////
             
             ////// 4. crear primas //////
@@ -1427,19 +1585,19 @@ public class CotizacionAction extends PrincipalCoreAction
             		{
             			if(tarifa.containsKey("MNPRIMA"+cdplan))
             			{
-            				log.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
+            				logger.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
             				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
-            				log.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
+            				logger.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
             			}
             			else
             			{
-            				log.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
+            				logger.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
             				tarifa.put("MNPRIMA"+cdplan,mnprima);
             			}
             		}
                 }
             }
-            log.debug("tarifas despues de primas: "+tarifas);
+            logger.debug("tarifas despues de primas: "+tarifas);
             
             slist2=tarifas;
             ////// 4. crear primas //////
@@ -1591,12 +1749,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.debug("error al cotizar",ex);
+			logger.debug("error al cotizar",ex);
 			success=false;
 			error=ex.getMessage();
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                   ######"
 				+ "\n######      cotizar      ######"
 				+ "\n###############################"
@@ -1610,20 +1768,20 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCotizacion()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n##############################"
 				+ "\n###### cargarCotizacion ######"
 				);
-		log.info("smap1: "+smap1);
+		logger.info("smap1: "+smap1);
 		success = true;
 		
 		String cdunieco = smap1.get("cdunieco");
 		String cdramo   = smap1.get("cdramo");
 		String cdtipsit = smap1.get("cdtipsit");
 		String nmpoliza = smap1.get("nmpoliza");
-		log.info("cdramo: "+cdramo);
-		log.info("cdtipsit: "+cdtipsit);
-		log.info("nmpoliza: "+nmpoliza);
+		logger.info("cdramo: "+cdramo);
+		logger.info("cdtipsit: "+cdtipsit);
+		logger.info("nmpoliza: "+nmpoliza);
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
@@ -1656,7 +1814,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error obtenido al validar carga de cotizacion",ex);
+				logger.error("error obtenido al validar carga de cotizacion",ex);
 				error=ex.getMessage();
 				success = false;
 			}
@@ -1684,9 +1842,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					String iCdunieco = iInciso.get("CDUNIECO");
 					String iEstado   = iInciso.get("ESTADO");
 					String iNmsituac = iInciso.get("NMSITUAC");
-					log.info("iCdunieco: "+iCdunieco);
-					log.info("iEstado: "+iEstado);
-					log.info("iNmsituac: "+iNmsituac);
+					logger.info("iCdunieco: "+iCdunieco);
+					logger.info("iEstado: "+iEstado);
+					logger.info("iNmsituac: "+iNmsituac);
 					LinkedHashMap<String,Object>paramsObtenerMpersonaCotizacion=new LinkedHashMap<String,Object>();
 					paramsObtenerMpersonaCotizacion.put("param1",iCdunieco);
 					paramsObtenerMpersonaCotizacion.put("param2",cdramo);
@@ -1716,14 +1874,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al recuperar tvalosit",ex);
+				logger.error("error al recuperar tvalosit",ex);
 				error   = ex.getMessage();
 				success = false;
 			}
 		}
 		//recupera tvalosit
 		
-		log.info(""
+		logger.info(""
 				+ "\n###### cargarCotizacion ######"
 				+ "\n##############################"
 				);
@@ -1732,11 +1890,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarSituacionesAuto()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n####################################"
 				+ "\n###### guardarSituacionesAuto ######"
 				);
-		log.info("smap1: "+smap1);
+		logger.info("smap1: "+smap1);
 		
 		String cdunieco = null;
 		String cdramo   = null;
@@ -1755,15 +1913,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				cdtipsit = smap1.get("cdtipsit");
 				estado   = smap1.get("estado");
 				nmpoliza = smap1.get("nmpoliza");
-				log.info("cdunieco: " + cdunieco);
-				log.info("cdramo: "   + cdramo);
-				log.info("cdtipsit: " + cdtipsit);
-				log.info("estado: "   + estado);
-				log.info("nmpoliza: " + nmpoliza);
+				logger.info("cdunieco: " + cdunieco);
+				logger.info("cdramo: "   + cdramo);
+				logger.info("cdtipsit: " + cdtipsit);
+				logger.info("estado: "   + estado);
+				logger.info("nmpoliza: " + nmpoliza);
 			}
 			catch(Exception ex)
 			{
-				log.error("error al obtener parametros",ex);
+				logger.error("error al obtener parametros",ex);
 				error   = "No se recibieron los datos necesarios";
 				success = false;
 			}
@@ -1790,7 +1948,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al completar cdperson de asegurados",ex);
+				logger.error("error al completar cdperson de asegurados",ex);
 				error   = ex.getMessage();
 				success = false;
 			}
@@ -1832,7 +1990,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al ordenar nmsituac",ex);
+				logger.error("error al ordenar nmsituac",ex);
 				error   = ex.getMessage();
 				success = false;
 			}
@@ -1852,7 +2010,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al borrar mpoliper",ex);
+				logger.error("error al borrar mpoliper",ex);
 				error   = ex.getMessage();
 				success = false;
 			}
@@ -1900,7 +2058,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					catch(Exception ex)
 					{
-						log.error("error al insertar mpersona "+aseg,ex);
+						logger.error("error al insertar mpersona "+aseg,ex);
 						error   = ex.getMessage();
 						success = false;
 					}
@@ -1929,7 +2087,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					catch(Exception ex)
 					{
-						log.error("error al insertar mpoliper "+aseg,ex);
+						logger.error("error al insertar mpoliper "+aseg,ex);
 						error   = ex.getMessage();
 						success = false;
 					}
@@ -2095,8 +2253,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		log.info("slist1: "+slist1);
-		log.info(""
+		logger.info("slist1: "+slist1);
+		logger.info(""
 				+ "\n###### guardarSituacionesAuto ######"
 				+ "\n####################################"
 				);
@@ -3072,7 +3230,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaDuroResultados.put("pv_cdelemen_i" , cdelemento);
 		            mapaDuroResultados.put("pv_cdtipsit_i" , cdtipsit);
 		            List<Map<String,String>> listaResultados=kernelManager.obtenerResultadosCotizacion2(mapaDuroResultados);
-		            log.debug("listaResultados: "+listaResultados);
+		            logger.debug("listaResultados: "+listaResultados);
 		            
 		            ////// 1. encontrar planes, formas de pago y algun nmsituac//////
 		            Map<String,String>formasPago = new LinkedHashMap<String,String>();
@@ -3094,8 +3252,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		            	}
 		            	nmsituac=res.get("NMSITUAC");
 		            }
-		            log.debug("formas de pago: "+formasPago);
-		            log.debug("planes: "+planes);
+		            logger.debug("formas de pago: "+formasPago);
+		            logger.debug("planes: "+planes);
 		            ////// 1. encontrar planes y formas de pago //////
 		            
 		            ////// 2. crear formas de pago //////
@@ -3108,7 +3266,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            	tarifa.put("NMSITUAC",nmsituac);
 		            	tarifas.add(tarifa);
 		            }
-		            log.debug("tarifas despues de formas de pago: "+tarifas);
+		            logger.debug("tarifas despues de formas de pago: "+tarifas);
 		            ////// 2. crear formas de pago //////
 		            
 		            ////// 3. crear planes //////
@@ -3120,7 +3278,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	tarifa.put("DSPLAN"+plan.getKey(),plan.getValue());
 		                }
 		            }
-		            log.debug("tarifas despues de planes: "+tarifas);
+		            logger.debug("tarifas despues de planes: "+tarifas);
 		            ////// 3. crear planes //////
 		            
 		            ////// 4. crear primas //////
@@ -3135,19 +3293,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		            		{
 		            			if(tarifa.containsKey("MNPRIMA"+cdplan))
 		            			{
-		            				log.debug("ya hay prima para "+cdplan+" en "+cdperpagqwe+": "+tarifa.get("MNPRIMA"+cdplan));
+		            				logger.debug("ya hay prima para "+cdplan+" en "+cdperpagqwe+": "+tarifa.get("MNPRIMA"+cdplan));
 		            				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
-		            				log.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
+		            				logger.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
 		            			}
 		            			else
 		            			{
-		            				log.debug("primer prima para "+cdplan+" en "+cdperpagqwe+": "+mnprima);
+		            				logger.debug("primer prima para "+cdplan+" en "+cdperpagqwe+": "+mnprima);
 		            				tarifa.put("MNPRIMA"+cdplan,mnprima);
 		            			}
 		            		}
 		                }
 		            }
-		            log.debug("tarifas despues de primas: "+tarifas);
+		            logger.debug("tarifas despues de primas: "+tarifas);
 		            
 		            slist2=tarifas;
 		            ////// 4. crear primas //////

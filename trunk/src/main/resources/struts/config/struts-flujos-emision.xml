@@ -8,6 +8,8 @@
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
             <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="error_mobile">/jsp-script/general/errorPantalla.jsp</result>
         </action>
         
         <action name="cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">

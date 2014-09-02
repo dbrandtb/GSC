@@ -22,4 +22,5 @@ public interface CotizacionDAO
 	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosGrupo(Map<String,String>params)throws Exception;
 	public void borrarMpoliperGrupo(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception;
 }

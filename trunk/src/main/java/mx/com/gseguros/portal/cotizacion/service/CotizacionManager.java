@@ -153,4 +153,6 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			,String cdgrupo)throws Exception;
+	
+	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
 }
