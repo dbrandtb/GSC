@@ -631,6 +631,7 @@ function _recargaBusqueda(){
 function _p22_datosAdicionalesClic()
 {
     debug('>_p22_datosAdicionalesClic');
+    _recargaBusqueda();
     _p22_tabPanel().setLoading(true);
     Ext.Ajax.request(
     {
