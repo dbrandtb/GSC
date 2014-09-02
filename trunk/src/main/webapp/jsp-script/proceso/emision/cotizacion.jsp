@@ -32,20 +32,21 @@ var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtip
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"                 />';
-var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"                 />';
-var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion"       />';
-var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"      />';
-var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
-var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
-var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline"       />';
-var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"      />';
-var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios"    />';
-var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="mcdinamica"              />';
-var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
-var _0_urlNada                 = '<s:url namespace="/emision"         action="webServiceNada"          />';
+var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                  />';
+var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                  />';
+var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action="detalleCotizacion"        />';
+var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"       />';
+var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"  />';
+var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"              />';
+var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"        />';
+var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"       />';
+var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"  />';
+var _0_urlDatosComplementarios     = '<s:url namespace="/"                action="datosComplementarios"     />';
+var _0_urlUpdateStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"  />';
+var _0_urlMesaControl              = '<s:url namespace="/mesacontrol"     action="mcdinamica"               />';
+var _0_urlLoad                     = '<s:url namespace="/emision"         action="cargarCotizacion"         />';
+var _0_urlNada                     = '<s:url namespace="/emision"         action="webServiceNada"           />';
+var _0_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto" />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -1986,6 +1987,65 @@ Ext.onReady(function()
     /*//////////////////*/
     ////// cargador //////
     //////////////////////
+    
+    //[parche] para ramo 6
+    if(_0_smap1.cdramo+'x'=='6x')
+    {
+        debug('>parche para ramo 6');
+        
+        _0_gridIncisos.setTitle('Datos del contratante');
+        
+        var agente = _fieldByName('parametros.pv_otvalor17');
+        //agente
+        if(_0_smap1.cdsisrol=='PROMOTORAUTO'
+            ||_0_smap1.cdsisrol=='SUSCRIAUTO')
+        {
+            agente.on(
+            {
+                'select' : function(comp,records)
+                {
+                    Ext.Ajax.request(
+                    {
+                        url     : _0_urlCargarCduniecoAgenteAuto
+                        ,params :
+                        {
+                            'smap1.cdagente' : records[0].get('key')
+                        }
+                        ,success : function(response)
+                        {
+                            var json=Ext.decode(response.responseText);
+                            debug('obtener cdunieco agente response:',json);
+                            if(json.exito)
+                            {
+                                _0_smap1.cdunieco=json.smap1.cdunieco;
+                                debug('_0_smap1:',_0_smap1);
+                            }
+                            else
+                            {
+                                mensajeError(json.respuesta);
+                            }
+                        }
+                        ,failure : errorComunicacion
+                    });
+                }
+            });
+        }
+        
+        //folio
+        var folio  = _fieldByName('parametros.pv_otvalor16');
+        debug('folio:',folio);
+        folio.on(
+        {
+            'change' : function(comp,val)
+            {
+                debug('folio change val:',val,'dummy');
+                agente.setReadOnly(!Ext.isEmpty(val));
+                agente.reset();
+            }
+        });
+        
+        debug('<parche para ramo 6');
+    }
     
     //[parche] para SL
     if(_0_smap1.cdtipsit=='SL')

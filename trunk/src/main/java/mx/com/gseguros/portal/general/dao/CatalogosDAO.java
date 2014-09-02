@@ -40,5 +40,9 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 	
 	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception;
+	
+	public List<GenericVO> cargarAgentesPorPromotor(Map<String,String> params) throws Exception;
+	
+	public List<GenericVO> cargarServicioPublicoAutos(Map<String,String> params) throws Exception;
 
 }

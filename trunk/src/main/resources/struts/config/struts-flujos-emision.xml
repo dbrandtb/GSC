@@ -136,6 +136,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarCduniecoAgenteAuto" class="CotizacionAction" method="cargarCduniecoAgenteAuto">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

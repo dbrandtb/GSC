@@ -160,7 +160,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		        }
 		        //cuando no hay ntramite es porque esta cotizando un agente por fuera,
 		        //y se obtiene cdunieco por medio de ese agente
-		        else
+		        //[cuando es promotor o suscriptor auto no aplica
+		        else if(!cdsisrol.equals(RolSistema.PROMOTOR_AUTO.getCdsisrol())
+		        		&&!cdsisrol.equals(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
 		        {
 	        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
 	        		cdunieco=datUsu.getCdunieco();
@@ -173,6 +175,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	        			cdagente = datUsu.getCdagente();
 	        		}
 	        		smap1.put("cdagente" , cdagente);
+		        }
+		        //para promotor y suscriptor auto
+		        else if(cdsisrol.equals(RolSistema.PROMOTOR_AUTO.getCdsisrol())
+		        		||cdsisrol.equals(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+		        {
+		        	cdunieco = "-1";
+		        	smap1.put("cdunieco" , cdunieco);
 		        }
 			}
 			catch(Exception ex)
@@ -277,27 +286,63 @@ public class CotizacionAction extends PrincipalCoreAction
 					//[parche] para ramo 6
 					else if(cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()))
 					{
-						//cuando el rol es agente se pone su cdagente
-						if(tatriIte.getNameCdatribu().equalsIgnoreCase("17")
-								&&StringUtils.isNotBlank(cdagente)
-								&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+						//agente
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("17"))
 						{
-							tatriIte.setValue(cdagente);
-							logger.debug(
-									new StringBuilder()
-									.append("\n@@@@@@ parche pone cdagente=")
-									.append(cdagente)
-									.append(" @@@@@@")
-									.toString()
-									);
+							//valor inicial si es agente
+							if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol())
+									&&StringUtils.isNotBlank(cdagente))
+							{
+								tatriIte.setValue(cdagente);
+								tatriIte.setSoloLectura(true);
+								logger.debug(
+										new StringBuilder()
+										.append("\n@@@@@@ parche pone cdagente=")
+										.append(cdagente)
+										.append(" @@@@@@")
+										.toString()
+										);
+							}
+							//sustituir componente si es promotor o suscriptor
+							else if(cdsisrol.equalsIgnoreCase(RolSistema.PROMOTOR_AUTO.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+							{
+								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+										,cdtipsit                              ,  "W"         , cdsisrol
+										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "17");
+								temp.remove(tatriIte);
+								componenteSustitutoListaAux.get(0).setSwsuscri("N");
+								temp.add(componenteSustitutoListaAux.get(0));
+							}
+							
+							//agregar combo
+							if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+							{
+								List<ComponenteVO>listaAuxComboAutos=pantallasManager.obtenerComponentes(
+										TipoTramite.POLIZA_NUEVA.getCdtiptra()
+										, null                   
+										,cdramo
+										,cdtipsit
+										,"W"
+										,cdsisrol
+										,"COTIZACION_CUSTOM"
+										,"COMBO_SERV_PUBL_AUTO"
+										,null);
+								listaAuxComboAutos.get(0).setSwsuscri("N");
+								temp.add(listaAuxComboAutos.get(0));
+							}
 						}
-						//cuando es agente no captur folio
-						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16")
-								&&StringUtils.isNotBlank(cdagente)
-								&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+						//folio
+						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16"))
 						{
-							tatriIte.setOculto(true);
-							logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
+							//oculto para el agente
+							if(StringUtils.isNotBlank(cdagente)
+									&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+							{
+								tatriIte.setOculto(true);
+								logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
+							}
 						}
 					}
 				}
@@ -4501,6 +4546,41 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### guardarReporteCotizacionGrupo ######"
 				+ "\n###########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarCduniecoAgenteAuto()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\nsmap1 ")
+				.append(smap1)
+				.toString()
+				);
+		success = true;
+		exito   = true;
+		try
+		{
+			smap1.put("cdunieco",cotizacionManager.cargarCduniecoAgenteAuto(smap1.get("cdagente")));
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = "Error al obtener sucursal del agente #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\nsmap1 ")
+				.append(smap1)
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\n######################################")
+				.toString()
 				);
 		return SUCCESS;
 	}
