@@ -1019,6 +1019,8 @@ Ext.onReady(function()
             {
                 'params.cdramo'    : _11_form.items.items[2].getValue()
                 ,'params.cdtipsit' : _11_form.items.items[3].getValue()
+                ,'params.tipopago' : _11_params.OTVALOR02
+                ,'params.ntramite' : _11_params.NTRAMITE
             }
         });
     });
@@ -1032,6 +1034,8 @@ Ext.onReady(function()
             {
                 'params.cdramo'    : _11_form.items.items[2].getValue()
                 ,'params.cdtipsit' : _11_form.items.items[3].getValue()
+                ,'params.tipopago' : _11_params.OTVALOR02
+                ,'params.ntramite' : _11_params.NTRAMITE
             }
         });
     });
@@ -1044,6 +1048,8 @@ Ext.onReady(function()
         {
             'params.cdramo'    : _11_form.items.items[2].getValue()
             ,'params.cdtipsit' : _11_form.items.items[3].getValue()
+            ,'params.tipopago' : _11_params.OTVALOR02
+            ,'params.ntramite' : _11_params.NTRAMITE
         }
     });
     //recarga al render

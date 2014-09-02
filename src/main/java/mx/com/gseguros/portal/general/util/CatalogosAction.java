@@ -190,12 +190,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 					try{
 						String tipoPago = params.get("tipopago").toString();
 						if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
+							//Verificamos en tworksin y si no en msiniest
+							List<Map<String,String>> datosCobertura = siniestrosManager.obtenerDatosAdicionalesCobertura(params.get("ntramite"));
 							HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
-							paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
-							paramCobertura.put("pv_estado_i",params.get("estado"));
-							paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
-							paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
-							paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
+							paramCobertura.put("pv_cdunieco_i",datosCobertura.get(0).get("CDUNIECO"));
+							paramCobertura.put("pv_estado_i",datosCobertura.get(0).get("ESTADO"));
+							paramCobertura.put("pv_cdramo_i",datosCobertura.get(0).get("CDRAMO"));
+							paramCobertura.put("pv_nmpoliza_i",datosCobertura.get(0).get("NMPOLIZA"));
+							paramCobertura.put("pv_nmsituac_i",datosCobertura.get(0).get("NMSITUAC"));
 							paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
 							
 							List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
