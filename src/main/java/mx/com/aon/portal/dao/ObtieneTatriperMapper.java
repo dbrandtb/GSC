@@ -81,7 +81,9 @@ public class ObtieneTatriperMapper implements RowMapper
         result.setCodidocu(rs.getString("codigo"));
 
         try{
-        	result.setTieneDocu(rs.getString("DATDOC"));
+        	if("DOC".equalsIgnoreCase(rs.getString("DATDOC"))){
+        		result.setTieneDocu(rs.getString("DATDOC"));
+    		}
         }catch(Exception esql){
         	logger.debug("NO se encontro DATDOC");
         }
