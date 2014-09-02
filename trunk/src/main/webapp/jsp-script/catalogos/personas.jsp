@@ -186,7 +186,7 @@ Ext.onReady(function()
 	        	,buttons     :
 	        	[
 	        	    {
-	        	        text     : 'Nuevo'
+	        	        text     : 'Nueva Persona'
                         ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                         ,hidden  : _p22_cdperson!=false
                         ,handler : _p22_nuevoClic
@@ -324,6 +324,16 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldSexo().hide();
         _fieldByName('DSNOMBRE').setFieldLabel('Raz&oacute;n social');
         _fieldByName('FENACIMI').setFieldLabel('Fecha de constituci&oacute;n');
+        
+        if(value == 'S'){
+        	_fieldByName('FENACIMI').allowBlank = true;
+        	_fieldByName('FENACIMI').setValue('');
+        	_fieldByName('FENACIMI').hide();
+        }else {
+        	_fieldByName('FENACIMI').allowBlank = false;
+        	_fieldByName('FENACIMI').setValue('');
+        	_fieldByName('FENACIMI').show();
+        }
     }
     else
     {
@@ -333,6 +343,10 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldSexo().show();
         _fieldByName('DSNOMBRE').setFieldLabel('Nombre');
         _fieldByName('FENACIMI').setFieldLabel('Fecha de nacimiento');
+        
+        _fieldByName('FENACIMI').allowBlank = false;
+    	_fieldByName('FENACIMI').setValue('');
+    	_fieldByName('FENACIMI').show();
     }
     debug('<_p22_tipoPersonaChange');
 }
@@ -676,25 +690,44 @@ function _p22_datosAdicionalesClic()
                 }
                 
 				fieldEstCorp = _fieldByLabel('Estructura corporativa');
+				var fieldEstCorpAux = Ext.clone(fieldEstCorp);
+				
 				if(fieldEstCorp){
 					var panelDatAdic = fieldEstCorp.up();
-					var indEstCorp = panelDatAdic.items.findIndex('fieldLabel', 'Estructura corporativa');
+					var indEstCorp = panelDatAdic.items.indexOf(fieldEstCorp);
+					
+					/*debug("fieldEstCorp" , fieldEstCorp);
+					
+					if(( (indEstCorp) %2) != 0){
+						panelDatAdic.insert(indEstCorp,{
+	            	    	layout: 'column',
+	            	    	border: false,
+	            	    	html:'<br/>'
+	            	    });
+						indEstCorp = indEstCorp + 1;
+					}*/
+					
+					_p22_formDatosAdicionales().items.remove(fieldEstCorp, true);
+					fieldEstCorp = fieldEstCorpAux;
 					
 					panelDatAdic.insert(indEstCorp,{
-            	    	layout: 'column',
-            	    	border: false,
-            	    	html:'<br/>'
-            	    });
-					panelDatAdic.insert(indEstCorp+2,{
-                        	 xtype    : 'button'
-                        	,text     : 'Ver/Editar Accionistas'
-                            ,icon     : '${ctx}/resources/fam3icons/icons/award_star_add.png'
-                            ,tooltip  : 'Ver/Editar Accionostas'
-                            ,handler  : function(button)
-                            {
-                               verEditarAccionistas(_p22_fieldCdperson().getValue(), fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length), fieldEstCorp.getValue());
-                            }
+						xtype      : 'panel',
+						//padding    :  '2px 2px 2px 2px',
+						defaults : { style : 'margin:3px' },
+						border     :  1,
+						items      : [fieldEstCorp,{
+                       	 xtype    : 'button'
+                         	,text     : 'Ver/Editar Accionistas'
+                             ,icon     : '${ctx}/resources/fam3icons/icons/award_star_add.png'
+                             ,tooltip  : 'Ver/Editar Accionostas'
+                             ,handler  : function(button)
+                             {
+                                verEditarAccionistas(_p22_fieldCdperson().getValue(), fieldEstCorp.getName().substring(fieldEstCorp.getName().length-2, fieldEstCorp.getName().length), fieldEstCorp.getValue());
+                             }
+ 					}]
 					});
+					
+					
 					
 					fieldEstCorp.addListener('beforeselect',function (combo){
 						if(windowAccionistas){
@@ -754,67 +787,77 @@ function _p22_datosAdicionalesClic()
 				
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
-                var itemsDocumento=Ext.ComponentQuery.query('[codidocu]');
+                var itemsDocumento=Ext.ComponentQuery.query('[tieneDocu]');
                 debug('itemsDocumento:',itemsDocumento);
+                
+                /*debug("agregar espacio docs: ", _p22_formDatosAdicionales().items.getCount());
+                if(( (_p22_formDatosAdicionales().items.getCount()) %2 ) == 0){
+                	_p22_formDatosAdicionales().add({
+            	    	layout: 'column',
+            	    	border: false,
+            	    	html:'<br/>'
+            	     });
+                }*/
                 
                 for(var i=0;i<itemsDocumento.length;i++)
                 {
                     itemDocumento=itemsDocumento[i];
                     
-                    if(i==0){
-                    	itemDocumento.up().add({
-                	    	layout: 'column',
-                	    	border: false,
-                	    	html:'<br/>'
-                	     });
-                    }
-                    
-                    itemDocumento.up().add(Ext.clone(itemDocumento));
                     
                     if('DOC' == itemDocumento.tieneDocu){
-	                    itemDocumento.up().add({
-	                        xtype    : 'panel'
-	                        ,layout  : 'hbox'
-	                        ,border  : 0
-	                        ,items   :
-	                        [
-	                            {
-	                                xtype       : 'displayfield'
-	                                ,labelWidth : 180
-	                                ,fieldLabel : 'Documento ' + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
-	                            }
-	                            ,{
-	                                xtype     : 'button'
-	                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
-	                                ,tooltip  : 'Subir nuevo'
-	                                ,codidocu : itemDocumento.codidocu
-	                                ,descrip  : itemDocumento.fieldLabel
-	                                ,handler  : function(button)
-	                                {
-	                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
-	                                }
-	                            },{
-	                                xtype     : 'button'
-	                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
-	                                ,tooltip  : 'Descargar'
-	                                ,codidocu : itemDocumento.codidocu
-	                                ,descrip  : itemDocumento.fieldLabel
-	                                ,handler  : function(button)
-	                                {
-	                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
-	                                }
-	                            }
-	                        ]
-	                    });
-	                }else{
+	                    itemDocumento.up().add(
+	                    		{
+	        						xtype      : 'panel',
+	        						//padding    :  '2px 2px 2px 2px',
+	        						defaults : { style : 'margin:3px' },
+	        						border     :  1,
+	        						items      : [
+	        						         Ext.clone(itemDocumento),
+	        						        {
+	        	                       		 xtype    : 'panel'
+	        		                        ,layout  : 'hbox'
+	        		                        ,border  : 0
+	        		                        ,items   :
+	        		                        [
+	        		                            {
+	        		                                xtype       : 'displayfield'
+	        		                                ,labelWidth : 180
+	        		                                ,fieldLabel : 'Documento digital' + (itemDocumento.allowBlank==false ? '<span style="font-size:10px;">(obligatorio)</span>' : '')
+	        		                            }
+	        		                            ,{
+	        		                                xtype     : 'button'
+	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
+	        		                                ,tooltip  : 'Subir nuevo'
+	        		                                ,codidocu : itemDocumento.codidocu
+	        		                                ,descrip  : itemDocumento.fieldLabel
+	        		                                ,handler  : function(button)
+	        		                                {
+	        		                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+	        		                                }
+	        		                            },{
+	        		                                xtype     : 'button'
+	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
+	        		                                ,tooltip  : 'Descargar'
+	        		                                ,codidocu : itemDocumento.codidocu
+	        		                                ,descrip  : itemDocumento.fieldLabel
+	        		                                ,handler  : function(button)
+	        		                                {
+	        		                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
+	        		                                }
+	        		                            }
+	        		                        ]
+	        		                    }]
+	        					}
+	                    	);
+	                }/*else{
 	                	itemDocumento.up().add({
                 	    	layout: 'column',
                 	    	border: false,
                 	    	html:'<br/>'
                 	     });
-	                }
+	                }*/
                     //itemDocumento.destroy();
-                    itemDocumento.allowBlank = true;
+                    //itemDocumento.allowBlank = true;
                 }
             }
             else
@@ -1210,8 +1253,9 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		    ,height  : 200
 		    ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
 		    {
-		        clicksToEdit  : 2
-		        ,errorSummary : false
+		    	pluginId: 'accionistasRowId',
+		        clicksToEdit  : 2,
+		        errorSummary : false
 		        
 		    })
 		    ,tbar     :
@@ -1221,6 +1265,7 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		                ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
 		                ,handler : function(){
 		                	accionistasStore.add(new modeloAccionistas());
+		                	gridAccionistas.getPlugin('accionistasRowId').startEdit(accionistasStore.getCount()-1,0);
 		                }
 		            },{
 		                text     : 'Eliminar'
