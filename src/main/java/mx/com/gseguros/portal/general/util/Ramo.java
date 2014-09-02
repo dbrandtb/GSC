@@ -4,6 +4,7 @@ public enum Ramo {
 	
 	SALUD_VITAL      ("2"),
 	MULTISALUD       ("4"),
+	SERVICIO_PUBLICO ("6"),
 	AUTOS_FRONTERIZOS("16");
 
 	private String cdramo;

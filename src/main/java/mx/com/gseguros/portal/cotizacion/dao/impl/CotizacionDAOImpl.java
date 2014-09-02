@@ -533,4 +533,31 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>respuestaProcedure=ejecutaSP(new CargarTipoSituacion(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+		Map<String,String>respuesta=null;
+		if(lista!=null&&lista.size()>0)
+		{
+			respuesta=lista.get(0);
+		}
+		return respuesta;
+	}
+	
+	protected class CargarTipoSituacion extends StoredProcedure
+	{
+		protected CargarTipoSituacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TIPO_SITUACION");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
