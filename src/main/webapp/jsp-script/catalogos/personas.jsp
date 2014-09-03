@@ -682,6 +682,13 @@ function _p22_datosAdicionalesClic()
                             ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                             ,handler : _p22_guardarDatosAdicionalesClic
                         }
+                        ,{
+                        	text: 'Cerrar'
+                        	,icon: '${ctx}/resources/fam3icons/icons/cancel.png'
+                        	,handler: function(){
+                        		Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].close();
+                        	}
+                        }
                         ,'->'
                     ]
                 }).show());
@@ -784,8 +791,13 @@ function _p22_datosAdicionalesClic()
 					});
 				}
 				
+
+				_p22_formDatosAdicionales().items.each(function(item,index,len){
+                	item.allowBlank = true;
+                });
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
+                
                 var itemsDocumento=Ext.ComponentQuery.query('[tieneDocu]');
                 debug('itemsDocumento:',itemsDocumento);
                 
