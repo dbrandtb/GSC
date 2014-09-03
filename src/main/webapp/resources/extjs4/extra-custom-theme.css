@@ -6,6 +6,10 @@
     background-position:bottom;
     border:1px solid #c30;
 }
+.x-form-invalid-field
+{
+    border:2px solid #c30;
+}
 .x-action-col-icon {
     height: 16px;
     width: 16px;
