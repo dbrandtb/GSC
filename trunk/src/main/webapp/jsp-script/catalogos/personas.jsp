@@ -37,6 +37,7 @@ var windowAccionistas = undefined;
 var accionistasStore;
 var gridAccionistas;
 var fieldEstCorp;
+var _0_botAceptar;
 
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -1253,7 +1254,18 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		    {
 		    	pluginId: 'accionistasRowId',
 		        clicksToEdit  : 2,
-		        errorSummary : false
+		        errorSummary : false,
+		        listeners: {
+		    		beforeedit: function(){
+		    			_0_botAceptar.disable();
+		    		},
+		    		edit: function(){
+		    			_0_botAceptar.enable();
+		    		},
+		    		canceledit: function(){
+		    			_0_botAceptar.enable();
+		    		}
+		    	}
 		        
 		    })
 		    ,tbar     :
@@ -1335,23 +1347,25 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		    ,store : accionistasStore
 		});
 		
+		
+		_0_botAceptar = Ext.create('Ext.Button',{
+            text: 'Aceptar',
+            icon:'${ctx}/resources/fam3icons/icons/accept.png',
+            handler: function() {
+           	 windowAccionistas.close();
+            }
+      	});
+		
 		windowAccionistas = Ext.create('Ext.window.Window', {
 	          title: 'Accionistas',
 	          closeAction: 'close',
 	          modal:true,
+	          closable: false,
 	          height : 320,
 	          width  : 800,
 		      items: [gridAccionistas],
 	          bodyStyle:'padding:15px;',
-	          buttons:[
-	           {
-	                 text: 'Aceptar',
-	                 icon:'${ctx}/resources/fam3icons/icons/accept.png',
-	                 handler: function() {
-	                	 windowAccionistas.close();
-	                 }
-	           }
-	          ]
+	          buttons:[_0_botAceptar]
 	        });
 		
 			var params = {
