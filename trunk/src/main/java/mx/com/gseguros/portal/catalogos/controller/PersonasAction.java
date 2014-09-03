@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.catalogos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,6 +160,12 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		try
 		{
+			Date fechaNacimi = new Date();
+			
+			if(StringUtils.isNotBlank(smap1.get("FENACIMI"))){
+				fechaNacimi = renderFechas.parse(smap1.get("FENACIMI"));
+			}
+					
 			Map<String,Object>managerResult=personasManager.guardarPantallaPersonas(
 					smap1.get("CDPERSON")
 					,null
@@ -167,7 +174,7 @@ public class PersonasAction extends PrincipalCoreAction
 					,null
 					,smap1.get("OTFISJUR")
 					,smap1.get("OTSEXO")
-					,renderFechas.parse(smap1.get("FENACIMI"))
+					,fechaNacimi
 					,smap1.get("CDRFC")
 					,null
 					,smap1.get("DSNOMBRE1")

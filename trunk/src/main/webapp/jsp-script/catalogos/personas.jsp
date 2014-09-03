@@ -653,8 +653,8 @@ function _p22_datosAdicionalesClic()
                 {
                     title   : 'Datos adicionales'
                     ,itemId : '_p22_ventanaDatosAdicionales'
-                    ,width  : 900
-                    ,height : 400
+                    ,width  : 650
+                    ,height : 600
                     ,autoScroll : true
                     ,modal  : true
                     ,items  :
@@ -728,8 +728,6 @@ function _p22_datosAdicionalesClic()
  					}]
 					});
 					
-					
-					
 					fieldEstCorp.addListener('beforeselect',function (combo){
 						if(windowAccionistas){
 							
@@ -782,7 +780,6 @@ function _p22_datosAdicionalesClic()
 						}else {
 							return true;
 						}
-						
 					});
 				}
 				
@@ -1385,6 +1382,6 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 </script>
 </head>
 <body>
-<div id="_p22_divpri" style="height : 1500px;"></div>
+<div id="_p22_divpri" style="height : 700px;"></div>
 </body>
 </html>
