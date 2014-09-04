@@ -31,6 +31,7 @@
         <property name="tipoCambioService"       ref="tipoCambioServiceImpl"       />
         <property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
         <property name="siniestrosManager"       ref="siniestrosManagerImpl"       />
+        <property name="agentePorFolioService"   ref="agentePorFolioServiceImpl"   />
     </bean>
     
     <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">

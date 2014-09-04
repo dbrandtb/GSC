@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.autosgs.service.AgentePorFolioService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -76,7 +77,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	private StoredProceduresManager          storedProceduresManager;
 	private NadaService          			 nadaService;
 	private TipoCambioDolarGSService         tipoCambioService;
-	private transient Ice2sigsService ice2sigsService;
+	private transient Ice2sigsService        ice2sigsService;
+	private AgentePorFolioService            agentePorFolioService;
 	private boolean                          success;
 	private String                           respuesta       = null;
 	private String                           respuestaOculta = null;
@@ -4734,6 +4736,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
+	}
+
+	public void setAgentePorFolioService(AgentePorFolioService agentePorFolioService) {
+		this.agentePorFolioService = agentePorFolioService;
 	}
 
 }

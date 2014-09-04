@@ -47,6 +47,11 @@
 	<bean id="tipoCambioServiceImpl" class="mx.com.gseguros.ws.tipocambio.service.impl.TipoCambioDolarGSServiceImpl">
         <property name="endpoint"      value="${ws.tipocambio.url}"></property>
 	</bean>
+
+    <!-- WS AGENTE POR FOLIO Y SUCURSAL / AUTOS SERVICIO PUBLICO -->
+	<bean id="agentePorFolioServiceImpl" class="mx.com.gseguros.ws.autosgs.service.impl.AgentePorFolioServiceImpl">
+        <property name="endpoint"      value="${ws.agenteporfolio.autos.serviciopublico.url}"></property>
+	</bean>
 	
 	
 </beans>
