@@ -77,6 +77,10 @@
         <action name="includes/editarRolesUsuario" class="usuarioAction">
             <result>/jsp/catalogos/includes/editarRolesUsuario.jsp</result>
         </action>
+ 
+        <action name="includes/editarProductosAgente" class="usuarioAction">
+            <result>/jsp/catalogos/includes/editarProductosAgente.jsp</result>
+        </action>
 
         <action name="gestionUsuarios" class="usuarioAction" method="cargaPantallaUsuarios">
             <result>/jsp-script/catalogos/usuarios.jsp</result>
@@ -313,6 +317,10 @@
         </action>
 
         <action name="eliminaAccionistas" class="personasAction" method="eliminaAccionistas">
+            <result type="json" />
+        </action>
+
+        <action name="actualizaStatusPersona" class="personasAction" method="actualizaStatusPersona">
             <result type="json" />
         </action>
 

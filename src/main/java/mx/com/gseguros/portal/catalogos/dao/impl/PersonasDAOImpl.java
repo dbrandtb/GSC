@@ -613,4 +613,24 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public String actualizaStatusPersona(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new ActualizaStatusPersona(getDataSource()), params);
+		return (String)resultado.get("pv_dsstatus_o");
+	}
+	
+	protected class ActualizaStatusPersona extends StoredProcedure
+	{
+		protected ActualizaStatusPersona(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA");
+			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dsstatus_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
