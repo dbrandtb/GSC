@@ -33,12 +33,7 @@
             var inputNtramite='<s:property value='map1.ntramite' />';
             var inputCdtipsit='<s:property value='cdtipsit' />';
             debug("inputNtramite",inputNtramite);
-            var urlEditarAsegurados=[];
-            urlEditarAsegurados['SL']='<s:url namespace="/" action="editarAsegurados"     />';
-            urlEditarAsegurados['SN']='<s:url namespace="/" action="editarAsegurados"     />';
-            urlEditarAsegurados['MS']='<s:url namespace="/" action="editarAsegurados"     />';
-            urlEditarAsegurados['AF']='<s:url namespace="/" action="editarAseguradosAuto" />';
-            urlEditarAsegurados['PU']='<s:url namespace="/" action="editarAseguradosAuto" />';
+            var urlEditarAsegurados='${ctx}<s:property value="map1.urlAsegurados" />';
             var contexto='${ctx}';
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
@@ -169,7 +164,7 @@
                             ,border:0
                             ,loader:
                             {
-                                url     : urlEditarAsegurados[inputCdtipsit]
+                                url     : urlEditarAsegurados
                                 ,params :
                                 {
                                     'map1.cdunieco'  : inputCdunieco
@@ -1870,17 +1865,53 @@
                     },
                     failure:function()
                     {
-                        Ext.Msg.show({
+                        centrarVentanaInterna(Ext.Msg.show({
                             title:'Error',
                             icon: Ext.Msg.ERROR,
                             msg: 'Error al cargar',
                             buttons: Ext.Msg.OK
-                        });
+                        }));
                     }
                 });
                 /*//////////////////////////////////////////////////*/
                 ////// Fin de cargador de formulario (sin grid) //////
                 //////////////////////////////////////////////////////
+                
+                <s:if test='%{getActionErrors()!=null&&getActionErrors().size()>0}' >
+                var items=[];
+                <s:iterator value="actionErrors" var="iError">
+                items.push(
+                {
+                    xtype : 'panel'
+                    ,layout   : 'hbox'
+                    ,border   : 0
+                    ,defaults : { style : 'margin : 5px;' }
+                    ,items    :
+                    [
+                        {
+                            xtype   : 'image'
+                            ,src    : '${ctx}/resources/fam3icons/icons/error.png'
+                            ,width  : 16
+                            ,height : 16
+                        }
+                        ,{
+                            xtype  : 'label'
+                            ,text  : '<s:property value="iError" escapeHtml="false" />'
+                            ,style : 'color:red;margin:5px;'
+                        }
+                    ]
+                });
+                </s:iterator>
+                centrarVentanaInterna(
+                Ext.create('Ext.window.Window',
+                {
+                    title      : 'Aviso(s)'
+                    ,width     : 600
+                    ,height    : (items.length*40)+40
+                    ,modal     : true
+                    ,items     : items
+                }).show());
+                </s:if>
                 
                 //Ext.getCmp('formPanel').loadRecord(storeLoader.getAt(0));
             });

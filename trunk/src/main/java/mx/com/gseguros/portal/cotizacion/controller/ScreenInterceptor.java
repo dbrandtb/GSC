@@ -5,9 +5,9 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 
-public class ScreenInterceptor {
+public class ScreenInterceptor
+{
 
-	public static final int PANTALLA_COMPLEMENTARIOS_GENERAL              = 0;
     public static final int PANTALLA_COMPLEMENTARIOS_ASEGURADOS           = 1;
     public static final int PANTALLA_COMPLEMENTARIOS_COBERTURAS_ASEGURADO = 2;
     public static final int PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO  = 3;
@@ -16,34 +16,6 @@ public class ScreenInterceptor {
 	
 	public String intercept(PrincipalCoreAction action, int screen)
 	{
-		/**
-		 * pantalla de datos complemetarios generales
-                 * @requiere:
-                    cdunieco
-                    cdramo
-                    estado
-                    nmpoliza
-		 * @return:
-                    mostrarPantallaGeneral();
-		 */
-		if(screen==PANTALLA_COMPLEMENTARIOS_GENERAL)
-		{
-			ComplementariosAction a=(ComplementariosAction)action;
-			if(a.getSession()==null
-                            ||a.getSession().get("USUARIO")==null
-                            ||StringUtils.isBlank(a.getCdunieco())
-                            ||StringUtils.isBlank(a.getCdramo())
-                            ||StringUtils.isBlank(a.getEstado())
-                            ||StringUtils.isBlank(a.getNmpoliza())
-                            )
-			{
-				return "denied";
-			}
-			else
-			{
-				return a.mostrarPantallaGeneral();
-			}
-		}
                 
         /**
 		 * pantalla de datos complemetarios de asegurados
@@ -55,7 +27,7 @@ public class ScreenInterceptor {
 		 * @return:
                     mostrarPantallaAsegurados();
 		 */
-                else if(screen==PANTALLA_COMPLEMENTARIOS_ASEGURADOS)
+		if(screen==PANTALLA_COMPLEMENTARIOS_ASEGURADOS)
 		{
 			ComplementariosAction a=(ComplementariosAction)action;
 			if(a.getSession()==null

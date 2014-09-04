@@ -161,6 +161,7 @@
         </action>
         <!-- jtezva subir archivo -->
         <action name="datosComplementarios" class="beanDatosComplementarios" method="mostrarPantalla">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp/extjs4/complementarios.jsp</result>
         </action>
         <action name="guardarCartaRechazo" class="beanDatosComplementarios" method="guardarCartaRechazo">
