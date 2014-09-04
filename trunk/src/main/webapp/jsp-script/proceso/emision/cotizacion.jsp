@@ -112,6 +112,15 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _0_funcionFechaChange(field,value)
+{
+    try
+    {
+        Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+    }
+    catch (e) {}
+}
+
 function _0_comprar()
 {
 	debug('comprar');
@@ -1411,14 +1420,7 @@ Ext.onReady(function()
                         ,value      : new Date()
                         ,listeners  :
                         {
-                            change : function(field,value)
-                            {
-                                try
-                                {
-                                    Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-                                }
-                                catch (e) {}
-                            }
+                            change : _0_funcionFechaChange
                         }
                     },
                     {
@@ -2042,6 +2044,31 @@ Ext.onReady(function()
                 agente.setReadOnly(!Ext.isEmpty(val));
                 agente.reset();
             }
+        });
+        
+        _fieldByName('fefin').setValue('');
+        
+        _fieldByName('feini').removeListener('change',_0_funcionFechaChange);
+        
+        _fieldByName('feini').addListener('change',function()
+        {
+            if(Ext.isEmpty(_fieldByName('parametros.pv_otvalor20').getValue()))
+            {
+                mensajeWarning('Favor de capturar la vigencia');
+            }
+            else
+            {
+                _fieldByName('fefin').setValue(
+                    Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+                );
+            }
+        });
+        
+        _fieldByName('parametros.pv_otvalor20').addListener('change',function()
+        {
+            _fieldByName('fefin').setValue(
+                Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+            );
         });
         
         debug('<parche para ramo 6');

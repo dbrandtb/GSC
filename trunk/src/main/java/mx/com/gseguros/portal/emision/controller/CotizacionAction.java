@@ -317,10 +317,25 @@ public class CotizacionAction extends PrincipalCoreAction
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
 							}
-							
-							//agregar combo
-							if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+						}
+						//folio
+						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16"))
+						{
+							//oculto para el agente
+							if(StringUtils.isNotBlank(cdagente)
+									&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
 							{
+								tatriIte.setOculto(true);
+								logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
+							}
+						}
+						//clave gs
+						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("22"))
+						{
+							temp.remove(tatriIte);
+							if(cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+							{
+								//agregar combo
 								List<ComponenteVO>listaAuxComboAutos=pantallasManager.obtenerComponentes(
 										TipoTramite.POLIZA_NUEVA.getCdtiptra()
 										, null                   
@@ -333,17 +348,6 @@ public class CotizacionAction extends PrincipalCoreAction
 										,null);
 								listaAuxComboAutos.get(0).setSwsuscri("N");
 								temp.add(listaAuxComboAutos.get(0));
-							}
-						}
-						//folio
-						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16"))
-						{
-							//oculto para el agente
-							if(StringUtils.isNotBlank(cdagente)
-									&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
-							{
-								tatriIte.setOculto(true);
-								logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
 							}
 						}
 					}
