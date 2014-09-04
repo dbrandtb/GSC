@@ -416,6 +416,21 @@ public class PersonasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	public String actualizaStatusPersona()
+	{
+		exito = false;
+		
+		try{
+			respuesta = personasManager.actualizaStatusPersona(params);
+			exito = true;
+		}catch(Exception ex){
+			logger.error("Error al actualizaStatusPersona",ex);
+			respuesta = ex.getMessage();
+		}
+		
+		return SUCCESS;
+	}
+
 	public String guardaAccionista()
 	{
 		exito = false;

@@ -88,4 +88,6 @@ public interface PersonasManager
 	public String guardaAccionista(Map<String, String> params)throws Exception;
 
 	public String eliminaAccionistas(Map<String, String> params)throws Exception;
+
+	public String actualizaStatusPersona(Map<String, String> params)throws Exception;
 }

@@ -26,6 +26,8 @@ var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccioni
 var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
 var _UrlEliminaAccionistas = '<s:url namespace="/catalogos" action="eliminaAccionistas" />';
 
+var _UrlActualizaStatusPersona = '<s:url namespace="/catalogos" action="actualizaStatusPersona" />';
+
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
 /* PARA EL LOADER */
@@ -38,6 +40,8 @@ var accionistasStore;
 var gridAccionistas;
 var fieldEstCorp;
 var _0_botAceptar;
+
+var _statusDataDocsPersona;
 
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -195,7 +199,38 @@ Ext.onReady(function()
 	        		,{
 	        			text     : 'Guardar'
 	        			,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-	        			,handler : function(){_p22_guardarClic(_recargaBusqueda);}
+	        			,handler : function(){_p22_guardarClic(function(){
+	        				/** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
+	                        Ext.Ajax.request(
+	                    	        {
+	                    	            url       : _UrlActualizaStatusPersona
+	                    	            ,params: {
+	                	            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
+	                	            	}
+	                    	            ,success  : function(response)
+	                    	            {
+	                    	                //_p22_formDatosAdicionales().setLoading(false);
+	                    	                var json = Ext.decode(response.responseText);
+	                    	                debug('response text:',json);
+	                    	                if(json.exito)
+	                    	                {
+	                    	                    debug('Actualizando estatus de Persona: ');
+	                    	                    _fieldByName('STATUS').setValue(json.respuesta);
+	                    	                    
+	                    	                    _recargaBusqueda();
+	                    	                }
+	                    	                else
+	                    	                {
+	                    	                    mensajeError(json.respuesta);
+	                    	                }
+	                    	            }
+	                    	            ,failure  : function()
+	                    	            {
+	                    	                _p22_formDatosAdicionales().setLoading(false);
+	                    	                errorComunicacion();
+	                    	            }
+	                    	});
+	        			});}
 	        		}
 	        	]
 	        })
@@ -632,7 +667,38 @@ function _recargaBusqueda(){
 function _p22_datosAdicionalesClic()
 {
     debug('>_p22_datosAdicionalesClic');
-    _recargaBusqueda();
+    
+    /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
+    Ext.Ajax.request(
+	        {
+	            url       : _UrlActualizaStatusPersona
+	            ,params: {
+            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
+            	}
+	            ,success  : function(response)
+	            {
+	                //_p22_formDatosAdicionales().setLoading(false);
+	                var json = Ext.decode(response.responseText);
+	                debug('response text:',json);
+	                if(json.exito)
+	                {
+	                    debug('Actualizando estatus de Persona: ');
+	                    _fieldByName('STATUS').setValue(json.respuesta);
+	                    
+	                    _recargaBusqueda();
+	                }
+	                else
+	                {
+	                    mensajeError(json.respuesta);
+	                }
+	            }
+	            ,failure  : function()
+	            {
+	                _p22_formDatosAdicionales().setLoading(false);
+	                errorComunicacion();
+	            }
+	});
+    
     _p22_tabPanel().setLoading(true);
     Ext.Ajax.request(
     {
@@ -655,11 +721,15 @@ function _p22_datosAdicionalesClic()
                     title   : 'Datos adicionales'
                     ,itemId : '_p22_ventanaDatosAdicionales'
                     ,width  : 650
-                    ,height : 600
+                    ,height : 630
                     ,autoScroll : true
                     ,modal  : true
                     ,items  :
-                    [
+                    [{
+            	    	layout: 'column',
+            	    	border: false,
+            	    	html:'<span style="font-size:14px; font-weight: bold;">Para que el estatus de la persona sea completo se requiere que los campos con el s&iacute;mbolo: <img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt="">, sean capturados.</span><br/><br/>'
+            	    },
                         Ext.create('Ext.form.Panel',
                         {
                             border    : 0
@@ -791,9 +861,13 @@ function _p22_datosAdicionalesClic()
 					});
 				}
 				
-
 				_p22_formDatosAdicionales().items.each(function(item,index,len){
-                	item.allowBlank = true;
+                	if(!item.allowBlank){
+                		item.allowBlank = true;
+                		if(item.getFieldLabel){
+                			item.setFieldLabel('<span>'+ item.getFieldLabel() +'<img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt=""></span>');
+                		}
+                	}
                 });
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
@@ -945,6 +1019,37 @@ function _p22_guardarDatosAdicionalesClic()
                 {
                     mensajeError(json.respuesta);
                 }
+                
+                /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
+                Ext.Ajax.request(
+            	        {
+            	            url       : _UrlActualizaStatusPersona
+            	            ,params: {
+        	            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
+        	            	}
+            	            ,success  : function(response)
+            	            {
+            	                //_p22_formDatosAdicionales().setLoading(false);
+            	                var json = Ext.decode(response.responseText);
+            	                debug('response text:',json);
+            	                if(json.exito)
+            	                {
+            	                    debug('Actualizando estatus de Persona: ');
+            	                    _fieldByName('STATUS').setValue(json.respuesta);
+            	                    
+            	                    _recargaBusqueda();
+            	                }
+            	                else
+            	                {
+            	                    mensajeError(json.respuesta);
+            	                }
+            	            }
+            	            ,failure  : function()
+            	            {
+            	                _p22_formDatosAdicionales().setLoading(false);
+            	                errorComunicacion();
+            	            }
+            	});
             }
             ,failure  : function()
             {
