@@ -54,6 +54,7 @@ import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -66,8 +67,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 {
 
 	private static final long serialVersionUID = -1269892388621564059L;
-	private org.apache.log4j.Logger log = org.apache.log4j.Logger
-			.getLogger(ComplementariosAction.class);
+	private final static Logger logger = Logger.getLogger(ComplementariosAction.class);
 	private Item items;
 	private Item fields;
 	
@@ -91,8 +91,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private boolean success = true;
 	private boolean retryWS;
 	private ScreenInterceptor scrInt = new ScreenInterceptor();
-	SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-	Calendar calendarHoy = Calendar.getInstance();
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private Calendar calendarHoy = Calendar.getInstance();
 	private Item item1;
 	private Item item2;
 	private Item item3;
@@ -119,110 +119,195 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private EmisionAutosService emisionAutosService;
 	private boolean clienteWS;
 	private String mensajeEmail;
+	private String respuesta;
+	private String respuestaOculta;
 
 	public String mostrarPantalla()
-	/*
-    
-    */
 	{
-		return scrInt.intercept(this,
-				ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_GENERAL);
-	}
-
-	public String mostrarPantallaGeneral() {
-		log.debug("map1: "+map1);
-		try {
-			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
-			
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			
-			List<ComponenteVO>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
-			
-			/*//// si es forma de pago dxn entonces los campos tatripol son obligatorios //////
-			CatalogosAction catalogosAction = new CatalogosAction();
-			catalogosAction.setCatalogosManager(catalogosManager);
-			catalogosAction.setCatalogo("TIPOS_PAGO_POLIZA_SIN_DXN");
-			catalogosAction.obtieneCatalogo();
-			List<GenericVO> formasPagoSinDxn = catalogosAction.getLista();
-			
-			Map<String, Object> parameters = new HashMap<String, Object>(0);
-			parameters.put("pv_cdunieco", cdunieco);
-			parameters.put("pv_cdramo", cdramo);
-			parameters.put("pv_estado", estado);
-			parameters.put("pv_nmpoliza", nmpoliza);
-			parameters.put("pv_cdusuari", usuario.getUser());
-			
-			Map<String, Object> select = kernelManager.getInfoMpolizas(parameters);
-			String cdperpag            = (String) select.get("cdperpag");
-			
-			boolean esDxn = true;
-			for(GenericVO formaNoDxnIte: formasPagoSinDxn)
+		logger.info(
+				new StringBuilder()
+				.append("\n###################################################")
+				.append("\n###### ComplementariosAction mostrarPantalla ######")
+				.append("\nmap1: ").append(map1)
+				.append("\ncdunieco: ").append(cdunieco)
+				.append("\ncdramo: ").append(cdramo)
+				.append("\nestado: ").append(estado)
+				.append("\nnmpoliza: ").append(nmpoliza)
+				.append("\ncdtipsit: ").append(cdtipsit)
+				.toString()
+				);
+		
+		success         = true;
+		exito           = true;
+		String result   = SUCCESS;
+		UserVO usuario  = null;
+		String cdsisrol = null;
+		
+		//revisar datos
+		if(exito)
+		{
+			try
 			{
-				if(formaNoDxnIte.getKey().equalsIgnoreCase(cdperpag))
+				if(session==null
+						||session.get("USUARIO")==null
+						||StringUtils.isBlank(cdunieco)
+						||StringUtils.isBlank(cdramo)
+						||StringUtils.isBlank(estado)
+						||StringUtils.isBlank(nmpoliza)
+						||StringUtils.isBlank(cdtipsit)
+						)
 				{
-					esDxn = false;
+					throw new Exception("Faltan datos (sesion o cdunieco o cdramo o estado o npoliza o cdtipsit");
+				}
+				else
+				{
+					usuario  = (UserVO)session.get("USUARIO");
+					cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+					
+					if(map1==null)
+					{
+						map1=new LinkedHashMap<String,String>(0);
+					}
+					
+					map1.put("sesiondsrol",cdsisrol);
 				}
 			}
-			
-			for(ComponenteVO comIte : listaTatrisit)
+			catch(Exception ex)
 			{
-				comIte.setObligatorio(esDxn);
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "No se recibieron datos necesarios #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
 			}
-			*///// si es forma de pago dxn entonces los campos tatripol son obligatorios //////
-			
-			log.debug("ServletActionContext.getServletContext().getServletContextName()$$$$$ "+ServletActionContext.getServletContext().getServletContextName());
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.genera(listaTatrisit);
-			items=gc.getItems();
-			fields=gc.getFields();
-			//fields = new Item("fields", null, Item.ARR);
-
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsciaaseg"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.nombreagente"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsramo"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmpoliza"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.estado"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.fesolici"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.solici"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.feefec"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.ferenova"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
-			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
-			
-			UserVO usu = (UserVO) session.get("USUARIO");
-			String dsrol="";
-			if(usu!=null
-			    &&usu.getRolActivo()!=null
-			    &&usu.getRolActivo().getObjeto()!=null
-			    &&usu.getRolActivo().getObjeto().getValue()!=null)
-			{
-			    dsrol=usu.getRolActivo().getObjeto().getValue();
-			}
-			if(map1==null)
-				map1=new LinkedHashMap<String,String>(0);
-			map1.put("sesiondsrol",dsrol);
-			
-			LinkedHashMap<String,Object>paramsRetroactividad=new LinkedHashMap<String,Object>();
-			paramsRetroactividad.put("param1",cdunieco);
-			paramsRetroactividad.put("param2",cdramo);
-			paramsRetroactividad.put("param3",TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
-			Map<String,String>retroactividad=storedProceduresManager.procedureMapCall(
-					ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
-			int retroac=Integer.valueOf(retroactividad.get("RETROAC"));
-			int diferi =Integer.valueOf(retroactividad.get("DIFERI"));
-			Calendar calendarMin=Calendar.getInstance();
-			Calendar calendarMax=Calendar.getInstance();
-			calendarMin.add(Calendar.DAY_OF_YEAR, retroac*-1);
-			calendarMax.add(Calendar.DAY_OF_YEAR, diferi);
-			map1.put("fechamin",renderFechas.format(calendarMin.getTime()));
-			map1.put("fechamax",renderFechas.format(calendarMax.getTime()));
-			
-		} catch (Exception ex) {
-			log.error("error al obtener los campos dinamicos", ex);
-			items = null;
-			fields = null;
 		}
-		return SUCCESS;
+		
+		//cargar campos dinamicos
+		if(exito)
+		{
+			try
+			{
+				List<ComponenteVO>listaTatrisit = kernelManager.obtenerTatripol(new String[]{cdramo});
+				GeneradorCampos gc              = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				gc.genera(listaTatrisit);
+				
+				items  = gc.getItems();
+				fields = gc.getFields();
+
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsciaaseg"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.nombreagente"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsramo"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmpoliza"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.estado"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.fesolici"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.solici"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.feefec"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.ferenova"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar la pantalla #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//retroactividad
+		if(exito)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>paramsRetroactividad = new LinkedHashMap<String,Object>();
+				paramsRetroactividad.put("param1" , cdunieco);
+				paramsRetroactividad.put("param2" , cdramo);
+				paramsRetroactividad.put("param3" , TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
+				Map<String,String>retroactividad=storedProceduresManager.procedureMapCall(
+						ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
+				
+				int retroac=Integer.valueOf(retroactividad.get("RETROAC"));
+				int diferi =Integer.valueOf(retroactividad.get("DIFERI"));
+				
+				Calendar calendarMin=Calendar.getInstance();
+				Calendar calendarMax=Calendar.getInstance();
+				
+				calendarMin.add(Calendar.DAY_OF_YEAR, retroac*-1);
+				calendarMax.add(Calendar.DAY_OF_YEAR, diferi);
+				
+				map1.put("fechamin" , renderFechas.format(calendarMin.getTime()));
+				map1.put("fechamax" , renderFechas.format(calendarMax.getTime()));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				respuesta       = "Error al obtener retroactividad #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+				
+				this.addActionError("No se ha definido la retroactividad para el producto #"+timestamp);
+				map1.put("fechamin",renderFechas.format(new Date()));
+				map1.put("fechamax",renderFechas.format(new Date()));
+			}
+		}
+		
+		//url pantalla asegurados
+		if(exito)
+		{
+			try
+			{
+				List<ComponenteVO>listaAux=pantallasManager.obtenerComponentes(
+						null
+						,null
+						,cdramo
+						,cdtipsit
+						,null
+						,cdsisrol
+						,"PANTALLA_EMISION"
+						,"URL_ASEGURADOS"
+						,null);
+				if(listaAux==null
+						||listaAux.size()==0)
+				{
+					throw new Exception("No se encuentra la url de pantalla de asegurados");
+				}
+				else if(listaAux.size()>1)
+				{
+					throw new Exception("Url repetida para pantalla de asegurados");
+				}
+				else
+				{
+					ComponenteVO url=listaAux.get(0);
+					map1.put("urlAsegurados",url.getNameCdatribu());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				respuesta       = "Error al obtener la url de la pesta&ntilde;a de asegurados #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+				
+				this.addActionError("No se ha definido la url de la pestaña de asegurados #"+timestamp);
+				map1.put("urlAsegurados","");
+			}
+		}
+		
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\nresult: ").append(result)
+				.append("\n###### ComplementariosAction mostrarPantalla ######")
+				.append("\n###################################################")
+				);
+		return result;
 	}
 
 	/*
@@ -299,13 +384,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 					Entry<String,Object> entry=(Map.Entry<String, Object>) it.next();
 					parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 				}
-				log.debug("panel1: "+panel1);
-				log.debug("panel2: "+panel2);
-				log.debug("parametros: "+parametros);
+				logger.debug("panel1: "+panel1);
+				logger.debug("panel2: "+panel2);
+				logger.debug("parametros: "+parametros);
 			}
 			catch(Exception ex)
 			{
-				log.error("No hubo valopol X(");
+				logger.error("No hubo valopol X(");
 				parametros=null;
 			}
 			/*/////////////////////////////*/
@@ -317,7 +402,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		} catch (Exception ex) {
 			panel1 = new HashMap<String, String>(0);
 			panel2 = new HashMap<String, String>(0);
-			log.error("error al obtener los datos de mpolizas", ex);
+			logger.error("error al obtener los datos de mpolizas", ex);
 			success = false;
 		}
 		return SUCCESS;
@@ -326,17 +411,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 	public String guardar() {
 		try
 		{
-			log.debug("### action:");
-			log.debug("panel1: "+panel1);
-			log.debug("panel2: "+panel2);
-			log.debug("map1: "+map1);
-			log.debug("parametros: "+parametros);
+			logger.debug("### action:");
+			logger.debug("panel1: "+panel1);
+			logger.debug("panel2: "+panel2);
+			logger.debug("map1: "+map1);
+			logger.debug("parametros: "+parametros);
 			
 			UserVO usuarioSesion=(UserVO) session.get("USUARIO");
 			
 			map1.put("pv_cdusuari",usuarioSesion.getUser());
 			Map<String,Object> anterior=kernelManager.getInfoMpolizasCompleta(map1);
-			log.debug("anterior: "+anterior);
+			logger.debug("anterior: "+anterior);
 			/*String columnasLeidas[]=new String[]{"status","swestado","nmsolici","feautori","cdmotanu","feanulac",
     				"swautori","cdmoneda","feinisus","fefinsus",
     	            "ottempot","feefecto","hhefecto","feproren","fevencim","nmrenova","ferecibo","feultsin","nmnumsin","cdtipcoa",
@@ -416,18 +501,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar la poliza",ex);
+			logger.error("error al guardar la poliza",ex);
 			success=false;
 		}
 		return SUCCESS;
 	}
 
 	public String pantallaAsegurados() {
-		log.info(""
+		logger.info(""
 				+ "\n################################"
 				+ "\n###### pantallaAsegurados ######"
 				);
-		log.debug("map1: "+map1);
+		logger.debug("map1: "+map1);
 		if(map1!=null)
 		{
 			if(map1.get("cdtipsit")!=null)
@@ -482,7 +567,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "swexiper")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdideper")));
-			log.debug("Modelo armado para persona: "+item1.toString());
+			logger.debug("Modelo armado para persona: "+item1.toString());
 			/*
 			nmsituac
     		cdrol
@@ -800,15 +885,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error sin efectos en obtener cantidad maxima",ex);
+				logger.error("error sin efectos en obtener cantidad maxima",ex);
 				maxLenContratante = "0";
 			}
 			
 			map1.put("maxLenContratante",maxLenContratante);
-			log.debug("map1: "+map1);
+			logger.debug("map1: "+map1);
 			
 		} catch (Exception ex) {
-			log.error("error al generar los campos dinamicos", ex);
+			logger.error("error al generar los campos dinamicos", ex);
 			item1 = null;
 		}
 		return SUCCESS;
@@ -816,21 +901,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String pantallaAseguradosAuto()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n####################################"
 				+ "\n###### pantallaAseguradosAuto ######"
 				);
-		log.info("map1: "+map1);
+		logger.info("map1: "+map1);
 		String cdunieco = map1.get("cdunieco");
 		String cdramo   = map1.get("cdramo");
 		String cdtipsit = map1.get("cdtipsit");
 		String estado   = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
-		log.info("cdunieco: " + cdunieco);
-		log.info("cdramo: "   + cdramo);
-		log.info("cdtipsit: " + cdtipsit);
-		log.info("estado: "   + estado);
-		log.info("nmpoliza: " + nmpoliza);
+		logger.info("cdunieco: " + cdunieco);
+		logger.info("cdramo: "   + cdramo);
+		logger.info("cdtipsit: " + cdtipsit);
+		logger.info("estado: "   + estado);
+		logger.info("nmpoliza: " + nmpoliza);
 		
 		GeneradorCampos gc;
 		
@@ -887,11 +972,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al cargar la pantalla de asegurados de auto",ex);
+				logger.error("error al cargar la pantalla de asegurados de auto",ex);
 			}
 		}
 		
-		log.info(""
+		logger.info(""
 				+ "\n###### pantallaAseguradosAuto ######"
 				+ "\n####################################"
 				);
@@ -899,7 +984,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	}
 	
 	public String cargarPantallaAsegurados() {
-		log.debug("cargarPantallaAsegurados map1: "+map1);
+		logger.debug("cargarPantallaAsegurados map1: "+map1);
 		try
 		{
 			list1=kernelManager.obtenerAsegurados(map1);/*
@@ -909,14 +994,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				Map<String,Object>aseg=(Map<String, Object>) it.next();
 				if(aseg.containsKey("fenacimi")&&aseg.get("fenacimi")!=null)
 				{
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					log.debug(aseg.get("fenacimi"));
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					logger.debug(aseg.get("fenacimi"));
 					Date fenacimi=(Date)aseg.get("fenacimi");
 					aseg.remove("fenacimi");
 					aseg.put("fenacimi",(String)renderFechas.format(fenacimi));
@@ -926,7 +1011,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar los asegurados",ex);
+			logger.error("error al cargar los asegurados",ex);
 			list1=new ArrayList<Map<String,Object>>(0);
 			success=false;
 		}
@@ -935,8 +1020,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String guardarPantallaAsegurados()
 	{
-		log.debug(map1);
-		log.debug(list1);
+		logger.debug(map1);
+		logger.debug(list1);
 		try
 		{
 			///////////////////////////////////////////////
@@ -953,7 +1038,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error cachado, no hay personas que borrar, pero no afecta.",ex);
+				logger.error("error cachado, no hay personas que borrar, pero no afecta.",ex);
 			}
 			/*///////////////////////////////////////////*/
 			////// para borrar los mpoliper anterior //////
@@ -984,7 +1069,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_ptcumupr_i"    , null);
 				parametros.put("pv_residencia_i"  , null);
 				parametros.put("pv_accion_i"      , "I");
-				log.debug("#iteracion mov mpersonas "+i);
+				logger.debug("#iteracion mov mpersonas "+i);
 				kernelManager.movMpersona(parametros);
 				
 				parametros=new LinkedHashMap<String,Object>(0);
@@ -1001,7 +1086,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_swreclam_i",	null);
 				parametros.put("pv_accion_i",	"I");
 				parametros.put("pv_swexiper_i", (String)aseg.get("swexiper"));
-				log.debug("#iteracion mov mpoliper "+i);
+				logger.debug("#iteracion mov mpoliper "+i);
 				
 				
 				/**
@@ -1163,9 +1248,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsGetValosit.put("pv_estado_i"   , map1.get("pv_estado"));
 					paramsGetValosit.put("pv_nmpoliza_i" , map1.get("pv_nmpoliza"));
 					paramsGetValosit.put("pv_nmsituac_i" , (String)aseg.get("nmsituac"));
-					log.debug("paramsValositAseguradoIterado: "+paramsGetValosit);
+					logger.debug("paramsValositAseguradoIterado: "+paramsGetValosit);
 					Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsGetValosit);
-					log.debug("valositAseguradoIterado: "+valositAsegurado);
+					logger.debug("valositAseguradoIterado: "+valositAsegurado);
 					
 					Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
 					//poner pv_ a los leidos
@@ -1176,7 +1261,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 					}
 					valositAsegurado=valositAseguradoIteradoTemp;
-					log.debug("se puso pv_");
+					logger.debug("se puso pv_");
 					
 					LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
 					parametrosAtributos.put("cdtipsit",map1.get("cdtipsit"));
@@ -1197,11 +1282,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 							cdatribusSexo = "0"+cdatribusSexo;
 						}
 						valositAsegurado.put("pv_otvalor"+cdatribusSexo, (String)aseg.get("sexo"));
-						log.debug("se agregaron los nuevos");
+						logger.debug("se agregaron los nuevos");
 					}
 					catch(Exception ex)
 					{
-						log.error("error en obtener los atributos",ex);
+						logger.error("error en obtener los atributos",ex);
 					}
 					
 					//convertir a string el total
@@ -1212,20 +1297,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 						Entry en=(Entry)it.next();
 						paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 					}
-					log.debug("se pasaron a string");
+					logger.debug("se pasaron a string");
 					
 					paramsNuevos.put("pv_cdunieco" , map1.get("pv_cdunieco"));
 					paramsNuevos.put("pv_cdramo"   , map1.get("pv_cdramo"));
 					paramsNuevos.put("pv_estado"   , map1.get("pv_estado"));
 					paramsNuevos.put("pv_nmpoliza" , map1.get("pv_nmpoliza"));
 					paramsNuevos.put("pv_nmsituac" , (String)aseg.get("nmsituac"));
-					log.debug("los actualizados seran: "+paramsNuevos);
+					logger.debug("los actualizados seran: "+paramsNuevos);
 					
 					kernelManager.actualizaValoresSituaciones(paramsNuevos);
 				}
 				catch(Exception ex)
 				{
-					log.error("exception no lanzada a pantalla",ex);
+					logger.error("exception no lanzada a pantalla",ex);
 				}
 				//para que cambie tvalosit
 				//////////////////////////
@@ -1236,7 +1321,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar asegurados",ex);
+			logger.error("error al guardar asegurados",ex);
 			success=false;
 		}
 		return SUCCESS;
@@ -1249,11 +1334,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 			cdperson=kernelManager.generaCdperson();
 			if(session.get("cdpersonciclado")!=null&&((String)session.get("cdpersonciclado")).equals(cdperson))
 			{
-				log.debug("###############################################");
-				log.debug("###############################################");
-				log.debug("##################CICLADO######################");
-				log.debug("###############################################");
-				log.debug("###############################################");
+				logger.debug("###############################################");
+				logger.debug("###############################################");
+				logger.debug("##################CICLADO######################");
+				logger.debug("###############################################");
+				logger.debug("###############################################");
 				return generarCdperson();
 			}
 			else
@@ -1264,7 +1349,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al generar cdperson",ex);
+			logger.error("error al generar cdperson",ex);
 			success=false;
 		}
 		return SUCCESS;
@@ -1274,14 +1359,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 	{
 		try
 		{
-			log.debug("panel1: "+panel1);
+			logger.debug("panel1: "+panel1);
 			/*nmsituac,parentesco,orden,Codigo_Garantia, Nombre_garantia, cdtipcon, Importe*/
 			slist1=kernelManager.obtenerDetallesCotizacion(panel1);
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("Error al obtener el detalle de cotizacion",ex);
+			logger.error("Error al obtener el detalle de cotizacion",ex);
 			success=false;
 		}
 		return SUCCESS;
@@ -1289,7 +1374,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String retarificar()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n#########################"
 				+ "\n#########################"
 				+ "\n######             ######"
@@ -1313,7 +1398,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al validar datos obligatorios de prevex",ex);
+				logger.error("error al validar datos obligatorios de prevex",ex);
 				mensajeRespuesta=ex.getMessage();
 				return SUCCESS;
 			}
@@ -1332,7 +1417,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("Error al validar Datos de DxN",ex);
+				logger.error("Error al validar Datos de DxN",ex);
 				mensajeRespuesta = ex.getMessage();
 				return SUCCESS;
 			}
@@ -1349,7 +1434,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramValExtraprima.put("pv_estado_i"   , "W");
 				paramValExtraprima.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
 				statusValidacionExtraprimas=(String) kernelManager.validarExtraprima(paramValExtraprima).getItemMap().get("status");
-				log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+				logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
 				if(statusValidacionExtraprimas==null)
 				{
 					statusValidacionExtraprimas="N";
@@ -1357,7 +1442,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("Error sin impacto funcional al validar extraprimas: ",ex);
+				logger.error("Error sin impacto funcional al validar extraprimas: ",ex);
 				statusValidacionExtraprimas="S";
 			}
 			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
@@ -1383,7 +1468,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("Error sin impacto funcional al validar domicilios: ",ex);
+				logger.error("Error sin impacto funcional al validar domicilios: ",ex);
 				lisUsuSinDir=null;
 			}
 			
@@ -1403,7 +1488,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
 					}					
 				}
-				log.debug("Se va a terminar el proceso porque faltan direcciones");
+				logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				return SUCCESS;
 			}
 			////// validar que tengan direccion //1548
@@ -1487,7 +1572,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//utilizando logica anterior
 			CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
 			gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
-			log.debug("### session poniendo resultados con grid: "+listaResultados.size());
+			logger.debug("### session poniendo resultados con grid: "+listaResultados.size());
 			session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
 			/*///////////////////////////////*/
 			////// Generacion cotizacion //////
@@ -1514,7 +1599,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("nmpoliza"));
 			paramObtenerPoliza.put("pv_cdusuari" , usuario.getUser());
 			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
-			log.debug("poliza a emitir: "+polizaCompleta);
+			logger.debug("poliza a emitir: "+polizaCompleta);
 			/**/
 			
 			/**
@@ -1553,10 +1638,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.debug("error al retarificar",ex);
+			logger.debug("error al retarificar",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######             ######"
 				+ "\n###### retarificar ######"
 				+ "\n######             ######"
@@ -1568,12 +1653,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String emitir()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n########################"
 				+ "\n######   emitir   ######"
 				+ "");
-		log.debug("panel1"+panel1);
-		log.debug("panel2"+panel2);
+		logger.debug("panel1"+panel1);
+		logger.debug("panel2"+panel2);
 		
 		////// variables 
 		success                = true;
@@ -1616,7 +1701,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("Error al procesar los datos",ex);
+				logger.error("Error al procesar los datos",ex);
 				mensajeRespuesta = "Error al procesar los datos";
 				success          = false;
 			}
@@ -1634,7 +1719,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al obtener los datos de usuario",ex);
+				logger.error("error al obtener los datos de usuario",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -1713,7 +1798,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al validar la edad de los asegurados",ex);
+				logger.error("error al validar la edad de los asegurados",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -1731,12 +1816,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
 				paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
 				Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
-				log.debug("poliza a emitir: "+polizaCompleta);
+				logger.debug("poliza a emitir: "+polizaCompleta);
 				cdperpag = (String)polizaCompleta.get("cdperpag");
 			}
 			catch(Exception ex)
 			{
-				log.error("error al obtener los datos completos de la poliza",ex);
+				logger.error("error al obtener los datos completos de la poliza",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -1763,7 +1848,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramEmi.put("pv_fecha"     , new Date());
 				paramEmi.put("pv_ntramite"  , ntramite);
 				mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
-				log.debug("emision obtenida "+wr.getItemMap());
+				logger.debug("emision obtenida "+wr.getItemMap());
 				
 				nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
 				this.nmpoliza   = nmpolizaEmitida;
@@ -1779,7 +1864,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error en el pl de emitir",ex);
+				logger.error("error en el pl de emitir",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -1933,7 +2018,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}
 						catch(Exception ex)
 						{
-							log.error("error al lanzar ws recibos",ex);
+							logger.error("error al lanzar ws recibos",ex);
 							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
@@ -1946,22 +2031,22 @@ public class ComplementariosAction extends PrincipalCoreAction
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
-            		log.debug("carpeta creada");
+            		logger.debug("carpeta creada");
             	}
             	else
             	{
-            		log.debug("carpeta NO creada");
+            		logger.debug("carpeta NO creada");
             		success          = false;
             		mensajeRespuesta = "Error al crear la carpeta de documentos";
             	}
             }
             else
             {
-            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
 		}
 		
@@ -1982,7 +2067,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
 				{
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -2004,12 +2089,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url);
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\n################################"
@@ -2100,7 +2185,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al generar documentacion de emision",ex);
+				logger.error("error al generar documentacion de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -2111,7 +2196,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				log.debug("se inserta detalle nuevo para emision");
+				logger.debug("se inserta detalle nuevo para emision");
 	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
@@ -2123,13 +2208,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al insertar detalle de emision",ex);
+				logger.error("error al insertar detalle de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
 		}
 		
-		log.debug(""
+		logger.debug(""
 				+ "\n######   emitir   ######"
 				+ "\n########################"
 				+ "");
@@ -2197,7 +2282,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al procesar los datos",ex);
+				logger.error("error al procesar los datos",ex);
 				mensajeRespuesta = "Error al procesar los datos";
 				success          = false;
 			}
@@ -2215,12 +2300,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
 				paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
 				Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
-				log.debug("poliza a emitir: "+polizaCompleta);
+				logger.debug("poliza a emitir: "+polizaCompleta);
 				cdperpag = (String)polizaCompleta.get("cdperpag");
 			}
 			catch(Exception ex)
 			{
-				log.error("error al obtener los datos completos de la poliza",ex);
+				logger.error("error al obtener los datos completos de la poliza",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -2247,7 +2332,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramEmi.put("pv_fecha"     , fechaEmisionDate);
 				paramEmi.put("pv_ntramite"  , ntramite);
 				mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
-				log.debug("emision obtenida "+wr.getItemMap());
+				logger.debug("emision obtenida "+wr.getItemMap());
 				
 				nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
 				this.nmpoliza = nmpolizaEmitida;
@@ -2260,7 +2345,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error en el pl de emision",ex);
+				logger.error("error en el pl de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -2408,7 +2493,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}
 						catch(Exception ex)
 						{
-							log.error("error al lanzar ws recibos",ex);
+							logger.error("error al lanzar ws recibos",ex);
 							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
@@ -2423,27 +2508,27 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            File carpeta = new File(rutaCarpeta);
 	            if(!carpeta.exists())
 	            {
-	            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+	            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
 	            	carpeta.mkdir();
 	            	if(carpeta.exists())
 	            	{
-	            		log.debug("carpeta creada");
+	            		logger.debug("carpeta creada");
 	            	}
 	            	else
 	            	{
-	            		log.debug("carpeta NO creada");
+	            		logger.debug("carpeta NO creada");
 	            		success          = false;
 	            		mensajeRespuesta = "Error al crear la carpeta de documentos";
 	            	}
 	            }
 	            else
 	            {
-	            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+	            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
 	            }
 			}
 			catch(Exception ex)
 			{
-				log.error("error al crear la carpeta",ex);
+				logger.error("error al crear la carpeta",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -2466,7 +2551,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
 				{
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -2488,12 +2573,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url);
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n###### reporte solicitado ######"
 							+ "\n################################"
 							+ "");
@@ -2583,7 +2668,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al crear documentacion",ex);
+				logger.error("error al crear documentacion",ex);
 				success          = false;
 				mensajeRespuesta = ex.getMessage();
 			}
@@ -2594,7 +2679,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				log.debug("se inserta detalle nuevo para emision");
+				logger.debug("se inserta detalle nuevo para emision");
 	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
@@ -2610,7 +2695,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al guardar detalle de emision",ex);
+				logger.error("error al guardar detalle de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -2741,22 +2826,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            File carpeta = new File(rutaCarpeta);
 	            if(!carpeta.exists())
 	            {
-	            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+	            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
 	            	carpeta.mkdir();
 	            	if(carpeta.exists())
 	            	{
-	            		log.debug("carpeta creada");
+	            		logger.debug("carpeta creada");
 	            	}
 	            	else
 	            	{
-	            		log.debug("carpeta NO creada");
+	            		logger.debug("carpeta NO creada");
 	            		success          = false;
 	            		mensajeRespuesta = "Error al crear la carpeta de documentos";
 	            	}
 	            }
 	            else
 	            {
-	            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+	            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
 	            }
 			}
 			
@@ -2777,7 +2862,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu)
 					{
-						log.debug("docu iterado: "+docu);
+						logger.debug("docu iterado: "+docu);
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
 						String url=this.getText("ruta.servidor.reports")
@@ -2799,12 +2884,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 						}
-						log.debug(""
+						logger.debug(""
 								+ "\n#################################"
 								+ "\n###### Se solicita reporte ######"
 								+ "\na "+url);
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						log.debug(""
+						logger.debug(""
 								+ "\n######                    ######"
 								+ "\n###### reporte solicitado ######"
 								+ "\n################################"
@@ -2896,7 +2981,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					log.error("error al generar documentacion de emision",ex);
+					logger.error("error al generar documentacion de emision",ex);
 					mensajeRespuesta = ex.getMessage();
 					success          = false;
 				}
@@ -2907,7 +2992,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				try
 				{
-					log.debug("se inserta detalle nuevo para emision");
+					logger.debug("se inserta detalle nuevo para emision");
 		        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
@@ -2919,7 +3004,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					log.error("error al insertar detalle de emision",ex);
+					logger.error("error al insertar detalle de emision",ex);
 					mensajeRespuesta = ex.getMessage();
 					success          = false;
 				}
@@ -2993,13 +3078,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String buscarPersonasRepetidas()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "#######################################\n"
 				+ "#######################################\n"
 				+ "###### buscar personas repetidas ######\n"
 				+ "######                           ######"
 				);
-		log.debug("map1: "+map1);
+		logger.debug("map1: "+map1);
 		clienteWS = false;
 		
 		try
@@ -3107,10 +3192,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("Error al buscar RFC",ex);
+			logger.error("Error al buscar RFC",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "######                           ######\n"
 				+ "###### buscar personas repetidas ######\n"
 				+ "#######################################\n"
@@ -3127,7 +3212,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener los ramos",ex);
+			logger.error("error al obtener los ramos",ex);
 		}
 		success=true;
 		return SUCCESS;
@@ -3141,7 +3226,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener los tipsit",ex);
+			logger.error("error al obtener los tipsit",ex);
 		}
 		success=true;
 		return SUCCESS;
@@ -3300,23 +3385,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String getCdatribuRol(String auxiliarProductoCdtipsit)
 	{
-		log.error("DEPRECATED getCdatribuRol",new Exception("DEPRECATED getCdatribuRol"));
+		logger.error("DEPRECATED getCdatribuRol",new Exception("DEPRECATED getCdatribuRol"));
 		return null;
 	}
 	
 	public String getCdatribuSexo(String auxiliarProductoCdtipsit)
 	{
-		log.error("DEPRECATED getCdatribuSexo",new Exception("DEPRECATED getCdatribuSexo"));
+		logger.error("DEPRECATED getCdatribuSexo",new Exception("DEPRECATED getCdatribuSexo"));
 		return null;
 	}
 	
 	public String pantallaJavaExterno()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n#################################"
 				+ "\n###### pantallaJavaExterno ######"
 				);
-		log.info(""
+		logger.info(""
 				+ "\n###### pantallaJavaExterno ######"
 				+ "\n#################################"
 				);
@@ -3325,11 +3410,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String operacionJavaExterno()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n##################################"
 				+ "\n###### operacionJavaExterno ######"
 				);
-		log.info("panel1: "+panel1);
+		logger.info("panel1: "+panel1);
 		String a = panel1.get("a");
 		String b = panel1.get("b");
 		String c = null;
@@ -3348,14 +3433,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 			Method      m      = cls.getMethod(metodo, parametros);
 			
 			c=(String)m.invoke(cls.newInstance(),a,b);
-			log.debug("c: "+c);
+			logger.debug("c: "+c);
 			panel1.put("c",c);
 		}
 		catch(Exception ex)
 		{
-			log.error("error:",ex);
+			logger.error("error:",ex);
 		}
-		log.info(""
+		logger.info(""
 				+ "\n###### operacionJavaExterno ######"
 				+ "\n##################################"
 				);
@@ -3364,11 +3449,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String pantallaCompiladora()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n#################################"
 				+ "\n###### pantallaCompiladora ######"
 				);
-		log.info(""
+		logger.info(""
 				+ "\n###### pantallaCompiladora ######"
 				+ "\n#################################"
 				);
@@ -3377,18 +3462,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String compilarProceso()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n#############################"
 				+ "\n###### compilarProceso ######"
 				);
 		//ENTRADA
-		log.info("map1: "+map1);
+		logger.info("map1: "+map1);
 		
 		//VARIABLES DE ENTRADA OBTENIDAS DEL MAPA
 		String archivo = map1.get("archivo");
 		String codigo  = map1.get("codigo");
-		log.info("archivo: "+archivo);
-		log.info("codigo: "+codigo);
+		logger.info("archivo: "+archivo);
+		logger.info("codigo: "+codigo);
 		
 		//PROPIEDAD PARA EL SUBMIT DE EXT
 		success = true;
@@ -3407,7 +3492,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al crear archivo java",ex);
+				logger.error("error al crear archivo java",ex);
 				mensajeRespuesta=ex.getMessage();
 				exito=false;
 			}
@@ -3421,7 +3506,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				esWindows = true;
 			}
-			log.info("es windows: "+esWindows);
+			logger.info("es windows: "+esWindows);
 		}
 		
 		//COMPILAR
@@ -3462,7 +3547,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String buff = null;
 					while ((buff = br_err.readLine()) != null)
 					{
-						log.error("Error :" + buff);
+						logger.error("Error :" + buff);
 						mensajeRespuesta=mensajeRespuesta+(buff.replaceAll(" ", "&nbsp;"))+"<br/>";
 						exito=false;
 						try
@@ -3474,7 +3559,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				catch (Exception ex)
 				{
-					log.error("Error al imprimir errores de proceso",ex);
+					logger.error("Error al imprimir errores de proceso",ex);
 					mensajeRespuesta=mensajeRespuesta+ex;
 					exito=false;
 				}
@@ -3488,13 +3573,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				log.error("error al compilar",ex);
+				logger.error("error al compilar",ex);
 				mensajeRespuesta=ex.getMessage();
 				exito=false;				
 			}
 		}
 		
-		log.info(""
+		logger.info(""
 				+ "\n###### compilarProceso ######"
 				+ "\n#############################"
 				);
@@ -3503,12 +3588,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String redireccion()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n#########################"
 				+ "\n###### redireccion ######"
 				);
-		log.info("map1: "+map1);
-		log.info(""
+		logger.info("map1: "+map1);
+		logger.info(""
 				+ "\n###### redireccion ######"
 				+ "\n#########################"
 				);
@@ -3559,13 +3644,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
 				+ "&p_ntramite="+ntramite
 				+ "&p_comments="+commentsM;
-		log.debug(""
+		logger.debug(""
 				+ "\n#################################"
 				+ "\n###### Se solicita reporte ######"
 				+ "\n###### "+url
 				);
 		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
-		log.debug(""
+		logger.debug(""
 				+ "\n###### Se solicita reporte ######"
 				+ "\n#################################"
 				);
@@ -3588,7 +3673,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	    }
 		catch(Exception ex)
 		{
-			log.error("error al crear la carta rechazo",ex);
+			logger.error("error al crear la carta rechazo",ex);
 		}
 	
 		logger.info(""
@@ -3769,6 +3854,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setMensajeEmail(String mensajeEmail) {
 		this.mensajeEmail = mensajeEmail;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
 	}
 
 }
