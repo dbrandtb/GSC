@@ -865,6 +865,7 @@ function _p22_datosAdicionalesClic()
                 	if(!item.allowBlank){
                 		item.allowBlank = true;
                 		if(item.getFieldLabel){
+                			item.inicialField = item.getFieldLabel();
                 			item.setFieldLabel('<span>'+ item.getFieldLabel() +'<img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt=""></span>');
                 		}
                 	}
@@ -914,7 +915,7 @@ function _p22_datosAdicionalesClic()
 	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
 	        		                                ,tooltip  : 'Subir nuevo'
 	        		                                ,codidocu : itemDocumento.codidocu
-	        		                                ,descrip  : itemDocumento.fieldLabel
+	        		                                ,descrip  : itemDocumento.inicialField
 	        		                                ,handler  : function(button)
 	        		                                {
 	        		                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
@@ -924,7 +925,7 @@ function _p22_datosAdicionalesClic()
 	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/eye.png'
 	        		                                ,tooltip  : 'Descargar'
 	        		                                ,codidocu : itemDocumento.codidocu
-	        		                                ,descrip  : itemDocumento.fieldLabel
+	        		                                ,descrip  : itemDocumento.inicialField
 	        		                                ,handler  : function(button)
 	        		                                {
 	        		                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
