@@ -236,6 +236,8 @@ Ext.onReady(function() {
 			}
 		}
 	});
+	
+	storeRamos.load();
     
     var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',
 	{
@@ -252,7 +254,7 @@ Ext.onReady(function() {
 	    allowBlank : false,							editable   : true,				displayField : 'value',
 	    labelWidth : 250,		   					 emptyText:'Seleccione...',		width		 : 500,
 	    valueField   : 'key',						forceSelection : true,			queryMode      :'local',
-	    store : oficinaEmisora,
+	    store : oficinaEmisora/*,
 	    listeners : {
 	    	//'select' : function(combo, record) {
 	    	change:function(e){
@@ -262,7 +264,7 @@ Ext.onReady(function() {
 	                }
 	            });
 	    	}
-	    }
+	    }*/
 	});
 	
     cmbRamos = Ext.create('Ext.form.field.ComboBox',
@@ -389,6 +391,8 @@ Ext.onReady(function() {
 				}else{
 					Ext.getCmp('idnombreBeneficiarioProv').setValue(cmbProveedor.rawValue);
 					Ext.getCmp('idnombreBeneficiarioProv').hide();
+					//Se realiza la validación para verificar si es pagado
+					validarFacturaPagada(Ext.getCmp('cmbProveedor').getValue(), Ext.getCmp('txtNoFactura').getValue());
 				}
 				
 				
@@ -427,7 +431,12 @@ Ext.onReady(function() {
             	valueField  : 'cdpresta',          	allowBlank  : false,		            	minChars  : 2,			            	width       : 500,
                 forceSelection : true,              matchFieldWidth: false,		                queryMode   :'remote',	                queryParam  : 'params.cdpresta',
                 store       : storeProveedor,	    triggerAction  : 'all',		                labelWidth  : 170,		                emptyText   : 'Seleccione...',
-                editable    : true,                hideTrigger:true, value:'8'
+                editable    : true,                hideTrigger:true, value:'8',
+                listeners : {
+					'select' : function(combo, record) {
+						validarFacturaPagada(this.getValue(),panelModificacionInsercion.query('[name=noFactInterno]')[0].getValue());
+					}
+		    	}
             },
     		{
     			xtype       : 'combo',            	name:'cmbTipoMonedaInterna',		        valueField: 'key',				displayField: 'value',
@@ -1122,6 +1131,16 @@ Ext.onReady(function() {
 	            	,
 	            	cmbBeneficiario
 	            	,
+	            	{
+		            	id:'txtNoFactura'
+		                ,xtype      : 'textfield'
+		            	,fieldLabel : 'No. Factura'
+		            	,labelWidth : 250
+		            	,width		: 500
+		            	,name       : 'txtNoFactura'
+		            	,allowBlank	: false
+		            }
+		            ,
 	            	cmbProveedor
 	        	    ,
 	        	    {
@@ -1133,16 +1152,6 @@ Ext.onReady(function() {
 							}
 						}
 					},
-	        	    {
-		            	id:'txtNoFactura'
-		                ,xtype      : 'textfield'
-		            	,fieldLabel : 'No. Factura'
-		            	,labelWidth : 250
-		            	,width		: 500
-		            	,name       : 'txtNoFactura'
-		            	,allowBlank	: false
-		            }
-		            ,
                 	{
 		            	id:'txtImporte'
 		                ,xtype      : 'numberfield'
@@ -1416,6 +1425,7 @@ Ext.onReady(function() {
 			    		oficinaEmisora.load();
 			    		Ext.getCmp('cmbOficEmisora').setValue(json.cdsucadmmc);
 			    		Ext.getCmp('dtFechaRecepcion').setValue(json.ferecepcmc);
+			    		Ext.getCmp('txtContraRecibo').setValue(json.otvalor01mc);
 			    		Ext.getCmp('cmbTipoAtencion').setValue(json.otvalor07mc);
 			    		Ext.getCmp('cmbTipoPago').setValue(json.otvalor02mc);
 			    		storeRamos.load({
@@ -1632,5 +1642,39 @@ Ext.onReady(function() {
 		Ext.getCmp('txtImporte').allowBlank = pagoDirecto;
 		Ext.getCmp('dtFechaFactura').allowBlank = pagoDirecto;
     	return true;
+	}
+	
+	
+	function validarFacturaPagada(cdpresta,nfactura){
+		Ext.Ajax.request(
+					{
+						url     : _URL_CONSULTA_FACTURA_PAGADA
+						,params:{
+							'params.nfactura' : nfactura,
+							'params.cdpresta' : cdpresta
+						}
+						,success : function (response)
+					    {
+					    	if(Ext.decode(response.responseText).factPagada !=null)
+					    	{
+					    		centrarVentanaInterna(Ext.Msg.show({
+			 		               title: 'Aviso',
+			 		               msg: 'La factura '+ nfactura +' ya se encuentra pagada en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+			 		               buttons: Ext.Msg.OK,
+			 		               icon: Ext.Msg.WARNING
+			 		           }));
+					    	}
+					    },
+					    failure : function ()
+					    {
+					        me.up().up().setLoading(false);
+					        centrarVentanaInterna(Ext.Msg.show({
+					            title:'Error',
+					            msg: 'Error de comunicaci&oacute;n',
+					            buttons: Ext.Msg.OK,
+					            icon: Ext.Msg.ERROR
+					        }));
+					    }
+					});
 	}
 });
