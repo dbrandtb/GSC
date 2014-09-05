@@ -3676,6 +3676,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	        case 13 :
     	        	penaliCirculoHosp = 40;
     	            break;
+    	        case 21 :
+    	        case 32 :
+    	        	penaliCirculoHosp = -5;
+    	            break;
+    	        case 31 :
+    	        	penaliCirculoHosp = -10;
+    	            break;
     	        default:
     	        	penaliCirculoHosp = 0;
     	          
