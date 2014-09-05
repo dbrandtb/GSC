@@ -1301,4 +1301,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return siniestrosDAO.obtieneDatosAdicionalesCobertura(params);
 	}
 
+
+	@Override
+	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception {
+		return siniestrosDAO.obtieneTramiteFacturaPagada(nfactura, cdpresta);
+	}
 }

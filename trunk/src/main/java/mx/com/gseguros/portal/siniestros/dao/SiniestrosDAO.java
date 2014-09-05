@@ -388,4 +388,6 @@ public interface SiniestrosDAO {
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 
 	public List<Map<String, String>> obtieneDatosAdicionalesCobertura(Map<String, Object> params) throws Exception;
+
+	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
 }

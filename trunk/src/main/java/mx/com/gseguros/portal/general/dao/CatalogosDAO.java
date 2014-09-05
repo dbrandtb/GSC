@@ -44,6 +44,4 @@ public interface CatalogosDAO {
 	public List<GenericVO> cargarAgentesPorPromotor(Map<String,String> params) throws Exception;
 	
 	public List<GenericVO> cargarServicioPublicoAutos(Map<String,String> params) throws Exception;
-
-	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
 }
