@@ -502,6 +502,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaFacturaPagada" class="siniestrosAction"
+			method="consultaFacturaPagada">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					factPagada
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaPorcentajePenalizacion" class="siniestrosAction"
 			method="validaPorcentajePenalizacion">
 			<result type="json">

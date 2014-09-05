@@ -53,4 +53,7 @@ public interface CatalogosManager {
     public List<GenericVO> cargarAgentesPorPromotor(String cdusuari)throws Exception;
     
     public List<GenericVO> cargarServicioPublicoAutos(String substring)throws Exception;
+    
+    public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
+    
 }

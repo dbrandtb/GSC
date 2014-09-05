@@ -99,6 +99,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String msgResult;
     private String diasMaximos;
     private String montoMaximo;
+    private String factPagada;
     private String existePenalizacion;
     private String montoArancel;
     private String requiereAutServ;
@@ -5601,7 +5602,18 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			);
     	return SUCCESS;
     }
-	
+
+    public String consultaFacturaPagada(){
+	   	logger.debug(" **** Entrando al metodo el tramite  de la factura ****");
+	   	try {
+	   		factPagada = catalogosManager.obtieneTramiteFacturaPagada(params.get("nfactura"), params.get("cdpresta"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }    
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}
@@ -6284,6 +6296,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setMap1(Map<String, String> map1) {
 		this.map1 = map1;
+	}
+
+	public String getFactPagada() {
+		return factPagada;
+	}
+
+
+	public void setFactPagada(String factPagada) {
+		this.factPagada = factPagada;
 	}
 	
 	
