@@ -3159,15 +3159,19 @@ Ext.onReady(function() {
 	            Ext.getCmp('idPenalCircHospitalario').setValue('0');
 	            break;
 	        case "BA" :
-	        case "CA" :
 	        case "CB" :
-	            Ext.getCmp('idPenalCircHospitalario').setValue('0');
+	        	Ext.getCmp('idPenalCircHospitalario').setValue('-5');
+	            break;
+	        case "CA" :
+	        	Ext.getCmp('idPenalCircHospitalario').setValue('-10');
 	            break;
 	        case "AB" :
 	        case "BC" :
+	        	//12 y 23
 	            Ext.getCmp('idPenalCircHospitalario').setValue('20');
 	            break;
 	        case "AC" :
+	        	//13
 	            Ext.getCmp('idPenalCircHospitalario').setValue('40');
 	            break;
 	        default:
