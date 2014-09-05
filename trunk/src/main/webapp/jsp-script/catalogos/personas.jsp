@@ -716,12 +716,13 @@ function _p22_datosAdicionalesClic()
                     extend  : 'Ext.data.Model'
                     ,fields : Ext.decode(json.smap1.fieldsTatriper.substring("fields:".length))
                 });
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                
+                Ext.create('Ext.window.Window',
                 {
                     title   : 'Datos adicionales'
                     ,itemId : '_p22_ventanaDatosAdicionales'
                     ,width  : 650
-                    ,height : 630
+                    ,height : 600
                     ,autoScroll : true
                     ,modal  : true
                     ,items  :
@@ -761,7 +762,8 @@ function _p22_datosAdicionalesClic()
                         }
                         ,'->'
                     ]
-                }).show());
+                }).show(); 
+                
                 fieldMail=_fieldByLabel('Correo electrónico');
                 if(fieldMail)
                 {
@@ -945,6 +947,12 @@ function _p22_datosAdicionalesClic()
                     //itemDocumento.destroy();
                     //itemDocumento.allowBlank = true;
                 }
+                
+                _p22_formDatosAdicionales().add({
+					xtype: 'tbspacer',        	    	
+					height: 100                	
+        	     });
+                
             }
             else
             {
@@ -1113,7 +1121,7 @@ function _p22_formDatosAdicionales()
 function _p22_documentosClic()
 {
     debug('>_p22_documentosClic');
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    Ext.create('Ext.window.Window',
     {
         title        : 'Documentos'
         ,modal       : true
@@ -1131,7 +1139,7 @@ function _p22_documentosClic()
             ,scripts  : true
             ,autoLoad : true
         }
-    }).show());
+    });
     debug('<_p22_documentosClic');
 }
 
