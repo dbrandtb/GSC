@@ -471,4 +471,6 @@ public interface SiniestrosManager {
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 
 	public List<Map<String, String>> obtenerDatosAdicionalesCobertura(String ntramite) throws Exception;
+	
+    public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
 }

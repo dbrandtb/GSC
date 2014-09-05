@@ -153,9 +153,4 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
-	
-	@Override
-	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception {
-		return catalogosDAO.obtieneTramiteFacturaPagada(nfactura, cdpresta);
-	}
 }
