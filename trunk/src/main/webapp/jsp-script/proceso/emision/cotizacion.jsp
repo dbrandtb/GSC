@@ -2012,6 +2012,14 @@ Ext.onReady(function()
     {
         debug('>parche para ramo 6');
         
+        _fieldByName('parametros.pv_otvalor18').on(
+        {
+            'select' : function()
+            {
+                _fieldByName('parametros.pv_otvalor19').allowBlank=false;
+            }
+        });
+        
         _0_gridIncisos.setTitle('Datos del contratante');
         
         var agente = _fieldByName('parametros.pv_otvalor17');

@@ -160,5 +160,5 @@ public interface CotizacionManager
 	
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	
-	public String cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception;
+	public Map<String,String>cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception;
 }

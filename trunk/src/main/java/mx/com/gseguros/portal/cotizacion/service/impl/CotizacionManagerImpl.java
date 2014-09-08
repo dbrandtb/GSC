@@ -722,7 +722,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public String cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception
+	public Map<String,String> cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -735,10 +735,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("cdtipsit"   , cdtipsit);
 		params.put("tipoUnidad" , tipoUnidad);
-		String nPasajeros = cotizacionDAO.cargarNumeroPasajerosPorTipoUnidad(params);
+		Map<String,String> nPasajeros = cotizacionDAO.cargarNumeroPasajerosPorTipoUnidad(params);
 		logger.info(
 				new StringBuilder()
-				.append("\nnPasajeros=").append(nPasajeros)
+				.append("\nparametros por tipo unidad=").append(nPasajeros)
 				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
 				.append("\n################################################")
 				.toString()

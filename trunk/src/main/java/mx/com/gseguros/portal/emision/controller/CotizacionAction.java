@@ -324,9 +324,9 @@ public class CotizacionAction extends PrincipalCoreAction
 						//clave gs
 						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("22"))
 						{
-							temp.remove(tatriIte);
 							if(cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
 							{
+								temp.remove(tatriIte);
 								//agregar combo
 								List<ComponenteVO>listaAuxComboAutos=pantallasManager.obtenerComponentes(
 										TipoTramite.POLIZA_NUEVA.getCdtiptra()
@@ -1834,6 +1834,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
+				Map<String,String>tipoSituacion=cotizacionManager.cargarTipoSituacion(cdramo,cdtipsit);
+				
 				LinkedHashMap<String,Object>paramsValidaCargarCotizacion=new LinkedHashMap<String,Object>();
 				paramsValidaCargarCotizacion.put("param1" , cdramo);
 				paramsValidaCargarCotizacion.put("param2" , cdtipsit);
@@ -1843,7 +1845,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				/*
 				 * cuando se encuentra cdunieco y ntramite para esa cotizacion y no es auto:
 				 */
-				if((!cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo()))&&datosParaComplementar.containsKey("CDUNIECO"))
+				if(tipoSituacion.get("SITUACION").equals("PERSONA")
+						&&datosParaComplementar.containsKey("CDUNIECO"))
 				{
 					throw new Exception("La cotizaci&oacute;n ya se encuentra en tr&aacute;mite de emisi&oacute;n");
 				}
@@ -4691,8 +4694,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				String nPasajeros=cotizacionManager.cargarNumeroPasajerosPorTipoUnidad(cdtipsit,tipoUnidad);
-				smap1.put("nPasajeros",nPasajeros);
+				Map<String,String>paramsTipoUnidad=cotizacionManager.cargarNumeroPasajerosPorTipoUnidad(cdtipsit,tipoUnidad);
+				smap1.put("nPasajeros"   , paramsTipoUnidad.get("NUMPASAJEROS"));
+				smap1.put("minPasajeros" , paramsTipoUnidad.get("PASAJMIN"));
+				smap1.put("maxPasajeros" , paramsTipoUnidad.get("PASAJMAX"));
+				smap1.put("claveGS"      , paramsTipoUnidad.get("CLAVEGS"));
+				smap1.put("sumaAseg"     , paramsTipoUnidad.get("SUMASEG"));
 			}
 			catch(Exception ex)
 			{
