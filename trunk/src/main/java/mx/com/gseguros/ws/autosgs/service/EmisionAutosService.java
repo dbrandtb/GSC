@@ -1,7 +1,7 @@
 package mx.com.gseguros.ws.autosgs.service;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.SDTPoliza;
+import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
 
 public interface EmisionAutosService {
 
@@ -16,6 +16,6 @@ public interface EmisionAutosService {
 	 * @param userVO
 	 * @return
 	 */
-	public SDTPoliza cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
+	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, UserVO userVO);
 }
