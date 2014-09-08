@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -21,6 +20,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -49,16 +49,18 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	private Map<String,Object> opanel1;
 	private Map<String,Object> opanel2;
 	private Map<String,Object> opanel3;
-	private Logger log=Logger.getLogger(ComplementariosCoberturasAction.class);
+	private final static Logger logger=Logger.getLogger(ComplementariosCoberturasAction.class);
 	private boolean success=false;
 	private boolean exito  =false;
 	private Map<String,String>parametros;
 	private String str1;
 	private String str2;
+	private String respuesta;
+	private String respuestaOculta;
 	
 	public String pantallaCoberturas()
 	{
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		ScreenInterceptor scrInt=new ScreenInterceptor();
 		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_COBERTURAS_ASEGURADO);
 	}
@@ -91,7 +93,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al armar la pantalla de coberturas",ex);
+			logger.error("error al armar la pantalla de coberturas",ex);
 			item1=null;
 			item2=null;
 		}
@@ -116,7 +118,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		catch(Exception ex)
 		{
 			spanel1=null;
-			log.error("error al cargar la pantalla de coberturas",ex);
+			logger.error("error al cargar la pantalla de coberturas",ex);
 			success=false;
 		}
 		return SUCCESS;
@@ -124,8 +126,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String guardarCoberturasUsuario()
 	{
-		log.debug(smap1);
-		log.debug(slist1);
+		logger.debug(smap1);
+		logger.debug(slist1);
 		try
 		{
 			int i=1;
@@ -161,7 +163,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				mapPoligarIterado.put("pv_swreas_i",   cob.get("swreas"));
 				mapPoligarIterado.put("pv_cdagrupa_i", cob.get("cdagrupa"));
 				mapPoligarIterado.put("PV_ACCION",     "I");
-				log.debug("Iteracion #"+i+" de movPoligar");
+				logger.debug("Iteracion #"+i+" de movPoligar");
 				kernelManager.movPoligar(mapPoligarIterado);
 				/**/
 				
@@ -203,7 +205,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				mapPolicapIterado.put("pv_swrevalo_i", cob.get("swrevalo"));
 				mapPolicapIterado.put("pv_cdagrupa_i", cob.get("cdagrupa"));
 				mapPolicapIterado.put("pv_accion_i", "I");
-				log.debug("Iteracion #"+i+" de movPolicap");
+				logger.debug("Iteracion #"+i+" de movPolicap");
 				kernelManager.movPolicap(mapPolicapIterado);
 				
 				i++;
@@ -247,7 +249,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				mapPoligarIterado.put("pv_cdagrupa_i", cob.get("cdagrupa"));
 				mapPoligarIterado.put("PV_ACCION",     "B");
 				mapPoligarIterado.put("pv_cdtipsup_i", TipoEndoso.EMISION_POLIZA.getCdTipSup().toString());
-				log.debug("Iteracion #"+i+" de movPoligar");
+				logger.debug("Iteracion #"+i+" de movPoligar");
 				kernelManager.movPoligar(mapPoligarIterado);
 				
 				i++;
@@ -261,7 +263,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("Error al guardar las coberturas",ex);
+			logger.error("Error al guardar las coberturas",ex);
 			success=false;
 		}
 		return SUCCESS;
@@ -269,12 +271,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String obtenerCamposTatrigar()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n###################################"
 				+ "\n###### obtenerCamposTatrigar ######"
 				+ "\nsmap1 "+smap1
 				);
-		log.debug(smap1);
+		logger.debug(smap1);
 		try
 		{
 			List<ComponenteVO>listTatri=kernelManager.obtenerTatrigar(smap1);
@@ -293,11 +295,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener los campos tatrigar",ex);
+			logger.error("error al obtener los campos tatrigar",ex);
 			success=false;
 		}
 
-		log.info(""
+		logger.info(""
 				+ "\n###### obtenerCamposTatrigar ######"
 				+ "\n###################################"
 				);
@@ -306,7 +308,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String obtenerValoresTatrigar()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n####################################"
 				+ "\n###### obtenerValoresTatrigar ######"
 				+ "\nsmap1 "+smap1
@@ -329,15 +331,15 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				Entry<String,Object> entry=it.next();
 				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 			}
-			log.debug(parametros);
+			logger.debug(parametros);
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener los valores de tatrigar",ex);
+			logger.error("error al obtener los valores de tatrigar",ex);
 			success=true;
 		}
-		log.info(""
+		logger.info(""
 				+ "\n###### obtenerValoresTatrigar ######"
 				+ "\n####################################"
 				);
@@ -346,7 +348,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String guardarValoresTatrigar()
 	{
-		log.debug("\n##############################"
+		logger.debug("\n##############################"
 				+ "\n###### Guardar tvalogar ######");
 		try
 		{
@@ -363,41 +365,41 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			smap1.putAll(parametros);
 			smap1.put("pv_status", "V");
 			smap1.put("pv_nmsuplem", "0");
-			log.debug("smap1"+smap1);
-	        log.debug("parametros"+parametros);
+			logger.debug("smap1"+smap1);
+	        logger.debug("parametros"+parametros);
 	        kernelManager.pMovTvalogar(smap1);
 	        success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar tvalogar",ex);
+			logger.error("error al guardar tvalogar",ex);
 			success=false;
 		}
-		log.debug("\n###### Guardar tvalogar ######"
+		logger.debug("\n###### Guardar tvalogar ######"
 				+ "\n##############################");
 		return SUCCESS; 
 	}
 	
 	public String pantallaDomicilio()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de domicilio ######"
 				+ "\n######                       ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		ScreenInterceptor scrInt=new ScreenInterceptor();
 		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO);
 	}
 	
 	public String pantallaExclusion()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n######                       ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		ScreenInterceptor scrInt=new ScreenInterceptor();
 		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO);
 	}
@@ -410,9 +412,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al mostrar la pantalla de exclusion",ex);
+			logger.error("error al mostrar la pantalla de exclusion",ex);
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n######                       ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -422,12 +424,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String cargarPantallaExclusion()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###### load                  ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			slist1=kernelManager.obtenerPolicot(smap1);
@@ -435,11 +437,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar las excepciones",ex);
+			logger.error("error al cargar las excepciones",ex);
 			success=false;
 		}
-		log.debug("slist1: "+slist1);
-		log.debug("\n######                       ######"
+		logger.debug("slist1: "+slist1);
+		logger.debug("\n######                       ######"
 				+ "\n###### load                  ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -449,12 +451,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String agregarExclusion()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###### agregar exclusion     ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			/*Map<String,String>paramObtenerHtml=new HashMap<String,String>(0);
@@ -480,10 +482,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al agregar la exclusion",ex);
+			logger.error("error al agregar la exclusion",ex);
 			success=false;
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n###### agregar exclusion     ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -493,14 +495,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String obtenerExclusionesPorTipo()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n####################################################"
 				+ "\n####################################################"
 				+ "\n###### cargar clausulas de exclusion por tipo ######"
 				+ "\n######                                        ######"
 				+ "\n######                                        ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			slist1=kernelManager.obtenerExclusionesPorTipo(smap1);
@@ -508,10 +510,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener las clausulas de exlusion por tipo",ex);
+			logger.error("error al obtener las clausulas de exlusion por tipo",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                                        ######"
 				+ "\n######                                        ######"
 				+ "\n###### cargar clausulas de exclusion por tipo ######"
@@ -523,7 +525,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String cargarTiposClausulasExclusion()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n####################################################"
 				+ "\n####################################################"
 				+ "\n###### cargar tipos de clausulas de exclusion ######"
@@ -537,10 +539,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar los tipos de clausulas de exclusion",ex);
+			logger.error("error al cargar los tipos de clausulas de exclusion",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                                        ######"
 				+ "\n###### cargar tipos de clausulas de exclusion ######"
 				+ "\n###### sin parametros de entrada              ######"
@@ -552,22 +554,22 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String guardarHtmlExclusion()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###### guardarHtmlExclusion  ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar html de la exclusion",ex);
+			logger.error("error al guardar html de la exclusion",ex);
 			success=false;
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n###### guardarHtmlExclusion  ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -577,12 +579,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String cargarHtmlExclusion()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###### cargar html de exclu  ######"
 				+ "\n######                       ######");
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			smap1=kernelManager.obtenerHtmlClausula(smap1);
@@ -590,10 +592,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar el html de exclusion",ex);
+			logger.error("error al cargar el html de exclusion",ex);
 			success=false;
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n###### cargar html de exclu  ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -603,23 +605,23 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String guardarExclusiones()
 	{
-		log.debug("\n###################################"
+		logger.debug("\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###### save                  ######"
 				+ "\n######                       ######");
-		log.debug("slist1: "+slist1);
-		log.debug("smap1: "+smap1);
+		logger.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.debug("error al guardar las excluciones",ex);
+			logger.debug("error al guardar las excluciones",ex);
 			success=false;
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n###### save                  ######"
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
@@ -711,9 +713,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al mostrar la pantalla de domicilio",ex);
+			logger.error("error al mostrar la pantalla de domicilio",ex);
 		}
-		log.debug("\n######                       ######"
+		logger.debug("\n######                       ######"
 				+ "\n######                       ######"
 				+ "\n###### pantalla de domicilio ######"
 				+ "\n###################################"
@@ -723,7 +725,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String cargarPantallaDomicilio()
 	{
-		log.debug("\n##########################################"
+		logger.debug("\n##########################################"
 				+ "\n##########################################"
 				+ "\n###### cargar pantalla de domicilio ######"
 				+ "\n######                              ######"
@@ -733,7 +735,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			
 			UserVO usuSes=(UserVO)session.get("USUARIO");
 			
-			log.debug(smap1);
+			logger.debug(smap1);
 			/*
 			pv_cdunieco_i  smap1 ready!
             pv_cdramo_i    smap1 ready!
@@ -756,7 +758,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			}
 			catch(Exception ex)
 			{
-				log.debug("no hay valores para tatriper",ex);
+				logger.debug("no hay valores para tatriper",ex);
 				parametrosCargados=new HashMap<String,Object>(0);
 			}
 			parametros=new HashMap<String,String>(0);
@@ -766,7 +768,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				Entry<String,Object> entry=it.next();
 				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 			}
-			log.debug(parametros);
+			logger.debug(parametros);
 			/*parametros=new HashMap<String,String>(0);//quitame
 			parametros.put("pv_otvalor01", "valor1");//quitame
 			parametros.put("pv_otvalor02", "valor2");//quitame
@@ -828,11 +830,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar los datos de domicilio",ex);
+			logger.error("error al cargar los datos de domicilio",ex);
 			success=false;
 		}
 		
-		log.debug("\n######                              ######"
+		logger.debug("\n######                              ######"
 				+ "\n######                              ######"
 				+ "\n###### cargar pantalla de domicilio ######"
 				+ "\n##########################################"
@@ -842,7 +844,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String guardarPantallaDomicilio()
 	{
-		log.debug("\n###########################################"
+		logger.debug("\n###########################################"
 				+ "\n###########################################"
 				+ "\n###### guardar pantalla de domicilio ######"
 				+ "\n######                               ######"
@@ -850,8 +852,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		try
 		{
 			success=true;
-			log.debug(smap1);
-			log.debug(parametros);
+			logger.debug(smap1);
+			logger.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
 			
 			
@@ -931,11 +933,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar los datos de domicilio",ex);
+			logger.error("error al guardar los datos de domicilio",ex);
 			str1=ex.getMessage();
 			exito=false;
 		}
-		log.debug("\n######                               ######"
+		logger.debug("\n######                               ######"
 				+ "\n######                               ######"
 				+ "\n###### guardar pantalla de domicilio ######"
 				+ "\n###########################################"
@@ -947,17 +949,17 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String agregarExclusionDetalle()
 	{
-		log.debug("\n#############################################"
+		logger.debug("\n#############################################"
 				+ "\n#############################################"
 				+ "\n###### pantalla de exclusion Detalle   ######"
 				+ "\n###### agregar exclusion   Detalle     ######"
 				+ "\n######                                 ######");
-		log.debug("omap1: "+omap1);
+		logger.debug("omap1: "+omap1);
 		try
 		{
 			UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
-            log.debug("se inserta detalle nuevo");
-            log.debug(omap1);
+            logger.debug("se inserta detalle nuevo");
+            logger.debug(omap1);
             
             Iterator<Entry<String,String >> it=smap1.entrySet().iterator();
             omap1= new HashMap<String,Object>(0);
@@ -977,10 +979,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al agregar la exclusion",ex);
+			logger.error("error al agregar la exclusion",ex);
 			success=false;
 		}
-		log.debug("\n######                                ######"
+		logger.debug("\n######                                ######"
 				+ "\n###### agregar exclusion  Detalle     ######"
 				+ "\n###### pantalla de exclusion  Detalle ######"
 				+ "\n############################################"
@@ -990,60 +992,123 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String pantallaValosit()
 	{
-		log.debug(""
-				+ "\n##############################"
-				+ "\n##############################"
-				+ "\n###### pantalla valosit ######"
-				+ "\n######                  ######"
+		logger.info(
+				new StringBuilder()
+				.append("\n##############################")
+				.append("\n###### pantalla valosit ######")
+				.append("\nsmap1=").append(smap1)
+				.toString()
 				);
-		try
+		
+		success = true;
+		exito   = true;
+		
+		String  cdunieco  = null;
+		String  cdramo    = null;
+		String  estado    = null;
+		String  nmpoliza  = null;
+		String  cdtipsit  = null;
+		String  sAgrupado = null;
+		boolean agrupado  = false;
+		String  cdusuari  = null;
+		
+		//datos
+		if(exito)
 		{
-			log.debug("smap1: "+smap1);
-			smap1.put("timestamp",""+System.currentTimeMillis());
-			String cdusuari;
+			try
 			{
-				UserVO usuario=(UserVO)session.get("USUARIO");
-				cdusuari=usuario.getUser();
-			}
-			String cdtipsit = smap1.get("cdtipsit");
-			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.setCdtipsit(cdtipsit);
-			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
-			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
-			
-			/*
-			 * Estos atributos no pueden modificarse
-			 */
-			Map<String,String>mapaAtributosReadonly=new HashMap<String,String>();
-			mapaAtributosReadonly.put("1" , "DUMMY");
-			mapaAtributosReadonly.put("2" , "DUMMY");
-			mapaAtributosReadonly.put("3" , "DUMMY");
-			mapaAtributosReadonly.put("4" , "DUMMY");
-			mapaAtributosReadonly.put("5" , "DUMMY");
-			mapaAtributosReadonly.put("6" , "DUMMY");
-			mapaAtributosReadonly.put("7" , "DUMMY");
-			
-			/*
-			 * Estos atributos no deben verse
-			 */
-			Map<String,String>mapaAtributosOcultos=new HashMap<String,String>();
-			mapaAtributosOcultos.put("24" , "DUMMY");
-			mapaAtributosOcultos.put("26" , "DUMMY");
-			
-			for(ComponenteVO t:tatrisit)
-			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
-			{
-				if(agrupado)
+				UserVO usuario = (UserVO)session.get("USUARIO");
+				cdusuari       = usuario.getUser();
+				
+				cdunieco  = smap1.get("cdunieco");
+				cdramo    = smap1.get("cdramo");
+				estado    = smap1.get("estado");
+				nmpoliza  = smap1.get("nmpoliza");
+				cdtipsit  = smap1.get("cdtipsit");
+				sAgrupado = smap1.get("agrupado");
+				if(StringUtils.isBlank(cdunieco)
+						||StringUtils.isBlank(cdramo)
+						||StringUtils.isBlank(estado)
+						||StringUtils.isBlank(nmpoliza)
+						||StringUtils.isBlank(cdtipsit)
+						||StringUtils.isBlank(sAgrupado)
+						)
 				{
-					if(t.getSwsuscri().equalsIgnoreCase("N"))//N=Agrupado
+					throw new Exception("No hay datos suficientes");
+				}
+				agrupado=sAgrupado.equalsIgnoreCase("si");
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Datos incompletos #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener atributos
+		if(exito)
+		{
+			try
+			{
+				smap1.put("timestamp",""+System.currentTimeMillis());
+				
+				//atributos readonly
+				List<ComponenteVO>listaAtributosReadOnly=pantallasManager.obtenerComponentes(
+						null, null, cdramo
+						,cdtipsit, null, null
+						,"PANTALLA_VALOSIT","READONLY",null
+						);
+				Map<String,String>mapaAtributosReadonly=new HashMap<String,String>();
+				for(ComponenteVO iReadonly:listaAtributosReadOnly)
+				{
+					mapaAtributosReadonly.put(iReadonly.getNameCdatribu() , "DUMMY");
+				}
+				
+				//atributos ocultos
+				List<ComponenteVO>listaAtributosOcultos=pantallasManager.obtenerComponentes(
+						null, null, cdramo
+						,cdtipsit, null, null
+						,"PANTALLA_VALOSIT","OCULTOS",null
+						);
+				Map<String,String>mapaAtributosOcultos=new HashMap<String,String>();
+				for(ComponenteVO iOculto:listaAtributosOcultos)
+				{
+					mapaAtributosOcultos.put(iOculto.getNameCdatribu() , "DUMMY");
+				}
+
+				//tatrisit
+				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdtipsit(cdtipsit);
+				
+				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>();
+				
+				//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+				for(ComponenteVO t:tatrisit)
+				{
+					if(agrupado)
 					{
-						tatriTemp.add(t);
-						if(
-								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								 ||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()) 
-								)
+						if(t.getSwsuscri().equalsIgnoreCase("N"))//N=Agrupado
 						{
+							tatriTemp.add(t);
+							if(mapaAtributosReadonly.containsKey(t.getNameCdatribu()))
+							{
+								t.setSoloLectura(true);
+							}
+							if(mapaAtributosOcultos.containsKey(t.getNameCdatribu()))
+							{
+								t.setOculto(true);
+							}
+						}
+					}
+					else
+					{
+						if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+						{
+							tatriTemp.add(t);
 							if(mapaAtributosReadonly.containsKey(t.getNameCdatribu()))
 							{
 								t.setSoloLectura(true);
@@ -1055,56 +1120,80 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 						}
 					}
 				}
-				else
-				{
-					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
-					{
-						tatriTemp.add(t);
-					}
-				}
-			}
-			tatrisit=tatriTemp;
-			if(agrupado&&
-					(
-							cdtipsit.equals(TipoSituacion.SALUD_VITAL)
-							||cdtipsit.equals(TipoSituacion.SALUD_NOMINA)
-							||cdtipsit.equals(TipoSituacion.MULTISALUD)
+				tatrisit=tatriTemp;
+				
+				//ordenar codigo postal>estado>municipio
+				if(agrupado&&
+						(
+								cdtipsit.equals(TipoSituacion.SALUD_VITAL)
+								||cdtipsit.equals(TipoSituacion.SALUD_NOMINA)
+								||cdtipsit.equals(TipoSituacion.MULTISALUD)
+						)
 					)
-				)
-			//reordenar cp, estado, municipio
-			{
-				List<ComponenteVO>tatriTemp2=new ArrayList<ComponenteVO>(0);
-				//buscar cp
-				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("3")) tatriTemp2.add(t);
-				//buscar estado
-				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("4")) tatriTemp2.add(t);
-				//buscar municipio
-				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("17")) tatriTemp2.add(t);
-				//agregar todos los demas
-				for(ComponenteVO t:tatrisit)
 				{
-					if(!t.getNameCdatribu().equals("3")&&!t.getNameCdatribu().equals("4")&&!t.getNameCdatribu().equals("17"))
+					List<ComponenteVO>tatriTemp2=new ArrayList<ComponenteVO>(0);
+					//buscar cp
+					for(ComponenteVO t:tatrisit)
 					{
-						tatriTemp2.add(t);
+						if(t.getNameCdatribu().equals("3"))
+						{
+							tatriTemp2.add(t);
+						}
 					}
+					//buscar estado
+					for(ComponenteVO t:tatrisit)
+					{
+						if(t.getNameCdatribu().equals("4"))
+						{
+							tatriTemp2.add(t);
+						}
+					}
+					//buscar municipio
+					for(ComponenteVO t:tatrisit)
+					{
+						if(t.getNameCdatribu().equals("17"))
+						{
+							tatriTemp2.add(t);
+						}
+					}
+					//agregar todos los demas
+					for(ComponenteVO t:tatrisit)
+					{
+						if(!t.getNameCdatribu().equals("3")&&!t.getNameCdatribu().equals("4")&&!t.getNameCdatribu().equals("17"))
+						{
+							tatriTemp2.add(t);
+						}
+					}
+					tatrisit=tatriTemp2;
 				}
-				tatrisit=tatriTemp2;
+				
+				gc.genera(tatrisit);
+				item1=gc.getFields();
+				item2=gc.getItems();
 			}
-			gc.genera(tatrisit);
-			item1=gc.getFields();
-			item2=gc.getItems();
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al obtener los componentes #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
 		}
-		catch(Exception ex)
-		{
-			log.error("error al mostrar la pantalla de valosit",ex);
-		}
-		log.debug(""
-				+ "\n######                  ######"
-				+ "\n###### pantalla valosit ######"
-				+ "\n##############################"
-				+ "\n##############################"
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### pantalla valosit ######")
+				.append("\n##############################")
+				.toString()
 				);
-		return SUCCESS;
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		return result;
 	}
 	
 	///////////////////////////////////////////////////////
@@ -1112,7 +1201,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	/*///////////////////////////////////////////////////*/
 	public String pantallaValositLoad()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla valosit load ######"
@@ -1120,7 +1209,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				);
 		try
 		{
-			log.debug("smap1: "+smap1);
+			logger.debug("smap1: "+smap1);
 			omap1=kernelManager.obtieneValositSituac(smap1);
 			parametros=new LinkedHashMap<String,String>(0);
 			Iterator it=omap1.entrySet().iterator();
@@ -1134,10 +1223,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar valosit",ex);
+			logger.error("error al cargar valosit",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                       ######"
 				+ "\n###### pantalla valosit load ######"
 				+ "\n###################################"
@@ -1154,7 +1243,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	/*/////////////////////////////////////////*/
 	public String pantallaValositSave()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###################################"
 				+ "\n###### pantalla valosit save ######"
@@ -1162,39 +1251,39 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				);
 		try
 		{
-			log.debug("smap1: "+smap1);
-			log.debug("parametros: "+parametros);
+			logger.debug("smap1: "+smap1);
+			logger.debug("parametros: "+parametros);
 			
 			if(smap1.get("agrupado").equalsIgnoreCase("si"))
 			//actualizar todos
 			{
-				log.debug("se tienen agrupados");
+				logger.debug("se tienen agrupados");
 				Map<String,String>paramsAsegurados=new LinkedHashMap<String,String>(0);
 				paramsAsegurados.put("pv_cdunieco", smap1.get("cdunieco"));
 				paramsAsegurados.put("pv_cdramo",   smap1.get("cdramo"));
 				paramsAsegurados.put("pv_estado",   smap1.get("estado"));
 				paramsAsegurados.put("pv_nmpoliza", smap1.get("nmpoliza"));
 				paramsAsegurados.put("pv_nmsuplem", "0");
-				log.debug("paramsAsegurados: "+paramsAsegurados);
+				logger.debug("paramsAsegurados: "+paramsAsegurados);
 				List<Map<String, Object>>asegurados=kernelManager.obtenerAsegurados(paramsAsegurados);
-				log.debug("asegurados: "+asegurados);
+				logger.debug("asegurados: "+asegurados);
 				int i=1;
 				for(Map<String,Object> asegurado:asegurados)
 				{
-					log.debug("iterando asegurado "+i+": ");
-					log.debug("asegurado: "+asegurado);
+					logger.debug("iterando asegurado "+i+": ");
+					logger.debug("asegurado: "+asegurado);
 					if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)
 					{
-						log.debug("es asegurado (situac>0)");
+						logger.debug("es asegurado (situac>0)");
 						Map<String,String>paramsValositAseguradoIterado=new LinkedHashMap<String,String>(0);
 						paramsValositAseguradoIterado.put("pv_cdunieco_i", smap1.get("cdunieco"));
 						paramsValositAseguradoIterado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
 						paramsValositAseguradoIterado.put("pv_cdramo_i",   smap1.get("cdramo"));
 						paramsValositAseguradoIterado.put("pv_estado_i",   smap1.get("estado"));
 						paramsValositAseguradoIterado.put("pv_nmsituac_i", (String)asegurado.get("nmsituac"));
-						log.debug("paramsValositAseguradoIterado: "+paramsValositAseguradoIterado);
+						logger.debug("paramsValositAseguradoIterado: "+paramsValositAseguradoIterado);
 						Map<String,Object>valositAseguradoIterado=kernelManager.obtieneValositSituac(paramsValositAseguradoIterado);
-						log.debug("valositAseguradoIterado: "+valositAseguradoIterado);
+						logger.debug("valositAseguradoIterado: "+valositAseguradoIterado);
 						
 						Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
 						//poner pv_ a los leidos
@@ -1205,7 +1294,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 							valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 						}
 						valositAseguradoIterado=valositAseguradoIteradoTemp;
-						log.debug("se puso pv_");
+						logger.debug("se puso pv_");
 						
 						try
 						{
@@ -1213,12 +1302,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 							{
 								String cpanterior = (String) valositAseguradoIterado.get("pv_otvalor03");
 								String cpnuevo    = parametros.get("pv_otvalor03");
-								log.debug("compara "+cpanterior+" con "+cpnuevo
+								logger.debug("compara "+cpanterior+" con "+cpnuevo
 										+" para cdperson "+asegurado.get("cdperson"));
 								if(!cpanterior.equalsIgnoreCase(cpnuevo))
 								{
 									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
-									log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
 									
 									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
 									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
@@ -1241,16 +1330,16 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 								String ciudadanterior = (String) valositAseguradoIterado.get("pv_otvalor05");
 								String estadonuevo    = parametros.get("pv_otvalor04");
 								String ciudadnueva    = parametros.get("pv_otvalor05");
-								log.debug("compara estado"+estadoanterior+" con "+estadonuevo
+								logger.debug("compara estado"+estadoanterior+" con "+estadonuevo
 										+" para cdperson "+asegurado.get("cdperson"));
-								log.debug("compara ciudad"+ciudadanterior+" con "+ciudadnueva
+								logger.debug("compara ciudad"+ciudadanterior+" con "+ciudadnueva
 										+" para cdperson "+asegurado.get("cdperson"));
 								if(!estadoanterior.equalsIgnoreCase(estadonuevo)
 										||!ciudadanterior.equalsIgnoreCase(ciudadnueva)
 										)
 								{
 									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
-									log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
 									
 									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
 									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
@@ -1270,7 +1359,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 						}
 						catch(Exception ex)
 						{
-							log.error("Error sin impacto funcional al comparar codigos postales",ex);
+							logger.error("Error sin impacto funcional al comparar codigos postales",ex);
 						}
 						
 						//agregar los del form a los leidos
@@ -1281,7 +1370,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 							valositAseguradoIterado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
 							//ya agregamos todos los nuevos en el mapa
 						}
-						log.debug("se agregaron los nuevos");
+						logger.debug("se agregaron los nuevos");
 						
 						//convertir a string el total
 						Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -1291,21 +1380,21 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 							Entry en=(Entry)it.next();
 							paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 						}
-						log.debug("se pasaron a string");
+						logger.debug("se pasaron a string");
 						
 						paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
 						paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
 						paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
 						paramsNuevos.put("pv_estado",   smap1.get("estado"));
 						paramsNuevos.put("pv_nmsituac", (String)asegurado.get("nmsituac"));
-						log.debug("los actualizados seran: "+paramsNuevos);
+						logger.debug("los actualizados seran: "+paramsNuevos);
 						
 						kernelManager.actualizaValoresSituaciones(paramsNuevos);
 						
 					}
 					else
 					{
-						log.debug("no es asegurado (situac<=0)");
+						logger.debug("no es asegurado (situac<=0)");
 					}
 					i++;
 				}
@@ -1313,16 +1402,16 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			else
 			//actualizar uno
 			{
-				log.debug("se tiene individual");
+				logger.debug("se tiene individual");
 				Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
 				paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
 				paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
 				paramsValositAsegurado.put("pv_cdramo_i",   smap1.get("cdramo"));
 				paramsValositAsegurado.put("pv_estado_i",   smap1.get("estado"));
 				paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
-				log.debug("paramsValositAsegurado: "+paramsValositAsegurado);
+				logger.debug("paramsValositAsegurado: "+paramsValositAsegurado);
 				Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
-				log.debug("valositAsegurado: "+valositAsegurado);
+				logger.debug("valositAsegurado: "+valositAsegurado);
 				
 				Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
 				//poner pv_ al leido
@@ -1333,7 +1422,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 				}
 				valositAsegurado=valositAseguradoIterado;
-				log.debug("se puso pv_");
+				logger.debug("se puso pv_");
 				
 				//agregar los del form al leido
 				Iterator it2=parametros.entrySet().iterator();
@@ -1343,7 +1432,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
 					//ya agregamos todos los nuevos en el mapa
 				}
-				log.debug("se agregaron los nuevos");
+				logger.debug("se agregaron los nuevos");
 				
 				//convertir a string el total
 				Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -1353,14 +1442,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 					Entry en=(Entry)it.next();
 					paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 				}
-				log.debug("se pasaron a string");
+				logger.debug("se pasaron a string");
 				
 				paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
 				paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
 				paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
 				paramsNuevos.put("pv_estado",   smap1.get("estado"));
 				paramsNuevos.put("pv_nmsituac", smap1.get("nmsituac"));
-				log.debug("los actualizados seran: "+paramsNuevos);
+				logger.debug("los actualizados seran: "+paramsNuevos);
 				
 				kernelManager.actualizaValoresSituaciones(paramsNuevos);
 			}
@@ -1368,10 +1457,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar valosit",ex);
+			logger.error("error al guardar valosit",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                       ######"
 				+ "\n###### pantalla valosit save ######"
 				+ "\n###################################"
@@ -1593,6 +1682,22 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
 	}
 	
 }

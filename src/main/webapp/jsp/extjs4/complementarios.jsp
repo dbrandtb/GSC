@@ -22,6 +22,8 @@
         /////////////////////////////////////-->
         <!--<script src="${ctx}/resources/jsp-script/extjs4/complementarios.js"></script>-->
         <script>
+            var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
+            debug('panDatComMap1:',panDatComMap1);
             var urlGuardar='<s:url namespace="/" action="guardarDatosComplementarios" />';
             var urlCargar='<s:url namespace="/" action="cargarDatosComplementarios" />';
             //var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
@@ -71,6 +73,51 @@
             
             var _paramsRetryWS;
             var _mensajeEmail;
+            
+            var panDatComUpdateFerenova = function(field,value)
+            {
+                try
+                {
+                    Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
+                }catch(e)
+                {}
+            }
+            
+            var pantallaValositParche = false;
+            var panDatComAux1         = 0;
+            
+            if(inputCdramo+'x'=='6x')
+            {
+                pantallaValositParche = function()
+                {
+                    debug('>parchando tvalosit');
+                    
+                    _fieldByName('panel2.feefec').removeListener('change',panDatComUpdateFerenova);
+                    
+                    _fieldByName('panel2.feefec').addListener('change',function()
+                    {
+                        if(Ext.isEmpty(_fieldByName('parametros.pv_otvalor20').getValue()))
+                        {
+                            mensajeWarning('Favor de capturar la vigencia');
+                        }
+                        else
+                        {
+                            _fieldByName('panel2.ferenova').setValue(
+                                Ext.Date.add(_fieldByName('panel2.feefec').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+                            );
+                        }
+                    });
+                    
+                    _fieldByName('parametros.pv_otvalor20').addListener('change',function()
+                    {
+                        _fieldByName('panel2.ferenova').setValue(
+                            Ext.Date.add(_fieldByName('panel2.feefec').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+                        );
+                    });
+                    
+                    debug('<parchando tvalosit');
+                };
+            }
             
             function expande(indice)
             {
@@ -343,13 +390,7 @@
 		                                    style:'margin:5px;',
 		                                    format:'d/m/Y',
 		                                    listeners:{
-		                                        change:function(field,value)
-		                                        {
-		                                            try
-		                                            {
-		                                                Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
-		                                            }catch(e){}
-		                                        }
+		                                        change:panDatComUpdateFerenova
 		                                    },
 		                                    minValue:fechaMinEmi,
                                             maxValue:fechaMaxEmi
@@ -652,7 +693,7 @@
 		                        ,{
 		                            text     : 'Emitir'
 		                            ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-		                            ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&(inputCdramo+'x')!='16x'
+		                            ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
 		                            ,handler : function()
 		                            {
 		                                var form=Ext.getCmp('formPanel');
@@ -1862,6 +1903,15 @@
                     success: function(resp) {
                         //console.log(resp);
                         Ext.getCmp('formPanel').loadRecord(resp);
+                        panDatComAux1=panDatComAux1+1;
+                        if(panDatComAux1==2&&inputCdramo+'x'=='6x')
+                        {
+                            pantallaValositParche();
+                        }
+                        else
+                        {
+                            debug('complementarios>todavia no se parcha tvalosit');
+                        }
                     },
                     failure:function()
                     {

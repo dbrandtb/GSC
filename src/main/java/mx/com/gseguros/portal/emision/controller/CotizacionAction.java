@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.EmAdmfolId;
 import mx.com.gseguros.ws.autosgs.service.AgentePorFolioService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
@@ -162,9 +163,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		        }
 		        //cuando no hay ntramite es porque esta cotizando un agente por fuera,
 		        //y se obtiene cdunieco por medio de ese agente
-		        //[cuando es promotor o suscriptor auto no aplica
-		        else if(!cdsisrol.equals(RolSistema.PROMOTOR_AUTO.getCdsisrol())
-		        		&&!cdsisrol.equals(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+		        else
 		        {
 	        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
 	        		cdunieco=datUsu.getCdunieco();
@@ -177,13 +176,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	        			cdagente = datUsu.getCdagente();
 	        		}
 	        		smap1.put("cdagente" , cdagente);
-		        }
-		        //para promotor y suscriptor auto
-		        else if(cdsisrol.equals(RolSistema.PROMOTOR_AUTO.getCdsisrol())
-		        		||cdsisrol.equals(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
-		        {
-		        	cdunieco = "-1";
-		        	smap1.put("cdunieco" , cdunieco);
 		        }
 			}
 			catch(Exception ex)
@@ -4586,6 +4578,137 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append(smap1)
 				.append("\n###### cargarCduniecoAgenteAuto ######")
 				.append("\n######################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarCdagentePorFolio()
+	{
+		logger.info(new StringBuilder()
+		      .append("\n####################################")
+		      .append("\n###### cargarCdagentePorFolio ######")
+		      .append("\nsmap1").append(smap1)
+		      .toString()
+		      );
+		
+		success = true;
+		exito   = true;
+		
+		int folio    = -1;
+		int cdunieco = -1;
+		
+		//checar datos
+		if(exito)
+		{
+			try
+			{
+				folio    = Integer.valueOf(smap1.get("folio"));
+				cdunieco = Integer.valueOf(smap1.get("cdunieco"));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//recuperar cdagente
+		if(exito)
+		{
+			try
+			{
+				EmAdmfolId agente = agentePorFolioService.obtieneAgentePorFolioSucursal(folio,cdunieco);
+				if(agente==null)
+				{
+					throw new Exception("No existe el agente");
+				}
+				smap1.put("cdagente",String.valueOf(agente.getNumAge()));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Este folio no pertenece a un agente #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(new StringBuilder()
+		      .append("\nsmap1").append(smap1)
+		      .append("\n###### cargarCdagentePorFolio ######")
+		      .append("\n####################################")
+		      .toString()
+		      );
+		return SUCCESS;
+	}
+	
+	public String cargarNumeroPasajerosPorTipoUnidad()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################################")
+				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
+				.append("\nsmap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdtipsit   = null;
+		String tipoUnidad = null;
+		
+		//datos
+		if(exito)
+		{
+			try
+			{
+				cdtipsit   = smap1.get("cdtipsit");
+				tipoUnidad = smap1.get("tipoUnidad");
+				if(StringUtils.isBlank(cdtipsit)
+						||StringUtils.isBlank(tipoUnidad))
+				{
+					throw new Exception("No hay cdtipsit/tipoUnidad");
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener numero de pasajeros
+		if(exito)
+		{
+			try
+			{
+				String nPasajeros=cotizacionManager.cargarNumeroPasajerosPorTipoUnidad(cdtipsit,tipoUnidad);
+				smap1.put("nPasajeros",nPasajeros);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al recuperar n&uacute;mero de pasajeros #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\nsmap1=").append(smap1)
+				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
+				.append("\n################################################")
 				.toString()
 				);
 		return SUCCESS;

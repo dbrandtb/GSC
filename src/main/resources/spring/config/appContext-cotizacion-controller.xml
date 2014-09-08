@@ -16,8 +16,9 @@
     <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion"/> -->
     
     <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
-        <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
-        <property name="catalogosManager"       ref="catalogosManagerImpl"/>
+        <property name="kernelManagerSustituto" ref="kernelManagerSustituto" />
+        <property name="catalogosManager"       ref="catalogosManagerImpl"   />
+        <property name="cotizacionManager"      ref="cotizacionManagerImpl"  />
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">
@@ -51,12 +52,13 @@
         <property name="consultasManager"        ref="consultasManagerImpl"        />
         <property name="pantallasManager"        ref="pantallasManagerImpl"        />
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
+        <property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
     </bean>
     
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">
-        <property name="kernelManager"    ref="kernelManagerSustituto"/>
-        <property name="pantallasManager" ref="pantallasManagerImpl"/>
-        <property name="endososManager"   ref="endososManagerImpl"/>
+        <property name="kernelManager"     ref="kernelManagerSustituto" />
+        <property name="pantallasManager"  ref="pantallasManagerImpl"   />
+        <property name="endososManager"    ref="endososManagerImpl"     />
     </bean>
     
     <!-- datos de Agentes -->

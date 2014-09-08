@@ -31,6 +31,7 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -121,6 +122,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String mensajeEmail;
 	private String respuesta;
 	private String respuestaOculta;
+	private CotizacionManager cotizacionManager;
 
 	public String mostrarPantalla()
 	{
@@ -180,6 +182,34 @@ public class ComplementariosAction extends PrincipalCoreAction
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
+		}
+        
+        //obtener tipo situacion
+		if(exito)
+		{
+	        try
+	        {
+	            Map<String,String>tipoSituacion=cotizacionManager.cargarTipoSituacion(cdramo,cdtipsit);
+	            if(tipoSituacion!=null)
+	            {
+	            	map1.putAll(tipoSituacion);
+	            }
+	            else
+	            {
+	            	throw new Exception("No se ha parametrizado la situacion en ttipram");
+	            }
+	        }
+	        catch(Exception ex)
+	        {
+	        	long timestamp  = System.currentTimeMillis();
+	        	respuesta       = "Error al cargar tipo de situacion #"+timestamp;
+	        	respuestaOculta = ex.getMessage();
+	        	logger.error(respuesta,ex);
+	        	
+	        	this.addActionError("No se ha parametrizado el tipo de situaci&oacute;n para el producto #"+timestamp);
+	        	map1.put("SITUACION"  , "PERSONA");
+	        	map1.put("AGRUPACION" , "SOLO");
+	        }
 		}
 		
 		//cargar campos dinamicos
@@ -3870,6 +3900,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setRespuestaOculta(String respuestaOculta) {
 		this.respuestaOculta = respuestaOculta;
+	}
+
+	public void setCotizacionManager(CotizacionManager cotizacionManager) {
+		this.cotizacionManager = cotizacionManager;
 	}
 
 }
