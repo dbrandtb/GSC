@@ -191,6 +191,19 @@ Ext.onReady(function()
             });
         }
     });
+    
+    if(pantallaValositParche!=false)
+    {
+    	panDatComAux1=panDatComAux1+1;
+    	if(panDatComAux1==2)
+    	{
+    		pantallaValositParche();
+    	}
+    	else
+    	{
+    		debug('tvalosit>todavia no se parcha tvalosit');
+    	}
+    }
     /*//////////////////*/    
     ////// cargador //////
     //////////////////////

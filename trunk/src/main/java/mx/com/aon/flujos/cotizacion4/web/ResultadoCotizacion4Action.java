@@ -23,13 +23,16 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import net.sf.json.JSONArray;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -45,12 +48,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
      */
     private static final long serialVersionUID = 468349054462501325L;
 
-    private Logger log= Logger.getLogger(ResultadoCotizacion4Action.class);
+    private final static Logger logger= Logger.getLogger(ResultadoCotizacion4Action.class);
     
     //beans
     private KernelManagerSustituto kernelManagerSustituto;
     
     private CatalogosManager catalogosManager;
+    
+    private CotizacionManager cotizacionManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -98,6 +103,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     private List<IncisoSaludVO> incisos;
     private boolean success;
+    private boolean exito;
     private GridVO gridResultados;
     private JSONArray dataResult = new JSONArray();
     private List<CoberturaCotizacionVO>listaCoberturas;
@@ -108,6 +114,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String jsonCober_cdramo;
     private String jsonCober_cdcia;
     private String jsonCober_situa;
+    private String respuesta;
+    private String respuestaOculta;
     
     //utilitarios
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
@@ -163,17 +171,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         	}
         	catch(Exception ex)
         	{
-        		log.error("error al obtener los datos del agente",ex);
+        		logger.error("error al obtener los datos del agente",ex);
         	}
         }
-        log.debug("### usuario name: "+usuario.getName());
-        log.debug("### usuario user: "+usuario.getUser());
-        log.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
-        log.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
-        log.debug("### ntramite: "+ntramite);
-        log.debug("### cdunieco: "+cdunieco);
-        log.debug("### cdramo: "+cdramo);
-        log.debug("### cdtipsit: "+cdtipsit);
+        logger.debug("### usuario name: "+usuario.getName());
+        logger.debug("### usuario user: "+usuario.getUser());
+        logger.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+        logger.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
+        logger.debug("### ntramite: "+ntramite);
+        logger.debug("### cdunieco: "+cdunieco);
+        logger.debug("### cdramo: "+cdramo);
+        logger.debug("### cdtipsit: "+cdtipsit);
         if(cdtipsit.equalsIgnoreCase("GB")) {
         	return "gb";
         }
@@ -182,7 +190,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         try {
         	edadMaximaCotizacion = catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION);
         } catch(Exception e) {
-        	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
+        	logger.error("Error al obtener la edad m�xima de cotizaci�n", e);
         	edadMaximaCotizacion = "0";
         }
         return SUCCESS;
@@ -191,7 +199,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public String cotizar()
     {
     	long t=System.currentTimeMillis();
-    	log.debug(""
+    	logger.debug(""
     			+ "\n######$ Tiempo de inicio: "+t);
         try
         {
@@ -200,13 +208,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             /////////////////////////////////////////////
             this.session=ActionContext.getContext().getSession();//porque se uso SMD en struts.xml y eso pierde la sesion
             UserVO usuario=(UserVO) session.get("USUARIO");
-            log.debug("### usuario name: "+usuario.getName());
-            log.debug("### usuario user: "+usuario.getUser());
-            log.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
-            log.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
-            log.debug("### cdunieco: "+cdunieco);
-            log.debug("### cdramo: "+cdramo);
-            log.debug("### cdtipsit: "+cdtipsit);
+            logger.debug("### usuario name: "+usuario.getName());
+            logger.debug("### usuario user: "+usuario.getUser());
+            logger.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+            logger.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
+            logger.debug("### cdunieco: "+cdunieco);
+            logger.debug("### cdramo: "+cdramo);
+            logger.debug("### cdtipsit: "+cdtipsit);
             /////////////////////////////////////////////
             
             ///////////////////////////////////////////////////
@@ -214,8 +222,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             /*///////////////////////////////////////////////*
             Calendar fechaEnUnAnio=Calendar.getInstance();
             fechaEnUnAnio.add(Calendar.YEAR, 1);
-            log.debug("### fecha "+renderFechas.format(calendarHoy.getTime()));
-            log.debug("### fecha en un anio: "+renderFechas.format(fechaEnUnAnio.getTime()));*/
+            logger.debug("### fecha "+renderFechas.format(calendarHoy.getTime()));
+            logger.debug("### fecha en un anio: "+renderFechas.format(fechaEnUnAnio.getTime()));*/
             /*///////////////////////////////////////////////*/
             ////// Calcular un anio a partir de la fecha //////
             ///////////////////////////////////////////////////
@@ -224,11 +232,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ////// obtener datos del usuario //////////////////
             /*///////////////////////////////////////////////*/
             long t1=System.currentTimeMillis();
-            //log.debug("######$ antes de pedir datos usuario: "+t1);
+            //logger.debug("######$ antes de pedir datos usuario: "+t1);
             long t2=System.currentTimeMillis();
-            /*log.debug("######$ despues de pedir datos usuario: "+t2);
-            log.debug("######$ tiempo pidiendo datos usuario: "+(t2-t1));
-            log.debug("######$ tiempo total: "+(t2-t));*/
+            /*logger.debug("######$ despues de pedir datos usuario: "+t2);
+            logger.debug("######$ tiempo pidiendo datos usuario: "+(t2-t1));
+            logger.debug("######$ tiempo total: "+(t2-t));*/
             /*///////////////////////////////////////////////*/
             ////// obtener datos del usuario //////////////////
             ///////////////////////////////////////////////////
@@ -244,7 +252,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             else
             {
             	t1=System.currentTimeMillis();
-            	log.debug("######$ antes de pedir numero de poliza: "+t1);
+            	logger.debug("######$ antes de pedir numero de poliza: "+t1);
             	
             	////// se quita porque ahora viene del formulario
                 //WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto.calculaNumeroPoliza(datosUsuario.getCdunieco(),datosUsuario.getCdramo(),"W");
@@ -254,9 +262,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	
                 numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
                 t2=System.currentTimeMillis();
-            	log.debug("######$ despues de pedir numero de poliza: "+t2);
-            	log.debug("######$ tiempo pidiendo numero de poliza: "+(t2-t1));
-            	log.debug("######$ tiempo total: "+(t2-t));
+            	logger.debug("######$ despues de pedir numero de poliza: "+t2);
+            	logger.debug("######$ tiempo pidiendo numero de poliza: "+(t2-t1));
+            	logger.debug("######$ tiempo total: "+(t2-t));
             }
             ///////////////////////////////////////////
             ////// fin Crear un numero de poliza //////
@@ -315,16 +323,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapa.put("pv_ttipcamv",     null);
             mapa.put("pv_swpatent",     null);
             mapa.put("pv_accion",       "U");
-            log.debug("### Invocacion de insercion de maestro de poliza map: "+mapa);
+            logger.debug("### Invocacion de insercion de maestro de poliza map: "+mapa);
             t1=System.currentTimeMillis();
-            log.debug("######$ tiempo antes de insertar maestro poliza "+t1);
+            logger.debug("######$ tiempo antes de insertar maestro poliza "+t1);
             WrapperResultados wr=kernelManagerSustituto.insertaMaestroPolizas(mapa);
             t2=System.currentTimeMillis();
-            log.debug("######$ tiempo despues de insertar maestro poliza "+t2);
-            log.debug("######$ tiempo consumido en insertar maestro poliza "+(t2-t1));
-            log.debug("######$ tiempo total consumido "+(t2-t));
-            log.debug("### response id "+wr.getMsgId());
-            log.debug("### response text "+wr.getMsgText());
+            logger.debug("######$ tiempo despues de insertar maestro poliza "+t2);
+            logger.debug("######$ tiempo consumido en insertar maestro poliza "+(t2-t1));
+            logger.debug("######$ tiempo total consumido "+(t2-t));
+            logger.debug("### response id "+wr.getMsgId());
+            logger.debug("### response text "+wr.getMsgText());
             ///////////////////////////////////////////////////////
             ////// fin Guardar el maestro de poliza nmpoliza //////
             ///////////////////////////////////////////////////////
@@ -358,7 +366,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            int contador=1;
 	            for(IncisoSaludVO i : incisos)
 	            {
-	                log.debug("### Iteracion de polisit y valosit #"+contador);
+	                logger.debug("### Iteracion de polisit y valosit #"+contador);
 	                
 	                //////////////////////////////////
 	                ////// ini mpolisit iterado //////
@@ -388,12 +396,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaPolisitIterado.put("pv_cdasegur_i",    "30");
 	                mapaPolisitIterado.put("pv_accion_i",      "I");
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de insertar polisit iterado "+t1);
+	                logger.debug("######$ tiempo antes de insertar polisit iterado "+t1);
 	                kernelManagerSustituto.insertaPolisit(mapaPolisitIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de insertar polisit iterado "+t2);
-	                log.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de insertar polisit iterado "+t2);
+	                logger.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                //////////////////////////////////
 	                ////// fin mpolisit iterado //////
 	                //////////////////////////////////
@@ -465,17 +473,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaValositIterado.put("pv_otvalor50",   null);
 	                mapaValositIterado.put("pv_accion_i",   "I");
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de insertar valosit iterado "+t1);
+	                logger.debug("######$ tiempo antes de insertar valosit iterado "+t1);
 	                kernelManagerSustituto.insertaValoresSituaciones(mapaValositIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de insertar valosit iterado "+t2);
-	                log.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de insertar valosit iterado "+t2);
+	                logger.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                //////////////////////////////////
 	                ////// fin mvalosit iterado //////
 	                //////////////////////////////////
 	                
-	                log.debug("### Fin de iteracion de polisit y valosit #"+contador);
+	                logger.debug("### Fin de iteracion de polisit y valosit #"+contador);
 	                contador++;
 	            }
 	            ///////////////////////////////////////////////////////////////////////////////
@@ -488,7 +496,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            contador=1;
 	            for(IncisoSaludVO i : incisos)
 	            {
-	                log.debug("### Iteracion de clonar personas #"+contador);
+	                logger.debug("### Iteracion de clonar personas #"+contador);
 	                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
 	                mapaClonPersonaIterado.put("pv_cdelemen_i",     usuario.getEmpresa().getElementoId());
 	                //mapaClonPersonaIterado.put("pv_cdunieco_i",     datosUsuario.getCdunieco());
@@ -510,12 +518,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaClonPersonaIterado.put("pv_fenacimi",       i.getFechaNacimiento());
 	                mapaClonPersonaIterado.put("pv_parentesco",     i.getRol().getKey());
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de clonar personas iterado "+t1);
+	                logger.debug("######$ tiempo antes de clonar personas iterado "+t1);
 	                kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de clonar personas iterado "+t2);
-	                log.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de clonar personas iterado "+t2);
+	                logger.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                contador++;
 	            }
 	            /////////////////////////////////
@@ -551,7 +559,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            int contador=1;
 	            for(Map<String,String> i : slist1)
 	            {
-	                log.debug("### Iteracion de polisit y valosit #"+contador);
+	                logger.debug("### Iteracion de polisit y valosit #"+contador);
 	                
 	                //////////////////////////////////
 	                ////// ini mpolisit iterado //////
@@ -581,12 +589,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaPolisitIterado.put("pv_cdasegur_i",    "30");
 	                mapaPolisitIterado.put("pv_accion_i",      "I");
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de insertar polisit iterado "+t1);
+	                logger.debug("######$ tiempo antes de insertar polisit iterado "+t1);
 	                kernelManagerSustituto.insertaPolisit(mapaPolisitIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de insertar polisit iterado "+t2);
-	                log.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de insertar polisit iterado "+t2);
+	                logger.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                //////////////////////////////////
 	                ////// fin mpolisit iterado //////
 	                //////////////////////////////////
@@ -658,17 +666,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaValositIterado.put("pv_otvalor50",   null);
 	                mapaValositIterado.put("pv_accion_i",   "I");
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de insertar valosit iterado "+t1);
+	                logger.debug("######$ tiempo antes de insertar valosit iterado "+t1);
 	                kernelManagerSustituto.insertaValoresSituaciones(mapaValositIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de insertar valosit iterado "+t2);
-	                log.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de insertar valosit iterado "+t2);
+	                logger.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                //////////////////////////////////
 	                ////// fin mvalosit iterado //////
 	                //////////////////////////////////
 	                
-	                log.debug("### Fin de iteracion de polisit y valosit #"+contador);
+	                logger.debug("### Fin de iteracion de polisit y valosit #"+contador);
 	                contador++;
 	            }
 	            ///////////////////////////////////////////////////////////////////////////////
@@ -681,7 +689,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            contador=1;
 	            for(Map<String,String> i : slist1)
 	            {
-	                log.debug("### Iteracion de clonar personas #"+contador);
+	                logger.debug("### Iteracion de clonar personas #"+contador);
 	                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
 	                mapaClonPersonaIterado.put("pv_cdelemen_i",     usuario.getEmpresa().getElementoId());
 	                //mapaClonPersonaIterado.put("pv_cdunieco_i",     datosUsuario.getCdunieco());
@@ -703,12 +711,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaClonPersonaIterado.put("pv_fenacimi",       calendarHoy.getTime());
 	                mapaClonPersonaIterado.put("pv_parentesco",     i.get("rol"));
 	                t1=System.currentTimeMillis();
-	                log.debug("######$ tiempo antes de clonar personas iterado "+t1);
+	                logger.debug("######$ tiempo antes de clonar personas iterado "+t1);
 	                kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
 	                t2=System.currentTimeMillis();
-	                log.debug("######$ tiempo despues de clonar personas iterado "+t2);
-	                log.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
-	                log.debug("######$ tiempo total consumido "+(t2-t));
+	                logger.debug("######$ tiempo despues de clonar personas iterado "+t2);
+	                logger.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
+	                logger.debug("######$ tiempo total consumido "+(t2-t));
 	                contador++;
 	            }
 	            /////////////////////////////////
@@ -731,12 +739,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             mapCoberturas.put("pv_cdtipsup_i",   "1");
             t1=System.currentTimeMillis();
-            log.debug("######$ tiempo antes de coberturas "+t1);
+            logger.debug("######$ tiempo antes de coberturas "+t1);
             kernelManagerSustituto.coberturas(mapCoberturas);
             t2=System.currentTimeMillis();
-            log.debug("######$ tiempo despues de coberturas "+t2);
-            log.debug("######$ tiempo consumido en coberturas "+(t2-t1));
-            log.debug("######$ tiempo total consumido "+(t2-t));
+            logger.debug("######$ tiempo despues de coberturas "+t2);
+            logger.debug("######$ tiempo consumido en coberturas "+(t2-t1));
+            logger.debug("######$ tiempo total consumido "+(t2-t));
             /*////////////////////*/
             ////// coberturas //////
             ////////////////////////
@@ -758,12 +766,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             //mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
             mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
             t1=System.currentTimeMillis();
-            log.debug("######$ tiempo antes de asigsvalipol "+t1);
+            logger.debug("######$ tiempo antes de asigsvalipol "+t1);
             WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
             t2=System.currentTimeMillis();
-            log.debug("######$ tiempo despues de asigsvalipol "+t2);
-            log.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
-            log.debug("######$ tiempo total consumido "+(t2-t));
+            logger.debug("######$ tiempo despues de asigsvalipol "+t2);
+            logger.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
+            logger.debug("######$ tiempo total consumido "+(t2-t));
             /*//////////////////////*/
             ////// TARIFICACION //////
             //////////////////////////
@@ -783,16 +791,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             //mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
             mapaDuroResultados.put("pv_cdtipsit_i", cdtipsit);
             t1=System.currentTimeMillis();
-            log.debug("######$ tiempo antes de obtener resultados cotizacion "+t1);
+            logger.debug("######$ tiempo antes de obtener resultados cotizacion "+t1);
             List<ResultadoCotizacionVO> listaResultados=kernelManagerSustituto.obtenerResultadosCotizacion(mapaDuroResultados);
             t2=System.currentTimeMillis();
-            log.debug("######$ tiempo despues de obtener resultados cotizacion "+t2);
-            log.debug("######$ tiempo consumido en obtener resultados cotizacion "+(t2-t1));
-            log.debug("######$ tiempo total consumido "+(t2-t));
+            logger.debug("######$ tiempo despues de obtener resultados cotizacion "+t2);
+            logger.debug("######$ tiempo consumido en obtener resultados cotizacion "+(t2-t1));
+            logger.debug("######$ tiempo total consumido "+(t2-t));
             //utilizando logica anterior
             CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
             gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
-            log.debug("### session poniendo resultados con grid: "+listaResultados.size());
+            logger.debug("### session poniendo resultados con grid: "+listaResultados.size());
             session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
             /*///////////////////////////////*/
             ////// Generacion cotizacion //////
@@ -804,7 +812,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         }
         catch(Exception ex)
         {
-            log.error(ex.getMessage(), ex);
+            logger.error(ex.getMessage(), ex);
             success=false;
         }
         return SUCCESS;
@@ -822,7 +830,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         }
         catch(Exception ex)
         {
-            log.error("error al obtener datos del grid",ex);
+            logger.error("error al obtener datos del grid",ex);
             success=false;
             dataResult=new JSONArray();
         }
@@ -862,7 +870,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         }
         catch(Exception ex)
         {
-            log.error("Error al obtener las coberturas",ex);
+            logger.error("Error al obtener las coberturas",ex);
             listaCoberturas=new ArrayList<CoberturaCotizacionVO>(0);
             success=false;
         }
@@ -882,280 +890,443 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdperpag   input
     */
     {
-    	log.debug(""
-    			+ "\n################################"
+    	logger.debug(""
     			+ "\n################################"
     			+ "\n###### comprar cotizacion ######"
-    			+ "\n######                    ######"
     			);
-    	log.debug("smap1: "+smap1);
-        try
-        {
-            UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
-            DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser(),cdtipsit);//cdperson,cdagente,nmcuadro
-            
-            Map<String,Object>parameters=new HashMap<String,Object>(0);
-            parameters.put("pv_cdunieco_i", comprarCdunieco);
-            parameters.put("pv_cdramo_i",   comprarCdramo);
-            parameters.put("pv_estado_i",   "W");
-            parameters.put("pv_nmpoliza_i", comprarNmpoliza);
-            parameters.put("pv_nsuplogi_i", "0");
-            parameters.put("pv_cdtipsup_i", "1");
-            parameters.put("pv_feemisio_i", calendarHoy.getTime());
-            parameters.put("pv_nmsolici_i", null);
-            parameters.put("pv_fesolici_i", calendarHoy.getTime());
-            parameters.put("pv_ferefere_i", null);
-            parameters.put("pv_cdseqpol_i", null);
-            parameters.put("pv_cduser_i",   usuarioSesion.getUser());
-            parameters.put("pv_nusuasus_i", null);
-            parameters.put("pv_nlogisus_i", null);
-            parameters.put("pv_cdperson_i", userData.getCdperson());
-            parameters.put("pv_accion_i",   "I");
-            kernelManagerSustituto.movDetalleSuplemento(parameters);
-            
-            //2
-            /*
-            pv_cdunieco_i
-            pv_cdramo_i
-            pv_estado_i
-            pv_nmpoliza_i
-            pv_nmsuplem_i
-            pv_feINival_i
-            pv_hhinival_i
-            pv_fefINval_i
-            pv_hhfinval_i
-            pv_swanula_i
-            pv_nsuplogi_i
-            pv_nsupusua_i
-            pv_nsupsess_i
-            pv_fesessio_i
-            pv_swconfir_i
-            pv_nmrenova_i
-            pv_nsuplori_i
-            pv_cdorddoc_i
-            pv_swpolfro_i
-            pv_pocofron_i
-            pv_swpoldec_i
-            pv_tippodec_i
-            pv_accion_i
-            pv_msg_id_o
-            pv_title_o
-            */
-            Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
-            map2.put("pv_cdunieco_i"  , comprarCdunieco);
-            map2.put("pv_cdramo_i"    , comprarCdramo);
-            map2.put("pv_estado_i"    , "W");
-            map2.put("pv_nmpoliza_i"  , comprarNmpoliza);
-            map2.put("pv_nmsuplem_i"  , "0");
-            map2.put("pv_feINival_i"  , renderFechas.parse(smap1.get("fechaInicio")));//date
-            map2.put("pv_hhinival_i"  , renderHora.format(calendarHoy.getTime()));
-            map2.put("pv_fefINval_i"  , renderFechas.parse(smap1.get("fechaFin")));//date
-            map2.put("pv_hhfinval_i"  , renderHora.format(calendarHoy.getTime()));
-            map2.put("pv_swanula_i"   , null);
-            map2.put("pv_nsuplogi_i"  , "0");
-            map2.put("pv_nsupusua_i"  , null);
-            map2.put("pv_nsupsess_i"  , null);
-            map2.put("pv_fesessio_i"  , null);
-            map2.put("pv_swconfir_i"  , null);
-            map2.put("pv_nmrenova_i"  , null);
-            map2.put("pv_nsuplori_i"  , null);
-            map2.put("pv_cdorddoc_i"  , null);
-            map2.put("pv_swpolfro_i"  , null);
-            map2.put("pv_pocofron_i"  , null);
-            map2.put("pv_swpoldec_i"  , null);
-            map2.put("pv_tippodec_i"  , null);
-            map2.put("pv_accion_i"    , "I");
-            kernelManagerSustituto.insertaMaestroHistoricoPoliza(map2);
-            
-            //3
-            /*
-            pv_cdunieco_i
-            pv_cdramo_i
-            pv_estado_i
-            pv_nmpoliza_i
-            pv_cdagente_i
-            pv_nmsuplem_i
-            pv_status_i
-            pv_cdtipoag_i
-            pv_porredau_i
-            pv_nmcuadro_i
-            pv_cdsucurs_i
-            pv_accion_i
-            */
-            Map<String,Object>map3=new LinkedHashMap<String,Object>(0);
-            map3.put("pv_cdunieco_i" , comprarCdunieco);
-            map3.put("pv_cdramo_i"   , comprarCdramo);
-            map3.put("pv_estado_i"   , "W");
-            map3.put("pv_nmpoliza_i" , comprarNmpoliza);
-            map3.put("pv_cdagente_i" , userData.getCdagente());
-            map3.put("pv_nmsuplem_i" , "0");
-            map3.put("pv_status_i"   , "V");
-            map3.put("pv_cdtipoag_i" , "1");
-            map3.put("pv_porredau_i" , "0");
-            map3.put("pv_nmcuadro_i" , userData.getNmcuadro());
-            map3.put("pv_cdsucurs_i" , null);
-            map3.put("pv_accion_i"   , "I");
-            if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
-            {
-            	map3.put("pv_ntramite_i" , smap1.get("ntramite"));
-            }
-            else
-            {
-            	map3.put("pv_ntramite_i" , null);
-            }
-            map3.put("pv_porparti_i", "100");
-            kernelManagerSustituto.movMPoliage(map3);
-            
-            if(!smap1.containsKey("parche"))
-            {
+    	logger.debug("smap1: "+smap1);
+    	
+    	exito   = true;
+    	success = true;
+    	
+    	UserVO usuario     = null;
+    	String cdusuari    = null;
+    	String cdperson    = null;
+    	String fechaInicio = null;
+    	String fechaFin    = null;
+    	String ntramite    = null;
+    	String cdagente    = null;
+    	String nmcuadro    = null;
+    	String cdelemen    = null;
+    	String cdpersonCli = null;
+    	String cdagenteExt = null;
+    	
+    	//sesion valida
+    	if(exito)
+    	{
+    		try
+    		{
+    			usuario  = (UserVO)session.get("USUARIO");
+    			cdusuari = usuario.getUser();
+    			cdelemen = usuario.getEmpresa().getElementoId();
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Sesi&oacute;n inv&aacute;lida #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//datos completos
+    	if(exito)
+    	{
+    		try
+    		{
+    			boolean completos = StringUtils.isNotBlank(comprarCdunieco)
+    					&&StringUtils.isNotBlank(comprarCdramo)
+    					&&StringUtils.isNotBlank(cdtipsit)
+    					&&StringUtils.isNotBlank(comprarNmpoliza)
+    					&&StringUtils.isNotBlank(comprarCdciaaguradora)
+    					&&StringUtils.isNotBlank(comprarCdplan)
+    					&&StringUtils.isNotBlank(comprarCdperpag)
+    					&&smap1!=null;
+    			
+    			if(completos)
+    			{
+    				ntramite    = smap1.get("ntramite");
+    				cdpersonCli = smap1.get("cdpersonCli");
+    				cdagenteExt = smap1.get("cdagenteExt");
+    				fechaInicio = smap1.get("fechaInicio");
+    				fechaFin    = smap1.get("fechaFin");
+    				completos   = StringUtils.isNotBlank(fechaInicio)
+    						&&StringUtils.isNotBlank(fechaFin);
+    			}
+    			
+    			if(!completos)
+    			{
+    				throw new Exception("Datos incompletos");
+    			}
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Datos incompletos #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//datos de usuario
+    	if(exito)
+    	{
+    		try
+    		{
+    			DatosUsuario userData = kernelManagerSustituto.obtenerDatosUsuario(cdusuari,cdtipsit);
+    			cdperson              = userData.getCdperson();
+    			cdagente              = userData.getCdagente();
+    			nmcuadro              = userData.getNmcuadro();
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Usted no tiene permisos para este producto #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//datos de agente
+    	if(exito&&StringUtils.isNotBlank(cdagenteExt))
+    	{
+    		try
+    		{
+    			Map<String,String>datosAgenteExterno=cotizacionManager.obtenerDatosAgente(cdagenteExt,comprarCdramo);
+    			cdagente=datosAgenteExterno.get("CDAGENTE");
+    			nmcuadro=datosAgenteExterno.get("NMCUADRO");
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al recuperar los datos del agente #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//detalle suplemento
+    	if(exito)
+    	{
+    		try
+    		{
+    			Map<String,Object>parameters=new HashMap<String,Object>(0);
+	            parameters.put("pv_cdunieco_i" , comprarCdunieco);
+	            parameters.put("pv_cdramo_i"   , comprarCdramo);
+	            parameters.put("pv_estado_i"   , "W");
+	            parameters.put("pv_nmpoliza_i" , comprarNmpoliza);
+	            parameters.put("pv_nsuplogi_i" , "0");
+	            parameters.put("pv_cdtipsup_i" , "1");
+	            parameters.put("pv_feemisio_i" , calendarHoy.getTime());
+	            parameters.put("pv_nmsolici_i" , null);
+	            parameters.put("pv_fesolici_i" , calendarHoy.getTime());
+	            parameters.put("pv_ferefere_i" , null);
+	            parameters.put("pv_cdseqpol_i" , null);
+	            parameters.put("pv_cduser_i"   , cdusuari);
+	            parameters.put("pv_nusuasus_i" , null);
+	            parameters.put("pv_nlogisus_i" , null);
+	            parameters.put("pv_cdperson_i" , cdperson);
+	            parameters.put("pv_accion_i"   , Constantes.INSERT_MODE);
+	            kernelManagerSustituto.movDetalleSuplemento(parameters);
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al insertar suplemento #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//maestro historico poliza
+    	if(exito)
+    	{
+    		try
+    		{
+                Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
+                map2.put("pv_cdunieco_i"  , comprarCdunieco);
+                map2.put("pv_cdramo_i"    , comprarCdramo);
+                map2.put("pv_estado_i"    , "W");
+                map2.put("pv_nmpoliza_i"  , comprarNmpoliza);
+                map2.put("pv_nmsuplem_i"  , "0");
+                map2.put("pv_feINival_i"  , renderFechas.parse(fechaInicio));//date
+                map2.put("pv_hhinival_i"  , renderHora.format(calendarHoy.getTime()));
+                map2.put("pv_fefINval_i"  , renderFechas.parse(fechaFin));//date
+                map2.put("pv_hhfinval_i"  , renderHora.format(calendarHoy.getTime()));
+                map2.put("pv_swanula_i"   , null);
+                map2.put("pv_nsuplogi_i"  , "0");
+                map2.put("pv_nsupusua_i"  , null);
+                map2.put("pv_nsupsess_i"  , null);
+                map2.put("pv_fesessio_i"  , null);
+                map2.put("pv_swconfir_i"  , null);
+                map2.put("pv_nmrenova_i"  , null);
+                map2.put("pv_nsuplori_i"  , null);
+                map2.put("pv_cdorddoc_i"  , null);
+                map2.put("pv_swpolfro_i"  , null);
+                map2.put("pv_pocofron_i"  , null);
+                map2.put("pv_swpoldec_i"  , null);
+                map2.put("pv_tippodec_i"  , null);
+                map2.put("pv_accion_i"    , "I");
+                kernelManagerSustituto.insertaMaestroHistoricoPoliza(map2);
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al insertar hist&oacute;rico de p&oacute;liza #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//mpoliage
+    	if(exito)
+    	{
+	    	try
+	    	{
+	            Map<String,Object>map3=new LinkedHashMap<String,Object>(0);
+	            map3.put("pv_cdunieco_i" , comprarCdunieco);
+	            map3.put("pv_cdramo_i"   , comprarCdramo);
+	            map3.put("pv_estado_i"   , "W");
+	            map3.put("pv_nmpoliza_i" , comprarNmpoliza);
+	            map3.put("pv_cdagente_i" , cdagente);
+	            map3.put("pv_nmsuplem_i" , "0");
+	            map3.put("pv_status_i"   , "V");
+	            map3.put("pv_cdtipoag_i" , "1");
+	            map3.put("pv_porredau_i" , "0");
+	            map3.put("pv_nmcuadro_i" , nmcuadro);
+	            map3.put("pv_cdsucurs_i" , null);
+	            map3.put("pv_accion_i"   , "I");
+	            if(StringUtils.isNotBlank(ntramite))
+	            {
+	            	map3.put("pv_ntramite_i" , ntramite);
+	            }
+	            else
+	            {
+	            	map3.put("pv_ntramite_i" , null);
+	            }
+	            map3.put("pv_porparti_i" , "100");
+	            kernelManagerSustituto.movMPoliage(map3);
+	    	}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al ligar la p&oacute;liza al agente #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//comprar
+    	if(exito)
+    	{
+    		try
+    		{
 	            Map<String,String>parameters2=new HashMap<String,String>(0);
-	            parameters2.put("pv_cdunieco",   comprarCdunieco);
-	            parameters2.put("pv_cdramo",     comprarCdramo);
-	            parameters2.put("pv_estado",     "W"); 
-	            parameters2.put("pv_nmpoliza",   comprarNmpoliza);
-	            parameters2.put("pv_nmsituac",   "0");
-	            parameters2.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
-	            parameters2.put("pv_cdperson",   userData.getCdperson());
-	            parameters2.put("pv_cdasegur",   comprarCdciaaguradora);
-	            parameters2.put("pv_cdplan",     comprarCdplan);
-	            parameters2.put("pv_cdperpag",   comprarCdperpag);
-	            log.debug("mapa en action: "+parameters2);
+	            parameters2.put("pv_cdunieco"  , comprarCdunieco);
+	            parameters2.put("pv_cdramo"    , comprarCdramo);
+	            parameters2.put("pv_estado"    , "W"); 
+	            parameters2.put("pv_nmpoliza"  , comprarNmpoliza);
+	            parameters2.put("pv_nmsituac"  , "0");
+	            parameters2.put("pv_cdelement" , cdelemen);
+	            parameters2.put("pv_cdperson"  , cdperson);
+	            parameters2.put("pv_cdasegur"  , comprarCdciaaguradora);
+	            parameters2.put("pv_cdplan"    , comprarCdplan);
+	            parameters2.put("pv_cdperpag"  , comprarCdperpag);
 	            kernelManagerSustituto.comprarCotizacion(parameters2);
-            }
-            
-            String ntramite=null;
-            String nmPolizaOriginal = comprarNmpoliza;
-            if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
-            //se va a actualizar un tramite que no tenia poliza
-            {
-            	ntramite=smap1.get("ntramite");
-            	log.debug("se actualiza el tramite "+ntramite);
-            	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
-            	
-            	log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
-            	parDmesCon.put("pv_cdusuari_i"   , usuarioSesion.getUser());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
-            }
-            else
-            //se compra un tramite nuevo
-            {
-            	log.debug("se inserta tramite nuevo");
-            	Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
-            	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
-            	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
-            	parMesCon.put("pv_estado_i"     , "W");
-            	parMesCon.put("pv_nmpoliza_i"   , "0");
-            	parMesCon.put("pv_nmsuplem_i"   , "0");
-            	parMesCon.put("pv_cdsucadm_i"   , null);
-            	parMesCon.put("pv_cdsucdoc_i"   , null);
-            	parMesCon.put("pv_cdtiptra_i"   , "1");
-            	parMesCon.put("pv_ferecepc_i"   , new Date());
-            	parMesCon.put("pv_cdagente_i"   , userData.getCdagente());
-            	parMesCon.put("pv_referencia_i" , null);
-            	parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
-            	parMesCon.put("pv_festatus_i"   , new Date());
-            	parMesCon.put("pv_status_i"     , "2");
-            	parMesCon.put("pv_comments_i"   , "");
-            	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
-            	parMesCon.put("pv_cdtipsit_i"   , cdtipsit);
-            	WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
-            	comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
-            	ntramite=comprarNmpoliza;
-            	
-            	log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , comprarNmpoliza);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
-            	parDmesCon.put("pv_cdusuari_i"   , usuarioSesion.getUser());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
-            }
-            
-            //////////////////////////////////
-            //agregar cotizacion.pdf
-            File carpeta=new File(getText("ruta.documentos.poliza")+"/"+ntramite);
-            if(!carpeta.exists())
-            {
-            	log.debug("no existe la carpeta::: "+ntramite);
-            	carpeta.mkdir();
-            	if(carpeta.exists())
-            	{
-            		log.debug("carpeta creada");
-            	}
-            	else
-            	{
-            		log.debug("carpeta NO creada");
-            	}
-            }
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al generar p&oacute;liza #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	//acutalizar/generar tramite
+    	if(exito)
+    	{
+    		//actualizar tramite
+    		if(StringUtils.isNotBlank(ntramite))
+    		{
+	    		try
+	    		{
+	            	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
+	            	
+	            	logger.debug("se inserta detalle nuevo");
+	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
+	            }
+	    		catch(Exception ex)
+	    		{
+	    			long timestamp  = System.currentTimeMillis();
+	    			exito           = false;
+	    			respuesta       = "Error al actualizar el tr&aacute;mite #"+timestamp;
+	    			respuestaOculta = ex.getMessage();
+	    			logger.error(respuesta,ex);
+	    		}
+    		}
+    		//se genera un tramite
             else
             {
-            	log.debug("existe la carpeta   ::: "+ntramite);
+            	try
+            	{
+	            	Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
+	            	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
+	            	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
+	            	parMesCon.put("pv_estado_i"     , "W");
+	            	parMesCon.put("pv_nmpoliza_i"   , "0");
+	            	parMesCon.put("pv_nmsuplem_i"   , "0");
+	            	parMesCon.put("pv_cdsucadm_i"   , null);
+	            	parMesCon.put("pv_cdsucdoc_i"   , null);
+	            	parMesCon.put("pv_cdtiptra_i"   , "1");
+	            	parMesCon.put("pv_ferecepc_i"   , new Date());
+	            	parMesCon.put("pv_cdagente_i"   , cdagente);
+	            	parMesCon.put("pv_referencia_i" , null);
+	            	parMesCon.put("pv_nombre_i"     , "");
+	            	parMesCon.put("pv_festatus_i"   , new Date());
+	            	parMesCon.put("pv_status_i"     , "2");
+	            	parMesCon.put("pv_comments_i"   , "");
+	            	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
+	            	parMesCon.put("pv_cdtipsit_i"   , cdtipsit);
+	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+	            	ntramite                     = (String) mesaContWr.getItemMap().get("ntramite");
+	            	smap1.put("ntramite",ntramite);
+	            	
+	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
+            	}
+	    		catch(Exception ex)
+	    		{
+	    			long timestamp  = System.currentTimeMillis();
+	    			exito           = false;
+	    			respuesta       = "Error al generar el tr&aacute;mite #"+timestamp;
+	    			respuestaOculta = ex.getMessage();
+	    			logger.error(respuesta,ex);
+	    		}
             }
+    	}
+    	
+    	//generar cotizacion
+    	if(exito)
+    	{
+            try
+            {
+	            File carpeta=new File(getText("ruta.documentos.poliza")+"/"+ntramite);
+	            if(!carpeta.exists())
+	            {
+	            	if(!carpeta.mkdir())
+	            	{
+	            		throw new Exception("Error al crear la carpeta");
+	            	}
+	            }
+	            
+	            String urlReporteCotizacion=new StringBuilder()
+	                   .append(getText("ruta.servidor.reports"))
+	                   .append("?p_unieco=")  .append(comprarCdunieco)
+	                   .append("&p_ramo=")    .append(comprarCdramo)
+	                   .append("&p_subramo=") .append(cdtipsit)
+	                   .append("&p_estado=")  .append("'W'")
+	                   .append("&p_poliza=")  .append(comprarNmpoliza)
+	                   .append("&p_suplem=")  .append("0")
+	                   .append("&p_cdplan=")  .append(comprarCdplan)
+	                   .append("&p_plan=")    .append(comprarCdplan)
+	                   .append("&p_perpag=")  .append(comprarCdperpag)
+	                   .append("&p_ntramite=").append(ntramite)
+	                   .append("&p_cdusuari=").append(cdusuari)
+	                   .append("&userid=")    .append(getText("pass.servidor.reports"))
+	                   .append("&report=")    .append(getText("rdf.cotizacion.nombre."+cdtipsit))
+	                   .append("&destype=cache")
+	                   .append("&desformat=PDF")
+	                   .append("&ACCESSIBLE=YES")
+	                   .append("&paramform=no")
+	                   .toString();
+	            
+	            String nombreArchivoCotizacion="cotizacion.pdf";
+	            String pathArchivoCotizacion=new StringBuilder()
+            					.append(getText("ruta.documentos.poliza"))
+            					.append("/").append(ntramite)
+            					.append("/").append(nombreArchivoCotizacion)
+            					.toString();
+	            HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
             
-            String urlReporteCotizacion=""
-            					+ getText("ruta.servidor.reports")
-            					+ "?p_unieco="      + comprarCdunieco
-            					+ "&p_ramo="        + comprarCdramo
-            					+ "&p_subramo="     + cdtipsit
-            					+ "&p_estado='W'"
-            					+ "&p_poliza="      + nmPolizaOriginal
-            					+ "&p_suplem=0"
-            					+ "&p_cdplan="      + comprarCdplan
-            					+ "&p_plan="        + comprarCdplan
-            					+ "&p_perpag="      + comprarCdperpag
-            					+ "&p_ntramite="    + (ntramite!=null?ntramite:"")
-            					+ "&p_cdusuari="    + usuarioSesion.getUser()
-                                + "&destype=cache"
-                                + "&desformat=PDF"
-                                + "&userid="        + getText("pass.servidor.reports")
-                                + "&ACCESSIBLE=YES"
-                                + "&report="        + getText("rdf.cotizacion.nombre."+cdtipsit)
-                                + "&paramform=no"
-                                ;
-            String nombreArchivoCotizacion="cotizacion.pdf";
-            String pathArchivoCotizacion=""
-            					+ getText("ruta.documentos.poliza")
-            					+ "/"+ntramite
-            					+ "/"+nombreArchivoCotizacion
-            					;
-            HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
-            
-            Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
-            mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
-            mapArchivo.put("pv_cdramo_i"    , comprarCdramo);
-            mapArchivo.put("pv_estado_i"    , "W");
-            mapArchivo.put("pv_nmpoliza_i"  , "0");
-            mapArchivo.put("pv_nmsuplem_i"  , "0");
-            mapArchivo.put("pv_feinici_i"   , new Date());
-            mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-            mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
-            mapArchivo.put("pv_ntramite_i"  , ntramite);
-            mapArchivo.put("pv_nmsolici_i"  , nmPolizaOriginal);
-            mapArchivo.put("pv_tipmov_i"    , "1");
-            mapArchivo.put("pv_swvisible_i" , null);
-            kernelManagerSustituto.guardarArchivo(mapArchivo);
-            //!agregar cotizacion.pdf
-            //////////////////////////////////
-            
-            success=true;
+	            Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+	            mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
+	            mapArchivo.put("pv_cdramo_i"    , comprarCdramo);
+	            mapArchivo.put("pv_estado_i"    , "W");
+	            mapArchivo.put("pv_nmpoliza_i"  , "0");
+	            mapArchivo.put("pv_nmsuplem_i"  , "0");
+	            mapArchivo.put("pv_feinici_i"   , new Date());
+	            mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
+	            mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+	            mapArchivo.put("pv_ntramite_i"  , ntramite);
+	            mapArchivo.put("pv_nmsolici_i"  , comprarNmpoliza);
+	            mapArchivo.put("pv_tipmov_i"    , "1");
+	            mapArchivo.put("pv_swvisible_i" , null);
+	            kernelManagerSustituto.guardarArchivo(mapArchivo);
+            }
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al generar la cotizaci&oacute;n #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
         }
-        catch(Exception ex)
-        {
-            log.error("error al comprar cotizacion",ex);
-            success=false;
-        }
-        log.debug(""
-        		+ "\n######                    ######"
+    	
+    	if(exito&&StringUtils.isNotBlank(cdpersonCli))
+    	{
+    		try
+    		{
+				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+				parametros.put("pv_cdunieco_i" , comprarCdunieco);
+				parametros.put("pv_cdramo_i"   , comprarCdramo);
+				parametros.put("pv_estado_i"   , "W");
+				parametros.put("pv_nmpoliza_i" , comprarNmpoliza);
+				parametros.put("pv_nmsituac_i" , "0");
+				parametros.put("pv_cdrol_i"    , "1");
+				parametros.put("pv_cdperson_i" , cdpersonCli);
+				parametros.put("pv_nmsuplem_i" , "0");
+				parametros.put("pv_status_i"   , "V");
+				parametros.put("pv_nmorddom_i" , "1");
+				parametros.put("pv_swreclam_i" , null);
+				parametros.put("pv_accion_i"   , "I");
+				parametros.put("pv_swexiper_i" , "S");
+				kernelManagerSustituto.movMpoliper(parametros);
+    		}
+    		catch(Exception ex)
+    		{
+    			long timestamp  = System.currentTimeMillis();
+    			exito           = false;
+    			respuesta       = "Error al guardar el cliente #"+timestamp;
+    			respuestaOculta = ex.getMessage();
+    			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+        logger.info(""
     			+ "\n###### comprar cotizacion ######"
-    			+ "\n################################"
     			+ "\n################################"
     			);
         return SUCCESS;
@@ -1165,13 +1336,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     {
         try
         {
-            log.debug("### obtener ayuda de cobertura para cobertura: "+idCobertura+","+idRamo+","+idCiaAseguradora);
+            logger.debug("### obtener ayuda de cobertura para cobertura: "+idCobertura+","+idRamo+","+idCiaAseguradora);
             ayudaCobertura=kernelManagerSustituto.obtenerAyudaCobertura(idCobertura,idRamo,idCiaAseguradora);
             success=true;
         }
         catch(Exception ex)
         {
-            log.error("error al obtener la ayuda de coberturas",ex);
+            logger.error("error al obtener la ayuda de coberturas",ex);
             success=false;
         }
         return SUCCESS;
@@ -1593,6 +1764,34 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setEdadMaximaCotizacion(String edadMaximaCotizacion) {
 		this.edadMaximaCotizacion = edadMaximaCotizacion;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
+	}
+
+	public void setCotizacionManager(CotizacionManager cotizacionManager) {
+		this.cotizacionManager = cotizacionManager;
 	}
     
 }

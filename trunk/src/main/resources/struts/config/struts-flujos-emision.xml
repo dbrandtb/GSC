@@ -140,6 +140,14 @@
            <result type="json" />
        </action>
        
+       <action name="cargarCdagentePorFolio" class="CotizacionAction" method="cargarCdagentePorFolio">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarNumeroPasajerosPorTipoUnidad" class="CotizacionAction" method="cargarNumeroPasajerosPorTipoUnidad">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

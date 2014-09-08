@@ -698,6 +698,54 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cdunieco;
 	}
 	
+	@Override
+	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception
+	{
+		logger.info(new StringBuilder()
+		.append("\n################################")
+		.append("\n###### obtenerDatosAgente ######")
+		.append("\ncdagente=").append(cdagente)
+		.append("\ncdramo=").append(cdramo)
+		.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdagente" , cdagente);
+		params.put("cdramo"   , cdramo);
+		Map<String,String>datos=cotizacionDAO.obtenerDatosAgente(params);
+		logger.info(new StringBuilder()
+		.append("\ndatos=").append(datos)
+		.append("\n###### obtenerDatosAgente ######")
+		.append("\n################################")
+		.toString()
+				);
+		return datos;
+	}
+	
+	@Override
+	public String cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################################")
+				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
+				.append("\ncdtipsit=").append(cdtipsit)
+				.append("\ntipoUnidad=").append(tipoUnidad)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("tipoUnidad" , tipoUnidad);
+		String nPasajeros = cotizacionDAO.cargarNumeroPasajerosPorTipoUnidad(params);
+		logger.info(
+				new StringBuilder()
+				.append("\nnPasajeros=").append(nPasajeros)
+				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
+				.append("\n################################################")
+				.toString()
+				);
+		return nPasajeros;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

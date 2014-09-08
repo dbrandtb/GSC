@@ -32,21 +32,24 @@ var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtip
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                  />';
-var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                  />';
-var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action="detalleCotizacion"        />';
-var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"       />';
-var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"  />';
-var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"              />';
-var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"        />';
-var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"       />';
-var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"  />';
-var _0_urlDatosComplementarios     = '<s:url namespace="/"                action="datosComplementarios"     />';
-var _0_urlUpdateStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"  />';
-var _0_urlMesaControl              = '<s:url namespace="/mesacontrol"     action="mcdinamica"               />';
-var _0_urlLoad                     = '<s:url namespace="/emision"         action="cargarCotizacion"         />';
-var _0_urlNada                     = '<s:url namespace="/emision"         action="webServiceNada"           />';
-var _0_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto" />';
+var _0_urlCotizar                            = '<s:url namespace="/emision"         action="cotizar"                            />';
+var _0_urlCotizarExterno                     = '<s:url namespace="/externo"         action="cotizar"                            />';
+var _0_urlDetalleCotizacion                  = '<s:url namespace="/"                action="detalleCotizacion"                  />';
+var _0_urlCoberturas                         = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                 />';
+var _0_urlDetalleCobertura                   = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"            />';
+var _0_urlEnviarCorreo                       = '<s:url namespace="/general"         action="enviaCorreo"                        />';
+var _0_urlViewDoc                            = '<s:url namespace ="/documentos"     action="descargaDocInline"                  />';
+var _0_urlComprar                            = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                 />';
+var _0_urlVentanaDocumentos                  = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"            />';
+var _0_urlDatosComplementarios               = '<s:url namespace="/"                action="datosComplementarios"               />';
+var _0_urlUpdateStatus                       = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"            />';
+var _0_urlMesaControl                        = '<s:url namespace="/mesacontrol"     action="mcdinamica"                         />';
+var _0_urlLoad                               = '<s:url namespace="/emision"         action="cargarCotizacion"                   />';
+var _0_urlNada                               = '<s:url namespace="/emision"         action="webServiceNada"                     />';
+var _0_urlCargarCduniecoAgenteAuto           = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"           />';
+var _0_urlRecuperarCliente                   = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
+var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"             />';
+var _0_urlCargarNumeroPasajerosPorTipoUnidad = '<s:url namespace="/emision"         action="cargarNumeroPasajerosPorTipoUnidad" />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -83,6 +86,8 @@ var _0_windowCoberturas;
 var _0_botDetalleCobertura;
 var _0_windowAyudaCobertura;
 var _0_selectedIdcobertura;
+var _0_recordClienteRecuperado;
+var _0_semaforoAux;
 
 var _0_validacion_custom;
 
@@ -140,16 +145,16 @@ function _0_comprar()
             ,cdtipsit              : _0_smap1.cdtipsit
             ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
             ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
-            ,'smap1.nombreTitular' : ''
             ,'smap1.ntramite'      : _0_smap1.ntramite
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.get('CLAVECLI')
+            ,'smap1.cdagenteExt'   : _0_smap1.cdramo+'x'=='6x' ? _fieldByName('parametros.pv_otvalor17').getValue() : ''
         }
 	    ,success : function(response,opts)
 	    {
 	    	_0_panelPri.setLoading(false);
             var json = Ext.decode(response.responseText);
-            if (json.success == true)
+            if (json.exito)
             {
-            	
             	Ext.getCmp('_0_botComprarId').hide();
             	Ext.getCmp('_0_botDetallesId').hide();
             	Ext.getCmp('_0_botCoberturasId').hide();
@@ -209,7 +214,7 @@ function _0_comprar()
                         {
                             title    : 'Tr&aacute;mite actualizado'
                             ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
-                                        + json.comprarNmpoliza
+                                        + json.smap1.ntramite
                                         + '<br/>y no podr&aacute; ser modificada posteriormente'
                             ,buttons : Ext.Msg.OK
                             ,y       : 50
@@ -225,7 +230,7 @@ function _0_comprar()
                                         ,cdramo          : _0_smap1.cdramo
                                         ,estado          : 'W'
                                         ,nmpoliza        : _0_fieldNmpoliza.getValue()
-                                        ,'map1.ntramite' : json.comprarNmpoliza
+                                        ,'map1.ntramite' : json.smap1.ntramite
                                         ,cdtipsit        : _0_smap1.cdtipsit
                                     }
                                 });
@@ -238,7 +243,7 @@ function _0_comprar()
                         {
                         	title    : 'Solicitud enviada'
                         	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
-                        	            + json.comprarNmpoliza
+                        	            + json.smap1.ntramite
                         	            + ', ahora puede subir los documentos del trámite'
                         	,buttons : Ext.Msg.OK
                         	,y       : 50
@@ -279,7 +284,7 @@ function _0_comprar()
             }
             else
             {
-            	
+            	mensajeError(json.respuesta);
             }
         }
 	    ,failure : function()
@@ -1223,6 +1228,18 @@ Ext.onReady(function()
 	     _0_validacion_custom=botonValidacionCustom.handler;
     </s:if>
     
+    Ext.define('_0_modeloRecuperado',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'NOMBRECLI'
+            ,'RFCCLI'
+            ,'CLAVECLI'
+            ,'DIRECCIONCLI'
+        ]
+    });
+    
     Ext.define('ModeloDetalleCotizacion',
     {
     	extend : 'Ext.data.Model'
@@ -2044,7 +2061,100 @@ Ext.onReady(function()
                 agente.setReadOnly(!Ext.isEmpty(val));
                 agente.reset();
             }
+            ,'blur' : function()
+            {
+                if(!Ext.isEmpty(folio.getValue()))
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarAgentePorFolio
+                        ,params  :
+                        {
+                            'smap1.folio'     : folio.getValue()
+                            ,'smap1.cdunieco' : _0_smap1.cdunieco
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response obtener agente por folio:',json);
+                            if(json.exito)
+                            {
+                                
+                                var contiene=false;
+                                agente.getStore().each(function(record)
+                                {
+                                    debug('buscando agente',json.smap1.cdagente,'en',record.data);
+                                    if(record.get('key')==json.smap1.cdagente)
+                                    {
+                                        contiene=true;
+                                    }
+                                });
+                                if(contiene)
+                                {
+                                    agente.setValue(json.smap1.cdagente);
+                                }
+                                else
+                                {
+                                    mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                }
+                            }
+                            else
+                            {
+                                mensajeError(json.respuesta);
+                            }
+                        }
+                        ,failure : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
         });
+        
+        //tipo de unidad
+        if(_0_smap1.cdtipsit+'x'=='MCx')
+        {
+            _fieldByName('parametros.pv_otvalor01').on(
+            {
+                'select' : function(comp,valArray)
+                {
+                    debug('tipo unidad select value:',valArray[0].data.key);
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarNumeroPasajerosPorTipoUnidad
+                        ,params  :
+                        {
+                            'smap1.cdtipsit'    : _0_smap1.cdtipsit
+                            ,'smap1.tipoUnidad' : valArray[0].data.key
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response numero pasajeros:',json);
+                            if(json.exito)
+                            {
+                                _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.nPasajeros);
+                            }
+                            else
+                            {
+                                mensajeWarning(json.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            });
+        }
         
         _fieldByName('fefin').setValue('');
         
@@ -2069,6 +2179,147 @@ Ext.onReady(function()
             _fieldByName('fefin').setValue(
                 Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
             );
+        });
+        
+        var combcl=_fieldByName('parametros.pv_otvalor24');
+        var codpos=_fieldByName('parametros.pv_otvalor23');
+        
+        
+        combcl.on('change',function()
+        {
+            debug('Combo cliente nuevo change:',combcl.getValue());
+            //cliente nuevo
+            if(combcl.getValue()=='S')
+            {
+                codpos.reset();
+                _0_storeIncisos.removeAll();
+                _0_gridIncisos.show();
+                codpos.setReadOnly(false);
+                codpos.setFieldLabel('C&Oacute;DIGO POSTAL CLIENTE');
+                _0_recordClienteRecuperado=null;
+            }
+            //recuperar cliente
+            else
+            {
+                codpos.reset();
+                _0_storeIncisos.removeAll();
+                _0_gridIncisos.hide();
+                codpos.setReadOnly(true);
+                var ventana=Ext.create('Ext.window.Window',
+                {
+                    title      : 'Recuperar cliente'
+                    ,modal     : true
+                    ,width     : 600
+                    ,height    : 400
+                    ,items     :
+                    [
+                        {
+                            layout    : 'hbox'
+                            ,defaults : { style : 'margin : 5px;' }
+                            ,items    :
+                            [
+                                {
+                                    xtype       : 'textfield'
+                                    ,name       : '_0_recuperaRfc'
+                                    ,fieldLabel : 'RFC'
+                                    ,minLength  : 9
+                                    ,maxLength  : 13
+                                }
+                                ,{
+                                    xtype    : 'button'
+                                    ,text    : 'Buscar'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                                    ,handler : function(button)
+                                    {
+                                        debug('recuperar cliente buscar');
+                                        var rfc=_fieldByName('_0_recuperaRfc').getValue();
+                                        var valido=true;
+                                        if(valido)
+                                        {
+                                            valido = !Ext.isEmpty(rfc)
+                                                     &&rfc.length>8
+                                                     &&rfc.length<14;
+                                            if(!valido)
+                                            {
+                                                mensajeWarning('Introduza un RFC v&aacute;lido');
+                                            }
+                                        }
+                                        if(valido)
+                                        {
+                                            button.up('window').down('grid').getStore().load(
+                                            {
+                                                params :
+                                                {
+                                                    'map1.pv_rfc_i' : rfc
+                                                }
+                                            });
+                                        }
+                                    }
+                                 }
+                            ]
+                        }
+                        ,Ext.create('Ext.grid.Panel',
+                        {
+                            title    : 'Resultados'
+                            ,columns :
+                            [
+                                {
+                                    xtype    : 'actioncolumn'
+                                    ,width   : 30
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                    ,handler : function(view,row,col,item,e,record)
+                                    {
+                                        debug('recuperar cliente handler record:',record);
+                                        _0_recordClienteRecuperado=record;
+                                        codpos.setValue(record.raw.CODPOSTAL);
+                                        codpos.setFieldLabel('C&Oacute;DIGO POSTAL CLIENTE<br/>('+record.get('NOMBRECLI')+')');
+                                        ventana.destroy();
+                                    }
+                                }
+                                ,{
+                                    text       : 'Nombre'
+                                    ,dataIndex : 'NOMBRECLI'
+                                    ,width     : 200
+                                }
+                                ,{
+                                    text       : 'Direcci&oacute;n'
+                                    ,dataIndex : 'DIRECCIONCLI'
+                                    ,flex      : 1
+                                }
+                            ]
+                            ,store : Ext.create('Ext.data.Store',
+                            {
+                                model     : '_0_modeloRecuperado'
+                                ,autoLoad : false
+                                ,proxy    :
+                                {
+                                    type    : 'ajax'
+                                    ,url    : _0_urlRecuperarCliente
+                                    ,reader :
+                                    {
+                                        type  : 'json'
+                                        ,root : 'slist1'
+                                    }
+                                }
+                            })
+                        })
+                    ]
+                    ,listeners :
+                    {
+                        close : function()
+                        {
+                            combcl.setValue('S');
+                        }
+                    }
+                }).show();
+                centrarVentanaInterna(ventana);
+            }
+        });
+        
+        combcl.getStore().on('load',function()
+        {
+            debug('combo cliente nuevo store load');
+            combcl.setValue('S');
         });
         
         debug('<parche para ramo 6');

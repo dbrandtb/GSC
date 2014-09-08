@@ -580,4 +580,64 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> obtenerDatosAgente(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new ObtenerDatosAgente(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("No hay datos del agente");
+		}
+		else if(listaAux.size()>1)
+		{
+			throw new Exception("Datos repetidos");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class ObtenerDatosAgente extends StoredProcedure
+	{
+		protected ObtenerDatosAgente(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_AGENTE_X_CDAGENTE");
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResponse=ejecutaSP(new CargarNumeroPasajerosPorTipoUnidad(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResponse.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("No se ha parametrizado el numero de pasajeros");
+		}
+		else if(listaAux.size()>1)
+		{
+			throw new Exception("Parametrizacion repetida para el numero de pasajeros");
+		}
+		return listaAux.get(0).get("NUMPASAJEROS");
+	}
+	
+	protected class CargarNumeroPasajerosPorTipoUnidad extends StoredProcedure
+	{
+		protected CargarNumeroPasajerosPorTipoUnidad(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_NUM_PASAJEROS");
+			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
