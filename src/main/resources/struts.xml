@@ -224,6 +224,7 @@
             <result name="success">/jsp/extjs4/aseguradoExclusion.jsp</result>
         </action>
         <action name="pantallaValosit" class="beanDatosComplementariosCoberturas" method="pantallaValosit">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp/extjs4/pantallaValosit.jsp</result>
         </action>
         <action name="pantallaValositLoad" class="beanDatosComplementariosCoberturas" method="pantallaValositLoad">
