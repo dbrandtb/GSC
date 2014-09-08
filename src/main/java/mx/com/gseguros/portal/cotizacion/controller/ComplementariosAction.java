@@ -46,7 +46,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.SDTPoliza;
+import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
@@ -1982,16 +1982,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 								)
 							)
 					{
-						SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
 									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
-						success = aux!=null && aux.getNumpol()>0l;
+						
+						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 						retryWS = !success;
+						
 						if(success)
 						{
-							logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
-							this.nmpolAlt = Long.toString(aux.getNumpol()); 
+							logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNmpoliex());
+							this.nmpolAlt = aux.getNmpoliex(); 
 							panel2.put("nmpoliex", this.nmpolAlt);
-							cdRamoGS = Short.toString(aux.getRamos());
+							cdRamoGS = aux.getSubramo();
 							
 							//Insetar Poliza Externa WS Auto
 							try{
@@ -2460,16 +2462,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 							)
 						)
 					{
-						SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
 									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
-						success = aux!=null && aux.getNumpol()>0l;
+						
+						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 						retryWS = !success;
+						
 						if(!success)
 						{
 							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
-							this.nmpolAlt = Long.toString(aux.getNumpol());
+							this.nmpolAlt = aux.getNmpoliex();
 							nmpoliexEmitida =  this.nmpolAlt;
-							cdRamoGS = Short.toString(aux.getRamos());
+							cdRamoGS = aux.getSubramo();
 							
 							//Insetar Poliza Externa WS Auto
 							try{
@@ -2817,16 +2821,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 					)
 				)
 		{
-			SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(_cdunieco, _cdramo,
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, _nmsuplem, ntramite, us);
-			success = aux!=null && aux.getNumpol()>0l;
+			
+			success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 			retryWS = !success;
+			
 			if(success)
 			{
-				logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNumpol());
-				this.nmpolAlt = Long.toString(aux.getNumpol());
+				logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNmpoliex());
+				this.nmpolAlt = aux.getNmpoliex();
 				panel2.put("nmpoliex", this.nmpolAlt);
-				cdRamoGS = Short.toString(aux.getRamos());
+				cdRamoGS = aux.getSubramo();
 				
 				//Insetar Poliza Externa WS Auto
 				try{

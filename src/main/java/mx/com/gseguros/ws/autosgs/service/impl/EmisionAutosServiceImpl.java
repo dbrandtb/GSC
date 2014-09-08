@@ -37,7 +37,7 @@ import mx.com.gseguros.ws.autosgs.client.axis2.CotizacionIndividualWSServiceStub
 import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
-import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZAResponse;
+import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
@@ -61,11 +61,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	private StoredProceduresManager storedProceduresManager;
 	
-	public SDTPoliza cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
+	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
+		EmisionAutosVO emisionAutoRes = null;
 		SDTPoliza polizaEmiRes = null;
 		Cotizacion datosCotizacionAuto = null;
 		
@@ -413,6 +414,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
 						polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
+						emisionAutoRes = new EmisionAutosVO();
+						emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
+						emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
 					}
 					
 				}else{
@@ -428,7 +432,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			logger.error("Error, No se tienen datos del Auto");
 		}
 		
-		return polizaEmiRes;
+		return emisionAutoRes;
 	}
 	
 	private WrapperResultadosWS ejecutaCotizacionAutosWS(Cotizacion datosCotizacionAuto) throws Exception{
