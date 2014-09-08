@@ -52,9 +52,11 @@
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
-            <s:if test='%{getCdramo().equals("16")}'>
-            _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
-            </s:if>
+            if(panDatComMap1.SITUACION=='AUTO')
+            {
+                _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
+            }
+            
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             var compleUrlGuardarCartoRechazo = '<s:url namespace="/" action="guardarCartaRechazo" />';
@@ -1962,6 +1964,11 @@
                     ,items     : items
                 }).show());
                 </s:if>
+                
+                if(inputCdramo+'x'=='6x')
+                {
+                    expande(2);
+                }
                 
                 //Ext.getCmp('formPanel').loadRecord(storeLoader.getAt(0));
             });

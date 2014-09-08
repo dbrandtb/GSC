@@ -25,5 +25,5 @@ public interface CotizacionDAO
 	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception;
 	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception;
 	public Map<String,String> obtenerDatosAgente(Map<String,String>params)throws Exception;
-	public String cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception;
+	public Map<String,String> cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception;
 }
