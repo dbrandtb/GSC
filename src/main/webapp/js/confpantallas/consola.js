@@ -29,6 +29,7 @@ var bChk = false;
 var namePnl = '';
 var focusPanel='';
 var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
+var isOpen = true;
 
 Ext.onReady(function() {
     Ext.QuickTips.init();
@@ -237,7 +238,13 @@ storeD.load();
                        scale:'medium',
                        tooltip: 'Grabar Panel',
                        handler: fncAsignaNombrePanel
-                    }]
+                    },{
+                        xtype: 'button',
+                        iconCls: 'preview_open',
+                        scale:'medium',
+                        tooltip: 'Abrir Panel',
+                        handler: fncAbrePanelExistente
+                     }]
                 }],
                 animCollapse: true,
                 collapsible: true,
@@ -457,7 +464,7 @@ storeD.load();
             				}else if(record.data.name == 'columnas'){
             					setSur('<p><b>Columnas.- </b>Es el atributo que define el número de columnas que contendrá el panel. <b>[ExtJs.-columns]</b></p>');
             				}else if(record.data.name == 'isPadre'){
-            					setSur('<p><b>IsPadre.- </b>Es el atributo que define si el combobox se liga a otro; para lo cual hay que definir en el atributo el ID del combobox al que se liga.</p>');
+            					setSur('<p><b>IsPadre.- </b>Es el atributo que define si el control se liga a otro; para lo cual hay que definir en el atributo el ID del combobox al que se liga.</p>');
             				}else if(record.data.name == 'url'){
             					setSur('<p><b>Url.- </b>Es el atributo que define a donde se redirige la información del formulario despues del Submit. Si esta en blanco [en tiempo de ejecución] no será considerado. <b>[ExtJs.-url]</b></p>');
             				}else if(record.data.name == 'estilo'){
@@ -584,7 +591,7 @@ function creaDataSP(idP, idH){
     	idPadre: idP,
         idHijo: idH,
         order: nCtrl
-	}
+	};
 	storeSuperPanel.add(rgs);
 }
 function creaDataSPG(idP, idH, idG,idName){
@@ -599,7 +606,7 @@ function creaDataSPG(idP, idH, idG,idName){
         tipoG:'string',
         dataIndex:'titulo',
         name: idName
-	}
+	};
 	storeSuperPanel.add(rgs);
 }
 
@@ -793,6 +800,7 @@ function attrGralPreliminar(pCtrl, idCtls, store){
 	if(getExisteStore(store,'isFondo')){Ext.apply(pCtrl, {frame:parseBol(getDataSP('isFondo',idCtls))});}
 	if(getExisteStore(store,'isCerrable')){Ext.apply(pCtrl, {closable:parseBol(getDataSP('isCerrable',idCtls))});}
 	if(getExisteStore(store,'isDesplegable')){Ext.apply(pCtrl, {collapsible:parseBol(getDataSP('isDesplegable',idCtls))});}
+	if(getExisteStore(store,'isSeleccionado')){Ext.apply(pCtrl, {checked:parseBol(getDataSP('isSeleccionado',idCtls))});}
 	if(getExisteStore(store,'isResizable')){Ext.apply(pCtrl, {resizable:parseBol(getDataSP('isResizable',idCtls))});}
 	if(getExisteStore(store,'isMinimizable')){Ext.apply(pCtrl, {minimizable:parseBol(getDataSP('isMinimizable',idCtls))});}
 	if(getExisteStore(store,'titulo_Aling')){
@@ -964,386 +972,44 @@ function CreaCtrlTextoPreliminar(idCtls,col) {
 	attrGralPreliminar(txt, idCtls,storeTextAttr);
 	return txt;
 }
-function CreaPanelForma(id,titulo) {
-	var frm = new Ext.form.Panel({
-		title: titulo,
-		id: id,collapsible: true,closable: true,
-		titleAlign : 'center',
-		frame: true,bodyPadding: '5 5 0',width: 350,height: 200,margin: '5,0,0,5',autoScroll:true,resizable:true,
-		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: 
-		function(event, toolEl, panelHeader) {var name = panelHeader.id;
-		var id = name.substring(0,name.indexOf("_header"));
-		cargaAtributosPanel(id,storeFormulario);}}],
-		listeners: {
-        	close: {
-            	fn: function(panel, eOpts ){ 
-            		limpiaObjetos(panel.id);
-            	}
-        	},
-        	resize: {
-        		fn: function(){ 
-        			cargaAtributosPanel(this.id,storeFormulario);
-            	}
-        	
-        	}/*,
-        	render:{fn: function(panel, eOpts ){panel.body.on('click', function() {alert('onclick');});}}*/
-    },
-	afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); 
-		this.dropTarget = Ext.getCmp(id).body;
-		var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { 
-		agregaCtrl(node.nodes[0].innerText,id);return true; }}); }});return frm;}
-//****Pendiente agregar por columna
-function CreaPanelColumnas(id,titulo) {
-	var frm = new Ext.form.Panel({
-		title: titulo,
-		id: id,
-		layout: 'column',
-		collapsible: true,
-		margin: '5,0,0,5',
-		frame: true,
-		closable: true,
-		columns: 2,
-		bodyPadding: '5 5 0',
-		width: 350,
-		height: 200,
-		autoScroll:true,
-		resizable:true,
-		//defaultType: 'container',
-		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeColumnas);}}],
-		listeners: {
-        	close: {
-            	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
-        	},resize: {
-        		fn: function(){cargaAtributosPanel(this.id,storeColumnas);}
-        	}
-        },
-		afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); 
-			this.dropTarget = Ext.getCmp(id).body;
-			var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',
-			notifyDrop:function(dd, e, node) { 
-			agregaCtrl(node.nodes[0].innerText,id);
-				return true; }}); }});return frm;}    
 
-function CreaPanelTabs(id,titulo) {
-	var frm = new Ext.TabPanel({
-		title: titulo,
-		id: id,
-		collapsible: true,
-		margin: '5',
-		frame: true,
-		closable: true,
-		bodyPadding: '5 5 5 5',width: 350,height: 200,
-		resizable:true,
-		items: [CreaTabColumnas(id), CreaTabColumnas(id), CreaTabColumnas(id)],
-		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, 
-		panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));
-		cargaAtributosPanel(id,storeTabs);}}],
-		listeners: {
-        	close: {
-            	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
-        	},resize: {
-        		fn: function(){cargaAtributosPanel(this.id,storeTabs);}
-        	},tabchange:{
-        		fn: function( tabPanel, newCard, oldCard, eOpts ){
-        			/*Columnas IN*/
-    				var arryAttr = [];
-    				ctrl = newCard.id;
-    				arryAttr.push('(id):'+newCard.id);
-    				arryAttr.push('width:'+newCard.getWidth());
-    				arryAttr.push('height:'+newCard.getHeight());
-    				arryAttr.push('titulo:'+newCard.title);
-            		arryAttr.push('columnas:'+getValorSP('columnas',2));
-            		arryAttr.push('isFondo:'+getValorSP('isFondo',true));
-            		arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));
-            		arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));
-            		arryAttr.push('isCerrable:'+getValorSP('isCerrable',true));
-            		arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));
-    				seteaAtributosGrid(arryAttr,newCard.id,storeTabsIn);
-        		}
-        	}
-        },
-		afterRender:function() { 
-			Ext.Panel.prototype.afterRender.apply(this, arguments); 
-			this.dropTarget = Ext.getCmp(id).body;
-			var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',
-						notifyDrop:function(dd, e, node) { 
-							agregaCtrl(node.nodes[0].innerText,id);
-							return true; 
-						}
-					});
-		}
-			
-			});
-		return frm;}
-
-function CreaTabColumnas(id) {panelTabId ++;var frm = new Ext.form.Panel({title: 'Tab ' + panelTabId,id: 'panel_tab_' + panelTabId,layout: 'column',
-columns: 2,frame: true,bodyPadding: '5 5 5 5',width: 350,height: 200,autoScroll:true,closable: true,defaultType: 'container',
-listeners: {close: {fn: function(c ){ 
-     	limpiaObjetos(this.id);
-}}}});
-nCtrl ++;
-	var rgs = {
-    	idPadre: id,
-        idHijo: 'panel_tab_' + panelTabId,
-        order: nCtrl,
-        columnas: 2,
-        titulo:'Tab ' + panelTabId,
-        bodyPadding: '5 5 5 5',
-        isFondo: true,
-        width: 350,height: 200,isAutoScroll:true,isCerrable: true, isBodyBorder:false,tipo:'form_columns'
-	}
-	storeSuperPanel.add(rgs);
-
-return frm;}
-
-function CreaPanelAcordion(id,titulo) {
-	var frm = new Ext.Panel(
-		{title: titulo,
-		id: id,
-		collapsible: true,
-		margin: '5,0,0,5',
-		frame: true,
-		layout: 'accordion',
-		closable: true,
-		width: 350,
-		height: 490,
-		autoScroll:true,
-		resizable:true,
-		defaults: {bodyPadding: 10},
-		tools:[{
-			type:'gear',
-			tooltip: 'Mostrar atributos del panel',
-			handler: function(event, toolEl, panelHeader) {
-				var name = panelHeader.id;
-				var id = name.substring(0,name.indexOf("_header"));
-				cargaAtributosPanel(id,storeAcordion);}
-			}],
-		items: [CreaAcordionColumnas(id), CreaAcordionColumnas(id), CreaAcordionColumnas(id)],
-		listeners: {
-        	close: {
-            	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
-        	},resize: {
-        		fn: function(){cargaAtributosPanel(this.id,storeAcordion);}
-        	}
-        },
-		afterRender:function() { 
-			Ext.Panel.prototype.afterRender.apply(this, arguments); 
-			this.dropTarget = Ext.getCmp(id).body;
-			var dd = new Ext.dd.DropTarget(this.dropTarget, {
-				ddGroup:'controlesDD',
-				notifyDrop:function(dd, e, node) { 
-					agregaCtrl(node.nodes[0].innerText,id);
-					return true; 
-				}
-			});
-		}
-	});
-	return frm;
-}
-
-function CreaAcordionColumnas(id) {
-	panelAcordionId ++;
-	var frm = new Ext.form.Panel(
-		{title: 'Acordion ' + panelAcordionId,
-		id: 'panel_acordion_' + panelAcordionId,
-		layout: 'column',
-		columns: 2,
-		frame: false,
-		bodyPadding: '5 5 5 5',
-		width: 50,
-		height: 50,
-		autoScroll:true,
-		closable: false,
-		defaultType: 'container',
-		listeners: {
-				expand: function(pnl) {
-					var arryAttr = [];
-    				ctrl = pnl.id;
-    				arryAttr.push('(id):'+pnl.id);
-    				arryAttr.push('width:'+pnl.getWidth());
-    				arryAttr.push('height:'+pnl.getHeight());
-    				arryAttr.push('titulo:'+pnl.title);
-            		arryAttr.push('columnas:'+getValorSP('columnas',2));
-            		arryAttr.push('isFondo:'+getValorSP('isFondo',false));
-            		arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));
-            		arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));
-            		arryAttr.push('isCerrable:'+getValorSP('isCerrable',false));
-            		arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));
-    				seteaAtributosGrid(arryAttr,pnl.id,storeAcordionIn);
-				},
-				close: {fn: function(c ){ 
-     				limpiaObjetos(this.id);
-				}}
-			}
-		});
-	nCtrl ++;
-	var rgs = {
-    	idPadre: id,
-        idHijo: 'panel_acordion_' + panelAcordionId,
-        order: nCtrl,
-        columnas: 2,
-        titulo:'Acordion ' + panelAcordionId,
-        bodyPadding: '5 5 5 5',
-        isFondo: false,
-        width: 350,height: 200,isAutoScroll:true,isCerrable: false, isBodyBorder:false,tipo:'form_columns'
-	};
-	storeSuperPanel.add(rgs);
-return frm;}
-
-
+//Formularios OPEN
+function CreaPanelFormaOpen(attrPnl) {var idP = getAttrOpen(attrPnl,'id');var frm = new Ext.form.Panel({title: getAttrOpen(attrPnl,'title'),id: idP,height: getAttrOpen(attrPnl,'height'),width: getAttrOpen(attrPnl,'width'),collapsible: true,closable: true,titleAlign : 'center',frame: true,bodyPadding: '5 5 0',margin: '5,0,0,5',autoScroll:true,resizable:true,tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeFormulario);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeFormulario);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(idP).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,idP);return true; }}); }});return frm;}
+function CreaPanelColumnasOpen(attrPnl) {var id = getAttrOpen(attrPnl,'id');var frm = new Ext.form.Panel({title: getAttrOpen(attrPnl,'title'),id: id, height: getAttrOpen(attrPnl,'height'),width: getAttrOpen(attrPnl,'width'),layout: 'column',collapsible: true,	margin: '5,0,0,5',frame: true, closable: true, columns: getAttrOpen(attrPnl,'columns'),bodyPadding: '5 5 0',autoScroll:true,	resizable:true,tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeColumnas);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeColumnas);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }}); }});return frm;}    
+function CreaPanelTabsOpen(attrPnl,hijosPnl) {var id = getAttrOpen(attrPnl,'id');var frm = new Ext.TabPanel({title: getAttrOpen(attrPnl,'title'),id: id,collapsible: true,margin: '5',frame: true,closable: true, bodyPadding: '5 5 5 5',width: getAttrOpen(attrPnl,'width'),height: getAttrOpen(attrPnl,'height'),resizable:true,tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeTabs);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeTabs);}},tabchange:{fn: function( tabPanel, newCard, oldCard, eOpts ){var arryAttr = [];ctrl = newCard.id;arryAttr.push('(id):'+newCard.id);arryAttr.push('width:'+newCard.getWidth());arryAttr.push('height:'+newCard.getHeight());arryAttr.push('titulo:'+newCard.title);arryAttr.push('columnas:'+getValorSP('columnas',2));arryAttr.push('isFondo:'+getValorSP('isFondo',true));arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));arryAttr.push('isCerrable:'+getValorSP('isCerrable',true));arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));seteaAtributosGrid(arryAttr,newCard.id,storeTabsIn);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }});}});for(pl = 0; pl < hijosPnl.length; pl++){var pnl = CreaTabColumnasOpen(hijosPnl[pl].attrs,id);frm.add(pnl);}return frm;}
+function CreaTabColumnasOpen(attrPnl,papaId) {var regId = getAttrOpen(attrPnl,'id');panelTabId = parseInt(regId.substring(regId.lastIndexOf("_")+1));var titulo = getAttrOpen(attrPnl,'title');var hWidth = getAttrOpen(attrPnl,'width');var hHeight = getAttrOpen(attrPnl,'height');var frm = new Ext.form.Panel({title: titulo,id: regId,layout: 'column',columns: 2,frame: true,bodyPadding: '5 5 5 5',width: hWidth,height: hHeight,autoScroll:true,closable: true,defaultType: 'container',listeners: {close: {fn: function(c ){ limpiaObjetos(this.id);}}}});nCtrl ++;var rgs = {idPadre: papaId,idHijo: regId,order: nCtrl,columnas: 2,titulo:titulo,bodyPadding: getAttrOpen(attrPnl,'bodyPadding'),isFondo: getAttrOpen(attrPnl,'frame'),width: hWidth,height: hHeight,isAutoScroll:getAttrOpen(attrPnl,'autoScroll'),isCerrable: getAttrOpen(attrPnl,'closable'), isBodyBorder:getAttrOpen(attrPnl,'bodyBorder'),tipo:'form_columns'};storeSuperPanel.add(rgs);return frm;}
+function CreaPanelAcordionOpen(attrPnl,hijosPnl) {var id = getAttrOpen(attrPnl,'id');var frm = new Ext.Panel({title: getAttrOpen(attrPnl,'title'),id: id,collapsible: true,margin: '5,0,0,5',frame: true,layout: 'accordion',closable: true,width: getAttrOpen(attrPnl,'width'),height: getAttrOpen(attrPnl,'height'),autoScroll:true,resizable:true,defaults: {bodyPadding: 10},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeAcordion);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeAcordion);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }});}});for(pl = 0; pl < hijosPnl.length; pl++){var pnl = CreaAcordionColumnasOpen(hijosPnl[pl].attrs,id);frm.add(pnl);}return frm;}
+function CreaAcordionColumnasOpen(attrPnl,papaId) {var regId = getAttrOpen(attrPnl,'id');panelAcordionId = parseInt(regId.substring(regId.lastIndexOf("_")+1));var titulo = getAttrOpen(attrPnl,'title');var hWidth = getAttrOpen(attrPnl,'width');var hHeight = getAttrOpen(attrPnl,'height');var frm = new Ext.form.Panel({title: titulo,	id: regId,layout: 'column',columns: 2,frame: false,bodyPadding: '5 5 5 5',width: hWidth,height: hHeight,autoScroll:true,closable: false,defaultType: 'container',listeners: {expand: function(pnl) {var arryAttr = [];ctrl = pnl.id;arryAttr.push('(id):'+pnl.id);arryAttr.push('width:'+pnl.getWidth());arryAttr.push('height:'+pnl.getHeight());arryAttr.push('titulo:'+pnl.title);arryAttr.push('columnas:'+getValorSP('columnas',2));arryAttr.push('isFondo:'+getValorSP('isFondo',false));arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));arryAttr.push('isCerrable:'+getValorSP('isCerrable',false));arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));seteaAtributosGrid(arryAttr,pnl.id,storeAcordionIn);},close: {fn: function(c ){ limpiaObjetos(this.id);}}}});nCtrl ++;var rgs = {idPadre: papaId,idHijo: regId,order: nCtrl,columnas: 2,titulo:titulo,bodyPadding:getAttrOpen(attrPnl,'bodyPadding'),isFondo: getAttrOpen(attrPnl,'frame'),width: hWidth,height: hHeight,isAutoScroll:getAttrOpen(attrPnl,'autoScroll'),isCerrable: getAttrOpen(attrPnl,'closable'), isBodyBorder:getAttrOpen(attrPnl,'bodyBorder'),tipo:'form_columns'};storeSuperPanel.add(rgs);return frm;}
+function CreaPanelBorderOpen(attrPnl,hijosPnl) {var id = getAttrOpen(attrPnl,'id');var frm = new Ext.panel.Panel({title: getAttrOpen(attrPnl,'title'),id: id,collapsible: true,margin: '5,0,0,5',frame: true,layout: 'border',closable: true,width: getAttrOpen(attrPnl,'width'),height: getAttrOpen(attrPnl,'height'),autoScroll:true,resizable:true,listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeBorder);}}},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorder);}}]});for(pl = 0; pl < hijosPnl.length; pl++){var pnl = CreaBorderColumnasOpen(hijosPnl[pl].attrs,id);frm.add(pnl);}return frm;}
+function CreaBorderColumnasOpen(attrPnl,papaId) {var hRegion = getAttrOpen(attrPnl,'region');var hStore;var hTipo;var regId = getAttrOpen(attrPnl,'id');panelAcordionId = parseInt(regId.substring(regId.lastIndexOf("_")+1));var titulo = getAttrOpen(attrPnl,'title');var hWidth = getAttrOpen(attrPnl,'width');var hHeight = getAttrOpen(attrPnl,'height');if(hRegion == 'south'){hStore = storeBorderSur;hTipo = 'sur';}else if(hRegion == 'west'){hStore = storeBorderIzq;hTipo = 'izq';}else if(hRegion == 'center'){hStore = storeBorderCenter;hTipo = 'centro';}else if(hRegion == 'east'){hStore = storeBorderDer;hTipo = 'der';}else if(hRegion == 'north'){hStore = storeBorderNorte;hTipo = 'norte';}var frm = new Ext.Panel({title: titulo, region : hRegion, collapsible:true,	split:true,margins:'5 5 5 5',id: regId,layout: 'column',columns: 2,frame: false,bodyPadding: '5 5 5 5',width: hWidth,height: hHeight,autoScroll:true,closable: true,defaultType: 'container',tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,hStore);}}],afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(regId).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,regId);return true;}});},listeners: {close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}}});nCtrl ++;var rgs = {idPadre: papaId,idHijo: regId,order: nCtrl,titulo:titulo,columnas:2,bodyPadding:getAttrOpen(attrPnl,'bodyPadding'),isDesplegable:getAttrOpen(attrPnl,'collapsible'),isFondo: getAttrOpen(attrPnl,'frame'),margen:getAttrOpen(attrPnl,'margin'),titulo_Aling:getAttrOpen(attrPnl,'titleAlign'),width: hWidth,height: hHeight,isAutoScroll:getAttrOpen(attrPnl,'autoScroll'),isCerrable: getAttrOpen(attrPnl,'closable'), isBodyBorder:getAttrOpen(attrPnl,'bodyBorder'),tipo:hTipo};storeSuperPanel.add(rgs);return frm;}
+function CreateWinOpen(attrPnl) {var idP = getAttrOpen(attrPnl,'id');Ext.create('Ext.Window', {title: getAttrOpen(attrPnl,'title'),id: idP,width: getAttrOpen(attrPnl,'width'),height: getAttrOpen(attrPnl,'height'),headerPosition: 'right',collapsible: true,frame: true,bodyPadding:'5 5 5 5',tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeWindow);}}],layout: {type: 'column',columns: 1},listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeWindow);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(idP).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,idP);return true; }}); }}).show();}
+//Formularios NEW
+function CreaPanelForma(id,titulo) {var frm = new Ext.form.Panel({title: titulo,id: id,collapsible: true,closable: true,titleAlign : 'center',frame: true,bodyPadding: '5 5 0',width: 350,height: 200,margin: '5,0,0,5',autoScroll:true,resizable:true,tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeFormulario);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeFormulario);}}/*,render:{fn: function(panel, eOpts ){panel.body.on('click', function() {alert('onclick');});}}*/},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) {agregaCtrl(node.nodes[0].innerText,id);return true; }}); }});return frm;}
+	//****Pendiente agregar por columna
+function CreaPanelColumnas(id,titulo) {var frm = new Ext.form.Panel({title: titulo,id: id,layout: 'column',collapsible: true,margin: '5,0,0,5',frame: true,closable: true,columns: 2,bodyPadding: '5 5 0',width: 350,height: 200,autoScroll:true,resizable:true,tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeColumnas);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeColumnas);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }}); }});return frm;}    
+function CreaPanelTabs(id,titulo) {var frm = new Ext.TabPanel({title: titulo,id: id,collapsible: true,margin: '5',frame: true,closable: true,bodyPadding: '5 5 5 5',width: 350,height: 200,resizable:true,items: [CreaTabColumnas(id), CreaTabColumnas(id), CreaTabColumnas(id)],tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeTabs);}}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeTabs);}},tabchange:{fn: function( tabPanel, newCard, oldCard, eOpts ){/*Columnas IN*/var arryAttr = [];ctrl = newCard.id;arryAttr.push('(id):'+newCard.id);arryAttr.push('width:'+newCard.getWidth());arryAttr.push('height:'+newCard.getHeight());arryAttr.push('titulo:'+newCard.title);arryAttr.push('columnas:'+getValorSP('columnas',2));arryAttr.push('isFondo:'+getValorSP('isFondo',true));arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));arryAttr.push('isCerrable:'+getValorSP('isCerrable',true));arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));seteaAtributosGrid(arryAttr,newCard.id,storeTabsIn);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }});}});return frm;}
+function CreaTabColumnas(id) {panelTabId ++;var frm = new Ext.form.Panel({title: 'Tab ' + panelTabId,id: 'panel_tab_' + panelTabId,layout: 'column',columns: 2,frame: true,bodyPadding: '5 5 5 5',width: 350,height: 200,autoScroll:true,closable: true,defaultType: 'container',listeners: {close: {fn: function(c ){ limpiaObjetos(this.id);}}}});nCtrl ++;var rgs = {idPadre: id,idHijo: 'panel_tab_' + panelTabId,order: nCtrl,columnas: 2,titulo:'Tab ' + panelTabId,bodyPadding: '5 5 5 5',isFondo: true,width: 350,height: 200,isAutoScroll:true,isCerrable: true, isBodyBorder:false,tipo:'form_columns'};storeSuperPanel.add(rgs);return frm;}
+function CreaPanelAcordion(id,titulo) {var frm = new Ext.Panel({title: titulo,id: id,collapsible: true,margin: '5,0,0,5',frame: true,layout: 'accordion',closable: true,width: 350,height: 490,autoScroll:true,resizable:true,defaults: {bodyPadding: 10},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeAcordion);}}],items: [CreaAcordionColumnas(id), CreaAcordionColumnas(id), CreaAcordionColumnas(id)],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeAcordion);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }});}});return frm;}
+function CreaAcordionColumnas(id) {panelAcordionId ++;var frm = new Ext.form.Panel({title: 'Acordion ' + panelAcordionId,id: 'panel_acordion_' + panelAcordionId,layout: 'column',columns: 2,frame: false,bodyPadding: '5 5 5 5',width: 50,height: 50,autoScroll:true,closable: false,defaultType: 'container',listeners: {expand: function(pnl) {var arryAttr = [];ctrl = pnl.id;arryAttr.push('(id):'+pnl.id);arryAttr.push('width:'+pnl.getWidth());arryAttr.push('height:'+pnl.getHeight());arryAttr.push('titulo:'+pnl.title);arryAttr.push('columnas:'+getValorSP('columnas',2));arryAttr.push('isFondo:'+getValorSP('isFondo',false));arryAttr.push('bodyPadding:'+getValorSP('bodyPadding','5 5 5 5'));arryAttr.push('isAutoScroll:'+getValorSP('isAutoScroll',true));arryAttr.push('isCerrable:'+getValorSP('isCerrable',false));arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder',false));seteaAtributosGrid(arryAttr,pnl.id,storeAcordionIn);},close: {fn: function(c ){ limpiaObjetos(this.id);}}}});nCtrl ++;var rgs = {idPadre: id,idHijo: 'panel_acordion_' + panelAcordionId,order: nCtrl,columnas: 2,titulo:'Acordion ' + panelAcordionId,bodyPadding: '5 5 5 5',isFondo: false,width: 350,height: 200,isAutoScroll:true,isCerrable: false, isBodyBorder:false,tipo:'form_columns'};storeSuperPanel.add(rgs);return frm;}
 function CreaPanelTablas(id) {var nameP = 'tablas' + id;var frm = new Ext.Panel({title: 'Titulo del Panel estilo Tablas ' + id,id: nameP,collapsible: true,margin: '5,0,0,5',frame: true,layout: {type: 'table',columns: 3},defaults: {frame:true, width:200, height: 200},closable: true,width: 350,height: 200,autoScroll:true,resizable:true,afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(nameP).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,nameP);return true; }}); }});return frm;}
 //****Penidente agregar en cada border agregaCtrl(node.nodes[0].innerText,nameP);
-function CreaPanelBorder(id,titulo) {
-	var sur = 'sur_'+ borderId;
-	nCtrl ++;
-	var rgsSur = {idPadre: id,idHijo: sur,order: nCtrl,titulo:'Región Sur ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'sur'};
-	storeSuperPanel.add(rgsSur);
-	var izq= 'izq_'+ borderId;
-	nCtrl ++;
-	var rgsIzq = {idPadre: id,idHijo: izq,order: nCtrl,titulo:'Región Izquierda ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'izq'};
-	storeSuperPanel.add(rgsIzq);
-	var centro= 'centro_'+ borderId;
-	nCtrl ++;
-	var rgsCentro = {idPadre: id,idHijo: centro,order: nCtrl,titulo:'Región Centro ' + borderId,bodyPadding: '5 5 5 5',isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'centro'};
-	storeSuperPanel.add(rgsCentro);
-	var der = 'der_'+ borderId;
-	nCtrl ++;
-	var rgsDer = {idPadre: id,idHijo: der,order: nCtrl,titulo:'Región Derecha ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'der'};
-	storeSuperPanel.add(rgsDer);
-	var norte = 'norte_'+ borderId;
-	nCtrl ++;
-	var rgsNorte = {idPadre: id,idHijo: norte,order: nCtrl,titulo:'Región Norte ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2, tipo:'norte'};
-	storeSuperPanel.add(rgsNorte);
-	var frm = new Ext.panel.Panel({title: titulo,id: id,collapsible: true,margin: '5,0,0,5',frame: true,
-	layout: 'border',closable: true,width: 700,height: 480,autoScroll:true,
-	resizable:true,
-	items: [{
-        title: 'Región Sur ' + borderId,region:'south',xtype:'panel',height: 100,id: sur,layout: 'column',columns: 2,closable:true,collapsible:true,autoScroll:true,split:true,margins:'5 5 5 5',
-        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderSur);}}],
-		afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(sur).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,sur);return true;}});},
-		listeners: {close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}}
-    },{
-        title: 'Región Izquierda ' + borderId,region:'west',xtype: 'panel',margins: '5 5 5 5',width: 200,closable: true,collapsible: true,id: izq,autoScroll:true,layout: 'column',split:true,columns: 2,
-        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(izq).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,izq);return true;}});},
-		listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},
-		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderIzq);}}]
-    },{
-        title: 'Región Centro '+ borderId, region: 'center', xtype: 'panel',margins: '5 5 5 5',closable: true,collapsible: true,id: centro,autoScroll:true,layout: 'column',split:true,columns: 2,
-        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(centro).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,centro);return true;}});},
-        listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}},
-        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderCenter);}}]
-    },{
-        title: 'Región Norte ' + borderId,region: 'north',xtype: 'panel',height: 100,closable: true,collapsible: true,id: norte,autoScroll:true,layout: 'column',columns: 2,split:true,margins: '5 5 5 5',
-        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderNorte);}}],
-        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(norte).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,norte);return true;}});},
-		listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}}
-    },{
-        title: 'Región Derecha ' + borderId,region:'east',xtype:'panel',margins:'5 5 5 5',width:200,closable:true,collapsible:true,id:der,layout: 'column',columns: 2,split:true,autoScroll:true,
-        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(der).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,der);return true;}});},
-		listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},
-		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderDer);}}]
-    }],
-    listeners: {
-    	close: {
-        	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
-    	},resize: {
-    		fn: function(){cargaAtributosPanel(this.id,storeBorder);}
-    	}
-    },
-    tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: 
-		function(event, toolEl, panelHeader) {
-    	var name = panelHeader.id;
-		var id = name.substring(0,name.indexOf("_header"));
-		cargaAtributosPanel(id,storeBorder);}}]
-	});return frm;}
-function CreateWin(id,titulo) {
-Ext.create('Ext.Window', {
-	title: titulo,
-	id: id,
-	width: 400,
-	height: 200,
-	x: 450,
-	y: 200,
-	headerPosition: 'right',
-	collapsible: true,
-	frame: true,
-	bodyPadding:'5 5 5 5',
-	tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeWindow);}}],
-	layout: {type: 'column',columns: 1},
-	listeners: {
-        	close: {
-            	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
-        	},resize: {
-        		fn: function(){cargaAtributosPanel(this.id,storeWindow);}
-        	}
-        },
-afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); 
-this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, 
-{ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);
-return true; }}); }}).show();}// Para agregar los paneles de trabajo    
+function CreaPanelBorder(id,titulo) {var sur = 'sur_'+ borderId;nCtrl ++;var rgsSur = {idPadre: id,idHijo: sur,order: nCtrl,titulo:'Región Sur ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'sur'};storeSuperPanel.add(rgsSur);var izq= 'izq_'+ borderId;nCtrl ++;var rgsIzq = {idPadre: id,idHijo: izq,order: nCtrl,titulo:'Región Izquierda ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'izq'};storeSuperPanel.add(rgsIzq);var centro= 'centro_'+ borderId;nCtrl ++;var rgsCentro = {idPadre: id,idHijo: centro,order: nCtrl,titulo:'Región Centro ' + borderId,bodyPadding: '5 5 5 5',isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'centro'};storeSuperPanel.add(rgsCentro);var der = 'der_'+ borderId;nCtrl ++;var rgsDer = {idPadre: id,idHijo: der,order: nCtrl,titulo:'Región Derecha ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'der'};storeSuperPanel.add(rgsDer);var norte = 'norte_'+ borderId;nCtrl ++;var rgsNorte = {idPadre: id,idHijo: norte,order: nCtrl,titulo:'Región Norte ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2, tipo:'norte'};storeSuperPanel.add(rgsNorte);var frm = new Ext.panel.Panel({title: titulo,id: id,collapsible: true,margin: '5,0,0,5',frame: true,layout: 'border',closable: true,width: 700,height: 480,autoScroll:true,resizable:true,items: [{title: 'Región Sur ' + borderId,region:'south',xtype:'panel',height: 100,id: sur,layout: 'column',columns: 2,closable:true,collapsible:true,autoScroll:true,split:true,margins:'5 5 5 5',tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderSur);}}],afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(sur).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,sur);return true;}});},listeners: {close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}}},{title: 'Región Izquierda ' + borderId,region:'west',xtype: 'panel',margins: '5 5 5 5',width: 200,closable: true,collapsible: true,id: izq,autoScroll:true,layout: 'column',split:true,columns: 2,afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(izq).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,izq);return true;}});},listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderIzq);}}]},{title: 'Región Centro '+ borderId, region: 'center', xtype: 'panel',margins: '5 5 5 5',closable: true,collapsible: true,id: centro,autoScroll:true,layout: 'column',split:true,columns: 2,afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(centro).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,centro);return true;}});},listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderCenter);}}]},{title: 'Región Norte ' + borderId,region: 'north',xtype: 'panel',height: 100,closable: true,collapsible: true,id: norte,autoScroll:true,layout: 'column',columns: 2,split:true,margins: '5 5 5 5',tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderNorte);}}],afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(norte).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,norte);return true;}});},listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}}},{title: 'Región Derecha ' + borderId,region:'east',xtype:'panel',margins:'5 5 5 5',width:200,closable:true,collapsible:true,id:der,layout: 'column',columns: 2,split:true,autoScroll:true,afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(der).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,der);return true;}});},listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderDer);}}]}],listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeBorder);}}},tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorder);}}]});return frm;}
+function CreateWin(id,titulo) {Ext.create('Ext.Window', {title: titulo,id: id,width: 400,height: 200,x: 450,y: 200,headerPosition: 'right',collapsible: true,frame: true,bodyPadding:'5 5 5 5',tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeWindow);}}],layout: {type: 'column',columns: 1},listeners: {close: {fn: function(panel, eOpts ){limpiaObjetos(panel.id);}},resize: {fn: function(){cargaAtributosPanel(this.id,storeWindow);}}},afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(id).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,id);return true; }}); }}).show();}
+
 //Funciones para agregar controles
-function CreaCtrlCombo(id){var myCtrl = {xtype:'combobox',id: id,fieldLabel: id,anchor:'95%',margin:'5 5 5 5',store: [['tr','uno'],['ru','dos'],['en','tres']],mode: 'local',listeners: {focus: {fn: function(c ){cChk = false;var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('height:'+ c.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('texto:'+getValorSP('texto',''));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('textoMax:'+getValorSP('textoMax',10));arryAttr.push('textoMin:'+getValorSP('textoMin',10));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('multiSelect:'+getValorSP('multiSelect',false));arryAttr.push('store:'+getValorSP('store',''));arryAttr.push('modo:'+getValorSP('modo','remote'));arryAttr.push('selectconFoco:'+getValorSP('selectconFoco',false));arryAttr.push('selectAction:'+getValorSP('selectAction','all'));arryAttr.push('valorDisplay:'+getValorSP('valorDisplay','value'));arryAttr.push('valorId:'+getValorSP('valorId','key'));arryAttr.push('isFlecha:'+getValorSP('isFlecha',false));arryAttr.push('isAutoComp:'+getValorSP('isAutoComp',false));arryAttr.push('isPadre:'+getValorSP('isPadre',false));arryAttr.push('delimitador:'+getValorSP('delimitador',''));seteaAtributosGrid(arryAttr,c.id,storeComboAttr);}}}};return myCtrl;}
-function CreaCtrlBoton(id){
-	var myCtrl = {xtype:'button',id: id,anchor:'95%',margin:'5 5 5 5',text : id,scale: 'small',
-	listeners: {
-		click: {fn: function(c ){ 
-			var arryAttr = [];
-			ctrl = c.id;
-			arryAttr.push('(id):'+c.id);
-			arryAttr.push('height:'+ c.getHeight());arryAttr.push('texto:'+getValorSP('texto',c.id));arryAttr.push('row:'+getValorSP('row',0));
-			arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));
-			arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('toolTip:'+getValorSP('toolTip',''));
-			arryAttr.push('estilo:'+getValorSP('estilo','normal'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
-			arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('imagenCls:'+getValorSP('imagenCls',''));
-			arryAttr.push('imagen_aling:'+getValorSP('imagen_aling',''));arryAttr.push('escala:'+getValorSP('escala',''));
-			arryAttr.push('width:'+getValorSP('width','0'));
-			seteaAtributosGrid(arryAttr,c.id,storeBotonAttr);}
-			}}
-		};return myCtrl;}
-function CreaCtrlRadio(id){var myCtrl = {xtype:'radiofield',/*hideLabel: true,//boxLabel: id,*/fieldLabel: id,id: id,anchor:'95%',margin:'5 5 5 5',listeners: {focus: {fn: function(c ){ cChk = false;var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isSeleccionado:'+getValorSP('isSeleccionado',false));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));seteaAtributosGrid(arryAttr,c.id,storeRadioAttr);}},click: {element: 'el', fn: function (id) {var s = Ext.getCmp(this.id).getValue();if(cChk == false){cChk = true;bChk = Ext.getCmp(this.id).getValue();}else{cChk = false;Ext.getCmp(this.id).setValue(bChk);}}}}};return myCtrl;}
-function CreaCtrlCheck(id){var myCtrl = {xtype:'checkboxfield',/*hideLabel: true,boxLabel: id,*/fieldLabel: id,margin:'5 5 5 5',id: id,anchor:'95%',listeners: {focus: {fn: function(c ){ cChk = false;var arryAttr = [];ctrl = c.id;ttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isSeleccionado:'+getValorSP('isSeleccionado',false));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));seteaAtributosGrid(arryAttr,c.id,storeCheckAttr);}},click: {element: 'el', fn: function (id) {var s = Ext.getCmp(this.id).getValue();if(cChk == false){cChk = true;bChk = Ext.getCmp(this.id).getValue();}else{cChk = false;Ext.getCmp(this.id).setValue(bChk);}}}}};return myCtrl;}
-function CreaCtrlPicker(id) {var txt = {xtype:'datefield',fieldLabel: id,id: id,anchor:'95%',margin:'5 5 5 5',format:'d/m/Y',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('isPadre:'+getValorSP('isPadre',''));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('fecha:'+getValorSP('fecha',''));arryAttr.push('textoMax:'+getValorSP('textoMax',10));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMin:'+getValorSP('textoMin',10));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('fechaMax:'+getValorSP('fechaMax',''));arryAttr.push('fechaMaxMsg:'+getValorSP('fechaMaxMsg',''));arryAttr.push('fechaMin:'+getValorSP('fechaMin',''));arryAttr.push('fechaMinMsg:'+getValorSP('fechaMinMsg',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('fechaInvalidTxt:'+getValorSP('fechaInvalidTxt',''));seteaAtributosGrid(arryAttr,c.id,storePickerAttr);}}}};return txt;}
-function CreaCtrlNumeric(id) {var txt = {xtype:'numberfield',fieldLabel: id,id: id,allowBlank:true,margin:'5 5 5 5',anchor:'95%',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('texto:'+c.getRawValue());arryAttr.push('textoMax:'+getValorSP('textoMax',0));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMin:'+getValorSP('textoMin',0));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('valorMax:'+getValorSP('valorMax',0));arryAttr.push('valorMin:'+getValorSP('valorMin',0));arryAttr.push('valorMaxMsg:'+getValorSP('valorMaxMsg',''));arryAttr.push('valorMinMsg:'+getValorSP('valorMinMsg',''));arryAttr.push('isFlechas:'+getValorSP('isFlechas',true));seteaAtributosGrid(arryAttr,c.id,storeNumericAttr);/*cargaAtributosCtrl(arryAttr,storeNumericAttr,c.id);*/}}}};return txt;}
-function CreaCtrlTexto(id) {var txt = {xtype:'textfield',fieldLabel: id,id: id,labelWidth : 100,allowBlank:true,margin:'5 5 5 5',anchor:'95%',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('height:'+ c.getHeight());arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('texto:'+c.getValue());arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('textoMax:'+getValorSP('textoMax',0));arryAttr.push('textoMin:'+getValorSP('textoMin',0));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));seteaAtributosGrid(arryAttr,c.id,storeTextAttr);}}}};return txt;}
-function CreaCtrlLabel(id){var myCtrl = {xtype:'label',id: id,margin:'5 5 5 5',text : id,
+function CreaCtrlTexto(_fieldLabel,id, _texto,_height) {var txt = {xtype:'textfield',fieldLabel: _fieldLabel,id: id,labelWidth : 100,height:_height,value:_texto,allowBlank:true,margin:'5 5 5 5',anchor:'95%',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('isPadre:'+getValorSP('isPadre',false));arryAttr.push('height:'+ c.getHeight());arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('texto:'+c.getValue());arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('textoMax:'+getValorSP('textoMax',0));arryAttr.push('textoMin:'+getValorSP('textoMin',0));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));seteaAtributosGrid(arryAttr,c.id,storeTextAttr);}}}};return txt;}
+function CreaCtrlNumeric(_fieldLabel,id, _texto,_height) {var txt = {xtype:'numberfield',fieldLabel: _fieldLabel,id: id,labelWidth : 100,height:_height,value:_texto,allowBlank:true,margin:'5 5 5 5',anchor:'95%',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('texto:'+c.getRawValue());arryAttr.push('textoMax:'+getValorSP('textoMax',0));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMin:'+getValorSP('textoMin',0));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('valorMax:'+getValorSP('valorMax',0));arryAttr.push('valorMin:'+getValorSP('valorMin',0));arryAttr.push('valorMaxMsg:'+getValorSP('valorMaxMsg',''));arryAttr.push('valorMinMsg:'+getValorSP('valorMinMsg',''));arryAttr.push('isFlechas:'+getValorSP('isFlechas',true));seteaAtributosGrid(arryAttr,c.id,storeNumericAttr);/*cargaAtributosCtrl(arryAttr,storeNumericAttr,c.id);*/}}}};return txt;}
+function CreaCtrlPicker(_fieldLabel,id, _texto,_height) {var txt = {xtype:'datefield',fieldLabel: _fieldLabel,id: id,labelWidth : 100,height:_height,value:_texto,anchor:'95%',margin:'5 5 5 5',format:'d/m/Y',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('isPadre:'+getValorSP('isPadre',''));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('fecha:'+getValorSP('fecha',''));arryAttr.push('textoMax:'+getValorSP('textoMax',10));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMin:'+getValorSP('textoMin',10));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('fechaMax:'+getValorSP('fechaMax',''));arryAttr.push('fechaMaxMsg:'+getValorSP('fechaMaxMsg',''));arryAttr.push('fechaMin:'+getValorSP('fechaMin',''));arryAttr.push('fechaMinMsg:'+getValorSP('fechaMinMsg',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('fechaInvalidTxt:'+getValorSP('fechaInvalidTxt',''));seteaAtributosGrid(arryAttr,c.id,storePickerAttr);}}}};return txt;}
+function CreaCtrlCheck(_fieldLabel,id,_height,_isCheck){var myCtrl = {xtype:'checkboxfield',/*hideLabel: true,boxLabel: id,*/fieldLabel: _fieldLabel,height:_height,checked:_isCheck,margin:'5 5 5 5',id: id,anchor:'95%',listeners: {focus: {fn: function(c ){ cChk = false;var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isSeleccionado:'+getValorSP('isSeleccionado',false));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));seteaAtributosGrid(arryAttr,c.id,storeCheckAttr);}},click: {element: 'el', fn: function (id) {if(cChk == false){cChk = true;bChk = Ext.getCmp(this.id).getValue();}else{cChk = false;Ext.getCmp(this.id).setValue(bChk);}var arryAttr = [];var s = Ext.getCmp(this.id).getValue();ctrl = this.id;arryAttr.push('(id):'+this.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',this.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ getValorSP('height',24));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('nombre:'+getValorSP('nombre',this.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('isSeleccionado:'+s);seteaAtributosGrid(arryAttr,this.id,storeCheckAttr);}}}};return myCtrl;}
+function CreaCtrlRadio(_fieldLabel,id,_height,_isCheck){var myCtrl = {xtype:'radiofield',/*hideLabel: true,//boxLabel: id,*/fieldLabel: _fieldLabel,id: id,height:_height,checked:_isCheck,anchor:'95%',margin:'5 5 5 5',listeners: {focus: {fn: function(c ){ var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ c.getHeight());arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isSeleccionado:'+getValorSP('isSeleccionado',false));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));seteaAtributosGrid(arryAttr,c.id,storeRadioAttr);}},click: {element: 'el', fn: function (id) {if(cChk == false){cChk = true;bChk = Ext.getCmp(this.id).getValue();}else{cChk = false;Ext.getCmp(this.id).setValue(false);}var arryAttr = [];var s = Ext.getCmp(this.id).getValue();ctrl = this.id;arryAttr.push('(id):'+this.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',this.id));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('height:'+ getValorSP('height',24));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('nombre:'+getValorSP('nombre',this.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('isSeleccionado:'+s);seteaAtributosGrid(arryAttr,this.id,storeRadioAttr);}}}};return myCtrl;}
+function CreaCtrlBoton(_fieldLabel,id,_height,_Icon){var myCtrl = {xtype:'button',id: id,anchor:'95%',margin:'5 5 5 5',text : _fieldLabel,scale: 'small',height:_height,iconCls:_Icon,listeners: {click: {fn: function(c ){var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('height:'+ c.getHeight());arryAttr.push('texto:'+getValorSP('texto',c.id));arryAttr.push('row:'+getValorSP('row',0));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('estilo:'+getValorSP('estilo','normal'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('imagenCls:'+getValorSP('imagenCls',''));arryAttr.push('imagen_aling:'+getValorSP('imagen_aling',''));arryAttr.push('escala:'+getValorSP('escala',''));arryAttr.push('width:'+getValorSP('width','0'));seteaAtributosGrid(arryAttr,c.id,storeBotonAttr);}}}};return myCtrl;}
+function CreaCtrlCombo(_fieldLabel,id,_texto,_height){var myCtrl = {xtype:'combobox',id: id,fieldLabel: _fieldLabel,height:_height,anchor:'95%',value:_texto,margin:'5 5 5 5',store: [['tr','uno'],['ru','dos'],['en','tres']],mode: 'local',listeners: {focus: {fn: function(c ){cChk = false;var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('height:'+ c.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('texto:'+getValorSP('texto',''));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('textoMax:'+getValorSP('textoMax',10));arryAttr.push('textoMin:'+getValorSP('textoMin',10));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('multiSelect:'+getValorSP('multiSelect',false));arryAttr.push('store:'+getValorSP('store',''));arryAttr.push('modo:'+getValorSP('modo','remote'));arryAttr.push('selectconFoco:'+getValorSP('selectconFoco',false));arryAttr.push('selectAction:'+getValorSP('selectAction','all'));arryAttr.push('valorDisplay:'+getValorSP('valorDisplay','value'));arryAttr.push('valorId:'+getValorSP('valorId','key'));arryAttr.push('isFlecha:'+getValorSP('isFlecha',false));arryAttr.push('isAutoComp:'+getValorSP('isAutoComp',false));arryAttr.push('isPadre:'+getValorSP('isPadre',false));arryAttr.push('delimitador:'+getValorSP('delimitador',''));seteaAtributosGrid(arryAttr,c.id,storeComboAttr);}}}};return myCtrl;}
+function CreaCtrlLabel(id,_texto){var myCtrl = {xtype:'label',id: id,margin:'5 5 5 5',text : _texto,listeners: {render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('height:'+ obj.getHeight());arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('texto:'+getValorSP('texto',obj.id));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('html:'+getValorSP('html',''));seteaAtributosGrid(arryAttr,obj.id,storeLabelAttr);});}}};return myCtrl;}
+function CreaCtrlImagen(id,_Src){var myCtrl = {xtype:'image',id: id,src:'http://www.sencha.com/img/20110215-feat-html5.png',listeners: {render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('height:'+ obj.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('src:'+getValorSP('src','http://www.sencha.com/img/20110215-feat-html5.png'));seteaAtributosGrid(arryAttr,obj.id,storeImagenAttr);});}}};return myCtrl;}
+
+function CreaCtrlHidden(id,_texto){var myCtrl = {xtype:'label',id: id,text : _texto,margin:'5 5 5 5',
 listeners: {
-    render: function(obj) {
-        Ext.get(obj.id).on('click',function(e) {
-            var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
-            arryAttr.push('height:'+ obj.getHeight());arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
-            arryAttr.push('texto:'+getValorSP('texto',obj.id));arryAttr.push('width:'+getValorSP('width','0'));
-            arryAttr.push('html:'+getValorSP('html',''));
-            seteaAtributosGrid(arryAttr,obj.id,storeLabelAttr);
-        });
-    }
-}
-};
-return myCtrl;}
-function CreaCtrlImagen(id){var myCtrl = {xtype:'image',id: id,src:'http://www.sencha.com/img/20110215-feat-html5.png',
-listeners: {
-    render: function(obj) {
-        Ext.get(obj.id).on('click',function(e) {
-var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
-arryAttr.push('height:'+ obj.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
-arryAttr.push('src:'+getValorSP('src','http://www.sencha.com/img/20110215-feat-html5.png'));
-seteaAtributosGrid(arryAttr,obj.id,storeImagenAttr);
-        });
-    }
-}
-};
-return myCtrl;}
-function CreaCtrlHidden(id){var myCtrl = {xtype:'label',id: id,text : id,margin:'5 5 5 5',
-		listeners: {
-		    render: function(obj) {
-		        Ext.get(obj.id).on('click',function(e) {
-		var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
-		arryAttr.push('texto:'+getValorSP('texto',obj.id));
-		seteaAtributosGrid(arryAttr,obj.id,storeHiddenAttr);
-		        });
-		    }
-		}
-		};
-return myCtrl;}
+render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('texto:'+getValorSP('texto',obj.id));seteaAtributosGrid(arryAttr,obj.id,storeHiddenAttr);});}}};return myCtrl;}
 
 function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5 5 5 5',
 		store: Ext.create('Ext.data.Store', { 
@@ -1458,8 +1124,96 @@ function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5
 		};
 
 return myCtrl;}
+
+//Open Paneles
+function openPanel(jsonResponse){
+	for(rp = 0; rp < jsonResponse.regreso.length; rp++){
+		var attrPnl = jsonResponse.regreso[rp].attrs;
+		var hijosPnl = jsonResponse.regreso[rp].attrsHijos;  
+		var controles = jsonResponse.regreso[rp].controles;
+		var regId;
+		var arryAttr = [];
+		var store;
+		var tipo = getAttrOpen(attrPnl,'xtype');
+		var layout = getAttrOpen(attrPnl,'layout');
+		if (tipo === 'form' && layout == ''){
+			regId = getAttrOpen(attrPnl,'id');
+			panelesId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeFormulario;
+			target.add(CreaPanelFormaOpen(attrPnl));
+			arryAttr.push('tipo:form');
+			arryAttr.push('url:'+getAttrOpen(attrPnl,'url'));
+		}else if(tipo === 'form' && layout == 'column'){
+			regId = getAttrOpen(attrPnl,'id');
+			columnasId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeColumnas;
+			target.add(CreaPanelColumnasOpen(attrPnl));
+			arryAttr.push('tipo:form_columns');
+			arryAttr.push('url:'+getAttrOpen(attrPnl,'url'));
+			arryAttr.push('columnas:'+getAttrOpen(attrPnl,'columns'));
+		}else if(tipo === 'panel' && layout == 'accordion'){
+			regId = getAttrOpen(attrPnl,'id');
+			acordionId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeAcordion;
+			target.add(CreaPanelAcordionOpen(attrPnl,hijosPnl));
+			arryAttr.push('tipo:form_acordion');
+			arryAttr.push('tabs:'+hijosPnl.length);
+		}else if(tipo === 'panel' && layout == 'border'){
+			regId = getAttrOpen(attrPnl,'id');
+			borderId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeBorder;
+			target.add(CreaPanelBorderOpen(attrPnl,hijosPnl));
+			arryAttr.push('tipo:border');
+		}else if(tipo === 'tabpanel'){
+			regId = getAttrOpen(attrPnl,'id');
+			tabsId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeTabs;
+			target.add(CreaPanelTabsOpen(attrPnl,hijosPnl));
+			arryAttr.push('tipo:form_tabs');
+			arryAttr.push('tabs:'+hijosPnl.length);
+		}else if(tipo === 'window'){
+			regId = getAttrOpen(attrPnl,'id');
+			ventanaId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store = storeWindow;
+			target.add(CreateWinOpen(attrPnl));
+			arryAttr.push('(id):'+regId);
+			arryAttr.push('columnas:'+getAttrOpen(attrPnl,'columns'));
+			arryAttr.push('columnas:'+getAttrOpen(attrPnl,'columns'));
+			arryAttr.push('titulo_Posicion:'+getAttrOpen(attrPnl,'headerPosition'));
+			arryAttr.push('isModal:'+getAttrOpen(attrPnl,'modal'));
+			arryAttr.push('isMinimizable:'+getAttrOpen(attrPnl,'minimizable'));
+			arryAttr.push('tipo:'+getAttrOpen(attrPnl,'xtype'));
+			arryAttr.push('cordX:0');arryAttr.push('cordY:0');
+			arryAttr.push('winEstilo:normal');
+		}
+		focusPanel=regId;
+		creaDataSP('superpanel',regId);
+		arryAttr.push('nombre:'+getAttrOpen(attrPnl,'name'));
+		arryAttr.push('isDesplegable:'+getAttrOpen(attrPnl,'collapsible'));
+		arryAttr.push('bodyPadding:' +getAttrOpen(attrPnl,'bodyPadding'));
+		arryAttr.push('isAutoScroll:' +getAttrOpen(attrPnl,'autoScroll'));
+		arryAttr.push('isBodyBorder:'+getAttrOpen(attrPnl,'bodyBorder'));
+		arryAttr.push('isCerrable:'+getAttrOpen(attrPnl,'closable'));
+		arryAttr.push('isFondo:'+getAttrOpen(attrPnl,'frame'));
+		arryAttr.push('isResizable:'+getAttrOpen(attrPnl,'resizable'));
+		arryAttr.push('height:'+getAttrOpen(attrPnl,'height'));
+		arryAttr.push('width:'+getAttrOpen(attrPnl,'width'));
+		arryAttr.push('titulo:'+getAttrOpen(attrPnl,'title'));
+		if (tipo != 'Ventana'){
+			arryAttr.push('margen:'+getAttrOpen(attrPnl,'margin'));
+		}
+		arryAttr.push('titulo_Aling:'+getAttrOpen(attrPnl,'titleAlign'));
+		seteaAtributosGrid(arryAttr,regId,store);	
+		agregaControlesOpen(controles,regId);
+		Ext.getCmp('west-panel').items.items[1].expand();
+		
+	}
+}
+
+
 // Para agregar los Paneles de trabajo
 function agrega(tipo){
+	isOpen = false;
 	tipo = trim(tipo);
 	var id='';
 	var store;var titulo='';
@@ -1548,9 +1302,146 @@ function agrega(tipo){
 	seteaAtributosGrid(arryAttr,id,store);	
 	Ext.getCmp('west-panel').items.items[1].expand();
 	//var f = pnl.items.items[1].expand();
-	}
+}
 
+function agregaControlesOpen(controles, panelId){
+	Ext.each(controles, function(control){
+		var ctrl = control.controlAttr;
+		var tipo = getAttrOpen(ctrl,'xtype');
+		var store;
+		var arryAttr = [];
+		var pnl = Ext.getCmp(panelId);
+		
+		//genericas
+		var regId = getAttrOpen(ctrl,'id');
+		var fieldLabel = getAttrOpen(ctrl,'fieldLabel');
+		var texto = getAttrOpen(ctrl,'value');
+		var height = getAttrOpen(ctrl,'height');
+		var anchor = parseInt(getAttrOpen(ctrl,'anchor'));
+		var toolTips = getAttrOpen(ctrl,'listeners');
+		var toolTip = toolTips.substring(toolTips.indexOf('text:')+6,toolTips.lastIndexOf(',d')-1);
 
+		if (tipo === 'textfield'){
+			textoId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeTextAttr;
+			pnl.add(CreaCtrlTexto(fieldLabel,regId,texto,height));
+			arryAttr.push('tipo:textfield');
+			arryAttr.push('texto:'+texto);
+		}else if(tipo === 'numberfield'){
+			numericId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeNumericAttr;
+			pnl.add(CreaCtrlNumeric(fieldLabel,regId,texto,height));
+			arryAttr.push('tipo:numberfield');arryAttr.push('isFlechas:'+getAttrOpen(ctrl,'hideTrigger'));arryAttr.push('isEditable:'+getAttrOpen(ctrl,'editable'));arryAttr.push('valorMax:'+getAttrOpen(ctrl,'maxValue'));arryAttr.push('valorMin:'+getAttrOpen(ctrl,'minValue'));arryAttr.push('valorMaxMsg:'+getAttrOpen(ctrl,'maxText'));arryAttr.push('valorMinMsg:'+getAttrOpen(ctrl,'minText'));
+			if(texto === ''){texto = '0';}
+			arryAttr.push('texto:'+texto);
+		}else if (tipo === 'datefield'){
+			pickerId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storePickerAttr;
+			pnl.add(CreaCtrlPicker(fieldLabel,regId,texto,height));
+			arryAttr.push('isEditable:'+getAttrOpen(ctrl,'editable'));arryAttr.push('fechaInvalidTxt:'+getAttrOpen(ctrl,'invalidText'));arryAttr.push('fechaMaxMsg:'+getAttrOpen(ctrl,'maxText'));arryAttr.push('fechaMax:'+getAttrOpen(ctrl,'maxValue'));arryAttr.push('fechaMinMsg:'+getAttrOpen(ctrl,'minText'));arryAttr.push('fechaMin:'+getAttrOpen(ctrl,'minValue'));arryAttr.push('isPadre:'+getAttrOpen(ctrl,'isPadre'));
+			arryAttr.push('tipo:datefield');
+			arryAttr.push('fecha:'+texto);
+		}else if (tipo === 'checkboxfield'){
+			checkId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeCheckAttr;
+			var isCheck = getAttrOpen(ctrl,'checked');
+			pnl.add(CreaCtrlCheck(fieldLabel,regId,height,isCheck));
+			arryAttr.push('isSeleccionado:'+getAttrOpen(ctrl,'checked'));
+			arryAttr.push('tipo:checkboxfield');
+		}else if (tipo === 'radiofield'){	
+			radioId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeRadioAttr;
+			var isCheck = getAttrOpen(ctrl,'checked');
+			pnl.add(CreaCtrlRadio(fieldLabel,regId,height,isCheck));
+			arryAttr.push('isSeleccionado:'+getAttrOpen(ctrl,'checked'));
+			arryAttr.push('tipo:radiofield');
+		}else if (tipo === 'button'){	
+			var textoBtn = getAttrOpen(ctrl,'text');
+			var iconCls = getAttrOpen(ctrl,'iconCls');
+			botonId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeBotonAttr;
+			pnl.add(CreaCtrlBoton(textoBtn,regId,height,iconCls));
+			arryAttr.push('texto:'+textoBtn);
+			arryAttr.push('row:'+getAttrOpen(ctrl,'row'));
+			arryAttr.push('estilo:'+getAttrOpen(ctrl,'estilo'));
+			arryAttr.push('escala:'+getAttrOpen(ctrl,'scale'));
+			arryAttr.push('imagen_aling:'+getAttrOpen(ctrl,'iconAling'));
+			arryAttr.push('imagenCls:'+iconCls);
+			arryAttr.push('tipo:button');
+		}else if(tipo === 'combobox'){
+			comboId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeComboAttr;
+			pnl.add(CreaCtrlCombo(fieldLabel,regId,texto,height));
+			arryAttr.push('isEditable:'+getAttrOpen(ctrl,'editable'));
+			arryAttr.push('multiSelect:'+getAttrOpen(ctrl,'multiSelect'));
+			arryAttr.push('modo:'+getAttrOpen(ctrl,'queryMode'));
+			arryAttr.push('selectconFoco:'+getAttrOpen(ctrl,'selectOnFocus'));
+			arryAttr.push('selectAction:'+getAttrOpen(ctrl,'triggerAction'));
+			arryAttr.push('valorDisplay:'+getAttrOpen(ctrl,'displayField'));
+			arryAttr.push('valorId:'+getAttrOpen(ctrl,'valueField'));
+			arryAttr.push('isFlecha:'+getAttrOpen(ctrl,'hideTrigger'));
+			arryAttr.push('isAutoComp:'+getAttrOpen(ctrl,'typeAhead'));
+			arryAttr.push('delimitador:'+getAttrOpen(ctrl,'delimiter'));
+			arryAttr.push('isPadre:'+getAttrOpen(ctrl,'isPadre'));
+			arryAttr.push('store:'+getAttrOpen(ctrl,'store'));
+			arryAttr.push('texto:'+getAttrOpen(ctrl,'value'));
+			arryAttr.push('tipo:combobox');
+		}else if(tipo === 'label'){
+			labelId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			var textolbl = getAttrOpen(ctrl,'text');
+			store=storeLabelAttr;
+			pnl.add(CreaCtrlLabel(regId,textolbl));
+			arryAttr.push('texto:'+textolbl);
+			arryAttr.push('html:'+getAttrOpen(ctrl,'html'));
+			arryAttr.push('tipo:label');
+		}else if(tipo === 'image'){
+			var src = getAttrOpen(ctrl,'src');
+			imagenId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeImagenAttr;
+			pnl.add(CreaCtrlImagen(regId,src));
+			arryAttr.push('src:'+src);
+			arryAttr.push('tipo:image');
+		}else if(tipo === 'hidden'){
+			hiddenId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			store=storeHiddenAttr;
+			var temp = '';
+			if(texto === ''){
+				temp = regId;
+			}else{
+				temp = texto;
+			}
+			pnl.add(CreaCtrlHidden(regId,temp));
+			arryAttr.push('texto:'+texto);
+			arryAttr.push('tipo:hidden');
+		}
+		
+
+		//generico texfield
+		arryAttr.push('isRequerido:'+getAttrOpen(ctrl,'allowBlank'));
+		arryAttr.push('isAnchor:'+anchor);
+		arryAttr.push('isRequeridoMsg:'+getAttrOpen(ctrl,'blankText'));
+		arryAttr.push('isBloqueado:'+getAttrOpen(ctrl,'disabled'));
+		arryAttr.push('textoSugerido:'+getAttrOpen(ctrl,'emptyText'));
+		arryAttr.push('etiqueta:'+fieldLabel);
+		arryAttr.push('height:'+height);
+		arryAttr.push('(id):'+getAttrOpen(ctrl,'id'));
+		arryAttr.push('etiqueta_aling:'+getAttrOpen(ctrl,'labelAlign'));
+		arryAttr.push('etiqueta_width:'+getAttrOpen(ctrl,'labelWidth'));
+		arryAttr.push('toolTip:'+toolTip);
+		arryAttr.push('margen:'+getAttrOpen(ctrl,'margin'));
+		arryAttr.push('textoMax:'+getAttrOpen(ctrl,'maxLength'));
+		arryAttr.push('textoMaxMsg:'+getAttrOpen(ctrl,'maxLengthText'));
+		arryAttr.push('textoMin:'+getAttrOpen(ctrl,'minLength'));
+		arryAttr.push('textoMinMsg:'+getAttrOpen(ctrl,'minLengthText'));
+		arryAttr.push('nombre:'+getAttrOpen(ctrl,'name'));
+		arryAttr.push('padding:'+getAttrOpen(ctrl,'padding'));
+		arryAttr.push('soloLectura:'+getAttrOpen(ctrl,'readOnly'));
+		arryAttr.push('width:'+getAttrOpen(ctrl,'width'));
+		creaDataSP(panelId,regId);
+		seteaAtributosGrid(arryAttr,regId,store);
+	});
+
+}
 // Para agregar los Controles de trabajo
 function agregaCtrl(tipo,forma,arryAttrCtrl){
 	tipo = trim(tipo);
@@ -1572,82 +1463,25 @@ function agregaCtrl(tipo,forma,arryAttrCtrl){
 	var widthC = 0;
 	var arryAttr = [];
 	if (tipo === 'Texto'){
-		textoId ++;
-		id = 'texto_' + textoId;
-		store=storeTextAttr;
-		pnl.add(CreaCtrlTexto(id));
-		arryAttr.push('tipo:textfield');
+		textoId ++;id = 'texto_' + textoId;store=storeTextAttr;pnl.add(CreaCtrlTexto(id,id,'',24));arryAttr.push('tipo:textfield');
 	}else if (tipo === 'Label'){
-		labelId ++;
-		id = 'label_' + labelId;
-		store=storeLabelAttr;
-		pnl.add(CreaCtrlLabel(id));
-		arryAttr.push('texto:'+id);
-		arryAttr.push('tipo:label');
-		arryAttr.push('html:'+'');
+		labelId ++;id = 'label_' + labelId;store=storeLabelAttr;pnl.add(CreaCtrlLabel(id,id));arryAttr.push('texto:'+id);arryAttr.push('tipo:label');arryAttr.push('html:'+'');
 	}else if (tipo === 'Numeric'){
-		numericId ++;
-		id = 'numerico_' + numericId;
-		store=storeNumericAttr;
-		pnl.add(CreaCtrlNumeric(id));
-		arryAttr.push('texto:0');/*valor inicial del objeto*/
-		arryAttr.push('isFlechas:true');/*valor inicial del objeto*/
-		arryAttr.push('isEditable:true');
-		arryAttr.push('tipo:numberfield');
-	}else if (tipo === 'Picker'){pickerId ++; id = 'datafield_' + pickerId; 
-		store=storePickerAttr;pnl.add(CreaCtrlPicker(id));
-		arryAttr.push('isEditable:true');
-		arryAttr.push('tipo:datefield');
+		numericId ++;id = 'numerico_' + numericId;store=storeNumericAttr;pnl.add(CreaCtrlNumeric(id,id,0,24));arryAttr.push('texto:0');arryAttr.push('isFlechas:true');arryAttr.push('isEditable:true');arryAttr.push('tipo:numberfield');
+	}else if (tipo === 'Picker'){
+		pickerId ++; id = 'datafield_' + pickerId; store=storePickerAttr;pnl.add(CreaCtrlPicker(id,id,'',24));arryAttr.push('isEditable:true');arryAttr.push('textoMax:10');arryAttr.push('textoMaxMsg:Verifica el formato de la fecha');arryAttr.push('textoMin:10');arryAttr.push('textoMinMsg:Verifica el formato de la fecha');arryAttr.push('tipo:datefield');
 	}else if (tipo === 'Check'){
-		checkId ++;
-		id = 'checkboxfield_' + checkId;
-		store=storeCheckAttr;
-		pnl.add(CreaCtrlCheck(id));
-		arryAttr.push('tipo:checkboxfield');
+		checkId ++;id = 'checkboxfield_' + checkId;store=storeCheckAttr;pnl.add(CreaCtrlCheck(id,id,24,false));arryAttr.push('tipo:checkboxfield');
 	}else if (tipo === 'Radio'){	
-		radioId ++;
-		id = 'radiofield_' + radioId;
-		store=storeRadioAttr;
-		pnl.add(CreaCtrlRadio(id));
-		arryAttr.push('tipo:radiofield');
+		radioId ++;	id = 'radiofield_' + radioId;store=storeRadioAttr;pnl.add(CreaCtrlRadio(id,id,24,false));arryAttr.push('tipo:radiofield');
 	}else if (tipo === 'Boton'){	
-		botonId ++;
-		id = 'button_' + botonId;
-		store=storeBotonAttr;
-		pnl.add(CreaCtrlBoton(id));
-		arryAttr.push('texto:'+id);
-		arryAttr.push('row:1');
-		arryAttr.push('estilo:normal');
-		arryAttr.push('imagen_aling:left');
-		arryAttr.push('tipo:button');
+		botonId ++;id = 'button_' + botonId;store=storeBotonAttr;pnl.add(CreaCtrlBoton(id,id,24,''));arryAttr.push('texto:'+id);arryAttr.push('row:1');arryAttr.push('estilo:normal');arryAttr.push('imagen_aling:left');arryAttr.push('tipo:button');
 	}else if (tipo === 'Combo'){	
-		comboId ++;
-		id = 'combobox_' + comboId;
-		store=storeComboAttr;
-		pnl.add(CreaCtrlCombo(id));
-		arryAttr.push('isEditable:true');
-		arryAttr.push('multiSelect:false');
-		arryAttr.push('modo:remote');
-		arryAttr.push('selectconFoco:false');
-		arryAttr.push('selectAction:all');
-		arryAttr.push('valorDisplay:value');
-		arryAttr.push('valorId:key');
-		arryAttr.push('isFlecha:false');
-		arryAttr.push('isAutoComp:false');
-		arryAttr.push('tipo:combobox');
+		comboId ++;id = 'combobox_' + comboId;store=storeComboAttr;pnl.add(CreaCtrlCombo(id,id,'',24));arryAttr.push('isEditable:true');arryAttr.push('multiSelect:false');arryAttr.push('modo:remote');arryAttr.push('selectconFoco:false');arryAttr.push('selectAction:all');arryAttr.push('valorDisplay:value');arryAttr.push('valorId:key');arryAttr.push('isFlecha:false');arryAttr.push('isAutoComp:false');arryAttr.push('tipo:combobox');
 	}else if (tipo === 'Imagen'){
-		imagenId ++;
-		id = 'imagen_' + imagenId;
-		store=storeImagenAttr;
-		pnl.add(CreaCtrlImagen(id));
-		arryAttr.push('src:http://www.sencha.com/img/20110215-feat-html5.png');
-		arryAttr.push('tipo:image');
+		imagenId ++;id = 'imagen_' + imagenId;store=storeImagenAttr;pnl.add(CreaCtrlImagen(id,'http://www.sencha.com/img/20110215-feat-html5.png'));arryAttr.push('src:http://www.sencha.com/img/20110215-feat-html5.png');arryAttr.push('tipo:image');
 	}else if (tipo === 'Hidden'){
-		hiddenId ++;
-		id = 'hidden_' + hiddenId;
-		store=storeHiddenAttr;
-		pnl.add(CreaCtrlHidden(id));
-		arryAttr.push('tipo:hidden');
+		hiddenId ++;id = 'hidden_' + hiddenId;store=storeHiddenAttr;pnl.add(CreaCtrlHidden(id,id));arryAttr.push('tipo:hidden');
 	}else if (tipo === 'Grid'){
 		gridId ++;
 		id = 'grid_' + gridId;
@@ -1691,6 +1525,41 @@ function agregaCtrl(tipo,forma,arryAttrCtrl){
 function fncAsignaNombrePanel(){
 	Ext.MessageBox.prompt('Grabar Panel', 'Ingresa el nombre del panel:',fncGrabaPanel);
 }
+function fncAbrePanelExistente(){
+	if(isOpen){
+		Ext.MessageBox.prompt('Panel Existente', 'Ingresa el panel que deseas cargar:',fncAbrePanel);
+	}
+}
+
+function fncAbrePanel(text,nombre){
+	if(text == 'ok'){
+		target.body.mask("Cargando el panel...");
+		isOpen = false;
+		Ext.Ajax.request({
+	        url: '../../confpantallas/openpanel.action',
+	        params: {nombrepanel: nombre,tarea:'existe'},
+	        success: function(response, opts){
+	        	var text = trim(response.responseText);
+	        	var jsonResponse = Ext.JSON.decode(text);
+		        if(jsonResponse.regreso != '') {
+		        	openPanel(jsonResponse);
+		        	target.body.unmask();
+		        }else{
+		        	target.body.unmask();
+		        	isOpen = true;
+	            	Ext.MessageBox.show({
+				           title:'Carga de Panel',
+				           msg: 'El panel que deseas cargar NO existe.',
+				           buttons: Ext.MessageBox.OK,
+				           icon: Ext.MessageBox.INFO
+	 				});
+		        }
+	        }
+	    });
+	}
+}
+
+
 function fncGrabaPanel(text,nombre){
 	if(text == 'ok'){
 		namePnl = nombre;
@@ -1700,7 +1569,7 @@ function fncGrabaPanel(text,nombre){
 	        success: function(response, opts){          
 	            var text = trim(response.responseText);
 	            var jsonResponse = Ext.JSON.decode(text);
-	            if(jsonResponse.existe == true) {
+	            if(jsonResponse.regreso != '') {
 	            	Ext.MessageBox.show({
 			           title:'Guardando Formulario?',
 			           msg: 'El nombre ['+nombre+'] del panel ya existe. <br />Deseas sobreescribirlo?',
@@ -1732,7 +1601,7 @@ Ext.Ajax.request({
 	        	target.body.unmask();    
 	            var text = trim(response.responseText);
 	            var jsonResponse = Ext.JSON.decode(text);
-	            if(jsonResponse.success == true) {
+	            if(jsonResponse.regreso == '') {
             	Ext.MessageBox.show({
 			           title:'Información',
 			           msg: 'El panel ha sido guardado satisfactoriamente \n ID=' + jsonResponse.panel,
@@ -2079,7 +1948,11 @@ function cargaAtributosPanel(panel,store){
 	
 	var nombrel=getDataSP('nombre',ctrl);
 	if(nombrel != ''){
-		arryAttr.push('nombre:'+nombrel);
+		if(nombrel == 'undefined'){
+			arryAttr.push('nombre:'+id);
+		}else{
+			arryAttr.push('nombre:'+nombrel);
+		}
 	}else{
 		arryAttr.push('nombre:'+id);
 	}
@@ -2128,7 +2001,7 @@ function seteaAtributosGrid(arryAttr,id,store){
 		var s = item.indexOf(":");
 		var name = item.substr(0,s);
 		var value = item.substr(s+1);
-		if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name==='nombre'){Ext.apply(daty,{nombre:value});}else if(name ==='(id)'){Ext.apply(daty, {"(id)":value}); }else if(name === 'width'){Ext.apply(daty, {width:value});}else if(name === 'height'){Ext.apply(daty, {height:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'isRequerido'){Ext.apply(daty, {isRequerido:value});}else if(name === 'isAnchor'){Ext.apply(daty, {isAnchor:value});}else if(name === 'etiqueta_width'){Ext.apply(daty, {etiqueta_width:value});}else if(name === 'isBloqueado'){Ext.apply(daty, {isBloqueado:value});}else if(name === 'textoSugerido'){Ext.apply(daty, {textoSugerido:value});}else if(name === 'textoMax'){Ext.apply(daty, {textoMax:value});}else if(name === 'textoMaxMsg'){Ext.apply(daty, {textoMaxMsg:value});}else if(name === 'textoMin'){Ext.apply(daty, {textoMin:value});}else if(name === 'textoMinMsg'){Ext.apply(daty, {textoMinMsg:value});}else if(name === 'soloLectura'){Ext.apply(daty, {soloLectura:value});}else if(name === 'toolTip'){Ext.apply(daty, {toolTip:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'valorMax'){Ext.apply(daty, {valorMax:value});}else if(name === 'valorMin'){Ext.apply(daty, {valorMin:value});}else if(name === 'valorMaxMsg'){Ext.apply(daty, {valorMaxMsg:value});}else if(name === 'valorMinMsg'){Ext.apply(daty, {valorMinMsg:value});}else if(name === 'isFlechas'){Ext.apply(daty, {isFlechas:value});}else if(name === 'fecha'){Ext.apply(daty, {fecha:value});}else if(name === 'fechaMax'){Ext.apply(daty, {fechaMax:value});}else if(name === 'fechaMin'){Ext.apply(daty, {fechaMin:value});}else if(name === 'fechaMinMsg'){Ext.apply(daty, {fechaMinMsg:value});}else if(name === 'etiqueta_aling'){Ext.apply(daty, {etiqueta_aling:value});}else if(name === 'isSeleccionado'){Ext.apply(daty, {isSeleccionado:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'imagenCls'){Ext.apply(daty, {imagenCls:value});}else if(name === 'margen'){Ext.apply(daty, {margen:value});}else if(name === 'padding'){Ext.apply(daty, {padding:value});}else if(name === 'imagen_aling'){Ext.apply(daty, {imagen_aling:value});}else if(name === 'isRequeridoMsg'){Ext.apply(daty, {isRequeridoMsg:value});}else if(name === 'isEditable'){Ext.apply(daty, {isEditable:value});}else if(name === 'multiSelect'){Ext.apply(daty, {multiSelect:value});}else if(name === 'store'){Ext.apply(daty, {store:value});}else if(name === 'modo'){Ext.apply(daty, {modo:value});}else if(name === 'selectconFoco'){Ext.apply(daty, {selectconFoco:value});}else if(name === 'selectAction'){Ext.apply(daty, {selectAction:value});}else if(name === 'valorDisplay'){Ext.apply(daty, {valorDisplay:value});}else if(name === 'valorId'){Ext.apply(daty, {valorId:value});}else if(name === 'isFlecha'){Ext.apply(daty, {isFlecha:value});}else if(name === 'isAutoComp'){Ext.apply(daty, {isAutoComp:value});}else if(name === 'delimitador'){Ext.apply(daty, {delimitador:value});}else if(name === 'row'){Ext.apply(daty, {row:value});}else if(name === 'columnas'){Ext.apply(daty, {columnas:value});}else if(name === 'tabs'){Ext.apply(daty, {tabs:value});}else if(name === 'isDesplegable'){Ext.apply(daty, {isDesplegable:value});}else if(name === 'isFondo'){Ext.apply(daty, {isFondo:value});}else if(name === 'isCerrable'){Ext.apply(daty, {isCerrable:value});}else if(name === 'bodyPadding'){Ext.apply(daty, {bodyPadding:value});}else if(name === 'isAutoScroll'){Ext.apply(daty, {isAutoScroll:value});}else if(name === 'isResizable'){Ext.apply(daty, {isResizable:value});}else if(name === 'isBodyBorder'){Ext.apply(daty, {isBodyBorder:value});}else if(name === 'titulo_Aling'){Ext.apply(daty, {titulo_Aling:value});}else if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'fechaInvalidTxt'){Ext.apply(daty, {fechaInvalidTxt:value});}else if(name === 'escala'){Ext.apply(daty, {escala:value});}else if(name === 'tipo'){Ext.apply(daty, {tipo:value});}else if(name === 'isPadre'){Ext.apply(daty, {isPadre:value});}else if(name === 'estilo'){Ext.apply(daty, {estilo:value});}else if(name === 'url'){Ext.apply(daty, {url:value});}else if(name === 'titulo_Posicion'){Ext.apply(daty, {titulo_Posicion:value});}else if(name === 'isModal'){Ext.apply(daty, {isModal:value});}else if(name === 'isMinimizable'){Ext.apply(daty, {isMinimizable:value});}else if(name === 'cordX'){Ext.apply(daty, {cordX:value});}else if(name === 'cordY'){Ext.apply(daty, {cordY:value});}else if(name === 'html'){Ext.apply(daty, {html:value});}else if(name === 'src'){Ext.apply(daty, {src:value});}else if(name === 'query'){Ext.apply(daty, {query:value});}else if(name === 'columna_orden'){Ext.apply(daty, {columna_orden:value});}else if(name === 'columna_hidden'){Ext.apply(daty, {columna_hidden:value});}else if(name === 'columna_move'){Ext.apply(daty, {columna_move:value});}else if(name === 'columna_resize'){Ext.apply(daty, {columna_resize:value});}else if(name === 'isBorder'){Ext.apply(daty, {isBorder:value});
+		if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name==='nombre'){Ext.apply(daty,{nombre:value});}else if(name ==='(id)'){Ext.apply(daty, {"(id)":value}); }else if(name === 'width'){Ext.apply(daty, {width:value});}else if(name === 'height'){Ext.apply(daty, {height:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'isRequerido'){Ext.apply(daty, {isRequerido:value});}else if(name === 'isAnchor'){Ext.apply(daty, {isAnchor:value});}else if(name === 'etiqueta_width'){Ext.apply(daty, {etiqueta_width:value});}else if(name === 'isBloqueado'){Ext.apply(daty, {isBloqueado:value});}else if(name === 'textoSugerido'){Ext.apply(daty, {textoSugerido:value});}else if(name === 'textoMax'){Ext.apply(daty, {textoMax:value});}else if(name === 'textoMaxMsg'){Ext.apply(daty, {textoMaxMsg:value});}else if(name === 'textoMin'){Ext.apply(daty, {textoMin:value});}else if(name === 'textoMinMsg'){Ext.apply(daty, {textoMinMsg:value});}else if(name === 'soloLectura'){Ext.apply(daty, {soloLectura:value});}else if(name === 'toolTip'){Ext.apply(daty, {toolTip:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'valorMax'){Ext.apply(daty, {valorMax:value});}else if(name === 'valorMin'){Ext.apply(daty, {valorMin:value});}else if(name === 'valorMaxMsg'){Ext.apply(daty, {valorMaxMsg:value});}else if(name === 'valorMinMsg'){Ext.apply(daty, {valorMinMsg:value});}else if(name === 'isFlechas'){Ext.apply(daty, {isFlechas:value});}else if(name === 'fecha'){Ext.apply(daty, {fecha:value});}else if(name === 'fechaMax'){Ext.apply(daty, {fechaMax:value});}else if(name === 'fechaMin'){Ext.apply(daty, {fechaMin:value});}else if(name === 'fechaMinMsg'){Ext.apply(daty, {fechaMinMsg:value});}else if(name === 'etiqueta_aling'){Ext.apply(daty, {etiqueta_aling:value});}else if(name === 'isSeleccionado'){Ext.apply(daty, {isSeleccionado:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'imagenCls'){Ext.apply(daty, {imagenCls:value});}else if(name === 'margen'){Ext.apply(daty, {margen:value});}else if(name === 'padding'){Ext.apply(daty, {padding:value});}else if(name === 'imagen_aling'){Ext.apply(daty, {imagen_aling:value});}else if(name === 'isRequeridoMsg'){Ext.apply(daty, {isRequeridoMsg:value});}else if(name === 'isEditable'){Ext.apply(daty, {isEditable:value});}else if(name === 'multiSelect'){Ext.apply(daty, {multiSelect:value});}else if(name === 'store'){Ext.apply(daty, {store:value});}else if(name === 'modo'){Ext.apply(daty, {modo:value});}else if(name === 'selectconFoco'){Ext.apply(daty, {selectconFoco:value});}else if(name === 'selectAction'){Ext.apply(daty, {selectAction:value});}else if(name === 'valorDisplay'){Ext.apply(daty, {valorDisplay:value});}else if(name === 'valorId'){Ext.apply(daty, {valorId:value});}else if(name === 'isFlecha'){Ext.apply(daty, {isFlecha:value});}else if(name === 'isAutoComp'){Ext.apply(daty, {isAutoComp:value});}else if(name === 'delimitador'){Ext.apply(daty, {delimitador:value});}else if(name === 'row'){Ext.apply(daty, {row:value});}else if(name === 'columnas'){Ext.apply(daty, {columnas:value});}else if(name === 'tabs'){Ext.apply(daty, {tabs:value});}else if(name === 'isDesplegable'){Ext.apply(daty, {isDesplegable:value});}else if(name === 'isFondo'){Ext.apply(daty, {isFondo:value});}else if(name === 'isCerrable'){Ext.apply(daty, {isCerrable:value});}else if(name === 'bodyPadding'){Ext.apply(daty, {bodyPadding:value});}else if(name === 'isAutoScroll'){Ext.apply(daty, {isAutoScroll:value});}else if(name === 'isResizable'){Ext.apply(daty, {isResizable:value});}else if(name === 'isBodyBorder'){Ext.apply(daty, {isBodyBorder:value});}else if(name === 'titulo_Aling'){Ext.apply(daty, {titulo_Aling:value});}else if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'fechaInvalidTxt'){Ext.apply(daty, {fechaInvalidTxt:value});}else if(name === 'escala'){Ext.apply(daty, {escala:value});}else if(name === 'tipo'){Ext.apply(daty, {tipo:value});}else if(name === 'isPadre'){Ext.apply(daty, {isPadre:value});}else if(name === 'estilo'){Ext.apply(daty, {estilo:value});}else if(name === 'url'){Ext.apply(daty, {url:value});}else if(name === 'titulo_Posicion'){Ext.apply(daty, {titulo_Posicion:value});}else if(name === 'isModal'){Ext.apply(daty, {isModal:value});}else if(name === 'isMinimizable'){Ext.apply(daty, {isMinimizable:value});}else if(name === 'cordX'){Ext.apply(daty, {cordX:value});}else if(name === 'cordY'){Ext.apply(daty, {cordY:value});}else if(name === 'html'){Ext.apply(daty, {html:value});}else if(name === 'src'){Ext.apply(daty, {src:value});}else if(name === 'query'){Ext.apply(daty, {query:value});}else if(name === 'columna_orden'){Ext.apply(daty, {columna_orden:value});}else if(name === 'columna_hidden'){Ext.apply(daty, {columna_hidden:value});}else if(name === 'columna_move'){Ext.apply(daty, {columna_move:value});}else if(name === 'columna_resize'){Ext.apply(daty, {columna_resize:value});}else if(name === 'isBorder'){Ext.apply(daty, {isBorder:value});}else if(name==='fechaMaxMsg'){Ext.apply(daty,{fechaMaxMsg:value});
 		}else if(name === 'winEstilo'){
 			Ext.apply(daty, {winEstilo:value});
 		}
@@ -2216,3 +2089,23 @@ function parseWidth(str){
 }
 
 function parseDate(str){var n = str.indexOf("/");var dia =  str.substring(0,n);var resto = str.substring(n+1);n = resto.indexOf("/");var mes = resto.substring(0,n);var año = resto.substring(n+1);if (isNaN(dia)==true || isNaN(mes)==true || isNaN(año)==true){return new Date();}else{return new Date(año,mes-1,dia);}}
+function getAttrOpen(lista,valor){
+	for(i = 0; i < lista.length; i++){
+		if(lista[i].attr == valor){
+			if(lista[i].tipo == 'N'){
+				
+				return parseInt(lista[i].valor);
+			}else if(lista[i].tipo == 'B'){
+				return parseBol(lista[i].valor);
+			}else{
+				return lista[i].valor;
+			}
+		}
+	}
+	if(valor == 'height' || valor == 'width'){
+		return 0;
+	}else{
+		return '';	
+	}
+}
+
