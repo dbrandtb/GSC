@@ -19,7 +19,7 @@ Ext.onReady(function() {
     </c:forEach>
     /******************************* STORE ******************************************/
 	
-	var target = new Ext.Panel({ 
+	var target = new Ext.form.Panel({ 
         id: 'contenedor',autoScroll:true,
         border: false,renderTo: Ext.getBody()});
 
