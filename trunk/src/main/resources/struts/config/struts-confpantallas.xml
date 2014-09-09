@@ -51,6 +51,9 @@
             <result name="success">/jsp-script/proceso/emision/cotizacionDemo.jsp</result>
         </action>
         
+		<action name="openpanel" class="mx.com.gseguros.confpantallas.action.AbrePanelAction">
+            <result type="json"/>
+        </action>
         
 
 	</package>
