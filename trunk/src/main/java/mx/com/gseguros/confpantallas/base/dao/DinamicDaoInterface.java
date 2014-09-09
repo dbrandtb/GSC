@@ -1,5 +1,7 @@
 package mx.com.gseguros.confpantallas.base.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,4 +56,14 @@ public interface DinamicDaoInterface {
 	
 	public String setPanel (HashMap<String, Object> mapa);
 	
+	public List<DinamicPanelVo> getPanelVORowMapper(String qry);
+
+	public List<DinamicPanelAttrVo> getPanelAttrVORowMapper(String panel);
+	
+	public List<DinamicControlVo> getControlVORowMapper(String panel);
+	
+	public List<DinamicControlAttrVo> getControlAttrVORowMapper(String panel, Integer control);
+	
+	public DinamicPanelVo mapRow(ResultSet rs, int rownumber) throws SQLException; 
+		
 }
