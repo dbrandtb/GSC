@@ -1,5 +1,7 @@
 package mx.com.gseguros.confpantallas.action;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -18,7 +20,7 @@ public class GrabaPanel extends ActionSupport {
 	private String json;
 	
 	//TODO:es temporal, cambiar logica
-	private boolean success;
+	//private boolean success;
 	private boolean existe;
 	private String panel;
 	
@@ -27,11 +29,18 @@ public class GrabaPanel extends ActionSupport {
 		 AdminPanelesDelegate adm = new AdminPanelesDelegate();
 		 if(tarea.equals("existe")){
 			 existe = adm.ExistePanel(nombrepanel);
+			 if(existe){
+				 setRegreso("ok");
+			 }else{
+				 setRegreso("");
+			 }
 		 }else if(tarea.equals("graba")){
-			 panel = adm.SetPanel(nombrepanel, json);
-			 logger.debug("json=" + json);
+			 HashMap<String, String> txt = adm.SetPanel(nombrepanel, json); 
+			 setPanel(txt.get("panel"));
+			 setRegreso(txt.get("rgs"));
 		 }
-		 success = true;
+		 //success = true;
+		 //return "SUCCESS";
 		 return SUCCESS;
 	 }
 
@@ -69,13 +78,13 @@ public class GrabaPanel extends ActionSupport {
 
 	
 	
-	public boolean isSuccess() {
+/*	public boolean isSuccess() {
 		return success;
 	}
 
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
+	}*/
 	
 	public boolean isExiste() {
 		return existe;

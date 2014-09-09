@@ -33,9 +33,9 @@ public class PintaPanelAction extends ActionSupport {
 			List<DinamicData> lt = cargaPanelesManager.GetListaTablas(
 					(List<String>) data.get("listaCmb"),
 					(List<String>) data.get("listaCmbHijo"));
-		    if(lt.size() > 0){
+		    //if(lt.size() > 0){
 		    	sesion.put("listaCatalogosEA", lt);
-		    }
+		    //}
             //sesion.put("datoSesion", adm.GetPanelesLista(getNombrepanel()));
 		}
 		return SUCCESS;
