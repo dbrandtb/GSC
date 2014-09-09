@@ -18,6 +18,10 @@ public class DinamicControlVo implements java.io.Serializable  {
 		this.orden = orden;
 	}
 	
+	public DinamicControlVo(){
+	}
+	
+	
 	public int getIdControl() {
 		return idControl;
 	}
