@@ -1,5 +1,7 @@
 package mx.com.gseguros.confpantallas.base.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -129,7 +132,6 @@ public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterfac
 			while (itlP.hasNext()) {
 				Map map =  itlP.next();
 				actualP = map.get("IDPANEL").toString();
-				rgs = actualP;
 				data.put("idpanel", actualP);
 				data.put("query", "deletePanelAttr");
 				this.ejecuta(data);
@@ -145,7 +147,6 @@ public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterfac
 				this.ejecuta(data);
 				data.put("query", "deleteCodigoExtJS");
 				this.ejecuta(data);
-				
 			}
 			ArrayList<DinamicPanelVo> arryPaneles = (ArrayList<DinamicPanelVo>) mapa.get("newPanel");
 			Iterator<DinamicPanelVo> itP = arryPaneles.iterator();
@@ -330,6 +331,68 @@ public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterfac
 			}
 		}
 		return rgs;
+	}
+	
+	@Override
+	public List<DinamicPanelVo> getPanelVORowMapper(String panel){
+		 return getJdbcTemplate().query("SELECT IDPANEL, IDPADRE FROM DNC_PANELES WHERE NAME_PANEL = '" + panel + "' ORDER BY ORDEN", new RowMapper<DinamicPanelVo>() {
+		    @Override  
+		    public DinamicPanelVo mapRow(ResultSet rs, int rownumber) throws SQLException {  
+		    	DinamicPanelVo e= new DinamicPanelVo();
+		    	e.setId(rs.getInt(1));
+		    	e.setIdPadre(rs.getInt(2));
+		        return e;  
+		    }  
+		});  
+	}
+	
+	@Override
+	public List<DinamicPanelAttrVo> getPanelAttrVORowMapper(String noPanel){
+		return getJdbcTemplate().query("SELECT SATTR, SVALOR, TIPO FROM DNC_PANELES_ATTR WHERE IDPANEL = " + noPanel, new RowMapper<DinamicPanelAttrVo>(){
+			@Override
+			public DinamicPanelAttrVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				DinamicPanelAttrVo e = new DinamicPanelAttrVo();
+				e.setAttr(rs.getString(1));
+				e.setValor(rs.getString(2));
+				e.setTipo(rs.getString(3));
+				return e;
+			}
+			
+		});
+	}
+
+	@Override
+	public List<DinamicControlVo> getControlVORowMapper(String noPanel){
+		return getJdbcTemplate().query("SELECT IDCONTROL, DESCRIPCION FROM DNC_DOCCONTROL WHERE IDPANEL = " + noPanel + " ORDER BY ORDEN", new RowMapper<DinamicControlVo>(){
+			@Override
+			public DinamicControlVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				DinamicControlVo e = new DinamicControlVo();
+				e.setIdControl(rs.getInt(1));
+				e.setDescripcion(rs.getString(2));
+				return e;
+			}
+			
+		});
+	}
+
+	@Override
+	public List<DinamicControlAttrVo> getControlAttrVORowMapper(String noPanel, Integer noControl){
+		return getJdbcTemplate().query("SELECT ATTR, VALOR, TIPO FROM DNC_DOCCONTROL_ATTR WHERE IDCONTROL = "+noControl+" AND IDPANEL = " + noPanel, new RowMapper<DinamicControlAttrVo>(){
+			@Override
+			public DinamicControlAttrVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				DinamicControlAttrVo e = new DinamicControlAttrVo();
+				e.setAttr(rs.getString(1));
+				e.setValor(rs.getString(2));
+				e.setTipo(rs.getString(3));
+				return e;
+			}
+		});
+	}
+	
+	@Override
+	public DinamicPanelVo mapRow(ResultSet rs, int rownumber)
+			throws SQLException {
+		return null;
 	}
 	
 }
