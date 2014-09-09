@@ -333,6 +333,7 @@ Ext.define('modelTextAttr', {
          {name: 'etiqueta_width',	type:'int'},
          {name: 'isBloqueado',		type:'boolean'},
          {name: 'textoSugerido',	type:'string'},
+         {name: 'isPadre',			type:'string'},
          {name: 'textoMax',			type:'int'},
          {name: 'textoMin',			type:'int'},
          {name: 'textoMaxMsg',		type:'string'},
