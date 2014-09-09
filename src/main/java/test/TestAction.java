@@ -1,4 +1,4 @@
-package com.biosnettcs.test.controller;
+package test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +13,6 @@ import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.ResponseFolio;
-import mx.com.gseguros.ws.folioserviciopublico.model.ResponseFolioVO;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
