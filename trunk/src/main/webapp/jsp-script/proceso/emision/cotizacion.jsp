@@ -2258,7 +2258,12 @@ Ext.onReady(function()
                                             {
                                                 params :
                                                 {
-                                                    'map1.pv_rfc_i' : rfc
+                                                    'map1.pv_rfc_i' : rfc,
+                                                    'map1.cdtipsit'     : _0_smap1.cdtipsit,
+                                        			'map1.pv_cdunieco_i': _0_smap1.cdunieco,
+                                               		'map1.pv_cdramo_i'  : _0_smap1.cdramo,
+                                               		'map1.pv_estado_i'  : 'W',
+                                               		'map1.pv_nmpoliza_i': _0_fieldNmpoliza.getValue()
                                                 }
                                             });
                                         }
