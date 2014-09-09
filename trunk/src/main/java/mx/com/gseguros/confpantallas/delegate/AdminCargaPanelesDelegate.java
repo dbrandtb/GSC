@@ -387,7 +387,6 @@ public class AdminCargaPanelesDelegate {
 					//rgsAttr.append("\n");
 					rgsAttr.append(strStore+".load({params:{valor:combo.value,tarea: 'llenaComboHijo'}});");
 					rgsAttr.append("\n");
-					
 					rgsAttr.append("Ext.getCmp('").append(strCmb).append("').enable();");
 					rgsAttr.append("\n");
 					rgsAttr.append("}").append("}");

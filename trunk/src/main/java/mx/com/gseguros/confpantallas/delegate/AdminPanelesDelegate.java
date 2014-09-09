@@ -61,8 +61,8 @@ public class AdminPanelesDelegate {
 		return existe;
 	}
 	
-	public String SetPanel (String panel, String json) {
-		String rgs = "";
+	public HashMap<String, String> SetPanel (String panel, String json) {
+		HashMap<String, String> rgs = new HashMap<String, String>();
 		HashMap<String, String> data = new HashMap<String, String>();
 		try {
 			data.put("query", "maxPanel");
@@ -126,10 +126,7 @@ public class AdminPanelesDelegate {
 			datas.put("ltsListaControlesArrt", lstdeLstCtrolAttr);
 			datas.put("lstdeLstCtrolGridAttr", lstdeLstCtrolGridAttr);
 			datas.put("lstdeLstCtrolGridSql", lstdeLstCtrolGridSql);
-			rgs = dinamicDAO.setPanel(datas);
-			if(StringUtils.isBlank(rgs)){
-				rgs = maxP;
-			}
+			dinamicDAO.setPanel(datas);
 			// tengo que man dar a obtener el codigo ExtJS
 			AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
 			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
@@ -149,9 +146,6 @@ public class AdminPanelesDelegate {
 			 stl.append("]");
 			 stl.append("});");
 			 System.out.println(stl.toString());
-					 
-			 String acP = rgs;
-			 rgs = "";
 			 List<DinamicData> lt = adm.GetListaTablas((List<String>) dataExt.get("listaCmb"),(List<String>) dataExt.get("listaCmbHijo"));
 			 StringBuffer st = new StringBuffer();
 			 if(lt.size() > 0){
@@ -171,14 +165,16 @@ public class AdminPanelesDelegate {
 
 			 HashMap<String, String> dataE = new HashMap<String, String>();
 			 dataE.put("query", "setCFExtjs");
-			 dataE.put("panel", acP);
+			 dataE.put("panel", maxP);
 			 dataE.put("stores", st.toString());
 			 dataE.put("codigo", stl.toString());
-            rgs = dinamicDAO.setCFExtjs(dataE);
-
+            dinamicDAO.setCFExtjs(dataE);
+            rgs.put("panel", maxP);
+            rgs.put("rgs", "");
 		} catch (Exception e) {
 			e.printStackTrace();
-			rgs = e.toString();
+            rgs.put("panel", "");
+            rgs.put("rgs", e.toString());
 		}
 		return rgs;
 	}
@@ -375,7 +371,7 @@ public class AdminPanelesDelegate {
 		if(!vo.getTextoSugerido().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "emptyText", vo.getTextoSugerido(), "S"));consec++;}
 		if(!vo.getTextoMaxMsg().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "maxLengthText", vo.getTextoMaxMsg(), "S"));consec++;}
 		if(!vo.getTextoMinMsg().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "minLengthText", vo.getTextoMinMsg(), "S"));consec++;}
-		if(!vo.getToolTip().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "listeners", "{afterrender: function(){Ext.QuickTips.register({target: this.id,text:'"+vo.getToolTip()+"',dismissDelay: 2000}) ;}}", "C"));consec++;}
+		if(!vo.getToolTip().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "listeners", "{afterrender: function(){Ext.QuickTips.register({target: this.id,text:''"+vo.getToolTip()+"'',dismissDelay: 2000}) ;}}", "C"));consec++;}
 		if(!vo.getMargen().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "margin", vo.getMargen(), "S"));consec++;}
 		if(!vo.getPadding().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "padding", vo.getPadding(), "S"));consec++;}
 		if(!vo.getIsAnchor().equals("0")){
