@@ -223,7 +223,7 @@
      */
     public CotizacionIndividualWSServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
+                    this(configurationContext,"http://10.1.1.134:8000/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
                 
     }
 
@@ -232,7 +232,7 @@
      */
     public CotizacionIndividualWSServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
+                    this("http://10.1.1.134:8000/cotizadoremisorautos-ws/soap/cotizacionIndividualWS" );
                 
     }
 
@@ -3192,7 +3192,7 @@
         }
         return false;
     }
-     //https://gswas.com.mx:443/cotizadoremisorautos-ws/soap/cotizacionIndividualWS
+     //http://10.1.1.134:8000/cotizadoremisorautos-ws/soap/cotizacionIndividualWS
         public static class Version
         implements org.apache.axis2.databinding.ADBBean{
         /* This type was generated from the piece of schema that had
@@ -34236,6 +34236,50 @@
         
 
                         /**
+                        * field for Adaptaciones
+                        */
+
+                        
+                                    protected java.lang.String localAdaptaciones ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localAdaptacionesTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getAdaptaciones(){
+                               return localAdaptaciones;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Adaptaciones
+                               */
+                               public void setAdaptaciones(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localAdaptacionesTracker = true;
+                                       } else {
+                                          localAdaptacionesTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localAdaptaciones=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for BeneficiarioPref
                         */
 
@@ -34442,6 +34486,50 @@
                             
 
                         /**
+                        * field for EquipoEspecial
+                        */
+
+                        
+                                    protected java.lang.String localEquipoEspecial ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localEquipoEspecialTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getEquipoEspecial(){
+                               return localEquipoEspecial;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param EquipoEspecial
+                               */
+                               public void setEquipoEspecial(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localEquipoEspecialTracker = true;
+                                       } else {
+                                          localEquipoEspecialTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localEquipoEspecial=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for FormaPago
                         */
 
@@ -34522,6 +34610,12 @@
                         
                                     protected int localIdPaqueteSeleccionado ;
                                 
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localIdPaqueteSeleccionadoTracker = false ;
+                           
 
                            /**
                            * Auto generated getter method
@@ -34539,6 +34633,15 @@
                                */
                                public void setIdPaqueteSeleccionado(int param){
                             
+                                       // setting primitive attribute tracker to true
+                                       
+                                               if (param==java.lang.Integer.MIN_VALUE) {
+                                           localIdPaqueteSeleccionadoTracker = false;
+                                              
+                                       } else {
+                                          localIdPaqueteSeleccionadoTracker = true;
+                                       }
+                                   
                                             this.localIdPaqueteSeleccionado=param;
                                     
 
@@ -34570,6 +34673,36 @@
                                public void setIdSegmento(int param){
                             
                                             this.localIdSegmento=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for IdTipoCarga
+                        */
+
+                        
+                                    protected int localIdTipoCarga ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdTipoCarga(){
+                               return localIdTipoCarga;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdTipoCarga
+                               */
+                               public void setIdTipoCarga(int param){
+                            
+                                            this.localIdTipoCarga=param;
                                     
 
                                }
@@ -35080,6 +35213,36 @@
                             
 
                         /**
+                        * field for TipoUso
+                        */
+
+                        
+                                    protected int localTipoUso ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getTipoUso(){
+                               return localTipoUso;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param TipoUso
+                               */
+                               public void setTipoUso(int param){
+                            
+                                            this.localTipoUso=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for TipoVehiculo
                         */
 
@@ -35293,7 +35456,41 @@
 
                
                    }
-                if (localBeneficiarioPrefTracker){
+                if (localAdaptacionesTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"adaptaciones", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"adaptaciones");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("adaptaciones");
+                                    }
+                                
+
+                                          if (localAdaptaciones==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("adaptaciones cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localAdaptaciones);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localBeneficiarioPrefTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -35430,6 +35627,40 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localEquipoEspecialTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"equipoEspecial", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"equipoEspecial");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("equipoEspecial");
+                                    }
+                                
+
+                                          if (localEquipoEspecial==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("equipoEspecial cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localEquipoEspecial);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localFormaPagoTracker){
                                             if (localFormaPago==null){
                                                  throw new org.apache.axis2.databinding.ADBException("formaPago cannot be null!!");
@@ -35465,7 +35696,7 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                              if (localIdPaqueteSeleccionadoTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -35494,7 +35725,7 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                             }
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -35520,6 +35751,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdSegmento));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"idTipoCarga", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idTipoCarga");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idTipoCarga");
+                                    }
+                                
+                                               if (localIdTipoCarga==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idTipoCarga cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoCarga));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -35903,6 +36163,35 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"tipoUso", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"tipoUso");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("tipoUso");
+                                    }
+                                
+                                               if (localTipoUso==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("tipoUso cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoUso));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
                               if (localTipoVehiculoTracker){
                                             if (localTipoVehiculo==null){
                                                  throw new org.apache.axis2.databinding.ADBException("tipoVehiculo cannot be null!!");
@@ -36106,7 +36395,16 @@
                  java.util.ArrayList elementList = new java.util.ArrayList();
                  java.util.ArrayList attribList = new java.util.ArrayList();
 
-                 if (localBeneficiarioPrefTracker){
+                 if (localAdaptacionesTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "adaptaciones"));
+                                 
+                                        if (localAdaptaciones != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAdaptaciones));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("adaptaciones cannot be null!!");
+                                        }
+                                    } if (localBeneficiarioPrefTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "beneficiarioPref"));
                                  
@@ -36148,6 +36446,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("descripcionVehiculo cannot be null!!");
                                         }
+                                    } if (localEquipoEspecialTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "equipoEspecial"));
+                                 
+                                        if (localEquipoEspecial != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localEquipoEspecial));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("equipoEspecial cannot be null!!");
+                                        }
                                     } if (localFormaPagoTracker){
                             elementList.add(new javax.xml.namespace.QName("",
                                                                       "formaPago"));
@@ -36163,18 +36470,24 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdInciso));
-                            
+                             if (localIdPaqueteSeleccionadoTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "idPaqueteSeleccionado"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdPaqueteSeleccionado));
-                            
+                            }
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "idSegmento"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdSegmento));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idTipoCarga"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoCarga));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "idTipoValor"));
@@ -36277,6 +36590,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipVehiCA));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "tipoUso"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoUso));
                              if (localTipoVehiculoTracker){
                             elementList.add(new javax.xml.namespace.QName("",
                                                                       "tipoVehiculo"));
@@ -36380,6 +36699,24 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","adaptaciones").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setAdaptaciones(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","beneficiarioPref").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
@@ -36468,6 +36805,24 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","equipoEspecial").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setEquipoEspecial(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","formaPago").equals(reader.getName())){
                                 
                                                 object.setFormaPago(FormaPago.Factory.parse(reader));
@@ -36513,11 +36868,12 @@
                                     
                               }  // End of if for expected property start element
                                 
-                                else{
-                                    // A start element we are not expecting indicates an invalid parameter was passed
-                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
-                                }
-                            
+                                    else {
+                                        
+                                               object.setIdPaqueteSeleccionado(java.lang.Integer.MIN_VALUE);
+                                           
+                                    }
+                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -36526,6 +36882,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setIdSegmento(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idTipoCarga").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdTipoCarga(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -36780,6 +37155,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setTipVehiCA(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","tipoUso").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setTipoUso(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -42500,6 +42894,50 @@
                             
 
                         /**
+                        * field for FinVigencia
+                        */
+
+                        
+                                    protected java.util.Calendar localFinVigencia ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localFinVigenciaTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.util.Calendar
+                           */
+                           public  java.util.Calendar getFinVigencia(){
+                               return localFinVigencia;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param FinVigencia
+                               */
+                               public void setFinVigencia(java.util.Calendar param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localFinVigenciaTracker = true;
+                                       } else {
+                                          localFinVigenciaTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localFinVigencia=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for FormaPago
                         */
 
@@ -42584,6 +43022,36 @@
                                public void setIdAgenteCompartido(int param){
                             
                                             this.localIdAgenteCompartido=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for IdBanco
+                        */
+
+                        
+                                    protected int localIdBanco ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdBanco(){
+                               return localIdBanco;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdBanco
+                               */
+                               public void setIdBanco(int param){
+                            
+                                            this.localIdBanco=param;
                                     
 
                                }
@@ -42836,6 +43304,36 @@
                             
 
                         /**
+                        * field for MesesSinIntereses
+                        */
+
+                        
+                                    protected int localMesesSinIntereses ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getMesesSinIntereses(){
+                               return localMesesSinIntereses;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param MesesSinIntereses
+                               */
+                               public void setMesesSinIntereses(int param){
+                            
+                                            this.localMesesSinIntereses=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Moneda
                         */
 
@@ -42860,6 +43358,36 @@
                                public void setMoneda(int param){
                             
                                             this.localMoneda=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for NumFolio
+                        */
+
+                        
+                                    protected int localNumFolio ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getNumFolio(){
+                               return localNumFolio;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param NumFolio
+                               */
+                               public void setNumFolio(int param){
+                            
+                                            this.localNumFolio=param;
                                     
 
                                }
@@ -43112,6 +43640,36 @@
                                public void setVersionTarifa(int param){
                             
                                             this.localVersionTarifa=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Vigencia
+                        */
+
+                        
+                                    protected int localVigencia ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getVigencia(){
+                               return localVigencia;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Vigencia
+                               */
+                               public void setVigencia(int param){
+                            
+                                            this.localVigencia=param;
                                     
 
                                }
@@ -43376,7 +43934,41 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                              if (localFinVigenciaTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"finVigencia", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"finVigencia");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("finVigencia");
+                                    }
+                                
+
+                                          if (localFinVigencia==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("finVigencia cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFinVigencia));
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             }
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -43437,6 +44029,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdAgenteCompartido));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"idBanco", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idBanco");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idBanco");
+                                    }
+                                
+                                               if (localIdBanco==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idBanco cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdBanco));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -43660,6 +44281,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"mesesSinIntereses", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"mesesSinIntereses");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("mesesSinIntereses");
+                                    }
+                                
+                                               if (localMesesSinIntereses==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("mesesSinIntereses cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMesesSinIntereses));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"moneda", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -43678,6 +44328,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMoneda));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"numFolio", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"numFolio");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("numFolio");
+                                    }
+                                
+                                               if (localNumFolio==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("numFolio cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNumFolio));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -43812,6 +44491,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVersionTarifa));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"vigencia", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"vigencia");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("vigencia");
+                                    }
+                                
+                                               if (localVigencia==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("vigencia cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVigencia));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -44034,7 +44742,16 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDescuentoMaximoAgente));
-                            
+                             if (localFinVigenciaTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "finVigencia"));
+                                 
+                                        if (localFinVigencia != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFinVigencia));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("finVigencia cannot be null!!");
+                                        }
+                                    }
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "formaPago"));
                                  
@@ -44055,6 +44772,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdAgenteCompartido));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idBanco"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdBanco));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "idCotizacion"));
@@ -44115,10 +44838,22 @@
                                         }
                                     }
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "mesesSinIntereses"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMesesSinIntereses));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "moneda"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMoneda));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "numFolio"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNumFolio));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "porcenComisionAgente2"));
@@ -44170,6 +44905,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVersionTarifa));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "vigencia"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localVigencia));
                             
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
@@ -44246,7 +44987,7 @@
                     
                     reader.next();
                 
-                        java.util.ArrayList list16 = new java.util.ArrayList();
+                        java.util.ArrayList list18 = new java.util.ArrayList();
                     
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
@@ -44391,6 +45132,24 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","finVigencia").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setFinVigencia(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDateTime(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","formaPago").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
@@ -44431,6 +45190,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setIdAgenteCompartido(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idBanco").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdBanco(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -44529,14 +45307,14 @@
                                     
                                                           nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                           if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                              list16.add(null);
+                                                              list18.add(null);
                                                               reader.next();
                                                           } else {
-                                                        list16.add(Inciso.Factory.parse(reader));
+                                                        list18.add(Inciso.Factory.parse(reader));
                                                                 }
                                                         //loop until we find a start element that is not part of this array
-                                                        boolean loopDone16 = false;
-                                                        while(!loopDone16){
+                                                        boolean loopDone18 = false;
+                                                        while(!loopDone18){
                                                             // We should be at the end element, but make sure
                                                             while (!reader.isEndElement())
                                                                 reader.next();
@@ -44547,19 +45325,19 @@
                                                                 reader.next();
                                                             if (reader.isEndElement()){
                                                                 //two continuous end elements means we are exiting the xml structure
-                                                                loopDone16 = true;
+                                                                loopDone18 = true;
                                                             } else {
                                                                 if (new javax.xml.namespace.QName("","incisos").equals(reader.getName())){
                                                                     
                                                                       nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                                       if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                                          list16.add(null);
+                                                                          list18.add(null);
                                                                           reader.next();
                                                                       } else {
-                                                                    list16.add(Inciso.Factory.parse(reader));
+                                                                    list18.add(Inciso.Factory.parse(reader));
                                                                         }
                                                                 }else{
-                                                                    loopDone16 = true;
+                                                                    loopDone18 = true;
                                                                 }
                                                             }
                                                         }
@@ -44568,7 +45346,7 @@
                                                         object.setIncisos((Inciso[])
                                                             org.apache.axis2.databinding.utils.ConverterUtil.convertToArray(
                                                                 Inciso.class,
-                                                                list16));
+                                                                list18));
                                                             
                               }  // End of if for expected property start element
                                 
@@ -44597,11 +45375,49 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","mesesSinIntereses").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setMesesSinIntereses(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","moneda").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setMoneda(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","numFolio").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setNumFolio(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -44723,6 +45539,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setVersionTarifa(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","vigencia").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setVigencia(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -57716,6 +58551,12 @@
                         
                                     protected int localIdFormaPago ;
                                 
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localIdFormaPagoTracker = false ;
+                           
 
                            /**
                            * Auto generated getter method
@@ -57733,6 +58574,15 @@
                                */
                                public void setIdFormaPago(int param){
                             
+                                       // setting primitive attribute tracker to true
+                                       
+                                               if (param==java.lang.Integer.MIN_VALUE) {
+                                           localIdFormaPagoTracker = false;
+                                              
+                                       } else {
+                                          localIdFormaPagoTracker = true;
+                                       }
+                                   
                                             this.localIdFormaPago=param;
                                     
 
@@ -58028,7 +58878,7 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                              if (localIdFormaPagoTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -58057,7 +58907,7 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                              if (localNombreTracker){
+                             } if (localNombreTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -58375,13 +59225,13 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDividor));
-                            
+                             if (localIdFormaPagoTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "idFormaPago"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdFormaPago));
-                             if (localNombreTracker){
+                            } if (localNombreTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "nombre"));
                                  
@@ -58523,11 +59373,12 @@
                                     
                               }  // End of if for expected property start element
                                 
-                                else{
-                                    // A start element we are not expecting indicates an invalid parameter was passed
-                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
-                                }
-                            
+                                    else {
+                                        
+                                               object.setIdFormaPago(java.lang.Integer.MIN_VALUE);
+                                           
+                                    }
+                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -66452,6 +67303,12 @@
                                     public static final java.lang.String _CAMION =
                                         org.apache.axis2.databinding.utils.ConverterUtil.convertToString("CAMION");
                                 
+                                    public static final java.lang.String _SERVICIO_PUBLICO_AUTOS =
+                                        org.apache.axis2.databinding.utils.ConverterUtil.convertToString("SERVICIO_PUBLICO_AUTOS");
+                                
+                                    public static final java.lang.String _SERVICIO_PUBLICO_MICROS =
+                                        org.apache.axis2.databinding.utils.ConverterUtil.convertToString("SERVICIO_PUBLICO_MICROS");
+                                
                                 public static final TipoVehiculo AUTO_PICKUP =
                                     new TipoVehiculo(_AUTO_PICKUP,true);
                             
@@ -66460,6 +67317,12 @@
                             
                                 public static final TipoVehiculo CAMION =
                                     new TipoVehiculo(_CAMION,true);
+                            
+                                public static final TipoVehiculo SERVICIO_PUBLICO_AUTOS =
+                                    new TipoVehiculo(_SERVICIO_PUBLICO_AUTOS,true);
+                            
+                                public static final TipoVehiculo SERVICIO_PUBLICO_MICROS =
+                                    new TipoVehiculo(_SERVICIO_PUBLICO_MICROS,true);
                             
 
                                 public java.lang.String getValue() { return localTipoVehiculo;}

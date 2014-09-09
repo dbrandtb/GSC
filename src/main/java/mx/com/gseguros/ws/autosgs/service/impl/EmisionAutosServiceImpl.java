@@ -86,6 +86,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				Map<String,String>m=lista.get(0);
 				datosCotizacionAuto=new Cotizacion();
 				
+				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("numFolio")));
+				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("vigencia")));
+				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("idBanco")));
+				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("mesesSinIntereses")));
+				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("idOrigenSolicitud")));
+				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("finVigencia"), Constantes.FORMATO_FECHA));
+				
 				//idagente y sucursal
 				Agente agente=new Agente();
 				datosCotizacionAuto.setAgente(agente);
@@ -300,9 +307,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					//conductor
 					incisoIterado.setConductor(row.get("CONDUCTOR"));
+
+					//TipoUso
+					incisoIterado.setConductor(row.get("CONDUCTOR"));
 					
 					//primanetainc
-					incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
+					incisoIterado.setTipoUso(Integer.valueOf(row.get("tipoUso")));
 					
 					//version
 					Version version=new Version();

@@ -1937,6 +1937,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					else if(
 							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
 							)
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
@@ -1979,6 +1981,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							&& (
 									cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+									|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+									|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
 								)
 							)
 					{
@@ -2418,7 +2422,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
 					}
 					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+						||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+						||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+						)
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
 							
@@ -2459,6 +2466,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							(
 								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
 							)
 						)
 					{
@@ -2818,6 +2827,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				&& (
 						cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+						|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+						|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
 					)
 				)
 		{
@@ -3127,16 +3138,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 		    slist1=kernelManager.buscarRFC(map1);
 		    
+		    logger.debug("slist antes de WS: "+ slist1);
+		    
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
 		     */
-		    if((TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")) || TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))) && (slist1 == null || slist1.isEmpty())){
+		    if((TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")) 
+		    		|| TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    	) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
 		    	slist1 = new ArrayList<Map<String, String>>();
 		    	HashMap<String, Object> params =  new HashMap<String, Object>();
 		    	params.putAll(map1);
-		    	String cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
+		    	
+		    	String cdtipsitGS = null;
+		    	
+		    	if(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")) 
+			    		|| TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    	){
+		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
+		    	}else{
+		    		cdtipsitGS = "781";
+		    	}
 		    	
 		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
 		    	clienteGeneral.setRfcCli(map1.get("pv_rfc_i"));
