@@ -18,6 +18,10 @@ public class DinamicPanelVo implements java.io.Serializable  {
 		this.orden = orden;
 	}
 	
+	public DinamicPanelVo() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}

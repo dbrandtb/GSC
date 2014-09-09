@@ -20,6 +20,8 @@ public class DinamicPanelAttrVo implements java.io.Serializable  {
 		this.tipo = tipo;
 	}
 	
+	public DinamicPanelAttrVo() {}
+
 	public int getIdattr() {
 		return idattr;
 	}
