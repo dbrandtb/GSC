@@ -109,6 +109,8 @@ public class CargaPanelesManagerImpl implements CargaPanelesManager {
 	}
 	public HashMap<String, Object> GeneraJson(String panel){
 		logger.info("Voy a buscar el ID del panel: "+panel);
+		mapaCmbHijo.clear();
+		mapaCmb.clear();
 		HashMap<String, Object> rgs = new HashMap<String, Object>();
 		List<ViewBean> listViewBean = new ArrayList<ViewBean>();
 		HashMap<String, Object> data = new HashMap<String, Object>();
