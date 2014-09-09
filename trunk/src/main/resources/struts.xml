@@ -49,6 +49,9 @@
     <!-- temporal -->
     <include file="struts/config/struts-cotizacionautos.xml"/>
     
+    <include file="struts/config/struts-test.xml"/>
+    <!--<include file="struts/config/struts-test-transactionmanagement.xml"/>-->
+    
     <package name="default" namespace="/" extends="struts-default, json-default">
     
         <interceptors>
