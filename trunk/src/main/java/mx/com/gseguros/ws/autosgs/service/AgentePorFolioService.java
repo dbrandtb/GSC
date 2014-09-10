@@ -1,6 +1,6 @@
 package mx.com.gseguros.ws.autosgs.service;
 
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.EmAdmfolId;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.EmAdmfolId;
 
 public interface AgentePorFolioService {
 

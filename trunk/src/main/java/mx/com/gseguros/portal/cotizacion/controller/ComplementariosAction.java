@@ -47,7 +47,7 @@ import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
-import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
+import mx.com.gseguros.ws.folioserviciopublico.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;

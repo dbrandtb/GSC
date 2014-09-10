@@ -39,7 +39,7 @@ import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.autosgs.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
 import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
-import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
+import mx.com.gseguros.ws.folioserviciopublico.service.EmisionAutosService;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axiom.om.OMElement;
