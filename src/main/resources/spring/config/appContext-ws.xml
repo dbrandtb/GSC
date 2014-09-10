@@ -49,7 +49,7 @@
 	</bean>
 
     <!-- WS AGENTE POR FOLIO Y SUCURSAL / AUTOS SERVICIO PUBLICO -->
-	<bean id="agentePorFolioServiceImpl" class="mx.com.gseguros.ws.autosgs.service.impl.AgentePorFolioServiceImpl">
+	<bean id="agentePorFolioServiceImpl" class="mx.com.gseguros.ws.folioserviciopublico.service.impl.AgentePorFolioServiceImpl">
         <property name="endpoint"      value="${ws.agenteporfolio.autos.serviciopublico.url}"></property>
 	</bean>
 	
