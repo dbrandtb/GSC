@@ -2058,7 +2058,15 @@ Ext.onReady(function()
         {
             'select' : function()
             {
-                _fieldByName('parametros.pv_otvalor19').allowBlank=false;
+                if(_fieldByName('parametros.pv_otvalor18').getValue()+'x'=='0x')
+                {
+                    _fieldByName('parametros.pv_otvalor19').allowBlank=true;
+                }
+                else
+                {
+                    _fieldByName('parametros.pv_otvalor19').allowBlank=false;
+                }
+                _fieldByName('parametros.pv_otvalor19').isValid();
             }
         });
         

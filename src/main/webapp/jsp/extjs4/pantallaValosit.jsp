@@ -14,14 +14,13 @@ var pantallaValositInputCdtipsit = '<s:property value="smap1.cdtipsit" />';
 var pantallaValositInputAgrupado = '<s:property value="smap1.agrupado" />';
 var pantallaValositInputNmsituac = '<s:property value="smap1.nmsituac" />';
 debug('A. Variables declaradas:');
-debug(pantallaValositUrlLoad);
-debug(pantallaValositInputCdunieco);
-debug(pantallaValositInputCdramo);
-debug(pantallaValositInputEstado);
-debug(pantallaValositInputNmpoliza);
-debug(pantallaValositInputCdtipsit);
-debug(pantallaValositInputAgrupado);
-debug(pantallaValositInputNmsituac);
+debug('pantallaValositInputCdunieco:' , pantallaValositInputCdunieco);
+debug('pantallaValositInputCdramo:'   , pantallaValositInputCdramo);
+debug('pantallaValositInputEstado:'   , pantallaValositInputEstado);
+debug('pantallaValositInputNmpoliza:' , pantallaValositInputNmpoliza);
+debug('pantallaValositInputCdtipsit:' , pantallaValositInputCdtipsit);
+debug('pantallaValositInputAgrupado:' , pantallaValositInputAgrupado);
+debug('pantallaValositInputNmsituac:' , pantallaValositInputNmsituac);
 debug("timestam struts: <s:property value='smap1.timestamp' />");
 /*///////////////////*/
 ////// variables //////
@@ -192,18 +191,43 @@ Ext.onReady(function()
         }
     });
     
+    //parche para ramo 6
+    if(pantallaValositInputCdramo+'x'=='6x'
+        &&pantallaValositInputAgrupado=='si')
+    {
+        expande(2);
+    
+        //banco -> meses
+        _fieldByName('parametros.pv_otvalor18').on(
+        {
+            'select' : function()
+            {
+                if(_fieldByName('parametros.pv_otvalor18').getValue()+'x'=='0x')
+                {
+                    _fieldByName('parametros.pv_otvalor19').allowBlank=true;
+                }
+                else
+                {
+                    _fieldByName('parametros.pv_otvalor19').allowBlank=false;
+                }
+                _fieldByName('parametros.pv_otvalor19').isValid();
+            }
+        });
+    }
+    
     if(pantallaValositParche!=false)
     {
-    	panDatComAux1=panDatComAux1+1;
-    	if(panDatComAux1==2)
-    	{
-    		pantallaValositParche();
-    	}
-    	else
-    	{
-    		debug('tvalosit>todavia no se parcha tvalosit');
-    	}
+        panDatComAux1=panDatComAux1+1;
+        if(panDatComAux1==2)
+        {
+            pantallaValositParche();
+        }
+        else
+        {
+            debug('tvalosit>todavia no se parcha tvalosit');
+        }
     }
+    
     /*//////////////////*/    
     ////// cargador //////
     //////////////////////

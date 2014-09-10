@@ -1965,11 +1965,6 @@
                 }).show());
                 </s:if>
                 
-                if(inputCdramo+'x'=='6x')
-                {
-                    expande(2);
-                }
-                
                 //Ext.getCmp('formPanel').loadRecord(storeLoader.getAt(0));
             });
         </script>

@@ -61,7 +61,7 @@ var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         
 var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"             />';
 var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
 
-var _p21_nombreReporteCotizacion = '<s:text name="rdf.cotizacion.nombre.MSC" />';
+var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
 var _p21_reportsServerUser       = '<s:text name="pass.servidor.reports"     />';
 
