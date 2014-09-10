@@ -545,6 +545,7 @@ function _p20_buscarRFC()
         {
             'map1.pv_rfc_i' : _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].get('cdrfc'),
             'map1.cdtipsit'     : _p20_map1.cdtipsit,
+            'map1.pv_cdtipsit_i': _p20_map1.cdtipsit,
 			'map1.pv_cdunieco_i': _p20_map1.cdunieco,
        		'map1.pv_cdramo_i'  : _p20_map1.cdramo,
        		'map1.pv_estado_i'  : _p20_map1.estado,
