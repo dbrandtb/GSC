@@ -13,6 +13,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.client.axis2.CotizacionIndividualWSServiceStub;
@@ -62,7 +63,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private StoredProceduresManager storedProceduresManager;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, UserVO userVO){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -79,19 +80,30 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			params.put("param3" , estado);
 			params.put("param4" , nmpoliza);
 			params.put("param5" , nmsuplem);
-			List<Map<String,String>>lista=storedProceduresManager.procedureListCall(
-					ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
-			if(lista.size()>0)
+			
+			List<Map<String,String>>lista = null;
+			
+			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+				lista = storedProceduresManager.procedureListCall(
+						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+			}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+				lista = storedProceduresManager.procedureListCall(
+						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+			}
+			
+			if(lista!=null && lista.size()>0)
 			{
 				Map<String,String>m=lista.get(0);
 				datosCotizacionAuto=new Cotizacion();
 				
-				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("numFolio")));
-				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("vigencia")));
-				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("idBanco")));
-				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("mesesSinIntereses")));
-				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("idOrigenSolicitud")));
-				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("finVigencia"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("NUMFOLIO")));
+				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("VIGENCIA")));
+				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
+				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
+				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
+				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 				
 				//idagente y sucursal
 				Agente agente=new Agente();
@@ -312,7 +324,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					incisoIterado.setConductor(row.get("CONDUCTOR"));
 					
 					//primanetainc
-					incisoIterado.setTipoUso(Integer.valueOf(row.get("tipoUso")));
+					incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
 					
 					//version
 					Version version=new Version();

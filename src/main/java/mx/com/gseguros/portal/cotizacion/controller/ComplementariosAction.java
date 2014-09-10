@@ -1987,7 +1987,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							)
 					{
 						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite,cdtipsit , us);
 						
 						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 						retryWS = !success;
@@ -2472,7 +2472,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						)
 					{
 						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+									edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite,cdtipsit , us);
 						
 						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 						retryWS = !success;
@@ -2833,7 +2833,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				)
 		{
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza, _nmsuplem, ntramite, us);
+						edoPoliza, _nmpoliza, _nmsuplem, ntramite,cdtipsit , us);
 			
 			success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 			retryWS = !success;

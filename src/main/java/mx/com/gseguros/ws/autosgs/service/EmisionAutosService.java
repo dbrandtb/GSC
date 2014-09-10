@@ -17,5 +17,5 @@ public interface EmisionAutosService {
 	 * @return
 	 */
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, UserVO userVO);
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO);
 }
