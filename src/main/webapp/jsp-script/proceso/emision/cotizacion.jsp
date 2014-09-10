@@ -50,6 +50,10 @@ var _0_urlCargarCduniecoAgenteAuto           = '<s:url namespace="/emision"     
 var _0_urlRecuperarCliente                   = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
 var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"             />';
 var _0_urlCargarNumeroPasajerosPorTipoUnidad = '<s:url namespace="/emision"         action="cargarNumeroPasajerosPorTipoUnidad" />';
+var _0_urlObtenerParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
+var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
+var _0_urlCargarClaveGSPorAuto               = '<s:url namespace="/emision"         action="cargarClaveGSPorAuto"               />';
+var _0_urlCargarSumaAsegurada                = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"            />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -1687,7 +1691,7 @@ Ext.onReady(function()
                     }
                     ,{
                         xtype  : 'label'
-                        ,text  : '<s:property value="iError" />'
+                        ,text  : '<s:property value="iError" escapeHtml="false" />'
                         ,style : 'color:red;margin:5px;'
                     }
                 ]
@@ -2012,6 +2016,44 @@ Ext.onReady(function()
     {
         debug('>parche para ramo 6');
         
+        //modelo
+        if(_0_smap1.cdtipsit+'x'=='MCx')
+        {
+            _fieldByLabel('MODELO').setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _0_urlObtenerParametros
+                ,params  :
+                {
+                    'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                    _fieldByLabel('MODELO').setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('respuesta json obtener rango:',json);
+                    if(json.exito)
+                    {
+                        _fieldByLabel('MODELO').setValue(json.smap1.P1VALOR);
+                        _fieldByLabel('MODELO').setMinValue(json.smap1.P2VALOR);
+                        _fieldByLabel('MODELO').setMaxValue(json.smap1.P3VALOR);
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    _fieldByLabel('MODELO').setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+        
+        //banco -> meses
         _fieldByName('parametros.pv_otvalor18').on(
         {
             'select' : function()
@@ -2023,6 +2065,8 @@ Ext.onReady(function()
         _0_gridIncisos.setTitle('Datos del contratante');
         
         var agente = _fieldByName('parametros.pv_otvalor17');
+        var folio  = _fieldByName('parametros.pv_otvalor16');
+        
         //agente
         if(_0_smap1.cdsisrol=='PROMOTORAUTO'
             ||_0_smap1.cdsisrol=='SUSCRIAUTO')
@@ -2031,6 +2075,7 @@ Ext.onReady(function()
             {
                 'select' : function(comp,records)
                 {
+                    folio.reset();
                     Ext.Ajax.request(
                     {
                         url     : _0_urlCargarCduniecoAgenteAuto
@@ -2059,15 +2104,17 @@ Ext.onReady(function()
         }
         
         //folio
-        var folio  = _fieldByName('parametros.pv_otvalor16');
         debug('folio:',folio);
         folio.on(
         {
             'change' : function(comp,val)
             {
                 debug('folio change val:',val,'dummy');
-                agente.setReadOnly(!Ext.isEmpty(val));
-                agente.reset();
+                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                {
+                    agente.setReadOnly(!Ext.isEmpty(val));
+                    agente.reset();
+                }
             }
             ,'blur' : function()
             {
@@ -2089,28 +2136,64 @@ Ext.onReady(function()
                             debug('json response obtener agente por folio:',json);
                             if(json.exito)
                             {
-                                
-                                var contiene=false;
-                                agente.getStore().each(function(record)
+                                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
                                 {
-                                    debug('buscando agente',json.smap1.cdagente,'en',record.data);
-                                    if(record.get('key')==json.smap1.cdagente)
+                                    var contiene=false;
+                                    agente.getStore().each(function(record)
                                     {
-                                        contiene=true;
+                                        debug('buscando agente',json.smap1.cdagente,'en',record.data);
+                                        if(record.get('key')==json.smap1.cdagente)
+                                        {
+                                            contiene=true;
+                                        }
+                                    });
+                                    if(contiene)
+                                    {
+                                        agente.setValue(json.smap1.cdagente);
                                     }
-                                });
-                                if(contiene)
-                                {
-                                    agente.setValue(json.smap1.cdagente);
+                                    else
+                                    {
+                                        mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                    }
                                 }
+                                //para suscriptor y agente
                                 else
                                 {
-                                    mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                    //agente
+                                    if(_0_smap1.cdsisrol+'x'=='EJECUTIVOCUENTAx')
+                                    {
+                                        if(json.smap1.cdagente!=agente.getValue())
+                                        {
+                                            mensajeWarning('El folio pertenece a otro agente');
+                                            folio.reset();
+                                            folio.focus();
+                                        }
+                                    }
+                                    //suscriptor
+                                    else
+                                    {
+                                        agente.getStore().load(
+                                        {
+                                            params :
+                                            {
+                                                'params.agente' : json.smap1.cdagente 
+                                            }
+                                            ,callback : function(records)
+                                            {
+                                                debug('callback records:',records);
+                                                if(records.length>0)
+                                                {
+                                                    agente.setValue(records[0]);
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             }
                             else
                             {
                                 mensajeError(json.respuesta);
+                                folio.reset();
                             }
                         }
                         ,failure : function(response)
@@ -2148,6 +2231,9 @@ Ext.onReady(function()
                             if(json.exito)
                             {
                                 _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.nPasajeros);
+                                _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.minPasajeros);
+                                _fieldByName('parametros.pv_otvalor04').setMaxValue(json.smap1.maxPasajeros);
+                                _fieldByName('parametros.pv_otvalor22').setValue(json.smap1.claveGS);
                             }
                             else
                             {
@@ -2335,6 +2421,160 @@ Ext.onReady(function()
             debug('combo cliente nuevo store load');
             combcl.setValue('S');
         });
+        
+        //modelo
+        if(_0_smap1.cdtipsit+'x'=='ATx')
+        {
+            _fieldByName('parametros.pv_otvalor04').on(
+            {
+                'select' : function()
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarClaveGSPorAuto
+                        ,params  :
+                        {
+                            'smap1.cdramo'  : _0_smap1.cdramo
+                            ,'smap1.modelo' : _fieldByName('parametros.pv_otvalor04').getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('### obtener clavegs por auto response:',json);
+                            if(json.exito)
+                            {
+                                _fieldByName('parametros.pv_otvalor22').getStore().load(
+                                {
+                                    params :
+                                    {
+                                        'params.substr' : json.smap1.CLAVEGS 
+                                    }
+                                    ,callback : function(records)
+                                    {
+                                        debug('callback records:',records);
+                                        if(records.length>0)
+                                        {
+                                            _fieldByName('parametros.pv_otvalor22').setValue(records[0]);
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                mensajeWarning(json.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            });
+        }
+        
+        //auto combo
+        if(_0_smap1.cdtipsit+'x'=='ATx')
+        {
+            _fieldByName('parametros.pv_otvalor22').on(
+            {
+                'select' : function()
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarAutoPorClaveGS
+                        ,params  :
+                        {
+                            'smap1.cdramo'    : _0_smap1.cdramo
+                            ,'smap1.clavegs'  : _fieldByName('parametros.pv_otvalor22').getValue()
+                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var ijson=Ext.decode(response.responseText);
+                            debug('### obtener auto por clave gs:',ijson);
+                            if(ijson.exito)
+                            {
+                                debug('obtener auto json response:',ijson);
+                                _fieldByName('parametros.pv_otvalor01').setValue(ijson.smap1.TIPUNI);
+                                _fieldByName('parametros.pv_otvalor02').heredar(true,function()
+                                {
+                                    _fieldByName('parametros.pv_otvalor02').setValue(ijson.smap1.MARCA);
+                                    _fieldByName('parametros.pv_otvalor03').heredar(true,function()
+                                    {
+                                        _fieldByName('parametros.pv_otvalor03').setValue(ijson.smap1.SUBMARCA);
+                                        _fieldByName('parametros.pv_otvalor04').heredar(true);
+                                        
+                                        _fieldByName('parametros.pv_otvalor06').setValue(ijson.smap1.NUMPASAJEROS);
+                                        _fieldByName('parametros.pv_otvalor06').setMinValue(ijson.smap1.PASAJMIN);
+                                        _fieldByName('parametros.pv_otvalor06').setMaxValue(ijson.smap1.PASAJMAX);
+                                    });
+                                });
+                            }
+                            else
+                            {
+                                mensajeWarning(ijson.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            });
+        }
+        
+        //version
+        if(_0_smap1.cdtipsit+'x'=='ATx')
+        {
+            _fieldByName('parametros.pv_otvalor05').on(
+            {
+                'select' : function()
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarSumaAsegurada
+                        ,params  :
+                        {
+                            'smap1.modelo'    : _fieldByName('parametros.pv_otvalor04').getValue()
+                                                .substr(_fieldByName('parametros.pv_otvalor04').getValue().length-4,4)
+                            ,'smap1.version'  : _fieldByName('parametros.pv_otvalor05').getValue()
+                            ,'smap1.cdsisrol' : _0_smap1.cdsisrol
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('### json response obtener suma asegurada:',json);
+                            if(json.exito)
+                            {
+                                _fieldByName('parametros.pv_otvalor25').setValue(json.smap1.SUMASEG);
+                                _fieldByName('parametros.pv_otvalor25').setMinValue((json.smap1.SUMASEG-0)*(1-(json.smap1.FACREDUC-0)));
+                                _fieldByName('parametros.pv_otvalor25').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
+                                _fieldByName('parametros.pv_otvalor25').isValid();
+                            }
+                            else
+                            {
+                                mensajeWarning(json.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            });
+        }
         
         debug('<parche para ramo 6');
     }

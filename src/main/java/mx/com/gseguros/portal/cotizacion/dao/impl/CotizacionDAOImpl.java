@@ -14,12 +14,15 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionDAO
 {
+	private final static Logger logger = Logger.getLogger(CotizacionDAOImpl.class);
+	
 	@Override
 	public void movimientoTvalogarGrupo(Map<String,String>params)throws Exception
 	{
@@ -634,6 +637,133 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_NUM_PASAJEROS");
 			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> obtenerParametrosCotizacion(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult = ejecutaSP(new ObtenerParametrosCotizacion(getDataSource()),params);
+		List<Map<String,String>>listaAux  = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("No hay parametros");
+		}
+		if(listaAux.size()>1)
+		{
+			throw new Exception("Parametros duplicados");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class ObtenerParametrosCotizacion extends StoredProcedure
+	{
+		protected ObtenerParametrosCotizacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_PARAMS_COTIZACION");
+			declareParameter(new SqlParameter("parametro" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave4"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave5"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> cargarAutoPorClaveGS(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarAutoPorClaveGS(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("Auto no encontrado");
+		}
+		if(listaAux.size()>1)
+		{
+			logger.debug("lista: "+listaAux);
+			//throw new Exception("Auto duplicado");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class CargarAutoPorClaveGS extends StoredProcedure
+	{
+		protected CargarAutoPorClaveGS(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_VEHICULOS");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> cargarClaveGSPorAuto(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarClaveGSPorAuto(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("Clave GS no encontrada");
+		}
+		if(listaAux.size()>1)
+		{
+			logger.debug("lista: "+listaAux);
+			//throw new Exception("Clave GS duplicada");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class CargarClaveGSPorAuto extends StoredProcedure
+	{
+		protected CargarClaveGSPorAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_VEHICULOS_X_MODELO");
+			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+    public Map<String,String>cargarSumaAseguradaAuto(Map<String,String>params)throws Exception
+    {
+		Map<String,Object>procedureResult=ejecutaSP(new CargarSumaAseguradaAuto(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("Suma asegurada no encontrada");
+		}
+		if(listaAux.size()>1)
+		{
+			throw new Exception("Suma asegurada duplicada");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class CargarSumaAseguradaAuto extends StoredProcedure
+	{
+		protected CargarSumaAseguradaAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_SUMA_ASEGURADA_AUTOS");
+			declareParameter(new SqlParameter("version"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

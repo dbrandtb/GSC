@@ -148,6 +148,22 @@
            <result type="json" />
        </action>
        
+       <action name="obtenerParametrosCotizacion" class="CotizacionAction" method="obtenerParametrosCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarAutoPorClaveGS" class="CotizacionAction" method="cargarAutoPorClaveGS">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarClaveGSPorAuto" class="CotizacionAction" method="cargarClaveGSPorAuto">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarSumaAseguradaAuto" class="CotizacionAction" method="cargarSumaAseguradaAuto">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

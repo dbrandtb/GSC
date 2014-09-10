@@ -3,6 +3,9 @@ package mx.com.gseguros.portal.cotizacion.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
+
 
 public interface CotizacionManager
 {
@@ -161,4 +164,17 @@ public interface CotizacionManager
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	
 	public Map<String,String>cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception;
+	
+	public ManagerRespuestaSmapVO obtenerParametrosCotizacion(
+			ParametroCotizacion parametro
+			,String cdramo
+			,String cdtipsit
+			,String clave4
+			,String clave5)throws Exception;
+	
+	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit) throws Exception;
+	
+	public ManagerRespuestaSmapVO cargarClaveGSPorAuto(String cdramo,String modelo) throws Exception;
+	
+	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version)throws Exception;
 }
