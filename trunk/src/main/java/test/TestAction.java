@@ -49,11 +49,11 @@ public class TestAction extends PrincipalCoreAction {
 		
 		//System.out.println("params==" + params);
 		
-		emisionAutosService.cotizaEmiteAutomovilWS(
+		/*emisionAutosService.cotizaEmiteAutomovilWS(
 				params.get("cdunieco"), params.get("cdramo"), 
 				params.get("estado"), params.get("nmpoliza"), 
 				params.get("nmsuplem"), params.get("nmtramite"),
-				(UserVO) session.get("USUARIO"));
+				(UserVO) session.get("USUARIO"));*/
 		
 		return SUCCESS;
 	}
