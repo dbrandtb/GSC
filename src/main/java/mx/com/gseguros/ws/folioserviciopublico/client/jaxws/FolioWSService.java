@@ -43,7 +43,7 @@ public class FolioWSService
     }
 
     public FolioWSService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME, features);
+        super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME/*, features*/);
     }
 
     public FolioWSService(URL wsdlLocation) {
@@ -51,7 +51,7 @@ public class FolioWSService
     }
 
     public FolioWSService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, FOLIOWSSERVICE_QNAME, features);
+        super(wsdlLocation, FOLIOWSSERVICE_QNAME/*, features*/);
     }
 
     public FolioWSService(URL wsdlLocation, QName serviceName) {
@@ -59,7 +59,7 @@ public class FolioWSService
     }
 
     public FolioWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
+        super(wsdlLocation, serviceName/*, features*/);
     }
 
     /**
