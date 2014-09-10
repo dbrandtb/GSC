@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 
 import org.apache.log4j.Logger;
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class CotizacionManagerImpl implements CotizacionManager 
 {
 
-	private final Logger logger = Logger.getLogger(CotizacionManagerImpl.class);
+	private static final Logger logger = Logger.getLogger(CotizacionManagerImpl.class);
 	private CotizacionDAO cotizacionDAO;
 	
 	@Override
@@ -744,6 +746,198 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.toString()
 				);
 		return nPasajeros;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO obtenerParametrosCotizacion(
+			ParametroCotizacion parametro
+			,String cdramo
+			,String cdtipsit
+			,String clave4
+			,String clave5)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ obtenerParametrosCotizacion @@@@@@")
+				.append("\n@@@@@@ parametro=").append(parametro.getParametro())
+				.append("\n@@@@@@ cdramo=")   .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=") .append(cdtipsit)
+				.append("\n@@@@@@ clave4=")   .append(clave4)
+				.append("\n@@@@@@ clave5=")   .append(clave5)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("parametro" , parametro.getParametro());
+			params.put("cdramo"    , cdramo);
+			params.put("cdtipsit"  , cdtipsit);
+			params.put("clave4"    , clave4);
+			params.put("clave5"    , clave5);
+			Map<String,String>valores=cotizacionDAO.obtenerParametrosCotizacion(params);
+			resp.setSmap(valores);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al obtener par&aacute;metros #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ obtenerParametrosCotizacion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit) throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarAutoPorClaveGS @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ clave gs=").append(clavegs)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.toString()
+				);
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdramo"   , cdramo);
+			params.put("clavegs"  , clavegs);
+			params.put("cdtipsit" , cdtipsit);
+			Map<String,String>valores=cotizacionDAO.cargarAutoPorClaveGS(params);
+			resp.setSmap(valores);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al recuperar datos del auto #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarAutoPorClaveGS @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarClaveGSPorAuto(String cdramo,String modelo) throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarClaveGSPorAuto @@@@@@")
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ modelo=").append(modelo)
+				.toString()
+				);
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdramo" , cdramo);
+			params.put("modelo" , modelo);
+			Map<String,String>valores=cotizacionDAO.cargarClaveGSPorAuto(params);
+			resp.setSmap(valores);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al recuperar clave gs del auto #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarClaveGSPorAuto @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarSumaAseguradaAuto @@@@@@")
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
+				.append("\n@@@@@@ modelo=")  .append(modelo)
+				.append("\n@@@@@@ version=") .append(version)
+				.toString()
+				);
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdsisrol" , cdsisrol);
+			params.put("modelo"   , modelo);
+			params.put("version"  , version);
+			Map<String,String>valores=cotizacionDAO.cargarSumaAseguradaAuto(params);
+			resp.setSmap(valores);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al cargar valor comercial del auto #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarSumaAseguradaAuto @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
 	}
 	
 	///////////////////////////////

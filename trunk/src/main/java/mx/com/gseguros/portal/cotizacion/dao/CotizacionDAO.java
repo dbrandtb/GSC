@@ -24,6 +24,10 @@ public interface CotizacionDAO
 	public void borrarMpoliperGrupo(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception;
 	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception;
-	public Map<String,String> obtenerDatosAgente(Map<String,String>params)throws Exception;
-	public Map<String,String> cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception;
+	public Map<String,String>obtenerDatosAgente(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception;
+	public Map<String,String>obtenerParametrosCotizacion(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarAutoPorClaveGS(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarClaveGSPorAuto(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarSumaAseguradaAuto(Map<String,String>params)throws Exception;
 }

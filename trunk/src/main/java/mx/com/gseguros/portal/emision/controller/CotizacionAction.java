@@ -21,6 +21,8 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -210,7 +212,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	respuestaOculta = ex.getMessage();
 	        	logger.error(respuesta,ex);
 	        	
-	        	this.addActionError("No se ha parametrizado el tipo de situaci&oacute;n para el producto #"+timestamp);
+	        	this.addActionError("No se ha parametrizado el tipo de situación para el producto #"+timestamp);
 	        	smap1.put("SITUACION"  , "PERSONA");
 	        	smap1.put("AGRUPACION" , "SOLO");
 	        }
@@ -308,17 +310,6 @@ public class CotizacionAction extends PrincipalCoreAction
 								temp.remove(tatriIte);
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
-							}
-						}
-						//folio
-						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("16"))
-						{
-							//oculto para el agente
-							if(StringUtils.isNotBlank(cdagente)
-									&&cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
-							{
-								tatriIte.setOculto(true);
-								logger.debug("\n@@@@@@ parche pone folio oculto @@@@@@");
 							}
 						}
 						//clave gs
@@ -4716,6 +4707,349 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\nsmap1=").append(smap1)
 				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
 				.append("\n################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String obtenerParametrosCotizacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#########################################")
+				.append("\n###### obtenerParametrosCotizacion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		ParametroCotizacion parametro  = null;
+		String              sParametro = null;
+		String              cdramo     = null;
+		String              cdtipsit   = null;
+		String              clave4     = null;
+		String              clave5     = null;
+		
+		//datos completos
+		if(exito)
+		{
+			try
+			{
+				sParametro = smap1.get("parametro");
+				cdramo     = smap1.get("cdramo");
+				cdtipsit   = smap1.get("cdtipsit");
+				clave4     = smap1.get("clave4");
+				clave5     = smap1.get("clave5");
+				if(StringUtils.isBlank(sParametro))
+				{
+					throw new Exception("No se especifica el parametro");
+				}
+				if(StringUtils.isBlank(cdramo))
+				{
+					throw new Exception("No se especifica el ramo");
+				}
+				if(StringUtils.isBlank(cdtipsit))
+				{
+					throw new Exception("No se especifica la situacion");
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Datos incompletos para obtener par&aacute;metros #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//parametro existente
+		if(exito)
+		{
+			try
+			{
+				parametro = ParametroCotizacion.valueOf(sParametro);
+				if(parametro==null)
+				{
+					throw new Exception("El parametro no se encuentra en el enum");
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder("Par&aacute;metro no definido #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener parametro
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaSmapVO resp=cotizacionManager.obtenerParametrosCotizacion(parametro, cdramo, cdtipsit, clave4, clave5);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				if(exito)
+				{
+				    smap1.putAll(resp.getSmap());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error inesperado al obtener par&aacute;metros #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### obtenerParametrosCotizacion ######")
+				.append("\n#########################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarAutoPorClaveGS()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################")
+				.append("\n###### cargarAutoPorClaveGS ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdramo   = null;
+		String clavegs  = null;
+		String cdtipsit = null;
+		
+		//datos
+		try
+		{
+			cdramo   = smap1.get("cdramo");
+			clavegs  = smap1.get("clavegs");
+			cdtipsit = smap1.get("cdtipsit");
+			if(StringUtils.isBlank(clavegs))
+			{
+				throw new Exception("No se recibio el ramo");
+			}
+			if(StringUtils.isBlank(clavegs))
+			{
+				throw new Exception("No se recibio la clave gs");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new Exception("No se recibio la situacion");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = "Datos incompletos #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//obtener datos auto
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit);
+				
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				
+				if(exito)
+				{
+					smap1.putAll(resp.getSmap());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error inesperado al obtener datos del auto #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### cargarAutoPorClaveGS ######")
+				.append("\n##################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarClaveGSPorAuto()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################")
+				.append("\n###### cargarClaveGSPorAuto ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdramo = null;
+		String modelo = null;
+		
+		//datos
+		try
+		{
+			cdramo = smap1.get("cdramo");
+			modelo = smap1.get("modelo");
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new Exception("No se recibio el ramo");
+			}
+			if(StringUtils.isBlank(modelo))
+			{
+				throw new Exception("No se recibio el modelo");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = "Datos incompletos #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//obtener datos auto
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarClaveGSPorAuto(cdramo,modelo);
+				
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				
+				if(exito)
+				{
+					smap1.putAll(resp.getSmap());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error inesperado al obtener clave GS del auto #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### cargarClaveGSPorAuto ######")
+				.append("\n##################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarSumaAseguradaAuto()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### cargarSumaAseguradaAuto ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdsisrol = null;
+		String modelo   = null;
+		String version  = null;
+		
+		//datos
+		try
+		{
+			cdsisrol = smap1.get("cdsisrol");
+			modelo   = smap1.get("modelo");
+			version  = smap1.get("version");
+			if(StringUtils.isBlank(cdsisrol))
+			{
+				throw new Exception("No se recibio el rol");
+			}
+			if(StringUtils.isBlank(modelo)||modelo.length()!=4)
+			{
+				throw new Exception("No se recibio el modelo");
+			}
+			if(StringUtils.isBlank(version))
+			{
+				throw new Exception("No se recibio la version");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder().append("Datos incompletos para obtener valor comercial #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarSumaAseguradaAuto(cdsisrol,modelo,version);
+				
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				
+				if(exito)
+				{
+					smap1.putAll(resp.getSmap());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error inesperado al obtener valor comercial #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarSumaAseguradaAuto ######")
+				.append("\n#####################################")
 				.toString()
 				);
 		return SUCCESS;

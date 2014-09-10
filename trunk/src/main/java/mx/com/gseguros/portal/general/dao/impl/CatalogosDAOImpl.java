@@ -470,24 +470,36 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     public List<GenericVO> cargarServicioPublicoAutos(Map<String,String> params) throws Exception
     {
     	Map<String,Object>respuestaProcedure=ejecutaSP(new CargarServicioPublicoAutos(getDataSource()), params);
-    	List<GenericVO>listaResp=new ArrayList<GenericVO>();
     	List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
-    	if(lista!=null&&lista.size()>0)
+    	List<GenericVO>listaGen=new ArrayList<GenericVO>();
+    	if(lista==null)
     	{
-    		for(Map<String,String>iAgente:lista)
-    		{
-    			listaResp.add(new GenericVO(iAgente.get("CDAGENTE"),iAgente.get("DSAGENTE")));
-    		}
+    		lista=new ArrayList<Map<String,String>>();
     	}
-    	return listaResp;
+    	for(Map<String,String>iAuto:lista)
+    	{
+    		listaGen.add(new GenericVO(iAuto.get("CLAVEGS"),
+    				new StringBuilder()
+    		        .append(iAuto.get("CLAVEGS")).append(" - ")
+    		        .append(iAuto.get("TIPUNI")).append(" - ")
+    		        .append(iAuto.get("MARCA")).append(" - ")
+    		        .append(iAuto.get("SUBMARCA")).append(" - ")
+    		        .append(iAuto.get("MODELO")).append(" - ")
+    		        .append(iAuto.get("VERSION"))
+    		        .toString()
+    		        ));
+    	}
+    	return listaGen;
     }
 	
     protected class CargarServicioPublicoAutos extends StoredProcedure {
     	
     	protected CargarServicioPublicoAutos(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_CONSULTA.P_GET_SERVICIO_PUBLICO_AUTOS");
+    		super(dataSource, "PKG_CONSULTA.P_GET_DESC_VEHICULOS");
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("substring" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

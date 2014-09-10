@@ -132,15 +132,19 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> cargarServicioPublicoAutos(String substring)throws Exception
+	public List<GenericVO> cargarServicioPublicoAutos(String substring,String cdramo,String cdtipsit)throws Exception
 	{
 		logger.info(""
 				+ "\n########################################"
 				+ "\n###### cargarServicioPublicoAutos ######"
 				+ "\nsubstring "+substring
+				+ "\ncdramo "+cdramo
+				+ "\ncdtipsit "+cdtipsit
 				);
 		Map<String,String>params=new HashMap<String,String>();
-		params.put("substring",substring);
+		params.put("substring" , substring);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("cdramo"    , cdramo);
 		List<GenericVO>lista=catalogosDAO.cargarServicioPublicoAutos(params);
 		if(lista==null)
 		{

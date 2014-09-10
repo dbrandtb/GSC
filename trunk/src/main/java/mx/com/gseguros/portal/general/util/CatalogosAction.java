@@ -358,7 +358,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					break;
 				case SERVICIO_PUBLICO_AUTOS:
-					lista=catalogosManager.cargarServicioPublicoAutos(params.get("substr"));
+					lista=catalogosManager.cargarServicioPublicoAutos(params.get("substr"),params.get("cdramo"),params.get("cdtipsit"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

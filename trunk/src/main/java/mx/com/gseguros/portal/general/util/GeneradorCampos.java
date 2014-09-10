@@ -464,9 +464,9 @@ public class GeneradorCampos
                 //it.add(Item.crear("forceSelection",false));??
                 item.add(Item.crear(""
                 		+ "heredar",
-                		  "function(remoto)"
+                		  "function(remoto,icallback)"
                 		+ "{"
-                		+ "    debug('Heredar "+name+"');"
+                		+ "    debug('Heredar "+name+"','icallback:',icallback?true:false);"
                 		+ "    me = this;"
                 		+ "    if(!me.noEsPrimera||remoto==true)"
                 		+ "    {"
@@ -493,6 +493,10 @@ public class GeneradorCampos
                 		+ "                if(!dentro)"
                 		+ "                {"
                 		+ "                    thisCmp.clearValue();"
+                		+ "                }"
+                		+ "                if(icallback)"
+                		+ "                {"
+                		+ "                    icallback();"
                 		+ "                }"
                 		+ "            }"
                 		+ "        });"
