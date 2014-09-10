@@ -247,6 +247,7 @@ public interface KernelManagerSustituto {
 	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
 
 	public String obtenCdtipsitGS(Map<String, Object> params) throws ApplicationException;
+	public String obtenSubramoGS(Map<String, Object> params) throws ApplicationException;
 	public String obtenCdtipsit(Map<String, Object> params) throws ApplicationException;
 	
 	/**
