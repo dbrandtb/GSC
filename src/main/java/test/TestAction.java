@@ -8,11 +8,11 @@ import javax.xml.namespace.QName;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.ResponseFolio;
+import mx.com.gseguros.ws.folioserviciopublico.service.EmisionAutosService;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

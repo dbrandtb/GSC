@@ -1,14 +1,14 @@
-package mx.com.gseguros.ws.autosgs.service.impl;
+package mx.com.gseguros.ws.folioserviciopublico.service.impl;
 
 import mx.com.gseguros.exception.WSException;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.EmAdmfolId;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.RequestFolio;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.ResponseFolio;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.ValidarFolio;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.ValidarFolioE;
-import mx.com.gseguros.ws.autosgs.client.axis2.FolioWSServiceStub.ValidarFolioResponseE;
 import mx.com.gseguros.ws.autosgs.service.AgentePorFolioService;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.EmAdmfolId;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.RequestFolio;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.ResponseFolio;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.ValidarFolio;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.ValidarFolioE;
+import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.ValidarFolioResponseE;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;

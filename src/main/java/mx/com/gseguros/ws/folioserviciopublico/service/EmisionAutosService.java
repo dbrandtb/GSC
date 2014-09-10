@@ -1,4 +1,4 @@
-package mx.com.gseguros.ws.autosgs.service;
+package mx.com.gseguros.ws.folioserviciopublico.service;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
