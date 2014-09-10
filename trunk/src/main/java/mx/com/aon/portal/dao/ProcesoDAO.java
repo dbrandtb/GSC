@@ -150,6 +150,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
 	public static final String OBTEN_CDTIPSIT_GS       =	"OBTEN_CDTIPSIT_GS";
+	public static final String OBTEN_SUBRAMO_GS       =	"OBTEN_SUBRAMO_GS";
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC_READ  =	"VALIDAR_EXTRAPRIMA_SITUAC_READ";
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC   =	"VALIDAR_EXTRAPRIMA_SITUAC";
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
@@ -260,6 +261,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA, new ValidarExtraprima(getDataSource()));
 		addStoredProcedure(OBTEN_CDTIPSIT_GS, new  ObtenCdtipsitGS(getDataSource()));
+		addStoredProcedure(OBTEN_SUBRAMO_GS, new  ObtenSubramoGS(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC, new ValidarExtraprimaSituac(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC_READ, new ValidarExtraprimaSituacRead(getDataSource()));
 		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
@@ -4734,6 +4736,28 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		wrapperResultados.setItemMap(new HashMap<String, Object>());
     		wrapperResultados.getItemMap().put("cdtipsitGS", map.get("pv_cdsubram_o"));
     		wrapperResultados.getItemMap().put("cdtipsit", map.get("pv_cdtipsit_o"));
+    		return wrapperResultados;
+    	}   	
+    	
+    }
+
+    protected class ObtenSubramoGS extends CustomStoredProcedure {
+    	
+    	protected ObtenSubramoGS(DataSource dataSource) {
+    		super(dataSource, "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
+    		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_cdsubram_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados=mapper.build(map);
+    		wrapperResultados.setItemMap(new HashMap<String, Object>());
+    		wrapperResultados.getItemMap().put("subramoGS", map.get("pv_cdsubram_o"));
     		return wrapperResultados;
     	}   	
     	

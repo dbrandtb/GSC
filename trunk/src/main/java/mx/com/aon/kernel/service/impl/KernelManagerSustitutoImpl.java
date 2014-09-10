@@ -1364,6 +1364,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return cdtipsitGS;
 	}
 	
+	public String obtenSubramoGS(Map<String, Object> params) throws ApplicationException{
+		String subramoGS = null;
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.OBTEN_SUBRAMO_GS);
+		subramoGS = (String) res.getItemMap().get("subramoGS");
+		logger.debug(">>>> subramoGS obtenido: " + subramoGS);
+		return subramoGS;
+	}
+	
 	public String obtenCdtipsit(Map<String, Object> params) throws ApplicationException{
 		String cdtipsit = null;
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.OBTEN_CDTIPSIT_GS);

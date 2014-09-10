@@ -3160,8 +3160,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 			    		|| TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
 			    	){
 		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
-		    	}else{
-		    		cdtipsitGS = "781";
+		    	}else if(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))){
+		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
 		    	}
 		    	
 		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
