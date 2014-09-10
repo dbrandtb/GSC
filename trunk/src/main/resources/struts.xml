@@ -6,9 +6,20 @@
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="monitored" class="mx.com.gseguros.portal.general.util.CustomMonitoredMultiPartRequest" scope="default" />
     <!-- jtezva agregado para monitorear el progreso de subir archivo -->
     
-    <constant name="struts.devMode" value="true"/>
+    
+    <!-- Dev Mode: -->
+    <constant name="struts.devMode" value="false"/>
+    <!-- Load custom default resource bundles: -->
+    <constant name="struts.custom.i18n.resources" value="global, messages-database, reportes"/>
+    <!-- Parser to handle HTTP POST requests, encoded using the MIME-type multipart/form-data -->
+    <constant name="struts.multipart.parser" value="monitored"/>
+    <!-- Allow slashes in your action names: -->
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
-
+    <!-- <constant name="struts.multipart.maxSize" value="2097152150"/>
+    <constant name="struts.action.extension" value="action"/>
+    <constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper"/> -->
+    
+    
     <include file="struts/config/struts-catalogos.xml"/>
     <include file="struts/config/struts-confpantallas.xml"/>
     <include file="struts/config/struts-consultas.xml"/>
