@@ -256,6 +256,13 @@
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-ooxml</artifactId>
 		    <version>3.10-FINAL</version>
+		    <exclusions>
+                <!-- Se excluye por pkg javax.xml.namespace: -->
+                <exclusion>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
         
         <!-- Para realizar conexiones seguras -->
@@ -320,6 +327,11 @@
                 <exclusion>
                     <artifactId>mail</artifactId>
                     <groupId>javax.mail</groupId>
+                </exclusion>
+                <!-- Se excluye por pkg javax.xml.namespace: -->
+                <exclusion>
+                    <artifactId>woden-impl-dom</artifactId>
+                    <groupId>org.apache.woden</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
