@@ -15,6 +15,11 @@
 		<action name="cargainfo" class="cargaInfoAction">
             <result type="json"/>
         </action>
+
+		<action name="cargaColumnas" class="mx.com.gseguros.confpantallas.action.CargaColumnasAction">
+            <result type="json"/>
+        </action>
+
         
 		<action name="pintapanelFER" class="mx.com.gseguros.confpantallas.action.PintaPanel">
 			<result name="SUCCESS">/jsp/confpantallas/commonJson.jsp</result>
