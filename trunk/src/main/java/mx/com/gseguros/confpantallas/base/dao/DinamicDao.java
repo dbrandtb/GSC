@@ -390,9 +390,26 @@ public class DinamicDao extends AbstractManagerDAO implements DinamicDaoInterfac
 	}
 	
 	@Override
+	public List<DinamicPanelAttrVo> getColumnasAttrVORowMapper(String namePanel){
+		return getJdbcTemplate().query("SELECT IDCONTROL, ATTR, VALOR FROM DNC_DOCCONTROLGRID_ATTR WHERE IDPANEL IN ("
+				+ "SELECT IDPANEL FROM DNC_PANELES WHERE NAME_PANEL = '"+namePanel+"') ORDER BY IDCONTROL ", new RowMapper<DinamicPanelAttrVo>(){
+			@Override
+			public DinamicPanelAttrVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				DinamicPanelAttrVo e = new DinamicPanelAttrVo();
+				e.setIdattr(rs.getInt(1));
+				e.setAttr(rs.getString(2));
+				e.setValor(rs.getString(3));
+				return e;
+			}
+		});
+	}
+	
+	@Override
 	public DinamicPanelVo mapRow(ResultSet rs, int rownumber)
 			throws SQLException {
 		return null;
 	}
+	
+
 	
 }
