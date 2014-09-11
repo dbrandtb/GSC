@@ -2141,7 +2141,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
 				 */
 				if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+				){
 					
 					String parametros = null;
 					String urlCaratula = this.getText("caratula.impresion.autos.url");
@@ -2631,7 +2634,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
 				 */
 				if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+				){
 					
 					String parametros = null;
 					String urlCaratula = this.getText("caratula.impresion.autos.url");
@@ -2947,7 +2953,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
 					 */
 					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+					){
 						
 						String parametros = null;
 						String urlCaratula = this.getText("caratula.impresion.autos.url");
@@ -3178,7 +3187,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	
 		    	ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
 		    	if(listaClientesGS != null && listaClientesGS.length > 0 ){
-		    		logger.debug("A�adiendo Clientes de GS a Lista, " + listaClientesGS.length);
+		    		logger.debug("Agregando Clientes de GS a Lista, " + listaClientesGS.length);
 		    		clienteWS = true;
 		    		
 		    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -3212,6 +3221,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    		agregar.put("FENACIMICLI", "");
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
+				    	
+				    	agregar.put("CODPOSTAL", cli.getCodposCli());
+				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
+		    			if(edoAdosPos.length() ==  1){
+		    				edoAdosPos = "0"+edoAdosPos;
+		    			}
+				    	agregar.put("CDEDO", edoAdosPos);
+				    	agregar.put("CDMUNICI", "");
+				    	agregar.put("DSDOMICIL", cli.getCalleCli());
+				    	agregar.put("NMNUMERO", cli.getNumeroCli());
+				    	agregar.put("NMNUMINT", "");
+				    	
 				    	agregar.put("CLAVECLI",     "");
 				    	agregar.put("CDIDEPER",     cli.getNumeroExterno());
 				    	
@@ -3240,7 +3261,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    	slist1.add(agregar);
 				    	
 			    	}
-			    			
+			    	
 		    	}else {
 		    		logger.debug("No se encontraron clientes en GS.");
 		    	}
