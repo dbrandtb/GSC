@@ -235,13 +235,21 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				{
 					int indiceRow    = 0;
 					int indiceInciso = 0;
+					Inciso nuevoInciso;
+					Version nuevoVersion;
+					
 					for(Map<String,String>row:lista)
 					{
+						nuevoVersion = new Version();
+						nuevoVersion.setAmis(Integer.valueOf(m.get("AMIS")));
+						nuevoInciso = new Inciso();
+						nuevoInciso.setVersion(nuevoVersion);
+						
 						String nmsituac=row.get("NMSITUAC");
 						if(!mapaIndicesIncisos.containsKey(nmsituac))
 						{
 							mapaIndicesIncisos.put(nmsituac,new Integer[]{Integer.valueOf(indiceInciso),Integer.valueOf(indiceRow)});
-							incisos.add(new Inciso());
+							incisos.add(nuevoInciso);
 							indiceInciso=indiceInciso+1;
 						}
 						indiceRow = indiceRow+1;
