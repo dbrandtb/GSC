@@ -2,6 +2,7 @@ package mx.com.gseguros.confpantallas.delegate;
 
 import java.util.List;
 
+import mx.com.gseguros.confpantallas.model.DinamicColumnaAttrVo;
 import mx.com.gseguros.confpantallas.model.NodoVO;
 
 
@@ -24,5 +25,6 @@ public interface ControlesPredeterminadosManager {
 	 * @return
 	 */
 	public List<NodoVO> getInfo(String query, Boolean leaf, String idAttr, String cdramo);
+	public List<DinamicColumnaAttrVo> getColumnas(String panelName);
 	
 }

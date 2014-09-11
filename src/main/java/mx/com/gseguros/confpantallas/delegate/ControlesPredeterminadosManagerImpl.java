@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
+import mx.com.gseguros.confpantallas.model.DinamicColumnaAttrVo;
 import mx.com.gseguros.confpantallas.model.NodoVO;
 
 import org.apache.log4j.Logger;
@@ -88,5 +89,18 @@ public class ControlesPredeterminadosManagerImpl implements ControlesPredetermin
 	public void setDinamicDAO(DinamicDaoInterface dinamicDAO) {
 		this.dinamicDAO = dinamicDAO;
 	}
+	
+	public List<DinamicColumnaAttrVo> getColumnas(String panelName) {
+		List<DinamicColumnaAttrVo> rgs = new ArrayList<DinamicColumnaAttrVo>();
+		DinamicColumnaAttrVo registro = new DinamicColumnaAttrVo();
+		registro.setTexto("Uno");
+		registro.setWidth(80);
+		registro.setDataIndex("titulo");
+		registro.setTipoG("string");
+		registro.setName("grigG_2");
+		rgs.add(registro);
+		return rgs;
+	}
+
 	
 }
