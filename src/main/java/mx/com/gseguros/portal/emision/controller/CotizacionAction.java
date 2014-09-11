@@ -4243,12 +4243,23 @@ public class CotizacionAction extends PrincipalCoreAction
 			    		);
 			    for(Map<String,String>iAsegurado:slist1)
 			    {
+			    	String tpl = null;
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR")))
+			    	{
+			    		tpl = "Asegurados";
+			    	}
+			    	else
+			    	{
+			    		tpl = new StringBuilder()
+	    	                    .append("Familia de ")
+	    	                    .append(iAsegurado.get("TITULAR"))
+	    	            		.toString();
+			    	}
 			    	iAsegurado.put("AGRUPADOR",
 			    			new StringBuilder()
 			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
 			    	            .append("_")
-			    	            .append("Familia ")
-			    	            .append(iAsegurado.get("FAMILIA"))
+			    	            .append(tpl)
 			    	            .toString());
 			    }
 			}
@@ -4384,13 +4395,24 @@ public class CotizacionAction extends PrincipalCoreAction
 						);
 				for(Map<String,String>iAsegurado:slist1)
 			    {
+			    	String tpl = null;
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR")))
+			    	{
+			    		tpl = "Asegurados";
+			    	}
+			    	else
+			    	{
+			    		tpl = new StringBuilder()
+	    	                    .append("Familia de ")
+	    	                    .append(iAsegurado.get("TITULAR"))
+	    	            		.toString();
+			    	}
 			    	iAsegurado.put("AGRUPADOR",
 			    			new StringBuilder()
-			    	             .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
-			    	             .append("_")
-			    	             .append("Familia ")
-			    	             .append(iAsegurado.get("FAMILIA"))
-			    	             .toString());
+			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	            .append("_")
+			    	            .append(tpl)
+			    	            .toString());
 			    }
 			}
 			catch(Exception ex)

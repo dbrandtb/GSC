@@ -60,6 +60,7 @@ var _p21_urlEditarCoberturas             = '<s:url namespace="/"                
 var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
 var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"             />';
 var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
+var _p21_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -2265,10 +2266,40 @@ function _p21_turnar(status,titulo,closable)
                             debug('json response:',json);
                             if(json.success)
                             {
-                                mensajeCorrecto('Tr&aacute;mite guardado','Tr&aacute;mite guardado',function()
+                                ventana.setLoading(true);
+                                Ext.Ajax.request(
                                 {
-                                    button.up().up().destroy();
-                                    _p21_mesacontrol();
+                                    url      : _p21_urlCargarParametros
+                                    ,params  :
+                                    {
+                                        'smap1.parametro' : 'MENSAJE_TURNAR'
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                                        ,'smap1.clave4'   : status
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        ventana.setLoading(false);
+                                        var json=Ext.decode(response.responseText);
+                                        debug('### json response parametro mensaje turnar:',json);
+                                        if(json.exito)
+                                        {
+                                            mensajeCorrecto('Tr&aacute;mite guardado',json.smap1.P1VALOR,function()
+                                            {
+                                                button.up().up().destroy();
+                                                _p21_mesacontrol();
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeWarning(json.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        ventana.setLoading(false);
+                                        errorComunicacion();
+                                    }
                                 });
                             }
                             else
