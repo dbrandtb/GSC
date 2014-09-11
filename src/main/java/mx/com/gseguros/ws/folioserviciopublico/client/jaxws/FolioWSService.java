@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "FolioWSService", targetNamespace = "http://com.gs.folioserviciopublico.soap.folio", wsdlLocation = "file:/C:/Users/Ricardo/AppData/Local/Temp/tempdir744309582479851523.tmp/servicios_1.wsdl")
+@WebServiceClient(name = "FolioWSService", targetNamespace = "http://com.gs.folioserviciopublico.soap.folio", wsdlLocation = "http://10.1.1.134:8000/folioserviciopublico-ws/servicios?wsdl")
 public class FolioWSService
     extends Service
 {
@@ -30,7 +30,7 @@ public class FolioWSService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/C:/Users/Ricardo/AppData/Local/Temp/tempdir744309582479851523.tmp/servicios_1.wsdl");
+            url = new URL("http://10.1.1.134:8000/folioserviciopublico-ws/servicios?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
@@ -43,7 +43,7 @@ public class FolioWSService
     }
 
     public FolioWSService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME/*, features*/);
+        super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME, features);
     }
 
     public FolioWSService(URL wsdlLocation) {
@@ -51,7 +51,7 @@ public class FolioWSService
     }
 
     public FolioWSService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, FOLIOWSSERVICE_QNAME/*, features*/);
+        super(wsdlLocation, FOLIOWSSERVICE_QNAME, features);
     }
 
     public FolioWSService(URL wsdlLocation, QName serviceName) {
@@ -59,7 +59,7 @@ public class FolioWSService
     }
 
     public FolioWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName/*, features*/);
+        super(wsdlLocation, serviceName, features);
     }
 
     /**

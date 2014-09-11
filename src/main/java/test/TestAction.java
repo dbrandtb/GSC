@@ -8,14 +8,13 @@ import javax.xml.namespace.QName;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.ResponseFolio;
 import mx.com.gseguros.ws.folioserviciopublico.service.EmisionAutosService;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +37,10 @@ public class TestAction extends PrincipalCoreAction {
 	
 	private Map<String, String> params;
 	
+	private EmisionAutosVO emisionAutos;
+	
+	private ResponseFolio responseFolio;
+	
 	/*
 	@Action(value="invocaServicioCotizacionAutos",
 		results={@Result(name="success", type="json")}
@@ -49,11 +52,12 @@ public class TestAction extends PrincipalCoreAction {
 		
 		//System.out.println("params==" + params);
 		
-		/*emisionAutosService.cotizaEmiteAutomovilWS(
+		emisionAutos = emisionAutosService.cotizaEmiteAutomovilWS(
 				params.get("cdunieco"), params.get("cdramo"), 
 				params.get("estado"), params.get("nmpoliza"), 
 				params.get("nmsuplem"), params.get("nmtramite"),
-				(UserVO) session.get("USUARIO"));*/
+				params.get("cdtipsit"),
+				(UserVO) session.get("USUARIO"));
 		
 		return SUCCESS;
 	}
@@ -71,6 +75,7 @@ public class TestAction extends PrincipalCoreAction {
             String targetNamespace="http://com.gs.folioserviciopublico.soap.folio";
             String name="FolioWSService";
             service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name));
+            //service = new FolioWSService();
             FolioWS port = service.getFolioWSPort();
             
             // Añadimos capacidades de seguridad a la llamada:
@@ -84,7 +89,7 @@ public class TestAction extends PrincipalCoreAction {
             req.setSucursalAdmin( Integer.parseInt(params.get("sucursaladmin")) ); //120 
             
             // Invocamos el WS:
-            ResponseFolio resp = port.validarFolio(req);
+            responseFolio = port.validarFolio(req);
             
             /*
             ResponseFolioVO respVO = new ResponseFolioVO();
@@ -95,8 +100,8 @@ public class TestAction extends PrincipalCoreAction {
             */
             
             // Mostramos el resultado:
-            System.out.println("resultado gral=" + ToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
-            System.out.println("resultado folio=" + ToStringBuilder.reflectionToString(resp.getFolio(), ToStringStyle.MULTI_LINE_STYLE));
+            //System.out.println("resultado gral=" + ToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
+            //System.out.println("resultado folio=" + ToStringBuilder.reflectionToString(resp.getFolio(), ToStringStyle.MULTI_LINE_STYLE));
             
         } catch (MalformedURLException e ) {
             e.printStackTrace();
@@ -114,6 +119,22 @@ public class TestAction extends PrincipalCoreAction {
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
+	}
+
+	public EmisionAutosVO getEmisionAutos() {
+		return emisionAutos;
+	}
+
+	public void setEmisionAutos(EmisionAutosVO emisionAutos) {
+		this.emisionAutos = emisionAutos;
+	}
+
+	public ResponseFolio getResponseFolio() {
+		return responseFolio;
+	}
+
+	public void setResponseFolio(ResponseFolio responseFolio) {
+		this.responseFolio = responseFolio;
 	}
 	
 }
