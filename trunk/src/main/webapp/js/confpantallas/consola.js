@@ -1006,18 +1006,26 @@ function CreaCtrlBoton(_fieldLabel,id,_height,_Icon){var myCtrl = {xtype:'button
 function CreaCtrlCombo(_fieldLabel,id,_texto,_height){var myCtrl = {xtype:'combobox',id: id,fieldLabel: _fieldLabel,height:_height,anchor:'95%',value:_texto,margin:'5 5 5 5',store: [['tr','uno'],['ru','dos'],['en','tres']],mode: 'local',listeners: {focus: {fn: function(c ){cChk = false;var arryAttr = [];ctrl = c.id;arryAttr.push('(id):'+c.id);arryAttr.push('etiqueta:'+getValorSP('etiqueta',c.id));arryAttr.push('height:'+ c.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('etiqueta_aling:'+getValorSP('etiqueta_aling','left'));arryAttr.push('isAnchor:'+getValorSP('isAnchor',0));arryAttr.push('isBloqueado:'+getValorSP('isBloqueado',false));arryAttr.push('isRequerido:'+getValorSP('isRequerido',false));arryAttr.push('isEditable:'+getValorSP('isEditable',true));arryAttr.push('isRequeridoMsg:'+getValorSP('isRequeridoMsg',''));arryAttr.push('nombre:'+getValorSP('nombre',c.id));arryAttr.push('soloLectura:'+getValorSP('soloLectura',false));arryAttr.push('etiqueta_width:'+getValorSP('etiqueta_width',100));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('padding:'+getValorSP('padding','0 0 0 0'));arryAttr.push('texto:'+getValorSP('texto',''));arryAttr.push('textoSugerido:'+getValorSP('textoSugerido',''));arryAttr.push('textoMaxMsg:'+getValorSP('textoMaxMsg',''));arryAttr.push('textoMinMsg:'+getValorSP('textoMinMsg',''));arryAttr.push('textoMax:'+getValorSP('textoMax',10));arryAttr.push('textoMin:'+getValorSP('textoMin',10));arryAttr.push('toolTip:'+getValorSP('toolTip',''));arryAttr.push('multiSelect:'+getValorSP('multiSelect',false));arryAttr.push('store:'+getValorSP('store',''));arryAttr.push('modo:'+getValorSP('modo','remote'));arryAttr.push('selectconFoco:'+getValorSP('selectconFoco',false));arryAttr.push('selectAction:'+getValorSP('selectAction','all'));arryAttr.push('valorDisplay:'+getValorSP('valorDisplay','value'));arryAttr.push('valorId:'+getValorSP('valorId','key'));arryAttr.push('isFlecha:'+getValorSP('isFlecha',false));arryAttr.push('isAutoComp:'+getValorSP('isAutoComp',false));arryAttr.push('isPadre:'+getValorSP('isPadre',false));arryAttr.push('delimitador:'+getValorSP('delimitador',''));seteaAtributosGrid(arryAttr,c.id,storeComboAttr);}}}};return myCtrl;}
 function CreaCtrlLabel(id,_texto){var myCtrl = {xtype:'label',id: id,margin:'5 5 5 5',text : _texto,listeners: {render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('height:'+ obj.getHeight());arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('texto:'+getValorSP('texto',obj.id));arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('html:'+getValorSP('html',''));seteaAtributosGrid(arryAttr,obj.id,storeLabelAttr);});}}};return myCtrl;}
 function CreaCtrlImagen(id,_Src){var myCtrl = {xtype:'image',id: id,src:'http://www.sencha.com/img/20110215-feat-html5.png',listeners: {render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('height:'+ obj.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));arryAttr.push('src:'+getValorSP('src','http://www.sencha.com/img/20110215-feat-html5.png'));seteaAtributosGrid(arryAttr,obj.id,storeImagenAttr);});}}};return myCtrl;}
+function CreaCtrlHidden(id,_texto){var myCtrl = {xtype:'label',id: id,text : _texto,margin:'5 5 5 5',listeners: {render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('texto:'+getValorSP('texto',obj.id));seteaAtributosGrid(arryAttr,obj.id,storeHiddenAttr);});}}};return myCtrl;}
 
-function CreaCtrlHidden(id,_texto){var myCtrl = {xtype:'label',id: id,text : _texto,margin:'5 5 5 5',
-listeners: {
-render: function(obj) {Ext.get(obj.id).on('click',function(e) {var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));arryAttr.push('texto:'+getValorSP('texto',obj.id));seteaAtributosGrid(arryAttr,obj.id,storeHiddenAttr);});}}};return myCtrl;}
 
-function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5 5 5 5',
-		store: Ext.create('Ext.data.Store', { 
+function CreaCtrlGrid(id,forma,titulo){var myCtrl = {xtype:'gridpanel',id: id,margin:'5 5 5 5',
+		title : titulo,
+//		store: Ext.create('Ext.data.Store', { 
+//			model: 'modelGridDef', 
+//			storeId : 'store_'+id,
+//			autoLoad: false, 
+//			proxy: { 
+//				type: 'ajax', 
+//				url: '../../confpantallas/cargaColumnas.action',
+//				reader: {type: 'json',root: 'data'} 
+//			}
+//		}), 
+		store: Ext.create('Ext.data.SimpleStore', { 
 			model: 'modelGridDef', 
 			storeId : 'store_'+id,
-			autoLoad: true, 
-			proxy: { type: 'ajax', url : '../../js/confpantallas/data/attr.json', 
-				reader: {type: 'json',root: 'attrGridDef'} } }), 
+			autoLoad: false
+		}), 
 		columns: [ {text: "Titulo", 
 					width:180,
 					dataIndex: 'texto',
@@ -1126,7 +1134,7 @@ function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5
 return myCtrl;}
 
 //Open Paneles
-function openPanel(jsonResponse){
+function openPanel(jsonResponse,nombre){
 	for(rp = 0; rp < jsonResponse.regreso.length; rp++){
 		var attrPnl = jsonResponse.regreso[rp].attrs;
 		var hijosPnl = jsonResponse.regreso[rp].attrsHijos;  
@@ -1204,9 +1212,9 @@ function openPanel(jsonResponse){
 		}
 		arryAttr.push('titulo_Aling:'+getAttrOpen(attrPnl,'titleAlign'));
 		seteaAtributosGrid(arryAttr,regId,store);	
-		agregaControlesOpen(controles,regId);
+		agregaControlesOpen(controles,regId,nombre);
 		Ext.getCmp('west-panel').items.items[1].expand();
-		
+	
 	}
 }
 
@@ -1304,7 +1312,7 @@ function agrega(tipo){
 	//var f = pnl.items.items[1].expand();
 }
 
-function agregaControlesOpen(controles, panelId){
+function agregaControlesOpen(controles, panelId,nombre){
 	Ext.each(controles, function(control){
 		var ctrl = control.controlAttr;
 		var tipo = getAttrOpen(ctrl,'xtype');
@@ -1413,6 +1421,23 @@ function agregaControlesOpen(controles, panelId){
 			pnl.add(CreaCtrlHidden(regId,temp));
 			arryAttr.push('texto:'+texto);
 			arryAttr.push('tipo:hidden');
+		}else if(tipo === 'gridpanel'){
+			gridId = parseInt(regId.substring(regId.lastIndexOf("_")+1));
+			var titulo = getAttrOpen(ctrl,'title');
+			store=storeGridAttr;
+			pnl.add(CreaCtrlGrid(regId,panelId,titulo));
+			arryAttr.push('tipo:gridpanel');
+			arryAttr.push('titulo:'+ titulo);
+			arryAttr.push('titulo_Aling:'+getAttrOpen(ctrl,'titleAlign'));
+			arryAttr.push('columna_orden:'+getAttrOpen(ctrl,'sortableColumns'));
+			arryAttr.push('isResizable:'+getAttrOpen(ctrl,'resizable'));
+			arryAttr.push('isFondo:'+getAttrOpen(ctrl,'frame'));
+			arryAttr.push('columna_hidden:'+getAttrOpen(ctrl,'enableColumnHide'));
+			arryAttr.push('columna_move:'+getAttrOpen(ctrl,'enableColumnMove'));
+			arryAttr.push('columna_resize:'+getAttrOpen(ctrl,'enableColumnResize'));
+			arryAttr.push('isDesplegable:'+getAttrOpen(ctrl,'collapsible'));
+			arryAttr.push('isCerrable:'+getAttrOpen(ctrl,'closable'));
+			arryAttr.push('isBodyBorder:'+getAttrOpen(ctrl,'bodyBorder'));
 		}
 		
 
@@ -1439,6 +1464,49 @@ function agregaControlesOpen(controles, panelId){
 		arryAttr.push('width:'+getAttrOpen(ctrl,'width'));
 		creaDataSP(panelId,regId);
 		seteaAtributosGrid(arryAttr,regId,store);
+		
+//    	gridIdH ++;
+//		var gh = 'colG_' + gridIdH;
+//		creaDataSPG(forma,gh,id,gh);
+
+		
+		if(tipo === 'gridpanel'){
+			var plugin = Ext.getCmp(regId).getPlugin('cellplugin_'+regId);
+			//Ext.getCmp('grid_1').store.loadData(jsonResponse.data);
+			//Ext.getCmp(regId).store.getProxy().url = '../../confpantallas/cargaColumnas.action?panelName=' + nombre;
+			//Ext.getCmp(regId).store.load();
+			Ext.Ajax.request({
+		        url: '../../confpantallas/cargaColumnas.action',
+		        params: {panelName:nombre},
+		        success: function(response, opts){
+		        	var text = trim(response.responseText);
+		        	var jsonResponse = Ext.JSON.decode(text);
+		        	//Ext.getCmp(regId).store.loadData(jsonResponse.data);
+		        	gridIdH = jsonResponse.data.length;
+		        	Ext.each(jsonResponse.data, function(item){
+		        		nCtrl ++;
+		        		var rgs = { //spanel.json
+		        		    	idPadre: panelId,
+		        		    	idHijo: item.name,
+		        		    	idGrid: regId,
+		        		    	order: nCtrl,
+		        		    	texto:item.texto,
+		        		    	width: item.width,
+		        		    	tipoG:item.tipoG,
+		        		    	dataIndex:item.dataIndex,
+		        		    	name: item.name
+		        		};
+		        		storeSuperPanel.add(rgs);
+		        		var rowG = plugin.grid.store.data.length;
+		        		Ext.getCmp(regId).store.insert(rowG, item);
+		        		//plugin.startEdit(rowG, 0);
+		        	});		
+		        }
+		    });
+			
+		}
+
+		
 	});
 
 }
@@ -1486,7 +1554,7 @@ function agregaCtrl(tipo,forma,arryAttrCtrl){
 		gridId ++;
 		id = 'grid_' + gridId;
 		store=storeGridAttr;
-		pnl.add(CreaCtrlGrid(id,forma));
+		pnl.add(CreaCtrlGrid(id,forma,''));
 		arryAttr.push('tipo:gridpanel');
 		arryAttr.push('titulo:'+'');
 		arryAttr.push('titulo_Aling:left');
@@ -1542,7 +1610,7 @@ function fncAbrePanel(text,nombre){
 	        	var text = trim(response.responseText);
 	        	var jsonResponse = Ext.JSON.decode(text);
 		        if(jsonResponse.regreso != '') {
-		        	openPanel(jsonResponse);
+		        	openPanel(jsonResponse,nombre);
 		        	target.body.unmask();
 		        }else{
 		        	target.body.unmask();
