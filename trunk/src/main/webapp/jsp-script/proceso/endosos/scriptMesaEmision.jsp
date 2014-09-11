@@ -9,13 +9,14 @@ debug('###################################');
 
 ///////////////////////
 ////// variables //////
-var mesConUrlDocu         = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"   />';
-var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComplementarios"      />';
-var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion"                />';
-var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
-var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
-var mesConUrlComGrupo     = '<s:url namespace="/emision"     action="cotizacionGrupo"           />';
-var mesConUrlUpdateStatus = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"   />';
+var mesConUrlDocu             = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"     />';
+var mesConUrlDatCom           = '<s:url namespace="/"            action="datosComplementarios"        />';
+var mesConUrlCotizar          = '<s:url namespace="/emision"     action="cotizacion"                  />';
+var mesConUrlDetMC            = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"      />';
+var mesConUrlFinDetalleMC     = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC"   />';
+var mesConUrlComGrupo         = '<s:url namespace="/emision"     action="cotizacionGrupo"             />';
+var mesConUrlUpdateStatus     = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"     />';
+var mesConUrlCargarParametros = '<s:url namespace="/emision"     action="obtenerParametrosCotizacion" />';
 
 var ROL_MESA_DE_CONTROL    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
 var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
@@ -115,9 +116,39 @@ function _4_turnar(row,status,titulo)
                             debug('json response:',json);
                             if(json.success)
                             {
-                                mensajeCorrecto('Tr&aacute;mite guardado','Tr&aacute;mite guardado');
-                                button.up().up().destroy();
-                                loadMcdinStore();
+                                ventana.setLoading(true);
+                                Ext.Ajax.request(
+                                {
+                                    url      : mesConUrlCargarParametros
+                                    ,params  :
+                                    {
+                                        'smap1.parametro' : 'MENSAJE_TURNAR'
+                                        ,'smap1.cdramo'   : record.get('cdramo')
+                                        ,'smap1.cdtipsit' : record.get('cdtipsit')
+                                        ,'smap1.clave4'   : status
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        ventana.setLoading(false);
+                                        var json=Ext.decode(response.responseText);
+                                        debug('### json response parametro mensaje turnar:',json);
+                                        if(json.exito)
+                                        {
+                                            mensajeCorrecto('Tr&aacute;mite guardado',json.smap1.P1VALOR);
+                                            button.up().up().destroy();
+                                            loadMcdinStore();
+                                        }
+                                        else
+                                        {
+                                            mensajeWarning(json.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        ventana.setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
                             }
                             else
                             {

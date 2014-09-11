@@ -787,7 +787,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setExito(false);
 			resp.setRespuesta(
 					new StringBuilder()
-					.append("Error al obtener par&aacute;metros #").append(timestamp)
+					.append("No existe el par&aacute;metro #").append(timestamp)
 					.toString()
 					);
 			resp.setRespuestaOculta(ex.getMessage());
