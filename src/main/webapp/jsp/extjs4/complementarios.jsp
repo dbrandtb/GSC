@@ -898,7 +898,7 @@
 										                                                            	    		
                                 	    																			Ext.getCmp('botonReenvioWS').hide();
                                 	    																			
-                                	    																			if(inputCdtipsit == "AF" || inputCdtipsit == "PU"){
+                                	    																			if(panDatComMap1.SITUACION == 'AUTO'){
                                 	    																				_mensajeEmail = json.mensajeEmail;
                                 	    																				//debug("Mensaje Mail: " + _mensajeEmail);
                                 	    																				Ext.getCmp('botonEnvioEmail').enable();
@@ -998,7 +998,7 @@
 										                                                            ,text  : 'Enviar Email'
 										                                                            ,icon  : contexto+'/resources/fam3icons/icons/email.png'
 										                                                            ,disabled: true
-										                                                            ,hidden: (inputCdtipsit != "AF" && inputCdtipsit != "PU") ? true: false
+										                                                            ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
 										                                                            ,handler:function()
 										                                                            {
 										                                                            	Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
@@ -1058,7 +1058,7 @@
 										                                                            ,text  : 'Reintentar Emisi&oacute;n'
 										                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 										                                                            ,disabled: true
-										                                                            ,hidden: (inputCdtipsit != "AF" && inputCdtipsit != "PU") ? true: false
+										                                                            ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
 										                                                            ,handler:function()
 										                                                            {
 										                                                            	var me=this;

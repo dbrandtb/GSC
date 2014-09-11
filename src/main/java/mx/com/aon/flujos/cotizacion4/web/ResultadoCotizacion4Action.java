@@ -26,12 +26,17 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import net.sf.json.JSONArray;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -56,6 +61,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private CatalogosManager catalogosManager;
     
     private CotizacionManager cotizacionManager;
+    
+    private transient Ice2sigsService ice2sigsService;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -909,6 +916,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String nmcuadro    = null;
     	String cdelemen    = null;
     	String cdpersonCli = null;
+    	String cdideperCli = null;
     	String cdagenteExt = null;
     	
     	//sesion valida
@@ -948,6 +956,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			{
     				ntramite    = smap1.get("ntramite");
     				cdpersonCli = smap1.get("cdpersonCli");
+    				cdideperCli = smap1.get("cdideperCli");
     				cdagenteExt = smap1.get("cdagenteExt");
     				fechaInicio = smap1.get("fechaInicio");
     				fechaFin    = smap1.get("fechaFin");
@@ -1295,26 +1304,246 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		}
         }
     	
-    	if(exito&&StringUtils.isNotBlank(cdpersonCli))
+    	if(exito)
     	{
-    		try
-    		{
-				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-				parametros.put("pv_cdunieco_i" , comprarCdunieco);
-				parametros.put("pv_cdramo_i"   , comprarCdramo);
-				parametros.put("pv_estado_i"   , "W");
-				parametros.put("pv_nmpoliza_i" , comprarNmpoliza);
-				parametros.put("pv_nmsituac_i" , "0");
-				parametros.put("pv_cdrol_i"    , "1");
-				parametros.put("pv_cdperson_i" , cdpersonCli);
-				parametros.put("pv_nmsuplem_i" , "0");
-				parametros.put("pv_status_i"   , "V");
-				parametros.put("pv_nmorddom_i" , "1");
-				parametros.put("pv_swreclam_i" , null);
-				parametros.put("pv_accion_i"   , "I");
-				parametros.put("pv_swexiper_i" , "S");
-				kernelManagerSustituto.movMpoliper(parametros);
-    		}
+    		if(StringUtils.isNotBlank(cdpersonCli)){
+    			try
+        		{
+    				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+    				parametros.put("pv_cdunieco_i" , comprarCdunieco);
+    				parametros.put("pv_cdramo_i"   , comprarCdramo);
+    				parametros.put("pv_estado_i"   , "W");
+    				parametros.put("pv_nmpoliza_i" , comprarNmpoliza);
+    				parametros.put("pv_nmsituac_i" , "0");
+    				parametros.put("pv_cdrol_i"    , "1");
+    				parametros.put("pv_cdperson_i" , cdpersonCli);
+    				parametros.put("pv_nmsuplem_i" , "0");
+    				parametros.put("pv_status_i"   , "V");
+    				parametros.put("pv_nmorddom_i" , "1");
+    				parametros.put("pv_swreclam_i" , null);
+    				parametros.put("pv_accion_i"   , "I");
+    				parametros.put("pv_swexiper_i" , "S");
+    				kernelManagerSustituto.movMpoliper(parametros);
+        		}
+        		catch(Exception ex)
+        		{
+        			long timestamp  = System.currentTimeMillis();
+        			exito           = false;
+        			respuesta       = "Error al guardar el cliente #"+timestamp;
+        			respuestaOculta = ex.getMessage();
+        			logger.error(respuesta,ex);
+        		}
+    			
+    		}else if(StringUtils.isNotBlank(cdideperCli)){
+				logger.debug("Persona proveniente de WS, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+				/**
+		    	 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS 
+		    	 */
+				try
+        		{
+			    	if(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(cdtipsit)
+				    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+			    		
+			    		
+			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
+			    		paramsTip.put("pv_cdramo_i", comprarCdramo);
+			    		paramsTip.put("pv_cdtipsit_i",   cdtipsit);
+						
+				    	String cdtipsitGS = kernelManagerSustituto.obtenSubramoGS(paramsTip);
+				    	
+				    	ClienteGeneral clienteGeneral = new ClienteGeneral();
+				    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+				    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
+				    	clienteGeneral.setNumeroExterno(cdideperCli);
+				    	
+				    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+				    	
+				    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
+				    		ClienteGeneral cli = null;
+				    		
+				    		if(clientesRes.getClientesGeneral().length == 1){
+				    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+				    			cli = clientesRes.getClientesGeneral()[0];
+				    		}else {
+				    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+				    		}
+				    		
+				    		if(cli != null){
+				    			
+				    			//IR POR NUEVO CDPERSON:
+					    		String newCdPerson = kernelManagerSustituto.generaCdperson();
+					    		
+					    		logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+					    		
+					    		
+					    		String apellidoPat = "";
+						    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+						    		apellidoPat = cli.getApellidopCli();
+						    	}
+						    	
+						    	String apellidoMat = "";
+						    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+						    		apellidoMat = cli.getApellidomCli();
+						    	}
+						    	
+					    		Calendar calendar =  Calendar.getInstance();
+					    		
+					    		String sexo = "H"; //Hombre
+						    	if(cli.getSexoCli() > 0){
+						    		if(cli.getSexoCli() == 2) sexo = "M";
+						    	}
+						    	
+						    	String tipoPersona = "F"; //Fisica
+						    	if(cli.getFismorCli() > 0){
+						    		if(cli.getFismorCli() == 2){
+						    			tipoPersona = "M";
+						    		}else if(cli.getFismorCli() == 3){
+						    			tipoPersona = "S";
+						    		}
+						    	}
+						    	
+						    	String nacionalidad = "001";// Nacional
+						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+						    		nacionalidad = "002";
+						    	}
+						    	
+						    	if(cli.getFecnacCli()!= null){
+						    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+						    	}
+						    	
+					    		//GUARDAR MPERSONA
+					    		
+					    		Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+								parametros.put("pv_cdperson_i"    , newCdPerson);
+								parametros.put("pv_cdtipide_i"    , "1");
+								parametros.put("pv_cdideper_i"    , cli.getNumeroExterno());
+								parametros.put("pv_dsnombre_i"    , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+								parametros.put("pv_cdtipper_i"    , "1");
+								parametros.put("pv_otfisjur_i"    , tipoPersona);
+								parametros.put("pv_otsexo_i"      , sexo);
+								parametros.put("pv_fenacimi_i"    , calendar.getTime());
+								parametros.put("pv_cdrfc_i"       , cli.getRfcCli());
+								parametros.put("pv_dsemail_i"     , "");
+								parametros.put("pv_dsnombre1_i"   , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+								parametros.put("pv_dsapellido_i"  , apellidoPat);
+								parametros.put("pv_dsapellido1_i" , apellidoMat);
+								parametros.put("pv_feingreso_i"   , calendarHoy.getTime());
+								parametros.put("pv_cdnacion_i"    , "001");
+								parametros.put("pv_canaling_i"    , null);
+								parametros.put("pv_conducto_i"    , null);
+								parametros.put("pv_ptcumupr_i"    , null);
+								parametros.put("pv_residencia_i"  , null);
+								parametros.put("pv_accion_i"      , "I");
+								kernelManagerSustituto.movMpersona(parametros);
+					    		
+					    		//GUARDAR DOMICILIO
+					    		HashMap<String,String> paramDomicil = new HashMap<String, String>();
+				    			paramDomicil.put("pv_cdperson_i", newCdPerson);
+				    			paramDomicil.put("pv_nmorddom_i", "1");
+				    			paramDomicil.put("pv_msdomici_i", cli.getCalleCli() +" "+ cli.getNumeroCli());
+				    			paramDomicil.put("pv_nmtelefo_i", cli.getTelefonoCli());
+				    			paramDomicil.put("pv_cdpostal_i", cli.getCodposCli());
+				    			
+				    			String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+				    			if(edoAdosPos2.length() ==  1){
+				    				edoAdosPos2 = "0"+edoAdosPos2;
+				    			}
+				    			
+				    			paramDomicil.put("pv_cdedo_i",    cli.getCodposCli()+edoAdosPos2);
+				    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
+				    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
+				    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
+				    			paramDomicil.put("pv_nmnumint_i", null);
+				    			paramDomicil.put("pv_accion_i", "I");
+			
+				    			kernelManagerSustituto.pMovMdomicil(paramDomicil);
+				    			
+				    			HashMap<String,String> paramValoper = new HashMap<String, String>();
+				    			paramValoper.put("pv_cdunieco", "0");
+				    			paramValoper.put("pv_cdramo",   "0");
+				    			paramValoper.put("pv_estado",   null);
+				    			paramValoper.put("pv_nmpoliza", "0");
+				    			paramValoper.put("pv_nmsituac", null);
+				    			paramValoper.put("pv_nmsuplem", null);
+				    			paramValoper.put("pv_status",   null);
+				    			paramValoper.put("pv_cdrol",    "1");
+				    			paramValoper.put("pv_cdperson", newCdPerson);
+				    			paramValoper.put("pv_cdatribu", null);
+				    			paramValoper.put("pv_cdtipsit", null);
+				    			
+				    			paramValoper.put("pv_otvalor01", cli.getCveEle());
+				    			paramValoper.put("pv_otvalor02", cli.getPasaporteCli());
+				    			paramValoper.put("pv_otvalor03", null);
+				    			paramValoper.put("pv_otvalor04", null);
+				    			paramValoper.put("pv_otvalor05", null);
+				    			paramValoper.put("pv_otvalor06", null);
+				    			paramValoper.put("pv_otvalor07", null);
+				    			paramValoper.put("pv_otvalor08", cli.getOrirecCli());
+				    			paramValoper.put("pv_otvalor09", null);
+				    			paramValoper.put("pv_otvalor10", null);
+				    			paramValoper.put("pv_otvalor11", cli.getNacCli());
+				    			paramValoper.put("pv_otvalor12", null);
+				    			paramValoper.put("pv_otvalor13", null);
+				    			paramValoper.put("pv_otvalor14", null);
+				    			paramValoper.put("pv_otvalor15", null);
+				    			paramValoper.put("pv_otvalor16", null);
+				    			paramValoper.put("pv_otvalor17", null);
+				    			paramValoper.put("pv_otvalor18", null);
+				    			paramValoper.put("pv_otvalor19", null);
+				    			paramValoper.put("pv_otvalor20", (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0");
+				    			paramValoper.put("pv_otvalor21", null);
+				    			paramValoper.put("pv_otvalor22", null);
+				    			paramValoper.put("pv_otvalor23", null);
+				    			paramValoper.put("pv_otvalor24", null);
+				    			paramValoper.put("pv_otvalor25", cli.getCurpCli());
+				    			paramValoper.put("pv_otvalor26", null);
+				    			paramValoper.put("pv_otvalor27", null);
+				    			paramValoper.put("pv_otvalor28", null);
+				    			paramValoper.put("pv_otvalor29", null);
+				    			paramValoper.put("pv_otvalor30", null);
+				    			paramValoper.put("pv_otvalor31", null);
+				    			paramValoper.put("pv_otvalor32", null);
+				    			paramValoper.put("pv_otvalor33", null);
+				    			paramValoper.put("pv_otvalor34", null);
+				    			paramValoper.put("pv_otvalor35", null);
+				    			paramValoper.put("pv_otvalor36", null);
+				    			paramValoper.put("pv_otvalor37", null);
+				    			paramValoper.put("pv_otvalor38", null);
+				    			paramValoper.put("pv_otvalor39", cli.getMailCli());
+				    			paramValoper.put("pv_otvalor40", null);
+				    			paramValoper.put("pv_otvalor41", null);
+				    			paramValoper.put("pv_otvalor42", null);
+				    			paramValoper.put("pv_otvalor43", null);
+				    			paramValoper.put("pv_otvalor44", null);
+				    			paramValoper.put("pv_otvalor45", null);
+				    			paramValoper.put("pv_otvalor46", null);
+				    			paramValoper.put("pv_otvalor47", null);
+				    			paramValoper.put("pv_otvalor48", null);
+				    			paramValoper.put("pv_otvalor49", null);
+				    			paramValoper.put("pv_otvalor50", null);
+				    			
+				    			kernelManagerSustituto.pMovTvaloper(paramValoper);
+				    			
+				    			LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
+				    			paramsMpoliper.put("pv_cdunieco_i" , comprarCdunieco);
+				    			paramsMpoliper.put("pv_cdramo_i"   , comprarCdramo);
+				    			paramsMpoliper.put("pv_estado_i"   , "W");
+				    			paramsMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
+				    			paramsMpoliper.put("pv_nmsituac_i" , "0");
+								paramsMpoliper.put("pv_cdrol_i"    , "1");
+								paramsMpoliper.put("pv_cdperson_i" , newCdPerson);
+								paramsMpoliper.put("pv_nmsuplem_i" , "0");
+								paramsMpoliper.put("pv_status_i"   , "V");
+								paramsMpoliper.put("pv_nmorddom_i" , "1");
+								paramsMpoliper.put("pv_swreclam_i" , null);
+								paramsMpoliper.put("pv_accion_i"   , "I");
+								paramsMpoliper.put("pv_swexiper_i" , "N");//N por ser de WS
+								kernelManagerSustituto.movMpoliper(paramsMpoliper);
+				    			
+				    		}
+				    	}
+			    	}
+	    		}
     		catch(Exception ex)
     		{
     			long timestamp  = System.currentTimeMillis();
@@ -1323,6 +1552,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
+				
+			}
+    		
     	}
     	
         logger.info(""
@@ -1792,6 +2024,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setCotizacionManager(CotizacionManager cotizacionManager) {
 		this.cotizacionManager = cotizacionManager;
+	}
+
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
     
 }

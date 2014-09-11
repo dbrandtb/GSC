@@ -19,6 +19,7 @@
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto" />
         <property name="catalogosManager"       ref="catalogosManagerImpl"   />
         <property name="cotizacionManager"      ref="cotizacionManagerImpl"  />
+        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"         />
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">

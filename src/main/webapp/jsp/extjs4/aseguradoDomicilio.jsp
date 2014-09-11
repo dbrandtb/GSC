@@ -375,7 +375,7 @@ Ext.onReady(function(){
 	    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
 	    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
 	    }
-    }else if((inputCdramop4+'x')=='16x' && inputCdtipsitp4 =='AF' && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
+    }else if( ((inputCdramop4+'x')=='16x' || (inputCdramop4+'x')=='6x') && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
     	//alert("cdrol: " + inputCdrolp4);
     	
     	formPanelp4.items.items[2].items.items.forEach(function(element, index, array){

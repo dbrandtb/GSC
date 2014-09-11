@@ -104,6 +104,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
 				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 				
 				//idagente y sucursal
 				Agente agente=new Agente();

@@ -135,6 +135,7 @@ function _0_comprar()
 	debug('comprar');
 	_0_panelPri.setLoading(true);
 	var nombreTitular = '';
+	
 	Ext.Ajax.request(
 	{
         url      : _0_urlComprar
@@ -151,6 +152,7 @@ function _0_comprar()
             ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
             ,'smap1.ntramite'      : _0_smap1.ntramite
             ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.get('CLAVECLI')
+            ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : _0_smap1.cdramo+'x'=='6x' ? _fieldByName('parametros.pv_otvalor17').getValue() : ''
         }
 	    ,success : function(response,opts)
