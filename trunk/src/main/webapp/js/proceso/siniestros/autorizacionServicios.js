@@ -39,7 +39,9 @@ Ext.onReady(function() {
 	Ext.define('modelListadoAsegurado',{
         extend: 'Ext.data.Model',
         fields: [  	{type:'string',    name:'nmautser'},       		{type:'string',    name:'nmautant'},               	{type:'string',    name:'fesolici'},
-					{type:'string',    name:'polizaafectada'},		{type:'string',    name:'cdprovee'},				{type:'string',    name:'nombreProveedor'}	]
+					{type:'string',    name:'polizaafectada'},		{type:'string',    name:'cdprovee'},				{type:'string',    name:'nombreProveedor'},
+					{type:'string',    name:'statusTramite'},		{type:'string',    name:'descICD'},					{type:'string',    name:'cobertura'},
+					{type:'string',    name:'subcobertura'}]
     });
 	
 	Ext.define('modelListadoPoliza',{
@@ -258,6 +260,21 @@ Ext.onReady(function() {
         }
     });
     
+    storeRamos = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:true,
+		proxy:
+		{
+			type: 'ajax',
+			url:_UR_LISTA_RAMO_SALUD,
+			reader:
+			{
+				type: 'json',
+				root: 'listadoRamosSalud'
+			}
+		}
+	});
+    
     //DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	storeConceptoAutorizados=new Ext.data.Store(
 	{
@@ -380,6 +397,19 @@ Ext.onReady(function() {
 					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
 					Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
 					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
+					
+					//Verificamos el CDTIPSIT del Asegurado para saber si es Salud Vital ó Multisalud
+					/*if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
+						Ext.getCmp('idCopagoFin').show();
+						Ext.getCmp('idPenalCircHospitalario').show();
+						Ext.getCmp('idPenalCambioZona').show();
+					}else{
+						
+						Ext.getCmp('idCopagoFin').hide();
+						Ext.getCmp('idPenalCircHospitalario').hide();
+						Ext.getCmp('idPenalCambioZona').hide();
+					}*/
+					
 					Ext.getCmp('idMesesAsegurado').setValue(record.get('mesesAsegurado'));
 					storeCobertura.load({
 	                    params:{
@@ -419,6 +449,21 @@ Ext.onReady(function() {
 			]
 	});
 	
+	cmbRamos = Ext.create('Ext.form.field.ComboBox',
+	{
+		colspan	   :2,			fieldLabel   : 'Producto',			id        : 'cmbRamos',		allowBlank     : false,	
+	    editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : false,
+	    width	   :350,		labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos'
+	    ,store : storeRamos
+	    ,listeners : {
+	    	'select' : function(combo, record) {
+	    	//change:function(e){
+	    		Ext.getCmp('idAsegurado').setValue('');
+	    		Ext.getCmp('polizaAfectadaCom').setValue('');
+	    	}
+	    }
+	});
+	
 	asegurado = Ext.create('Ext.form.field.ComboBox',
     {
 		colspan:2,						fieldLabel     : 'Asegurado',		allowBlank     : false,			displayField : 'value',
@@ -442,7 +487,8 @@ Ext.onReady(function() {
 			    	
 			    	
 					var params = {
-			                'params.cdperson' : obtieneCDPerson
+			                'params.cdperson' : obtieneCDPerson,
+                            'params.cdramo' : Ext.getCmp('cmbRamos').getValue()
 			        };
 					
 			        cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
@@ -488,12 +534,23 @@ Ext.onReady(function() {
 	
 	medico = Ext.create('Ext.form.field.ComboBox',
     {
-    	fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
+    	colspan:2,fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
     	id				: 'idMedico',				labelWidth   : 170,			    valueField   : 'cdpresta',				forceSelection : true,
     	matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
-    	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,
+    	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,		width:500,
 		listeners : {
 			change:function(e){
+				
+				if(e.getValue() =='0'){
+	    			Ext.getCmp('medicoPExt').show();
+	    			Ext.getCmp('especialidadPExt').show();
+	    			Ext.getCmp('idEspecialidad').hide();
+	    		}else{
+	    			Ext.getCmp('medicoPExt').hide();
+	    			Ext.getCmp('especialidadPExt').hide();
+	    			Ext.getCmp('idEspecialidad').show();
+	    		}
+	    		
 				Ext.getCmp('idEspecialidad').setValue('');
 	    		Ext.Ajax.request(
 					{
@@ -525,23 +582,6 @@ Ext.onReady(function() {
     		}
         }
     });
-    
-    medicoConAutorizado = Ext.create('Ext.form.field.ComboBox',
-    {
-		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
-		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
-	});
-    
-    medicoEqQuirurg = Ext.create('Ext.form.field.ComboBox',
-    {
-		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
-		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
-		
-	});
     
     proveedor = Ext.create('Ext.form.field.ComboBox',
     {
@@ -577,17 +617,6 @@ Ext.onReady(function() {
 	                	'params.cdgarant' :this.getValue()
 	                }
 	            });
-	        	
-	        	if(Ext.getCmp('idCobAfectada').getValue() =="18MA"){
-	        		if(+ Ext.getCmp('idMesesAsegurado').getValue() < 10 ){
-	        			centrarVentanaInterna(Ext.Msg.show({
-	  		               title: 'Error',
-	  		               msg: 'El n&uacute;mero de meses es menor al m&iacute;nimo requerido',
-	  		               buttons: Ext.Msg.OK,
-	  		               icon: Ext.Msg.ERROR
-	  		           	}));
-        			}
-	        	}
 	        }
         }
     });
@@ -601,6 +630,49 @@ Ext.onReady(function() {
 		listeners : {
 					change:function(e){
 						obtieneInformacion();
+						//aqui se va a ser el llamado al pl porque se tiene que obtener e
+							
+						    Ext.Ajax.request(
+						    {
+						        url    : _URL_MONTO_DISP_PROVEEDOR
+						        ,params:{
+						            'params.cobertura': Ext.getCmp('idCobAfectada').getValue(),
+						            'params.subcobertura': Ext.getCmp('idSubcobertura').getValue()
+						        }
+						        ,success : function (response)
+						        {
+						        	Ext.getCmp('idSalarioMin').setValue('');
+									Ext.getCmp('idReqPenalizacion').setValue('');
+									Ext.getCmp('idValMaternidad').setValue('');
+						        	
+						        	var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+						        	var montoDisponible = json.SUMADISP;
+						        	
+						        	Ext.getCmp('idSalarioMin').setValue(montoDisponible);
+						        	Ext.getCmp('idReqPenalizacion').setValue(json.REQPENALIZACION);
+						        	Ext.getCmp('idValMaternidad').setValue(json.VALMATERNIDAD);
+						        	
+						        	if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+						        		if(+ Ext.getCmp('idMesesAsegurado').getValue() < 10 ){
+						        			centrarVentanaInterna(Ext.Msg.show({
+						  		               title: 'Error',
+						  		               msg: 'El n&uacute;mero de meses es menor al m&iacute;nimo requerido',
+						  		               buttons: Ext.Msg.OK,
+						  		               icon: Ext.Msg.ERROR
+						  		           	}));
+					        			}
+						        	}
+						        },
+						        failure : function ()
+						        {
+						            Ext.Msg.show({
+						                title:'Error',
+						                msg: 'Error de comunicaci&oacute;n',
+						                buttons: Ext.Msg.OK,
+						                icon: Ext.Msg.ERROR
+						            });
+						        }
+						    });
 		    		}
 		        }
     	
@@ -637,14 +709,14 @@ Ext.onReady(function() {
     	                	}
     	                	
     	                	if(Ext.getCmp('idCausaSiniestro').getValue()!="2"){
-                                notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + (mensajeInicial +tiempo);
-                                Ext.getCmp('notaInterna').setValue(notasInternas);
-                                centrarVentanaInterna(Ext.Msg.show({
-                                   title: 'Error',
-                                   msg: mensajeInicial +tiempo,
-                                   buttons: Ext.Msg.OK,
-                                   icon: Ext.Msg.WARNING
-                                }));
+			    				notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + (mensajeInicial +tiempo);
+	    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+	    	                	centrarVentanaInterna(Ext.Msg.show({
+			  		               title: 'Error',
+			  		               msg: mensajeInicial +tiempo,
+			  		               buttons: Ext.Msg.OK,
+			  		               icon: Ext.Msg.WARNING
+			  		           	}));
 			    			}
     	                }
     	            },
@@ -676,6 +748,7 @@ Ext.onReady(function() {
     	    	//PRIMERO VALIDACIÓN DEL NUMERO DE MESES DE PERIODO DE ESPERA
     	    	Ext.Ajax.request(
     	        {
+    	            //......
     	            url     : _URL_NUM_MESES_TIEMPO_ESPERA
     	            ,params : 
     	            {           
@@ -697,14 +770,14 @@ Ext.onReady(function() {
     	                	}
     	                	//alert("Movimiento no procede por padecimiento de periodo de espera");
     	                	if(Ext.getCmp('idCausaSiniestro').getValue()!="2"){
-                                notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + (mensajeInicial +tiempo);
-                                Ext.getCmp('notaInterna').setValue(notasInternas);
-                                centrarVentanaInterna(Ext.Msg.show({
-                                   title: 'Error',
-                                   msg: mensajeInicial +tiempo,
-                                   buttons: Ext.Msg.OK,
-                                   icon: Ext.Msg.WARNING
-                                }));
+    	                		notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + (mensajeInicial +tiempo);
+	    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+	    	                	centrarVentanaInterna(Ext.Msg.show({
+			  		               title: 'Error',
+			  		               msg: mensajeInicial +tiempo,
+			  		               buttons: Ext.Msg.OK,
+			  		               icon: Ext.Msg.WARNING
+			  		           	}));
     	                	}
     	                }//else{
 		                	    Ext.Ajax.request(
@@ -766,6 +839,7 @@ Ext.onReady(function() {
     	        //PRIMERO VALIDACIÓN DEL NUMERO DE MESES DE PERIODO DE ESPERA
 		        Ext.Ajax.request(
     	        {
+    	            //......
     	            url     : _URL_NUM_MESES_TIEMPO_ESPERA
     	            ,params : 
     	            {           
@@ -789,14 +863,14 @@ Ext.onReady(function() {
     	                	//panelEquipoQuirurgicoBase.getForm().reset();
 							//ventanaEqQuirurgicoBase.close()
 							if(Ext.getCmp('idCausaSiniestro').getValue()!="2"){
-                                notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT equipo quirúrgico base: " +cptQuirBase.rawValue + (mensajeInicial +tiempo);
-                                Ext.getCmp('notaInterna').setValue(notasInternas);
-                                centrarVentanaInterna(Ext.Msg.show({
-                                    title: 'Error',
-                                    msg: mensajeInicial+tiempo,
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.WARNING
-                                }));
+								notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT equipo quirúrgico base: " +cptQuirBase.rawValue + (mensajeInicial +tiempo);
+	    	                	Ext.getCmp('notaInterna').setValue(notasInternas);
+	    	                	centrarVentanaInterna(Ext.Msg.show({
+			  		               title: 'Error',
+			  		               msg: mensajeInicial+tiempo,
+			  		               buttons: Ext.Msg.OK,
+			  		               icon: Ext.Msg.WARNING
+			  		           	}));
 							}
     	                }//else{
 			    	        Ext.Ajax.request(
@@ -850,11 +924,22 @@ Ext.onReady(function() {
 	//SUCURSAL
 	sucursal= Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan		:2,					fieldLabel   : 'Plaza',			id: 'idSucursal',				allowBlank: false,			width:500	
+		colspan		:2,					fieldLabel   : 'Plaza',			id: 'idSucursal',				allowBlank: false,			width:350	
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs'
 		,store : storePlazas
-	});	
+		/*,listeners : {
+	    	//'select' : function(combo, record) {
+	    	change:function(e){
+	    		//Ext.getCmp('cmbRamos').setValue('');
+	    		storeRamos.load({
+	                params:{
+	                	'params.idPadre' :this.getValue()
+	                }
+	            });
+	    	}
+	    }*/
+	});
 	
 	
 	
@@ -900,7 +985,8 @@ Ext.onReady(function() {
 	    labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'cdcausa',
 	    store : storeCausaSinestro,
 	    listeners : {
-			change:function(e){
+			'select' :function(e){
+				Ext.getCmp('sumDisponible').setValue('');
 				switch (this.getValue()) {
 			        case '1': //ENFERMEDAD
 			        	Ext.getCmp('notaInterna').setValue('');
@@ -913,7 +999,7 @@ Ext.onReady(function() {
 			        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			        	Ext.getCmp('idPenalCambioZona').setValue('0');
 			        	if(e.getValue() == "3"){
-			        		Ext.getCmp('sumDisponible').setValue("25000");
+			        		Ext.getCmp('sumDisponible').setValue(Ext.getCmp('idSalarioMin').getValue());
 			        	}
 			        	break;
 			        default: 
@@ -930,7 +1016,26 @@ Ext.onReady(function() {
 		,bodyStyle:'padding:5px;'
 		,items :
 		[   			
-		 	medicoConAutorizado,
+		 	{
+    			xtype       : 'combo',
+    			fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
+				labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
+				matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+				minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
+    			,listeners : {
+			    	'select' : function(combo, record) {
+			    		if(this.getValue() =='0'){
+			    			Ext.getCmp('medicoExt').show();
+			    		}else{
+			    			Ext.getCmp('medicoExt').hide();
+			    		}
+			    	}
+			    }
+		    },
+			{
+				id		: 'medicoExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre',					labelWidth: 100,
+				width	:450,							name   :'medicoExt', hidden: true
+			},
 		 	cptConAutorizado,
 			{
 				id		: 'precioConAutorizado',		xtype  : 'textfield',			fieldLabel 	: 'Precio',					labelWidth: 100,
@@ -1012,7 +1117,26 @@ Ext.onReady(function() {
 		,bodyStyle:'padding:5px;'
 		,items :
 		[ 
-		 	medicoEqQuirurg,
+		 	{
+    			xtype       : 'combo',
+    			fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
+				labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
+				matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+				triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
+    			,listeners : {
+			    	'select' : function(combo, record) {
+			    		if(this.getValue() =='0'){
+			    			Ext.getCmp('medicoExtEqQ').show();
+			    		}else{
+			    			Ext.getCmp('medicoExtEqQ').hide();
+			    		}
+			    	}
+			    }
+		    },
+			{
+				id		: 'medicoExtEqQ',		xtype  : 'textfield',			fieldLabel 	: 'Nombre',					labelWidth: 100,
+				width	:450,							name   :'medicoExtEqQ', hidden: true
+			},
 		 	tipoMedico
 		 	,
 		 	{
@@ -1071,10 +1195,17 @@ Ext.onReady(function() {
 	        	handler: function() {
 	        		if (panelConceptosAutorizados.form.isValid()) {			
 	        			var datos=panelConceptosAutorizados.form.getValues();
+	        			var nombreProveedor;
+	        			
+	        			if(datos.idmedicoConAutorizado =='0'){
+	        				nombreProveedor = datos.medicoExt;
+	        			}else{
+	        				nombreProveedor = Ext.getCmp('idmedicoConAutorizado').getRawValue();
+	        			}
 	        			
 	        			var rec = new modelListadoTablas({
 	        					cdmedico: datos.idmedicoConAutorizado,
-	        					nombreMedico: medicoConAutorizado.rawValue,
+	        					nombreMedico: nombreProveedor,
 	        					cdcpt: datos.cptConAutorizado,
 	        					desccpt:cptConAutorizado.rawValue,
 	        					precio: datos.precioConAutorizado,
@@ -1175,15 +1306,28 @@ Ext.onReady(function() {
 				
 				if (panelEquipoQuirurgico.form.isValid()){
 					var datos=panelEquipoQuirurgico.form.getValues();
-					var rec = new modelListadoTablas({
+					var nombreProveedor;
+	    			if(datos.idmedicoEqQuirurg =='0'){
+	    				nombreProveedor = datos.medicoExtEqQ;
+	    			}else{
+	    				nombreProveedor = Ext.getCmp('idmedicoEqQuirurg').getRawValue();
+	    			}
+	    			var rec = new modelListadoTablas({
 						cdmedico: datos.idmedicoEqQuirurg,
-						nombreMedico:medicoEqQuirurg.rawValue,
+						nombreMedico:nombreProveedor,//medicoEqQuirurg.rawValue,
 						cantporc: datos.porcentajeEqQuirurg,
 						ptimport: datos.importeEqQuirurg,
 						cdtipmed:datos.idTipoMedico,
 						descTipMed:tipoMedico.rawValue,
 						cdtipaut:'3'
 					});
+					
+					if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+						var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+						sumaDisponible = Ext.getCmp('sumDisponible').getValue() - datos.importeEqQuirurg;
+						Ext.getCmp('sumDisponible').setValue(sumaDisponible);
+					}
+					
 					storeQuirurgico.add(rec);
 					panelEquipoQuirurgico.getForm().reset();
 					ventanaEqQuirurgico.close();
@@ -1273,6 +1417,7 @@ Ext.onReady(function() {
     	   this.callParent();
 	   },
 	   onAddClick: function(btn, e){
+	   		Ext.getCmp('medicoExt').hide();
 		   ventanaConceptosAutorizado.animateTarget=btn;
 		   ventanaConceptosAutorizado.showAt(150,750);
 	   },
@@ -1425,11 +1570,18 @@ Ext.onReady(function() {
        },
 	
        onAddClick: function(btn, e){
+       	   Ext.getCmp('medicoExtEqQ').hide();
     	   ventanaEqQuirurgico.animateTarget=btn;
     	   ventanaEqQuirurgico.showAt(150,1220);
        },
        onRemoveClick: function(grid, rowIndex){
     	   var record=this.getStore().getAt(rowIndex);
+    	   var importeEliminar = record.get("ptimport");
+    	   if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+    	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+    	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
+    	   }
+    	   
     	   this.getStore().removeAt(rowIndex);
        }
 	});
@@ -1536,6 +1688,12 @@ Ext.onReady(function() {
 			 }
 			 ,
 			 {
+				 header     : 'Estatus <br/> Tr&aacute;mite'
+				 ,dataIndex : 'statusTramite'
+				 ,width     : 200
+			 }
+			 ,
+			 {
 				 header     : 'Fecha Solicitud'
 				 ,dataIndex : 'fesolici'
 				 ,width     : 100
@@ -1557,6 +1715,22 @@ Ext.onReady(function() {
 				 ,dataIndex : 'nombreProveedor'
 				 ,width	   : 200
 			 }
+			 ,
+			 {
+				 header     : 'Internamiento'
+				 ,dataIndex : 'descICD'
+				 ,width	   : 200
+			 },
+			 {
+				 header     : 'Cobertura'
+				 ,dataIndex : 'cobertura'
+				 ,width	   : 200
+			 },
+			 {
+				 header     : 'Subcobertura'
+				 ,dataIndex : 'subcobertura'
+				 ,width	   : 200
+			 }
 		 ],
 		 bbar     :
 		 {
@@ -1568,14 +1742,14 @@ Ext.onReady(function() {
 		listeners: {
 	        itemclick: function(dv, record, item, index, e) {
 	        	idTipoAutorizacion= Ext.getCmp('tipoAutorizacion').getValue();
-	           	if(idTipoAutorizacion !=3)
+	           	/*if(idTipoAutorizacion !=3)
 				{
 					Ext.getCmp('idNumeroAnterior').hide();
 					Ext.getCmp('btnBuscar').hide();
 				}else{
 					Ext.getCmp('idNumeroAnterior').show();
 					Ext.getCmp('btnBuscar').show();
-				}
+				}*/
 	           	
 				if(idTipoAutorizacion !=1)
 				{
@@ -1595,10 +1769,8 @@ Ext.onReady(function() {
 						
 					}
 				}
-	           	//modificacionClausula.close();
 				modificacionClausula.hide();
-	           	
-	        }			     	
+	        }
 	    }
 		
 			
@@ -1636,6 +1808,7 @@ Ext.onReady(function() {
 						'select' : function(combo, record) {
 								closedStatusSelectedID = this.getValue();
 								Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
+								Ext.getCmp('idEstatusTramite').setValue('0');
 								if(closedStatusSelectedID !=1){
 									Ext.getCmp('panelbusqueda').show();
 									Ext.getCmp('clausulasGridId').show();
@@ -1697,16 +1870,11 @@ Ext.onReady(function() {
 					]
 			});
 	
-	//Ext.getCmp('idCopagoFin').hide();
-	//Ext.getCmp('idPenalCircHospitalario').hide();
-	//Ext.getCmp('idPenalCambioZona').hide();
-	
 	if(valorAction.nmAutSer == null && valorAction.ntramite ==null)
 	{
 		cdrol = valorAction.cdrol;
 		modificacionClausula.showAt(50,100);
 	}else{
-			//Ext.getCmp('idCopagoFin').hide();
 			storeMedico.load();
 			storeTratamiento.load();
 			storePlazas.load();
@@ -1856,6 +2024,26 @@ Ext.onReady(function() {
 					 labelWidth: 170,					hidden:true
 	 			}
 	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'ReqPenalizacion'		,id       : 'idReqPenalizacion', 	name:'idReqPenalizacion',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'ValMaternidad'		,id       : 'idValMaternidad', 	name:'idValMaternidad',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'SalarioMinimo'		,id       : 'idSalarioMin', 	name:'idSalarioMin',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'estatusTramite'		,id       : 'idEstatusTramite', 	name:'idEstatusTramite',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
 			 	{
 			 		colspan:2
 			 		,border: false
@@ -1904,6 +2092,8 @@ Ext.onReady(function() {
 				 			 })
 		 			 	]
 			 	}
+			 	,
+			 	cmbRamos
 			 	,
 			 	asegurado
 			 	,
@@ -2008,13 +2198,30 @@ Ext.onReady(function() {
 			 			 ]
 			 	},
 			 	sucursal,
-			 	
 			 	coberturaAfectada,
 			 	subCobertura,
 			 	proveedor,
 			 	medico,
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Especialidad'				,id       : 'idEspecialidad',		name:'idEspecialidad'
+					colspan:2, id		: 'medicoPExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre M&eacute;dico',					labelWidth: 170,
+					width	:350,		width:500,					name   :'medicoPExt', hidden: false,
+					listeners:{
+						afterrender: function(){
+							this.hide();
+						}
+					}
+				},
+				{
+					colspan:2, id		: 'especialidadPExt',		xtype  : 'textfield',			fieldLabel 	: 'Especialidad',					labelWidth: 170,
+					width	:350,		width:500,					name   :'especialidadPExt', hidden: false,
+					listeners:{
+						afterrender: function(){
+							this.hide();
+						}
+					}
+				},
+			 	{
+			 		colspan:2,xtype       : 'textfield'				,fieldLabel : 'Especialidad'				,id       : 'idEspecialidad',		name:'idEspecialidad'
 		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
 			 	},
 			 	{
@@ -2027,19 +2234,20 @@ Ext.onReady(function() {
 			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoFin'
-		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal'//,  width: 670
+		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal',  width: 670
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario'
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario'
 		 			,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario'
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona'
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona'
 		 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
 			 	},
-			 	causaSiniestro
-			 	,
+			 	
 			 	comboICD
+			 	,
+			 	causaSiniestro
 			 	,
 			 	{
 			 		colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
@@ -2146,7 +2354,7 @@ Ext.onReady(function() {
 												    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
 												    		{
 													    		
-													    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
+													    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue()!=null )
 											 					{
 												 					Ext.getCmp('idstatus').setValue("2");
 												 					guardadoAutorizacionServicio(_Existe);
@@ -2234,12 +2442,17 @@ Ext.onReady(function() {
 		    	if(Ext.decode(response.responseText).listaConsultaTablas != null)
         		{
 		    		var json=Ext.decode(response.responseText);
-			        for(var i=0;i<json.listaConsultaTablas.length;i++)
+		    		for(var i=0;i<json.listaConsultaTablas.length;i++)
                     {
                         /*OBTENEMOS LOS VALORES*/
 			        	if(json.listaConsultaTablas[i].cdtipaut==1)
                     	{
-                    		var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		if(json.listaConsultaTablas[i].cdmedico == 0){
+                    			var medicoCompleto= json.listaConsultaTablas[i].nombreMedico;
+                    		}else{
+                    			var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		}
+                    		
                     		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
                         	var rec = new modelListadoTablas({
                         		nmautser: json.listaConsultaTablas[i].nmautser,
@@ -2258,7 +2471,13 @@ Ext.onReady(function() {
                     	}
                         else
                     	{
-                        	var medicoCompleto = json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                        	//var medicoCompleto = json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		
+                    		if(json.listaConsultaTablas[i].cdmedico == 0){
+                    			var medicoCompleto= json.listaConsultaTablas[i].nombreMedico;
+                    		}else{
+                    			var medicoCompleto= json.listaConsultaTablas[i].cdmedico+ " "+json.listaConsultaTablas[i].nombreMedico;
+                    		}
                     		var cptCompleto = json.listaConsultaTablas[i].cdcpt+" "+json.listaConsultaTablas[i].desccpt;
                         	
                         	var rec = new modelListadoTablas({
@@ -2317,7 +2536,10 @@ Ext.onReady(function() {
 			Ext.getCmp('idEstado').setValue(json.estado);
 			Ext.getCmp('idcdRamo').setValue(json.cdramo);
 			Ext.getCmp('idNmSituac').setValue(json.nmsituac);
+			Ext.getCmp('idEstatusTramite').setValue(json.status);
 			//Ext.getCmp('').getValue()
+			
+			Ext.getCmp('idAaapertu').setValue(json.aaapertu);
 			
 			if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
 			{
@@ -2362,6 +2584,11 @@ Ext.onReady(function() {
 			//Médico
 			Ext.getCmp('idMedico').setValue(json.cdmedico);
 			
+			if(json.cdmedico == '0'){
+				Ext.getCmp('medicoPExt').setValue(json.nombreMedico);
+				Ext.getCmp('especialidadPExt').setValue(json.especialidadMedico);
+			}
+			
 			//Tratamiento
 			Ext.getCmp('tratamiento').setValue(json.dstratam);
 			
@@ -2375,7 +2602,18 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
 			
+			Ext.getCmp('idPenalCircHospitalario').setValue(json.porpenal);
+			
+			storePlazas.load();
 			Ext.getCmp('idSucursal').setValue(json.cduniecs);
+			
+			storeRamos.load({
+                params:{
+                	'params.idPadre':Ext.getCmp('idSucursal').getValue()
+                }
+			});
+			Ext.getCmp('cmbRamos').setValue(json.cdramo);
+			
 			
 			Ext.getCmp('idComboICD').setValue(json.cdicd);
 			
@@ -2390,6 +2628,34 @@ Ext.onReady(function() {
 			var dateFechaAutorizacion= json.feautori;
 			
 			//OBTENEMOS LA INFORMACION DE LA POLIZA EN ESPECIFICO PARA OBTENER LOS VALORES QUE SE NECESITARAN PARA LAS VALIDACIONES DE PENALIZACION
+		    Ext.Ajax.request(
+		    {
+		        url    : _URL_MONTO_DISP_PROVEEDOR
+		        ,params:{
+		            'params.cobertura': json.cdgarant,
+		            'params.subcobertura': json.cdconval
+		        }
+		        ,success : function (response)
+		        {
+		        	var jsonRes=Ext.decode(response.responseText).datosInformacionAdicional[0];
+		        	var montoDisponible = json.SUMADISP;
+		        	
+		        	Ext.getCmp('idSalarioMin').setValue(jsonRes.SUMADISP);
+		        	Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);
+		        	Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);
+		        },
+		        failure : function ()
+		        {
+		            Ext.Msg.show({
+		                title:'Error',
+		                msg: 'Error de comunicaci&oacute;n',
+		                buttons: Ext.Msg.OK,
+		                icon: Ext.Msg.ERROR
+		            });
+		        }
+		    });
+	        
+	        
 	        Ext.Ajax.request(
 	        {
 	            url     : _URL_POLIZA_UNICA
@@ -2413,10 +2679,19 @@ Ext.onReady(function() {
 						Ext.getCmp('idcdtipsit').setValue(json.cdtipsit);
 						Ext.getCmp('iddsplanAsegurado').setValue(json.dsplan);
 						Ext.getCmp('idMesesAsegurado').setValue(json.mesesAsegurado);
-						
-						
 						//Fecha Autorización
 						Ext.getCmp('fechaAutorizacion').setValue(dateFechaAutorizacion);
+						
+						if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
+							Ext.getCmp('idCopagoFin').show();
+							Ext.getCmp('idPenalCircHospitalario').show();
+							Ext.getCmp('idPenalCambioZona').show();
+						}else{
+							Ext.getCmp('idCopagoFin').hide();
+							Ext.getCmp('idPenalCircHospitalario').hide();
+							Ext.getCmp('idPenalCambioZona').hide();
+						}
+						
             		}
 	            },
 	            failure : function ()
@@ -2454,7 +2729,6 @@ Ext.onReady(function() {
 			
 			//Proveedor
 			Ext.getCmp('idProveedor').setValue(json.cdprovee);
-			
 			
 			//Causa Siniestro
 			storeCausaSinestro.load();
@@ -2553,7 +2827,8 @@ Ext.onReady(function() {
             	precio: record.get('precio'),
             	cantporc: record.get('cantporc'),
             	ptimport: record.get('ptimport'),
-            	cdtipmed: record.get('cdtipmed')
+            	cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
             	
             });
            });
@@ -2565,7 +2840,8 @@ Ext.onReady(function() {
             	precio: record.get('precio'),
             	cantporc: record.get('cantporc')/100,
             	ptimport: record.get('ptimport'),
-            	cdtipmed: record.get('cdtipmed')
+            	cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
             	
             });
        });
@@ -2577,7 +2853,8 @@ Ext.onReady(function() {
 				precio: record.get('precio'),
 				cantporc: record.get('cantporc')/100,
 				ptimport: record.get('ptimport'),
-				cdtipmed: record.get('cdtipmed')
+				cdtipmed: record.get('cdtipmed'),
+            	nombreMedico: record.get('nombreMedico')
 		        });
 		   });
 		
@@ -2710,7 +2987,7 @@ Ext.onReady(function() {
 		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 		            	Ext.getCmp('idCopago').setValue(json.copago);
 		            	
-						if(Ext.getCmp('idCobAfectada').getValue() == "18HO"){
+		            	if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('idEstatusTramite').getValue() != "2"){
 							Ext.Ajax.request(
 			    					{
 			    					    url     : _URL_CATALOGOS
@@ -2747,6 +3024,10 @@ Ext.onReady(function() {
 								Ext.getCmp('idCopagoFin').setValue('0');
 							}else{
 								Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopago').getValue());
+							}
+							
+							if(Ext.getCmp('idEstatusTramite').getValue() == "2"){
+								Ext.getCmp('idCopagoFin').setValue('0');
 							}
 							Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				        	Ext.getCmp('idPenalCambioZona').setValue('0');
@@ -2886,9 +3167,11 @@ Ext.onReady(function() {
 	            break;
 	        case "AB" :
 	        case "BC" :
+	        	//12 y 23
 	            Ext.getCmp('idPenalCircHospitalario').setValue('20');
 	            break;
 	        case "AC" :
+	        	//13
 	            Ext.getCmp('idPenalCircHospitalario').setValue('40');
 	            break;
 	        default:
