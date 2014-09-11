@@ -64,6 +64,8 @@ public interface DinamicDaoInterface {
 	
 	public List<DinamicControlAttrVo> getControlAttrVORowMapper(String panel, Integer control);
 	
+	public List<DinamicPanelAttrVo> getColumnasAttrVORowMapper(String namePanel);
+	
 	public DinamicPanelVo mapRow(ResultSet rs, int rownumber) throws SQLException; 
-		
+	
 }
