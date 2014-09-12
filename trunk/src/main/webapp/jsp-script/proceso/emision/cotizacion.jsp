@@ -1221,6 +1221,8 @@ function _0_tarifaSelect(selModel, record, row, column, eOpts)
 Ext.onReady(function()
 {
     
+    Ext.Ajax.timeout = 60000;
+    
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
