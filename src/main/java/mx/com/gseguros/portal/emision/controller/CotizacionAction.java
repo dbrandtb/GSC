@@ -3534,7 +3534,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdtipsit
 			,boolean hayTramite
 			,boolean hayTramiteVacio
-			,String user
+			,String cdusuari
 			,String cdelemento
 			,String ntramiteVacio
 			,boolean reinsertaContratante
@@ -3550,7 +3550,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		sb.append("cdtipsit: ").append(cdtipsit).append("\n");
 		sb.append("hayTramite: ").append(hayTramite).append("\n");
 		sb.append("hayTramiteVacio: ").append(hayTramiteVacio).append("\n");
-		sb.append("user: ").append(user).append("\n");
+		sb.append("cdusuari: ").append(cdusuari).append("\n");
 		sb.append("cdelemento: ").append(cdelemento).append("\n");
 		sb.append("ntramiteVacio: ").append(ntramiteVacio).append("\n");
 		sb.append("reinsertaContratante: ").append(reinsertaContratante).append("\n");
@@ -3901,7 +3901,17 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_cdtipsit_i"   , cdtipsit);
 					params.put("pv_otvalor01"    , clasif);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(params);
-					smap1.put("ntramite",(String)wr.getItemMap().get("ntramite"));
+					String ntramiteNew = (String)wr.getItemMap().get("ntramite");
+					smap1.put("ntramite",ntramiteNew);
+					
+					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	kernelManager.movDmesacontrol(parDmesCon);
 				}
 				else
 				{
@@ -3928,7 +3938,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
-	            mapaTarificacion.put("pv_cdusuari_i" , user);
+	            mapaTarificacion.put("pv_cdusuari_i" , cdusuari);
 	            mapaTarificacion.put("pv_cdelemen_i" , cdelemento);
 	            mapaTarificacion.put("pv_cdunieco_i" , cdunieco);
 	            mapaTarificacion.put("pv_cdramo_i"   , cdramo);
@@ -4251,7 +4261,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			    	else
 			    	{
 			    		tpl = new StringBuilder()
-	    	                    .append("Familia de ")
+	    	                    .append("Familia (")
+	    	                    .append(iAsegurado.get("FAMILIA"))
+	    	                    .append(") de ")
 	    	                    .append(iAsegurado.get("TITULAR"))
 	    	            		.toString();
 			    	}
@@ -4403,9 +4415,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			    	else
 			    	{
 			    		tpl = new StringBuilder()
-	    	                    .append("Familia de ")
-	    	                    .append(iAsegurado.get("TITULAR"))
-	    	            		.toString();
+			    		        .append("Familia (")
+			    		        .append(iAsegurado.get("FAMILIA"))
+			    		        .append(") de ")
+    			    		    .append(iAsegurado.get("TITULAR"))
+			    		        .toString();
 			    	}
 			    	iAsegurado.put("AGRUPADOR",
 			    			new StringBuilder()
