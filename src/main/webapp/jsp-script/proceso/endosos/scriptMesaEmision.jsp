@@ -464,7 +464,7 @@ function _4_onClockClick(rowIndex)
                         else if(cellIndex==6&&$(td).find('img').length>0)
                         {
                             debug('finalizar');
-                            Ext.create('Ext.window.Window',
+                            centrarVentanaInterna(Ext.create('Ext.window.Window',
                             {
                                 title        : 'Finalizar detalle'
                                 ,width       : 600
@@ -546,7 +546,7 @@ function _4_onClockClick(rowIndex)
                                         }
                                     }
                                 ]
-                            }).show();
+                            }).show());
                         }
                         /*else if(cellIndex==5&&$(td).find('img').length>0)
                         {
@@ -564,7 +564,7 @@ function _4_onClockClick(rowIndex)
             })
         ]
     }).show();
-    window.center();
+    centrarVentanaInterna(window);
     Ext.getCmp('inputReadDetalleHtmlVisor').getToolbar().hide();
 }
 ////// funciones //////
