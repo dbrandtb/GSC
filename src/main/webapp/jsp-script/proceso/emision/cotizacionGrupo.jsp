@@ -745,6 +745,31 @@ Ext.onReady(function()
                 ]
             }
         ]
+        ,listeners :
+        {
+            tabchange : function(panel,newtab,oldtab,e)
+            {
+                var grids=Ext.ComponentQuery.query('[xtype=grid]',oldtab);
+                debug('grids:',grids);
+                if(grids.length>0)
+                {
+                    var conCambios = false;
+                    $.each(grids,function(i,grid)
+                    {
+                        var records = grid.getStore().getModifiedRecords();
+                        if(grid.title!='RESUMEN SUBGRUPOS'&&records.length>0)
+                        {
+                            conCambios = true;
+                            debug('cambios:',records);
+                        }
+                    });
+                    if(conCambios)
+                    {
+                        mensajeWarning('Hay cambios pendientes sin guardar');
+                    }
+                }
+            }
+        }
     });
     
     if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
@@ -912,6 +937,8 @@ Ext.onReady(function()
                                             grupo.set('asisinte'  , datosAdic.params.ASISINTE);
                                             grupo.set('emerextr'  , datosAdic.params.EMEREXTR);
                                             _p21_storeGrupos.add(grupo);
+                                            _p21_storeGrupos.sort('letra','ASC');
+                                            _p21_storeGrupos.commitChanges();
                                             if(aux2==aux)//tenemos todas las respuestas
                                             {
                                                 _p21_tabpanel().setLoading(false);
@@ -984,6 +1011,8 @@ Ext.onReady(function()
                                             grupo.tvalogars=tvalogars.slist1;
                                             grupo.valido=true;
                                             _p21_storeGrupos.add(grupo);
+                                            _p21_storeGrupos.sort('letra','ASC');
+                                            _p21_storeGrupos.commitChanges();
                                             if(aux2==aux)//tenemos todas las respuestas
                                             {
                                                 _p21_tabpanel().setLoading(false);
@@ -1152,7 +1181,9 @@ function _p21_agregarGrupoClic()
 {
     debug('>_p21_agregarGrupoClic');
     _p21_storeGrupos.add(new _p21_modeloGrupo());
+    _p21_storeGrupos.sort('letra','ASC');
     _p21_renombrarGrupos(true);
+    _p21_storeGrupos.commitChanges();
     debug('<_p21_agregarGrupoClic');
 }
 
@@ -2169,8 +2200,10 @@ function _p21_generarTramiteClic(callback)
     debug('<_p21_generarTramiteClic');
 }
 
-function _p21_reload(json)
+function _p21_reload(json,status,nmpoliza)
 {
+    debug('>_p21_reload params:');
+    debug(json,status,nmpoliza,'dummy');
     _p21_tabpanel().setLoading(true);
     Ext.create('Ext.form.Panel').submit(
     {
@@ -2181,12 +2214,13 @@ function _p21_reload(json)
             ,'smap1.cdramo'   : _p21_smap1.cdramo
             ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
             ,'smap1.estado'   : _p21_smap1.estado
-            ,'smap1.nmpoliza' : json.smap1.nmpoliza
+            ,'smap1.nmpoliza' : Ext.isEmpty(nmpoliza) ? json.smap1.nmpoliza : nmpoliza
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
             ,'smap1.cdagente' : _p21_fieldByName('cdagente').getValue()
-            ,'smap1.status'   : _p21_smap1.status
+            ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
         }
     });
+    debug('<_p21_reload');
 }
 
 function _p21_mesacontrol(json)
@@ -2287,7 +2321,14 @@ function _p21_turnar(status,titulo,closable)
                                             mensajeCorrecto('Tr&aacute;mite guardado',json.smap1.P1VALOR,function()
                                             {
                                                 button.up().up().destroy();
-                                                _p21_mesacontrol();
+                                                if(status+'x'=='19x')
+                                                {
+                                                    _p21_reload(null,19,_p21_smap1.nmpoliza);
+                                                }
+                                                else
+                                                {
+                                                    _p21_mesacontrol();
+                                                }
                                             });
                                         }
                                         else
