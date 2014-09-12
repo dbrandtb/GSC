@@ -472,8 +472,10 @@ function _11_editar(grid,rowindex)
                                     'params.nmpoliza' : record.raw.noPoliza,
                                     'params.nmsuplem' : record.raw.NMSUPLEM,
                                     'params.nmsituac' : record.raw.NMSITUAC,
-                                    'params.cdtipsit' : record.raw.CDTIPSIT
+                                    'params.cdtipsit' : record.raw.CDTIPSIT,
+                                    'params.dateOcurrencia' : record.raw.fechaOcurrencia
                                 };
+                                
                                 Ext.Ajax.request(
                                 {
                                     url      : _11_urlIniciarSiniestroSinAutServ
