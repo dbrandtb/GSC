@@ -293,66 +293,7 @@ function revisarDocumento(grid,rowIndex)
                 valido = idReclamacion && idReclamacion>0;
                 if(!valido){
                     //Preguntamos si esta seguro de generar el siniestro
-                    msgWindow = Ext.Msg.show({
-                        title: 'Aviso',
-                        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
-                        buttons: Ext.Msg.YESNO,
-                        icon: Ext.Msg.QUESTION,
-                        fn: function(buttonId, text, opt){
-                            if(buttonId == 'no'){
-                                var json =
-                                {
-                                    'params.ntramite' : _11_params.NTRAMITE,
-                                    'params.cdunieco' : record.raw.CDUNIECO,
-                                    'params.cdramo'   : record.raw.CDRAMO,
-                                    'params.estado'   : record.raw.ESTADO,
-                                    'params.nmpoliza' : record.raw.noPoliza,
-                                    'params.nmsuplem' : record.raw.NMSUPLEM,
-                                    'params.nmsituac' : record.raw.NMSITUAC,
-                                    'params.cdtipsit' : record.raw.CDTIPSIT,
-                                    'params.dateOcurrencia' : record.raw.fechaOcurrencia
-                                    
-                                };
-                                Ext.Ajax.request(
-                                {
-                                    url      : _11_urlIniciarSiniestroSinAutServ
-                                    ,params  : json
-                                    ,success : function(response)
-                                    {
-                                        json = Ext.decode(response.responseText);
-                                        if(json.success==true){
-                                            mensajeCorrecto('Datos guardados',json.mensaje,function(){
-                                                Ext.create('Ext.form.Panel').submit(
-                                                {
-                                                    standardSubmit :true
-                                                    ,params        :
-                                                    {
-                                                        'params.ntramite' : _11_params.NTRAMITE
-                                                    }
-                                                });
-                                            });
-                                        }else{
-                                            mensajeError(json.mensaje);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        errorComunicacion();
-                                    }
-                                });
-                            }else{
-                                var valido = true;
-                                var nAut = record.get('NoAutorizacion');
-                                valido = nAut && nAut>0;
-                                if(!valido){
-                                    _11_pedirAutorizacion(record);
-                                }
-                                debug('!_11_validaAutorizacion: ',valido?'si':'no');
-                                return valido;
-                           }
-                        }
-                    });
-                    centrarVentana(msgWindow);
+                    asociarAsegurado(_11_params.NTRAMITE, record.raw.CDUNIECO,record.raw.CDRAMO,record.raw.ESTADO,record.raw.noPoliza, record.raw.NMSUPLEM, record.raw.NMSITUAC, record.raw.CDTIPSIT, record.raw.fechaOcurrencia, record);
                 }
             }
             
@@ -456,66 +397,7 @@ function _11_editar(grid,rowindex)
                 valido = idReclamacion && idReclamacion>0;
                 if(!valido){
                     //Preguntamos si esta seguro de generar el siniestro
-                    msgWindow = Ext.Msg.show({
-                        title: 'Aviso',
-                        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
-                        buttons: Ext.Msg.YESNO,
-                        icon: Ext.Msg.QUESTION,
-                        fn: function(buttonId, text, opt){
-                            if(buttonId == 'no'){
-                                var json =
-                                {
-                                    'params.ntramite' : _11_params.NTRAMITE,
-                                    'params.cdunieco' : record.raw.CDUNIECO,
-                                    'params.cdramo'   : record.raw.CDRAMO,
-                                    'params.estado'   : record.raw.ESTADO,
-                                    'params.nmpoliza' : record.raw.noPoliza,
-                                    'params.nmsuplem' : record.raw.NMSUPLEM,
-                                    'params.nmsituac' : record.raw.NMSITUAC,
-                                    'params.cdtipsit' : record.raw.CDTIPSIT,
-                                    'params.dateOcurrencia' : record.raw.fechaOcurrencia
-                                };
-                                
-                                Ext.Ajax.request(
-                                {
-                                    url      : _11_urlIniciarSiniestroSinAutServ
-                                    ,params  : json
-                                    ,success : function(response)
-                                    {
-                                        json = Ext.decode(response.responseText);
-                                        if(json.success==true){
-                                            mensajeCorrecto('Datos guardados',json.mensaje,function(){
-                                                Ext.create('Ext.form.Panel').submit(
-                                                {
-                                                    standardSubmit :true
-                                                    ,params        :
-                                                    {
-                                                        'params.ntramite' : _11_params.NTRAMITE
-                                                    }
-                                                });
-                                            });
-                                        }else{
-                                            mensajeError(json.mensaje);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        errorComunicacion();
-                                    }
-                                });
-                            }else{
-                                var valido = true;
-                                var nAut = record.get('NoAutorizacion');
-                                valido = nAut && nAut>0;
-                                if(!valido){
-                                    _11_pedirAutorizacion(record);
-                                }
-                                debug('!_11_validaAutorizacion: ',valido?'si':'no');
-                                return valido;
-                           }
-                        }
-                    });
-                    centrarVentana(msgWindow);
+                    asociarAsegurado(_11_params.NTRAMITE, record.raw.CDUNIECO,record.raw.CDRAMO,record.raw.ESTADO,record.raw.noPoliza, record.raw.NMSUPLEM, record.raw.NMSITUAC, record.raw.CDTIPSIT, record.raw.fechaOcurrencia,record);
                 }
             }
             // se realiza la validación  con la otra informacion
@@ -806,6 +688,68 @@ function _11_rechazoSiniestro()
 	}
 }
 
+function asociarAsegurado(ntramite,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,cdtipsit,dateOcurrencia,record){
+    msgWindow = Ext.Msg.show({
+        title: 'Aviso',
+        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
+        buttons: Ext.Msg.YESNO,
+        icon: Ext.Msg.QUESTION,
+        fn: function(buttonId, text, opt){
+            if(buttonId == 'no'){
+                var json =
+                {
+                    'params.ntramite' : ntramite,
+                    'params.cdunieco' : cdunieco,
+                    'params.cdramo'   : cdramo,
+                    'params.estado'   : estado,
+                    'params.nmpoliza' : nmpoliza,
+                    'params.nmsuplem' : nmsuplem,
+                    'params.nmsituac' : nmsituac,
+                    'params.cdtipsit' : cdtipsit,
+                    'params.dateOcurrencia' : dateOcurrencia
+                };
+                
+                Ext.Ajax.request(
+                {
+                    url      : _11_urlIniciarSiniestroSinAutServ
+                    ,params  : json
+                    ,success : function(response)
+                    {
+                        json = Ext.decode(response.responseText);
+                        if(json.success==true){
+                            mensajeCorrecto('Datos guardados',json.mensaje,function(){
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    standardSubmit :true
+                                    ,params        :
+                                    {
+                                        'params.ntramite' : _11_params.NTRAMITE
+                                    }
+                                });
+                            });
+                        }else{
+                            mensajeError(json.mensaje);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+            }else{
+                var valido = true;
+                var nAut = record.get('NoAutorizacion');
+                valido = nAut && nAut>0;
+                if(!valido){
+                    _11_pedirAutorizacion(record);
+                }
+                debug('!_11_validaAutorizacion: ',valido?'si':'no');
+                return valido;
+           }
+        }
+    });
+    centrarVentana(msgWindow);
+}
 function _11_regresarMC()
 {
 	debug('_11_regresarMC');
