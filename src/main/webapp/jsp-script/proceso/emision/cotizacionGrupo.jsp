@@ -757,7 +757,12 @@ Ext.onReady(function()
                     $.each(grids,function(i,grid)
                     {
                         var records = grid.getStore().getModifiedRecords();
-                        if(grid.title!='RESUMEN SUBGRUPOS'&&records.length>0)
+                        if(
+                            (
+                                (!Ext.isEmpty(grid.title) && grid.title!='RESUMEN SUBGRUPOS')
+                                ||(grid.getTitle          && grid.getTitle()!='RESUMEN SUBGRUPOS')
+                            )
+                            &&records.length>0)
                         {
                             conCambios = true;
                             debug('cambios:',records);
@@ -3231,6 +3236,37 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     clicksToEdit  : 1
                     ,errorSummary : false
                 }) : null
+                ,tbar       :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,listeners  :
+                        {
+                            change : function(comp,val)
+                            {
+                                debug('extraprimas filtro change:',val);
+                                var grid=comp.up().up();
+                                debug('grid:',grid);
+                                grid.getStore().filterBy(function(record, id)
+                                {
+                                    var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+                                    var filtro = val.toUpperCase().replace(/ /g,'');
+                                    var posNombre = nombre.lastIndexOf(filtro);
+                                    
+                                    if(posNombre > -1)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                ]
                 ,store      : Ext.create('Ext.data.Store',
                 {
                     model       : '_p21_modeloExtraprima'
@@ -3388,6 +3424,41 @@ function _p21_aseguradosClic(grid,rowIndex)
                     clicksToEdit  : 1
                     ,errorSummary : false
                 }) : null
+                ,tbar       :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,listeners  :
+                        {
+                            change : function(comp,val)
+                            {
+                                debug('asegurados filtro change:',val);
+                                var grid=comp.up().up();
+                                debug('grid:',grid);
+                                grid.getStore().filterBy(function(record, id)
+                                {
+                                    var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+                                    var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
+                                    var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
+                                    var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
+                                    
+                                    var filtro = val.toUpperCase().replace(/ /g,'');
+                                    var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
+                                    
+                                    if(posNombre > -1)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                ]
                 ,store      : Ext.create('Ext.data.Store',
                 {
                     model       : '_p21_modeloAsegurados'
