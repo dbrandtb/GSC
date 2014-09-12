@@ -63,7 +63,7 @@ public class CotizacionAction extends PrincipalCoreAction
 {
 
 	private static final long       serialVersionUID = 3237792502541753915L;
-	private final Logger            logger           = Logger.getLogger(CotizacionAction.class);
+	private static final Logger     logger           = Logger.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
@@ -2647,220 +2647,533 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		if(exito)
 		{
+			FileInputStream input       = null;
+			XSSFWorkbook    workbook    = null;
+			XSSFSheet       sheet       = null;
+			Long            inTimestamp = null;
+			String          nombreCenso = null;
+			File            archivoTxt  = null;
+			PrintStream     output      = null;
+			
 			try
 			{	
-				FileInputStream input       = new FileInputStream(censo);
-				XSSFWorkbook    workbook    = new XSSFWorkbook(input);
-				XSSFSheet       sheet       = workbook.getSheetAt(0);
-				Long            timestamp   = System.currentTimeMillis();
-				String          nombreCenso = "censo_"+timestamp+"_"+nmpoliza+".txt";
-				
-				File        archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
-				PrintStream output     = new PrintStream(archivoTxt);
-				
+				input       = new FileInputStream(censo);
+				workbook    = new XSSFWorkbook(input);
+				sheet       = workbook.getSheetAt(0);
+				inTimestamp = System.currentTimeMillis();
+				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
+				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+				output      = new PrintStream(archivoTxt);
+			}
+			catch(Exception ex)
+			{
+				long etimestamp = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al procesar censo #"+etimestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+			
+			if(exito)
+			{
 				//Iterate through each rows one by one
 				logger.info(""
 						+ "\n##############################################"
 						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 						);
 	            Iterator<Row> rowIterator = sheet.iterator();
-	            while (rowIterator.hasNext()) 
+	            int fila = 0;
+	            while (rowIterator.hasNext()&&exito) 
 	            {
 	                Row row        = rowIterator.next();
 	                Date   auxDate = null;
 	                Cell   auxCell = null;
 	                
-	                logger.info("GRUPO: "+(
-	                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
-	                		));
-	                output.print(
-	                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
-	                		);
+	                fila = fila + 1;
 	                
-	                logger.info("PARENTESCO: "+(
-	                		row.getCell(1).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(1).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("GRUPO: "+(
+			                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+			                		));
+			                output.print(
+			                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Grupo' ("+"A"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("PATERNO: "+(
-	                		row.getCell(2).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(2).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("PARENTESCO: "+(
+			                		row.getCell(1).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(1).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Parentesco' ("+"B"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("MATERNO: "+(
-	                		row.getCell(3).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(3).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("PATERNO: "+(
+			                		row.getCell(2).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(2).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Apellido paterno' ("+"C"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("NOMBRE: "+(
-	                		row.getCell(4).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(4).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("MATERNO: "+(
+			                		row.getCell(3).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(3).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Apellido materno' ("+"D"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxCell=row.getCell(5);
-	                logger.info("SEGUNDO NOMBRE: "+(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		));
-	                output.print(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("NOMBRE: "+(
+			                		row.getCell(4).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(4).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Nombre' ("+"E"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("SEXO: "+(
-	                		row.getCell(6).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(6).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(5);
+			                logger.info("SEGUNDO NOMBRE: "+(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		));
+			                output.print(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Segundo nombre' ("+"F"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxDate=row.getCell(7).getDateCellValue();
-	                logger.info("FECHA NACIMIENTO: "+(
-	                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
-	                			));
-	                output.print(
-	                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
-	                			);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("SEXO: "+(
+			                		row.getCell(6).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(6).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Sexo' ("+"G"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("COD POSTAL: "+(
-	                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
-	                		));
-	                output.print(
-	                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxDate=row.getCell(7).getDateCellValue();
+			                logger.info("FECHA NACIMIENTO: "+(
+			                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+			                			));
+			                output.print(
+			                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+			                			);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Fecha de nacimiento' ("+"H"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("ESTADO: "+(
-	                		row.getCell(9).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(9).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("COD POSTAL: "+(
+			                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+			                		));
+			                output.print(
+			                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Codigo postal' ("+"I"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("MUNICIPIO: "+(
-	                		row.getCell(10).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(10).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("ESTADO: "+(
+			                		row.getCell(9).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(9).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Estado' ("+"J"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("COLONIA: "+(
-	                		row.getCell(11).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(11).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("MUNICIPIO: "+(
+			                		row.getCell(10).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(10).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Municipio' ("+"K"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("CALLE: "+(
-	                		row.getCell(12).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(12).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("COLONIA: "+(
+			                		row.getCell(11).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(11).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Colonia' ("+"L"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("NUM EXT: "+(
-	                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-	                		));
-	                output.print(
-	                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("CALLE: "+(
+			                		row.getCell(12).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(12).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Calle' ("+"M"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxCell=row.getCell(14);
-	                logger.info("NUM INT: "+(
-	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-	                		));
-	                output.print(
-	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("NUM EXT: "+(
+			                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+			                		));
+			                output.print(
+			                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Numero exterior' ("+"N"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                logger.info("RFC: "+(
-	                		row.getCell(15).getStringCellValue()+"|"
-	                		));
-	                output.print(
-	                		row.getCell(15).getStringCellValue()+"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(14);
+			                logger.info("NUM INT: "+(
+			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+			                		));
+			                output.print(
+			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Numero interior' ("+"O"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxCell=row.getCell(16);
-	                logger.info("CORREO: "+(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		));
-	                output.print(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                logger.info("RFC: "+(
+			                		row.getCell(15).getStringCellValue()+"|"
+			                		));
+			                output.print(
+			                		row.getCell(15).getStringCellValue()+"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'RFC' ("+"P"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxCell=row.getCell(17);
-	                logger.info("TELEFONO: "+(
-	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-	                		));
-	                output.print(
-	                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(16);
+			                logger.info("CORREO: "+(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		));
+			                output.print(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Correo' ("+"Q"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
-	                auxCell=row.getCell(18);
-	                logger.info("IDENTIDAD: "+(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		));
-	                output.print(
-	                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-	                		);
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(17);
+			                logger.info("TELEFONO: "+(
+			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+			                		));
+			                output.print(
+			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Telefono' ("+"R"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
+	                
+	                if(exito)
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(18);
+			                logger.info("IDENTIDAD: "+(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		));
+			                output.print(
+			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long etimestamp = System.currentTimeMillis();
+		                	exito           = false;
+		                	respuesta       = "Error en el campo 'Identidad' ("+"S"+") de la fila "+fila+" #"+etimestamp;
+		                	respuestaOculta = ex.getMessage();
+		                	logger.error(respuesta,ex);
+		                }
+	                }
 	                
 	                output.println("");
 	                logger.info("** NUEVA_FILA **");
 	            }
-	            input.close();
-	            output.close();
+	            
+	            if(exito)
+	            {
+	            	try
+	            	{
+	            		input.close();
+	            		output.close();
+	            	}
+	            	catch(Exception ex)
+	            	{
+	            		long etimestamp = System.currentTimeMillis();
+	            		exito           = false;
+	            		respuesta       = "Error al transformar el archivo #"+etimestamp;
+	            		respuestaOculta = ex.getMessage();
+	            		logger.error(respuesta,ex);
+	            	}
+	            }
+	            
 	            logger.info(""
 	            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 						+ "\n##############################################"
 						);
 				
-				exito = FTPSUtils.upload(
-						this.getText("dominio.server.layouts"),
-						this.getText("user.server.layouts"),
-						this.getText("pass.server.layouts"),
-						archivoTxt.getAbsolutePath(),
-						this.getText("directorio.server.layouts")+"/"+nombreCenso);
-				if(!exito)
-				{
-					logger.error("No se pudo pasar el archivo al servidor");
-					nombreCenso = null;
-					exito = true;
-				}
+	            if(exito)
+	            {
+					exito = FTPSUtils.upload(
+							this.getText("dominio.server.layouts"),
+							this.getText("user.server.layouts"),
+							this.getText("pass.server.layouts"),
+							archivoTxt.getAbsolutePath(),
+							this.getText("directorio.server.layouts")+"/"+nombreCenso);
+					
+					if(!exito)
+					{
+						long etimestamp = System.currentTimeMillis();
+						exito           = false;
+						respuesta       = "Error al transferir archivo al servidor #"+etimestamp;
+						respuestaOculta = respuesta;
+						logger.error(respuesta);
+					}
+	            }
 				
 				if(exito)
 				{
-					String cdedo         = smap1.get("cdedo");
-					String cdmunici      = smap1.get("cdmunici");
-					String cdplanes[]    = new String[5];
-					
-					for(Map<String,Object>iGrupo:olist1)
+					try
 					{
-						String  cdgrupo      = (String)iGrupo.get("letra");
-						String  cdplan       = (String)iGrupo.get("cdplan");
-						Integer indGrupo     = Integer.valueOf(cdgrupo);
-						cdplanes[indGrupo-1] = cdplan;
+						String cdedo         = smap1.get("cdedo");
+						String cdmunici      = smap1.get("cdmunici");
+						String cdplanes[]    = new String[5];
+						
+						for(Map<String,Object>iGrupo:olist1)
+						{
+							String  cdgrupo      = (String)iGrupo.get("letra");
+							String  cdplan       = (String)iGrupo.get("cdplan");
+							Integer indGrupo     = Integer.valueOf(cdgrupo);
+							cdplanes[indGrupo-1] = cdplan;
+						}
+						
+						cotizacionManager.guardarCensoCompleto(nombreCenso,
+								cdunieco     , cdramo      , "W"
+								,nmpoliza    , cdedo       , cdmunici
+								,cdplanes[0] , cdplanes[1] , cdplanes[2]
+								,cdplanes[3] , cdplanes[4]
+								);
 					}
-					
-					cotizacionManager.guardarCensoCompleto(nombreCenso,
-							cdunieco     , cdramo      , "W"
-							,nmpoliza    , cdedo       , cdmunici
-							,cdplanes[0] , cdplanes[1] , cdplanes[2]
-							,cdplanes[3] , cdplanes[4]
-							);
+					catch(Exception ex)
+					{
+						long etimestamp = System.currentTimeMillis();
+						exito           = false;
+						respuesta       = "Error al guardar los datos #"+etimestamp;
+						respuestaOculta = ex.getMessage();
+						logger.error(respuesta,ex);
+						
+					}
 				}
-			}
-			catch(Exception ex)
-			{
-				long etimestamp = System.currentTimeMillis();
-				logger.error(etimestamp+" error mover censo",ex);
-				respuesta       = "Error al procesar censo #"+etimestamp;
-				respuestaOculta = ex.getMessage();
-				exito           = false;
 			}
 		}
 		
@@ -2911,7 +3224,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			success = true;
 			exito   = true;
 			
-			String timestamp        = smap1.get("timestamp");
+			String inTimestamp      = smap1.get("timestamp");
 			String clasif           = smap1.get("clasif");
 			String LINEA_EXTENDIDA  = smap1.get("LINEA_EXTENDIDA");
 			String cdunieco         = smap1.get("cdunieco");
@@ -2934,9 +3247,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
 			
-			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
+			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
-			logger.info("timestamp "+timestamp);
+			logger.info("inTimestamp "+inTimestamp);
 			logger.info("clasif "   +clasif);
 			
 			logger.info("censo "           +censo);
@@ -3032,17 +3345,35 @@ public class CotizacionAction extends PrincipalCoreAction
 			//enviar archivo
 			if(exito&&(!hayTramite||hayTramiteVacio))
 			{
+				
+				FileInputStream input      = null;
+				XSSFWorkbook    workbook   = null;
+				XSSFSheet       sheet      = null;
+				File            archivoTxt = null;
+				PrintStream     output     = null;
+				
 				try
 				{	
-					FileInputStream input    = new FileInputStream(censo);
-					XSSFWorkbook    workbook = new XSSFWorkbook(input);
-					XSSFSheet       sheet    = workbook.getSheetAt(0);
+					input    = new FileInputStream(censo);
+					workbook = new XSSFWorkbook(input);
+					sheet    = workbook.getSheetAt(0);
 					
-					nombreCenso        = "censo_"+timestamp+"_"+nmpoliza+".txt";
+					nombreCenso        = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
 					
-					File        archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
-					PrintStream output     = new PrintStream(archivoTxt);
-					
+					archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+					output     = new PrintStream(archivoTxt);
+				}
+				catch(Exception ex)
+				{
+					long etimestamp = System.currentTimeMillis();
+					exito           = false;
+					respuesta       = "Error inesperado al procesar censo #"+etimestamp;
+					respuestaOculta = ex.getMessage();
+					logger.error(respuesta,ex);
+				}
+				
+				if(exito)
+				{
 					if(esCensoSolo)
 					{
 						//Iterate through each rows one by one
@@ -3051,60 +3382,231 @@ public class CotizacionAction extends PrincipalCoreAction
 								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								);
 			            Iterator<Row> rowIterator = sheet.iterator();
-			            while (rowIterator.hasNext()) 
+			            int fila = 0;
+			            while (rowIterator.hasNext()&&exito) 
 			            {
-			                Row row        = rowIterator.next();
-			                Date   auxDate = null;
-			                Cell   auxCell = null;
+			                Row  row     = rowIterator.next();
+			                Date auxDate = null;
+			                Cell auxCell = null;
 			                
-			                auxCell=row.getCell(0);
-			                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                fila = fila + 1;
 			                
-			                auxCell=row.getCell(1);
-			                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                if(exito)
+			                {
+				                try
+				                {	
+					                auxCell=row.getCell(0);
+					                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+					                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Nombre' ("+"A"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(2);
-			                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+			                if(exito)
+			                {
+				                try
+				                {
+					                auxCell=row.getCell(1);
+					                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+					                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Apellido paterno' ("+"B"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(3);
-			                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-			                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(2);
+					                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+					                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Apellido materno' ("+"C"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxDate=row.getCell(4).getDateCellValue();
-			                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-			                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(3);
+					                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+					                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+					                
+					                auxDate=row.getCell(4).getDateCellValue();
+					                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+					                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Edad' o 'Fecha de nacimiento' ("+"D"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
-			                output.print(row.getCell(5).getStringCellValue()+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
+					                output.print(row.getCell(5).getStringCellValue()+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Sexo' ("+"F"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
-			                output.print(row.getCell(6).getStringCellValue()+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
+					                output.print(row.getCell(6).getStringCellValue()+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Parentesco' ("+"G"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(7);
-			                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-			               
-			                auxCell=row.getCell(8);
-			                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(7);
+					                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+					                output.print(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Ocupacion' ("+"H"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(9);
-			                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(8);
+					                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+					                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Extraprima de ocupacion' ("+"I"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(10);
-			                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(9);
+					                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+					                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Peso' ("+"J"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                auxCell=row.getCell(11);
-			                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-			                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(10);
+					                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+					                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Estatura' ("+"K"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
-			                output.print(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                auxCell=row.getCell(11);
+					                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+					                output.print(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Extraprima de sobrepeso' ("+"L"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
+			                
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+					                output.print(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Grupo' ("+"M"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
 			                output.println("");
 			                logger.info("** NUEVA_FILA **");
@@ -3124,21 +3626,80 @@ public class CotizacionAction extends PrincipalCoreAction
 								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								);
 			            Iterator<Row> rowIterator = sheet.iterator();
-			            while (rowIterator.hasNext()) 
+			            int fila = 0;
+			            while (rowIterator.hasNext()&&exito) 
 			            {
 			                Row row = rowIterator.next();
 			                
-			                logger.info("EDAD: "+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
-			                output.print(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+			                fila = fila + 1;
 			                
-			                logger.info("SEXO: "+row.getCell(1).getStringCellValue()+"|");
-			                output.print(row.getCell(1).getStringCellValue()+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("EDAD: "+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+					                output.print(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Edad' ("+"A"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                logger.info("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
-			                output.print(String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("SEXO: "+row.getCell(1).getStringCellValue()+"|");
+					                output.print(row.getCell(1).getStringCellValue()+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Sexo' ("+"B"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
-			                logger.info("GRUPO: "+String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
-			                output.print(String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+					                output.print(String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Cantidad' ("+"C"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
+			                
+			                if(exito)
+			                {
+			                	try
+			                	{
+					                logger.info("GRUPO: "+String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+					                output.print(String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+				                }
+				                catch(Exception ex)
+				                {
+				                	long etimestamp = System.currentTimeMillis();
+				                	exito           = false;
+				                	respuesta       = "Error en el campo 'Grupo' ("+"D"+") de la fila "+fila+" #"+etimestamp;
+				                	respuestaOculta = ex.getMessage();
+				                	logger.error(respuesta,ex);
+				                }
+			                }
 			                
 			                output.println("");
 			                logger.info("** NUEVA_FILA **");
@@ -3151,26 +3712,24 @@ public class CotizacionAction extends PrincipalCoreAction
 								);
 					}
 					
-					exito = FTPSUtils.upload(
-							this.getText("dominio.server.layouts"),
-							this.getText("user.server.layouts"),
-							this.getText("pass.server.layouts"),
-							archivoTxt.getAbsolutePath(),
-							this.getText("directorio.server.layouts")+"/"+nombreCenso);
-					if(!exito)
+					if(exito)
 					{
-						logger.error("No se pudo pasar el archivo al servidor");
-						nombreCenso = null;
-						exito = true;
+						exito = FTPSUtils.upload(
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso);
+						
+						if(!exito)
+						{
+							long etimestamp = System.currentTimeMillis();
+							exito           = false;
+							respuesta       = "Error al transferir archivo al servidor #"+etimestamp;
+							respuestaOculta = respuesta;
+							logger.error(respuesta);
+						}
 					}
-				}
-				catch(Exception ex)
-				{
-					long etimestamp = System.currentTimeMillis();
-					logger.error(etimestamp+" error mover censo",ex);
-					respuesta       = "Error al procesar censo #"+etimestamp;
-					respuestaOculta = ex.getMessage();
-					exito           = false;
 				}
 			}
 			
