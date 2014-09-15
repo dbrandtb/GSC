@@ -9,12 +9,12 @@ import javax.xml.ws.WebServiceFeature;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.ws.autosgs.model.EmisionAutosVO;
+import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
+import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.ResponseFolio;
-import mx.com.gseguros.ws.folioserviciopublico.service.EmisionAutosService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
