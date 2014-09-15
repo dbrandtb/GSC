@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceFeature;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -74,7 +75,15 @@ public class TestAction extends PrincipalCoreAction {
             URL wsdlLocation = new URL("http://10.1.1.134:8000/folioserviciopublico-ws/servicios?wsdl");
             String targetNamespace="http://com.gs.folioserviciopublico.soap.folio";
             String name="FolioWSService";
-            service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name));
+            WebServiceFeature feature = new WebServiceFeature() {
+				@Override
+				public String getID() {
+					return "1";
+				}
+			};
+			System.out.println("Usando array features...");
+			WebServiceFeature[] features = {feature}; 
+            service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name), features);
             //service = new FolioWSService();
             FolioWS port = service.getFolioWSPort();
             
