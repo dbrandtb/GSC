@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -394,11 +395,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String pantallaExclusion()
 	{
-		logger.debug("\n###################################"
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###### pantalla de exclusion ######"
-				+ "\n######                       ######"
-				+ "\n######                       ######");
+				);
 		logger.debug("smap1: "+smap1);
 		ScreenInterceptor scrInt=new ScreenInterceptor();
 		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO);
@@ -408,17 +408,25 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	{
 		try
 		{
+			List<ComponenteVO>autocompleterICD=pantallasManager.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null
+					, null, null, null
+					, "PANTALLA_EXCLUSION", "COMBO_ICD", null);
 			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(autocompleterICD, true, false, true, false, false, false);
+			
+			item1=gc.getItems();
 		}
 		catch(Exception ex)
 		{
 			logger.error("error al mostrar la pantalla de exclusion",ex);
 		}
-		logger.debug("\n######                       ######"
-				+ "\n######                       ######"
+		logger.debug(""
 				+ "\n###### pantalla de exclusion ######"
 				+ "\n###################################"
-				+ "\n###################################");
+				);
 		return SUCCESS;
 	}
 	

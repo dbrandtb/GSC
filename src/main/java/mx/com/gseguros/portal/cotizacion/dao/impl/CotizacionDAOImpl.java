@@ -770,4 +770,61 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void movimientoMpolicotICD(Map<String,String>params)throws Exception
+	{
+		ejecutaSP(new MovimientoMpolicotICD(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpolicotICD extends StoredProcedure
+	{
+		protected MovimientoMpolicotICD(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICOTICD");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("icd"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>cargarMpolicotICD(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarMpolicotICD(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class CargarMpolicotICD extends StoredProcedure
+	{
+		protected CargarMpolicotICD(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_MPOLICOTICD");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

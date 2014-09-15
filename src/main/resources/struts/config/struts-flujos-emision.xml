@@ -164,6 +164,18 @@
            <result type="json" />
        </action>
        
+       <action name="agregarClausulaICD" class="CotizacionAction" method="agregarClausulaICD">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarClausulaICD" class="CotizacionAction" method="cargarClausulaICD">
+           <result type="json" />
+       </action>
+       
+       <action name="borrarClausulaICD" class="CotizacionAction" method="borrarClausulaICD">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

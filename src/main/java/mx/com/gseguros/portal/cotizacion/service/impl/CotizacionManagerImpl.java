@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 
@@ -935,6 +938,196 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ cargarSumaAseguradaAuto @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO agregarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem
+			,String icd)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ agregarClausulaICD @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsituac=").append(nmsituac)
+				.append("\n@@@@@@ cdclausu=").append(cdclausu)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ icd=")     .append(icd)
+				.toString()
+				);
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsituac" , nmsituac);
+			params.put("cdclausu" , cdclausu);
+			params.put("nmsuplem" , nmsuplem);
+			params.put("icd"      , icd);
+			params.put("accion"   , Constantes.INSERT_MODE);
+			cotizacionDAO.movimientoMpolicotICD(params);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al relacionar ICD #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ agregarClausulaICD @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO cargarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarClausulaICD @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsituac=").append(nmsituac)
+				.append("\n@@@@@@ cdclausu=").append(cdclausu)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.toString()
+				);
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsituac" , nmsituac);
+			params.put("cdclausu" , cdclausu);
+			params.put("nmsuplem" , nmsuplem);
+			resp.setSlist(cotizacionDAO.cargarMpolicotICD(params));
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al obtener los ICD #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+			
+			resp.setSlist(new ArrayList<Map<String,String>>());
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarClausulaICD @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO borrarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem
+			,String icd)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ borrarClausulaICD @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsituac=").append(nmsituac)
+				.append("\n@@@@@@ cdclausu=").append(cdclausu)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ icd=")     .append(icd)
+				.toString()
+				);
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsituac" , nmsituac);
+			params.put("cdclausu" , cdclausu);
+			params.put("nmsuplem" , nmsuplem);
+			params.put("icd"      , icd);
+			params.put("accion"   , Constantes.DELETE_MODE);
+			cotizacionDAO.movimientoMpolicotICD(params);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al borrar ICD #").append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ borrarClausulaICD @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

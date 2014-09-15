@@ -50,16 +50,18 @@ var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
 var panDocInputNmsolici  = '<s:property value="smap1.nmsolici" />';
 var panDocInputTipoMov   = '<s:property value="smap1.tipomov" />';
 var panDocStoreDoc;
-var panDocUrlCargar      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaLoad" />';
 var panDocGridDocu;
 var panDocContexto       = '${ctx}';
-var panDocUrlUploadDoc   = '<s:url namespace="/" action="subirArchivo" />';
-var panDocUrlUploadPro   = '<s:url namespace="/" action="subirArchivoMostrarBarra" />';
-var panDocUrlDownload    = '<s:url namespace ="/documentos" action="descargaDoc" />';
-var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
 
-var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec" />';
+var panDocUrlCargar      = '<s:url namespace="/documentos"  action="ventanaDocumentosPolizaLoad" />';
+var panDocUrlUploadDoc   = '<s:url namespace="/"            action="subirArchivo"                />';
+var panDocUrlUploadPro   = '<s:url namespace="/"            action="subirArchivoMostrarBarra"    />';
+var panDocUrlDownload    = '<s:url namespace ="/documentos" action="descargaDoc"                 />';
+var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline"           />';
+var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo"         />';
+var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocumentos"          />';
+var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
+
 var panelSeleccionDocumento;
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var panDocSmap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -286,6 +288,71 @@ Ext.onReady(function()
                     });
         		}
         	});
+        }
+        ,fusionarClick : function(button)
+        {
+            debug('fusionar click')
+            var grid=button.up('grid');
+            debug('grid:',grid);
+            
+            var docus;
+            var lista;
+            
+            var valido = true;
+            if(valido)
+            {
+                valido = grid.getSelectionModel().getSelection().length>0;
+                if(!valido)
+                {
+                    mensajeWarning('Seleccione al menos un documento');
+                }
+            }
+            if(valido)
+            {
+                docus = grid.getSelectionModel().getSelection();
+                var images = [];
+                for(var i=0;i<docus.length;i++)
+                {
+                    var docu=docus[i];
+                    var docuname = docu.get('cddocume');
+                    var extension =docuname.substring(
+                        docuname.lastIndexOf('.')+1
+                        ,docuname.length
+                        ).toLowerCase();
+                    debug('extension iterada:',extension);
+                    if(extension!='pdf')
+                    {
+                        images.push('El archivo '+docu.get('dsdocume')+' no es compatible');
+                    }
+                    if(i==0)
+                    {
+                        lista = docuname;
+                    }
+                    else
+                    {
+                        lista = lista + '#' + docuname
+                    }
+                }
+                valido =images.length==0;
+                if(!valido)
+                {
+                    mensajeWarning(images.join('<br/>'));
+                }
+            }
+            if(valido)
+            {
+                Ext.create('Ext.form.Panel').submit(
+                {
+                    url             : panDocUrlFusionar
+                    ,standardSubmit : true
+                    ,target         : '_blank'
+                    ,params         :
+                    {
+                        'smap1.ntramite' : panDocInputNtramite
+                        ,'smap1.lista'   : lista
+                    }
+                });
+            }
         }
         ,onAddClick : function(button,e)
         {
@@ -585,85 +652,134 @@ Ext.onReady(function()
                         ,dock  : 'top'
                         ,items :
                         [
-			                <s:if test='!smap1.containsKey("readOnly")'>
                             {
+                                xtype  : 'displayfield'
+                                ,value : '<span style="color:white;">Buscar:</span>'
+                            }
+                            ,{
+                                xtype       : 'textfield'
+                                ,width      : 100
+                                ,listeners  :
+                                {
+                                    change : function(comp,val)
+                                    {
+                                        debug('documentos filtro change:',val);
+                                        var grid=comp.up('grid');
+                                        debug('grid:',grid);
+                                        grid.getStore().filterBy(function(record, id)
+                                        {
+                                            var nombre = record.get('dsdocume').toUpperCase().replace(/ /g,'');
+                                            var filtro = val.toUpperCase().replace(/ /g,'');
+                                            var posNombre = nombre.lastIndexOf(filtro);
+                                    
+                                            if(posNombre > -1)
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+			                <s:if test='!smap1.containsKey("readOnly")'>
+                            ,{
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : panDocContexto+'/resources/fam3icons/icons/add.png'
                                 ,handler : this.onAddClick
-                            },
-			                </s:if>
-                            {
-                            	xtype    : 'button'
-                            	,id      : 'venDocMenuSupBotGenConrec'
-	                            ,text    : 'Generar contrarecibo'
-	                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
-	                            ,handler : this.onContrareciboClick
-	                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
-                            },
-                            '-',
-                            { xtype: 'tbspacer', width: 50 }, 
-                            {
-                            	xtype    : 'button'
-                            	,id      : 'habilitaRec'
-	                            ,text    : 'Habilitar siguiente Recibo'
-	                            ,icon    : '${ctx}/resources/fam3icons/icons/table_go.png'
-	                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
-	                            ,handler : function (button, evt){
-	                            	var window=button.up().up();
-	                            	
-	                            	window.setLoading(true);
-	                            	Ext.Ajax.request({
-	                            		url       : _URLhabilitaSigRec
-	                            		//,jsonData : Ext.encode(jsonParams)
-	                            		,params   : {
-	                            			'smap1.pv_cdunieco_i' : panDocInputCdunieco,
-	                            			'smap1.pv_cdramo_i'   : panDocInputCdramo,
-	                            			'smap1.pv_estado_i'   : panDocInputEstado,
-	                            			'smap1.pv_nmpoliza_i' : panDocInputNmpoliza,
-	                            			
-	                            		}
-	                            		,success  : function(response){
-	                            			window.setLoading(false);
-	                            			
-	                            			var json=Ext.decode(response.responseText);
-	                            			
-	                            			if(json.success==true)
-	                            			{
-	                            				panDocStoreDoc.load();
-	                            				Ext.Msg.show({
-	                                                title:'Aviso',
-	                                                msg: json.progresoTexto,
-	                                                buttons: Ext.Msg.OK,
-	                                                icon:'x-message-box-ok'  
-	                                            });
-	                            			}
-	                            			else
-	                            			{
-	                            				Ext.Msg.show({
-	                                                title:'Error',
-	                                                msg: json.progresoTexto,
-	                                                buttons: Ext.Msg.OK,
-	                                                icon: Ext.Msg.ERROR
-	                                            });
-	                            			}
-	                            		}
-	                            		,failure  : function()
-	                            		{
-	                            			window.setLoading(false);
-	                            			Ext.Msg.show({
-	                                            title:'Error',
-	                                            msg: 'Error de comunicaci&oacute;n',
-	                                            buttons: Ext.Msg.OK,
-	                                            icon: Ext.Msg.ERROR
-	                                        });
-	                            		}
-	                            	});
-	                            }
                             }
+                            ,{
+                                xtype    : 'button'
+                                ,text    : 'Fusionar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/compress.png'
+                                ,handler : this.fusionarClick
+                            }
+			                </s:if>
+			                ,{
+			                    xtype : 'button'
+			                    ,text : 'Recibos...'
+			                    ,icon : '${ctx}/resources/fam3icons/icons/calendar_view_day.png'
+			                    ,menu :
+			                    {
+			                        xtype  : 'menu'
+			                        ,items :
+			                        [
+			                            {
+                                            xtype    : 'button'
+                                            ,id      : 'venDocMenuSupBotGenConrec'
+                                            ,text    : 'Generar contrarecibo'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
+                                            ,handler : this.onContrareciboClick
+                                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
+                                        }
+                                        ,{
+                                            xtype    : 'button'
+                                            ,id      : 'habilitaRec'
+                                            ,text    : 'Habilitar siguiente Recibo'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/table_go.png'
+                                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
+                                            ,handler : function (button, evt){
+                                                var window=button.up().up();
+                                    
+                                                window.setLoading(true);
+                                                Ext.Ajax.request({
+                                                    url       : _URLhabilitaSigRec
+                                                    //,jsonData : Ext.encode(jsonParams)
+                                                    ,params   : {
+                                                        'smap1.pv_cdunieco_i' : panDocInputCdunieco,
+                                                        'smap1.pv_cdramo_i'   : panDocInputCdramo,
+                                                        'smap1.pv_estado_i'   : panDocInputEstado,
+                                                        'smap1.pv_nmpoliza_i' : panDocInputNmpoliza,
+                                                        
+                                                    }
+                                                    ,success  : function(response){
+                                                        window.setLoading(false);
+                                                        
+                                                        var json=Ext.decode(response.responseText);
+                                                        
+                                                        if(json.success==true)
+                                                        {
+                                                            panDocStoreDoc.load();
+                                                            Ext.Msg.show({
+                                                                title:'Aviso',
+                                                                msg: json.progresoTexto,
+                                                                buttons: Ext.Msg.OK,
+                                                                icon:'x-message-box-ok'  
+                                                            });
+                                                        }
+                                                        else
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: json.progresoTexto,
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    }
+                                                    ,failure  : function()
+                                                    {
+                                                        window.setLoading(false);
+                                                        Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+			                        ]
+			                    }
+			                }                                        
                         ]
                     }
                 ]
+                ,selType : 'checkboxmodel'
                 ,listeners:
                 {
                 	cellclick : function(grid, td,
@@ -671,7 +787,7 @@ Ext.onReady(function()
                             rowIndex, e, eOpts)
                 	{
                 		debug( cellIndex+'x', rowIndex+'y' , record.raw );
-                		if(cellIndex==2)//ver
+                		if(cellIndex==3)//ver
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
@@ -715,7 +831,7 @@ Ext.onReady(function()
                                 }
                 			}
                 		}
-                		else if(cellIndex==3)//descargar
+                		else if(cellIndex==4)//descargar
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion

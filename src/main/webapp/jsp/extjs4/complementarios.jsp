@@ -1150,7 +1150,7 @@
 										                                                            ,id      : 'venDocVenEmiBotNueCotiza'
 										                                                            ,text    : 'Regresar a mesa de control'
 										                                                            ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
-										                                                            ,hidden  : inputCdramo+'x'=='16x'
+										                                                            ,hidden  : panDatComMap1.SITUACION=='AUTO'
 										                                                            ,handler : function()
 										                                                            {
 										                                                                var me=this;

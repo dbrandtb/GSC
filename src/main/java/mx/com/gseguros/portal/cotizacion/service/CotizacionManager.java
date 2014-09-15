@@ -3,7 +3,9 @@ package mx.com.gseguros.portal.cotizacion.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 
 
@@ -177,4 +179,33 @@ public interface CotizacionManager
 	public ManagerRespuestaSmapVO cargarClaveGSPorAuto(String cdramo,String modelo) throws Exception;
 	
 	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version)throws Exception;
+	
+	public ManagerRespuestaVoidVO agregarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem
+			,String icd)throws Exception;
+	
+	public ManagerRespuestaSlistVO cargarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem)throws Exception;
+	
+	public ManagerRespuestaVoidVO borrarClausulaICD(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdclausu
+			,String nmsuplem
+			,String icd)throws Exception;
 }
