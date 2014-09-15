@@ -81,9 +81,7 @@ public class TestAction extends PrincipalCoreAction {
 					return "1";
 				}
 			};
-			System.out.println("Usando array features...");
-			WebServiceFeature[] features = {feature}; 
-            service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name), features);
+            service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name));
             //service = new FolioWSService();
             FolioWS port = service.getFolioWSPort();
             

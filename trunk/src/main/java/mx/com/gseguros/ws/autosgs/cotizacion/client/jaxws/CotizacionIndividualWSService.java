@@ -42,25 +42,25 @@ public class CotizacionIndividualWSService
         super(__getWsdlLocation(), COTIZACIONINDIVIDUALWSSERVICE_QNAME);
     }
 
-    public CotizacionIndividualWSService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), COTIZACIONINDIVIDUALWSSERVICE_QNAME, features);
-    }
+    //public CotizacionIndividualWSService(WebServiceFeature... features) {
+        //super(__getWsdlLocation(), COTIZACIONINDIVIDUALWSSERVICE_QNAME, features);
+    //}
 
     public CotizacionIndividualWSService(URL wsdlLocation) {
         super(wsdlLocation, COTIZACIONINDIVIDUALWSSERVICE_QNAME);
     }
 
-    public CotizacionIndividualWSService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, COTIZACIONINDIVIDUALWSSERVICE_QNAME, features);
-    }
+    //public CotizacionIndividualWSService(URL wsdlLocation, WebServiceFeature... features) {
+        //super(wsdlLocation, COTIZACIONINDIVIDUALWSSERVICE_QNAME, features);
+    //}
 
     public CotizacionIndividualWSService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
     }
 
-    public CotizacionIndividualWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
-    }
+    //public CotizacionIndividualWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
+        //super(wsdlLocation, serviceName, features);
+    //}
 
     /**
      * 
