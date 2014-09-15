@@ -30,4 +30,6 @@ public interface CotizacionDAO
 	public Map<String,String>cargarAutoPorClaveGS(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarClaveGSPorAuto(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarSumaAseguradaAuto(Map<String,String>params)throws Exception;
+	public void movimientoMpolicotICD(Map<String,String>params)throws Exception;
+	public List<Map<String,String>>cargarMpolicotICD(Map<String,String>params)throws Exception;
 }

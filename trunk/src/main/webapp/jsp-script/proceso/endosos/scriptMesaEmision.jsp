@@ -31,7 +31,7 @@ function _4_onFolderClick(rowIndex)
     debug(rowIndex);
     var record=mcdinStore.getAt(rowIndex);
     debug(record);
-    Ext.create('Ext.window.Window',
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
         title        : 'Documentaci&oacute;n'
         ,modal       : true
@@ -56,7 +56,7 @@ function _4_onFolderClick(rowIndex)
             ,scripts  : true
             ,autoLoad : true
         }
-    }).show();
+    }).show());
 }
 
 function _4_rechazar(row)

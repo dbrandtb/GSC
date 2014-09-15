@@ -1632,6 +1632,7 @@ debug("validarYGuardar flag:2");
                             'smap1.pv_estado'       : inputEstadop2,
                             'smap1.pv_nmpoliza'     : inputNmpolizap2,
                             'smap1.pv_nmsituac'     : record.get('nmsituac'),
+                            'smap1.pv_nmsuplem'     : '0',
                             'smap1.pv_cdperson'     : record.get('cdperson'),
                             'smap1.pv_cdrol'        : record.get('cdrol'),
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),

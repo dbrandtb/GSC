@@ -21,7 +21,9 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -648,7 +650,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		exito   = true;
 		success = true;
-		
+
 		String cdperson = null;
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
@@ -929,7 +931,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = "Todo OK";
 		}
 		
-		logger.debug("\n"
+		logger.debug(""
 				+ "\n###### emitirColectivo ######"
 				+ "\n#############################"
 				);
@@ -5645,6 +5647,281 @@ public class CotizacionAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### cargarSumaAseguradaAuto ######")
 				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String agregarClausulaICD()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################")
+				.append("\n###### agregarClausulaICD ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsituac = null;
+		String cdclausu = null;
+		String nmsuplem = null;
+		String icd      = null;
+		
+		//datos completos
+		try
+		{
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsituac = smap1.get("nmsituac");
+			cdclausu = smap1.get("cdclausu");
+			nmsuplem = smap1.get("nmsuplem");
+			icd      = smap1.get("icd");
+			if(StringUtils.isBlank(cdunieco)
+					||StringUtils.isBlank(cdramo)
+					||StringUtils.isBlank(estado)
+					||StringUtils.isBlank(nmpoliza)
+					||StringUtils.isBlank(nmsituac)
+					||StringUtils.isBlank(cdclausu)
+					||StringUtils.isBlank(nmsuplem)
+					||StringUtils.isBlank(icd)
+					)
+			{
+				throw new Exception("Dato requerido no encontrado");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder().append("Datos incompletos para guardar ICD #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaVoidVO resp = cotizacionManager.agregarClausulaICD(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,cdclausu
+						,nmsuplem
+						,icd);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error inesperado al guardar ICD #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### agregarClausulaICD ######")
+				.append("\n################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarClausulaICD()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###############################")
+				.append("\n###### cargarClausulaICD ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsituac = null;
+		String cdclausu = null;
+		String nmsuplem = null;
+		
+		//datos completos
+		try
+		{
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsituac = smap1.get("nmsituac");
+			cdclausu = smap1.get("cdclausu");
+			nmsuplem = smap1.get("nmsuplem");
+			if(StringUtils.isBlank(cdunieco)
+					||StringUtils.isBlank(cdramo)
+					||StringUtils.isBlank(estado)
+					||StringUtils.isBlank(nmpoliza)
+					||StringUtils.isBlank(nmsituac)
+					||StringUtils.isBlank(cdclausu)
+					||StringUtils.isBlank(nmsuplem)
+					)
+			{
+				throw new Exception("Dato requerido no encontrado");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder().append("Datos incompletos para cargar ICD #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+			
+			slist1 = new ArrayList<Map<String,String>>();
+		}
+		
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaSlistVO resp=cotizacionManager.cargarClausulaICD(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,cdclausu
+						,nmsuplem);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				slist1          = resp.getSlist();
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error inesperado al cargar ICD #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+				
+				slist1 = new ArrayList<Map<String,String>>();
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### cargarClausulaICD ######")
+				.append("\n###############################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String borrarClausulaICD()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###############################")
+				.append("\n###### borrarClausulaICD ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsituac = null;
+		String cdclausu = null;
+		String nmsuplem = null;
+		String icd      = null;
+		
+		//datos completos
+		try
+		{
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsituac = smap1.get("nmsituac");
+			cdclausu = smap1.get("cdclausu");
+			nmsuplem = smap1.get("nmsuplem");
+			icd      = smap1.get("icd");
+			if(StringUtils.isBlank(cdunieco)
+					||StringUtils.isBlank(cdramo)
+					||StringUtils.isBlank(estado)
+					||StringUtils.isBlank(nmpoliza)
+					||StringUtils.isBlank(nmsituac)
+					||StringUtils.isBlank(cdclausu)
+					||StringUtils.isBlank(nmsuplem)
+					||StringUtils.isBlank(icd)
+					)
+			{
+				throw new Exception("Dato requerido no encontrado");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder().append("Datos incompletos para borrar ICD #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		if(exito)
+		{
+			try
+			{
+				ManagerRespuestaVoidVO resp = cotizacionManager.borrarClausulaICD(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,cdclausu
+						,nmsuplem
+						,icd);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error inesperado al borrar ICD #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### borrarClausulaICD ######")
+				.append("\n###############################")
 				.toString()
 				);
 		return SUCCESS;

@@ -4,20 +4,27 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var venExcluUrlCargar       = '<s:url namespace="/" action="cargarPantallaExclusion" />';
-    var venExcluUrlCargarDisp   = '<s:url namespace="/" action="obtenerExclusionesPorTipo" />';
-    var venExcluUrlGuardar      = '<s:url namespace="/" action="guardarExclusiones" />';
-    var venExcluUrlLoadHtml     = '<s:url namespace="/" action="cargarHtmlExclusion" />';
-    var venExcluUrlAddExclu     = '<s:url namespace="/" action="agregarExclusion" />';
-    var venExcluUrlAddExcluDetalle   = '<s:url namespace="/" action="agregarExclusionDetalle" />';
-    var venExcluUrlSaveHtml     = '<s:url namespace="/" action="guardarHtmlExclusion" />';
-    var venExcluUrlCargarTipos  = '<s:url namespace="/" action="cargarTiposClausulasExclusion" />';
-    var venExcluContexto        = '${ctx}';
-    var inputCduniecopx         = '<s:property value="smap1.pv_cdunieco" />';
-    var inputCdramopx           = '<s:property value="smap1.pv_cdramo" />';
-    var inputEstadopx           = '<s:property value="smap1.pv_estado" />';
-    var inputNmpolizapx         = '<s:property value="smap1.pv_nmpoliza" />';
-    var inputNmsituacpx         = '<s:property value="smap1.pv_nmsituac" />';
+    var venExcluUrlCargar          = '<s:url namespace="/"        action="cargarPantallaExclusion"       />';
+    var venExcluUrlCargarDisp      = '<s:url namespace="/"        action="obtenerExclusionesPorTipo"     />';
+    var venExcluUrlGuardar         = '<s:url namespace="/"        action="guardarExclusiones"            />';
+    var venExcluUrlLoadHtml        = '<s:url namespace="/"        action="cargarHtmlExclusion"           />';
+    var venExcluUrlAddExclu        = '<s:url namespace="/"        action="agregarExclusion"              />';
+    var venExcluUrlAddExcluDetalle = '<s:url namespace="/"        action="agregarExclusionDetalle"       />';
+    var venExcluUrlSaveHtml        = '<s:url namespace="/"        action="guardarHtmlExclusion"          />';
+    var venExcluUrlCargarTipos     = '<s:url namespace="/"        action="cargarTiposClausulasExclusion" />';
+    var _pnx_urlAgregarIcd         = '<s:url namespace="/emision" action="agregarClausulaICD"            />';    
+    var _pnx_urlCargarIcdClausu    = '<s:url namespace="/emision" action="cargarClausulaICD"             />';
+    var _pnx_urlBorrarIcd          = '<s:url namespace="/emision" action="borrarClausulaICD"             />';
+    
+    var _pnx_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+    _pnx_smap1.cdunieco = _pnx_smap1.pv_cdunieco;
+    _pnx_smap1.cdramo   = _pnx_smap1.pv_cdramo;
+    _pnx_smap1.estado   = _pnx_smap1.pv_estado;
+    _pnx_smap1.nmpoliza = _pnx_smap1.pv_nmpoliza;
+    _pnx_smap1.nmsituac = _pnx_smap1.pv_nmsituac;
+    _pnx_smap1.nmsuplem = _pnx_smap1.pv_nmsuplem;
+    debug('_pnx_smap1:',_pnx_smap1);
+    
     var inputCdpersonpx         = '<s:property value="smap1.pv_cdperson" />';
     var inputCdrolpx            = '<s:property value="smap1.pv_cdrol" />';
     var inputNombreaseguradopx  = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
@@ -29,20 +36,21 @@
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
-    
-    ///////////////////////
-    ////// funciones //////
-    /*///////////////////*/
-    
-    /*///////////////////*/
-    ////// funciones //////
-    ///////////////////////
-    
+
 Ext.onReady(function(){
     
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
+    Ext.define('_pnx_modeloICD',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'ICD','DESCRIPCION'
+        ]
+    });
+    
     Ext.define('ModeloExclusion',{
         extend:'Ext.data.Model',
         fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
@@ -101,11 +109,11 @@ Ext.onReady(function(){
             url     : venExcluUrlCargar
             ,extraParams :
             {
-                'smap1.pv_cdunieco'  : inputCduniecopx
-                ,'smap1.pv_cdramo'   : inputCdramopx
-                ,'smap1.pv_estado'   : inputEstadopx
-                ,'smap1.pv_nmpoliza' : inputNmpolizapx
-                ,'smap1.pv_nmsituac' : inputNmsituacpx
+                'smap1.pv_cdunieco'  : _pnx_smap1.cdunieco
+                ,'smap1.pv_cdramo'   : _pnx_smap1.cdramo
+                ,'smap1.pv_estado'   : _pnx_smap1.estado
+                ,'smap1.pv_nmpoliza' : _pnx_smap1.nmpoliza
+                ,'smap1.pv_nmsituac' : _pnx_smap1.nmsituac
             }
             ,type   : 'ajax'
             ,reader :
@@ -231,7 +239,7 @@ Ext.onReady(function(){
                         ,items       :
                         [
                             {
-                                icon     : venExcluContexto+'/resources/fam3icons/icons/add.png'
+                                icon     : '${ctx}/resources/fam3icons/icons/add.png'
                                 ,tooltip : 'Agregar cl&aacute;usula'
                                 ,handler : function(me,rowIndex)
                                 {
@@ -251,7 +259,7 @@ Ext.onReady(function(){
                                             {
                                                 var exclu=json.smap1;
                                                 debug(exclu);
-                                                Ext.create('Ext.window.Window',
+                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
                                                 {
                                                     title        : 'Detalle de '+exclu.dsclausu
                                                     ,modal       : true
@@ -279,7 +287,7 @@ Ext.onReady(function(){
                                                         {
                                                             id       : 'venExcluHtmlCopyWindowBoton1'
                                                             ,text    : 'Editar'
-                                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/pencil.png'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
                                                             ,handler : function(me)
                                                             {
                                                                 debug(me);
@@ -291,7 +299,7 @@ Ext.onReady(function(){
                                                         ,{
                                                             id       : 'venExcluHtmlCopyWindowBoton2'
                                                             ,text    : 'Agregar'
-                                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/add.png'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                                                             ,handler : function(me)
                                                             {
                                                                 debug(me);
@@ -311,13 +319,13 @@ Ext.onReady(function(){
                                                                                 url     : venExcluUrlAddExclu
                                                                                 ,params : 
                                                                                 {
-                                                                                    'smap1.pv_cdunieco_i'  : inputCduniecopx
-                                                                                    ,'smap1.pv_cdramo_i'   : inputCdramopx
-                                                                                    ,'smap1.pv_estado_i'   : inputEstadopx
-                                                                                    ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-                                                                                    ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+                                                                                    'smap1.pv_cdunieco_i'  : _pnx_smap1.cdunieco
+                                                                                    ,'smap1.pv_cdramo_i'   : _pnx_smap1.cdramo
+                                                                                    ,'smap1.pv_estado_i'   : _pnx_smap1.estado
+                                                                                    ,'smap1.pv_nmpoliza_i' : _pnx_smap1.nmpoliza
+                                                                                    ,'smap1.pv_nmsituac_i' : _pnx_smap1.nmsituac
                                                                                     ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
-                                                                                    ,'smap1.pv_nmsuplem_i' : '0'
+                                                                                    ,'smap1.pv_nmsuplem_i' : _pnx_smap1.nmsuplem
                                                                                     ,'smap1.pv_status_i'   : 'V'
                                                                                     ,'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()
                                                                                     ,'smap1.pv_swmodi_i'   : ''
@@ -412,8 +420,16 @@ Ext.onReady(function(){
                                                                 }                                                                
                                                             }
                                                         }
+                                                        ,{
+                                                            text     : "Relaci&oacute;n de ICD's"
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pill.png'
+                                                            ,handler : function ()
+                                                            {
+                                                                _pnx_windowIcd(record.get('cdclausu'));
+                                                            }
+                                                        }
                                                     ]
-                                                }).show();
+                                                }).show());
                                             }
                                             else
                                             {
@@ -494,7 +510,7 @@ Ext.onReady(function(){
                         ,items       :
                         [
                             {
-                                icon     : venExcluContexto+'/resources/fam3icons/icons/pencil.png'
+                                icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
                                 ,tooltip : 'Editar detalle'
                                 ,handler : function(me,rowIndex)
                                 {
@@ -510,7 +526,7 @@ Ext.onReady(function(){
                 [
                     /*{
                         text     : 'Guardar'
-                        ,icon    : venExcluContexto+'/resources/fam3icons/icons/disk.png'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                         ,handler : function(but)
                         {
                             var me=but;
@@ -527,11 +543,11 @@ Ext.onReady(function(){
                             var submitValues={};
                             submitValues['slist1']=slist1;
                             var smap1={
-                                cdunieco  : inputCduniecopx
-                                ,cdramo   : inputCdramopx
-                                ,estado   : inputEstadopx
-                                ,nmpoliza : inputNmpolizapx
-                                ,nmsituac : inputNmsituacpx
+                                cdunieco  : _pnx_smap1.cdunieco
+                                ,cdramo   : _pnx_smap1.cdramo
+                                ,estado   : _pnx_smap1.estado
+                                ,nmpoliza : _pnx_smap1.nmpoliza
+                                ,nmsituac : _pnx_smap1.nmsituac
                                 ,cdperson : inputCdpersonpx
                                 ,cdrol    : inputCdrolpx
                             };
@@ -556,7 +572,7 @@ Ext.onReady(function(){
                     }*/
                     {
                         text     : 'Aceptar'
-                        ,icon    : venExcluContexto+'/resources/fam3icons/icons/accept.png'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                         ,handler : function()
                         {
                             expande(2);
@@ -576,7 +592,7 @@ Ext.onReady(function(){
                             {
                                 var record=venExcluStoreUsa.getAt(rowIndex);
                                 debug(record);
-                                Ext.create('Ext.window.Window',
+                                centrarVentanaInterna(Ext.create('Ext.window.Window',
                                 {
                                     title        : 'Detalle de '+record.get('dsclausu')
                                     ,modal       : true
@@ -604,7 +620,7 @@ Ext.onReady(function(){
                                     [
                                         {
                                             text     : 'Editar'
-                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/pencil.png'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
                                             ,handler : function(me)
                                             {
                                                 debug(me);
@@ -615,7 +631,7 @@ Ext.onReady(function(){
                                         }
                                         ,{
                                             text     : 'Guardar'
-                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/disk.png'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                             ,handler : function(me)
                                             {
                                                 debug(me);
@@ -627,13 +643,13 @@ Ext.onReady(function(){
                                                         url     : venExcluUrlAddExclu
                                                         ,params : 
                                                         {
-                                                            'smap1.pv_cdunieco_i'  : inputCduniecopx
-                                                            ,'smap1.pv_cdramo_i'   : inputCdramopx
-                                                            ,'smap1.pv_estado_i'   : inputEstadopx
-                                                            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-                                                            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+                                                            'smap1.pv_cdunieco_i'  : _pnx_smap1.cdunieco
+                                                            ,'smap1.pv_cdramo_i'   : _pnx_smap1.cdramo
+                                                            ,'smap1.pv_estado_i'   : _pnx_smap1.estado
+                                                            ,'smap1.pv_nmpoliza_i' : _pnx_smap1.nmpoliza
+                                                            ,'smap1.pv_nmsituac_i' : _pnx_smap1.nmsituac
                                                             ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
-                                                            ,'smap1.pv_nmsuplem_i' : '0'
+                                                            ,'smap1.pv_nmsuplem_i' : _pnx_smap1.nmsuplem
                                                             ,'smap1.pv_status_i'   : 'V'
                                                             ,'smap1.pv_cdtipcla_i' : record.get('cdtipcla')
                                                             ,'smap1.pv_swmodi_i'   : ''
@@ -682,8 +698,16 @@ Ext.onReady(function(){
                                                 }
                                             }
                                         }
+                                        ,{
+                                            text     : "Relaci&oacute;n de ICD's"
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/pill.png'
+                                            ,handler : function()
+                                            {
+                                                _pnx_windowIcd(record.get('cdclausu'));
+                                            }
+                                        }
                                     ]
-                                }).show();
+                                }).show());
                             }//end if cell index = 1
                             else if(cellIndex==2)
                             {
@@ -695,13 +719,13 @@ Ext.onReady(function(){
 	                                url     : venExcluUrlAddExclu
 	                                ,params : 
 	                                {
-	                                    'smap1.pv_cdunieco_i'  : inputCduniecopx
-	                                    ,'smap1.pv_cdramo_i'   : inputCdramopx
-	                                    ,'smap1.pv_estado_i'   : inputEstadopx
-	                                    ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-	                                    ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+	                                    'smap1.pv_cdunieco_i'  : _pnx_smap1.cdunieco
+	                                    ,'smap1.pv_cdramo_i'   : _pnx_smap1.cdramo
+	                                    ,'smap1.pv_estado_i'   : _pnx_smap1.estado
+	                                    ,'smap1.pv_nmpoliza_i' : _pnx_smap1.nmpoliza
+	                                    ,'smap1.pv_nmsituac_i' : _pnx_smap1.nmsituac
 	                                    ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
-	                                    ,'smap1.pv_nmsuplem_i' : '0'
+	                                    ,'smap1.pv_nmsuplem_i' : _pnx_smap1.nmsuplem
 	                                    ,'smap1.pv_status_i'   : ''
 	                                    ,'smap1.pv_cdtipcla_i' : ''
 	                                    ,'smap1.pv_swmodi_i'   : ''
@@ -757,5 +781,179 @@ Ext.onReady(function(){
     //////////////////////
     
 });
+
+///////////////////////
+////// funciones //////
+///////////////////////
+function _pnx_quitarICD(cdclausu,icd,store,ventana)
+{
+    debug('>_pnx_quitarICD:',cdclausu,icd,'dummy');
+    debug(store,ventana,'dummy');
+    ventana.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _pnx_urlBorrarIcd
+        ,params  :
+        {
+            'smap1.cdunieco'  : _pnx_smap1.cdunieco
+            ,'smap1.cdramo'   : _pnx_smap1.cdramo
+            ,'smap1.estado'   : _pnx_smap1.estado
+            ,'smap1.nmpoliza' : _pnx_smap1.nmpoliza
+            ,'smap1.nmsituac' : _pnx_smap1.nmsituac
+            ,'smap1.cdclausu' : cdclausu
+            ,'smap1.nmsuplem' : _pnx_smap1.nmsuplem
+            ,'smap1.icd'      : icd
+        }
+        ,success : function(response)
+        {
+            ventana.setLoading(false);
+            var json=Ext.decode(response.responseText);
+            debug('### borrar icd response:',json);
+            if(json.exito)
+            {
+                mensajeCorrecto('ICD borrado','El ICD ha sido borrado',function()
+                {
+                    store.load();
+                });
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            ventana.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_pnx_quitarICD');
+}
+
+function _pnx_windowIcd(cdclausu)
+{
+    debug('>_pnx_windowIcd:',cdclausu);
+    var ventana;
+    var combo = <s:property value="item1" />;
+    combo.on(
+    {
+        'select' : function(comp,val)
+        {
+            debug('combo icd select:',val[0]);
+            ventana.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _pnx_urlAgregarIcd
+                ,params  :
+                {
+                    'smap1.cdunieco'  : _pnx_smap1.cdunieco
+                    ,'smap1.cdramo'   : _pnx_smap1.cdramo
+                    ,'smap1.estado'   : _pnx_smap1.estado
+                    ,'smap1.nmpoliza' : _pnx_smap1.nmpoliza
+                    ,'smap1.nmsituac' : _pnx_smap1.nmsituac
+                    ,'smap1.cdclausu' : cdclausu
+                    ,'smap1.nmsuplem' : _pnx_smap1.nmsuplem
+                    ,'smap1.icd'      : val[0].get('key')
+                }
+                ,success : function(response)
+                {
+                    comp.reset();
+                    ventana.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('### agregar icd response:',json);
+                    if(json.exito)
+                    {
+                        mensajeCorrecto('ICD relacionado','Se ha relacionado correctamente el ICD',function()
+                        {
+                            combo.up().down('grid').getStore().load();
+                        });
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    comp.reset();
+                    ventana.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+    });
+    ventana = Ext.create('Ext.window.Window',
+    {
+        title   : "Relaci&oacute;n de ICD's"
+        ,width  : 600
+        ,height : 400
+        ,modal  : true
+        ,items  :
+        [
+            combo
+            ,Ext.create('Ext.grid.Panel',
+            {
+                minHeight   : 100
+                ,maxHeight  : 250
+                ,autoScroll : true
+                ,columns    :
+                [
+                    {
+                        header     : 'ICD'
+                        ,dataIndex : 'DESCRIPCION'
+                        ,flex      : 1
+                    }
+                    ,{
+                        xtype  : 'actioncolumn'
+                        ,width : 20
+                        ,items :
+                        [
+                            {
+                                icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+                                ,tooltip : 'Quitar'
+                                ,handler : function(view,row,col,item,e,record)
+                                {
+                                    _pnx_quitarICD(cdclausu,record.get('ICD'),combo.up().down('grid').getStore(),ventana);
+                                }
+                            }
+                        ]
+                    }
+                ]
+                ,store : Ext.create('Ext.data.Store',
+                {
+                    model     : '_pnx_modeloICD'
+                    ,autoLoad : true
+                    ,proxy    :
+                    {
+                        url          : _pnx_urlCargarIcdClausu
+                        ,type        : 'ajax'
+                        ,extraParams :
+                        {
+                            'smap1.cdunieco'  : _pnx_smap1.cdunieco
+                            ,'smap1.cdramo'   : _pnx_smap1.cdramo
+                            ,'smap1.estado'   : _pnx_smap1.estado
+                            ,'smap1.nmpoliza' : _pnx_smap1.nmpoliza
+                            ,'smap1.nmsituac' : _pnx_smap1.nmsituac
+                            ,'smap1.cdclausu' : cdclausu
+                            ,'smap1.nmsuplem' : _pnx_smap1.nmsuplem
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
+                        }
+                    }
+                })
+            })
+        ]
+    }).show();
+    centrarVentanaInterna(ventana);
+    debug('<_pnx_windowIcd');
+}
+
+///////////////////////
+////// funciones //////
+///////////////////////
+
 </script>
 <div id="maindiv_scr_exclu" style="height:500px;border:0px solid red;"></div>

@@ -784,7 +784,7 @@ Ext.onReady(function()
             title           : 'Documentos del tr&aacute;mite ' + _p21_ntramite
             ,ventanaDocu    : true
             ,closable       : false
-            ,width          : 300
+            ,width          : 400
             ,height         : 300
             ,autoScroll     : true
             ,collapsible    : true
@@ -808,7 +808,7 @@ Ext.onReady(function()
                     ,'smap1.tipomov'  : '0'
                 }
             }
-        }).showAt(700, 0);
+        }).showAt(600, 0);
     }
     ////// contenido //////
     
@@ -3088,6 +3088,133 @@ function _p21_subirDetallePersonas()
 
 function _p21_emitir()
 {
+    _p21_generarTramiteClic(_p21_generarVentanaVistaPrevia);
+}
+
+function _p21_generarVentanaVistaPrevia()
+{
+    var itemsVistaPrevia=[];
+    
+    var mostrarVentana= function()
+    {
+        var ventana = Ext.create('Ext.window.Window',
+        {
+            title     : 'Vista previa'
+            ,width    : 800
+            ,height   : 400
+            ,closable : false
+            ,modal    : true
+            ,items    :
+            [
+                Ext.create('Ext.tab.Panel',
+                {
+                    height : 300
+                    ,items : itemsVistaPrevia
+                })
+            ]
+            ,buttonAlign : 'center'
+            ,buttons     :
+            [
+                {
+                    text     : 'Emitir'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                    ,handler : function(){_p21_emitir2(ventana,this);}
+                }
+                ,{
+                    text     : 'Cancelar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                    ,handler : function(){ventana.destroy();}
+                }
+            ]
+        });
+        centrarVentanaInterna(ventana.show());
+    }
+    
+    _p21_storeGrupos.each(function(record)
+    {
+        itemsVistaPrevia.push(
+        Ext.create('Ext.grid.Panel',
+        {
+            title      : 'TARIFA SUBGRUPO '+record.get('letra')
+            ,minHeight : 100
+            ,maxHeight : 250
+            ,store     : Ext.create('Ext.data.Store',
+            {
+                model     : '_p21_modeloTarifaEdad'
+                ,autoLoad : true
+                ,proxy    :
+                {
+                    type         : 'ajax'
+                    ,extraParams :
+                    {
+                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                        ,'smap1.estado'   : _p21_smap1.estado
+                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                        ,'smap1.nmsuplem' : '0'
+                        ,'smap1.cdplan'   : record.get('cdplan')
+                        ,'smap1.cdgrupo'  : record.get('letra')
+                        ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                    }
+                    ,url         : _p21_urlObtenerTarifaEdad
+                    ,reader      :
+                    {
+                        type  : 'json'
+                        ,root : 'slist1'
+                    }
+                }
+            })
+            ,columns   :
+            [
+                {
+                    header     : 'Edad'
+                    ,width     : 60
+                    ,dataIndex : 'EDAD'
+                }
+                ,{
+                    header     : 'No. Hombres'
+                    ,width     : 100
+                    ,dataIndex : 'HOMBRES'
+                }
+                ,{
+                    header     : 'No. Mujeres'
+                    ,width     : 100
+                    ,dataIndex : 'MUJERES'
+                }
+                ,{
+                    header     : 'Tarifa por hombre'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Tarifa por mujer'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Total hombres'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Total mujeres'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+            ]
+        })
+        );
+    });
+    
+    mostrarVentana();
+}
+
+function _p21_emitir2(ventana,button)
+{
     var params =
     {
         'smap1.cdunieco'  : _p21_smap1.cdunieco
@@ -3101,52 +3228,73 @@ function _p21_emitir()
         ,'smap1.ntramite' : _p21_ntramite
     };
     debug('parametros para emitir:',params);
-    _p21_tabpanel().setLoading(true);
+    ventana.setLoading(true);
     Ext.Ajax.request(
     {
         url      : _p21_urlEmitir
         ,params  : params
         ,success : function(response)
         {
-            _p21_tabpanel().setLoading(false);
+            ventana.setLoading(false);
             var json=Ext.decode(response.responseText);
             debug('json response emitir:',json);
             if(json.exito)
             {
-                mensajeCorrecto('P&oacute;liza emitida',json.respuesta,function()
-                {
-                    if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
+                button.hide();
+                button.up().down('[text=Cancelar]').hide();
+                button.up().add(
+                [
                     {
-                        Ext.ComponentQuery.query('[ventanaDocu]')[0].destroy();
-                        debug('ventana de documentos destruida');
+                        xtype  : 'displayfield'
+                        ,value : 'P&Oacute;LIZA '+json.smap1.nmpoliexEmi
                     }
-                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-                    {
-                        title       : 'Documentos de la p&oacute;liza ' + json.smap1.nmpolizaEmi + ' [' + json.smap1.nmpoliexEmi + ']'
-                        ,closable   : false
-                        ,width      : 500
-                        ,height     : 400
-                        ,autoScroll : true
-                        ,modal      : true
-                        ,loader     :
+                    ,{
+                        xtype    : 'button'
+                        ,text    : 'Documentos'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                        ,handler : function()
                         {
-                            scripts   : true
-                            ,autoLoad : true
-                            ,url      : _p21_urlVentanaDocumentosClon
-                            ,params   :
+                            centrarVentanaInterna(Ext.create('Ext.window.Window',
                             {
-                                'smap1.cdunieco'  : _p21_smap1.cdunieco
-                                ,'smap1.cdramo'   : _p21_smap1.cdramo
-                                ,'smap1.estado'   : 'M'
-                                ,'smap1.nmpoliza' : json.smap1.nmpolizaEmi
-                                ,'smap1.nmsuplem' : json.smap1.nmsuplemEmi
-                                ,'smap1.nmsolici' : json.smap1.nmpoliza
-                                ,'smap1.ntramite' : _p21_ntramite
-                                ,'smap1.tipomov'  : '0'
-                            }
+                                title       : 'Documentos de la p&oacute;liza ' + json.smap1.nmpolizaEmi + ' [' + json.smap1.nmpoliexEmi + ']'
+                                ,width      : 500
+                                ,height     : 400
+                                ,autoScroll : true
+                                ,modal      : true
+                                ,loader     :
+                                {
+                                    scripts   : true
+                                    ,autoLoad : true
+                                    ,url      : _p21_urlVentanaDocumentosClon
+                                    ,params   :
+                                    {
+                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.estado'   : 'M'
+                                        ,'smap1.nmpoliza' : json.smap1.nmpolizaEmi
+                                        ,'smap1.nmsuplem' : json.smap1.nmsuplemEmi
+                                        ,'smap1.nmsolici' : json.smap1.nmpoliza
+                                        ,'smap1.ntramite' : _p21_ntramite
+                                        ,'smap1.tipomov'  : '0'
+                                    }
+                                }
+                            }).show());
                         }
-                    }).show());
-                });
+                    }
+                    ,{
+                        xtype    : 'button'
+                        ,text    : 'Mesa de control'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+                        ,handler : _p21_mesacontrol
+                    }
+                ]);
+                
+                if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
+                {
+                    Ext.ComponentQuery.query('[ventanaDocu]')[0].destroy();
+                    debug('ventana de documentos destruida');
+                }
+                mensajeCorrecto('P&oacute;liza emitida',json.respuesta);
             }
             else
             {
@@ -3155,7 +3303,7 @@ function _p21_emitir()
         }
         ,failure:function()
         {
-            _p21_tabpanel().setLoading(false);
+            ventana.setLoading(false);
             errorComunicacion();
         }
     });
@@ -3932,6 +4080,7 @@ function _p21_editarExclusiones(grid,row)
                     ,'smap1.pv_estado'       : _p21_smap1.estado
                     ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
                     ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
+                    ,'smap1.pv_nmsuplem'     : '0'
                     ,'smap1.pv_cdperson'     : record.get('CDPERSON')
                     ,'smap1.pv_cdrol'        : record.get('CDROL')
                     ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
