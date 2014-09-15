@@ -42,25 +42,25 @@ public class FolioWSService
         super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME);
     }
 
-    public FolioWSService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME, features);
-    }
+    //public FolioWSService(WebServiceFeature... features) {
+        //super(__getWsdlLocation(), FOLIOWSSERVICE_QNAME, features);
+    //}
 
     public FolioWSService(URL wsdlLocation) {
         super(wsdlLocation, FOLIOWSSERVICE_QNAME);
     }
 
-    public FolioWSService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, FOLIOWSSERVICE_QNAME, features);
-    }
+    //public FolioWSService(URL wsdlLocation, WebServiceFeature... features) {
+        //super(wsdlLocation, FOLIOWSSERVICE_QNAME, features);
+    //}
 
     public FolioWSService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
     }
 
-    public FolioWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
-    }
+    //public FolioWSService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
+        //super(wsdlLocation, serviceName, features);
+    //}
 
     /**
      * 
