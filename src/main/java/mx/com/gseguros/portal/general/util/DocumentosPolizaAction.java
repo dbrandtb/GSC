@@ -3,10 +3,12 @@ package mx.com.gseguros.portal.general.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +18,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 5866297387639852014L;
 
-	private static Logger logger = Logger.getLogger(DocumentosPolizaAction.class);
+	private static final Logger logger = Logger.getLogger(DocumentosPolizaAction.class);
 
 	// private transient ArchivosManager archivosManagerJdbcTemplate;
 
@@ -30,6 +32,10 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	protected String contentType;
 	
 	private String url;
+	
+	private String  respuesta       = null;
+	private String  respuestaOculta = null;
+	private boolean exito           = false;
 
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
@@ -143,6 +149,102 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String fusionarDocumentos()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################")
+				.append("\n###### fusionarDocumentos ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String archivosAux = null;
+		String ntramite    = null;
+		
+		//datos completos
+		try
+		{
+			archivosAux = smap1.get("lista");
+			ntramite    = smap1.get("ntramite");
+			if(StringUtils.isBlank(archivosAux))
+			{
+				throw new Exception("No hay lista de archivos");
+			}
+			if(StringUtils.isBlank(ntramite))
+			{
+				throw new Exception("No hay tramite");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("No se recibieron los datos necesarios #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		if(exito)
+		{
+			try
+			{
+				String[]archivos = archivosAux.split("#");
+				List<File>files  = new ArrayList<File>();
+				for(String iArchivo:archivos)
+				{
+					File file = new File(
+							new StringBuilder().
+							append(this.getText("ruta.documentos.poliza"))
+							.append("/").append(ntramite)
+							.append("/").append(iArchivo)
+							.toString()
+							);
+					logger.debug(new StringBuilder().append("archivo iterado=").append(file).toString());
+					files.add(file);
+				}
+		
+				File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(
+						new StringBuilder()
+						.append(this.getText("ruta.documentos.temporal")).append("/")
+						.append(System.currentTimeMillis()).append("_fusion_").append(ntramite).append(".pdf")
+						.toString()
+						));
+				
+				if(fusionado==null || !fusionado.exists())
+				{
+					throw new Exception("El archivo no fue creado");
+				}
+				
+				fileInputStream=new FileInputStream(fusionado);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al crear el archivo #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### fusionarDocumentos ######")
+				.append("\n################################")
+				.toString()
+				);
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		return result;
+	}
+	
 	public InputStream getFileInputStream() {
 		return fileInputStream;
 	}
@@ -206,6 +308,29 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
 
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
+	}
+	
 }
