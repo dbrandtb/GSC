@@ -1185,7 +1185,7 @@ function _p21_renombrarGrupos(sinBorrarPestañas)
 function _p21_agregarGrupoClic()
 {
     debug('>_p21_agregarGrupoClic');
-    _p21_storeGrupos.add(new _p21_modeloGrupo());
+    _p21_storeGrupos.add(new _p21_modeloGrupo({letra:'99'}));
     _p21_storeGrupos.sort('letra','ASC');
     _p21_renombrarGrupos(true);
     _p21_storeGrupos.commitChanges();

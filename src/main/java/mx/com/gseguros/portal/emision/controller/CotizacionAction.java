@@ -3021,6 +3021,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			                output.print(
 			                		row.getCell(15).getStringCellValue()+"|"
 			                		);
+			                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
+			                {
+			                	throw new Exception("Sin rfc");
+			                }
 	                	}
 		                catch(Exception ex)
 		                {
