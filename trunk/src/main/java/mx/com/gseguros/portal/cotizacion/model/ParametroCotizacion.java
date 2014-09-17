@@ -5,6 +5,7 @@ public enum ParametroCotizacion
 	
 	RANGO_ANIO_MODELO("RANGOMODELO")
 	,MENSAJE_TURNAR("MENSAJETURNAR")
+	,MINIMOS_Y_MAXIMOS("MINMAXVALUES")
 	;
 	
 	private String parametro;

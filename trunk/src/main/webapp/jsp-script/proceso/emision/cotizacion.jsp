@@ -2658,6 +2658,45 @@ Ext.onReady(function()
     {
         debug('no focus:',_0_formAgrupados.items.items[0].items.items);
     }
+    
+    //obtener minimos y maximo
+    _0_panelPri.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _0_urlObtenerParametros
+        ,params  :
+        {
+            'smap1.parametro' : 'MINIMOS_Y_MAXIMOS'
+            ,'smap1.cdramo'   : _0_smap1.cdramo
+            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            _0_panelPri.setLoading(false);
+            var json=Ext.decode(response.responseText);
+            debug('respuesta json obtener minimos y maximos:',json);
+            if(json.exito)
+            {
+                for(var i=1;i<=13;i=i+2)
+                {
+                    if(json.smap1['P'+i+'CLAVE']=='CDATRIBU')
+                    {
+                        _fieldByName('parametros.pv_otvalor'+(('00'+json.smap1['P'+i+'VALOR']).slice(-2))).setMinValue(json.smap1['P'+(i+1)+'CLAVE']);
+                        _fieldByName('parametros.pv_otvalor'+(('00'+json.smap1['P'+i+'VALOR']).slice(-2))).setMaxValue(json.smap1['P'+(i+1)+'VALOR']);
+                    }
+                }
+            }
+            else
+            {
+                debug('### ERROR:',json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            _0_panelPri.setLoading(false);
+            errorComunicacion();
+        }
+    });
 });
 </script>
 </head>
