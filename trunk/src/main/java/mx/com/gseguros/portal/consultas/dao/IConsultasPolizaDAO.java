@@ -7,7 +7,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 
 
 public interface IConsultasPolizaDAO {
-	
+		
 	/**
 	 * Obtiene los datos de la p&oacute;liza
 	 * @param cdunieco
@@ -15,8 +15,9 @@ public interface IConsultasPolizaDAO {
 	 * @param estado
 	 * @param nmpoliza
 	 * @return
+	 * @throws Exception
 	 */
-    public List<ConsultaDatosPolizaVO> consultaPoliza(String cdunieco, String cdramo, String estado, String nmpoliza);
+    public List<ConsultaDatosPolizaVO> consultaDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
     /**
      * Obtiene las polizas asociadas al asegurado
@@ -24,8 +25,9 @@ public interface IConsultasPolizaDAO {
      * @param cdperson C&oacute;digo de persona del asegurado
      * @param nombre Nombre del asegurado
      * @return Polizas asociadas al asegurado
+     * @throws Exception
      */
-	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre);
+	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception;
 	
 	
 }

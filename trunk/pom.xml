@@ -285,13 +285,22 @@
             </exclusions>
         </dependency>
 
-        <!-- Oracle instalada Repo local porque no la tomaba, si hay conflicto en el server poner en provided -->
+        
+        <!-- Oracle Driver -->
         <dependency>
             <groupId>oracle</groupId>
             <artifactId>ojdbc</artifactId>
             <version>1.4</version>
             <!-- <scope>provided</scope> -->
         </dependency>
+        
+        <!-- SQL Server Driver -->
+        <dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>sqljdbc4</artifactId>
+		    <version>4.0</version>
+		    <!-- <scope>provided</scope> -->
+		</dependency>
 
 
         <!-- PARA AXIS2 -->
