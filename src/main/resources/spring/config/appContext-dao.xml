@@ -24,6 +24,13 @@
         -->
     </bean>
     
+    <bean id="dataSourceSISA" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        <property name="url" value="jdbc:sqlserver://192.168.1.26\\RESPALDO:1434;databaseName=SISA"/>
+        <property name="username" value="sa"/>
+        <property name="password" value="sa4925"/>
+    </bean>
+    
     <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/> -->
 
     
@@ -36,40 +43,9 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <!-- Fin de Manejo de transacciones para Spring JDBC -->
-    
-    
-    <!-- Transaction manager for Spring JDBC -->
-    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
-    </bean> -->
-    <!-- <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor" lazy-init="true"/> -->
-    <!-- LobHandler for Oracle JDBC drivers
-        (refers to the NativeJdbcExtractor above to get access to native OracleConnections) -->
-    <!-- <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
-        <property name="nativeJdbcExtractor"><ref local="nativeJdbcExtractor"/></property>
-    </bean> -->
-    
-
-    <!-- Agregado para setear el contexto de VPD -->
-    <!-- <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
-        <property name="beanNames">
-            <list>
-                <value>dataSource</value>
-            </list>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>dataAccessInterceptor</value>
-            </list>
-        </property>
-        <property name="proxyTargetClass" value="false"/>
-    </bean>
-
-    <bean id="dataAccessInterceptor" class="mx.com.aon.portal.util.ConnectionCallInterceptor"/> -->
-    <!-- Fin Agregado para setear el contexto de VPD -->
 
 
-    <!-- Beans utilizados para Spring JDBC: -->
+    <!-- ******************** Beans de Viejo Patron de Spring JDBC: ******************** -->
     <bean id="processResultDAO" class="mx.com.aon.portal.dao.ProcessResultDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
@@ -85,8 +61,10 @@
             <ref bean="processResultManagerJdbcTemplate"/>
         </property>
     </bean>
+    <!-- ******************** Fin de Beans de Viejo Patron de Spring JDBC: ******************** -->
     
-    <!-- Nuevo patron de Spring JDBC: -->
+    
+    <!-- ******************** Beans de Nuevo patron de Spring JDBC: ******************** -->
     <bean id="abstractJdbcDAO" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -96,6 +74,19 @@
     <bean id="abstractManagerDAO" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAO">
         <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
     </bean>
-    <!-- Fin de Beans utilizados para Spring JDBC: -->
+    
+    <!-- Para SISA: -->
+    <bean id="abstractJdbcDAOSISA" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
+        <property name="dataSource" ref="dataSourceSISA"/>
+    </bean>
+    
+    <!-- <bean id="procesoResultadoDAOSISA" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/> -->
+    
+    <bean id="abstractManagerDAOSISA" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSISA">
+        <!-- <property name="procesoResultadoDAO" ref="procesoResultadoDAOSISA"/> -->
+    </bean>
+    
+    <!-- ******************** Fin de Beans de Nuevo patron de Spring JDBC: ******************** -->
+    
     
 </beans>
