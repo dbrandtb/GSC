@@ -256,6 +256,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramsRetroactividad.put("param1" , cdunieco);
 				paramsRetroactividad.put("param2" , cdramo);
 				paramsRetroactividad.put("param3" , TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
+				paramsRetroactividad.put("param4" , usuario.getUser());
+				paramsRetroactividad.put("param5" , cdtipsit);
 				Map<String,String>retroactividad=storedProceduresManager.procedureMapCall(
 						ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
 				
