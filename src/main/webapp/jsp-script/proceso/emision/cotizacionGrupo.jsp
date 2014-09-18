@@ -634,6 +634,7 @@ Ext.onReady(function()
                                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                                     })
                                     ,<s:property value="imap.comboFormaPago" />
+                                    ,<s:property value="imap.comboRepartoPago" />
                                 ]
                             }
                             ,{
@@ -757,11 +758,9 @@ Ext.onReady(function()
                     $.each(grids,function(i,grid)
                     {
                         var records = grid.getStore().getModifiedRecords();
+                        debug('modificados:',records.length);
                         if(
-                            (
-                                (!Ext.isEmpty(grid.title) && grid.title!='RESUMEN SUBGRUPOS')
-                                ||(grid.getTitle          && grid.getTitle()!='RESUMEN SUBGRUPOS')
-                            )
+                            grid.up('panel').title!='RESUMEN SUBGRUPOS'
                             &&records.length>0)
                         {
                             conCambios = true;
@@ -784,7 +783,7 @@ Ext.onReady(function()
             title           : 'Documentos del tr&aacute;mite ' + _p21_ntramite
             ,ventanaDocu    : true
             ,closable       : false
-            ,width          : 400
+            ,width          : 500
             ,height         : 300
             ,autoScroll     : true
             ,collapsible    : true
@@ -808,12 +807,19 @@ Ext.onReady(function()
                     ,'smap1.tipomov'  : '0'
                 }
             }
-        }).showAt(600, 0);
+        }).showAt(500, 0);
     }
     ////// contenido //////
     
     ////// loaders //////
-    _p21_fieldRfc().addListener('blur',_p21_rfcBlur);
+    _p21_fieldRfc().on(
+    {
+        'blur'    : _p21_rfcBlur
+        ,'change' : function()
+        {
+            _fieldByName('cdperson').reset();
+        }
+    });
     
     if(_p21_smap1.BLOQUEO_CONCEPTO=='S')
     {
@@ -822,6 +828,11 @@ Ext.onReady(function()
         {
             item.setReadOnly(true);
         });
+    }
+    
+    if(_p21_smap1.cdsisrol=='SUSCRIPTOR')
+    {
+        _fieldByName('cdreppag').setReadOnly(_p21_smap1.status-0>18);
     }
     
     if(_p21_smap1.BLOQUEO_EDITORES=='S')
@@ -3028,7 +3039,9 @@ function _p21_subirDetallePersonas()
                                         conceptos['cdunieco']        = _p21_smap1.cdunieco;
                                         conceptos['cdramo']          = _p21_smap1.cdramo;
                                         conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
-                                        conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
+                                        conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
+                                        conceptos['cdperpag']        = _fieldByName('cdperpag').getValue();
+                                        conceptos['cdreppag']        = _fieldByName('cdreppag').getValue();
                                         var grupos = [];
                                         _p21_storeGrupos.each(function(record)
                                         {
@@ -4066,7 +4079,7 @@ function _p21_editarExclusiones(grid,row)
     {
         var ventana=Ext.create('Ext.window.Window',
         {
-            title   : 'Editar exclusiones de '+record.get('NOMBRE')
+            title   : 'Editar exclusiones de '+(record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO'))
             ,width  : 900
             ,height : 500
             ,modal  : true

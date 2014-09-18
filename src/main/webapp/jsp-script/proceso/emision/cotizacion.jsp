@@ -2618,7 +2618,7 @@ Ext.onReady(function()
     	{
             title           : 'Documentos del tr&aacute;mite ' + _0_smap1.ntramite
             ,closable       : false
-            ,width          : 300
+            ,width          : 500
             ,height         : 300
             ,autoScroll     : true
             ,collapsible    : true

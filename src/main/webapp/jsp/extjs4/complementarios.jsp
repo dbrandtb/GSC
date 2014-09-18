@@ -1850,7 +1850,7 @@
 		        {
 		            title           : 'Documentos del tr&aacute;mite '+inputNtramite
 		            ,closable       : false
-		            ,width          : 300
+		            ,width          : 500
 		            ,height         : 300
 		            ,autoScroll     : true
 		            ,collapsible    : true
@@ -1874,7 +1874,7 @@
 		                    ,'smap1.tipomov'  : '0'
 		                }
 		            }
-		        }).showAt(700,0);
+		        }).showAt(500,0);
                 venDocuTramite.collapse();
                 //para ver documentos en vivo
                 

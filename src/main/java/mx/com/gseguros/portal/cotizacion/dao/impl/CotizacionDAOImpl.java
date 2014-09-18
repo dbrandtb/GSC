@@ -143,6 +143,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"cdperpag"
 			,"cdagente"
 			,"clasif"
+			,"cdreppag"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
@@ -822,6 +823,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoMpoliagr(Map<String,String>params)throws Exception
+	{
+		params.put("dumy", null);
+		ejecutaSP(new MovimientoMpoliagr(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpoliagr extends StoredProcedure
+	{
+		protected MovimientoMpoliagr(DataSource dataSource)
+		{
+			super(dataSource,"PKG_EMISION.P_MOV_MPOLIAGR");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagrupa" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmorddom" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdforpag" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdbanco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucur"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmcuenta" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ptajepag" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dumy"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
