@@ -89,5 +89,5 @@ public interface LoginManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean eliminarUsuarioLDAP(String user, String password) throws Exception;
+	public boolean eliminarUsuarioLDAP(String user) throws Exception;
 }
