@@ -208,4 +208,22 @@ public interface CotizacionManager
 			,String cdclausu
 			,String nmsuplem
 			,String icd)throws Exception;
+	
+	@Deprecated
+	public void movimientoMpoliagr(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdagrupa
+			,String nmsuplem
+			,String status
+			,String cdperson
+			,String nmorddom
+			,String cdforpag
+			,String cdbanco
+			,String cdsucur
+			,String nmcuenta
+			,String ptajepag
+			,String accion)throws Exception;
 }

@@ -99,6 +99,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case PLANES:
 				case REFERENCIAS_TRAMITE_NUEVO:
 				case RELACION_CONT_ASEG:
+				case REPARTO_PAGO_GRUPO:
 				case ROLES_POLIZA:
 				case SEXO:
 				case STATUS_POLIZA:

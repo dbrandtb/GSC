@@ -2431,6 +2431,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
 				imap.put("comboFormaPago"  , gc.getItems());
 				
+				List<ComponenteVO>comboRepartoPago=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_REPARTO_PAGO", null);
+				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
+				imap.put("comboRepartoPago"  , gc.getItems());
+				
 				List<ComponenteVO>botones=pantallasManager.obtenerComponentes(
 						null, null, "|"+status+"|",
 						null, null, cdsisrol,
@@ -2636,6 +2643,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdtipsit         = smap1.get("cdtipsit");
 		String cdramo           = smap1.get("cdramo");
 		String nmpoliza         = smap1.get("nmpoliza");
+		String cdperpag         = smap1.get("cdperpag");
+		String cdreppag         = smap1.get("cdreppag");
 		UserVO usuario          = (UserVO)session.get("USUARIO");
 		String user             = usuario.getUser();
 		String cdelemento       = usuario.getEmpresa().getElementoId();
@@ -3190,7 +3199,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdunieco , cdramo     , nmpoliza
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
-					,true);
+					,true     , cdperpag   , cdreppag);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
 			respuestaOculta = aux.respuestaOculta;
@@ -3249,6 +3258,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String ntramite         = smap1.get("ntramite");
 			String ntramiteVacio    = smap1.get("ntramiteVacio");
 			String tipoCenso        = smap1.get("tipoCenso");
+			String ptajepar         = smap1.get("cdreppag");
 			boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
@@ -3810,7 +3820,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdunieco , cdramo     , nmpoliza
 						,cdtipsit , hayTramite , hayTramiteVacio
 						,user     , cdelemento , ntramiteVacio
-						,false);
+						,false    , cdperpag   , ptajepar);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
 				respuestaOculta = aux.respuestaOculta;
@@ -4103,24 +4113,31 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdelemento
 			,String ntramiteVacio
 			,boolean reinsertaContratante
+			,String cdperpag
+			,String ptajepag
 			)
 	{
-		StringBuilder sb = new StringBuilder().append("\n## tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject ##\n");
-		sb.append("clasif: ").append(clasif).append("\n");
-		sb.append("LINEA: ").append(LINEA).append("\n");
-		sb.append("LINEA_EXTENDIDA: ").append(LINEA_EXTENDIDA).append("\n");
-		sb.append("cdunieco: ").append(cdunieco).append("\n");
-		sb.append("cdramo: ").append(cdramo).append("\n");
-		sb.append("nmpoliza: ").append(nmpoliza).append("\n");
-		sb.append("cdtipsit: ").append(cdtipsit).append("\n");
-		sb.append("hayTramite: ").append(hayTramite).append("\n");
-		sb.append("hayTramiteVacio: ").append(hayTramiteVacio).append("\n");
-		sb.append("cdusuari: ").append(cdusuari).append("\n");
-		sb.append("cdelemento: ").append(cdelemento).append("\n");
-		sb.append("ntramiteVacio: ").append(ntramiteVacio).append("\n");
-		sb.append("reinsertaContratante: ").append(reinsertaContratante).append("\n");
-		sb.append("## tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject ##");
-		logger.debug(sb);
+		logger.debug(
+				new StringBuilder()
+				.append("\n###########################################################")
+				.append("\n## tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol ##")
+				.append("\n## clasif: ")              .append(clasif)
+				.append("\n## LINEA: ")               .append(LINEA)
+				.append("\n## LINEA_EXTENDIDA: ")     .append(LINEA_EXTENDIDA)
+				.append("\n## cdunieco: ")            .append(cdunieco)
+				.append("\n## cdramo: ")              .append(cdramo)
+				.append("\n## nmpoliza: ")            .append(nmpoliza)
+				.append("\n## cdtipsit: ")            .append(cdtipsit)
+				.append("\n## hayTramite: ")          .append(hayTramite)
+				.append("\n## hayTramiteVacio: ")     .append(hayTramiteVacio)
+				.append("\n## cdusuari: ")            .append(cdusuari)
+				.append("\n## cdelemento: ")          .append(cdelemento)
+				.append("\n## ntramiteVacio: ")       .append(ntramiteVacio)
+				.append("\n## reinsertaContratante: ").append(reinsertaContratante)
+				.append("\n## cdperpag: ")            .append(cdperpag)
+				.append("\n## ptajepag: ")            .append(ptajepag)
+				.toString()
+				);
 		
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
@@ -4428,6 +4445,28 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
 				paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
 				kernelManager.pMovMdomicil(paramDomicil);
+				
+				if(StringUtils.isNotBlank(cdperpag)
+						&&(StringUtils.isNotBlank(ptajepag)))
+				{
+					cotizacionManager.movimientoMpoliagr(
+							cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,null//cdagrupa
+							,"0"//nmsuplem
+							,Constantes.STATUS_VIVO//status
+							,cdperson
+							,null//nmorddom
+							,cdperpag
+							,null//cdbanco
+							,null//sucursal
+							,null//cuenta
+							,ptajepag
+							,Constantes.INSERT_MODE
+							);
+				}
 			}
 			catch(Exception ex)
 			{
