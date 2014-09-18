@@ -49,7 +49,6 @@ var _0_urlNada                               = '<s:url namespace="/emision"     
 var _0_urlCargarCduniecoAgenteAuto           = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"           />';
 var _0_urlRecuperarCliente                   = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
 var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"             />';
-var _0_urlCargarNumeroPasajerosPorTipoUnidad = '<s:url namespace="/emision"         action="cargarNumeroPasajerosPorTipoUnidad" />';
 var _0_urlObtenerParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
 var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
 var _0_urlCargarClaveGSPorAuto               = '<s:url namespace="/emision"         action="cargarClaveGSPorAuto"               />';
@@ -2229,11 +2228,14 @@ Ext.onReady(function()
                     _0_panelPri.setLoading(true);
                     Ext.Ajax.request(
                     {
-                        url      : _0_urlCargarNumeroPasajerosPorTipoUnidad
+                        url      : _0_urlObtenerParametros
                         ,params  :
                         {
-                            'smap1.cdtipsit'    : _0_smap1.cdtipsit
-                            ,'smap1.tipoUnidad' : valArray[0].data.key
+                            'smap1.parametro' : 'NUMERO_PASAJEROS_SERV_PUBL'
+                            ,'smap1.cdramo'   : _0_smap1.cdramo
+                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                            ,'smap1.clave4'   : valArray[0].data.key
+                            ,'smap1.clave5'   : _0_smap1.cdsisrol
                         }
                         ,success : function(response)
                         {
@@ -2242,10 +2244,13 @@ Ext.onReady(function()
                             debug('json response numero pasajeros:',json);
                             if(json.exito)
                             {
-                                _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.nPasajeros);
-                                _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.minPasajeros);
-                                _fieldByName('parametros.pv_otvalor04').setMaxValue(json.smap1.maxPasajeros);
-                                _fieldByName('parametros.pv_otvalor22').setValue(json.smap1.claveGS);
+                                _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.P1VALOR);
+                                _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.P2VALOR);
+                                _fieldByName('parametros.pv_otvalor04').setMaxValue(json.smap1.P3VALOR);
+                                _fieldByName('parametros.pv_otvalor22').setValue(json.smap1.P4VALOR);
+                                
+                                _fieldByName('parametros.pv_otvalor04').isValid();
+                                _fieldByName('parametros.pv_otvalor22').isValid();
                             }
                             else
                             {
@@ -2560,6 +2565,8 @@ Ext.onReady(function()
                                                 .substr(_fieldByName('parametros.pv_otvalor04').getValue().length-4,4)
                             ,'smap1.version'  : _fieldByName('parametros.pv_otvalor05').getValue()
                             ,'smap1.cdsisrol' : _0_smap1.cdsisrol
+                            ,'smap1.cdramo'   : _0_smap1.cdramo
+                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
                         }
                         ,success : function(response)
                         {

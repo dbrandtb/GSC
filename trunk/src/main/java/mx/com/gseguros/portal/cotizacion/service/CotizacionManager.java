@@ -165,8 +165,6 @@ public interface CotizacionManager
 	
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	
-	public Map<String,String>cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception;
-	
 	public ManagerRespuestaSmapVO obtenerParametrosCotizacion(
 			ParametroCotizacion parametro
 			,String cdramo
@@ -178,7 +176,8 @@ public interface CotizacionManager
 	
 	public ManagerRespuestaSmapVO cargarClaveGSPorAuto(String cdramo,String modelo) throws Exception;
 	
-	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version)throws Exception;
+	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(
+			String cdsisrol,String modelo,String version,String cdramo,String cdtipsit)throws Exception;
 	
 	public ManagerRespuestaVoidVO agregarClausulaICD(
 			String cdunieco

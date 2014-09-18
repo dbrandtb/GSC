@@ -110,11 +110,22 @@
                         }
                     });
                     
-                    _fieldByName('parametros.pv_otvalor20').addListener('change',function()
+                    _fieldByName('parametros.pv_otvalor20').addListener('select',function()
                     {
                         _fieldByName('panel2.ferenova').setValue(
                             Ext.Date.add(_fieldByName('panel2.feefec').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
                         );
+                        var vigencia=_fieldByName('parametros.pv_otvalor20').getValue();
+                        debug('vigencia:',vigencia);
+                        if(vigencia-0==3||vigencia-0==6)
+                        {
+                            _fieldByName('panel2.cdperpag').setValue('12');
+                            _fieldByName('panel2.cdperpag').setReadOnly(true);
+                        }
+                        else
+                        {
+                            _fieldByName('panel2.cdperpag').setReadOnly(false);
+                        }
                     });
                     
                     debug('<parchando tvalosit');
@@ -381,7 +392,7 @@
 		                                    format:'d/m/Y',
 		                                    //minValue:fechaMinEmi,
 		                                    //maxValue:fechaMaxEmi,
-		                                    readOnly:inputCdramo+'x'=='16x'
+		                                    readOnly:panDatComMap1.SITUACION=='AUTO'
 		                                },
 		                                {
 		                                    xtype:'datefield',
@@ -421,7 +432,7 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <s:if test='cdtipsit=="AF"||cdtipsit=="PU"'>
+		                                            <s:if test='%{getMap1().get("SITUACION").equals("AUTO")}'>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA_AUTO"/>'},
 		                                            </s:if>
 		                                            <s:else>
@@ -453,7 +464,7 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <s:if test='cdtipsit=="AF"||cdtipsit=="PU"'>
+		                                            <s:if test='map1.SITUACION=="AUTO"'>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA_SIN_DXN"/>'},
 		                                            </s:if>
 		                                            <s:else>
@@ -906,7 +917,7 @@
                                 	    																				Ext.getCmp('botonEnvioEmail').hide();
                                 	    																			}
 										                                                            	    		
-										                                                            	    		if(inputCdramo+'x'=='16x')
+										                                                            	    		if(panDatComMap1.SITUACION=='AUTO')
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 										                                                            	    		}
@@ -944,7 +955,7 @@
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 											                                                            	    		
-											                                                            	    		if(inputCdramo+'x'=='16x')
+											                                                            	    		if(panDatComMap1.SITUACION=='AUTO')
 											                                                            	    		{
 											                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 											                                                            	    		}
@@ -1172,7 +1183,7 @@
                                                                                                     ,id      : 'venDocVenEmiBotIrCotiza'
                                                                                                     ,text    : 'Nueva cotizaci&oacute;n'
                                                                                                     ,icon    : '${ctx}/resources/fam3icons/icons/book_open.png'
-                                                                                                    ,hidden  : inputCdramo+'x'!='16x'
+                                                                                                    ,hidden  : panDatComMap1.SITUACION!='AUTO'
                                                                                                     ,handler : function()
                                                                                                     {
                                                                                                         var me=this;

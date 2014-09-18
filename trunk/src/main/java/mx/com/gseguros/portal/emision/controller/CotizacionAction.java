@@ -5281,77 +5281,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String cargarNumeroPasajerosPorTipoUnidad()
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n################################################")
-				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
-				.append("\nsmap1=").append(smap1)
-				.toString()
-				);
-		
-		success = true;
-		exito   = true;
-		
-		String cdtipsit   = null;
-		String tipoUnidad = null;
-		
-		//datos
-		if(exito)
-		{
-			try
-			{
-				cdtipsit   = smap1.get("cdtipsit");
-				tipoUnidad = smap1.get("tipoUnidad");
-				if(StringUtils.isBlank(cdtipsit)
-						||StringUtils.isBlank(tipoUnidad))
-				{
-					throw new Exception("No hay cdtipsit/tipoUnidad");
-				}
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//obtener numero de pasajeros
-		if(exito)
-		{
-			try
-			{
-				Map<String,String>paramsTipoUnidad=cotizacionManager.cargarNumeroPasajerosPorTipoUnidad(cdtipsit,tipoUnidad);
-				smap1.put("nPasajeros"   , paramsTipoUnidad.get("NUMPASAJEROS"));
-				smap1.put("minPasajeros" , paramsTipoUnidad.get("PASAJMIN"));
-				smap1.put("maxPasajeros" , paramsTipoUnidad.get("PASAJMAX"));
-				smap1.put("claveGS"      , paramsTipoUnidad.get("CLAVEGS"));
-				smap1.put("sumaAseg"     , paramsTipoUnidad.get("SUMASEG"));
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al recuperar n&uacute;mero de pasajeros #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\nsmap1=").append(smap1)
-				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
-				.append("\n################################################")
-				.toString()
-				);
-		return SUCCESS;
-	}
-	
 	public String obtenerParametrosCotizacion()
 	{
 		logger.info(
@@ -5632,6 +5561,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdsisrol = null;
 		String modelo   = null;
 		String version  = null;
+		String cdramo   = null;
+		String cdtipsit = null;
 		
 		//datos
 		try
@@ -5639,6 +5570,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdsisrol = smap1.get("cdsisrol");
 			modelo   = smap1.get("modelo");
 			version  = smap1.get("version");
+			cdramo   = smap1.get("cdramo");
+			cdtipsit = smap1.get("cdtipsit");
 			if(StringUtils.isBlank(cdsisrol))
 			{
 				throw new Exception("No se recibio el rol");
@@ -5650,6 +5583,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(StringUtils.isBlank(version))
 			{
 				throw new Exception("No se recibio la version");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new Exception("No se recibio el ramo");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new Exception("No se recibio la situacion");
 			}
 		}
 		catch(Exception ex)
@@ -5665,7 +5606,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				ManagerRespuestaSmapVO resp = cotizacionManager.cargarSumaAseguradaAuto(cdsisrol,modelo,version);
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarSumaAseguradaAuto(cdsisrol,modelo,version,cdramo,cdtipsit);
 				
 				exito           = resp.isExito();
 				respuesta       = resp.getRespuesta();

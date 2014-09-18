@@ -615,22 +615,6 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
-	@Override
-	public Map<String,String> cargarNumeroPasajerosPorTipoUnidad(Map<String,String>params)throws Exception
-	{
-		Map<String,Object>procedureResponse=ejecutaSP(new CargarNumeroPasajerosPorTipoUnidad(getDataSource()),params);
-		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResponse.get("pv_registro_o");
-		if(listaAux==null||listaAux.size()==0)
-		{
-			throw new Exception("No se ha parametrizado el numero de pasajeros");
-		}
-		else if(listaAux.size()>1)
-		{
-			throw new Exception("Parametrizacion repetida para el numero de pasajeros");
-		}
-		return listaAux.get(0);
-	}
-	
 	protected class CargarNumeroPasajerosPorTipoUnidad extends StoredProcedure
 	{
 		protected CargarNumeroPasajerosPorTipoUnidad(DataSource dataSource)

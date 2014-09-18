@@ -727,31 +727,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public Map<String,String> cargarNumeroPasajerosPorTipoUnidad(String cdtipsit,String tipoUnidad)throws Exception
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n################################################")
-				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
-				.append("\ncdtipsit=").append(cdtipsit)
-				.append("\ntipoUnidad=").append(tipoUnidad)
-				.toString()
-				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdtipsit"   , cdtipsit);
-		params.put("tipoUnidad" , tipoUnidad);
-		Map<String,String> nPasajeros = cotizacionDAO.cargarNumeroPasajerosPorTipoUnidad(params);
-		logger.info(
-				new StringBuilder()
-				.append("\nparametros por tipo unidad=").append(nPasajeros)
-				.append("\n###### cargarNumeroPasajerosPorTipoUnidad ######")
-				.append("\n################################################")
-				.toString()
-				);
-		return nPasajeros;
-	}
-	
-	@Override
 	public ManagerRespuestaSmapVO obtenerParametrosCotizacion(
 			ParametroCotizacion parametro
 			,String cdramo
@@ -898,7 +873,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version)throws Exception
+	public ManagerRespuestaSmapVO cargarSumaAseguradaAuto(String cdsisrol,String modelo,String version,String cdramo,String cdtipsit)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -918,7 +893,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 			params.put("modelo"   , modelo);
 			params.put("version"  , version);
 			Map<String,String>valores=cotizacionDAO.cargarSumaAseguradaAuto(params);
+			logger.debug(
+					new StringBuilder()
+					.append("suma asegurada=")
+					.append(valores)
+					.toString());
+			
+			String claveSuma = "SUMASEG";
+			String suma      = valores.get(claveSuma);
+			Double dSuma     = Double.valueOf(suma);
+			
+			Map<String,String>paramsDeprecio=new HashMap<String,String>();
+			paramsDeprecio.put("parametro" , ParametroCotizacion.DEPRECIACION.getParametro());
+			paramsDeprecio.put("cdramo"    , cdramo);
+			paramsDeprecio.put("cdtipsit"  , cdtipsit);
+			paramsDeprecio.put("clave4"    , cdsisrol);
+			paramsDeprecio.put("clave5"    , null);
+			Map<String,String>valoresDeprecio=cotizacionDAO.obtenerParametrosCotizacion(paramsDeprecio);
+			logger.debug(
+					new StringBuilder()
+					.append("depreciacion=")
+					.append(valoresDeprecio)
+					.toString());
+			
+			Double deprecio=Double.valueOf(valoresDeprecio.get("P1VALOR"));
+			dSuma = dSuma*(1d-deprecio);
+			
+			valores.put(claveSuma,String.format("%.2f", dSuma));
+			
 			resp.setSmap(valores);
+
+			logger.debug(
+					new StringBuilder()
+					.append("suma asegurada nueva=")
+					.append(valores)
+					.toString());
 		}
 		catch(Exception ex)
 		{
