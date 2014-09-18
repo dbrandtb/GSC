@@ -234,6 +234,21 @@ public class LoginManagerImpl implements LoginManager {
 	        return true;
 		}
 
+	@Override
+	public boolean eliminarUsuarioLDAP(String user, String password)
+			throws Exception {
+		try {
+			DirContext ctx;
+			Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
+					Ldap_security_credentials);
+			logger.debug(env);
+			ctx = new InitialLdapContext(env, null);
+			ctx.destroySubcontext("cn=" + user +","+ Ldap_base_search);
+	        return true;
+		} catch (Exception e) {
+            return false;
+        }
+	}
 	// Getters and Setters
 
 	public void setEndpoints(Map<String, Endpoint> endpoints) {

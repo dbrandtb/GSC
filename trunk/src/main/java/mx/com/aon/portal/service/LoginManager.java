@@ -82,4 +82,12 @@ public interface LoginManager {
 
 	public boolean cambiarPasswordUsuarioLDAP(String user, String passwordNuevo) throws Exception;
 
+	/**
+	 * Eliminar un usuario/password en LDAP
+	 * @param user
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean eliminarUsuarioLDAP(String user, String password) throws Exception;
 }
