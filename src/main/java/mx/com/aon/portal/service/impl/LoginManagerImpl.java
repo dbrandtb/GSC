@@ -235,7 +235,7 @@ public class LoginManagerImpl implements LoginManager {
 		}
 
 	@Override
-	public boolean eliminarUsuarioLDAP(String user, String password)
+	public boolean eliminarUsuarioLDAP(String user)
 			throws Exception {
 		try {
 			DirContext ctx;
