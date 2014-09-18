@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.CausaSiniestro;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Rango;
@@ -2572,7 +2573,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//1.- Obtenemos los datos generales del siniestros
     				List<Map<String,String>> informacionGral = siniestrosManager.obtieneDatosGeneralesSiniestro(cdunieco, cdramo,
     						estado, nmpoliza,nmsituac, nmsuplem, status, aaapertu, nmsinies, factura.get("NTRAMITE"));
-    				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
+    				
+    				if(informacionGral.size()>0){
+    					penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
+    				}else{
+    					penalizacion.put("causaSiniestro", CausaSiniestro.ENFERMEDAD.getCodigo());
+    				}
     				
     				//2.- Obtenemos la información parametrizable con respecto al valor de tipo del formato del calculo y si requiere penalizaciones
     				//List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
