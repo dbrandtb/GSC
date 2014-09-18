@@ -475,6 +475,91 @@ Ext.onReady(function(){
                     'params.cp' : resp.data['smap1.CODPOSTAL']
                 }
             });
+            
+            //////usa valores del padre (editarAsegurados.jsp) //////
+            if(!esElContratanteP4)
+            {
+                var record = storePersonasp2.getAt(0);
+                if(inputNmsituacp4>1)//si es asegurano no titular le pone la direccion del titular
+                {
+                    Ext.define('LoaderFormp4_1',
+                    {
+                        extend:'Modelo1p4',
+                        proxy:
+                        {
+                            extraParams:
+                            {
+                                'smap1.pv_cdunieco_i'   : inputCduniecop4,
+                                'smap1.pv_cdramo_i'     : inputCdramop4,
+                                'smap1.pv_estado_i'     : inputEstadop4,
+                                'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
+                                'smap1.pv_nmsituac_i'   : record.get('nmsituac'),
+                                'smap1.pv_cdperson_i'   : record.get('cdperson'),
+                                'smap1.pv_cdrol_i'      : '2',
+                                'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+                                'smap1.cdrfc'           : record.get('cdrfc'),
+                                'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                            },
+                            type:'ajax',
+                            url : urlCargarp4,
+                            reader:
+                            {
+                                type:'json'
+                            }
+                        }
+                    });
+                    var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4_1');
+                    loaderFormp4.load(123, {
+                        success: function(resp) {
+                            debug('se desbloquea el boton porque ya copio del cliente');
+                            Ext.getCmp('idbotonguardardireccion').setDisabled(false);
+                            /*formPanelp4.getForm().setValues(
+                            {
+                                'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
+                                'smap1.CODPOSTAL':resp.data['smap1.CODPOSTAL'],
+                                'smap1.estado':resp.data['smap1.estado'],
+                                'smap1.Municipio':resp.data['smap1.Municipio'],
+                                'smap1.NMTELEFO':resp.data['smap1.NMTELEFO'],
+                                'smap1.CDCOLONI':resp.data['smap1.CDCOLONI'],
+                                'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
+                                'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
+                                'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
+                            });*/
+                            formPanelp4.loadRecord(resp);
+                            debug('heredarPanel');
+                            if(formPanelp4.down('[name=smap1.CODPOSTAL]').getValue()+'x'!='x'&&formPanelp4.down('[name=smap1.CODPOSTAL]').getValue().length==4)
+                            {
+                                debug('poniendo cero para cp:',formPanelp4.down('[name=smap1.CODPOSTAL]').getValue());
+                                formPanelp4.down('[name=smap1.CODPOSTAL]').setValue('0'+formPanelp4.down('[name=smap1.CODPOSTAL]').getValue());
+                            }
+                            heredarPanel(formPanelp4.items.items[2]);
+                            debug('[name="smap1.CDCOLONI"]:',Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length);
+                            Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
+                            {
+                                params :
+                                {
+                                    'params.cp' : resp.data['smap1.CODPOSTAL']
+                                }
+                            });
+                        },
+                        failure:function()
+                        {
+                            Ext.Msg.show({
+                                title:'Error',
+                                icon: Ext.Msg.ERROR,
+                                msg: 'No se encontr&oacute; domicilio anterior',
+                                buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+                }
+            }
+            else
+            {
+                debug('se desbloquea el boton porque es el cliente');
+                Ext.getCmp('idbotonguardardireccion').setDisabled(false);
+            }
+            ////// usa valores del padre //////
         },
         failure:function()
         {
@@ -489,87 +574,6 @@ Ext.onReady(function(){
             });
         }
     });
-    
-    //////usa valores del padre (editarAsegurados.jsp) //////
-    if(!esElContratanteP4)
-    {
-	    //storePersonasp2.each(function(record,index)
-	    //{
-	    var record = storePersonasp2.getAt(0);
-	        if(inputNmsituacp4>1)//si es asegurano no titular le pone la direccion del titular
-	        {
-	            Ext.define('LoaderFormp4',
-	            {
-	                extend:'Modelo1p4',
-	                proxy:
-	                {
-	                    extraParams:
-	                    {
-	                        'smap1.pv_cdunieco_i'   : inputCduniecop4,
-	                        'smap1.pv_cdramo_i'     : inputCdramop4,
-	                        'smap1.pv_estado_i'     : inputEstadop4,
-	                        'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-	                        'smap1.pv_nmsituac_i'   : record.get('nmsituac'),
-	                        'smap1.pv_cdperson_i'   : record.get('cdperson'),
-	                        'smap1.pv_cdrol_i'      : '2',
-	                        'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-	                        'smap1.cdrfc'           : record.get('cdrfc'),
-	                        'smap1.pv_cdtipsit_i'   : inputCdtipsit
-	                    },
-	                    type:'ajax',
-	                    url : urlCargarp4,
-	                    reader:
-	                    {
-	                        type:'json'
-	                    }
-	                }
-	            });
-	
-	            var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
-	            loaderFormp4.load(123, {
-	                success: function(resp) {
-	                	debug('se desbloquea el boton porque ya copio del cliente');
-	                	Ext.getCmp('idbotonguardardireccion').setDisabled(false);
-	                    formPanelp4.getForm().setValues(
-	                    {
-	                        'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
-	                        'smap1.CODPOSTAL':resp.data['smap1.CODPOSTAL'],
-	                        'smap1.estado':resp.data['smap1.estado'],
-	                        'smap1.Municipio':resp.data['smap1.Municipio'],
-	                        'smap1.NMTELEFO':resp.data['smap1.NMTELEFO'],
-	                        'smap1.CDCOLONI':resp.data['smap1.CDCOLONI'],
-	                        'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
-	                        'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
-	                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
-	                    });
-	                    debug('[name="smap1.CDCOLONI"]:',Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length);
-	                    Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
-                        {
-                            params :
-                            {
-                                'params.cp' : resp.data['smap1.CODPOSTAL']
-                            }
-                        });
-	                },
-	                failure:function()
-	                {
-	                    Ext.Msg.show({
-	                        title:'Error',
-	                        icon: Ext.Msg.ERROR,
-	                        msg: 'No se encontr&oacute; domicilio anterior',
-	                        buttons: Ext.Msg.OK
-	                    });
-	                }
-	            });
-	        }
-	    //});
-    }
-    else
-    {
-    	debug('se desbloquea el boton porque es el cliente');
-    	Ext.getCmp('idbotonguardardireccion').setDisabled(false);
-    }
-    ////// usa valores del padre //////
     
     if(Ext.isEmpty(inputCdideperp4)){
     	_fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
