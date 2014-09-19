@@ -8,9 +8,12 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -841,6 +844,97 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("ptajepag" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dumy"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>cargarConfiguracionGrupo(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarConfiguracionGrupo(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class CargarConfiguracionGrupo extends StoredProcedure
+	{
+		protected CargarConfiguracionGrupo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_CONF_GRUPO");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public ComponenteVO cargarComponenteTatrisit(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarComponenteTatrisit(getDataSource()),params);
+		List<ComponenteVO>lista=(List<ComponenteVO>)procedureResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new Exception("No existe el componente");
+		}
+		else if(lista.size()>1)
+		{
+			throw new Exception("Componente repetido");
+		}
+		return lista.get(0);
+	}
+	
+	protected class CargarComponenteTatrisit extends StoredProcedure
+    {
+    	protected CargarComponenteTatrisit(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_UNICO_SITUACION");
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public ComponenteVO cargarComponenteTatrigar(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>procedureResult=ejecutaSP(new CargarComponenteTatrigar(getDataSource()),params);
+		List<ComponenteVO>lista=(List<ComponenteVO>)procedureResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new Exception("No existe el componente");
+		}
+		else if(lista.size()>1)
+		{
+			throw new Exception("Componente repetido");
+		}
+		return lista.get(0);
+	}
+
+	protected class CargarComponenteTatrigar extends StoredProcedure
+	{
+		protected CargarComponenteTatrigar(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_ATRI_UNICO_GARANTIA");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrigarMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

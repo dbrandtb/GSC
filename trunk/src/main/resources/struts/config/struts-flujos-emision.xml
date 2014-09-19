@@ -13,6 +13,7 @@
         </action>
         
         <action name="cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionGrupo.jsp</result>
         </action>
         

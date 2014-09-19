@@ -2302,29 +2302,39 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String pantallaCotizacionGrupo()
 	{
-		logger.info(""
-				+ "\n#####################################"
-				+ "\n###### pantallaCotizacionGrupo ######"
-				+ "\n smap1: "+smap1
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### pantallaCotizacionGrupo ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
 				);
-		try
+		
+		success = true;
+		exito   = true;
+		imap    = new HashMap<String,Item>();
+		
+		String cdramo        = null;
+		String cdtipsit      = null;
+		String ntramite      = null;
+		String ntramiteVacio = null;
+		String status        = null;
+		
+		//datos completos
+		if(exito)
 		{
-			success = true;
-			exito   = true;
-			imap    = new HashMap<String,Item>();
-			
-			GeneradorCampos gc            = null;
-			String          ntramite      = null;
-			String          ntramiteVacio = null;
-			String          nombreAgente  = null;
-			String          cdAgente      = null;
-			String          status        = null;
-			
-			UserVO usuario  = (UserVO) session.get("USUARIO");
-			String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
-			
-			if(exito)
+			try
 			{
+				cdramo        = smap1.get("cdramo");
+				cdtipsit      = smap1.get("cdtipsit");
+				if(StringUtils.isBlank(cdramo))
+				{
+					throw new Exception("No hay cdramo");
+				}
+				if(StringUtils.isBlank(cdtipsit))
+				{
+					throw new Exception("No hay cdtipsit");
+				}
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
 				status        = smap1.get("status");
@@ -2332,18 +2342,60 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					status="0";
 				}
-				smap1.put("cdsisrol",cdsisrol);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		String cdusuari      = null;
+		String cdsisrol      = null;
+		String nombreUsuario = null;
+		
+		//datos sesion
+		if(exito)
+		{
+			try
+			{
+				UserVO usuario  = (UserVO) session.get("USUARIO");
+				cdusuari        = usuario.getUser();
+				cdsisrol        = usuario.getRolActivo().getObjeto().getValue();
+				nombreUsuario   = usuario.getName();
 				
+				smap1.put("cdsisrol",cdsisrol);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener datos del usuario #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+
+		String nombreAgente  = null;
+		String cdAgente      = null;
+		
+		//datos del agente
+		if(exito)
+		{
+			try
+			{
 				//si entran por agente
 				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
 				{
-					String cdtipsit = smap1.get("cdtipsit");
-					DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);
+					DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
 	        		String cdunieco = datUsu.getCdunieco();
 	        		smap1.put("cdunieco",cdunieco);
 	        		
 	        		cdAgente     = datUsu.getCdagente();
-	        		nombreAgente = usuario.getName();
+	        		nombreAgente = nombreUsuario;
 				}
 				//si entran por tramite o tramite vacio
 				else if(StringUtils.isNotBlank(ntramite)||StringUtils.isNotBlank(ntramiteVacio))
@@ -2352,8 +2404,22 @@ public class CotizacionAction extends PrincipalCoreAction
 					nombreAgente = cotizacionManager.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
 				}
 			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener datos del agente #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
 			
-			if(exito)
+		GeneradorCampos gc = null;
+		
+		//generar componentes
+		if(exito)
+		{
+			try
 			{
 				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
@@ -2365,11 +2431,18 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("editorPlanesColumn",gc.getColumns());
 				
 				List<ComponenteVO>columnaEditorSumaAseg=pantallasManager.obtenerComponentes(
-						null, null, null,
+						null, null, cdramo,
 						null, null, null,
 						"COTIZACION_GRUPO", "EDITOR_SUMA_ASEG", null);
 				gc.generaComponentes(columnaEditorSumaAseg, true, false, false, true, true, false);
 				imap.put("editorSumaAsegColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorPAquete=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_PAQUETE", null);
+				gc.generaComponentes(columnaEditorPAquete, true, false, false, true, true, false);
+				imap.put("editorPaqueteColumn",gc.getColumns());
 				
 				List<ComponenteVO>columnaEditorAyudaMater=pantallasManager.obtenerComponentes(
 						null, null, null,
@@ -2450,20 +2523,290 @@ public class CotizacionAction extends PrincipalCoreAction
 				else
 				{
 					imap.put("botones" , null);
-				}	
+				}
 			}
-			
-			//obtener permisos
-			if(exito)
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al generar componentes #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener permisos
+		if(exito)
+		{
+			try
 			{
 				smap1.put("status",status);
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
 			}
-			
-			//campos para asegurados
-			if(exito && smap1.containsKey("ASEGURADOS")
-					 && StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
-					 && smap1.get("ASEGURADOS").equals("S"))
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener permisos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener configuraciones
+		/*
+		if(exito)
+		{
+			try
+			{
+				List<Map<String,String>>cols=cotizacionManager.cargarConfiguracionGrupo(cdramo, cdtipsit);
+				
+				List<ComponenteVO>compsColBase   = new ArrayList<ComponenteVO>();
+				List<ComponenteVO>compsColNoBase = new ArrayList<ComponenteVO>();
+				
+				Item baseCols     = new Item("basecols"    ,null,Item.ARR);
+				Item noBaseCols   = new Item("nobasecols"  ,null,Item.ARR);
+				Item baseFields   = new Item("basefields"  ,null,Item.ARR);
+				Item noBaseFields = new Item("nobasefields",null,Item.ARR);
+				
+				for(Map<String,String>iCol:cols)
+				{
+					String tipo   = iCol.get("TIPO");
+					String base   = iCol.get("BASE");
+					String nombre = iCol.get("NOMBRE");
+					if(StringUtils.isBlank(nombre))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene nombre")
+								.toString()
+								);
+					}
+					if(StringUtils.isBlank(tipo))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene tipo ")
+								.append(nombre)
+								.toString()
+								);
+					}
+					if(StringUtils.isBlank(base))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene base ")
+								.append(nombre)
+								.toString()
+								);
+					}
+					ComponenteVO comp = null;
+					if(tipo.equals(ConfiguracionGrupo.TIPO_ATRIBUTO)
+							||tipo.equals(ConfiguracionGrupo.TIPO_DOBLE)
+							)
+					{
+						String cdatrisit = iCol.get("CDATRISIT");
+						if(StringUtils.isBlank(cdatrisit))
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El componente no esta ligado a un atributo de situacion  ")
+									.append(nombre)
+									.toString()
+									);
+						}
+						comp=cotizacionManager.cargarComponenteTatrisit(cdtipsit,cdusuari,cdatrisit);
+						comp.setColumna(Constantes.SI);
+						
+						GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+						gec.setCdtipsit(cdtipsit);
+						List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+						aux.add(comp);
+						gec.generaComponentes(aux, true, true, false, true, true, false);
+						if(base.equals(Constantes.SI))
+						{
+							baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+							baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+							compsColBase.add(comp);
+						}
+						else
+						{
+							noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+							noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+							compsColNoBase.add(comp);
+						}
+					}
+					else if(tipo.equals(ConfiguracionGrupo.TIPO_COBERTURA))
+					{
+						String tipogar = iCol.get("TIPOGAR");
+						if(StringUtils.isBlank(tipogar))
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El componente no tiene tipo de cobertura ")
+									.append(nombre)
+									.toString()
+									);
+						}
+						if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_VALOR))
+						{
+							String cdgarant  = iCol.get("CDGARANT");
+							String cdatrigar = iCol.get("CDATRIGAR");
+							if(StringUtils.isBlank(cdgarant))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene codigo de cobertura ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							if(StringUtils.isBlank(cdatrigar))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene codigo de atributo ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							comp=cotizacionManager.cargarComponenteTatrigar(cdramo,cdtipsit,cdgarant,cdatrigar);
+							comp.setColumna(Constantes.SI);
+							
+							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+							gec.setCdtipsit(cdtipsit);
+							gec.setCdgarant(cdgarant);
+							gec.setCdramo(cdramo);
+							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+							aux.add(comp);
+							gec.generaComponentes(aux, true, true, false, true, true, false);
+							if(base.equals(Constantes.SI))
+							{
+								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColBase.add(comp);
+							}
+							else
+							{
+								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColNoBase.add(comp);
+							}
+						}
+						else if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_INSERCION))
+						{
+							String etiqueta = iCol.get("ETIQUETA");
+							if(StringUtils.isBlank(etiqueta))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene etiqueta ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							List<ComponenteVO>listaAux=pantallasManager.obtenerComponentes(
+									null                , null         , null
+									,null               , null         , null
+									,"COTIZACION_GRUPO" , "COMBO_SINO" , null);
+							comp=listaAux.get(0);
+							comp.setLabel(etiqueta);
+							comp.setColumna(Constantes.SI);
+							
+							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+							aux.add(comp);
+							gec.generaComponentes(aux, true, true, false, true, true, false);
+							if(base.equals(Constantes.SI))
+							{
+								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColBase.add(comp);
+							}
+							else
+							{
+								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColNoBase.add(comp);
+							}
+						}
+						else
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El tipo de cobertura no es correcto ")
+									.append(nombre)
+									.toString()
+									);
+						}
+					}
+					else
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El tipo de componente no es correcto ")
+								.append(nombre)
+								.toString()
+								);
+					}
+				}
+				
+				if(compsColBase.size()>0)
+				{
+					gc.generaComponentes(compsColBase, true, true, false, true, true, false);
+					imap2.put("colsBaseFields"  , baseFields);
+					imap2.put("colsBaseColumns" , baseCols);
+				}
+				else
+				{
+					imap2.put("colsBaseFields"  , null);
+					imap2.put("colsBaseColumns" , null);
+				}
+				
+				if(compsColNoBase.size()>0)
+				{
+					gc.generaComponentes(compsColNoBase, true, true, false, true, true, false);
+					imap2.put("colsNoBaseFields"  , noBaseFields);
+					imap2.put("colsNoBaseColumns" , noBaseCols);
+				}
+				else
+				{
+					imap2.put("colsNoBaseFields"  , null);
+					imap2.put("colsNoBaseColumns" , null);
+				}
+				
+				logger.debug(
+						new StringBuilder()
+						.append("\nColumnas base=").append(compsColBase)
+						.append("\nColumnas no base=").append(compsColNoBase)
+						.toString()
+						);
+			}
+			catch(ApplicationException aex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append(aex.getMessage()).append(" #").append(timestamp).toString();
+				respuestaOculta = aex.getMessage();
+				logger.error(respuesta,aex);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener configuraciones #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		*/
+		
+		//campos para asegurados
+		if(exito && smap1.containsKey("ASEGURADOS")
+				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
+				 && smap1.get("ASEGURADOS").equals("S"))
+		{
+			try
 			{
 				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
 						null  , null , null
@@ -2473,11 +2816,22 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("aseguradosColumns" , gc.getColumns());
 				imap.put("aseguradosFields"  , gc.getFields());
 			}
-			
-			//campos para extraprimas
-			if(exito && smap1.containsKey("EXTRAPRIMAS")
-					 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
-					 && smap1.get("EXTRAPRIMAS").equals("S"))
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de asegurados #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//campos para extraprimas
+		if(exito && smap1.containsKey("EXTRAPRIMAS")
+				 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
+				 && smap1.get("EXTRAPRIMAS").equals("S"))
+		{
+			try
 			{
 				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
 						null  , null , null
@@ -2487,11 +2841,22 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("extraprimasColumns" , gc.getColumns());
 				imap.put("extraprimasFields"  , gc.getFields());
 			}
-			
-			//campos para recuperados (asegurados)
-			if(exito && smap1.containsKey("ASEGURADOS_EDITAR")
-					 && StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
-					 && smap1.get("ASEGURADOS_EDITAR").equals("S"))
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de extraprimas #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//campos para recuperados (asegurados)
+		if(exito && smap1.containsKey("ASEGURADOS_EDITAR")
+				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
+				 && smap1.get("ASEGURADOS_EDITAR").equals("S"))
+		{
+			try
 			{
 				List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
 						null  , null , null
@@ -2501,26 +2866,36 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("recuperadosColumns" , gc.getColumns());
 				imap.put("recuperadosFields"  , gc.getFields());
 			}
-			
-			if(exito)
+			catch(Exception ex)
 			{
-				respuesta       = "Todo OK";
-				respuestaOculta = "Todo OK";
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de recuperados #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
 			}
 		}
-		catch(Exception ex)
+		
+		if(exito)
 		{
-			long timestamp=System.currentTimeMillis();
-			logger.error(timestamp+" error inesperado",ex);
-			respuesta       = "Error inesperado #"+timestamp;
-			respuestaOculta = ex.getMessage();
-			exito           = false;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
 		}
-		logger.info(""
-				+ "\n###### pantallaCotizacionGrupo ######"
-				+ "\n#####################################"
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### pantallaCotizacionGrupo ######")
+				.append("\n#####################################")
+				.toString()
 				);
-		return SUCCESS;
+		return result;
 	}
 	
 	public String obtenerCoberturasPlan()
@@ -2643,7 +3018,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdtipsit         = smap1.get("cdtipsit");
 		String cdramo           = smap1.get("cdramo");
 		String nmpoliza         = smap1.get("nmpoliza");
-		String cdperpag         = smap1.get("cdperpag");
+		//String cdperpag         = smap1.get("cdperpag");
 		String cdreppag         = smap1.get("cdreppag");
 		UserVO usuario          = (UserVO)session.get("USUARIO");
 		String user             = usuario.getUser();
@@ -3199,7 +3574,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdunieco , cdramo     , nmpoliza
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
-					,true     , cdperpag   , cdreppag);
+					,true     , cdreppag);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
 			respuestaOculta = aux.respuestaOculta;
@@ -3820,7 +4195,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdunieco , cdramo     , nmpoliza
 						,cdtipsit , hayTramite , hayTramiteVacio
 						,user     , cdelemento , ntramiteVacio
-						,false    , cdperpag   , ptajepar);
+						,false    , ptajepar);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
 				respuestaOculta = aux.respuestaOculta;
@@ -4113,7 +4488,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdelemento
 			,String ntramiteVacio
 			,boolean reinsertaContratante
-			,String cdperpag
 			,String ptajepag
 			)
 	{
@@ -4134,7 +4508,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## cdelemento: ")          .append(cdelemento)
 				.append("\n## ntramiteVacio: ")       .append(ntramiteVacio)
 				.append("\n## reinsertaContratante: ").append(reinsertaContratante)
-				.append("\n## cdperpag: ")            .append(cdperpag)
 				.append("\n## ptajepag: ")            .append(ptajepag)
 				.toString()
 				);
@@ -4446,8 +4819,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
 				kernelManager.pMovMdomicil(paramDomicil);
 				
-				if(StringUtils.isNotBlank(cdperpag)
-						&&(StringUtils.isNotBlank(ptajepag)))
+				if(StringUtils.isNotBlank(ptajepag))
 				{
 					cotizacionManager.movimientoMpoliagr(
 							cdunieco
@@ -4459,7 +4831,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,Constantes.STATUS_VIVO//status
 							,cdperson
 							,null//nmorddom
-							,cdperpag
+							,"1"//cdforpag
 							,null//cdbanco
 							,null//sucursal
 							,null//cuenta
