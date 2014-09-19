@@ -16,6 +16,10 @@
             var _CAT_MEDICOS                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
             var _CAT_PROVEEDORES                    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             
+            var _CODIGO_CAUSA_ENFERMEDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ENFERMEDAD.codigo"/>';
+            var _CODIGO_CAUSA_ACCIDENTE			    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
+            var _CODIGO_CAUSA_MATERNIDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@MATERNIDAD.codigo"/>';
+            
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             
             var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
@@ -50,6 +54,7 @@
             
             var _p12_urlMesaControl              	= '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
             var _URL_MONTO_MAXIMO					= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
+            var _URL_MESES_MAXIMO_MAT				= '<s:url namespace="/siniestros"  action="consultaMesesMaximoMaternidad"/>';
             var _URL_Existe_Documentos				= '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
             var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros" action="obtieneMesesTiempoEspera" />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';

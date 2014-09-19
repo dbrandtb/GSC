@@ -101,6 +101,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String msgResult;
     private String diasMaximos;
     private String montoMaximo;
+    private String mesMaximoMaternidad;
     private String factPagada;
     private String existePenalizacion;
     private String montoArancel;
@@ -1460,12 +1461,24 @@ public String generarSiniestroSinAutorizacion()
 	   	try {
 	   		montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS, Validacion.MONTO_MAXIMO_AUTORIZACION_SERVICIOS);
 	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		logger.error("Error al consultar el monto maximo",e);
 	   		return SUCCESS;
 	   	}
 	   	success = true;
 	   	return SUCCESS;
   }
+   
+   public String consultaMesesMaximoMaternidad(){
+	   	logger.debug(" **** Entrando al metodo para obtener el numero de meses max para validar Maternidad****");
+	   	try {
+	   		mesMaximoMaternidad = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.MESES, Validacion.MESES_MAX_MATERNIDAD);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el numero de meses maximo para maternidad ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
    
    public String validaExclusionPenalizacion(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
@@ -2580,17 +2593,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					penalizacion.put("causaSiniestro", CausaSiniestro.ENFERMEDAD.getCodigo());
     				}
     				
-    				//2.- Obtenemos la información parametrizable con respecto al valor de tipo del formato del calculo y si requiere penalizaciones
-    				//List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
-    		   		//String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
-    		   		
-    		   		//3.- Guardamos los valores en calculosPenalizaciones
-    		   		//String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
-    		   		//calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
-					//calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
-    				//datosCoberturaxCal.add(calcxCobe);
-    				//4.- Obtenemos los valores de los Deducibles y copagos
-    				//logger.debug("&&&&VALORES DE ENTRADA&&&&&-->cdunieco "+cdunieco+" cdramo "+cdramo+" Estado "+estado+ "nmpoliza "+nmpoliza+" nmsuplem"+nmsuplem+" nmsituac"+nmsituac+" aaapertu"+aaapertu+" status"+status+" nmsinies"+nmsinies+" nmsuplem"+nmsuplem);
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
     				//logger.debug("%%%%RESPUESTA%%%%"+copagoDeducibleSiniestroIte);
@@ -2810,13 +2812,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hPTIMPORT 	+= PTIMPORT;
     							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
                                 hIVA      	+= PTIMPORT*(ivaprov/100d);
-    							/*if(!cveConcepto.equalsIgnoreCase("UB250")){
-    								logger.debug(">>>>>ENTRA IF");
-    								hIVA      	+= PTIMPORT*(ivaprov/100d);
-    							}else{
-    								logger.debug(">>>>>ENTRA ELSE");
-    							}*/
-    							
     							hPRECIO 	+= PTPRECIO;
     							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
@@ -2906,21 +2901,17 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double  copago = 0d;
     							double  copagoAplicado = 0d;//++
     							String scopago =concepto.get("COPAGO");
-    							logger.debug("procesar copago ====>"+scopago);
     							
     							if(StringUtils.isNotBlank(scopago))
     							{
 									if(scopago.equalsIgnoreCase("na") || scopago.equalsIgnoreCase("no")){
     									copagoAplicado = 0d;
     								}else{
-    									logger.debug("ENTRA AL ELSE");
     									if(scopago.contains("%"))
         								{
         									copagoPorc = true;
-        									logger.debug("ENTRA AL IF");
         								}
         								scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
-        								logger.debug("scopago--->"+scopago);
         								copago=Double.valueOf(scopago);
         								if(copagoPorc)
         								{
@@ -3460,7 +3451,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				if(tipoFormatoCalculo.equalsIgnoreCase("1")){
 						//verificamos la causa del siniestro
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
-						if(causadelSiniestro.equalsIgnoreCase("2")){
+						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 							deducibleFacturaIte = 0d;
 						}
 					}
@@ -3486,7 +3477,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					if(tipoFormatoCalculo.equalsIgnoreCase("1"))
     					{
     						//verificamos la causa del siniestro
-    						if(!causadelSiniestro.equalsIgnoreCase("2")){
+    						if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
     							//Diferente de accidente
     							copagoAplicadoFacturaIte = Double.parseDouble(penalizacionT[1].toString()) + (totalFactura * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
     						}else{
@@ -3605,7 +3596,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	
     	if(causaSiniestro != null)
     	{
-    		if(!causaSiniestro.equalsIgnoreCase("2")){
+    		if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
         		if(tipoCopago.equalsIgnoreCase("%")){
         			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
         			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
@@ -3632,7 +3623,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		String zonaTarifiAsegurado, String idProveedor) {
 		double penalizacionCambioZona = 0;
 		if(causaSiniestro!= null){
-			if(!causaSiniestro.equalsIgnoreCase("2")){
+			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				//obtenemos la penalización por el cambio de zona
 				if(existePenalizacion.equalsIgnoreCase("s")){
 					//obtenemos el valor del porcentaje
@@ -3659,7 +3650,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	String valor1 = null;
     	String valor2 = null;
     	if(causaSiniestro !=null){
-        	if(!causaSiniestro.equalsIgnoreCase("2")){
+        	if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
         		if(circuloHospAsegurado == null){
         			valor1="0";
         		}else{
@@ -3830,6 +3821,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double penalizacionCirculoHosp =0d;
     				String aplicaIVA= "S";
 					String seleccionAplica= "D";
+					String ivaRetenido= "N";
 					double deducibleSiniestroIte      = 0d;
     				double copagoAplicadoSiniestroIte = 0d;
     				double cantidadCopagoSiniestroIte = 0d;
@@ -3848,21 +3840,23 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//1.- Obtenemos los datos generales del siniestros
     				List<Map<String,String>> informacionGral = siniestrosManager.obtieneDatosGeneralesSiniestro(cdunieco, cdramo,
     						estado, nmpoliza,nmsituac, nmsuplem, status, aaapertu, nmsinies, factura.get("NTRAMITE"));
-    				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
     				
-    				//2.- Obtenemos la información parametrizable con respecto al valor de tipo del formato del calculo y si requiere penalizaciones
-    				List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(factura.get("CDGARANT"),cdramo);
-    		   		String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
-    		   		
-    		   		//3.- Guardamos los valores en calculosPenalizaciones
-    		   		String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
-    		   		calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
-					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
-    				datosCoberturaxCal.add(calcxCobe);
-    				//4.- Obtenemos los valores de los Deducibles y copagos
+    				if(informacionGral.size()>0){
+    					penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
+    				}else{
+    					penalizacion.put("causaSiniestro", CausaSiniestro.ENFERMEDAD.getCodigo());
+    				}
+    				
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
-    				
+    				//logger.debug("%%%%RESPUESTA%%%%"+copagoDeducibleSiniestroIte);
+    				//copagoDeducibleSiniestroIte.get("TIPOCOPAGO");
+    				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
+    				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
+    				calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
+					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
+					datosCoberturaxCal.add(calcxCobe);
+					
     				//4.- Verificamos si va a necesitar calculos de penalizaciones
     				if(calculosPenalizaciones.equalsIgnoreCase("1")){
     		   			
@@ -3901,10 +3895,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				
     				//5.- Obtenemos información adicional de las facturas, para realizar la validación de aplica IVA o No
     				List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
-    				
     				if(listaFactura.get(0).get("APLICA_IVA") != null){
     					aplicaIVA= listaFactura.get(0).get("APLICA_IVA");
     					seleccionAplica =listaFactura.get(0).get("ANTES_DESPUES");
+    					ivaRetenido = listaFactura.get(0).get("IVARETENIDO");
+    					if(!StringUtils.isNotBlank(ivaRetenido)){
+    						ivaRetenido= "N";
+    					}
     				}
     				
     				String sDeducibleSiniestroIte     = copagoDeducibleSiniestroIte.get("DEDUCIBLE").replace(",","");
@@ -3995,6 +3992,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				mpdir.put("total","0");
     				mpdir.put("totalcedular","0");
     				mpdir.put("ivaTotalMostrar","0");
+    				mpdir.put("ivaRetenidoMostrar","0");
+    				mpdir.put("iSRMostrar","0");
 					lpdir.add(mpdir);
     				//PAGO DIRECTO --> CONCEPTOS
     				for(Map<String,String>concepto : conceptos)
@@ -4145,8 +4144,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			            		if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
     			            			double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);//++
     			            			row.put("IVAAPLICA",iVaaplicaAntes+"");
-    			            			//subtotalDescuento=subtotalDescuento - iVaaplicaAntes;//++
-    			            			//row.put("SUBTTDESCUENTO",subtotalDescuento +"");
     			            		}
     			            	}
     							
@@ -4154,7 +4151,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double  copago = 0d;
     							double  copagoAplicado = 0d;//++
     							String scopago =concepto.get("COPAGO");
-    							logger.debug("procesar copago "+scopago);
     							
     							if(StringUtils.isNotBlank(scopago))
     							{
@@ -4169,7 +4165,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         								copago=Double.valueOf(scopago);
         								if(copagoPorc)
         								{
-        									copagoAplicado=subtotalDescuento*(copagoAplicado/100d);
+        									copagoAplicado=(subtotalDescuento*(copago/100d));
         								}
         								else
         								{
@@ -4188,6 +4184,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double subtotalImpuestos = subtotalCopago-(israplicado+0d);//cedularaplicado);//++
     							logger.debug("subtotalImpuestos "+subtotalImpuestos);
     							
+    							double totalISRMostrar = Double.parseDouble(mpdir.get("iSRMostrar"));
+    							logger.debug("base totalISRMostrar"+totalISRMostrar);
+    							totalISRMostrar += israplicado;
+    							//logger.debug("new totalISRMostrar"+totalISRMostrar);
+    							mpdir.put("iSRMostrar",totalISRMostrar+"");
+    							
     							////// modificado
     							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
     							logger.debug("cedularaplicado "+cedularaplicado);
@@ -4198,31 +4200,59 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
     							
     			            	double ivaaplicado =0d;
+    			            	double ivaRetenidos =0d;
     			            	double ptimportauto =0d;
+    			            	//logger.debug("#####...aplicaIVA.....--->"+aplicaIVA);
+    			            	
     			            	if(aplicaIVA.equalsIgnoreCase("S")){
-    			            		if(seleccionAplica.equalsIgnoreCase("D")){ 
-    			            			ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
+    			            		if(seleccionAplica.equalsIgnoreCase("D")){
+    			            			ivaaplicado       = subtotalCopago*(ivaprov/100d);//++
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    	    							ptimportauto      = subtotalImpuestos+ivaaplicado;//++
+    			            			//logger.debug("#####...ivaRetenido.....--->"+ivaRetenido);
+    			            			if(ivaRetenido.equalsIgnoreCase("S")){
+    			            				ivaRetenidos      = ((2d * ivaaplicado)/3);
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}else{
+    										ivaRetenidos      = 0d;
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}
+    			            			ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado;//++
     	    							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}else{
     			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);
     			            			row.put("IVAAPLICA",ivaaplicado+"");
-    			            			ptimportauto      = subtotalImpuestos+ivaaplicado; //++
+    			            			if(ivaRetenido.equalsIgnoreCase("S")){
+    			            				ivaRetenidos      = ((2d * ivaaplicado)/3);
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}else{
+    										ivaRetenidos      = 0d;
+        			            			row.put("IVARETENIDO",ivaRetenidos+"");
+    									}
+    			            			ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado; //++
             							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            		}
     			            	}else{
     			            		ivaaplicado       = 0d;//++
+    			            		ivaRetenidos      = 0d;
         							row.put("IVAAPLICA",ivaaplicado+"");
-        							ptimportauto      = subtotalImpuestos+ivaaplicado;//++
+        							row.put("IVARETENIDO",ivaRetenidos+"");
+        							ptimportauto      = (subtotalImpuestos-ivaRetenidos)+ivaaplicado;//++
         							row.put("PTIMPORTAUTO",ptimportauto+"");
     			            	}
-    							
+    			            	
+    			            	
 								double totalIVAMostrar = Double.parseDouble(mpdir.get("ivaTotalMostrar"));
     							logger.debug("base totalIVAMostrar"+totalIVAMostrar);
     							totalIVAMostrar += ivaaplicado;
     							logger.debug("new totalIVAMostrar"+totalIVAMostrar);
     							mpdir.put("ivaTotalMostrar",totalIVAMostrar+"");
+    							
+    							
+    							double totalIVARetenidoMostrar = Double.parseDouble(mpdir.get("ivaRetenidoMostrar"));
+    							logger.debug("base totalIVARetenidoMostrar"+totalIVARetenidoMostrar);
+    							totalIVARetenidoMostrar += ivaRetenidos;
+    							logger.debug("new totalIVAMostrar"+totalIVARetenidoMostrar);
+    							mpdir.put("ivaRetenidoMostrar",totalIVARetenidoMostrar+"");
     							
     							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
     							logger.debug("ptimport "+ptimport);
@@ -4319,8 +4349,17 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		            		hosp.put("BASEIVA" , subttDesto+"");
 		            	}
 						
+		            	//APLICAMOS EL IVA RETENIDO
+		            	if(ivaRetenido.equalsIgnoreCase("S")){
+							ivrSiniestroIte = ((2d * Double.parseDouble(hosp.get("IVA")))/3d);
+                            hosp.put("IVARETENIDO"    , ivrSiniestroIte+"");
+                            
+                        }else{
+                        	ivrSiniestroIte = 0d;
+                            hosp.put("IVARETENIDO"    , ivrSiniestroIte+"");
+                        }
 						ivaSiniestroIte = Double.parseDouble(hosp.get("IVA"));//hIVA;
-						ivrSiniestroIte = 0d;
+						//ivrSiniestroIte = 0d;
 						isrSiniestroIte = 0d;
 						cedSiniestroIte = 0d;
 						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
@@ -4370,6 +4409,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	    						subttcopagototalSiniestroIte+= Double.valueOf(concepto.get("SUBTTCOPAGO"));
 	    						subttISRSiniestroIte+= Double.valueOf(concepto.get("ISRAPLICA"));
 	    						ivaSiniestroIte+= Double.valueOf(concepto.get("IVAAPLICA"));
+	    						ivrSiniestroIte += ((2 * Double.valueOf(concepto.get("IVAAPLICA")))/3);
 	    					}
 	    				}
 						
@@ -4379,12 +4419,20 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 							}else{
 								importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttDescuentoSiniestroIte)).toString());
 							}
+							
+							if(ivaRetenido.equalsIgnoreCase("S")){
+								importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
+							}else{
+								importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(0d)    ).toString());
+							}
+							
 						}else{
 							importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttcopagototalSiniestroIte)).toString());
+							importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(0d)    ).toString());
 						}
 						
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
-						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
+						//importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(subttISRSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
 						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
@@ -4653,7 +4701,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				if(tipoFormatoCalculo.equalsIgnoreCase("1")){
 						//verificamos la causa del siniestro
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
-						if(causadelSiniestro.equalsIgnoreCase("2")){
+						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 							deducibleFacturaIte = 0d;
 						}
 					}
@@ -4679,7 +4727,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					if(tipoFormatoCalculo.equalsIgnoreCase("1"))
     					{
     						//verificamos la causa del siniestro
-    						if(!causadelSiniestro.equalsIgnoreCase("2")){
+    						if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
     							//Diferente de accidente
     							copagoAplicadoFacturaIte = Double.parseDouble(penalizacionT[1].toString()) + (totalFactura * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
     						}else{
@@ -6353,6 +6401,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setFactPagada(String factPagada) {
 		this.factPagada = factPagada;
+	}
+
+	public String getMesMaximoMaternidad() {
+		return mesMaximoMaternidad;
+	}
+
+	public void setMesMaximoMaternidad(String mesMaximoMaternidad) {
+		this.mesMaximoMaternidad = mesMaximoMaternidad;
 	}
 	
 	

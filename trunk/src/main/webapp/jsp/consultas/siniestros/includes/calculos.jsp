@@ -214,16 +214,18 @@ Ext.onReady(function()
             	debug('subttDesc' , subttDesc);
             	var deducible = 0;
             	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
+            	
             	if(causaSiniestro !="2"){
-                    if(
-                            !(!sDeducible
-                            ||sDeducible.toLowerCase()=='na'
-                            ||sDeducible.toLowerCase()=='no')
-                            )
-                    {
-                        deducible = sDeducible.replace(',','')*1.0;
-                    }
+            		if(
+                			!(!sDeducible
+                			||sDeducible.toLowerCase()=='na'
+                			||sDeducible.toLowerCase()=='no')
+                			)
+                	{
+                		deducible = sDeducible.replace(',','')*1.0;
+                	}
             	}
+            	
             	var subttDedu = subttDesc - deducible;
             	
             	if(causaSiniestro !="2"){
@@ -232,12 +234,13 @@ Ext.onReady(function()
             		
             		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
             	}else{
-            		var copagoaplica = 0.0;
+                	var copagoaplica = 0.0;
             	}
             	
             	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
-            	var total = subttDedu - copagoaplica + iva ;
+            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
+            	var total = subttDedu - copagoaplica + iva - ivaRetenido;
             	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -335,7 +338,16 @@ Ext.onReady(function()
                             {
                                 return Ext.util.Format.usMoney(value);
                             }
-                        }
+                        },{
+                            xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'IVA Retenido' //IVA PAGO DIRECTO HOSPI
+                                ,value      : ivaRetenido
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
@@ -462,6 +474,12 @@ Ext.onReady(function()
                             ,flex      : 1
                         }
             		    ,{
+                            header     : 'IVA RETENIDO'
+                            ,dataIndex : 'IVARETENIDO'
+                            ,renderer  : Ext.util.Format.usMoney
+                            ,flex      : 1
+                        }
+            		    ,{
                             header     : 'Importe autom&aacute;tico'
                             ,dataIndex : 'PTIMPORTAUTO'
                             ,renderer  : Ext.util.Format.usMoney
@@ -516,6 +534,10 @@ Ext.onReady(function()
 	                        }
 	                    }
 	                }
+            	    ,listeners :
+            	    {
+            	    	itemclick : _p12_mostrarWindowAutoriza
+            	    }
             	});
 	            var panelTotales = Ext.create('Ext.form.Panel',
 	            {
@@ -536,7 +558,7 @@ Ext.onReady(function()
 	                        xtype       : 'displayfield'
 	                        ,fieldLabel : 'SUBTOTAL'
 	                        ,labelWidth : 200
-	                        ,value      : (_p12_lpdir[indice].total) -( _p12_lpdir[indice].ivaTotalMostrar)
+	                        ,value      : ((_p12_lpdir[indice].total)*1) + ((_p12_lpdir[indice].iSRMostrar)*1) + ((_p12_lpdir[indice].ivaRetenidoMostrar)*1) - ((_p12_lpdir[indice].ivaTotalMostrar)*1)
 	                        ,valueToRaw : function(value)
 	                        {
 	                        	return Ext.util.Format.usMoney(value);
@@ -547,6 +569,27 @@ Ext.onReady(function()
 	                        ,fieldLabel : 'IVA'
 	                        ,labelWidth : 200
 	                        ,value      : _p12_lpdir[indice].ivaTotalMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'IVA Retenido'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].ivaRetenidoMostrar
+	                        ,valueToRaw : function(value)
+	                        {
+	                        	return Ext.util.Format.usMoney(value);
+	                        }
+	                    },
+	                    
+	                    {
+	                        xtype       : 'displayfield'
+	                        ,fieldLabel : 'ISR'
+	                        ,labelWidth : 200
+	                        ,value      : _p12_lpdir[indice].iSRMostrar
 	                        ,valueToRaw : function(value)
 	                        {
 	                        	return Ext.util.Format.usMoney(value);
@@ -730,6 +773,7 @@ Ext.onReady(function()
             var deducible   = 0;
             var _facturaIndividual = _p12_slist1[indice];
             var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
+            
             if(
                     !(!sDeducible
                     ||sDeducible.toLowerCase()=='na'
@@ -737,14 +781,17 @@ Ext.onReady(function()
                     )
             {
                 deducible = sDeducible.replace(',','')*1.0;
+                
                 //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
-	        if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1')
+               	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1')
                	{
                 	if(causaSiniestro =="2"){
                 		deducible = 0;
                 	}
                	}
             }
+            
+            
             var subttdeduc  = subttdesc-deducible;
             _p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
             _p12_slist2[indice].COPAGO = 0;
@@ -771,13 +818,13 @@ Ext.onReady(function()
             		var copagoaplica = 0.0;
             	}
            	}else{
-            		if(tipcopag=='$'){
-                        var copagoaplica = copago;
-                    }
-                    else if(tipcopag=='%'){
-                        var copagoaplica = subttdeduc*(copago/100.0);
-                    }
-                    else{
+           		if(tipcopag=='$'){
+                    var copagoaplica = copago;
+                }
+                else if(tipcopag=='%'){
+                    var copagoaplica = subttdeduc*(copago/100.0);
+                }
+                else{
                     var copagoaplica = 0.0;
                 }
            	}
@@ -942,6 +989,12 @@ Ext.onReady(function()
                     return Ext.util.Format.usMoney(value);
                 }
     	    }
+    	    /*,{
+    	    	xtype    : 'button'
+    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+    	    	,text    : 'Aceptar y guardar'
+    	    	,handler : _p12_guardar_click
+    	    }*/
     	]
     }));
     
@@ -1140,6 +1193,8 @@ Ext.onReady(function()
 	_p12_panelCalculo = Ext.create('Ext.panel.Panel',
 	{
 		title     : 'C&Aacute;LCULO'
+		,autoScroll : true
+		,height: 1800
 		,defaults :
 		{
 			style : 'margin : 5px;'
@@ -1153,11 +1208,42 @@ Ext.onReady(function()
 	    ,renderTo : '_p12_divpri'
 	    ,items    :
 	    [
-	        _p12_formTramite
+	        /*{
+	        	xtype     : 'panel'
+	        	,title    : 'C&Aacute;LCULOS DEL TR&Aacute;MITE'
+	        	,items :
+	        	[
+			        {
+			        	xtype   : 'panel'
+			        	,style  : 'margin : 5px;'
+			        	,border : 0
+			        	,icon   : '${ctx}/resources/fam3icons/icons/error.png'
+			        	,title  : 'Al acceder a esta pesta&ntilde;a los c&aacute;lculos anteriores se eliminan y debe guardarlos de nuevo'
+			        }
+	        	]
+	        }
+	        ,*/
+		_p12_formTramite
 	        ,_p12_formFactura
 	        ,_p12_formProveedor
 	        ,_p12_formSiniestro
 	        ,_p12_panelCalculo
+	        /*
+	        ,Ext.create('Ext.panel.Panel',
+	        {
+	        	border  : 0
+	        	,layout :
+	        	{
+	        		type     : 'table'
+	        		,columns : 2
+	        	}
+	            ,items  :
+	        	[
+	        	    _p12_gridFacturas
+	        	    ,_p12_gridSiniestros
+	        	]
+	        })
+	        ,_p12_panelCalculo*/
 	    ]
 	});
 	////// contenido //////
@@ -1564,7 +1650,7 @@ function _p12_validaAutorizaciones()
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
-            if(false && facturaIte.AUTMEDIC!='S')
+            if(facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }

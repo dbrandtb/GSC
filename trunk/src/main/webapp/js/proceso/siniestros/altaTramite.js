@@ -254,17 +254,7 @@ Ext.onReady(function() {
 	    allowBlank : false,							editable   : true,				displayField : 'value',
 	    labelWidth : 250,		   					 emptyText:'Seleccione...',		width		 : 500,
 	    valueField   : 'key',						forceSelection : true,			queryMode      :'local',
-	    store : oficinaEmisora/*,
-	    listeners : {
-	    	//'select' : function(combo, record) {
-	    	change:function(e){
-	    		storeRamos.load({
-	                params:{
-	                	'params.idPadre' :this.getValue()
-	                }
-	            });
-	    	}
-	    }*/
+	    store : oficinaEmisora
 	});
 	
     cmbRamos = Ext.create('Ext.form.field.ComboBox',
@@ -275,7 +265,7 @@ Ext.onReady(function() {
 	    ,store : storeRamos
 	    ,listeners : {
 	    	'select' : function(combo, record) {
-	    		if(Ext.getCmp('cmbTipoPago').getValue() == "1"){ // --> Pago Directo
+	    		if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO){ // --> Pago Directo
 	    			storeListAsegPagDirecto.removeAll();
 	    		}else{
 	    			// --> Pago por Reembolso
@@ -305,7 +295,7 @@ Ext.onReady(function() {
     			Ext.getCmp('idnombreAsegurado').setValue('');
 				Ext.getCmp('cmbTipoMoneda').hide();
     				
-				if(e.getValue() =='1'){
+				if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				//PAGO DIRECTO
     				limpiarRegistrosTipoPago(e.getValue());
     				
@@ -646,8 +636,6 @@ Ext.onReady(function() {
 	 	onAddClick: function(btn, e){
 	 		panelModificacionInsercion.query('combo[name=cmbTipoMonedaInterna]')[0].setValue('001');
 	 		panelModificacionInsercion.query('combo[name=tipoServicioInterno]')[0].hide();
-	 		//panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].hide();
-	 		//panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].hide();
 	 		ventanaGrid.animateTarget=btn;
 	 		ventanaGrid.show();
 		   },
@@ -869,8 +857,6 @@ Ext.onReady(function() {
 	    height		  : 200,
 	    columns       :
 	    [
-	        
-	        
 	        {
 	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
 	        },
@@ -917,7 +903,7 @@ Ext.onReady(function() {
                 	if(record.get('desEstatusCliente')=="Vigente")
             		{
                 		var valorFechaOcurrencia;
-                		if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+                		if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO)
             			{
                 			var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
                 			valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
@@ -953,7 +939,7 @@ Ext.onReady(function() {
         	                	});
                 				modPolizasAltaTramite.hide();
                     			limpiarRegistros();
-                    			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+                    			if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO)
                     			{
                     				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
                     			}else{
@@ -970,7 +956,7 @@ Ext.onReady(function() {
     	                	});
                 			modPolizasAltaTramite.hide();
                 			limpiarRegistros();
-                			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+                			if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO)
                 			{
                 				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
                 			}else{
@@ -987,7 +973,7 @@ Ext.onReady(function() {
 	                	});
             			modPolizasAltaTramite.hide();
             			limpiarRegistros();
-            			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+            			if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO)
             			{
             				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
             			}else{
@@ -1195,7 +1181,7 @@ Ext.onReady(function() {
             				//aqui realizamos el llamado al guardado
             				var respuesta=true;
             				//Llenamos los campos dependiendo si es pago por reembolso
-            				if( Ext.getCmp('cmbTipoPago').getValue() == "1") // Pago Directo
+            				if( Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO) // Pago Directo
         					{
             					Ext.getCmp('cmbAseguradoAfectado').setValue("");
             					Ext.getCmp('dtFechaOcurrencia').setValue("");
@@ -1274,7 +1260,7 @@ Ext.onReady(function() {
             				var datosTablas = [];
             				
             				// si es pago directo
-            				if( Ext.getCmp('cmbTipoPago').getValue() == "1")
+            				if( Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO)
         					{
             					storeListAsegPagDirecto.each(function(record,index){
             						datosTablas.push({
@@ -1292,9 +1278,7 @@ Ext.onReady(function() {
                 				});
         					}else{
         						storeFactCtrl.each(function(record,index){
-        							console.log("VALOR DE RECORD");
-        							console.log(record);
-    	            				datosTablas.push({
+        							datosTablas.push({
     	            					nfactura:record.get('noFactura'),
     	            					ffactura:record.get('fechaFactura'),
     	            					cdtipser:record.get('tipoServicio'),
@@ -1308,8 +1292,6 @@ Ext.onReady(function() {
     						}
             				
             				submitValues['datosTablas']=datosTablas;
-            				console.log("############ DATOS PARA ENVIAR ############");
-            				console.log(submitValues);
             				panelInicialPral.setLoading(true);
             				Ext.Ajax.request(
     						{
@@ -1394,7 +1376,7 @@ Ext.onReady(function() {
     
     if(valorAction == null)
 	{
-    	Ext.getCmp('cmbTipoPago').setValue('1');
+    	Ext.getCmp('cmbTipoPago').setValue(_TIPO_PAGO_DIRECTO);
     	oficinaEmisora.load();
     	Ext.getCmp('cmbOficEmisora').setValue('1000');
     	storeRamos.load({
@@ -1404,8 +1386,6 @@ Ext.onReady(function() {
 		});
     	
 	}else{
-		
-			
 			storeProveedor.load();
 			Ext.Ajax.request(
 			{
@@ -1440,7 +1420,7 @@ Ext.onReady(function() {
 						}
 						
 			    		//VALORES DE PAGO DIRECTO
-			    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
+			    		if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO){
 			    			Ext.getCmp('cmbProveedor').setValue(json.otvalor11mc);
 			    			Ext.getCmp('txtNoFactura').setValue(json.otvalor08mc);
 			    			Ext.getCmp('txtImporte').setValue(json.otvalor03mc);
@@ -1453,8 +1433,6 @@ Ext.onReady(function() {
 			    			}
 			    		}else{
 			    			//VALORES DE PAGO POR REEMBOLSO
-			    			console.log("PAGO POR REEMBOLSO");
-			    			console.log(json);
 			    			Ext.getCmp('idUnieco').setValue(json.cduniecomc);
 			    			Ext.getCmp('idEstado').setValue(json.estadomc);
 			    			Ext.getCmp('idcdRamo').setValue(json.cdramomc);
@@ -1499,12 +1477,8 @@ Ext.onReady(function() {
 	    	                    if(Ext.decode(response.responseText).listaAltaTramite != null)
 	    			    		{
 	    				    		var json=Ext.decode(response.responseText).listaAltaTramite;
-	    				    		console.log("");
-	    				    		
-	    				    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
+	    				    		if(Ext.getCmp('cmbTipoPago').getValue() == _TIPO_PAGO_DIRECTO){
 	    				    			// PAGO DIRECTO
-	    				    			//var nombreProveedor= json[0].cdpresta +" "+ json[0].dspresta;
-	    				    			//Ext.getCmp('idnombreBeneficiarioProv').setValue('ALBERTO');
 	    				    			Ext.getCmp('cmbTipoMoneda').setValue(json[0].cdmoneda);
 	    				    			for(var i = 0; i < json.length; i++){
 		    				    			var rec = new modelListAsegPagDirecto({
@@ -1529,8 +1503,6 @@ Ext.onReady(function() {
 	    				    			//PAGO POR REEMBOLSO
 	    				    			Ext.getCmp('idNmSituac').setValue(json[0].nmsituac);
 	    				    			for(var i = 0; i < json.length; i++){
-	    				    				console.log("valor de json");
-	    				    				console.log(json[i]);
 	    				    				var rec = new modelFactCtrl({
 							 				  	noFactura: json[i].nfactura,
 											 	fechaFactura: json[i].ffactura,
@@ -1596,7 +1568,7 @@ Ext.onReady(function() {
 	{
 		var pagoDirecto = true;
 		var pagoReembolso = true;
-		if(tipoPago == "1") // Pago Directo
+		if(tipoPago == _TIPO_PAGO_DIRECTO) // Pago Directo
 		{
 		    Ext.getCmp('editorIncisos').hide();
 		    Ext.getCmp('EditorAsegPagDirecto').show();
@@ -1647,34 +1619,34 @@ Ext.onReady(function() {
 	
 	function validarFacturaPagada(cdpresta,nfactura){
 		Ext.Ajax.request(
-					{
-						url     : _URL_CONSULTA_FACTURA_PAGADA
-						,params:{
-							'params.nfactura' : nfactura,
-							'params.cdpresta' : cdpresta
-						}
-						,success : function (response)
-					    {
-					    	if(Ext.decode(response.responseText).factPagada !=null)
-					    	{
-					    		centrarVentanaInterna(Ext.Msg.show({
-			 		               title: 'Aviso',
-			 		               msg: 'La factura '+ nfactura +' ya se encuentra pagada en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
-			 		               buttons: Ext.Msg.OK,
-			 		               icon: Ext.Msg.WARNING
-			 		           }));
-					    	}
-					    },
-					    failure : function ()
-					    {
-					        me.up().up().setLoading(false);
-					        centrarVentanaInterna(Ext.Msg.show({
-					            title:'Error',
-					            msg: 'Error de comunicaci&oacute;n',
-					            buttons: Ext.Msg.OK,
-					            icon: Ext.Msg.ERROR
-					        }));
-					    }
-					});
+		{
+			url     : _URL_CONSULTA_FACTURA_PAGADA
+			,params:{
+				'params.nfactura' : nfactura,
+				'params.cdpresta' : cdpresta
+			}
+			,success : function (response)
+		    {
+		    	if(Ext.decode(response.responseText).factPagada !=null)
+		    	{
+		    		centrarVentanaInterna(Ext.Msg.show({
+ 		               title: 'Aviso',
+ 		               msg: 'La factura '+ nfactura +' ya se encuentra pagada en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+ 		               buttons: Ext.Msg.OK,
+ 		               icon: Ext.Msg.WARNING
+ 		           }));
+		    	}
+		    },
+		    failure : function ()
+		    {
+		        me.up().up().setLoading(false);
+		        centrarVentanaInterna(Ext.Msg.show({
+		            title:'Error',
+		            msg: 'Error de comunicaci&oacute;n',
+		            buttons: Ext.Msg.OK,
+		            icon: Ext.Msg.ERROR
+		        }));
+		    }
+		});
 	}
 });

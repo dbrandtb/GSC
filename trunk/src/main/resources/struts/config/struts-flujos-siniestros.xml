@@ -502,6 +502,19 @@
 			</result>
 		</action>
 		
+		<action name="consultaMesesMaximoMaternidad" class="siniestrosAction"
+			method="consultaMesesMaximoMaternidad">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mesMaximoMaternidad
+				</param>
+			</result>
+		</action>
+		
+		
+		
 		<action name="consultaFacturaPagada" class="siniestrosAction"
 			method="consultaFacturaPagada">
 			<result type="json">

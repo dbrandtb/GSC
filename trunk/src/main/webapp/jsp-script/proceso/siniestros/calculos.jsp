@@ -17,7 +17,9 @@ var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='f
 var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
 
 var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
+var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='false' />; //Informacion de penalizacion
 
+debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
@@ -199,7 +201,8 @@ Ext.onReady(function()
                 ]
             });
             panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
-            if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA')
+            //if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
+            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1")
             {
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
@@ -780,7 +783,8 @@ Ext.onReady(function()
             {
                 deducible = sDeducible.replace(',','')*1.0;
                 
-                if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+                //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+               	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1')
                	{
                 	if(causaSiniestro =="2"){
                 		deducible = 0;
@@ -805,8 +809,8 @@ Ext.onReady(function()
             //var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             //var _facturaIndividual = _p12_slist1[indice];
             
-            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
-           	{
+            //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
+           	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
             	if(causaSiniestro !="2"){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
@@ -1563,7 +1567,8 @@ function _p12_validaAutorizaciones()
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
 	{
-		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
+		//var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
+		var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
 		{

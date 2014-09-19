@@ -17,7 +17,10 @@ public enum Validacion {
 	/**
 	 * Longitud m&aacute;xima del nombre del contratante
 	 */
-	LONGITUD_MAX_CONTRATANTE("4");
+	LONGITUD_MAX_CONTRATANTE("4"),
+	/**
+	 * Numero de meses para validacion de Maternidad*/
+	MESES_MAX_MATERNIDAD("5");
 	
 	private String clave;
 	
