@@ -951,6 +951,7 @@ public class ProcesoDAO extends AbstractDAO {
     		declareParameter(new SqlParameter("pv_ttipcamc", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_ttipcamv", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_swpatent", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_pcpgocte", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_accion", OracleTypes.VARCHAR));
     		
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));

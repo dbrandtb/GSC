@@ -661,6 +661,26 @@ Ext.onReady(function()
                                     })
                                     ,<s:property value="imap.comboFormaPago" />
                                     ,<s:property value="imap.comboRepartoPago" />
+                                    ,{
+                                        xtype       : 'numberfield'
+                                        ,fieldLabel : 'PORCENTAJE A CARGO DEL CLIENTE'
+                                        ,name       : 'pcpgocte'
+                                        ,allowBlank : false
+                                        ,minValue   : 0
+                                        ,maxValue   : 100
+                                        ,listeners  :
+                                        {
+                                            change : function(comp,val)
+                                            {
+                                                _fieldByName('pcpgotit').setValue(100-val);
+                                            }
+                                        }
+                                    },{
+                                        xtype       : 'numberfield'
+                                        ,fieldLabel : 'PORCENTAJE A CARGO DEL TITULAR'
+                                        ,name       : 'pcpgotit'
+                                        ,readOnly   : true
+                                    }
                                 ]
                             }
                             ,{
@@ -859,7 +879,38 @@ Ext.onReady(function()
     if(_p21_smap1.cdsisrol=='SUSCRIPTOR')
     {
         _fieldByName('cdreppag').setReadOnly(_p21_smap1.status-0>18);
+        _fieldByName('pcpgocte').setReadOnly(_p21_smap1.status-0>18);
     }
+    
+    _fieldByName('cdreppag').on(
+    {
+        select : function(comp,arr)
+        {
+            var val=_fieldByName('cdreppag').getValue();
+            debug('reparto pago select valor:',val);
+            if(val==1)
+            {
+                _fieldByName('pcpgocte').hide();
+                _fieldByName('pcpgocte').setValue(100);
+                _fieldByName('pcpgotit').hide();
+                _fieldByName('pcpgotit').setValue(0);
+            }
+            else if(val==2)
+            {
+                _fieldByName('pcpgocte').show();
+                _fieldByName('pcpgocte').setValue(50);
+                _fieldByName('pcpgotit').show();
+                _fieldByName('pcpgotit').setValue(50);
+            }
+            else
+            {
+                _fieldByName('pcpgocte').hide();
+                _fieldByName('pcpgocte').setValue(0);
+                _fieldByName('pcpgotit').hide();
+                _fieldByName('pcpgotit').setValue(100);
+            }
+        }
+    });
     
     if(_p21_smap1.BLOQUEO_EDITORES=='S')
     {
@@ -902,7 +953,64 @@ Ext.onReady(function()
                     {
                         if(prop!='cdmunici'&&prop!='clasif')
                         {
-                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                            if(prop=='pcpgocte')
+                            {
+                                var porc = json.params[prop];
+                                debug('porcentaje pago cliente:',porc);
+                                if(porc-0==100)
+                                {
+                                    _fieldByName('cdreppag').setValue('1');
+                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _fieldByName('pcpgocte').hide();
+                                    _fieldByName('pcpgotit').hide();
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('1');
+                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                            _fieldByName('pcpgocte').hide();
+                                            _fieldByName('pcpgotit').hide();
+                                            _fieldByName('pcpgocte').setAllowBlank(true);
+                                            _fieldByName('pcpgocte').isValid();
+                                        }
+                                    });
+                                }
+                                else if(porc-0==0)
+                                {
+                                    _fieldByName('cdreppag').setValue('3');
+                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _fieldByName('pcpgocte').hide();
+                                    _fieldByName('pcpgotit').hide();
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('3');
+                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                            _fieldByName('pcpgocte').hide();
+                                            _fieldByName('pcpgotit').hide();
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    _fieldByName('cdreppag').setValue('2');
+                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('2');
+                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                _p21_fieldByName(prop).setValue(json.params[prop]);
+                            }
                         }
                     }
                     _p21_fieldByName('cdmunici').setValue(json.params['cdmunici']);
@@ -3066,8 +3174,6 @@ function _p21_subirDetallePersonas()
                                         conceptos['cdramo']          = _p21_smap1.cdramo;
                                         conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
                                         conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
-                                        conceptos['cdperpag']        = _fieldByName('cdperpag').getValue();
-                                        conceptos['cdreppag']        = _fieldByName('cdreppag').getValue();
                                         var grupos = [];
                                         _p21_storeGrupos.each(function(record)
                                         {
