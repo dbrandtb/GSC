@@ -518,6 +518,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_ttipcamc",     (String)anterior.get("ttipcamc"));
             nuevo.put("pv_ttipcamv",     (String)anterior.get("ttipcamv"));
             nuevo.put("pv_swpatent",     (String)anterior.get("swpatent"));
+            nuevo.put("pv_pcpgocte",     "100");
             nuevo.put("pv_accion",       "U");
             kernelManager.insertaMaestroPolizas(nuevo);
             

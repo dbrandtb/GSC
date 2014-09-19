@@ -1260,6 +1260,7 @@ public class CotizacionAction extends PrincipalCoreAction
             mapaMpolizas.put("pv_ttipcamc"  , null);
             mapaMpolizas.put("pv_ttipcamv"  , null);
             mapaMpolizas.put("pv_swpatent"  , null);
+            mapaMpolizas.put("pv_pcpgocte"  , "100");
             mapaMpolizas.put("pv_accion"    , "U");
             kernelManager.insertaMaestroPolizas(mapaMpolizas);
             ////// mpolizas //////
@@ -3018,8 +3019,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdtipsit         = smap1.get("cdtipsit");
 		String cdramo           = smap1.get("cdramo");
 		String nmpoliza         = smap1.get("nmpoliza");
-		//String cdperpag         = smap1.get("cdperpag");
-		String cdreppag         = smap1.get("cdreppag");
+		String cdperpag         = smap1.get("cdperpag");
+		String pcpgocte         = smap1.get("pcpgocte");
 		UserVO usuario          = (UserVO)session.get("USUARIO");
 		String user             = usuario.getUser();
 		String cdelemento       = usuario.getEmpresa().getElementoId();
@@ -3028,8 +3029,76 @@ public class CotizacionAction extends PrincipalCoreAction
 		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 		String ntramiteVacio    = smap1.get("ntramiteVacio");
 		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+		Date fechaHoy           = new Date();
+		String feini            = smap1.get("feini");
+		String fefin            = smap1.get("fefin");
 		
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
+		
+		//mpolizas
+		if(exito)
+		{
+			try
+			{
+				Map<String,String>mapaMpolizas=new HashMap<String,String>(0);
+	            mapaMpolizas.put("pv_cdunieco"  , cdunieco);
+	            mapaMpolizas.put("pv_cdramo"    , cdramo);
+	            mapaMpolizas.put("pv_estado"    , "W");
+	            mapaMpolizas.put("pv_nmpoliza"  , nmpoliza);
+	            mapaMpolizas.put("pv_nmsuplem"  , "0");
+	            mapaMpolizas.put("pv_status"    , "V");
+	            mapaMpolizas.put("pv_swestado"  , "0");
+	            mapaMpolizas.put("pv_nmsolici"  , null);
+	            mapaMpolizas.put("pv_feautori"  , null);
+	            mapaMpolizas.put("pv_cdmotanu"  , null);
+	            mapaMpolizas.put("pv_feanulac"  , null);
+	            mapaMpolizas.put("pv_swautori"  , "N");
+	            mapaMpolizas.put("pv_cdmoneda"  , "001");
+	            mapaMpolizas.put("pv_feinisus"  , null);
+	            mapaMpolizas.put("pv_fefinsus"  , null);
+	            mapaMpolizas.put("pv_ottempot"  , "R");
+	            mapaMpolizas.put("pv_feefecto"  , feini);
+	            mapaMpolizas.put("pv_hhefecto"  , "12:00");
+	            mapaMpolizas.put("pv_feproren"  , fefin);
+	            mapaMpolizas.put("pv_fevencim"  , null);
+	            mapaMpolizas.put("pv_nmrenova"  , "0");
+	            mapaMpolizas.put("pv_ferecibo"  , null);
+	            mapaMpolizas.put("pv_feultsin"  , null);
+	            mapaMpolizas.put("pv_nmnumsin"  , "0");
+	            mapaMpolizas.put("pv_cdtipcoa"  , "N");
+	            mapaMpolizas.put("pv_swtarifi"  , "A");
+	            mapaMpolizas.put("pv_swabrido"  , null);
+	            mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdperpag"  , cdperpag);
+	            mapaMpolizas.put("pv_nmpoliex"  , null);
+	            mapaMpolizas.put("pv_nmcuadro"  , "P1");
+	            mapaMpolizas.put("pv_porredau"  , "100");
+	            mapaMpolizas.put("pv_swconsol"  , "S");
+	            mapaMpolizas.put("pv_nmpolant"  , null);
+	            mapaMpolizas.put("pv_nmpolnva"  , null);
+	            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdramant"  , null);
+	            mapaMpolizas.put("pv_cdmejred"  , null);
+	            mapaMpolizas.put("pv_nmpoldoc"  , null);
+	            mapaMpolizas.put("pv_nmpoliza2" , null);
+	            mapaMpolizas.put("pv_nmrenove"  , null);
+	            mapaMpolizas.put("pv_nmsuplee"  , null);
+	            mapaMpolizas.put("pv_ttipcamc"  , null);
+	            mapaMpolizas.put("pv_ttipcamv"  , null);
+	            mapaMpolizas.put("pv_swpatent"  , null);
+	            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
+	            mapaMpolizas.put("pv_accion"    , "U");
+	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
+			}
+			catch(Exception ex)
+			{
+				long etimestamp = System.currentTimeMillis();
+				logger.error(etimestamp+" error mpolizas",ex);
+				respuesta       = "Error al cotizar #"+etimestamp;
+				respuestaOculta = ex.getMessage();
+				exito           = false;
+			}
+		}
 		
 		if(exito)
 		{
@@ -3574,7 +3643,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdunieco , cdramo     , nmpoliza
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
-					,true     , cdreppag);
+					,true
+					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
 			respuestaOculta = aux.respuestaOculta;
@@ -3633,7 +3703,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String ntramite         = smap1.get("ntramite");
 			String ntramiteVacio    = smap1.get("ntramiteVacio");
 			String tipoCenso        = smap1.get("tipoCenso");
-			String ptajepar         = smap1.get("cdreppag");
+			//String ptajepar         = smap1.get("cdreppag");
+			String pcpgocte         = smap1.get("pcpgocte");;
 			boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
@@ -3703,6 +3774,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_ttipcamc"  , null);
 		            mapaMpolizas.put("pv_ttipcamv"  , null);
 		            mapaMpolizas.put("pv_swpatent"  , null);
+		            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
 		            mapaMpolizas.put("pv_accion"    , "U");
 		            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 				}
@@ -4195,7 +4267,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdunieco , cdramo     , nmpoliza
 						,cdtipsit , hayTramite , hayTramiteVacio
 						,user     , cdelemento , ntramiteVacio
-						,false    , ptajepar);
+						,false
+						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
 				respuestaOculta = aux.respuestaOculta;
@@ -4488,7 +4561,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdelemento
 			,String ntramiteVacio
 			,boolean reinsertaContratante
-			,String ptajepag
 			)
 	{
 		logger.debug(
@@ -4508,7 +4580,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## cdelemento: ")          .append(cdelemento)
 				.append("\n## ntramiteVacio: ")       .append(ntramiteVacio)
 				.append("\n## reinsertaContratante: ").append(reinsertaContratante)
-				.append("\n## ptajepag: ")            .append(ptajepag)
 				.toString()
 				);
 		
@@ -4818,27 +4889,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
 				paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
 				kernelManager.pMovMdomicil(paramDomicil);
-				
-				if(StringUtils.isNotBlank(ptajepag))
-				{
-					cotizacionManager.movimientoMpoliagr(
-							cdunieco
-							,cdramo
-							,"W"
-							,nmpoliza
-							,null//cdagrupa
-							,"0"//nmsuplem
-							,Constantes.STATUS_VIVO//status
-							,cdperson
-							,null//nmorddom
-							,"1"//cdforpag
-							,null//cdbanco
-							,null//sucursal
-							,null//cuenta
-							,ptajepag
-							,Constantes.INSERT_MODE
-							);
-				}
 			}
 			catch(Exception ex)
 			{
