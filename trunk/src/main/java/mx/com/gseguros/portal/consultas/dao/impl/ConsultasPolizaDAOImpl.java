@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.utils.Utilerias;
@@ -25,7 +26,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaDatosPolizaVO> consultaDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
     	
     	Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -140,5 +141,12 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     		return polizaAsegurado;
     	}
     }
+
+
+	@Override
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
