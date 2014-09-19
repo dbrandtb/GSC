@@ -145,6 +145,9 @@ debug('_p21_editorEmerextr:',_p21_editorEmerextr);
 var _p21_editorDeducible = <s:property value="imap.editorDeducibleColumn" />.editor;
 debug('_p21_editorDeducible:',_p21_editorDeducible);
 
+var _p21_editorPaquete = <s:property value="imap.editorPaqueteColumn" />.editor;
+debug('_p21_editorPaquete:',_p21_editorPaquete);
+
 var _p21_TARIFA_LINEA      = 1;
 var _p21_TARIFA_MODIFICADA = 2;
 ////// variables //////
@@ -174,6 +177,7 @@ Ext.onReady(function()
             ,'pondubic'
             ,'descbono'
             ,'porcgast'
+            ,'paquete'
         ]
     });
     
@@ -332,6 +336,17 @@ Ext.onReady(function()
                     }
                 }
                 ,{
+                    header     : 'Paquete'
+                    ,dataIndex : 'paquete'
+                    ,width     : 120
+                    ,editor    : _p21_editorPaquete
+                    ,hidden    : _p21_smap1.cdramo!='1'
+                    ,renderer  : function(v)
+                    {
+                        return rendererColumnasDinamico(v,'paquete');
+                    }
+                }
+                ,{
                     header     : 'Suma asegurada'
                     ,dataIndex : 'ptsumaaseg'
                     ,width     : 120
@@ -344,9 +359,9 @@ Ext.onReady(function()
                 ,{
                     header     : 'Deducible'
                     ,dataIndex : 'deducible'
-                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 100
                     ,editor    : _p21_editorDeducible
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'deducible');
@@ -355,9 +370,9 @@ Ext.onReady(function()
                 ,{
                     header     : 'Ayuda Maternidad'
                     ,dataIndex : 'ayudamater'
-                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'ayudamater');
@@ -366,9 +381,9 @@ Ext.onReady(function()
                 ,{
                     header     : 'Asis. Inter. Viajes'
                     ,dataIndex : 'asisinte'
-                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'asisinte');
@@ -377,9 +392,9 @@ Ext.onReady(function()
                 ,{
                     header     : 'Emergencia extranjero'
                     ,dataIndex : 'emerextr'
-                    ,hidden    : _p21_smap1.LINEA_EXTENDIDA=='N'
                     ,width     : 140
                     ,editor    : _p21_editorEmerextr
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'emerextr');
@@ -499,6 +514,17 @@ Ext.onReady(function()
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'cdplan');
+                    }
+                }
+                ,{
+                    header     : 'Paquete'
+                    ,dataIndex : 'paquete'
+                    ,width     : 120
+                    ,editor    : _p21_editorPaquete
+                    ,hidden    : _p21_smap1.cdramo!='1'
+                    ,renderer  : function(v)
+                    {
+                        return rendererColumnasDinamico(v,'paquete');
                     }
                 }
                 ,{

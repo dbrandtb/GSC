@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cotizacion.dao;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+
 public interface CotizacionDAO
 {
 	public void movimientoTvalogarGrupo(Map<String,String>params)throws Exception;
@@ -32,4 +34,7 @@ public interface CotizacionDAO
 	public void movimientoMpolicotICD(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarMpolicotICD(Map<String,String>params)throws Exception;
 	public void movimientoMpoliagr(Map<String,String>params)throws Exception;
+	public List<Map<String,String>>cargarConfiguracionGrupo(Map<String,String>params)throws Exception;
+	public ComponenteVO cargarComponenteTatrisit(Map<String,String>params)throws Exception;
+	public ComponenteVO cargarComponenteTatrigar(Map<String,String>params)throws Exception;
 }

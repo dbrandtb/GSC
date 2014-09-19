@@ -21,6 +21,8 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
@@ -1401,83 +1403,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             return wrapperResultados;
     	}
     }
-    
-    protected class ObtieneTatrisitMapper implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	logger.info("cdatribu: "+rs.getString("CDATRIBU")+" swsuscri: "+rs.getString("SWSUSCRI")+" dsatribu: "+rs.getString("DSATRIBU"));
-        	ComponenteVO result=new ComponenteVO();
-        	result.setFlagEsAtribu(true);
-            result.setType(ComponenteVO.TIPO_TATRISIT);
-            result.setNameCdatribu(rs.getString("CDATRIBU"));
-            result.setTipoCampo(rs.getString("SWFORMAT"));
-            
-            String sMinlen = rs.getString("NMLMIN");
-            int minlen = -1;
-            boolean fMinlen = false;
-            if(StringUtils.isNotBlank(sMinlen))
-            {
-            	try
-            	{
-            		minlen=(Integer)Integer.parseInt(sMinlen);
-            		fMinlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		minlen=-1;
-            		fMinlen=false;
-            	}
-            }
-            result.setMinLength(minlen);
-            result.setFlagMinLength(fMinlen);
-            
-            String sMaxlen = rs.getString("NMLMAX");
-            int maxlen = -1;
-            boolean fMaxlen = false;
-            if(StringUtils.isNotBlank(sMaxlen))
-            {
-            	try
-            	{
-            		maxlen=(Integer)Integer.parseInt(sMaxlen);
-            		fMaxlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		maxlen=-1;
-            		fMaxlen=false;
-            	}
-            }
-            result.setMaxLength(maxlen);
-            result.setFlagMaxLength(fMaxlen);
-            
-            String sObliga = rs.getString("SWOBLIGA");
-            boolean isObliga = false;
-            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
-            {
-            	isObliga = true;
-            }
-            result.setObligatorio(isObliga);
-            
-            result.setLabel(rs.getString("DSATRIBU"));
-            result.setCatalogo(rs.getString("OTTABVAL"));
-            
-            String sDepend = rs.getString("CDTABLJ1");
-            boolean isDepend = false;
-            if(StringUtils.isNotBlank(sDepend))
-            {
-            	isDepend = true;
-            }
-            result.setDependiente(isDepend);
-            
-            result.setSwsuscri(rs.getString("SWSUSCRI"));
-            result.setSwtarifi(rs.getString("SWTARIFI"));
-            result.setSwpresen(rs.getString("SWPRESEN"));
-            result.setDefaultValue(rs.getString("VALOR"));
-            result.setValue(rs.getString("OTVALOR01"));
-            result.setSoloLectura(!(StringUtils.isNotBlank(rs.getString("SWACTUAL"))&&rs.getString("SWACTUAL").equalsIgnoreCase("S")));
-            
-            return result;
-        }
-    }
     /*//////////////////////////////////////////*/
     ////// Obtiene campos tatrisit de tabla //////
     //////////////////////////////////////////////
@@ -1601,90 +1526,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			List result = (List) map.get("pv_registro_o");
 			wrapperResultados.setItemList(result);
 			return wrapperResultados;
-		}
-	}
-	
-	protected class ObtieneTatrigarMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			ComponenteVO result=new ComponenteVO();
-			result.setFlagEsAtribu(true);
-			result.setType(ComponenteVO.TIPO_TATRIGAR);
-			result.setNameCdatribu(rs.getString("CDATRIBU"));
-			result.setTipoCampo(rs.getString("SWFORMAT"));
-			
-			String sMinlen = rs.getString("NMLMIN");
-            int minlen = -1;
-            boolean fMinlen = false;
-            if(StringUtils.isNotBlank(sMinlen))
-            {
-            	try
-            	{
-            		minlen=(Integer)Integer.parseInt(sMinlen);
-            		fMinlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		minlen=-1;
-            		fMinlen=false;
-            	}
-            }
-            result.setMinLength(minlen);
-            result.setFlagMinLength(fMinlen);
-            
-            String sMaxlen = rs.getString("NMLMAX");
-            int maxlen = -1;
-            boolean fMaxlen = false;
-            if(StringUtils.isNotBlank(sMaxlen))
-            {
-            	try
-            	{
-            		maxlen=(Integer)Integer.parseInt(sMaxlen);
-            		fMaxlen = true;
-            	}
-            	catch(Exception ex)
-            	{
-            		maxlen=-1;
-            		fMaxlen=false;
-            	}
-            }
-            result.setMaxLength(maxlen);
-            result.setFlagMaxLength(fMaxlen);
-			
-            String sObliga = rs.getString("SWOBLIGA");
-            boolean isObliga = false;
-            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
-            {
-            	isObliga = true;
-            }
-            result.setObligatorio(isObliga);
-			
-			result.setLabel(rs.getString("DSATRIBU"));
-			result.setCatalogo(rs.getString("OTTABVAL"));
-			
-			String sDepend = rs.getString("CDTABLJ1");
-            boolean isDepend = false;
-            if(StringUtils.isNotBlank(sDepend))
-            {
-            	isDepend = true;
-            }
-            result.setDependiente(isDepend);
-            
-            String maximo=rs.getString("MAXIMO");
-            if(StringUtils.isNotBlank(maximo))
-            {
-            	if(StringUtils.isNotBlank(result.getCatalogo()))
-            	{
-            		result.setValue("'"+maximo+"'");
-            	}
-            	else
-                {
-            		result.setValue(maximo);
-                }
-                result.setMaxValue(maximo);
-            }
-			
-			return result;
 		}
 	}
 	/*//////////////////////////////////////////*/

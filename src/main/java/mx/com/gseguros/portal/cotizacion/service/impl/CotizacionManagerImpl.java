@@ -11,6 +11,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
@@ -1204,6 +1205,87 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n################################")
 				.toString()
 				);
+	}
+	
+	@Override
+	public List<Map<String,String>>cargarConfiguracionGrupo(String cdramo,String cdtipsit)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarConfiguracionGrupo ######")
+				.append("\n###### cdramo=")  .append(cdramo)
+				.append("\n###### cdtipsit=").append(cdtipsit)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		List<Map<String,String>>lista=cotizacionDAO.cargarConfiguracionGrupo(params);
+		logger.info(
+				new StringBuilder()
+				.append("\n###### lista=").append(lista)
+				.append("\n###### cargarConfiguracionGrupo ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public ComponenteVO cargarComponenteTatrisit(String cdtipsit,String cdusuari,String cdatribu)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarComponenteTatrisit ######")
+				.append("\n###### cdtipsit=").append(cdtipsit)
+				.append("\n###### cdusuari=").append(cdusuari)
+				.append("\n###### cdatribu=").append(cdatribu)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdatribu" , cdatribu);
+		ComponenteVO comp = cotizacionDAO.cargarComponenteTatrisit(params);
+		logger.info(
+				new StringBuilder()
+				.append("\n###### componente=").append(comp)
+				.append("\n###### cargarComponenteTatrisit ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return comp;
+	}
+	
+	@Override
+	public ComponenteVO cargarComponenteTatrigar(String cdramo,String cdtipsit,String cdgarant,String cdatribu)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarComponenteTatrigar ######")
+				.append("\n###### cdramo=")  .append(cdramo)
+				.append("\n###### cdtipsit=").append(cdtipsit)
+				.append("\n###### cdgarant=").append(cdgarant)
+				.append("\n###### cdatribu=").append(cdatribu)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdgarant" , cdgarant);
+		params.put("cdatribu" , cdatribu);
+		ComponenteVO comp = cotizacionDAO.cargarComponenteTatrigar(params);
+		logger.info(
+				new StringBuilder()
+				.append("\n###### componente=").append(comp)
+				.append("\n###### cargarComponenteTatrigar ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return comp;
 	}
 	
 	///////////////////////////////
