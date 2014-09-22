@@ -362,12 +362,12 @@ Ext.onReady(function() {
                         	}
                         	
                         } else {
-                            Ext.Msg.show({
+                            centrarVentanaInterna(Ext.Msg.show({
                                    title: 'Aviso',
                                    msg: 'Complete la informaci&oacute;n requerida',
                                    buttons: Ext.Msg.OK,
                                    icon: Ext.Msg.WARNING
-                               });
+                               }));
                         }
                     }
               },
@@ -548,7 +548,7 @@ Ext.onReady(function() {
 				 	{ 	header: 'Descuento $',		    dataIndex: 'txtDescNum',			flex:2  	 ,renderer: Ext.util.Format.usMoney	},
 				 	{   header: 'Ajuste M&eacute;dico', dataIndex: 'txtAjusteMed',			flex:2       ,renderer: Ext.util.Format.usMoney	},
 				 	{ 	header: 'Subtotal Factura', 	dataIndex: 'txtSubTotalFac',		flex:2       ,renderer: Ext.util.Format.usMoney	},
-				 	{   header: 'Subtotal Ajustado',	dataIndex: 'txtSbubTotalAjuste',	flex:2   	 ,renderer: Ext.util.Format.usMoney	},
+				 	{   header: 'Subtotal Ajustado',	dataIndex: 'txtSbubTotalAjuste',	flex:2   	 ,renderer: Ext.util.Format.usMoney	}
 		 		]
 		 	});
  			this.callParent();
