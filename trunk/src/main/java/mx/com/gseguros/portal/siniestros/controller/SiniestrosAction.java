@@ -2941,7 +2941,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							mpdir.put("iSRMostrar",totalISRMostrar+"");
     							
     							////// modificado
-    							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
+    							double cedularaplicado   = subtotalCopago*(cedprov/100d);//++
     							logger.debug("cedularaplicado "+cedularaplicado);
     							row.put("CEDUAPLICA",cedularaplicado+"");
     							////// modificado
@@ -4191,7 +4191,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							mpdir.put("iSRMostrar",totalISRMostrar+"");
     							
     							////// modificado
-    							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
+    							double cedularaplicado   = subtotalCopago*(cedprov/100d);//++
     							logger.debug("cedularaplicado "+cedularaplicado);
     							row.put("CEDUAPLICA",cedularaplicado+"");
     							////// modificado
