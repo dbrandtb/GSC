@@ -340,7 +340,7 @@ Ext.onReady(function(){
                                                                                     if(json.success==true)
                                                                                     {
                                                                                         me.up().up().destroy();
-                                                                                        venExcluStoreDisp.remove(record)
+                                                                                        venExcluStoreDisp.remove(record);
                                                                                         venExcluStoreUsa.load();
                                                                                         //venExcluStoreUsa.add(record);
                                                                                         //Ext.getCmp('venExcluGridUsaId').getView().refresh();
@@ -713,7 +713,6 @@ Ext.onReady(function(){
                             {
                                 var record=venExcluStoreUsa.getAt(rowIndex);
                             	debug(record);
-                            	grid.setLoading(true);
                             	Ext.Ajax.request(
 	                            {
 	                                url     : venExcluUrlAddExclu
@@ -737,12 +736,10 @@ Ext.onReady(function(){
 	                                    var json=Ext.decode(response.responseText);
 	                                    if(json.success==true)
 	                                    {
-	                                    	grid.setLoading(false);
 	                                        venExcluStoreUsa.remove(record);
 	                                    }
 	                                    else
 	                                    {
-	                                    	grid.setLoading(false);
 	                                        Ext.Msg.show({
 	                                            title:'Error',
 	                                            msg: 'Error al quitar la cl&aacute;usula',
@@ -753,7 +750,6 @@ Ext.onReady(function(){
 	                                }
 	                                ,failure : function ()
 	                                {
-	                                	grid.setLoading(false);
 	                                    Ext.Msg.show({
 	                                        title:'Error',
 	                                        msg: 'Error de comunicaci&oacute;n',
