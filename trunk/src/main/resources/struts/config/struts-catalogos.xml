@@ -96,6 +96,16 @@
             </result>
         </action>
         
+        <action name="obtienerRolesPorPrivilegio" class="usuarioAction" method="obtienerRolesPorPrivilegio">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    lista.*,
+                    success
+                </param>
+            </result>
+	   </action>
+        
         <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
             <result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -107,6 +117,24 @@
         </action>
         
         <action name="guardaRolesUsuario" class="usuarioAction" method="guardaRolesUsuario">
+			<interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+		</action>
+
+        <action name="obtieneProductosAgente" class="usuarioAction" method="obtieneProductosAgente">
+            <result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+        </action>
+        
+        <action name="guardaProductosAgente" class="usuarioAction" method="guardaProductosAgente">
 			<interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -125,6 +153,16 @@
         </action>
         
         <action name="cambiarPasswordUsuario" class="usuarioAction" method="cambiarPasswordUsuarioLDAP">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    errorMessage
+                </param>
+            </result>
+        </action>
+
+        <action name="eliminaUsuarioLDAP" class="usuarioAction" method="eliminaUsuarioLDAP">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">

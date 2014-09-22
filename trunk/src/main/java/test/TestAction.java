@@ -75,40 +75,15 @@ public class TestAction extends PrincipalCoreAction {
             URL wsdlLocation = new URL("http://10.1.1.134:8000/folioserviciopublico-ws/servicios?wsdl");
             String targetNamespace="http://com.gs.folioserviciopublico.soap.folio";
             String name="FolioWSService";
-            WebServiceFeature feature = new WebServiceFeature() {
-				@Override
-				public String getID() {
-					return "1";
-				}
-			};
             service = new FolioWSService( wsdlLocation, new QName(targetNamespace, name));
-            //service = new FolioWSService();
             FolioWS port = service.getFolioWSPort();
             
-            // Añadimos capacidades de seguridad a la llamada:
-            //BindingProvider provider = (BindingProvider) port;
-            //provider.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, "user");   
-            //provider.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, "12345678");
-            
-            // Generamos los Datos de entrada:
             RequestFolio req = new RequestFolio();
             req.setNumFolio( Integer.parseInt(params.get("numfolio")) ); // 984452
             req.setSucursalAdmin( Integer.parseInt(params.get("sucursaladmin")) ); //120 
             
             // Invocamos el WS:
             responseFolio = port.validarFolio(req);
-            
-            /*
-            ResponseFolioVO respVO = new ResponseFolioVO();
-            respVO.setFolio(resp.getFolio());
-            respVO.setCodigo(resp.getCodigo());
-            respVO.setExito(resp.isExito());
-            respVO.setMensaje(resp.getMensaje());
-            */
-            
-            // Mostramos el resultado:
-            //System.out.println("resultado gral=" + ToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
-            //System.out.println("resultado folio=" + ToStringBuilder.reflectionToString(resp.getFolio(), ToStringStyle.MULTI_LINE_STYLE));
             
         } catch (MalformedURLException e ) {
             e.printStackTrace();
