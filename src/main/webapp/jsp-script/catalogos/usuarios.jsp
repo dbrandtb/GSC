@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Admin Usuarios</title>
+<title>Administracion de Usuarios y Agentes</title>
 <script>
 ///////////////////////
 ////// variables //////
@@ -15,8 +15,10 @@ var recargaGridUsuarios;
 var _UrlBusquedaUsuarios        = '<s:url namespace="/catalogos"    action="busquedaUsuarios" />';
 var _URL_LOADER_NUEVO_USUARIO   = '<s:url namespace="/catalogos"    action="includes/agregaUsuarios" />';
 var _URL_LOADER_EDITAR_ROLES    = '<s:url namespace="/catalogos"    action="includes/editarRolesUsuario" />';
+var _URL_LOADER_EDITAR_PRODUCTOS= '<s:url namespace="/catalogos"    action="includes/editarProductosAgente" />';
 var _UrlActivarDesactivarUsuario= '<s:url namespace="/catalogos"    action="activaDesactivaUsuario" />';
 var _UrlCambiaPasswordUsuario   = '<s:url namespace="/catalogos"    action="cambiarPasswordUsuario" />';
+var _UrlEliminaPasswordUsuario   = '<s:url namespace="/catalogos"    action="eliminaUsuarioLDAP" />';
 var _MSG_SIN_DATOS              = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS     = 'No hay datos para la b\u00FAsqueda actual.';
 
@@ -97,7 +99,7 @@ Ext.apply(Ext.form.field.VTypes, {
 	/*///////////////////*/
 	var panelUsuarios = Ext.create('Ext.form.Panel',
 	        {
-    	title : 'B&uacute;squeda de Usuarios'
+    	title : 'B&uacute;squeda de Usuarios/Agentes'
     	,layout :
     		{
     		type : 'table'
@@ -145,7 +147,7 @@ Ext.apply(Ext.form.field.VTypes, {
 	
 	var gridUsuarios = Ext.create('Ext.grid.Panel',
 	    {
-    	title : 'Usuarios'
+    	title : 'Usuarios/Agentes'
     	,height : 350
     	,selType: 'checkboxmodel'
     	,store : busquedaUsuariosStore
@@ -294,6 +296,7 @@ Ext.apply(Ext.form.field.VTypes, {
         },'-',{
             icon    : '${ctx}/resources/fam3icons/icons/key_add.png',
             text    : 'Cambiar Contrase&ntilde;a',
+            hidden  : true,
             handler : function()
             {
             	var model =  gridUsuarios.getSelectionModel();
@@ -411,6 +414,49 @@ Ext.apply(Ext.form.field.VTypes, {
             		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
             }
+        },{
+            icon    : '${ctx}/resources/fam3icons/icons/arrow_rotate_anticlockwise.png',
+            text    : 'Reiniciar Contrase&ntilde;a',
+            handler : function()
+            {
+            	var model =  gridUsuarios.getSelectionModel();
+            	if(model.hasSelection()){
+            		var record = model.getLastSelected();
+            		
+            		Ext.Msg.show({
+    		            title: 'Confirmar acci&oacute;n',
+    		            msg: '&iquest;Esta seguro que desea reiniciar la contrase&ntilde;a de este usuario?',
+    		            buttons: Ext.Msg.YESNO,
+    		            fn: function(buttonId, text, opt) {
+    		            	if(buttonId == 'yes') {
+    		            		
+    		            		Ext.Ajax.request({
+            						url: _UrlEliminaPasswordUsuario,
+            						params: {
+            					    		'user'  : model.getLastSelected().get('cdUsuario')
+            						},
+            						success: function(response, opt) {
+            							var jsonRes=Ext.decode(response.responseText);
+
+            							if(jsonRes.success == true){
+            								mensajeCorrecto('Aviso','Se ha reiniciado la contrase&ntilde;a correctamente.');
+                   						}else {
+                   							mensajeError('No se pudo reiniciar la contrase&ntilde;a del usuario.');
+                   						}
+            						},
+            						failure: function(){
+            							mensajeError('No se pudo reiniciar la contrase&ntilde;a del usuario.');
+            						}
+            					});
+    		            	}
+            			},
+    		            icon: Ext.Msg.QUESTION
+        			});
+            		
+            	}else{
+            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+            	}
+            }
         },'-',{
             icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
             text    : 'Ver/Editar Roles',
@@ -420,6 +466,10 @@ Ext.apply(Ext.form.field.VTypes, {
             	if(model.hasSelection()){
             		var record = model.getLastSelected();
             		
+            		if('EJECUTIVOCUENTA' == record.get('cdrol')){
+            			mensajeWarning('No se pueden editar los roles para un Agente.');
+            			return;
+            		}
             		windowLoader = Ext.create('Ext.window.Window',
                             {
                                 title        : 'Ver/Editar Roles del usuario: ' + record.get('cdUsuario')
@@ -440,6 +490,46 @@ Ext.apply(Ext.form.field.VTypes, {
                                     params: {
                                     	'params.cdusuario': record.get('cdUsuario'),
                                     	'params.esAgente':  ('EJECUTIVOCUENTA' == record.get('cdrol')) ? 'S':'N'
+                                    }
+                                }
+                            }).show();
+            		
+            	}else{
+            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+            	}
+            }
+        },'-',{
+            icon    : '${ctx}/resources/fam3icons/icons/database_add.png',
+            text    : 'Productos del Agente',
+            handler : function()
+            {
+            	var model =  gridUsuarios.getSelectionModel();
+            	if(model.hasSelection()){
+            		var record = model.getLastSelected();
+            		
+            		if('EJECUTIVOCUENTA' != record.get('cdrol')){
+            			mensajeWarning('No se pueden editar los productos para un usuario que no sea Agente.');
+            			return;
+            		}
+            		windowLoader = Ext.create('Ext.window.Window',
+                            {
+                                title        : 'Ver/Editar Productos del usuario: ' + record.get('cdUsuario')
+                                ,modal       : true
+                                ,buttonAlign : 'center'
+                                ,width       : 500
+                                ,height      : 350
+                                ,autoScroll  : true
+                                ,loader      :
+                                {
+                                    url       : _URL_LOADER_EDITAR_PRODUCTOS
+                                    ,scripts  : true
+                                    ,autoLoad : true
+                                    ,loadMask : true
+                                    ,ajaxOptions: {
+                                        method   : 'POST'
+                                    },
+                                    params: {
+                                    	'params.cdagente': record.get('cdUsuario')
                                     }
                                 }
                             }).show();

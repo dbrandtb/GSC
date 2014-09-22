@@ -1,11 +1,13 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -38,6 +40,7 @@ public class UsuarioAction extends PrincipalCoreAction{
 	private Item items;
 	
 	private List<UsuarioVO> usuarios;
+	private List<GenericVO> lista;
 	
 	private List<Map<String, String>> loadList;
     private List<Map<String, String>> saveList;
@@ -99,6 +102,9 @@ public class UsuarioAction extends PrincipalCoreAction{
     	try{
         	usuarioManager.guardaUsuario(params);
         	
+        	/**
+        	 *PARA CREAR EN LDAP USER PASS, Como el pass no se esta pidiendo por el momento no se crea hasta que el usuario se loguea por primer vez. 
+        	 *
         	if(Constantes.INSERT_MODE.equalsIgnoreCase(params.get("accion"))){
         		boolean existsUser = loginManager.validaUsuarioLDAP(true, params.get("cdusuari"), params.get("password"));
             	
@@ -110,6 +116,7 @@ public class UsuarioAction extends PrincipalCoreAction{
         			logger.info("Usuario Ya existia en LDAP, Consulte a soporte para modificar Password si es necesario.");
         		}
         	}
+        	*/
     		
         	success=true;
     	} catch(Exception e) {
@@ -155,10 +162,27 @@ public class UsuarioAction extends PrincipalCoreAction{
     	success=true;
     	return SUCCESS;
     }
+
+	public String eliminaUsuarioLDAP() throws Exception {
+		
+		logger.debug("Eliminando usuario para reset de password en LDAP, user: " + user);
+		try{
+			loginManager.eliminarUsuarioLDAP(user);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			errorMessage = "Error al resetear el password del usuario." + e.getMessage();
+		}
+		
+		success=true;
+		return SUCCESS;
+	}
 	
     public String obtieneUsuarios() throws Exception {
     	
     	try{
+    		UserVO usuario=(UserVO)session.get("USUARIO");
+    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getObjeto().getValue());
+    		
     		usuarios = usuarioManager.obtieneUsuarios(params);
     		success=true;
     	} catch(Exception e) {
@@ -166,9 +190,28 @@ public class UsuarioAction extends PrincipalCoreAction{
     		errorMessage = "Error al obtener usuarios. Intente m&aacute;s tarde";
     	}
     	
-    	logger.debug("Resultado de usuarios para la busqueda: "+ usuarios);
+    	//logger.debug("Resultado de usuarios para la busqueda: "+ usuarios);
     	return SUCCESS;
     }
+
+    public String obtienerRolesPorPrivilegio() throws Exception {
+    	
+    	try{
+    		UserVO usuario=(UserVO)session.get("USUARIO");
+    		
+    		params = new HashMap<String, String>();
+    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getObjeto().getValue());
+    		
+    		lista = usuarioManager.obtienerRolesPorPrivilegio(params);
+    		success=true;
+    	} catch(Exception e) {
+    		logger.error(e.getMessage(), e);
+    		errorMessage = "Error al obtener roles. Intente m&aacute;s tarde";
+    	}
+    	
+    	return SUCCESS;
+    }
+    
     public String obtieneRolesUsuario() throws Exception {
        	try {
        		loadList = usuarioManager.obtieneRolesUsuario(params);
@@ -193,6 +236,32 @@ public class UsuarioAction extends PrincipalCoreAction{
        	}
        	success = true;
        	return SUCCESS;
+       }
+
+       public String obtieneProductosAgente() throws Exception {
+    	   try {
+    		   loadList = usuarioManager.obtieneProductosAgente(params);
+    	   }catch( Exception e){
+    		   logger.error("Error en obtieneProductosAgente",e);
+    		   success =  false;
+    		   return SUCCESS;
+    	   }
+    	   success = true;
+    	   return SUCCESS;
+       }
+       
+       public String guardaProductosAgente(){
+    	   
+    	   try {
+    		   logger.debug("guardaRolesUsuario SaveList: "+ saveList);
+    		   usuarioManager.guardaProductosAgente(params, saveList);
+    	   }catch( Exception e){
+    		   logger.error("Error en guardaProductosAgente",e);
+    		   success =  false;
+    		   return SUCCESS;
+    	   }
+    	   success = true;
+    	   return SUCCESS;
        }
 
 
@@ -312,5 +381,13 @@ public class UsuarioAction extends PrincipalCoreAction{
 
 	public void setNewpassword(String newpassword) {
 		this.newpassword = newpassword;
+	}
+
+	public List<GenericVO> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<GenericVO> lista) {
+		this.lista = lista;
 	}
 }

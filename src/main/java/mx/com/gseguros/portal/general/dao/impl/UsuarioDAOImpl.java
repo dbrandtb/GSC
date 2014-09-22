@@ -16,6 +16,8 @@ import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
+import mx.com.gseguros.portal.general.dao.impl.CatalogosDAOImpl.ObtieneRolesSistema;
+import mx.com.gseguros.portal.general.dao.impl.CatalogosDAOImpl.ObtieneRolesSistemaMapper;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -217,7 +219,8 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class ObtieneUsuarios extends StoredProcedure {
 
 		protected ObtieneUsuarios(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_GET_USUARIOS");
+			super(dataSource, "PKG_GENERA_USUARIO.P_GET_USUARIOS_POR_PRIVILEGIOS");
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NOMBRE_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
@@ -255,6 +258,29 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
         }
     }
 
+    @Override
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map params) throws DaoException {
+		Map<String, Object> resultado = ejecutaSP(new ObtienerRolesPorPrivilegio(getDataSource()), params);
+		return (List<GenericVO>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtienerRolesPorPrivilegio extends StoredProcedure {
+		protected ObtienerRolesPorPrivilegio(DataSource dataSource) {
+			super(dataSource, "PKG_GENERA_USUARIO.P_BUSCA_ROL_POR_PRIVILEGIOS");
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesSistemaMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ObtieneRolesSistemaMapper implements RowMapper {
+		
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		return new GenericVO(rs.getString("CDSISROL"), rs.getString("DSSISROL"));
+    	}
+    }
     
     @Override
     public List<Map<String, String>> obtieneRolesUsuario(Map params) throws DaoException {
@@ -293,6 +319,47 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneProductosAgente(Map params) throws DaoException {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneProductosAgente(getDataSource()), params);
+		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneProductosAgente extends StoredProcedure {
+		
+		protected ObtieneProductosAgente(DataSource dataSource) {
+			super(dataSource, "PKG_GENERA_USUARIO.P_GET_RAMOS_AGENTE");
+			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String guardaProductoAgente(Map params)
+			throws DaoException {
+		logger.debug("Params guardaProductoAgente: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new GuardaProductoAgente(getDataSource()), params);
+		
+		return (String) mapResult.get("PV_TITLE_O");
+	}
+	
+	protected class GuardaProductoAgente extends StoredProcedure {
+		
+		protected GuardaProductoAgente(DataSource dataSource) {
+			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_MAGECOM");
+			
+			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
 		}
 	}

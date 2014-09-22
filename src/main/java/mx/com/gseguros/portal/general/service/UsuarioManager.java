@@ -21,9 +21,15 @@ public interface UsuarioManager {
 
 	public List<UsuarioVO> obtieneUsuarios(Map<String, String> params) throws Exception;
 	
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map<String, String> params) throws ApplicationException;
+	
 	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws ApplicationException;
 	
 	public boolean guardaRolesUsuario(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException;
+
+	public List<Map<String, String>> obtieneProductosAgente(Map<String, String> params) throws ApplicationException;
+	
+	public boolean guardaProductosAgente(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException;
 
     public List<RamaVO> getClientesRoles(String user)throws Exception;
 

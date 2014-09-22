@@ -55,6 +55,16 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	}
 
 	@Override
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map<String, String> params) throws ApplicationException{
+		try {
+			return usuarioDAO.obtienerRolesPorPrivilegio(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+		
+	}
+	
+	@Override
 	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws ApplicationException{
 		try {
 			return usuarioDAO.obtieneRolesUsuario(params);
@@ -73,6 +83,34 @@ public class UsuarioManagerImpl implements UsuarioManager {
 				params.put("PV_ACCION_I", rol.get("EXISTE_ROL"));
 				params.put("PV_CDSISROL_I", rol.get("CDSISROL"));
 				usuarioDAO.guardaRolUsuario(params);
+			} catch (DaoException daoExc) {
+				logger.error("Error al guardar Rol ",daoExc);
+				allUpdated = false;
+			}
+		}
+		
+		return allUpdated;
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneProductosAgente(Map<String, String> params) throws ApplicationException{
+		try {
+			return usuarioDAO.obtieneProductosAgente(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+		
+	}
+	
+	@Override
+	public boolean guardaProductosAgente(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException{
+		boolean allUpdated = true;
+		
+		for(Map<String, String> rol : saveList){
+			try {
+				params.put("PV_ACCION_I", rol.get("TIENE_CDRAMO"));
+				params.put("PV_CDRAMO_I", rol.get("CDRAMO"));
+				usuarioDAO.guardaProductoAgente(params);
 			} catch (DaoException daoExc) {
 				logger.error("Error al guardar Rol ",daoExc);
 				allUpdated = false;

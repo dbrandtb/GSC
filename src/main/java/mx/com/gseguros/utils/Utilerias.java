@@ -3,9 +3,13 @@ package mx.com.gseguros.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 
@@ -63,6 +67,36 @@ public class Utilerias {
 		}
 		
 		return cal;
+	}
+
+	/**
+	 * Convierte una fecha String a XMLGregorianCalendar
+	 * @param fecha String dd/MM/YYYY
+	 * @return devuelve objeto XMLGregorianCalendar
+	 */
+	public static XMLGregorianCalendar getXmlGregCalendar(String fecha, String dateFormat) {
+		
+		XMLGregorianCalendar xmlCal = null;
+		
+		try {
+			//Asumimos que tiene formato dd/MM/YYYY
+			//TODO:preparar este metodo  para otros formatos
+			if(Utilerias.esFechaValida(fecha, dateFormat)){
+				String [] fechaArr = fecha.split("/");   
+				int dia  =  Integer.parseInt(fechaArr[0]);
+				int mes  =  Integer.parseInt(fechaArr[1])-1;
+				int anio =  Integer.parseInt(fechaArr[2]);
+
+				xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar());
+				xmlCal.setDay(dia);
+				xmlCal.setMonth(mes);
+				xmlCal.setYear(anio);
+			}
+		} catch (Exception e) {
+			logger.error("Error al formatear la fecha", e);
+		}
+		
+		return xmlCal;
 	}
 	
 	public static boolean esFechaValida(String dateToValidate, String dateFromat){

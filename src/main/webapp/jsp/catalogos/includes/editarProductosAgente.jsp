@@ -5,27 +5,26 @@
 
 var _CONTEXT = '${ctx}';
 
-var _cdUsuario = '<s:property value="params.cdusuario" />';
-var _esAgente = 'N';
+var _cdAgente = '<s:property value="params.cdagente" />';
 
-var _URL_LoadRolesUsuario   = '<s:url namespace="/catalogos" action="obtieneRolesUsuario" />';
-var _URL_GuardaRolesUsuario = '<s:url namespace="/catalogos" action="guardaRolesUsuario" />';
+var _URL_LoadProductosAgente   = '<s:url namespace="/catalogos" action="obtieneProductosAgente" />';
+var _URL_GuardaProductosAgente = '<s:url namespace="/catalogos" action="guardaProductosAgente" />';
 
 Ext.onReady(function() {
 
-	Ext.define('modeloRoles',{
+	Ext.define('modeloProductos',{
         extend: 'Ext.data.Model',
-        fields: [{type:'string',    name:'CDSISROL'},
-                 {type:'string',    name:'DSSISROL'},
-                 {type:'boolean',   name:'EXISTE_ROL'}
+        fields: [{type:'string',    name:'CDRAMO'},
+                 {type:'string',    name:'DSRAMO'},
+                 {type:'boolean',   name:'TIENE_CDRAMO'}
 				]
     });
     
-    var storeRoles = Ext.create('Ext.data.JsonStore', {
-    	model:'modeloRoles',
+    var storeProductos = Ext.create('Ext.data.JsonStore', {
+    	model:'modeloProductos',
         proxy: {
             type: 'ajax',
-            url: _URL_LoadRolesUsuario,
+            url: _URL_LoadProductosAgente,
             reader: {
                 type: 'json',
                 root: 'loadList'
@@ -33,77 +32,67 @@ Ext.onReady(function() {
         }
     });
     
-    storeRoles.load({
+    storeProductos.load({
     	params: {
-    		'params.PV_CDUSUARIO_I' : _cdUsuario
+    		'params.PV_CDAGENTE_I' : _cdAgente
     	}
     });
     
-    var gridRoles = Ext.create('Ext.grid.Panel',{
-		//title: 'Roles del usuario',
-		renderTo : 'maindivRolesUsuario',
+    var gridProductos = Ext.create('Ext.grid.Panel',{
+		//title: 'Productos del Agente',
+		renderTo : 'maindivProductosAgente',
 		autoScroll: true,
-		store:  storeRoles,
+		store:  storeProductos,
 		//collapsible: true,
 		titleCollapse: true,
 		style: 'margin:0px',
 		height: 300,
-		columns       :[ { dataIndex  : 'CDSISROL', hidden: true},
-		                 { header     : 'Seleccione' ,dataIndex  : 'EXISTE_ROL', xtype: 'checkcolumn', menuDisabled : true, listeners: {
-		                	 beforecheckchange( chkcol, rowIndex, checked, eOpts ){
-		                		 alert(checked);
+		columns       :[ { dataIndex  : 'CDRAMO', hidden: true},
+		                 { header     : 'Seleccione' ,dataIndex  : 'TIENE_CDRAMO', xtype: 'checkcolumn', menuDisabled : true, listeners: {
+		                	 beforecheckchange: function (chkcol, rowIndex, checked, eOpts){
+		                		 if(!checked){
+		                			 recordChk = storeProductos.getAt(rowIndex);
+		                			 if(!recordChk.dirty){
+		                				 return false;	 
+		                			 }
+		                		 }
 		                	 }
 		                 } },
-		                 { header     : 'Rol del Sistema' ,dataIndex : 'DSSISROL', flex: 1 }
+		                 { header     : 'Productos' ,dataIndex : 'DSRAMO', flex: 1 }
 		 			   ],
 		buttonAlign: 'center', 
 		buttons:[{
-				text: 'Actualizar Roles',
+				text: 'Actualizar Productos',
 				icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
 				handler: function() {
-					if(_esAgente == 'N'){
 						
-						var almenos1rol = false;
-						storeRoles.each(function(record){
-							if(record.get('EXISTE_ROL')){
-								almenos1rol = true;
-								return false;
-							}
-						});
-						
-						if(!almenos1rol){
-							mensajeWarning('El usuario debe tener almenos un rol.');
-							return;
-						}
-					}
-					
 					var saveList = [];
-					storeRoles.getUpdatedRecords().forEach(function(record,index,arr){
+					storeProductos.getUpdatedRecords().forEach(function(record,index,arr){
 						//para convertir boolean a string ya que el server no lo convierte bien
-						record.data['EXISTE_ROL'] = record.get('EXISTE_ROL')==true?'I':'D';
+						record.data['TIENE_CDRAMO'] = record.get('TIENE_CDRAMO')==true?'I':'';
 						saveList.push(record.data);
 					});
 					
 					if(saveList.length == 0){
-						mensajeWarning('No se modificaron roles.');
+						mensajeWarning('No se agregaron Productos.');
 						return;
 					}
 					
-					gridRoles.setLoading(true);
+					gridProductos.setLoading(true);
 					Ext.Ajax.request({
-						url: _URL_GuardaRolesUsuario,
+						url: _URL_GuardaProductosAgente,
 						jsonData: {
 							params: {
-								'PV_CDUSUARIO_I' : _cdUsuario
+								'PV_CDAGENTE_I' : _cdAgente
 					    	},
 							saveList : 	saveList
 						},
 						success: function(response) {
 							var res = Ext.decode(response.responseText);
-							gridRoles.setLoading(false);
+							gridProductos.setLoading(false);
 							
 							if(res.success){
-								storeRoles.reload();
+								storeProductos.reload();
 								mensajeCorrecto('Aviso','Se ha guardado con exito.');
 								windowLoader.close();
 							}else{
@@ -112,7 +101,7 @@ Ext.onReady(function() {
 							
 						},
 						failure: function(){
-							gridRoles.setLoading(false);
+							gridProductos.setLoading(false);
 							mensajeError('No se pudo guardar.');
 						}
 					});
@@ -131,4 +120,4 @@ Ext.onReady(function() {
 
 </script>
 
-<div id="maindivRolesUsuario" style="height:300px;"></div>
+<div id="maindivProductosAgente" style="height:300px;"></div>

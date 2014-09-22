@@ -107,12 +107,13 @@ Ext.onReady(function(){
         			url: _URL_VALIDA_EXISTE_USUARIO,
     	        	waitMsg:'Procesando...',
     	        	failure: function(form, action) {
+    	        		dsPassword.reset();
 						loginForm.down('[name=passwordConfirm]').enable();
 						loginForm.down('[name=passwordConfirm]').show();
 						Ext.Msg.show({
 							title    : 'Aviso'
 							,icon    : Ext.Msg.INFO
-							,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de confirmar su contraseña.'
+							,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contraseña.'
 							,buttons : Ext.Msg.OK
 						});
 					},

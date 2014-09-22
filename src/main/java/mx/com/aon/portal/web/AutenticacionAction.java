@@ -120,11 +120,11 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 		} catch (AuthenticationException ax) {
 			logger.info(ax.getMessage());
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico, detalle: " + ax.getMessage();
 			return SUCCESS;
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico, detalle: " + ex.getMessage();
 			return SUCCESS;
 		}
 	}

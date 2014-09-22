@@ -20,9 +20,15 @@ public interface UsuarioDAO {
 
 	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException;
 	
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map params) throws DaoException;
+	
 	public List<Map<String, String>> obtieneRolesUsuario(Map params) throws DaoException;
 	
 	public String guardaRolUsuario(Map params) throws DaoException;
+
+	public List<Map<String, String>> obtieneProductosAgente(Map params) throws DaoException;
+	
+	public String guardaProductoAgente(Map params) throws DaoException;
 	
 	public List<UsuarioRolEmpresaVO> obtieneRolesCliente(String user) throws DaoException;
 

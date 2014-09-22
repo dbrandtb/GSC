@@ -11,8 +11,9 @@
             var _URL_INSERTA_PERSONA = '<s:url namespace="/catalogos" action="guardaUsuario" />';
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
+            var _URL_ROLES_SISTEMA_X_PRIVILEGIOS = '<s:url namespace="/catalogos" action="obtienerRolesPorPrivilegio" />';
+            
             var _CAT_AGENTES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
-            var _CAT_ROLES_SISTEMA = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_SISTEMA"/>';
             var _CAT_COLONIAS= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COLONIAS"/>';
             var _SEXO        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SEXO"/>';
             var ROL_AGENTE    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol" />';

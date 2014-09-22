@@ -1,5 +1,7 @@
 package mx.com.gseguros.ws.autosgs.service.impl;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,30 +18,31 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Agente;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Cobertura;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CodigoPostal;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.ConfiguracionPaquete;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Cotizacion;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CotizacionRequest;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.FormasDePago_type0;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.GuardarCotizacionResponse;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Inciso;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Paquete;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.SDTClientesSDTClientesItem;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.TipoProducto;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.TipoVehiculo;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.TotalFormaPago;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Version;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacion;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionE;
-import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionResponseE;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Agente;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Cobertura;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.CodigoPostal;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.ConfiguracionPaquete;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Cotizacion;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Cotizacion.FormasDePago;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.CotizacionIndividualWS;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.CotizacionIndividualWSService;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.CotizacionRequest;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.GuardarCotizacionResponse;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Inciso;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Paquete;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.SDTClientesSDTClientesItem;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.TipoProducto;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.TipoVehiculo;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.TotalFormaPago;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Version;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
+import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
+import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
+import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axiom.om.OMElement;
@@ -51,15 +54,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementacion de WS de Cotizacion y Emision de Autos
+ * Implementacion de WS de Cotizacion y Emision de Autos con JAXWS
  * @author Hector
  *
  */
 @Service
-@Qualifier("emisionAutosServiceImpl")
-public class EmisionAutosServiceImpl implements EmisionAutosService {
+@Qualifier("emisionAutosServiceJAXWSImpl")
+public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 
-	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceImpl.class);
+	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceJAXWSImpl.class);
 	
 	private static final long WS_TIMEOUT =  20000;
 	
@@ -113,7 +116,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
 				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
-				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setFinVigencia(Utilerias.getXmlGregCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 				
 				//idagente y sucursal
@@ -125,37 +128,37 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				//cve_cli
 				SDTClientesSDTClientesItem cliente = new SDTClientesSDTClientesItem();
 				datosCotizacionAuto.setCliente(cliente);
-				cliente.setCve_cli(Integer.valueOf(m.get("CVE_CLI").substring(m.get("CVE_CLI").length()-10)));
-				cliente.setFis_mor("");//null
-				cliente.setNom_cli("");//null
-				cliente.setApe_pat("");//null
-				cliente.setApe_mat("");//null
-				cliente.setRaz_soc("");//null
-				cliente.setAne_cli("");//null
-				cliente.setRfc_cli("");//null
-				cliente.setCve_ele("");//null
+				cliente.setCveCli(Integer.valueOf(m.get("CVE_CLI").substring(m.get("CVE_CLI").length()-10)));
+				cliente.setFisMor("");//null
+				cliente.setNomCli("");//null
+				cliente.setApePat("");//null
+				cliente.setApeMat("");//null
+				cliente.setRazSoc("");//null
+				cliente.setAneCli("");//null
+				cliente.setRfcCli("");//null
+				cliente.setCveEle("");//null
 				cliente.setCurpcli("");//null
-				cliente.setCal_cli("");//null
-				cliente.setNum_cli("");//null
+				cliente.setCalCli("");//null
+				cliente.setNumCli("");//null
 				cliente.setColonia("");//null
 				cliente.setPoblaci("");//null
-				cliente.setNac_ext("");//null
+				cliente.setNacExt("");//null
 				cliente.setTelefo1("");//null
 				cliente.setTelefo2("");//null
 				cliente.setTelefo3("");//null
-				cliente.setCor_ele("");//null
-				cliente.setPag_web("");//null
-				cliente.setFue_ing("");//null
-				cliente.setAdm_con("");//null
-				cliente.setCar_pub("");//null
-				cliente.setNom_car("");//null
-				cliente.setPer_car("");//null
-				cliente.setApo_cli("");//null
-				cliente.setDom_ori("");//null
-				cliente.setNum_pas("");//null
-				cliente.setSta_cli("");//null
+				cliente.setCorEle("");//null
+				cliente.setPagWeb("");//null
+				cliente.setFueIng("");//null
+				cliente.setAdmCon("");//null
+				cliente.setCarPub("");//null
+				cliente.setNomCar("");//null
+				cliente.setPerCar("");//null
+				cliente.setApoCli("");//null
+				cliente.setDomOri("");//null
+				cliente.setNumPas("");//null
+				cliente.setStaCli("");//null
 				
-				datosCotizacionAuto.setFormasDePago(new FormasDePago_type0());//null
+				datosCotizacionAuto.setFormasDePago(new FormasDePago());//null
 				
 				//codigo
 				CodigoPostal cp=new CodigoPostal();
@@ -209,7 +212,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
 				
 				//inicioVigencia
-				datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setInicioVigencia(Utilerias.getXmlGregCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
 				
 				//moneda
 				datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));
@@ -362,10 +365,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					//versionTarifa
 					confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
 					
-					List<Paquete> paquetesIncisoIterado = new ArrayList<Paquete>();
 					Paquete paqueteIncisoIterado        = new Paquete();
-					paquetesIncisoIterado.add(paqueteIncisoIterado);
-					
 					//idconfiguracionpaquete
 					paqueteIncisoIterado.setIdConfiguracionPaquete(Integer.valueOf(row.get("IDCONFIGURACIONPAQUETE")));
 					
@@ -380,64 +380,44 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					List<Map<String,String>>listaCoberturasIncisoIterado=listaRowCoberturaPorInciso.get(nmsituac);
 					
-					List<Cobertura>coberturasIncisoIterado=new ArrayList<Cobertura>();
 					
 					////// iterar cada cobertura //////
 					for(Map<String,String>rowCoberturaIncisoIterado:listaCoberturasIncisoIterado)
 					{
-						Cobertura coberturaIteradaPaqueteIncisoIterado=new Cobertura();
-						
+						Cobertura coberturaDeInciso=new Cobertura();
 						//idcobertura
-						coberturaIteradaPaqueteIncisoIterado.setIdCobertura(Integer.parseInt(rowCoberturaIncisoIterado.get("IDCOBERTURA")));
-						
+						coberturaDeInciso.setIdCobertura(Integer.parseInt(rowCoberturaIncisoIterado.get("IDCOBERTURA")));
 						//seleccionadocob
 						boolean seleccionadoCob = false;
 						if(StringUtils.isNotBlank(rowCoberturaIncisoIterado.get("SELECCIONADOCOB"))
-								&&rowCoberturaIncisoIterado.get("SELECCIONADOCOB").equalsIgnoreCase("TRUE"))
-						{
+								&&rowCoberturaIncisoIterado.get("SELECCIONADOCOB").equalsIgnoreCase("TRUE")) {
 							seleccionadoCob = true;
 						}
-						coberturaIteradaPaqueteIncisoIterado.setSeleccionado(seleccionadoCob);
-						
+						coberturaDeInciso.setSeleccionado(seleccionadoCob);
 						//deducible
-						coberturaIteradaPaqueteIncisoIterado.setDeducible(Double.valueOf(rowCoberturaIncisoIterado.get("DEDUCIBLE")));
-						
+						coberturaDeInciso.setDeducible(Double.valueOf(rowCoberturaIncisoIterado.get("DEDUCIBLE")));
 						//suma_asegurada
-						coberturaIteradaPaqueteIncisoIterado.setSuma_asegurada(Double.valueOf(rowCoberturaIncisoIterado.get("SUMA_ASEGURADA")));
-						
+						coberturaDeInciso.setSumaAsegurada(Double.valueOf(rowCoberturaIncisoIterado.get("SUMA_ASEGURADA")));
 						//prima_bruta
-						coberturaIteradaPaqueteIncisoIterado.setPrima_bruta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_BRUTA")));
-						
+						coberturaDeInciso.setPrimaBruta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_BRUTA")));
 						//prima_netacob
-						coberturaIteradaPaqueteIncisoIterado.setPrima_neta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_NETACOB")));
-						
+						coberturaDeInciso.setPrimaNeta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_NETACOB")));
 						//comision
-						coberturaIteradaPaqueteIncisoIterado.setComision(Double.valueOf(rowCoberturaIncisoIterado.get("COMISION")));
+						coberturaDeInciso.setComision(Double.valueOf(rowCoberturaIncisoIterado.get("COMISION")));
+						//coberturasIncisoIterado.add(coberturaIteradaPaqueteIncisoIterado);
+						paqueteIncisoIterado.getCoberturas().add(coberturaDeInciso);
+					}
+					
+					confPaq.getPaquetes().add(paqueteIncisoIterado);
 
-						coberturasIncisoIterado.add(coberturaIteradaPaqueteIncisoIterado);
-					}
-					
-					Cobertura[] listaCoberturasPaqueteAux=new Cobertura[coberturasIncisoIterado.size()];
-					for(int i=0;i<listaCoberturasPaqueteAux.length;i++)
-					{
-						listaCoberturasPaqueteAux[i]=coberturasIncisoIterado.get(i);
-					}
-					paqueteIncisoIterado.setCoberturas(listaCoberturasPaqueteAux);
-					
-					Paquete[]listaPaquetesIncisoIteradoAux=new Paquete[paquetesIncisoIterado.size()];
-					for(int i=0;i<listaPaquetesIncisoIteradoAux.length;i++)
-					{
-						listaPaquetesIncisoIteradoAux[i]=paquetesIncisoIterado.get(i);
-					}
-					confPaq.setPaquetes(listaPaquetesIncisoIteradoAux);
 				}
 				
 				Inciso[]incisosCotizacionAux=new Inciso[incisos.size()];
 				for(int i=0;i<incisosCotizacionAux.length;i++)
 				{
-					incisosCotizacionAux[i]=incisos.get(i);
+					datosCotizacionAuto.getIncisos().add(incisos.get(i));
 				}
-				datosCotizacionAuto.setIncisos(incisosCotizacionAux);
+				
 				
 			}
 		} catch (Exception e1) {
@@ -450,7 +430,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 				GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
 				
-				if(cotRes != null && cotRes.getExito()){
+				if(cotRes != null && cotRes.isExito()){
 					logger.debug("Respuesta de WS Cotizacion Codigo(): " +cotRes.getCodigo());
 					logger.debug("Respuesta de WS Cotizacion Mensaje(): " +cotRes.getMensaje());
 					
@@ -485,41 +465,48 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private WrapperResultadosWS ejecutaCotizacionAutosWS(Cotizacion datosCotizacionAuto) throws Exception{
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();
-		CotizacionIndividualWSServiceStub stubGS = null;
+		CotizacionIndividualWSService serviceCot = null;
+		CotizacionIndividualWS cotizacionInd = null; 
+		
+		logger.debug("INVICANDO COTIZACION CON JAXWS...");
 		
 		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpointCotiza));
-			stubGS = new CotizacionIndividualWSServiceStub(endpointCotiza);
-			stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: " + e.getMessage());
+			
+			logger.info(new StringBuffer("Endpoint a invocar=").append(endpointCotiza));
+			
+			URL wsdlLocation = new URL(endpointCotiza+"?wsdl");
+			String targetNamespace="http://com.gs.cotizador.ws.cotizacionindividual";
+            String name="CotizacionIndividualWSService";
+            serviceCot =  new CotizacionIndividualWSService(wsdlLocation, new QName(targetNamespace, name));
+//			serviceCot =  new CotizacionIndividualWSService(wsdlLocation);
+			cotizacionInd = serviceCot.getCotizacionIndividualWSPort();
+			
+			/**
+			 * TODO:
+			 * stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+			 */
+			
+		} catch (Exception e) {
+			logger.error("Error en WS JAXWS: " + e.getMessage(),e);
+			throw new Exception("Error de preparacion de JAXWS: " + e.getMessage());
 		}
 		
-		
 		CotizacionRequest cotizacionRequest = new CotizacionRequest();
-		cotizacionRequest.setCodigo(0);
 		cotizacionRequest.setCotizacion(datosCotizacionAuto);
 		
-		WsGuardarCotizacion wsGuardarCotizacion =  new WsGuardarCotizacion();
-		wsGuardarCotizacion.setArg0(cotizacionRequest);
-		
-		WsGuardarCotizacionE wsGuardarCotizacionE = new WsGuardarCotizacionE();
-		wsGuardarCotizacionE.setWsGuardarCotizacion(wsGuardarCotizacion);
-		
-		WsGuardarCotizacionResponseE wsGuardarCotizacionResponseE = null;
-		GuardarCotizacionResponse responseCot = null;
-		
 		try {
-			wsGuardarCotizacionResponseE = stubGS.wsGuardarCotizacion(wsGuardarCotizacionE);
-			responseCot = wsGuardarCotizacionResponseE.getWsGuardarCotizacionResponse().get_return();
-			resultWS.setResultadoWS(responseCot);
-			resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-			
-			logger.debug("Xml enviado para obtener Cotizacion de auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			GuardarCotizacionResponse resCot = cotizacionInd.wsGuardarCotizacion(cotizacionRequest);
+
+			resultWS.setResultadoWS(resCot);
+			/**
+			 * TODO: 
+			 * resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			 * logger.debug("Xml enviado para obtener Cotizacion de auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			 */
 			
 		} catch (Exception re) {
-			throw new WSException("Error de conexion Cotizacion Autos: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			throw new WSException("Error de conexion Cotizacion Autos: " + re.getMessage(), re, null/**TODO:
+			stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString()**/);
 		}
 		
 		return resultWS;

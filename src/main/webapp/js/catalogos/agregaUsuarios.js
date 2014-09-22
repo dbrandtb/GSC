@@ -78,8 +78,7 @@ Ext.onReady(function() {
 	                        autoLoad  : true,
 	                        proxy     : {
 	                            type        : 'ajax'
-	                            ,url        : _URL_CARGA_CATALOGO
-	                            ,extraParams: {catalogo:_CAT_ROLES_SISTEMA}
+	                            ,url        : _URL_ROLES_SISTEMA_X_PRIVILEGIOS
 	                            ,reader     :
 	                            {
 	                                type  : 'json'
@@ -372,9 +371,9 @@ Ext.onReady(function() {
 							    		fieldLabel : 'Fin de Licencia',
 							    		value      : _parametros.fefin
 							        }]
-					},
+					}/*,
 					dsPassword,
-					confirmPassword
+					confirmPassword*/
         ],
         buttonAlign: 'center',
 	    buttons: [{
