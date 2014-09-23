@@ -26,7 +26,16 @@ public interface IConsultasPolizaDAO {
 	 * @return El hist&oacute;rico (suplementos) de la p&oacute;liza
 	 * @throws Exception
 	 */
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex) throws Exception;
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex, String icodpoliza) throws Exception;
+	
+	
+	/**
+	 * 
+	 * @param polizaAsegurado
+	 * @return
+	 * @throws Exception
+	 */
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
 	
 	
 	/**
