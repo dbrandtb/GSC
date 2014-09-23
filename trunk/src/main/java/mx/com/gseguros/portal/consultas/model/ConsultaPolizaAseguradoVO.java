@@ -21,6 +21,10 @@ public class ConsultaPolizaAseguradoVO implements Serializable {
 	private String nmpoliza;
 	private String nombreAsegurado;
 	private String nmpoliex;
+	/**
+	 * C&oacute;digo de la p&oacute;liza usado en SISA 
+	 */
+	private String icodpoliza;
 	
 	
 	public String getCdunieco() {
@@ -87,8 +91,16 @@ public class ConsultaPolizaAseguradoVO implements Serializable {
 		this.nmpoliex = nmpoliex;
 	}
 
+	public String getIcodpoliza() {
+		return icodpoliza;
+	}
+
+	public void setIcodpoliza(String icodpoliza) {
+		this.icodpoliza = icodpoliza;
+	}
+
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-	}	
+	}
 		
 }
