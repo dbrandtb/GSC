@@ -3313,11 +3313,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		   				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"), siniestro.get("STATUS"), siniestro.get("AAAPERTU"), siniestro.get("NMSINIES") , facturaIte.get("NTRAMITE"));
     		   		
     		   		//3.- Guardamos los valores en calculosPenalizaciones
-    		   		List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(facturaIte.get("CDGARANT"),siniestro.get("CDRAMO"));
-    		   		String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
-    		   		String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
-    		   		
-    		   		calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
+    		   		Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
+    		   				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
+    		   				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"));
+    		   				
+    				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
+    				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
+    				calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
 					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
     				datosCoberturaxCal.add(calcxCobe);
     				
@@ -4563,10 +4565,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		   				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"), siniestro.get("STATUS"), siniestro.get("AAAPERTU"), siniestro.get("NMSINIES") , facturaIte.get("NTRAMITE"));
     		   		
     		   		//3.- Guardamos los valores en calculosPenalizaciones
-    		   		List<Map<String,String>>  DatosEntradaSiniestro = siniestrosManager.obtieneFormatoCalculo(facturaIte.get("CDGARANT"),siniestro.get("CDRAMO"));
-    		   		String tipoFormatoCalculo = DatosEntradaSiniestro.get(0).get("OTVALOR01");
-    		   		String calculosPenalizaciones = DatosEntradaSiniestro.get(0).get("OTVALOR02");
-    		   		
+    		   		Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
+    		   				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
+    		   				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"));
+    		   				
+    				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
+    				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
+    				
     		   		calcxCobe.put("tipoFormatoCalculo",""+tipoFormatoCalculo);
 					calcxCobe.put("calculosPenalizaciones",""+calculosPenalizaciones);
     				datosCoberturaxCal.add(calcxCobe);
