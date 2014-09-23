@@ -145,11 +145,18 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex) throws Exception {
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
+			String nmpoliex, String icodpoliza) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
@@ -157,5 +164,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
 
 }
