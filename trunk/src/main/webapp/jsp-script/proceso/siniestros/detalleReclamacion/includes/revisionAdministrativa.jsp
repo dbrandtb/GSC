@@ -1272,14 +1272,16 @@ Ext.define('EditorFacturas', {
  		}else{
  			panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue(record.get('APLICA_IVA'));
  	 		panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue(record.get('ANTES_DESPUES'));
- 	 		panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue(record.get('IVARETENIDO'));
- 	 		
+ 	 		//panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue(record.get('IVARETENIDO'));
+ 	 		if(record.get('IVARETENIDO')== null || record.get('IVARETENIDO') ==''){
+	 			panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
+ 			}else{
+ 				panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue(record.get('IVARETENIDO'));
+ 			}
+ 			
  	 		panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
  	 		panelEdicionFacturas.query('combo[name=parametros.pv_otvalor03]')[0].show();
  	 		if(record.get('APLICA_IVA') =="S"){
- 	 			if(record.get('IVARETENIDO')== null || record.get('IVARETENIDO') ==''){
- 	 				panelEdicionFacturas.down('[name="parametros.pv_otvalor03"]').setValue("N");
- 	 			}
  	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
  	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor03]')[0].show();
  	 		}else{
