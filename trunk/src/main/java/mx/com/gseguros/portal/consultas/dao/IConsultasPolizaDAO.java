@@ -9,17 +9,6 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 
 public interface IConsultasPolizaDAO {
 		
-	/**
-	 * Obtiene los datos de la p&oacute;liza
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @return
-	 * @throws Exception
-	 */
-    public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-	
     /**
      * Obtiene las polizas asociadas al asegurado
      * @param rfc RFC del asegurado
@@ -38,5 +27,28 @@ public interface IConsultasPolizaDAO {
 	 * @throws Exception
 	 */
 	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex) throws Exception;
+	
+	
+	/**
+	 * Obtiene los datos de la p&oacute;liza
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @return
+	 * @throws Exception
+	 */
+    public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodpoliza) throws Exception;
+    
+    
+    /**
+     * Obtiene los datos de la p&oacute;liza
+     * @param polizaAsegurado
+     * @return
+     * @throws Exception
+     */
+    public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
+    
+    
 	
 }
