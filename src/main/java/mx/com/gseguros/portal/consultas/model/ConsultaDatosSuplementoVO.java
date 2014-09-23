@@ -14,17 +14,60 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	
 	private static final long serialVersionUID = -8555353864912795413L;
 
-	
+	/**
+	 * Sucursal
+	 */
 	private String cdunieco;
+	
+	/**
+	 * Ramo
+	 */
 	private String cdramo;
+	
+	/**
+	 * Estado de la poliza
+	 */
 	private String estado;
+	
+	/**
+	 * Numero de la poliza
+	 */
 	private String nmpoliza;
+	
+	/**
+	 * Numero de Endoso-historico (formato largo)
+	 */
 	private String nmsuplem;
+	
+	/**
+	 * Fecha de inicio de vigencia del endoso
+	 */
 	private String feinival;
+	
+	/**
+	 * Numero consecutivo de endoso (formato corto)
+	 */
 	private String nsuplogi;
+	
+	/**
+	 * Fecha de emisión de la poliza
+	 */
 	private String feemisio;
+	
+	/**
+	 * TODO: // Investigar que es
+	 */
 	private String nlogisus;
+	
+	/**
+	 * Nombre del tipo de endoso
+	 */
 	private String dstipsup;
+	
+	
+	/**
+	 * Importe de prima total
+	 */
 	private String ptpritot;
 	
 	
