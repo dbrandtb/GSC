@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="endosos" namespace="/endosos" extends="default">
+        
+        <action name="principal" class="EndososAction" method="marco">
+            <result name="success">/jsp-script/proceso/endosos/marcoEndosos.jsp</result>
+        </action>
+        
+        <action name="obtenerEndosos" class="EndososAction" method="obtenerEndosos">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaEndosoCoberturas" class="EndososAction" method="pantallaEndosoCoberturas">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCoberturas.jsp   </result>
+        </action>
+        
+        <action name="pantallaEndosoDomicilio" class="EndososAction" method="pantallaEndosoDomicilio">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDomicilio.jsp    </result>
+        </action>
+        
+        <action name="pantallaEndosoDomicilioSimple" class="EndososAction" method="pantallaEndosoDomicilioSimple">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDomicilio.jsp    </result>
+        </action>
+        
+        <action name="pantallaEndosoNombres" class="EndososAction" method="pantallaEndosoNombres">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoNombres.jsp      </result>
+        </action>
+        
+        <action name="pantallaEndosoNombresSimple" class="EndososAction" method="pantallaEndosoNombresSimple">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoNombres.jsp      </result>
+        </action>
+        
+        <action name="guardarEndosoNombres" class="EndososAction" method="guardarEndosoNombres">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoNombresSimple" class="EndososAction" method="guardarEndosoNombresSimple">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoDomicilio" class="EndososAction" method="guardarEndosoDomicilio">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoDomicilioSimple" class="EndososAction" method="guardarEndosoDomicilioSimple">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerCoberturasDisponibles" class="EndososAction" method="obtenerCoberturasDisponibles">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoCoberturas" class="EndososAction" method="guardarEndosoCoberturas">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoValositBasico" class="EndososAction" method="endosoValositBasico">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoValositBasico" class="EndososAction" method="guardarEndosoValositBasico">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoValositBasicoSimple" class="EndososAction" method="endosoValositBasicoSimple">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoValositBasicoSimple" class="EndososAction" method="guardarEndosoValositBasicoSimple">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="visorPantallas" class="EndososAction" method="visorPantallas">
+            <result name="success">/jsp-script/proceso/endosos/visorPantallas.jsp</result>
+        </action>
+        
+        <action name="editorPantallas" class="EndososAction" method="editorPantallas">
+            <result name="success">/jsp-script/proceso/endosos/editorPantallas.jsp</result>
+        </action>
+        
+        <action name="obtenerParametrosPantalla" class="EndososAction" method="obtenerParametrosPantalla">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarParametrosPantalla" class="EndososAction" method="guardarParametrosPantalla">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaEndosoClausulas" class="EndososAction" method="pantallaEndosoClausulas">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp    </result>
+            <result name="success">/jsp-script/proceso/endosos/pantallaEndosoClausulas.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoClausulaPaso" class="EndososAction" method="guardarEndosoClausulaPaso">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaEndosoAltaBajaAsegurado" class="EndososAction" method="pantallaEndosoAltaBajaAsegurado">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp            </result>
+            <result name="success">/jsp-script/proceso/endosos/pantallaEndosoAltaBajaAsegurado.jsp</result>
+        </action>
+        
+        <action name="testpantalla" class="EndososAction" method="testpantalla">
+            <result name="success">/jsp-script/proceso/endosos/testpantalla.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoAltaBajaAsegurado" class="EndososAction" method="guardarEndosoAltaBajaAsegurado">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoEdad" class="EndososAction" method="endosoEdad">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoEdad.jsp         </result>
+        </action>
+        
+        <action name="guardarEndosoEdad" class="EndososAction" method="guardarEndosoEdad">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoSexo" class="EndososAction" method="endosoSexo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoSexo.jsp         </result>
+        </action>
+        
+        <action name="guardarEndosoSexo" class="EndososAction" method="guardarEndosoSexo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="autorizarEndoso" class="EndososAction" method="autorizarEndoso">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoDomicilioFull" class="EndososAction" method="endosoDomicilioFull">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDomicilioFull.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoDomicilioFull" class="EndososAction" method="guardarEndosoDomicilioFull">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoDeducible" class="EndososAction" method="endosoDeducible">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDeducible.jsp    </result>
+        </action>
+        
+        <action name="guardarEndosoDeducible" class="EndososAction" method="guardarEndosoDeducible">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoCopago" class="EndososAction" method="endosoCopago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCopago.jsp    </result>
+        </action>
+        
+        <action name="guardarEndosoCopago" class="EndososAction" method="guardarEndosoCopago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoReexpedicion" class="EndososAction" method="endosoReexpedicion">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoReexpedicion.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoReexpedicion" class="EndososAction" method="guardarEndosoReexpedicion">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoExtraprima" class="EndososAction" method="endosoExtraprima">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoExtraprima.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoExtraprima" class="EndososAction" method="guardarEndosoExtraprima">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoFormaPago" class="EndososAction" method="endosoFormaPago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoFormaPago.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoFormaPago" class="EndososAction" method="guardarEndosoFormaPago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="endosoAgente" class="EndososAction" method="endosoAgente">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoAgente.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoAgente" class="EndososAction" method="guardarEndosoAgente">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="cargarAgentesEndosoAgente" class="EndososAction" method="cargarAgentesEndosoAgente">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaRecibosSubsecuentes" class="EndososAction" method="pantallaRecibosSubsecuentes">
+            <result name="success">/jsp-script/proceso/endosos/pantallaRecibosSubsecuentes.jsp </result>
+        </action>
+        
+        <action name="habilitarRecibosSubsecuentes" class="EndososAction" method="habilitarRecibosSubsecuentes">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
+        <action name="pantallaJavaExterno" class="beanDatosComplementarios" method="pantallaJavaExterno">
+            <result name="success">/jsp-script/proceso/endosos/pantallaJavaExterno.jsp</result>
+        </action>
+        
+        <action name="operacionJavaExterno" class="beanDatosComplementarios" method="operacionJavaExterno">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaCompiladora" class="beanDatosComplementarios" method="pantallaCompiladora">
+            <result name="success">/jsp-script/proceso/endosos/pantallaCompiladora.jsp</result>
+        </action>
+        
+        <action name="compilarProceso" class="beanDatosComplementarios" method="compilarProceso">
+            <result name="success" type="json" />
+        </action>
+        
+    </package>
+
+</struts>
