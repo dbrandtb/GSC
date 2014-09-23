@@ -26,7 +26,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodPoliza) throws Exception {
     	
     	Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -138,6 +138,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     		polizaAsegurado.setNmpoliex(rs.getString("nmpoliex"));
     		polizaAsegurado.setNmpoliza(rs.getString("nmpoliza"));
     		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
+    		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE
     		return polizaAsegurado;
     	}
     }
@@ -145,6 +146,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 	@Override
 	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(String nmpoliex) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
