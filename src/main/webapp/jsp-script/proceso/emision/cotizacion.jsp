@@ -2271,16 +2271,37 @@ Ext.onReady(function()
         
         _fieldByName('feini').removeListener('change',_0_funcionFechaChange);
         
-        _fieldByName('feini').addListener('change',function()
+        _fieldByName('feini').on(
         {
-            if(Ext.isEmpty(_fieldByName('parametros.pv_otvalor20').getValue()))
+            change : function()
             {
-                mensajeWarning('Favor de capturar la vigencia');
+                if(Ext.isEmpty(_fieldByName('parametros.pv_otvalor20').getValue()))
+                {
+                    mensajeWarning('Favor de capturar la vigencia');
+                }
+                else
+                {
+                    _fieldByName('fefin').setValue(
+                        Ext.Date.add(
+                            _fieldByName('feini').getValue()
+                            ,Ext.Date.MONTH
+                            ,_fieldByName('parametros.pv_otvalor20').getValue()
+                        )
+                    );
+                }
             }
-            else
+        });
+        
+        _fieldByName('parametros.pv_otvalor20').getStore().on(
+        {
+            load : function()
             {
                 _fieldByName('fefin').setValue(
-                    Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+                    Ext.Date.add(
+                        _fieldByName('feini').getValue()
+                        ,Ext.Date.MONTH
+                        ,_fieldByName('parametros.pv_otvalor20').getValue()
+                    )
                 );
             }
         });
@@ -2667,6 +2688,7 @@ Ext.onReady(function()
     }
     
     //obtener minimos y maximo
+    /*
     _0_panelPri.setLoading(true);
     Ext.Ajax.request(
     {
@@ -2704,6 +2726,7 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
+    */
 });
 </script>
 </head>
