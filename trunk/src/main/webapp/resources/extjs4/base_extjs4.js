@@ -277,12 +277,12 @@ function heredarPanel(formPanel)
  */
 function centrarVentana(ventana)
 {
-	ventana.setPosition(ventana.getPosition()[0], $(window.parent).scrollTop() + 100);
+	ventana.setPosition(ventana.getPosition()[0], $(window.parent).scrollTop() + 50);
 }
 
 function centrarVentanaInterna(ventana)
 {
-	var y = $(window.parent).scrollTop() + 100;
+	var y = $(window.parent).scrollTop() + 50;
 	debug('y:',y);
 	ventana.setPosition(ventana.getPosition()[0],y);
 }
@@ -352,7 +352,16 @@ function consultaDinamica(accion,inParams,form,callback)
 function _fieldByName(name)
 {
     debug('_fieldByName:',name);
-    var comp=Ext.ComponentQuery.query('[name='+name+']')[Ext.ComponentQuery.query('[name='+name+']').length-1];
+    var comp;
+    var arr = Ext.ComponentQuery.query('[name='+name+']');
+    if(arr.length==0)
+    {
+        mensajeError('No se encuentra el campo con name "'+name+'"');
+    }
+    else
+    {
+        comp = arr[arr.length-1];
+    }
     debug('_fieldByName comp:',comp);
     return comp;
 }
@@ -360,8 +369,34 @@ function _fieldByName(name)
 function _fieldByLabel(label)
 {
     debug('_fieldByLabel:',label);
-    var comp=Ext.ComponentQuery.query('[fieldLabel='+label+']')[Ext.ComponentQuery.query('[fieldLabel='+label+']').length-1];
+    var comp;
+    var arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
+    if(arr.length==0)
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
+        comp = arr[arr.length-1];
+    }
     debug('_fieldByLabel comp:',comp);
+    return comp;
+}
+
+function _fieldLikeLabel(label)
+{
+    debug('_fieldLikeLabel:',label);
+    var comp;
+    var arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']');
+    if(arr.length==0)
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
+        comp = arr[arr.length-1];
+    }
+    debug('_fieldLikeLabel comp:',comp);
     return comp;
 }
 ////////////////////////////
