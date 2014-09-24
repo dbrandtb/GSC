@@ -145,6 +145,9 @@
         <!-- >tomcat -->
         <pattern>/reexpediciondocumentos/principal.action*</pattern>
         <!-- <tomcat -->
+        
+        <pattern>/renovacion/*.action</pattern>
+        <pattern>/jsp-script/proceso/renovacion/*.jsp</pattern>
 
    	</decorator>
 	

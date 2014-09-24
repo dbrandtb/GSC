@@ -34,6 +34,7 @@
     <include file="struts/config/struts-flujos-externos.xml"/>
     <include file="struts/config/struts-flujos-reexpedicion-documentos.xml"/>
     <include file="struts/config/struts-flujos-rehabilitacion.xml"/>
+    <include file="struts/config/struts-flujos-renovacion.xml"/>
     <include file="struts/config/struts-flujos-siniestros.xml"/>
     <include file="struts/config/struts-general.xml"/>
     <include file="struts/config/struts-mesacontrol.xml"/>
