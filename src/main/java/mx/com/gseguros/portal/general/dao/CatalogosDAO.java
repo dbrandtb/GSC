@@ -26,6 +26,10 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws DaoException;
 	
 	public List<GenericVO> obtieneColonias(String codigoPostal) throws DaoException;
+
+	public List<GenericVO> obtieneMunicipios(String cdEstado) throws DaoException;
+
+	public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws DaoException;
 	
 	public List<GenericVO> obtieneRolesSistema(String dsRol) throws DaoException;
 	
@@ -44,4 +48,8 @@ public interface CatalogosDAO {
 	public List<GenericVO> cargarAgentesPorPromotor(Map<String,String> params) throws Exception;
 	
 	public List<GenericVO> cargarServicioPublicoAutos(Map<String,String> params) throws Exception;
+	
+	public String agregaCodigoPostal(Map<String,String>params)throws Exception;
+
+	public String asociaZonaCodigoPostal(Map<String,String>params)throws Exception;
 }

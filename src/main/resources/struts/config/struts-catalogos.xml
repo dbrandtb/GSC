@@ -369,6 +369,25 @@
             </interceptor-ref>
             <result name="success" type="json" />
         </action>
+        
+        
+        <action name="obtieneMunicipiosEstado" class="catalogoAction" method="obtieneMunicipiosEstado">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    lista.*,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
+	   <action name="agregaCodigoPostal" class="catalogoAction" method="agregaCodigoPostal">
+            <result type="json" />
+       </action>
+
+	   <action name="asociaZonaCodigoPostal" class="catalogoAction" method="asociaZonaCodigoPostal">
+            <result type="json" />
+       </action>
 
 	</package>
 

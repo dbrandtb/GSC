@@ -32,7 +32,16 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneColonias(String codigoPostal) throws Exception {
 		return catalogosDAO.obtieneColonias(codigoPostal);
 	}
-	
+
+	@Override
+	public List<GenericVO> obtieneMunicipios(String cdEstado) throws Exception {
+		return catalogosDAO.obtieneMunicipios(cdEstado);
+	}
+
+	@Override
+	public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws Exception {
+		return catalogosDAO.obtieneZonasPorModalidad(cdtipsit);
+	}
 	
 	@Override
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu,
@@ -156,5 +165,17 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				+ "\n########################################"
 				);
 		return lista;
+	}
+	
+	@Override
+	public String agregaCodigoPostal(Map<String, String> params)throws Exception
+	{
+		return catalogosDAO.agregaCodigoPostal(params);
+	}
+
+	@Override
+	public String asociaZonaCodigoPostal(Map<String, String> params)throws Exception
+	{
+		return catalogosDAO.asociaZonaCodigoPostal(params);
 	}
 }
