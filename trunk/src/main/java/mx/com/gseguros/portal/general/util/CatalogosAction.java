@@ -65,6 +65,10 @@ public class CatalogosAction extends PrincipalCoreAction {
      */
     private Map<String, String> params;
 
+    /**
+     * Mensaje de respuesta del servicio
+     */
+    private String msgRespuesta;
     
     /**
      * Obtiene el catalogo solicitado en forma de una lista de VOs con llave y valor
@@ -85,6 +89,12 @@ public class CatalogosAction extends PrincipalCoreAction {
         			break;
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
+					break;
+        		case MUNICIPIOS:
+					lista = catalogosManager.obtieneMunicipios(params.get("cdestado"));
+					break;
+        		case ZONAS_POR_PRODUCTO:
+					lista = catalogosManager.obtieneZonasPorModalidad(params.get("cdtipsit"));
 					break;
         		case ANIOS_RENOVACION:
         		case CATCONCEPTO:
@@ -119,6 +129,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_RESIDENCIA:
 				case TRATAMIENTOS:
 				case TCUMULOS:
+				case TESTADOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
@@ -375,6 +386,36 @@ public class CatalogosAction extends PrincipalCoreAction {
         return SUCCESS;
 	}
     
+    public String agregaCodigoPostal()throws Exception{
+		
+		try{
+			catalogosManager.agregaCodigoPostal(params);
+		}catch(Exception ex){
+			logger.error("Error al agregaCodigoPostal",ex);
+			msgRespuesta = ex.getMessage();
+			success = false;
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+
+    public String asociaZonaCodigoPostal()throws Exception{
+    	
+    	try{
+    		catalogosManager.asociaZonaCodigoPostal(params);
+    	}catch(Exception ex){
+    		logger.error("Error al asociaZonaCodigoPostal",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+    
     
     // Getters and setters
 	public boolean isSuccess() {
@@ -445,6 +486,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 	public void setStoredProceduresManager(
 			StoredProceduresManager storedProceduresManager) {
 		this.storedProceduresManager = storedProceduresManager;
+	}
+
+	public String getMsgRespuesta() {
+		return msgRespuesta;
+	}
+
+	public void setMsgRespuesta(String msgRespuesta) {
+		this.msgRespuesta = msgRespuesta;
 	}
 	
 }

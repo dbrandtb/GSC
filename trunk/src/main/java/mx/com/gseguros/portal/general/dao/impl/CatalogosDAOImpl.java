@@ -102,6 +102,76 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	}
     }
 
+    public List<GenericVO> obtieneMunicipios(String cdEstado) throws DaoException {
+    	try {
+    		HashMap<String,Object> params =  new HashMap<String, Object>();
+    		params.put("pv_estado_i", cdEstado);
+    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneMunicipios(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+    	} catch (Exception e) {
+    		throw new DaoException(e.getMessage(), e);
+    	}
+    }
+    
+    protected class ObtieneMunicipios extends StoredProcedure {
+    	
+    	protected ObtieneMunicipios(DataSource dataSource) {
+    		super(dataSource, "PKG_LISTAS.P_GET_MUNICIPIOS_X_EDO");
+    		
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new MunicipiosMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class MunicipiosMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		GenericVO base = new GenericVO();	    
+    		base.setKey(rs.getString("CODIGO"));
+    		base.setValue(rs.getString("DESCRIPCION"));
+    		return base;
+    	}
+    }
+
+    public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws DaoException {
+    	try {
+    		HashMap<String,Object> params =  new HashMap<String, Object>();
+    		params.put("pv_cdtipsit_i", cdtipsit);
+    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneZonasPorModalidad(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+    	} catch (Exception e) {
+    		throw new DaoException(e.getMessage(), e);
+    	}
+    }
+    
+    protected class ObtieneZonasPorModalidad extends StoredProcedure {
+    	
+    	protected ObtieneZonasPorModalidad(DataSource dataSource) {
+    		super(dataSource, "PKG_LISTAS.___");
+    		
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ZonasMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class ZonasMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		GenericVO base = new GenericVO();	    
+    		base.setKey(rs.getString("CODIGO"));
+    		base.setValue(rs.getString("DESCRIPCION"));
+    		return base;
+    	}
+    }
+
 
 	@Override
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
@@ -506,4 +576,44 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		compile();
     	}
     }
+    
+    @Override
+	public String agregaCodigoPostal(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new AgregaCodigoPostal(getDataSource()), params);
+		return (String)resultado.get("pv_msg_id_o");
+	}
+	
+	protected class AgregaCodigoPostal extends StoredProcedure
+	{
+		protected AgregaCodigoPostal(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_CODIGO_POSTAL");
+			declareParameter(new SqlParameter("pv_cdpostal_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmunici_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String asociaZonaCodigoPostal(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new AsociaZonaCodigoPostal(getDataSource()), params);
+		return (String)resultado.get("pv_msg_id_o");
+	}
+	
+	protected class AsociaZonaCodigoPostal extends StoredProcedure
+	{
+		protected AsociaZonaCodigoPostal(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.___");
+			declareParameter(new SqlParameter("pv_cdpostal_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmunici_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

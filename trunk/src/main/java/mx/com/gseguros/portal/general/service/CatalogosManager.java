@@ -14,6 +14,10 @@ public interface CatalogosManager {
 	public List<GenericVO> getTmanteni(Catalogos catalogo) throws Exception;
 	
 	public List<GenericVO> obtieneColonias(String codigoPostal) throws Exception;
+
+	public List<GenericVO> obtieneMunicipios(String cdEstado) throws Exception;
+
+	public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws Exception;
 	
 	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception;
 
@@ -53,4 +57,8 @@ public interface CatalogosManager {
     public List<GenericVO> cargarAgentesPorPromotor(String cdusuari)throws Exception;
     
     public List<GenericVO> cargarServicioPublicoAutos(String substring,String cdramo,String cdtipsit)throws Exception;
+    
+    public String agregaCodigoPostal(Map<String, String> params)throws Exception;
+
+    public String asociaZonaCodigoPostal(Map<String, String> params)throws Exception;
 }
