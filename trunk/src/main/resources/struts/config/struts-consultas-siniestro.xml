@@ -13,9 +13,10 @@
             <result type="json"></result>
         </action>
         
-		<action name="includes/revAdmin" class="detalleSiniestroAction" method= "entradaRevisionAdmin">
+		<action name="includes/revAdmin" class="detalleSiniestroAction" method= "entradaRevisionAdminConsulta">
     		<result>/jsp/consultas/siniestros/includes/revisionAdministrativa.jsp</result>
 		</action>
+		
 		
 		<action name="includes/loadInfoGeneralReclamacion" class="detalleSiniestroAction" method="loadInfoGeneralReclamacion">
             <result>/jsp/consultas/siniestros/includes/informacionGeneral.jsp</result>
