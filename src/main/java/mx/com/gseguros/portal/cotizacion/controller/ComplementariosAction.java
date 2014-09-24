@@ -1933,6 +1933,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							)
 					{
 						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
@@ -2028,6 +2030,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							))
 					{
 						try
@@ -2423,6 +2427,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							)
 					{
 						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
@@ -2513,6 +2519,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							))
 					{
 						try
