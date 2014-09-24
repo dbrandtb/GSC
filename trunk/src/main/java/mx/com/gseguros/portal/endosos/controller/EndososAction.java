@@ -44,7 +44,7 @@ import com.opensymphony.xwork2.ActionContext;
 public class EndososAction extends PrincipalCoreAction
 {
 	private static final long        serialVersionUID = 84257834070419933L;
-	private static Logger            log              = Logger.getLogger(EndososAction.class);
+	private final static Logger      logger             = Logger.getLogger(EndososAction.class);
 	private boolean                  success          = false;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -77,14 +77,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////*/
 	public String marco()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n##############################"
 				+ "\n##############################"
 				+ "\n###### marco de endosos ######"
 				+ "\n######                  ######"
 				);
 		success=true;
-		log.debug(""
+		logger.debug(""
 				+ "\n######                  ######"
 				+ "\n###### marco de endosos ######"
 				+ "\n##############################"
@@ -101,13 +101,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////*/
 	public String obtenerEndosos()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n############################"
 				+ "\n############################"
 				+ "\n###### obtenerEndosos ######"
 				+ "\n######                ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			slist1=endososManager.obtenerEndosos(smap1);
@@ -115,10 +115,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener los endosos",ex);
+			logger.error("error al obtener los endosos",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                ######"
 				+ "\n###### obtenerEndosos ######"
 				+ "\n############################"
@@ -129,7 +129,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String validarCP()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n############################"
 				+ "\n############################"
 				+ "\n###### validarCP ######"
@@ -143,11 +143,11 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("Error en Valida CP",ex);
+			logger.error("Error en Valida CP",ex);
 			this.mensaje = ex.getMessage();
 			
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                ######"
 				+ "\n###### validarCP ######"
 				+ "\n############################"
@@ -180,12 +180,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoCoberturas() {
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n######################################")
 		        .append("\n######################################")
 		        .append("\n###### pantallaEndosoCoberturas ######")
 		        .append("\n######                          ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
@@ -195,7 +195,7 @@ public class EndososAction extends PrincipalCoreAction
 										TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 		error = resp.getMensaje();
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n######                          ######")
 		        .append("\n###### pantallaEndosoCoberturas ######")
 		        .append("\n######################################")
@@ -225,13 +225,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilio()
 	{
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n#####################################")
 		        .append("\n#####################################")
 		        .append("\n###### pantallaEndosoDomicilio ######")
 		        .append("\n######                         ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("session: ").append(session).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
@@ -251,7 +251,7 @@ public class EndososAction extends PrincipalCoreAction
 			item3=actionDomicilio.getItem3();
 		}
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n######                         ######")
 		        .append("\n###### pantallaEndosoDomicilio ######")
 		        .append("\n#####################################")
@@ -282,13 +282,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilioSimple() {
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n###########################################")
 				.append("\n###########################################")
 				.append("\n###### pantallaEndosoDomicilioSimple ######")
 				.append("\n######                               ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("session: ").append(session).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());
 		
 		String respuesta = ERROR;
 		endosoSimple = true;
@@ -328,12 +328,12 @@ public class EndososAction extends PrincipalCoreAction
 			
 			respuesta = SUCCESS;
 		} catch(Exception ex) {
-			log.error("error al cargar pantalla de endoso de valosit simple",ex);
+			logger.error("error al cargar pantalla de endoso de valosit simple",ex);
 			error=ex.getMessage();
 			respuesta = ERROR;
 		}
 			
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 			.append("\n######                               ######")
 			.append("\n###### pantallaEndosoDomicilioSimple ######")
 			.append("\n###########################################")
@@ -373,13 +373,13 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*///////////////////////////////////////*/
 	public String pantallaEndosoNombres() {
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n###################################")
 				.append("\n###################################")
 				.append("\n###### pantallaEndosoNombres ######")
 				.append("\n######                       ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(
@@ -387,7 +387,7 @@ public class EndososAction extends PrincipalCoreAction
 				TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 		error = resp.getMensaje();
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n###################################")
 				.append("\n###################################")
 				.append("\n###### pantallaEndosoNombres ######")
@@ -427,13 +427,13 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*///////////////////////////////////////*/
 	public String pantallaEndosoNombresSimple() {
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n#########################################")
 				.append("\n#########################################")
 				.append("\n###### pantallaEndosoNombresSimple ######")
 				.append("\n######                             ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 		
 		String respuesta = ERROR;
 		
@@ -463,12 +463,12 @@ public class EndososAction extends PrincipalCoreAction
 			
 			respuesta = SUCCESS;
 		} catch(Exception ex) {
-			log.error("Error al abrir la pantalla de endoso de nombres simple", ex);
+			logger.error("Error al abrir la pantalla de endoso de nombres simple", ex);
 			respuesta = ERROR;
 			error = ex.getMessage();
 		}
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n######                             ######")
 				.append("\n###### pantallaEndosoNombresSimple ######")
 				.append("\n#########################################")
@@ -489,14 +489,14 @@ public class EndososAction extends PrincipalCoreAction
 		 */
 		this.session=ActionContext.getContext().getSession();
         UserVO usuario=(UserVO) session.get("USUARIO");
-		log.debug(""
+		logger.debug(""
 				+ "\n##################################"
 				+ "\n##################################"
 				+ "\n###### guardarEndosoNombres ######"
 				+ "\n######                      ######"
 				);
-		log.debug("omap1: "+omap1);
-		log.debug("slist1: "+slist1);
+		logger.debug("omap1: "+omap1);
+		logger.debug("slist1: "+slist1);
 		try {
 			/*
 			 * ya viene en el omap1 desde el jsp:
@@ -576,13 +576,13 @@ public class EndososAction extends PrincipalCoreAction
 			    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
 			    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String nmsolici=docu.get("nmsolici");
 					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
@@ -605,13 +605,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -642,11 +642,11 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			success=true;
 		} catch(Exception ex) {
-			log.error("error al generar endoso de nombres",ex);
+			logger.error("error al generar endoso de nombres",ex);
 			success=false;
 			error=ex.getMessage();
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                      ######"
 				+ "\n###### guardarEndosoNombres ######"
 				+ "\n##################################"
@@ -663,13 +663,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////////*/
 	public String guardarEndosoNombresSimple() {
         
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n########################################")
 				.append("\n########################################")
 				.append("\n###### guardarEndosoNombresSimple ######")
 				.append("\n######                            ######").toString());
-		log.debug(new StringBuilder("omap1: ").append(omap1).toString());
-		log.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(new StringBuilder("omap1: ").append(omap1).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 		
 		// Se obtiene la sesion manualmente por el enableSMD de struts...xml:
 		this.session = ActionContext.getContext().getSession();
@@ -751,11 +751,11 @@ public class EndososAction extends PrincipalCoreAction
 			success = true;
 
 		} catch(Exception ex) {
-			log.error("Error al generar endoso de nombres simple",ex);
+			logger.error("Error al generar endoso de nombres simple",ex);
 			success = false;
 			error   = ex.getMessage();
 		}
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 				.append("\n######                            ######")
 				.append("\n###### guardarEndosoNombresSimple ######")
 				.append("\n########################################")
@@ -787,13 +787,13 @@ public class EndososAction extends PrincipalCoreAction
     ////// smap1.fecha_endoso           //////
 	/*//////////////////////////////////////*/
 	public String guardarEndosoClausulaPaso() {
-		log.debug(""
+		logger.debug(""
 				+ "\n#######################################"
 				+ "\n#######################################"
 				+ "\n###### guardarEndosoClausulaPaso ######"
 				+ "\n######                           ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			
@@ -865,13 +865,13 @@ public class EndososAction extends PrincipalCoreAction
 				    		,resEnd.get("pv_nmsuplem_o")
 				    		,TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString()
 				    		);
-				    log.debug("documentos que se regeneran: "+listaDocu);
+				    logger.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 				    
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
-						log.debug("docu iterado: "+docu);
+						logger.debug("docu iterado: "+docu);
 						String nmsolici=docu.get("nmsolici");
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
@@ -894,13 +894,13 @@ public class EndososAction extends PrincipalCoreAction
 							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 						}
-						log.debug(""
+						logger.debug(""
 								+ "\n#################################"
 								+ "\n###### Se solicita reporte ######"
 								+ "\na "+url+""
 								+ "\n#################################");
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						log.debug(""
+						logger.debug(""
 								+ "\n######                    ######"
 								+ "\n###### reporte solicitado ######"
 								+ "\na "+url+""
@@ -924,11 +924,11 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			success=true;
 		} catch(Exception ex) {
-			log.error("error al guardar endoso de clausula paso",ex);
+			logger.error("error al guardar endoso de clausula paso",ex);
 			success=false;
 			error=ex.getMessage();
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                           ######"
 				+ "\n###### guardarEndosoClausulaPaso ######"
 				+ "\n#######################################"
@@ -971,15 +971,15 @@ public class EndososAction extends PrincipalCoreAction
     //////                                          //////
 	/*//////////////////////////////////////////////////*/
 	public String guardarEndosoDomicilio() {
-		log.debug("\n#########################################"
+		logger.debug("\n#########################################"
 				+ "\n#########################################"
 				+ "\n###### guardar endoso de domicilio ######"
 				+ "\n######                             ######"
 				+ "\n######                             ######");
 		try {
-			log.debug("smap1: "+smap1);
-			log.debug("smap2: "+smap2);
-			log.debug("parametros: "+parametros);
+			logger.debug("smap1: "+smap1);
+			logger.debug("smap2: "+smap2);
+			logger.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
@@ -1107,13 +1107,13 @@ public class EndososAction extends PrincipalCoreAction
 			    		,resEndDomi.get("pv_nmsuplem_o")
 			    		,TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString()
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String nmsolici=docu.get("nmsolici");
 					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
@@ -1136,13 +1136,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -1175,11 +1175,11 @@ public class EndososAction extends PrincipalCoreAction
 			success=true;
 			
 		} catch(Exception ex) {
-			log.error("error al guardar los datos de endoso de domicilio",ex);
+			logger.error("error al guardar los datos de endoso de domicilio",ex);
 			success = false;
 			error = ex.getMessage();
 		}
-		log.debug("\n######                             ######"
+		logger.debug("\n######                             ######"
 				+ "\n######                             ######"
 				+ "\n###### guardar endoso de domicilio ######"
 				+ "\n#########################################"
@@ -1222,14 +1222,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////////////*/
 	public String guardarEndosoDomicilioSimple() {
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n##########################################")
 		        .append("\n##########################################")
 		        .append("\n###### guardarEndosoDomicilioSimple ######")
 		        .append("\n######                              ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("smap2: ").append(smap2).toString());
-		log.debug(new StringBuilder("parametros: ").append(parametros).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		logger.debug(new StringBuilder("parametros: ").append(parametros).toString());
 		
 		try {
 			
@@ -1366,12 +1366,12 @@ public class EndososAction extends PrincipalCoreAction
 			success=true;
 
 		} catch(Exception ex) {
-			log.error("error al guardar los datos de endoso de domicilio simple", ex);
+			logger.error("error al guardar los datos de endoso de domicilio simple", ex);
 			success = false;
 			error = ex.getMessage();
 		}
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 	        .append("\n######                              ######")
 	        .append("\n######                              ######")
 	        .append("\n###### guardarEndosoDomicilioSimple ######")
@@ -1388,23 +1388,23 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////*/
 	public String obtenerCoberturasDisponibles()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n##########################################"
 				+ "\n##########################################"
 				+ "\n###### obtenerCoberturasDisponibles ######"
 				+ "\n######                              ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			slist1=endososManager.obtieneCoberturasDisponibles(smap1);
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar las coberturas disponibles");
+			logger.error("error al cargar las coberturas disponibles");
 		}
 		success=true;
-		log.debug(""
+		logger.debug(""
 				+ "\n######                              ######"
 				+ "\n###### obtenerCoberturasDisponibles ######"
 				+ "\n##########################################"
@@ -1439,16 +1439,16 @@ public class EndososAction extends PrincipalCoreAction
 	//////,swrevalo,cdagrupa]      //////
 	/*/////////////////////////////////*/
 	public String guardarEndosoCoberturas() {
-		log.debug(""
+		logger.debug(""
 				+ "\n#####################################"
 				+ "\n#####################################"
 				+ "\n###### guardarEndosoCoberturas ######"
 				+ "\n######                         ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("omap1: "+omap1);
-		log.debug("slist1: "+slist1);
-		log.debug("slist2: "+slist2);
+		logger.debug("smap1: "+smap1);
+		logger.debug("omap1: "+omap1);
+		logger.debug("slist1: "+slist1);
+		logger.debug("slist2: "+slist2);
 		
 		this.session=ActionContext.getContext().getSession();
         UserVO usuario=(UserVO) session.get("USUARIO");
@@ -1611,7 +1611,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsValositAsegurado.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
 			paramsValositAsegurado.put("pv_nmsituac_i" , smap1.get("nmsituac"));
 			Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
-			log.debug("valosit anterior: "+valositAsegurado);
+			logger.debug("valosit anterior: "+valositAsegurado);
 			
 			//poner pv_ al anterior
 			Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
@@ -1621,7 +1621,7 @@ public class EndososAction extends PrincipalCoreAction
 				valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 			}
 			valositAsegurado=valositAseguradoIterado;
-			log.debug("se puso pv_ en el anterior");
+			logger.debug("se puso pv_ en el anterior");
 			
 			String cdtipsit=smap1.get("cdtipsit");
 			if(cdtipsit.equals(TipoSituacion.SALUD_VITAL.getCdtipsit())) {
@@ -1649,7 +1649,7 @@ public class EndososAction extends PrincipalCoreAction
 					valositAsegurado.put("pv_otvalor16",atriCober.get("OTVALOR16"));
 				}
 			}
-			log.debug("se agregaron los nuevos");
+			logger.debug("se agregaron los nuevos");
 			
 			//convertir a string el total que es object
 			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -1659,7 +1659,7 @@ public class EndososAction extends PrincipalCoreAction
 				Entry en=(Entry)it.next();
 				paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 			}
-			log.debug("se pasaron a string");
+			logger.debug("se pasaron a string");
 			
 			/*
 			pv_cdunieco
@@ -1683,7 +1683,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_status"   , "V");
 			paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
 			paramsNuevos.put("pv_accion_i" , "I");
-			log.debug("los actualizados seran: "+paramsNuevos);
+			logger.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
 			
 			/*
@@ -1766,13 +1766,13 @@ public class EndososAction extends PrincipalCoreAction
 				    		,respEndCob.get("pv_nmsuplem_o")
 				    		,auxTipMov
 				    		);
-				    log.debug("documentos que se regeneran: "+listaDocu);
+				    logger.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 				    
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
-						log.debug("docu iterado: "+docu);
+						logger.debug("docu iterado: "+docu);
 						String nmsolici=docu.get("nmsolici");
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
@@ -1795,13 +1795,13 @@ public class EndososAction extends PrincipalCoreAction
 							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 						}
-						log.debug(""
+						logger.debug(""
 								+ "\n#################################"
 								+ "\n###### Se solicita reporte ######"
 								+ "\na "+url+""
 								+ "\n#################################");
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						log.debug(""
+						logger.debug(""
 								+ "\n######                    ######"
 								+ "\n###### reporte solicitado ######"
 								+ "\na "+url+""
@@ -1848,11 +1848,11 @@ public class EndososAction extends PrincipalCoreAction
 			
 			success=true;
 		} catch(Exception ex) {
-			log.error("error al guardar el endoso de coberturas",ex);
+			logger.error("error al guardar el endoso de coberturas",ex);
 			success=false;
 			error=ex.getMessage();
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                         ######"
 				+ "\n###### guardarEndosoCoberturas ######"
 				+ "\n#####################################"
@@ -1878,12 +1878,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String entrarEndosoValositBasico()
 	{
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n#######################################")
 		        .append("\n#######################################")
 		        .append("\n###### entrarEndosoValositBasico ######")
 		        .append("\n######                     ############").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1));
+		logger.debug(new StringBuilder("smap1: ").append(smap1));
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(
@@ -1917,10 +1917,10 @@ public class EndososAction extends PrincipalCoreAction
 				item1=gc.getFields();
 				item2=gc.getItems();
 			} catch(Exception ex) {
-				log.error("error al mostrar la pantalla de valosit", ex);
+				logger.error("error al mostrar la pantalla de valosit", ex);
 			}
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                     ############"
 				+ "\n###### entrarEndosoValositBasico ######"
 				+ "\n#######################################"
@@ -1946,12 +1946,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String entrarEndosoValositBasicoSimple() {
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n##############################################")
 		        .append("\n##############################################")
 		        .append("\n###### entrarEndosoValositBasicoSimple ######")
 		        .append("\n######                           #############").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		endosoSimple = true;
 		String respuesta = ERROR;
@@ -2003,10 +2003,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			respuesta = ERROR;
 			error = ex.getMessage();
-			log.error("Error al mostrar la pantalla de valosit", ex);
+			logger.error("Error al mostrar la pantalla de valosit", ex);
 		}
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n######                           #############")
 		        .append("\n###### entrarEndosoValositBasicoSimple ######")
 		        .append("\n##############################################")
@@ -2032,14 +2032,14 @@ public class EndososAction extends PrincipalCoreAction
 	////// parametros: tvalosit          //////
 	/*///////////////////////////////////////*/
 	public String guardarEndosoValositBasico() {
-		log.debug(""
+		logger.debug(""
 				+ "\n########################################"
 				+ "\n########################################"
 				+ "\n###### guardarEndosoValositBasico ######"
 				+ "\n######                            ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("parametros: "+parametros);
+		logger.debug("smap1: "+smap1);
+		logger.debug("parametros: "+parametros);
 		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -2074,7 +2074,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
 			paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
 			Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
-			log.debug("valosit anterior: "+valositAsegurado);
+			logger.debug("valosit anterior: "+valositAsegurado);
 			
 			//poner pv_ al anterior
 			Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
@@ -2084,7 +2084,7 @@ public class EndososAction extends PrincipalCoreAction
 				valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 			}
 			valositAsegurado=valositAseguradoIterado;
-			log.debug("se puso pv_ en el anterior");
+			logger.debug("se puso pv_ en el anterior");
 			
 			//agregar los del form al leido
 			Iterator it2=parametros.entrySet().iterator();
@@ -2093,7 +2093,7 @@ public class EndososAction extends PrincipalCoreAction
 				valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
 				//ya agregamos todos los nuevos en el mapa
 			}
-			log.debug("se agregaron los nuevos");
+			logger.debug("se agregaron los nuevos");
 			
 			//convertir a string el total
 			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -2102,7 +2102,7 @@ public class EndososAction extends PrincipalCoreAction
 				Entry en=(Entry)it.next();
 				paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 			}
-			log.debug("se pasaron a string");
+			logger.debug("se pasaron a string");
 			
 			/*
 			pv_cdunieco
@@ -2125,7 +2125,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_status"   , "V");
 			paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
 			paramsNuevos.put("pv_accion_i" , "I");
-			log.debug("los actualizados seran: "+paramsNuevos);
+			logger.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
             
 			//////////////////////
@@ -2189,13 +2189,13 @@ public class EndososAction extends PrincipalCoreAction
 				    		,respEnd.get("pv_nmsuplem_o")
 				    		,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString()
 				    		);
-				    log.debug("documentos que se regeneran: "+listaDocu);
+				    logger.debug("documentos que se regeneran: "+listaDocu);
 				    
 				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 				    
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
-						log.debug("docu iterado: "+docu);
+						logger.debug("docu iterado: "+docu);
 						String nmsolici=docu.get("nmsolici");
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
@@ -2218,13 +2218,13 @@ public class EndososAction extends PrincipalCoreAction
 							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 						}
-						log.debug(""
+						logger.debug(""
 								+ "\n#################################"
 								+ "\n###### Se solicita reporte ######"
 								+ "\na "+url+""
 								+ "\n#################################");
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						log.debug(""
+						logger.debug(""
 								+ "\n######                    ######"
 								+ "\n###### reporte solicitado ######"
 								+ "\na "+url+""
@@ -2248,12 +2248,12 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			success=true;
 		} catch(Exception ex) {
-			log.error("error al guardar endosos de valosit basico",ex);
+			logger.error("error al guardar endosos de valosit basico",ex);
 			success=false;
 			error=ex.getMessage();
 		}
 		
-		log.debug(""
+		logger.debug(""
 				+ "\n######                            ######"
 				+ "\n###### guardarEndosoValositBasico ######"
 				+ "\n########################################"
@@ -2279,13 +2279,13 @@ public class EndososAction extends PrincipalCoreAction
 	////// parametros: tvalosit          //////
 	/*///////////////////////////////////////*/
 	public String guardarEndosoValositBasicoSimple() {
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n##############################################")
 		        .append("\n##############################################")
 		        .append("\n###### guardarEndosoValositBasicoSimple ######")
 		        .append("\n######                                  ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("parametros: ").append(parametros).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("parametros: ").append(parametros).toString());
 		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -2335,7 +2335,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsValositAsegurado.put("pv_nmpoliza_i", nmpoliza);
 			paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
 			Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
-			log.debug("valosit anterior: "+valositAsegurado);
+			logger.debug("valosit anterior: "+valositAsegurado);
 			
 			//poner pv_ al anterior
 			Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
@@ -2345,7 +2345,7 @@ public class EndososAction extends PrincipalCoreAction
 				valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 			}
 			valositAsegurado=valositAseguradoIterado;
-			log.debug("se puso pv_ en el anterior");
+			logger.debug("se puso pv_ en el anterior");
 			
 			//agregar los del form al leido
 			Iterator it2=parametros.entrySet().iterator();
@@ -2354,7 +2354,7 @@ public class EndososAction extends PrincipalCoreAction
 				valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
 				//ya agregamos todos los nuevos en el mapa
 			}
-			log.debug("se agregaron los nuevos");
+			logger.debug("se agregaron los nuevos");
 			
 			//convertir a string el total
 			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -2363,7 +2363,7 @@ public class EndososAction extends PrincipalCoreAction
 				Entry en=(Entry)it.next();
 				paramsNuevos.put((String)en.getKey(),(String)en.getValue());
 			}
-			log.debug("se pasaron a string");
+			logger.debug("se pasaron a string");
 			
 			/*
 			pv_cdunieco
@@ -2386,7 +2386,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_status"   , Constantes.STATUS_VIVO);
 			paramsNuevos.put("pv_cdtipsit" , cdtipsit);
 			paramsNuevos.put("pv_accion_i" , Constantes.INSERT_MODE);
-			log.debug("los actualizados seran: "+paramsNuevos);
+			logger.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
             
 			//////////////////////
@@ -2442,12 +2442,12 @@ public class EndososAction extends PrincipalCoreAction
 			success=true;
 			
 		} catch(Exception ex) {
-			log.error("error al guardar endosos de valosit basico simple", ex);
+			logger.error("error al guardar endosos de valosit basico simple", ex);
 			success = false;
 			error = ex.getMessage();
 		}
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
         .append("\n######                                  ######")
         .append("\n###### guardarEndosoValositBasicoSimple ######")
         .append("\n##############################################")
@@ -2464,7 +2464,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String editorPantallas()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n#############################"
 				+ "\n#############################"
 				+ "\n###### editorPantallas ######"
@@ -2493,9 +2493,9 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar la pantalla de alvaro",ex);
+			logger.error("error al cargar la pantalla de alvaro",ex);
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                 ######"
 				+ "\n###### editorPantallas ######"
 				+ "\n#############################"
@@ -2512,13 +2512,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	public String visorPantallas()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n############################"
 				+ "\n############################"
 				+ "\n###### visorPantallas ######"
 				+ "\n######                ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			List<ComponenteVO>lt=pantallasManager.obtenerComponentes(
@@ -2540,9 +2540,9 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al visualizar pantalla",ex);
+			logger.error("error al visualizar pantalla",ex);
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                ######"
 				+ "\n###### visorPantallas ######"
 				+ "\n############################"
@@ -2559,13 +2559,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////*/
 	public String obtenerParametrosPantalla()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n#######################################"
 				+ "\n#######################################"
 				+ "\n###### obtenerParametrosPantalla ######"
 				+ "\n######                           ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			slist1=pantallasManager.obtenerParametros(
@@ -2583,10 +2583,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener parametros pantalla",ex);
+			logger.error("error al obtener parametros pantalla",ex);
 			success=false;
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                           ######"
 				+ "\n###### obtenerParametrosPantalla ######"
 				+ "\n#######################################"
@@ -2603,14 +2603,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////*/
 	public String guardarParametrosPantalla()
 	{
-		log.debug(""
+		logger.debug(""
 				+ "\n#######################################"
 				+ "\n#######################################"
 				+ "\n###### guardarParametrosPantalla ######"
 				+ "\n######                           ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("slist1: "+slist1);
 		
 		String idpro  = System.currentTimeMillis() + "";
 		String accion = Constantes.DELETE_MODE;
@@ -2637,7 +2637,7 @@ public class EndososAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			accion = Constantes.DELETE_MODE;
-			log.error("error al guardar parametros pantalla",ex);
+			logger.error("error al guardar parametros pantalla",ex);
 			success=false;
 		}
 		
@@ -2658,9 +2658,9 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar parametros pantalla",ex);
+			logger.error("error al guardar parametros pantalla",ex);
 		}
-		log.debug(""
+		logger.debug(""
 				+ "\n######                           ######"
 				+ "\n###### guardarParametrosPantalla ######"
 				+ "\n#######################################"
@@ -2686,12 +2686,12 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoClausulas() {
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n##############################################")
 		        .append("\n##############################################")
 		        .append("\n###### pantalla de endosos de clausulas ######")
 		        .append("\n######                                  ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1));
+		logger.debug(new StringBuilder("smap1: ").append(smap1));
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("cdunieco"), smap1.get("cdramo"),
@@ -2699,7 +2699,7 @@ public class EndososAction extends PrincipalCoreAction
 				TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
 		error = resp.getMensaje();
 		
-		log.debug(new StringBuilder()
+		logger.debug(new StringBuilder()
 		        .append("\n######                                  ######")
 		        .append("\n###### pantalla de endosos de clausulas ######")
 		        .append("\n##############################################")
@@ -2735,12 +2735,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////////////////////////////*/
 	public String pantallaEndosoAltaBajaAsegurado() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n###############################################################")
 		        .append("\n###############################################################")
 		        .append("\n###### pantalla de endoso de alta y/o baja de asegurados ######")
 		        .append("\n######                                                   ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),
@@ -2792,10 +2792,10 @@ public class EndososAction extends PrincipalCoreAction
 					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 					{
 						String name=t.getNameCdatribu();
-						log.debug("se busca "+name+" en excluciones");
+						logger.debug("se busca "+name+" en excluciones");
 						if(!exclusiones.contains(name))
 						{
-							log.debug("no encontrado");
+							logger.debug("no encontrado");
 							tatriTemp.add(t);
 						}
 					}
@@ -2830,11 +2830,11 @@ public class EndososAction extends PrincipalCoreAction
 				////// campos de tatrisit para individual //////
 				////////////////////////////////////////////////
 			} catch(Exception ex) {
-				log.error("Error al mostrar pantalla de alta y/o baja de asegurados", ex);
+				logger.error("Error al mostrar pantalla de alta y/o baja de asegurados", ex);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n###### pantalla de endoso de alta y/o baja de asegurados ######")
 		        .append("\n######                                                   ######")
 		        .append("\n###############################################################")
@@ -2902,16 +2902,16 @@ public class EndososAction extends PrincipalCoreAction
 	{
 		this.session=ActionContext.getContext().getSession();
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n############################################"
 				+ "\n############################################"				
 				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
 				+ "\n######                                ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("smap2: "+smap2);
-		log.debug("smap3: "+smap3);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("smap3: "+smap3);
+		logger.debug("slist1: "+slist1);
 		try
 		{
 			UserVO usuario=(UserVO) session.get("USUARIO");
@@ -3216,7 +3216,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramValExtraprima.put("pv_nmpoliza_i" , nmpoliza);
 				paramValExtraprima.put("pv_nmsituac_i" , nmsituac);
 				String statusValidacionExtraprimas=(String) kernelManager.validarExtraprimaSituac(paramValExtraprima).getItemMap().get("status");
-				log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+				logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
 				if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
 				{
 					error="Favor de verificar las extraprimas y los endosos de extraprima";
@@ -3589,14 +3589,14 @@ public class EndososAction extends PrincipalCoreAction
 			    		    ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 			    		    : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
 				{
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -3618,13 +3618,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -3681,11 +3681,11 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al guardar endoso de alta o baja de asegurado", ex);
+			logger.error("error al guardar endoso de alta o baja de asegurado", ex);
 			success=false;
 			error=ex.getMessage();
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                                ######"
 				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
 				+ "\n############################################"
@@ -3719,7 +3719,7 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error en la prueba de pantalla dinamica",ex);
+			logger.error("error en la prueba de pantalla dinamica",ex);
 		}
 		return SUCCESS;
 	}
@@ -3740,13 +3740,13 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoEdad()
 	{
 		this.session=ActionContext.getContext().getSession();
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n############################")
 		        .append("\n############################")
 		        .append("\n###### endoso de edad ######")
 		        .append("\n######                ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(
@@ -3771,11 +3771,11 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put("modelo"   , gc.getFields());
 				imap1.put("columnas" , gc.getColumns());
 			} catch(Exception ex) {
-				log.error("error al cargar la pantalla de endoso de edad",ex);
+				logger.error("error al cargar la pantalla de endoso de edad",ex);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 	        .append("\n######                ######")
 	        .append("\n###### endoso de edad ######")
 	        .append("\n############################")
@@ -3800,15 +3800,15 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoEdad() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n####################################"
 				+ "\n####################################"
 				+ "\n###### guardar endoso de edad ######"
 				+ "\n######                        ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("smap2: "+smap2);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("slist1: "+slist1);
 		try {
 			String  cdunieco    = smap1.get("cdunieco");
 			String  cdramo      = smap1.get("cdramo");
@@ -3991,13 +3991,13 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmsuplem
 			    		,cdtipsup
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -4018,13 +4018,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -4064,11 +4064,11 @@ public class EndososAction extends PrincipalCoreAction
 			
 			success=true;
 		} catch(Exception ex) {
-			log.debug("error al guardar endoso de edad",ex);
+			logger.debug("error al guardar endoso de edad",ex);
 			success=false;
 			error=ex.getMessage();
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                        ######"
 				+ "\n###### guardar endoso de edad ######"
 				+ "\n####################################"
@@ -4095,14 +4095,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////*/
 	public String endosoSexo() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n#######################################")
 		        .append("\n#######################################")
 		        .append("\n###### endoso de camibio de sexo ######")
 		        .append("\n######                           ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("smap2: ").append(smap2).toString());
-		log.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 		
 		this.session = ActionContext.getContext().getSession();
 		
@@ -4129,11 +4129,11 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put("modelo"   , gc.getFields());
 				imap1.put("columnas" , gc.getColumns());
 			} catch(Exception ex) {
-				log.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
+				logger.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######                           ######")
 		        .append("\n###### endoso de camibio de sexo ######")
 		        .append("\n#######################################")
@@ -4158,15 +4158,15 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*//////////////////////////////////////////*/
 	public String guardarEndosoSexo() {
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n###############################################"
 				+ "\n###############################################"
 				+ "\n###### guardar endoso de camibio de sexo ######"
 				+ "\n######                                   ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("smap2: "+smap2);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("slist1: "+slist1);
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -4353,13 +4353,13 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmsuplem
 			    		,cdtipsup
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -4380,13 +4380,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -4428,9 +4428,9 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			success=false;
 			error=ex.getMessage();
-			log.error("error al guardar endoso de cambio de sexo",ex);
+			logger.error("error al guardar endoso de cambio de sexo",ex);
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                                   ######"
 				+ "\n###### guardar endoso de camibio de sexo ######"
 				+ "\n###############################################"
@@ -4487,12 +4487,12 @@ public class EndososAction extends PrincipalCoreAction
 			}
 		}
 		
-		log.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
-		log.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
+		logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
+		logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
 		
 		String estatusTramite = null;
 		if(diferenciaFechaActualVSEndoso > maximoDiasPermitidos) {
-			log.debug("************* El Endoso esta en espera, confirmado false");
+			logger.debug("************* El Endoso esta en espera, confirmado false");
 			estatusTramite = EstatusTramite.ENDOSO_EN_ESPERA.getCodigo();
 			respuesta.setConfirmado(false);
 		} else {
@@ -4511,7 +4511,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
 			respuesta.setConfirmado(true);
-			log.debug("************* El Endoso fue confirmado, confirmado true");
+			logger.debug("************* El Endoso fue confirmado, confirmado true");
 		}
 		
 		// Se inserta en la Mesa de Control:
@@ -4559,13 +4559,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////*/
 	public String autorizarEndoso()
 	{
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n##############################"
 				+ "\n##############################"
 				+ "\n###### autorizar endoso ######"
 				+ "\n######                  ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			String cdunieco    = smap1.get("cdunieco");
@@ -4606,7 +4606,7 @@ public class EndososAction extends PrincipalCoreAction
 		    		,nmsuplem
 		    		,cdtipsup
 		    		);
-		    log.debug("documentos que se regeneran: "+listaDocu);
+		    logger.debug("documentos que se regeneran: "+listaDocu);
 		    
 		    String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramiteEmi;
 		    String nmsolici    = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
@@ -4614,7 +4614,7 @@ public class EndososAction extends PrincipalCoreAction
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 			for(Map<String,String> docu:listaDocu)
 			{
-				log.debug("docu iterado: "+docu);
+				logger.debug("docu iterado: "+docu);
 				String descripc=docu.get("descripc");
 				String descripl=docu.get("descripl");
 				String url=this.getText("ruta.servidor.reports")
@@ -4636,13 +4636,13 @@ public class EndososAction extends PrincipalCoreAction
 					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 				}
-				log.debug(""
+				logger.debug(""
 						+ "\n#################################"
 						+ "\n###### Se solicita reporte ######"
 						+ "\na "+url+""
 						+ "\n#################################");
 				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
+				logger.debug(""
 						+ "\n######                    ######"
 						+ "\n###### reporte solicitado ######"
 						+ "\na "+url+""
@@ -4712,7 +4712,7 @@ public class EndososAction extends PrincipalCoreAction
 						(UserVO) session.get("USUARIO"));
 				break;
 			default:
-				log.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
+				logger.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
 				break;
 		}
 			
@@ -4722,9 +4722,9 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			success=false;
 			error=ex.toString();
-			log.error("error al autorizar el endoso: ",ex);
+			logger.error("error al autorizar el endoso: ",ex);
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                  ######"
 				+ "\n###### autorizar endoso ######"
 				+ "\n##############################"
@@ -4769,13 +4769,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////*/
 	public String endosoDomicilioFull() {
 		
-		log.info("endosoDomicilioFull()");
-		log.debug(new StringBuilder("\n")
+		logger.info("endosoDomicilioFull()");
+		logger.debug(new StringBuilder("\n")
 	        .append("\n#################################")
 	        .append("\n#################################")
 	        .append("\n###### endosoDomicilioFull ######")
 	        .append("\n######                     ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -4818,11 +4818,11 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put("fieldsDomicil" , gc.getFields());
 				
 			} catch(Exception ex) {
-				log.error("Error al cargar la pantalla de domicilio full",ex);
+				logger.error("Error al cargar la pantalla de domicilio full",ex);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 	        .append("\n######                     ######")
 	        .append("\n###### endosoDomicilioFull ######")
 	        .append("\n#################################")
@@ -4877,16 +4877,16 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////*/
 	public String guardarEndosoDomicilioFull() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n########################################"
 				+ "\n########################################"
 				+ "\n###### guardarEndosoDomicilioFull ######"
 				+ "\n######                            ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("smap2: "+smap2);
-		log.debug("smap3: "+smap3);
-		log.debug("parametros: "+parametros);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("smap3: "+smap3);
+		logger.debug("parametros: "+parametros);
 		try {
 			UserVO usuario      = (UserVO) session.get("USUARIO");
 			String cdelemento   = usuario.getEmpresa().getElementoId();
@@ -5078,13 +5078,13 @@ public class EndososAction extends PrincipalCoreAction
 			    		,nmsuplem
 			    		,TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString()
 			    		);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String nmsolici=docu.get("nmsolici");
 					//String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
@@ -5107,13 +5107,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -5154,12 +5154,12 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			success=true;
 		} catch(Exception ex) {
-			log.error("error al guardar los datos de endoso de domicilio full",ex);
+			logger.error("error al guardar los datos de endoso de domicilio full",ex);
 			success=false;
 			error=ex.getMessage();
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                            ######"
 				+ "\n###### guardarEndosoDomicilioFull ######"
 				+ "\n########################################"
@@ -5196,13 +5196,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////*/
 	public String endosoDeducible() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n#############################")
 		        .append("\n#############################")
 		        .append("\n###### endosoDeducible ######")
 		        .append("\n######                 ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -5249,7 +5249,7 @@ public class EndososAction extends PrincipalCoreAction
 						&&valositTitular.containsKey(llaveDeducible)
 						&&((String)valositTitular.get(llaveDeducible))!=null) {
 					String deducible=(String)valositTitular.get(llaveDeducible);
-					log.debug("deducible de la poliza: "+deducible);
+					logger.debug("deducible de la poliza: "+deducible);
 					smap1.put("deducible"    , deducible);
 					smap1.put("masdeducible" , smap2.get("masdeducible"));
 				} else {
@@ -5290,13 +5290,13 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put(llavePanelLectura,gc.getItems());
 				
 			} catch(Exception ex) {
-				log.error("Error al mostrar pantalla endoso deducible", ex);
+				logger.error("Error al mostrar pantalla endoso deducible", ex);
 				error = ex.getMessage();
 				resp.setSuccess(false);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######                 ######")
 		        .append("\n###### endosoDeducible ######")
 		        .append("\n#############################")
@@ -5335,14 +5335,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoDeducible() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n####################################"
 				+ "\n####################################"
 				+ "\n###### guardarEndosoDeducible ######"
 				+ "\n######                        ######"
 				);
-		log.debug("smap1:"+smap1);
-		log.debug("smap2:"+smap2);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
 		
 		try {
 			UserVO usuario    = (UserVO)session.get("USUARIO");
@@ -5451,10 +5451,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			error=ex.getMessage();
 			success=false;
-			log.error("error al guardar endoso de deducible",ex);
+			logger.error("error al guardar endoso de deducible",ex);
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                        ######"
 				+ "\n###### guardarEndosoDeducible ######"
 				+ "\n####################################"
@@ -5490,13 +5490,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	public String endosoCopago() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n##########################")
 		        .append("\n##########################")
 		        .append("\n###### endosoCopago ######")
 		        .append("\n######              ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -5543,7 +5543,7 @@ public class EndososAction extends PrincipalCoreAction
 						&&valositTitular.containsKey(llaveCopago)
 						&&((String)valositTitular.get(llaveCopago))!=null) {
 					String copago=(String)valositTitular.get(llaveCopago);
-					log.debug("copago de la poliza: "+copago);
+					logger.debug("copago de la poliza: "+copago);
 					smap1.put("copago"    , copago);
 					smap1.put("mascopago" , smap2.get("mascopago"));
 				} else {
@@ -5584,13 +5584,13 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put(llavePanelLectura,gc.getItems());
 				
 			} catch(Exception ex) {
-				log.error("error al mostrar pantalla endoso copago",ex);
+				logger.error("error al mostrar pantalla endoso copago",ex);
 				error = ex.getMessage();
 				resp.setSuccess(false);
 			}
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######              ######"
 				+ "\n###### endosoCopago ######"
 				+ "\n##########################"
@@ -5629,14 +5629,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoCopago() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n#################################"
 				+ "\n#################################"
 				+ "\n###### guardarEndosoCopago ######"
 				+ "\n######                     ######"
 				);
-		log.debug("smap1:"+smap1);
-		log.debug("smap2:"+smap2);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
 		
 		try
 		{
@@ -5745,10 +5745,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			error=ex.getMessage();
 			success=false;
-			log.error("error al guardar endoso de copago",ex);
+			logger.error("error al guardar endoso de copago",ex);
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                     ######"
 				+ "\n###### guardarEndosoCopago ######"
 				+ "\n#################################"
@@ -5790,7 +5790,7 @@ public class EndososAction extends PrincipalCoreAction
 	    		,nmsuplem
 	    		,cdtipsup
 	    		);
-	    log.debug("documentos que se regeneran: "+listaDocu);
+	    logger.debug("documentos que se regeneran: "+listaDocu);
 	    
 	    if(StringUtils.isBlank(ntramite))
 	    {
@@ -5801,7 +5801,7 @@ public class EndososAction extends PrincipalCoreAction
 		//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 		for(Map<String,String> docu:listaDocu)
 		{
-			log.debug("docu iterado: "+docu);
+			logger.debug("docu iterado: "+docu);
 			nmsolici = docu.get("nmsolici");
 			String descripc=docu.get("descripc");
 			String descripl=docu.get("descripl");
@@ -5825,13 +5825,13 @@ public class EndososAction extends PrincipalCoreAction
 				logger.debug("descripc: "+descripc+" descripc.lastIndexOf(_): "+descripc.lastIndexOf("_"));
 				url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 			}
-			log.debug(""
+			logger.debug(""
 					+ "\n#################################"
 					+ "\n###### Se solicita reporte ######"
 					+ "\na "+url+""
 					+ "\n#################################");
 			HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-			log.debug(""
+			logger.debug(""
 					+ "\n######                    ######"
 					+ "\n###### reporte solicitado ######"
 					+ "\na "+url+""
@@ -5871,12 +5871,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	public String endosoReexpedicion() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 	        .append("\n################################")
 	        .append("\n################################")
 	        .append("\n###### endosoReexpedicion ######")
 	        .append("\n######                    ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session = ActionContext.getContext().getSession();
 		
@@ -5923,13 +5923,13 @@ public class EndososAction extends PrincipalCoreAction
 				
 				imap1.put(keyItemsDatosEndoso,gc.getItems());
 			} catch(Exception ex) {
-				log.error("error al mostrar pantalla endoso reexpedicion",ex);
+				logger.error("error al mostrar pantalla endoso reexpedicion",ex);
 				error = ex.getMessage();
 				resp.setSuccess(false);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######                    ######")
 		        .append("\n###### endosoReexpedicion ######")
 		        .append("\n################################")
@@ -5984,15 +5984,15 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*//////////////////////////////////////*/
 	public String guardarEndosoReexpedicion() {
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n#######################################"
 				+ "\n#######################################"
 				+ "\n###### guardarEndosoReexpedicion ######"
 				+ "\n######                           ######"
 				);
-		log.debug("smap1:"+smap1);
-		log.debug("smap2:"+smap2);
-		log.debug("smap3:"+smap3);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
+		logger.debug("smap3:"+smap3);
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6043,13 +6043,13 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				
 				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			    log.debug("documentos que se regeneran: "+listaDocu);
+			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
-					log.debug("docu iterado: "+docu);
+					logger.debug("docu iterado: "+docu);
 					String nmsolici = docu.get("nmsolici");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
@@ -6071,13 +6071,13 @@ public class EndososAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
 					}
-					log.debug(""
+					logger.debug(""
 							+ "\n#################################"
 							+ "\n###### Se solicita reporte ######"
 							+ "\na "+url+""
 							+ "\n#################################");
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					log.debug(""
+					logger.debug(""
 							+ "\n######                    ######"
 							+ "\n###### reporte solicitado ######"
 							+ "\na "+url+""
@@ -6114,10 +6114,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			error=ex.getMessage();
 			success=false;
-			log.error("error al guardar endoso de reexpedicion",ex);
+			logger.error("error al guardar endoso de reexpedicion",ex);
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                           ######"
 				+ "\n###### guardarEndosoReexpedicion ######"
 				+ "\n#######################################"
@@ -6164,13 +6164,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	public String endosoExtraprima() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n##############################")
 		        .append("\n##############################")
 		        .append("\n###### endosoExtraprima ######")
 		        .append("\n######                  ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		log.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6219,7 +6219,7 @@ public class EndososAction extends PrincipalCoreAction
 					if(StringUtils.isBlank(extraprima)) {
 						extraprima="0";
 					}
-					log.debug("extraprima del asegurado: "+extraprima);
+					logger.debug("extraprima del asegurado: "+extraprima);
 					smap1.put("extraprima"    , extraprima);
 					smap1.put("masextraprima" , smap2.get("masextraprima"));
 				} else {
@@ -6260,13 +6260,13 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put(llavePanelLectura,gc.getItems());
 				
 			} catch(Exception ex) {
-				log.error("error al mostrar pantalla endoso extraprima",ex);
+				logger.error("error al mostrar pantalla endoso extraprima",ex);
 				error = ex.getMessage();
 				resp.setSuccess(false);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######                  ######")
 		        .append("\n###### endosoExtraprima ######")
 		        .append("\n##############################")
@@ -6325,15 +6325,15 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////////*/
 	public String guardarEndosoExtraprima() {
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n#####################################"
 				+ "\n#####################################"
 				+ "\n###### guardarEndosoExtraprima ######"
 				+ "\n######                         ######"
 				);
-		log.debug("smap1:"+smap1);
-		log.debug("smap2:"+smap2);
-		log.debug("slist1:"+slist1);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
+		logger.debug("slist1:"+slist1);
 		try {
 			UserVO usuario    = (UserVO)session.get("USUARIO");
 			String cdunieco   = smap1.get("CDUNIECO");
@@ -6376,7 +6376,7 @@ public class EndososAction extends PrincipalCoreAction
 			//pkg_satelites.valida_extraprima_situac_read
 			String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
 					cdunieco,cdramo, estado, nmpoliza, nmsituac, nmsuplem).getItemMap().get("status");
-			log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+			logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
 			if(statusValidacionExtraprimas.equalsIgnoreCase("N")) {
 				error="Favor de verificar las extraprimas y los endosos de extraprima";
 				throw new Exception(error);
@@ -6424,10 +6424,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			error=ex.getMessage();
 			success=false;
-			log.error("error al guardar endoso de extraprima",ex);
+			logger.error("error al guardar endoso de extraprima",ex);
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                         ######"
 				+ "\n###### guardarEndosoExtraprima ######"
 				+ "\n#####################################"
@@ -6461,12 +6461,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	public String endosoFormaPago() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n#############################")
 		        .append("\n#############################")
 		        .append("\n###### endosoFormaPago ######")
 		        .append("\n######                 ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6535,13 +6535,13 @@ public class EndososAction extends PrincipalCoreAction
 				smap1.put(llaveFechaInicio,renderFechas.format(fechaInicioEndoso));
 				
 			} catch(Exception ex) {
-				log.error("error al mostrar pantalla endoso forma pago",ex);
+				logger.error("error al mostrar pantalla endoso forma pago",ex);
 				error = ex.getMessage();
 				resp.setSuccess(false);
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######                    ######")
 		        .append("\n###### endosoFormaPago ######")
 		        .append("\n################################")
@@ -6581,15 +6581,15 @@ public class EndososAction extends PrincipalCoreAction
 	public String guardarEndosoFormaPago()
 	{
 		this.session=ActionContext.getContext().getSession();
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n####################################"
 				+ "\n####################################"
 				+ "\n###### guardarEndosoFormaPago ######"
 				+ "\n######                        ######"
 				);
-		log.debug("smap1:"+smap1);
-		log.debug("smap2:"+smap2);
-		log.debug("smap3:"+smap3);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
+		logger.debug("smap3:"+smap3);
 		try
 		{
 			UserVO usuario        = (UserVO)session.get("USUARIO");
@@ -6655,10 +6655,10 @@ public class EndososAction extends PrincipalCoreAction
 		} catch(Exception ex) {
 			error=ex.getMessage();
 			success=false;
-			log.error("error al guardar endoso de reexpedicion",ex);
+			logger.error("error al guardar endoso de reexpedicion",ex);
 		}
 		
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                        ######"
 				+ "\n###### guardarEndosoFormaPago ######"
 				+ "\n####################################"
@@ -6692,12 +6692,12 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	public String endosoAgente() {
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n##########################")
 		        .append("\n##########################")
 		        .append("\n###### endosoAgente ######")
 		        .append("\n######              ######").toString());
-		log.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6760,12 +6760,12 @@ public class EndososAction extends PrincipalCoreAction
 				////// campos pantalla //////
 				/////////////////////////////
 			} catch(Exception ex) {
-				log.error("error al cargar la pantalla de endoso de agente",ex);
+				logger.error("error al cargar la pantalla de endoso de agente",ex);
 				error=ex.getMessage();
 			}
 		}
 		
-		log.debug(new StringBuilder("\n")
+		logger.debug(new StringBuilder("\n")
 		        .append("\n######              ######")
 		        .append("\n###### endosoAgente ######")
 		        .append("\n##########################")
@@ -6782,13 +6782,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////*/
 	public String cargarAgentesEndosoAgente()
 	{
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n#######################################"
 				+ "\n#######################################"
 				+ "\n###### cargarAgentesEndosoAgente ######"
 				+ "\n######                           ######"
 				);
-		log.debug("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			String cdunieco = smap1.get("cdunieco");
@@ -6815,11 +6815,11 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar agentes para el endoso de agente",ex);
+			logger.error("error al cargar agentes para el endoso de agente",ex);
 			error=ex.getMessage();
 			success=false;
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                           ######"
 				+ "\n###### cargarAgentesEndosoAgente ######"
 				+ "\n#######################################"
@@ -6871,15 +6871,15 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*/////////////////////////////*/
 	public String guardarEndosoAgente() {
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n#################################"
 				+ "\n#################################"
 				+ "\n###### guardarEndosoAgente ######"
 				+ "\n######                     ######"
 				);
-		log.debug("smap1: "+smap1);
-		log.debug("smap2: "+smap2);
-		log.debug("slist1: "+slist1);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("slist1: "+slist1);
 		
 		this.session=ActionContext.getContext().getSession();
 		try {
@@ -6969,11 +6969,11 @@ public class EndososAction extends PrincipalCoreAction
 			success=true;
 			
 		} catch(Exception ex) {
-			log.error("Error al guardar endoso de agente", ex);
+			logger.error("Error al guardar endoso de agente", ex);
 			success = false;
 			error = ex.getMessage();
 		}
-		log.debug("\n"
+		logger.debug("\n"
 				+ "\n######                     ######"
 				+ "\n###### guardarEndosoAgente ######"
 				+ "\n#################################"
@@ -6987,7 +6987,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String pantallaRecibosSubsecuentes()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n#########################################"
 				+ "\n###### pantallaRecibosSubsecuentes ######"
 				);
@@ -7005,10 +7005,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar la pantalla de recibos subsecuentes",ex);
+			logger.error("error al cargar la pantalla de recibos subsecuentes",ex);
 		}
 		
-		log.info(""
+		logger.info(""
 				+ "\n###### pantallaRecibosSubsecuentes ######"
 				+ "\n#########################################"
 				);
@@ -7017,11 +7017,11 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String habilitarRecibosSubsecuentes()
 	{
-		log.info(""
+		logger.info(""
 				+ "\n##########################################"
 				+ "\n###### habilitarRecibosSubsecuentes ######"
 				);
-		log.info("smap1: "+smap1);
+		logger.info("smap1: "+smap1);
 		try
 		{
 			String cdunieco      = smap1.get("cdunieco");
@@ -7038,11 +7038,11 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al habilitar recibos subsecuentes",ex);
+			logger.error("error al habilitar recibos subsecuentes",ex);
 			mensaje=ex.getMessage();
 			success=false;
 		}
-		log.info(""
+		logger.info(""
 				+ "\n###### habilitarRecibosSubsecuentes ######"
 				+ "\n##########################################"
 				);
