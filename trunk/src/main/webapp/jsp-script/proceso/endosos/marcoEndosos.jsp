@@ -1081,6 +1081,7 @@ Ext.onReady(function()
     {
         autoLoad  : true
         ,model    : 'Liga'
+        ,pageSize : 50
         ,proxy    :
         {
             enablePaging  : true
@@ -1235,26 +1236,28 @@ Ext.onReady(function()
         	            var ligasSinAcceso = [];
         	            for(var i=0;i<marendStoreLigas.data.items.length;i++)
         	            {
-        	            	debug('Se busca el nombre de:',marendStoreLigas.data.items[i]);
+        	            	debug('Se busca el nombre de:',marendStoreLigas.data.items[i].get('texto')-0);
         	            	var acceso = false;
         	            	for(var j=0;j<json.lista.length;j++)
         	            	{
         	            		var cdtipsup = json.lista[j].key-0;
         	            		var dstipsup = json.lista[j].value;
-        	            		debug('en:',cdtipsup,dstipsup);
+        	            		//debug('en:',cdtipsup,dstipsup);
         	            		if(marendStoreLigas.data.items[i].get('texto')==cdtipsup)
         	            		{
         	            			acceso = true;
         	            			marendStoreLigas.data.items[i].set('texto',dstipsup);
+        	            			debug('Encontrado',cdtipsup,dstipsup);
         	            		}
         	            	}
         	            	if(!acceso
         	            			&&(marendStoreLigas.data.items[i].get('texto')+'').lastIndexOf('*')<0)
         	            	{
-        	            		debug('no se encontro');
+        	            	    debug('no encontrado!');
         	            		ligasSinAcceso.push(i-0);
         	            	}
         	            }
+        	            debug('ligas sin acceso:',ligasSinAcceso);
         	            for(var i=ligasSinAcceso.length-1;i>=0;i--)
         	            {
         	            	marendStoreLigas.removeAt(ligasSinAcceso[i]);
@@ -1412,13 +1415,13 @@ Ext.onReady(function()
                                         }
                                         else
                                         {
-                                            Ext.Msg.show(
+                                            centrarVentanaInterna(Ext.Msg.show(
                                             {
                                                 title    : 'Sin resultados'
                                                 ,msg     : 'No hay resultados'
                                                 ,icon    : Ext.Msg.WARNING
                                                 ,buttons : Ext.Msg.OK
-                                            });
+                                            }));
                                         }
                                     }
                                     ,failure : function()
