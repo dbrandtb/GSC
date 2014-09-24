@@ -140,8 +140,11 @@ Ext.onReady(function()
 	////// stores //////
 	
 	////// componentes //////
-	var totalglobal = 0.0;
-    
+	var totalglobal		 = 0.0;
+	var totalIVA		 = 0.0;
+	var totalISR 		 = 0.0;
+	var totalIVARet 	 = 0.0;
+	var totalImpCedular  = 0.0;
 	//PAGO DIRECTO
     if(_p12_smap.OTVALOR02=='1')
     {
@@ -251,6 +254,12 @@ Ext.onReady(function()
             	debug('copagoaplica',copagoaplica);
             	debug('total',total);
             	totalglobal = totalglobal + total;
+            	
+            	totalIVA 		 = totalIVA + iva;
+            	totalISR  		 = 0.0;
+            	totalIVARet 	 = totalIVARet + ivaRetenido;
+            	totalImpCedular  = 0.0;
+            	
             	var panelCuentas = Ext.create('Ext.panel.Panel',
             	{
             		title     : 'Resumen'
@@ -383,6 +392,11 @@ Ext.onReady(function()
             {
             	debug('PAGO DIRECTO');
             	totalglobal = totalglobal + _p12_lpdir[indice].total*1.0;
+            	totalIVA   = totalIVA + _p12_lpdir[indice].ivaTotalMostrar*1.0;
+            	totalISR = totalISR + _p12_lpdir[indice].iSRMostrar*1.0;
+            	totalIVARet = totalIVARet + _p12_lpdir[indice].ivaRetenidoMostrar*1.0;
+            	totalImpCedular = totalImpCedular + _p12_lpdir[indice].totalcedular*1.0;
+            	
             	var gridCuentas = Ext.create('Ext.grid.Panel',
             	{
             		store    : Ext.create('Ext.data.Store',
@@ -972,12 +986,18 @@ Ext.onReady(function()
 	
     _p12_paneles.push(Ext.create('Ext.form.Panel',
     {
-    	title     : 'TOTAL'
+    	title     : 'TOTAL PAGAR'
     	,defaults :
     	{
     		style : 'margin : 5px;'
     	}
-        ,layout : 'hbox'
+        //,layout : 'hbox'
+        ,layout  :
+        {
+        	type     : 'table'
+        	,columns : 1
+        }
+        	
     	,items    :
     	[
     	    {
@@ -985,6 +1005,50 @@ Ext.onReady(function()
     	    	,labelWidth : 200
     	    	,fieldLabel : 'TOTAL DEL TR&Aacute;MITE'
     	    	,value      : totalglobal
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IVA'
+    	    	,value      : totalIVA
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'ISR'
+    	    	,value      : totalISR
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IVA RETENIDO'
+    	    	,value      : totalIVARet
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IMPUESTO CEDULAR'
+    	    	,value      : totalImpCedular
     	    	,valueToRaw : function(value)
                 {
                     return Ext.util.Format.usMoney(value);

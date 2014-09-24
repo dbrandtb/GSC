@@ -187,6 +187,71 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   	return SUCCESS;
 	   }
 	
+	public String entradaRevisionAdminConsulta(){
+	try {
+			logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdrol    = "COORDINASINI";
+			String pantalla = "AFILIADOS_AGRUPADOS";
+			String seccion  = "COLUMNAS";
+			String cdunieco  = params.get("cdunieco");
+			String cdramo    = params.get("cdramo");
+			String estado    = params.get("estado");
+			String nmpoliza  = params.get("nmpoliza");
+			
+			List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
+				null, null, null, null, null, cdrol, pantalla, seccion, null);
+
+			for(ComponenteVO com:componentes)
+			{
+				com.setWidth(100);
+			}
+
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			imap = new HashMap<String,Item>();
+
+			List<ComponenteVO>tatrisin=kernelManager.obtenerTatrisinPoliza(cdunieco,cdramo,estado,nmpoliza);
+			gc.generaComponentes(tatrisin, true, false, true, false, false, false);
+			imap.put("tatrisinItems",gc.getItems());
+
+			gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(componentes, true, false, false, true,false, false);
+
+			imap.put("gridColumns",gc.getColumns());
+
+			pantalla = "DETALLE_FACTURA";
+			seccion  = "BOTONES_CONCEPTOS";
+
+			componentes = pantallasManager.obtenerComponentes(
+					null, null, null, null, null, cdrol, pantalla, seccion, null);
+
+			gc.generaComponentes(componentes, true, false, false, false,false, true);
+
+			imap.put("conceptosButton",gc.getButtons());
+
+			seccion = "FORM_EDICION";
+			componentes = pantallasManager.obtenerComponentes(
+					null, null, null, null, null, cdrol, pantalla, seccion, null);
+			gc.generaComponentes(componentes, true, false, true, false, false, false);
+			imap.put("itemsEdicion",gc.getItems());
+
+			pantalla = "RECHAZO_SINIESTRO";
+			seccion  = "FORMULARIO";
+			componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+			gc.generaComponentes(componentes, true, false, true, false, false, false);
+			imap.put("itemsCancelar",gc.getItems());
+
+			logger.debug("Resultado: "+imap);
+			//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
+		}catch( Exception e){
+			logger.error("Error en guardaListaTramites",e);
+			success =  false;
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+   }
+	
 	public String loadListaFacturasTramite(){
 	   	try {
 	   			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
