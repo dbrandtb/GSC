@@ -191,7 +191,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	try {
 			logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
 			UserVO usuario  = (UserVO)session.get("USUARIO");
-			String cdrol    = "COORDINASINI";
+			String cdrol    =  RolSistema.COORDINADOR_SINIESTROS.getCdsisrol();
 			String pantalla = "AFILIADOS_AGRUPADOS";
 			String seccion  = "COLUMNAS";
 			String cdunieco  = params.get("cdunieco");
