@@ -86,12 +86,14 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
+        		case ANIOS_RENOVACION:
         		case CATCONCEPTO:
         		case CAUSA_SINIESTRO:
         		case DESTINOPAGO:
         		case FORMAS_ASEGURAMIENTO:
         		case GIROS:
 				case MC_TIPOS_TRAMITE:
+				case MESES:
 				case MOTIVOS_CANCELACION:
 				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
