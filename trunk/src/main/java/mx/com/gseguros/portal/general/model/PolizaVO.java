@@ -46,6 +46,11 @@ public class PolizaVO implements Serializable {
 	 */
 	private String nmsituac;
 	
+	/**
+	 * C&oacute;digo de la p&oacute;liza usado en SISA 
+	 */
+	private String icodpoliza;
+	
 	
 	//Constructors:
 	
@@ -130,6 +135,14 @@ public class PolizaVO implements Serializable {
 
 	public void setNmsituac(String nmsituac) {
 		this.nmsituac = nmsituac;
+	}
+	
+	public String getIcodpoliza() {
+		return icodpoliza;
+	}
+
+	public void setIcodpoliza(String icodpoliza) {
+		this.icodpoliza = icodpoliza;
 	}
 
 	@Override
