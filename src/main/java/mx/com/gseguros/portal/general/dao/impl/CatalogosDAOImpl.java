@@ -608,9 +608,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected AsociaZonaCodigoPostal(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.___");
+			super(dataSource,"PKG_SATELITES.P_ASOCIA_ZONA_A_CODIPOS");
 			declareParameter(new SqlParameter("pv_cdpostal_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdmunici_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cvezona_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
