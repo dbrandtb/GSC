@@ -12,7 +12,9 @@ import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -161,6 +163,20 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
 			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CopagoVO> consultaCopagosPoliza(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String suplemento) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CopagoVO> consultaCopagosPoliza(PolizaVO poliza)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
