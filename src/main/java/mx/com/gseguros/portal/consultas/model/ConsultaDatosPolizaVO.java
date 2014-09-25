@@ -53,6 +53,10 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	 * Modalidad
 	 */
 	private String dstipsit;
+	/**
+	 * C&oacute;digo de la p&oacute;liza usado en SISA 
+	 */
+	private String icodpoliza;
 	
 	
 	public String toString(){
@@ -430,5 +434,17 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	public void setDstipsit(String dstipsit) {
 		this.dstipsit = dstipsit;
 	}
+
+
+	public String getIcodpoliza() {
+		return icodpoliza;
+	}
+
+
+	public void setIcodpoliza(String icodpoliza) {
+		this.icodpoliza = icodpoliza;
+	}
+	
+	
 	
 }
