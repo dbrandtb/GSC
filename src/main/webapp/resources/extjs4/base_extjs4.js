@@ -349,11 +349,36 @@ function consultaDinamica(accion,inParams,form,callback)
 	debug('<consultaDinamica');
 }
 
-function _fieldByName(name)
+function _fieldById(id)
+{
+    debug('_fieldById:',id);
+    var comp;
+    var arr = Ext.ComponentQuery.query('#'+id);
+    if(arr.length==0)
+    {
+        mensajeError('No se encuentra el campo con id "'+id+'"');
+    }
+    else
+    {
+        comp = arr[arr.length-1];
+    }
+    debug('_fieldById comp:',comp);
+    return comp;
+}
+
+function _fieldByName(name,parent)
 {
     debug('_fieldByName:',name);
     var comp;
-    var arr = Ext.ComponentQuery.query('[name='+name+']');
+    var arr = [];
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[name='+name+']',parent);
+    }
+    else
+    {
+        arr = Ext.ComponentQuery.query('[name='+name+']');
+    }
     if(arr.length==0)
     {
         mensajeError('No se encuentra el campo con name "'+name+'"');
@@ -366,11 +391,19 @@ function _fieldByName(name)
     return comp;
 }
 
-function _fieldByLabel(label)
+function _fieldByLabel(label,parent)
 {
     debug('_fieldByLabel:',label);
     var comp;
-    var arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
+    var arr = [];
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']',parent);
+    }
+    else
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
+    }
     if(arr.length==0)
     {
         mensajeError('No se encuentra el campo "'+label+'"');
@@ -383,11 +416,19 @@ function _fieldByLabel(label)
     return comp;
 }
 
-function _fieldLikeLabel(label)
+function _fieldLikeLabel(label,parent)
 {
     debug('_fieldLikeLabel:',label);
     var comp;
-    var arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']');
+    var arr = [];
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']',parent);
+    }
+    else
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']');
+    }
     if(arr.length==0)
     {
         mensajeError('No se encuentra el campo "'+label+'"');
