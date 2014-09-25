@@ -16,6 +16,7 @@ var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo
 var _CAT_ESTADOS  =       '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TESTADOS"/>';
 var _CAT_MUNICIPIOS =     '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MUNICIPIOS"/>';
 var _CAT_MODALIDADES =    '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
+var _CAT_ZONAS =          '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TZONAS"/>';
 var _CAT_ZONAS_POR_PRODUCTO = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ZONAS_POR_PRODUCTO"/>';
 
 var _MSG_SIN_DATOS = 'No hay datos';
@@ -177,10 +178,11 @@ Ext.onReady(function(){
 	
 	var storeZonas = Ext.create('Ext.data.Store', {
         model     : 'Generic',
+        autoLoad  : true,
         proxy     : {
             type        : 'ajax'
             ,url        : _URL_CARGA_CATALOGO
-            ,extraParams: {catalogo:_CAT_ZONAS_POR_PRODUCTO}
+            ,extraParams: {catalogo:_CAT_ZONAS}
             ,reader     :
             {
                 type  : 'json'
@@ -190,7 +192,7 @@ Ext.onReady(function(){
     });
 	
 	var modalidad = Ext.create('Ext.form.ComboBox', {
-    	name:'params.',
+    	name:'params.pv_cdtipsit_i',
     	fieldLabel: 'Modalidad',
     	queryMode:'local',
     	displayField: 'value',
@@ -215,18 +217,18 @@ Ext.onReady(function(){
         listeners: {
         	select: function(combo, records){
         		var selRecord = records[0];
-        		storeZonas.load({
+        		/*storeZonas.load({
         			params: {
         				'params.pv_cdtipsit_i': selRecord.get('key')
         			}
-        		});
+        		});*/
         	}
         }
    	});
 
 	
 	var zona = Ext.create('Ext.form.ComboBox', {
-    	name:'params.',
+    	name:'params.pv_cvezona_i',
     	fieldLabel: 'Zona',
     	queryMode:'local',
     	displayField: 'value',
@@ -295,7 +297,10 @@ Ext.onReady(function(){
 	
 	var tabs = Ext.create('Ext.tab.Panel', {
 	    width: 400,
-	    height: 400,
+	    height: 250,
+	    defaults : {
+			style : 'margin : 20px;'
+		},
 	    renderTo: 'mainDivCP',
 	    items: [panelCP, panelZonas]
 	});
