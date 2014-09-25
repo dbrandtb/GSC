@@ -9,10 +9,13 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class RenovacionAction extends PrincipalCoreAction
 {
@@ -124,8 +127,10 @@ public class RenovacionAction extends PrincipalCoreAction
 		
 		success = true;
 		
-		String anio = null;
-		String mes  = null;
+		String cdunieco = null;
+		String cdramo   = null;
+		String anio     = null;
+		String mes      = null;
 		
 		//datos completos
 		try
@@ -134,8 +139,10 @@ public class RenovacionAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException("No se recibieron datos");
 			}
-			anio = smap1.get("anio");
-			mes  = smap1.get("mes");
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			anio     = smap1.get("anio");
+			mes      = smap1.get("mes");
 			if(StringUtils.isBlank(anio))
 			{
 				throw new ApplicationException("No se recibio el año");
@@ -165,7 +172,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		//proceso
 		if(success)
 		{
-			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovables(anio,mes);
+			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovables(cdunieco,cdramo,anio,mes);
 			success         = managerResp.isExito();
 			respuesta       = managerResp.getRespuesta();
 			respuestaOculta = managerResp.getRespuestaOculta();
@@ -180,6 +187,70 @@ public class RenovacionAction extends PrincipalCoreAction
 				.append("\n###### slist1=").append(slist1)
 				.append("\n###### buscarPolizasRenovables ######")
 				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String renovarPolizas()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n############################")
+				.append("\n###### renovarPolizas ######")
+				.append("\n###### slist1=").append(slist1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		//datos completos
+		try
+		{
+			session=ActionContext.getContext().getSession();
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			if(slist1==null||slist1.size()==0)
+			{
+				throw new ApplicationException("No se recibieron polizas");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error inesperado al obtener datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp = renovacionManager.renovarPolizas(slist1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### renovarPolizas ######")
+				.append("\n############################")
 				.toString()
 				);
 		return SUCCESS;
