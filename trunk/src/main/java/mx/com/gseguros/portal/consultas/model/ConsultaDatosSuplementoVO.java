@@ -70,6 +70,11 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	 */
 	private String ptpritot;
 	
+	/**
+	 * C&oacute;digo de la p&oacute;liza usado en SISA 
+	 */
+	private String icodpoliza;
+	
 	
 	public String getNmsuplem() {
 		return nmsuplem;
@@ -137,6 +142,12 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	}
 	public void setNmpoliza(String nmpoliza) {
 		this.nmpoliza = nmpoliza;
+	}
+	public String getIcodpoliza() {
+		return icodpoliza;
+	}
+	public void setIcodpoliza(String icodpoliza) {
+		this.icodpoliza = icodpoliza;
 	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
