@@ -19,6 +19,10 @@ var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='f
 var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
 var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='false' />; //Informacion de penalizacion
 
+var _CAUSA_ACCIDENTE = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
+var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
+var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+
 debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
@@ -141,9 +145,12 @@ Ext.onReady(function()
 	
 	////// componentes //////
 	var totalglobal = 0.0;
-    
+	var totalIVA		 = 0.0;
+	var totalISR 		 = 0.0;
+	var totalIVARet 	 = 0.0;
+	var totalImpCedular  = 0.0;
 	//PAGO DIRECTO
-    if(_p12_smap.OTVALOR02=='1')
+    if(_p12_smap.OTVALOR02== _TIPO_PAGO_DIRECTO)
     {
         debug('PAGO DIRECTO');
         var indice;
@@ -202,7 +209,8 @@ Ext.onReady(function()
             });
             panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
             //if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
-            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1"){
+            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1")
+            {
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             	var importe   = (_p12_lhosp[indice].PRECIO*1.0);
@@ -215,7 +223,7 @@ Ext.onReady(function()
             	var deducible = 0;
             	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
             	
-            	if(causaSiniestro !="2"){
+            	if(causaSiniestro != _CAUSA_ACCIDENTE){
             		if(
                 			!(!sDeducible
                 			||sDeducible.toLowerCase()=='na'
@@ -228,7 +236,7 @@ Ext.onReady(function()
             	
             	var subttDedu = subttDesc - deducible;
             	
-            	if(causaSiniestro !="2"){
+            	if(causaSiniestro != _CAUSA_ACCIDENTE){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
             		
@@ -250,6 +258,10 @@ Ext.onReady(function()
             	debug('copagoaplica',copagoaplica);
             	debug('total',total);
             	totalglobal = totalglobal + total;
+            	totalIVA 		 = totalIVA + iva;
+            	totalISR  		 = 0.0;
+            	totalIVARet 	 = totalIVARet + ivaRetenido;
+            	totalImpCedular  = 0.0;
             	var panelCuentas = Ext.create('Ext.panel.Panel',
             	{
             		title     : 'Resumen'
@@ -382,6 +394,10 @@ Ext.onReady(function()
             {
             	debug('PAGO DIRECTO');
             	totalglobal = totalglobal + _p12_lpdir[indice].total*1.0;
+            	totalIVA   = totalIVA + _p12_lpdir[indice].ivaTotalMostrar*1.0;
+            	totalISR = totalISR + _p12_lpdir[indice].iSRMostrar*1.0;
+            	totalIVARet = totalIVARet + _p12_lpdir[indice].ivaRetenidoMostrar*1.0;
+            	totalImpCedular = totalImpCedular + _p12_lpdir[indice].totalcedular*1.0;
             	var gridCuentas = Ext.create('Ext.grid.Panel',
             	{
             		store    : Ext.create('Ext.data.Store',
@@ -785,7 +801,7 @@ Ext.onReady(function()
                 //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
                	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1')
                	{
-                	if(causaSiniestro =="2"){
+                	if(causaSiniestro == _CAUSA_ACCIDENTE){
                 		deducible = 0;
                 	}
                	}
@@ -810,7 +826,7 @@ Ext.onReady(function()
             
             //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
            	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
-            	if(causaSiniestro !="2"){
+            	if(causaSiniestro != _CAUSA_ACCIDENTE){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
             		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
@@ -971,12 +987,17 @@ Ext.onReady(function()
 	
     _p12_paneles.push(Ext.create('Ext.form.Panel',
     {
-    	title     : 'TOTAL'
+    	title     : 'TOTAL PAGAR'
     	,defaults :
     	{
     		style : 'margin : 5px;'
     	}
-        ,layout : 'hbox'
+        //,layout : 'hbox'
+        ,layout  :
+        {
+        	type     : 'table'
+        	,columns : 1
+        }
     	,items    :
     	[
     	    {
@@ -984,6 +1005,50 @@ Ext.onReady(function()
     	    	,labelWidth : 200
     	    	,fieldLabel : 'TOTAL DEL TR&Aacute;MITE'
     	    	,value      : totalglobal
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IVA'
+    	    	,value      : totalIVA
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'ISR'
+    	    	,value      : totalISR
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IVA RETENIDO'
+    	    	,value      : totalIVARet
+    	    	,valueToRaw : function(value)
+                {
+                    return Ext.util.Format.usMoney(value);
+                }
+    	    }
+    	    ,
+    	    {
+    	    	xtype       : 'displayfield'
+    	    	,labelWidth : 200
+    	    	,fieldLabel : 'IMPUESTO CEDULAR'
+    	    	,value      : totalImpCedular
     	    	,valueToRaw : function(value)
                 {
                     return Ext.util.Format.usMoney(value);
