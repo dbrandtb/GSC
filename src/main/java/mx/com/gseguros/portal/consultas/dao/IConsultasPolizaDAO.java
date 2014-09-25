@@ -5,6 +5,8 @@ import java.util.List;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 
 public interface IConsultasPolizaDAO {
@@ -39,7 +41,7 @@ public interface IConsultasPolizaDAO {
 	
 	
 	/**
-	 * Obtiene los datos de la p&oacute;liza
+	 * Obtiene los datos generales de la p&oacute;liza
 	 * @param cdunieco
 	 * @param cdramo
 	 * @param estado
@@ -51,12 +53,30 @@ public interface IConsultasPolizaDAO {
     
     
     /**
-     * Obtiene los datos de la p&oacute;liza
+     * Obtiene los datos generales de la p&oacute;liza
      * @param polizaAsegurado
      * @return
      * @throws Exception
      */
     public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
+    
+    /**
+     * 
+     * @param cdunieco
+     * @param cdramo
+     * @param estado
+     * @param nmpoliza
+     * @param suplemento
+     * @return
+     */
+    public List<CopagoVO> consultaCopagosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento);
+    
+    /**
+     * 
+     * @param poliza
+     * @return
+     */
+    public List<CopagoVO> consultaCopagosPoliza(PolizaVO poliza) throws Exception;
     
     
 	
