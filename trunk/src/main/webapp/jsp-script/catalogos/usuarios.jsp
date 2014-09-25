@@ -439,7 +439,8 @@ Ext.apply(Ext.form.field.VTypes, {
             							var jsonRes=Ext.decode(response.responseText);
 
             							if(jsonRes.success == true){
-            								mensajeCorrecto('Aviso','Se ha reiniciado la contrase&ntilde;a correctamente.');
+            								mensajeCorrecto('Aviso','Se ha reiniciado la contrase&ntilde;a correctamente.\n ' +
+            												'Se solicitar&aacute; una nueva contrase&ntilde;a al usuario al reingresar al sistema.');
                    						}else {
                    							mensajeError('No se pudo reiniciar la contrase&ntilde;a del usuario.');
                    						}
