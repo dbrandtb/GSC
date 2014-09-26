@@ -1110,8 +1110,10 @@ Ext.onReady(function() {
     			,listeners : {
 			    	'select' : function(combo, record) {
 			    		if(this.getValue() =='0'){
+			    			Ext.getCmp('medicoExtEqQ').setValue('EQUIPO QUIRÚRGICO'),
 			    			Ext.getCmp('medicoExtEqQ').show();
 			    		}else{
+			    			Ext.getCmp('medicoExtEqQ').setValue(''),
 			    			Ext.getCmp('medicoExtEqQ').hide();
 			    		}
 			    	}
