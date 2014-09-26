@@ -981,8 +981,9 @@ Ext.onReady(function() {
 			        	Ext.getCmp('idCopagoFin').setValue('0');
 			        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			        	Ext.getCmp('idPenalCambioZona').setValue('0');
-			        	if(e.getValue() == "3"){
-			        		Ext.getCmp('sumDisponible').setValue(Ext.getCmp('idSalarioMin').getValue());
+			        	if(e.getValue() == _CODIGO_CAUSA_MATERNIDAD){
+			        		var salarioMin = Ext.getCmp('idSalarioMin').getValue();
+			        		Ext.getCmp('sumDisponible').setValue(salarioMin);
 			        	}
 			        	break;
 			        default: 
@@ -1197,6 +1198,15 @@ Ext.onReady(function() {
 	        					cdtipaut:'1'
 	        						
 	    				});
+	    				/*var copagoPrevio = Ext.getCmp('idCopagoPrevio').getValue();
+	    				copagoPrevio = +copagoPrevio + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
+						Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+						Ext.getCmp('idCopagoFin').setValue(copagoPrevio);*/
+						
+						if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+			    	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+			    	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) - (+datos.importeConAutorizado));
+			    	   }
 	        			storeConceptoAutorizados.add(rec);
 	        			panelConceptosAutorizados.getForm().reset();
 	        			ventanaConceptosAutorizado.close();
@@ -1405,6 +1415,15 @@ Ext.onReady(function() {
 	   },
 	   onRemoveClick: function(grid, rowIndex){
 		   var record=this.getStore().getAt(rowIndex);
+		   var cantidad = record.get("cantporc");
+		   var importeEliminar = record.get("ptimport");
+    	   if(Ext.getCmp('idValMaternidad').getValue() =="1"){
+    	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
+    	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
+    	   }
+		   /*var copagoPrevio = +Ext.getCmp('idCopagoFin').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
+		   Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+		   Ext.getCmp('idCopagoFin').setValue(copagoPrevio);*/
 		   this.getStore().removeAt(rowIndex);
 	   }
 	});
@@ -2195,6 +2214,10 @@ Ext.onReady(function() {
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago original'						,id       : 'idCopago'
 		 			,labelWidth: 170						,readOnly   : true,  width: 670
 			 	},
+			 	/*{
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago Previo'						,id       : 'idCopagoPrevio'
+		 			,labelWidth: 170						,readOnly   : false,				name:'copagoPrevio',  width: 670
+			 	},*/
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoFin'
 		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal',  width: 670
