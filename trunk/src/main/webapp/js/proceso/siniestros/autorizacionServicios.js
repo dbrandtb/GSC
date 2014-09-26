@@ -622,12 +622,14 @@ Ext.onReady(function() {
 								Ext.getCmp('idSalarioMin').setValue('');
 								Ext.getCmp('idReqPenalizacion').setValue('');
 								Ext.getCmp('idValMaternidad').setValue('');
+								Ext.getCmp('idValSesiones').setValue('');
 								
 								var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
 								var montoDisponible = json.SUMADISP;
 								Ext.getCmp('idSalarioMin').setValue(montoDisponible);
 								Ext.getCmp('idReqPenalizacion').setValue(json.REQPENALIZACION);
 								Ext.getCmp('idValMaternidad').setValue(json.VALMATERNIDAD);
+								Ext.getCmp('idValSesiones').setValue(json.VALSESIONES);
 								
 								if(Ext.getCmp('idValMaternidad').getValue() =="1"){
 									Ext.Ajax.request(
@@ -1200,11 +1202,14 @@ Ext.onReady(function() {
 	        					cdtipaut:'1'
 	        						
 	    				});
-	    				/*var copagoPrevio = Ext.getCmp('idCopagoPrevio').getValue();
-	    				copagoPrevio = +copagoPrevio + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
-						Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
-						Ext.getCmp('idCopagoFin').setValue(copagoPrevio);*/
-						
+	    				
+	    				if(Ext.getCmp('idValSesiones').getValue() =="1"){
+	    					var copagoPrevio = Ext.getCmp('idCopagoPrevio').getValue();
+		    				copagoPrevio = +copagoPrevio + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
+							Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+							Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
+			    	   }
+			    	   
 						if(Ext.getCmp('idValMaternidad').getValue() =="1"){
 			    	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
 			    	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) - (+datos.importeConAutorizado));
@@ -1423,9 +1428,12 @@ Ext.onReady(function() {
     	   		var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
     	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
     	   }
-		   /*var copagoPrevio = +Ext.getCmp('idCopagoFin').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
-		   Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
-		   Ext.getCmp('idCopagoFin').setValue(copagoPrevio);*/
+    	   
+    	   if(Ext.getCmp('idValSesiones').getValue() =="1"){
+				var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
+				Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+				Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
+    	   }
 		   this.getStore().removeAt(rowIndex);
 	   }
 	});
@@ -2019,6 +2027,11 @@ Ext.onReady(function() {
 	 			}
 	 			,
 	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'ValSesiones'		,id       : 'idValSesiones', 	name:'ValSesiones',
+					 labelWidth: 170,					hidden:true
+	 			}
+	 			,
+	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'SalarioMinimo'		,id       : 'idSalarioMin', 	name:'idSalarioMin',
 					 labelWidth: 170,					hidden:true
 	 			}
@@ -2216,13 +2229,13 @@ Ext.onReady(function() {
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago original'						,id       : 'idCopago'
 		 			,labelWidth: 170						,readOnly   : true,  width: 670
 			 	},
-			 	/*{
-			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago Previo'						,id       : 'idCopagoPrevio'
+			 	{
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoPrevio'
 		 			,labelWidth: 170						,readOnly   : false,				name:'copagoPrevio',  width: 670
-			 	},*/
+			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoFin'
-		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal',  width: 670
+		 			,labelWidth: 170						,readOnly   : true,				name:'copagoTotal',  width: 670, hidden: true
 			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario'
@@ -2310,6 +2323,7 @@ Ext.onReady(function() {
 			 		{
 			 			if (panelInicialPrincipal.form.isValid()) {
 			 				//validamos que exista valor del registro
+			 				
 			 				if(valorAction == null )
 			 				{
 			 					//Solo se guarda y no realiza la validacion del monto
@@ -2517,7 +2531,8 @@ Ext.onReady(function() {
 		,success : function (response)
 		{
 			var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-			
+			debug("VALOR DEL JSON ===>");
+			debug(json);
 			Ext.getCmp('idUnieco').setValue(json.cdunieco);
 			Ext.getCmp('idEstado').setValue(json.estado);
 			Ext.getCmp('idcdRamo').setValue(json.cdramo);
@@ -2586,6 +2601,9 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
 			
+			
+			Ext.getCmp('idCopagoPrevio').setValue(json.copagofi);
+			
 			Ext.getCmp('idCopagoFin').setValue(json.copagofi);
 			
 			Ext.getCmp('idPenalCircHospitalario').setValue(json.porpenal);
@@ -2629,6 +2647,7 @@ Ext.onReady(function() {
 		        	Ext.getCmp('idSalarioMin').setValue(jsonRes.SUMADISP);
 		        	Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);
 		        	Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);
+		        	Ext.getCmp('idValSesiones').setValue(json.VALSESIONES);
 		        },
 		        failure : function ()
 		        {
@@ -3160,6 +3179,7 @@ Ext.onReady(function() {
 	
 	function validacionCopagoTotal()
 	{
+		debug("ENTRA A validacionCopagoTotal");
 		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
 		var tipoCopago = Ext.getCmp('idTipoCopago').getValue() ;
 		var sumatoria = 0;
