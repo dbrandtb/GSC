@@ -1942,21 +1942,49 @@ Ext.onReady(function()
         };
         comboTipoValor.addListener('change',changeFunction);
         changeFunction();
-        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+        Ext.Ajax.request(
         {
-             var anioActual = new Date().getFullYear();
-             var max = anioActual-5;
-             var min = anioActual-20;
-             var value = _0_formAgrupados.down('[name=parametros.pv_otvalor05]').getValue()-0;
-             debug('anioActual:',anioActual);
-             debug('max:',max);
-             debug('min:',min);
-             debug('value:',value);
-             if(value<min||value>max)
-             {
-                 _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
-                 mensajeWarning('El modelo debe estar en el rango '+min+'-'+max);
-             }
+            url      : _0_urlObtenerParametros
+            ,params  :
+            {
+                'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                ,'smap1.cdramo'   : _0_smap1.cdramo
+                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### obtener rango años response:',json);
+                if(json.exito)
+                {
+                    var limiteInferior = json.smap1.P1VALOR-0;
+                    var limiteSuperior = json.smap1.P2VALOR-0;
+                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+                    {
+                        var anioActual = new Date().getFullYear();
+                        var max = anioActual+limiteSuperior;
+                        var min = anioActual+limiteInferior;
+                        var value = _0_formAgrupados.down('[name=parametros.pv_otvalor05]').getValue()-0;
+                        debug('anioActual:',anioActual);
+                        debug('max:',max);
+                        debug('min:',min);
+                        debug('value:',value);
+                        if(value<min||value>max)
+                        {
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
+                            mensajeWarning('El modelo debe estar en el rango '+min+'-'+max);
+                        }
+                   });
+               }
+               else
+               {
+                   mensajeError(json.respuesta);
+               }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
         });
     }
     //fin [parche]
