@@ -1,0 +1,73 @@
+ items:[{
+          xtype: 'grid',
+          frame:true,
+          id:'gridCoberturas',
+          store: storeCoberturas,
+          stripeRows: true,
+          cm:new Ext.grid.ColumnModel([
+	          {   
+	          header: "cdGarantia",
+	          dataIndex:'cdGarant',
+	          sortable:true,
+              width:20,
+              id:'cdGarant',
+              
+              hidden:true
+            },{
+          	  header: "Coberturas",
+			  dataIndex:'dsGarant',
+			  sortable:false,
+			  renderer : crearHLink,
+			  width:150
+			},{
+          	  header: "Suma Asegurada",
+			  dataIndex:'sumaAsegurada',
+			  sortable:false,
+			  width:150
+			},{
+          	  header: "Deducible",
+			  dataIndex:'deducible',
+			  sortable:false,
+			  width:80
+           }
+       ]),
+     buttonAlign : 'center',
+     //autoHeight : true,
+     height:200,
+     width:450,
+     viewConfig: {autoFill: true,forceFit:true}, 
+     sm: new Ext.grid.RowSelectionModel({
+        singleSelect: true,
+        listeners: {                            
+            rowselect: function(sm, row, rec) { 
+                var recordCoberturas = storeCoberturas.getAt(row);
+                //alert(Ext.get('cRamo').dom.value);
+                //alert(Ext.get('cdAseguradora').dom.value);
+           		if(recordCoberturas==null || recordCoberturas=="undefined"){
+				}else{
+					idGarant = recordCoberturas.get('cdGarant');
+					//window.open ('/AON/flujocotizacion/obtenerAyudaCobertura.action'+'?idA='+Ext.get('cdAseguradora').dom.value+ '&idR='+Ext.get('cRamo').dom.value+ '&idG='+ recordCoberturas.get('cdGarant'), "Ayuda" , 'toolbar=no,status=no,scrollbars=yes,location=no,menubar=no,directories=no,width=300,height=300,top=100,left=300');
+					//windowCoberturas.hide();
+					//windowAyuda.show();
+					//windowCoberturas.toBack();					
+					//windowAyuda.toFront();
+					//getAyudaWindow(Ext.get('cdAseguradora').dom.value,Ext.get('cRamo').dom.value,recordCoberturas.get('cdGarant'));			
+          		}//else
+          		
+                    }
+                    }
+        }),
+     bbar: new Ext.PagingToolbar({
+     pageSize: 25,
+     store: storeCoberturas,
+     displayInfo: true,
+	 displayMsg: 'Registros mostrados {0} - {1} de {2}',
+	 emptyMsg: 'No hay registros para mostrar',
+	 beforePageText: 'P&aacute;gina',
+	 afterPageText: 'de {0}'
+     })
+                                 
+  }]
+
+ 
+   

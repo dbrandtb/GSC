@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="emision" namespace="/emision" extends="default" >
+        
+        <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
+            <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
+        </action>
+        
+        <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
+        </action>
+        
+        <action name="cotizar" class="CotizacionAction" method="cotizar">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+       
+       <action name="cargarCotizacion" class="CotizacionAction" method="cargarCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="webServiceNada" class="CotizacionAction" method="webServiceNada">
+           <result type="json" />
+       </action>
+       
+       <action name="guardarSituacionesAuto" class="CotizacionAction" method="guardarSituacionesAuto">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+    </package>
+    
+</struts>
