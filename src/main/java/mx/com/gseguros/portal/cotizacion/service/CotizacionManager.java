@@ -214,4 +214,12 @@ public interface CotizacionManager
 	public ComponenteVO cargarComponenteTatrisit(String cdtipsit,String cdusuari,String cdatribu)throws Exception;
 
 	public ComponenteVO cargarComponenteTatrigar(String cdramo,String cdtipsit,String cdgarant,String cdatribu)throws Exception;
+	
+	public ManagerRespuestaVoidVO validarDescuentoAgente(
+			String  tipoUnidad
+			,String uso
+			,String zona
+			,String promotoria
+			,String cdagente
+			,String descuento);
 }

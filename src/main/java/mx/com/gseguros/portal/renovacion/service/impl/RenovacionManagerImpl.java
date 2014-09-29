@@ -1,11 +1,14 @@
 package mx.com.gseguros.portal.renovacion.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
@@ -15,6 +18,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
+import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -27,6 +31,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 	//Dependencias inyectadas
 	private RenovacionDAO renovacionDAO;
 	private PantallasDAO  pantallasDAO;
+	private CotizacionDAO cotizacionDAO;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -126,13 +131,27 @@ public class RenovacionManagerImpl implements RenovacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaVoidVO renovarPolizas(List<Map<String,String>>polizas)
+	public ManagerRespuestaVoidVO renovarPolizas(
+			List<Map<String,String>>polizas
+			,String cdusuari
+			,String anio
+			,String mes
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ renovarPolizas @@@@@@")
+				.append("\n@@@@@@ cdusuari=").append(cdusuari)
+				.append("\n@@@@@@ anio=").append(anio)
+				.append("\n@@@@@@ mes=").append(mes)
 				.append("\n@@@@@@ polizas=").append(polizas)
+				.append("\n@@@@@@ rutaDocumentosPoliza=").append(rutaDocumentosPoliza)
+				.append("\n@@@@@@ rutaServidorReports=").append(rutaServidorReports)
+				.append("\n@@@@@@ passServidorReports=").append(passServidorReports)
 				.toString()
 				);
 		
@@ -164,11 +183,143 @@ public class RenovacionManagerImpl implements RenovacionManager
 			resp.setExito(false);
 			resp.setRespuesta(new StringBuilder("Error al marcar polizas #").append(timestamp).toString());
 			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		List<Map<String,String>>polizasRenovadas=null;
+		
+		//ejecutar renovacion
+		if(resp.isExito())
+		{
+			try
+			{
+			    polizasRenovadas = renovacionDAO.renovarPolizas(
+			    		cdusuari
+			    		,anio
+			    		,mes
+			    		,"2"//cdtipopc
+			    		);
+			}
+			catch(ApplicationException ax)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+				resp.setRespuestaOculta(ax.getMessage());
+				logger.error(resp.getRespuesta(),ax);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(
+						new StringBuilder()
+						.append("Error al renovar polizas #")
+						.append(timestamp)
+						.toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		StringBuilder respBuilder = new StringBuilder("P&oacute;lizas renovadas:");
+		
+		//crear documentacion
+		if(resp.isExito())
+		{
+			try
+			{
+				for(Map<String,String>iPoliza:polizasRenovadas)
+				{
+					logger.debug(new StringBuilder("\n@@@@@@ Documentacion para poliza=").append(iPoliza));
+					String cdunieco = iPoliza.get("cdunieco");
+					String cdramo   = iPoliza.get("cdramo");
+					String estado   = iPoliza.get("estado");
+					String nmpoliza = iPoliza.get("nmpoliza");
+					String nmsuplem = iPoliza.get("nmsuplem");
+					String ntramite = iPoliza.get("ntramite");
+					String cdtipopc = iPoliza.get("cdtipopc");
+					String nmpolant = iPoliza.get("nmpolant");
+					
+					List<Map<String,String>>iPolizaDocs =
+							cotizacionDAO.impresionDocumentosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
+					
+					String iPolizaRutaCarpeta = new StringBuilder(rutaDocumentosPoliza).append("/").append(ntramite).toString();
+					File   iPolizaCarpeta     = new File(iPolizaRutaCarpeta);
+					
+					if(!iPolizaCarpeta.exists())
+					{
+						if(!iPolizaCarpeta.mkdir())
+						{
+							throw new ApplicationException("Sin permisos para crear carpeta de documentos");
+						}
+					}
+					
+					for(Map<String,String>iDoc:iPolizaDocs)
+					{
+						String descripc          = iDoc.get("descripc");
+						String descripl          = iDoc.get("descripl");
+						StringBuilder urlBuilder = new StringBuilder()
+						        .append(rutaServidorReports)
+						        .append("?destype=cache")
+								.append("&desformat=PDF")
+								.append("&paramform=no")
+								.append("&ACCESSIBLE=YES")
+								.append("&userid=")  .append(passServidorReports)
+								.append("&report=")  .append(descripl)
+								.append("&p_unieco=").append(cdunieco)
+								.append("&p_ramo=")  .append(cdramo)
+								.append("&p_estado=").append(estado)
+								.append("&p_poliza=").append(nmpoliza)
+								.append("&p_suplem=").append(nmsuplem)
+								.append("&desname=") .append(iPolizaRutaCarpeta).append("/").append(descripc);
+						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+						{
+							// C R E D E N C I A L _ X X X X X X . P D F
+							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+							
+							urlBuilder.append("&p_cdperson=").append(descripc.substring(11, descripc.lastIndexOf(".")));
+						}
+						String url = urlBuilder.toString();
+						HttpUtil.generaArchivo(url,iPolizaRutaCarpeta+"/"+descripc);
+					}
+					
+					renovacionDAO.actualizaRenovacionDocumentos(anio,mes,cdtipopc,cdunieco,cdramo,nmpolant);
+					
+					respBuilder
+					    .append("<br/>De la sucural ").append(cdunieco)
+					    .append(". Antes ")
+					    .append(nmpolant).append(", ahora ")
+					    .append(nmpoliza)
+					    .append(" con tr&aacute;mite ")
+					    .append(ntramite);
+				}
+			}
+			catch(ApplicationException ax)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+				resp.setRespuestaOculta(ax.getMessage());
+				logger.error(resp.getRespuesta(),ax);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(
+						new StringBuilder()
+						.append("Error al generar documentos de polizas #")
+						.append(timestamp)
+						.toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
 		}
 		
 		if(resp.isExito())
 		{
-			resp.setRespuesta(new StringBuilder("Se renovaron ").append(polizas.size()).append(" polizas").toString());
+			resp.setRespuesta(respBuilder.toString());
 			resp.setRespuestaOculta("Todo OK");
 		}
 		
@@ -189,5 +340,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 
 	public void setPantallasDAO(PantallasDAO pantallasDAO) {
 		this.pantallasDAO = pantallasDAO;
+	}
+
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
+		this.cotizacionDAO = cotizacionDAO;
 	}
 }

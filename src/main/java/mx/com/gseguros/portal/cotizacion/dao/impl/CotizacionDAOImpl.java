@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
@@ -906,4 +908,91 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void validarDescuentoAgente(
+			String tipoUnidad
+			,String uso
+			,String zona
+			,String promotoria
+			,String cdagente
+			,String descuento)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("tipoUnidad" , tipoUnidad);
+		params.put("uso"        , uso);
+		params.put("zona"       , zona);
+		params.put("promotoria" , promotoria);
+		params.put("cdagente"   , cdagente);
+		params.put("descuento"  , descuento);
+		ejecutaSP(new ValidarDescuentoAgente(getDataSource()),params);
+	}
+	
+	protected class ValidarDescuentoAgente extends StoredProcedure
+	{
+		protected ValidarDescuentoAgente(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_VALIDA_DESCUENTO_COMERCIAL");
+			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("uso"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("zona"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("promotoria" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("descuento"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>impresionDocumentosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite)throws DaoException,ApplicationException
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("ntramite" , ntramite);
+		Map<String,Object>procedureResult=ejecutaSP(new ImpresionDocumentosPoliza(getDataSource()),params);
+		List<Map<String,String>>listaDocumentos=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaDocumentos==null||listaDocumentos.size()==0)
+		{
+			throw new ApplicationException("No hay documentos parametrizados");
+		}
+		logger.debug(new StringBuilder("\n&&&&&& Lista documentos size=").append(listaDocumentos.size()).toString());
+		return listaDocumentos;
+	}
+	
+	protected class ImpresionDocumentosPoliza extends StoredProcedure
+	{
+		protected ImpresionDocumentosPoliza(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_Imp_documentos");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"nmsolici"
+					,"nmsituac"
+					,"descripc"
+					,"descripl"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+		}
+	}
+			
 }

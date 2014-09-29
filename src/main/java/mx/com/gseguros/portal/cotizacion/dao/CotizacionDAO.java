@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cotizacion.dao;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 public interface CotizacionDAO
@@ -36,4 +38,18 @@ public interface CotizacionDAO
 	public List<Map<String,String>>cargarConfiguracionGrupo(Map<String,String>params)throws Exception;
 	public ComponenteVO cargarComponenteTatrisit(Map<String,String>params)throws Exception;
 	public ComponenteVO cargarComponenteTatrigar(Map<String,String>params)throws Exception;
+	public void validarDescuentoAgente(
+			String tipoUnidad
+			,String uso
+			,String zona
+			,String promotoria
+			,String cdagente
+			,String descuento)throws Exception;
+	public List<Map<String,String>>impresionDocumentosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite)throws DaoException,ApplicationException;
 }

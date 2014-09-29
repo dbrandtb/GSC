@@ -8,17 +8,21 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionDAO
 {
+	private static final Logger logger = Logger.getLogger(RenovacionDAOImpl.class);
+	
 	@Override
 	public List<Map<String,String>>buscarPolizasRenovables(String cdunieco,String cdramo,String anio,String mes)throws Exception
 	{
@@ -113,4 +117,88 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>>renovarPolizas(String cdusuari,String anio,String mes,String cdtipopc)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("anio"     , anio);
+		params.put("mes"      , mes);
+		params.put("cdtipopc" , cdtipopc);
+		Map<String,Object>procedureResult        = ejecutaSP(new RenovarPolizas(getDataSource()),params);
+		List<Map<String,String>>polizasRenovadas = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(polizasRenovadas==null||polizasRenovadas.size()==0)
+		{
+			throw new ApplicationException("No se renovaron polizas");
+		}
+		logger.info(new StringBuilder("renovarPolizas lista size=").append(polizasRenovadas.size()).toString());
+		return polizasRenovadas;
+	}
+	
+	protected class RenovarPolizas extends StoredProcedure
+	{
+		protected RenovarPolizas(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVA.P_RENUEVA_X_LISTA_POLIZAS");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"cdunieco"
+					,"cdramo"
+					,"estado"
+					,"nmpoliza"
+					,"nmsuplem"
+					,"ntramite"
+					,"nmanno"
+					,"nmmes"
+					,"cdtipopc"
+					,"nmpolant"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaRenovacionDocumentos(
+			String anio
+			,String mes
+			,String cdtipopc
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("anio"     , anio);
+		params.put("mes"      , mes);
+		params.put("cdtipopc" , cdtipopc);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("nmpoliza" , nmpoliza);
+		ejecutaSP(new ActualizaRenovacionDocumentos(getDataSource()),params);
+	}
+	
+	protected class ActualizaRenovacionDocumentos extends StoredProcedure
+	{
+		protected ActualizaRenovacionDocumentos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVA.P_ACTUALIZA_TCARTERA_SWIMPDOC");
+			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

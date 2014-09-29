@@ -177,6 +177,10 @@
            <result type="json" />
        </action>
        
+       <action name="validarDescuentoAgente" class="CotizacionAction" method="validarDescuentoAgente">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

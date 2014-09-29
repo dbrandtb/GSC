@@ -19,4 +19,14 @@ public interface RenovacionDAO
 			,String swrenova
 			,String swaproba
 			,String nmsituac)throws Exception;
+	
+	public List<Map<String,String>>renovarPolizas(String cdusuari,String anio,String mes,String cdtipopc)throws Exception;
+	
+	public void actualizaRenovacionDocumentos(
+			String anio
+			,String mes
+			,String cdtipopc
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza)throws Exception;
 }

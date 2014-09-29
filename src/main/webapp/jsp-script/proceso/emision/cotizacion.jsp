@@ -53,6 +53,7 @@ var _0_urlObtenerParametros                  = '<s:url namespace="/emision"     
 var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
 var _0_urlCargarClaveGSPorAuto               = '<s:url namespace="/emision"         action="cargarClaveGSPorAuto"               />';
 var _0_urlCargarSumaAsegurada                = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"            />';
+var _0_urlValidarDescuentoRamo6              = '<s:url namespace="/emision"         action="validarDescuentoAgente"             />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -2046,6 +2047,43 @@ Ext.onReady(function()
     if(_0_smap1.cdramo+'x'=='6x')
     {
         debug('>parche para ramo 6');
+        
+        //descuento
+        _fieldLikeLabel('DESCUENTO').on(
+        {
+            change : function(comp,val)
+            {
+                if(val-0>0)
+                {
+                    debug('se valida el descuento');
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlValidarDescuentoRamo6
+                        ,params  :
+                        {
+                            'smap1.tipoUnidad' : _fieldLikeLabel('TIPO DE UNIDAD').getValue()
+                            ,'smap1.uso'       : _fieldLikeLabel('TIPO DE USO').getValue()
+                            ,'smap1.descuento' : val
+                            ,'smap1.cdagente'  : _0_smap1.cdagente
+                        }
+                        ,success : function(response)
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### validar descuento json response:',json);
+                            if(!json.exito)
+                            {
+                                comp.setValue('0');
+                                mensajeWarning(json.respuesta);
+                            }
+                        }
+                        ,failure : function(response)
+                        {
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        });
         
         //modelo
         if(_0_smap1.cdtipsit+'x'=='MCx')
