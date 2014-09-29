@@ -1224,6 +1224,54 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return comp;
 	}
 	
+	@Override
+	public ManagerRespuestaVoidVO validarDescuentoAgente(
+			String  tipoUnidad
+			,String uso
+			,String zona
+			,String promotoria
+			,String cdagente
+			,String descuento)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ validarDescuentoAgente @@@@@@")
+				.append("\n@@@@@@ tipoUnidad=").append(tipoUnidad)
+				.append("\n@@@@@@ uso=").append(uso)
+				.append("\n@@@@@@ zona=").append(zona)
+				.append("\n@@@@@@ promotoria=").append(promotoria)
+				.append("\n@@@@@@ cdagente=").append(cdagente)
+				.append("\n@@@@@@ descuento=").append(descuento)
+				.toString()
+				);
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		//procedure
+		try
+		{
+			cotizacionDAO.validarDescuentoAgente(tipoUnidad,uso,zona,promotoria,cdagente,descuento);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ validarDescuentoAgente @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+			
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

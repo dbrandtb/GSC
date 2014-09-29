@@ -11,5 +11,13 @@ public interface RenovacionManager
 {
 	public ManagerRespuestaImapVO  pantallaRenovacion(String cdsisrol);
 	public ManagerRespuestaSlistVO buscarPolizasRenovables(String cdunieco,String cdramo,String anio,String mes);
-	public ManagerRespuestaVoidVO  renovarPolizas(List<Map<String,String>>polizas);
+	public ManagerRespuestaVoidVO  renovarPolizas(
+			List<Map<String,String>>polizas
+			,String cdusuari
+			,String anio
+			,String mes
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			);
 }

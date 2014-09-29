@@ -9,6 +9,7 @@ var _p24_urlBuscarPolizas  = '<s:url namespace="/renovacion" action="buscarPoliz
 var _p24_urlRenovarPolizas = '<s:url namespace="/renovacion" action="renovarPolizas"          />';
 
 var _p24_storePolizas;
+var _p24_ultimosParams;
 ////// variables //////
 
 Ext.onReady(function()
@@ -120,6 +121,13 @@ Ext.onReady(function()
             _fieldByName('cdramo',form).setValue('-1');
         }
     });
+    _fieldByName('mes',form).getStore().on(
+    {
+        load : function(me)
+        {
+            _fieldByName('mes',form).setValue(('00'+(new Date().getMonth()+1)).slice(-2));
+        }
+    });
     _fieldById('_p24_grid').getSelectionModel().on(
     {
         selectionChange : _p24_gridSelectionChange
@@ -135,9 +143,16 @@ function _p24_buscarClic(button,e)
 {
     debug('>_p24_buscarClic');
     var form=button.up('form');
+    _p24_ultimosParams =
+    {
+        'cdunieco' : _fieldByName('cdunieco' , form).getValue()
+        ,'cdramo'  : _fieldByName('cdramo'   , form).getValue()
+        ,'anio'    : _fieldByName('anio'     , form).getValue()
+        ,'mes'     : _fieldByName('mes'      , form).getValue()
+    };
     _p24_storePolizas.load(
     {
-        params :
+        params    :
         {
             'smap1.cdunieco' : _fieldByName('cdunieco' , form).getValue()
             ,'smap1.cdramo'  : _fieldByName('cdramo'   , form).getValue()
@@ -179,6 +194,7 @@ function _p24_renovarClic(button,e)
         slist1.push(record.raw);
     });
     json['slist1'] = slist1;
+    json['smap1']  = _p24_ultimosParams;
     debug('### renovar json params:',json);
     _fieldById('_p24_grid').setLoading(true);
     Ext.Ajax.request(

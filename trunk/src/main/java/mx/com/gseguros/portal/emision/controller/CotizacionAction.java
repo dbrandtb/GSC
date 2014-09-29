@@ -17,6 +17,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -6328,6 +6329,90 @@ public class CotizacionAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### borrarClausulaICD ######")
 				.append("\n###############################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String validarDescuentoAgente()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n####################################")
+				.append("\n###### validarDescuentoAgente ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String tipoUnidad = null;
+		String cdagente   = null;
+		String uso        = null;
+		String descuento  = null;
+		
+		String zona       = "9";
+		String promotoria = "13";
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No hay parametros");
+			}
+			tipoUnidad = smap1.get("tipoUnidad");
+			cdagente   = smap1.get("cdagente");
+			uso        = smap1.get("uso");
+			descuento  = smap1.get("descuento");
+			if(StringUtils.isBlank(tipoUnidad))
+			{
+				throw new ApplicationException("No se recibio el tipo de unidad");
+			}
+			if(StringUtils.isBlank(cdagente))
+			{
+				throw new ApplicationException("No se recibio el codigo de agente");
+			}
+			if(StringUtils.isBlank(uso))
+			{
+				throw new ApplicationException("No se recibio el tipo de uso");
+			}
+			if(StringUtils.isBlank(descuento))
+			{
+				throw new ApplicationException("No se recibio el descuento");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos para el descuento #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp = cotizacionManager.validarDescuentoAgente(tipoUnidad,uso,zona,promotoria,cdagente,descuento);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### validarDescuentoAgente ######")
+				.append("\n####################################")
 				.toString()
 				);
 		return SUCCESS;

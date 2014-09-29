@@ -11,6 +11,7 @@ import mx.com.gseguros.utils.Utilerias;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 
+@Deprecated
 public class DinamicMapper implements RowMapper
 {
 	

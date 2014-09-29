@@ -204,6 +204,10 @@ public class RenovacionAction extends PrincipalCoreAction
 		
 		exito = true;
 		
+		String anio     = null;
+		String mes      = null;
+		String cdusuari = null;
+		
 		//datos completos
 		try
 		{
@@ -216,9 +220,29 @@ public class RenovacionAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException("No hay usuario en la sesion");
 			}
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdusuari       = usuario.getUser();
+			if(StringUtils.isBlank(cdusuari))
+			{
+				throw new ApplicationException("No hay clave de usuario");
+			}
 			if(slist1==null||slist1.size()==0)
 			{
 				throw new ApplicationException("No se recibieron polizas");
+			}
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos de busqueda");
+			}
+			anio = smap1.get("anio");
+			mes  = smap1.get("mes");
+			if(StringUtils.isBlank(anio))
+			{
+				throw new ApplicationException("No hay año");
+			}
+			if(StringUtils.isBlank(mes))
+			{
+				throw new ApplicationException("No hay mes");
 			}
 		}
 		catch(ApplicationException ax)
@@ -241,7 +265,15 @@ public class RenovacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaVoidVO resp = renovacionManager.renovarPolizas(slist1);
+			ManagerRespuestaVoidVO resp = renovacionManager.renovarPolizas(
+					slist1
+					,cdusuari
+					,anio
+					,mes
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
+					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
