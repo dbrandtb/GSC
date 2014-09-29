@@ -436,7 +436,7 @@ Ext.onReady(function() {
     ]);
     
     
-    /**INFORMACION DEL GRID DE COPAGOS**/
+    /**INFORMACION DEL GRID DE COPAGOS/COBERTURAS**/
     //-------------------------------------------------------------------------------------------------------------    
     //Modelo
     Ext.define('CopagosPolizaModel',{
@@ -461,7 +461,7 @@ Ext.onReady(function() {
             }
         }
     });
-    // GRID PARA LOS DATOS DE COPAGOS
+    // GRID PARA LOS DATOS DE COPAGOS/COBERTURAS
     var gridCopagosPoliza = Ext.create('Ext.grid.Panel', {
         width   : 500,
         viewConfig: {
@@ -697,7 +697,7 @@ Ext.onReady(function() {
             }]
         }, {
             //title: 'DATOS TARIFICACION',
-        	title: 'COPAGOS',
+        	title: 'COBERTURAS',
             //itemId: 'tabDatosTarificacion',
         	itemId: 'tabDatosCopagosPoliza',
             items:[{
