@@ -13,4 +13,8 @@
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
     </bean>
     
+    <bean id="endososGrupoAction" class="mx.com.gseguros.portal.endosos.controller.EndososGrupoAction" scope="prototype">
+        <property name="endososGrupoManager" ref="endososGrupoManagerImpl" />
+    </bean>
+    
 </beans>

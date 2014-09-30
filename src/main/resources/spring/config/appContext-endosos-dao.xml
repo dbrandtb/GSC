@@ -5,4 +5,6 @@
     
     <bean id="endososDAOImpl" class="mx.com.gseguros.portal.endosos.dao.impl.EndososDAOImpl" parent="abstractManagerDAO"></bean>
     
+    <bean id="endososGrupoDAOImpl" class="mx.com.gseguros.portal.endosos.dao.impl.EndososGrupoDAOImpl" parent="abstractManagerDAO" />
+    
 </beans>

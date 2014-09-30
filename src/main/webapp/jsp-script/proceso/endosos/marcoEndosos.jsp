@@ -1337,8 +1337,8 @@ Ext.onReady(function()
                 ,items         :
                 [
                     {
-                    	xtype : 'numberfield'
-                    	,id   : 'marendFilNmpoliex'
+                    	xtype       : 'textfield'
+                    	,id         : 'marendFilNmpoliex'
                     	,fieldLabel : 'N&uacute;mero de p&oacute;liza'
                     	,name       : 'smap1.pv_nmpoliex_i'
                     }

@@ -119,6 +119,40 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _0_cargarNumPasajerosAuto()
+{
+    Ext.Ajax.request(
+    {
+        url      : _0_urlCargarAutoPorClaveGS
+        ,params  :
+        {
+            'smap1.cdramo'    : _0_smap1.cdramo
+            ,'smap1.clavegs'  : _fieldByName('parametros.pv_otvalor22').getValue()
+            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            var ijson=Ext.decode(response.responseText);
+            debug('### obtener auto por clave gs:',ijson);
+            if(ijson.exito)
+            {
+                _fieldByName('parametros.pv_otvalor06').setValue(ijson.smap1.NUMPASAJEROS);
+                _fieldByName('parametros.pv_otvalor06').setMinValue(ijson.smap1.PASAJMIN);
+                _fieldByName('parametros.pv_otvalor06').setMaxValue(ijson.smap1.PASAJMAX);
+                _fieldByName('parametros.pv_otvalor06').isValid();
+            }
+            else
+            {
+                mensajeWarning(ijson.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+}
+
 function _0_obtenerClaveGSPorAuto()
 {
     _fieldByName('parametros.pv_otvalor22').getStore().load(
@@ -140,11 +174,12 @@ function _0_obtenerClaveGSPorAuto()
             _fieldByName('parametros.pv_otvalor22').setValue(
                 _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
             );
+            _0_cargarNumPasajerosAuto();
         }
     });
 }
 
-function _0_obtenerSumaAseguradaRamo6()
+function _0_obtenerSumaAseguradaRamo6(mostrarError)
 {
     _0_panelPri.setLoading(true);
     Ext.Ajax.request(
@@ -171,7 +206,7 @@ function _0_obtenerSumaAseguradaRamo6()
                 _fieldByName('parametros.pv_otvalor25').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
                 _fieldByName('parametros.pv_otvalor25').isValid();
             }
-            else
+            else if(mostrarError==true)
             {
                 mensajeWarning(json.respuesta);
             }
@@ -2620,7 +2655,7 @@ Ext.onReady(function()
                 select : function()
                 {
                     _0_obtenerClaveGSPorAuto();
-                    _0_obtenerSumaAseguradaRamo6();
+                    _0_obtenerSumaAseguradaRamo6(false);
                 }
             });
         }
@@ -2668,42 +2703,13 @@ Ext.onReady(function()
                                 _fieldByLabel('VERSION').heredar(true,function()
                                 {
                                     _fieldByLabel('VERSION').setValue(_fieldByLabel('VERSION').findRecord('value',version));    
-                                    _0_obtenerSumaAseguradaRamo6();                        
+                                    _0_obtenerSumaAseguradaRamo6(true);                        
                                 });
                             });
                         });
                     });
                     
-                    Ext.Ajax.request(
-                    {
-                        url      : _0_urlCargarAutoPorClaveGS
-                        ,params  :
-                        {
-                            'smap1.cdramo'    : _0_smap1.cdramo
-                            ,'smap1.clavegs'  : _fieldByName('parametros.pv_otvalor22').getValue()
-                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-                        }
-                        ,success : function(response)
-                        {
-                            var ijson=Ext.decode(response.responseText);
-                            debug('### obtener auto por clave gs:',ijson);
-                            if(ijson.exito)
-                            {
-                                _fieldByName('parametros.pv_otvalor06').setValue(ijson.smap1.NUMPASAJEROS);
-                                _fieldByName('parametros.pv_otvalor06').setMinValue(ijson.smap1.PASAJMIN);
-                                _fieldByName('parametros.pv_otvalor06').setMaxValue(ijson.smap1.PASAJMAX);
-                                _fieldByName('parametros.pv_otvalor06').isValid();
-                            }
-                            else
-                            {
-                                mensajeWarning(ijson.respuesta);
-                            }
-                        }
-                        ,failure : function()
-                        {
-                            errorComunicacion();
-                        }
-                    });
+                    _0_cargarNumPasajerosAuto();
                 }
             });
         }
@@ -2713,7 +2719,10 @@ Ext.onReady(function()
         {
             _fieldByLabel('VERSION').on(
             {
-                'select' : _0_obtenerSumaAseguradaRamo6
+                'select' : function()
+                {
+                    _0_obtenerSumaAseguradaRamo6(true);
+                }
             });
         }
         
