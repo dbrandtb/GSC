@@ -7,4 +7,8 @@
         <property name="endososDAO" ref="endososDAOImpl"></property>
     </bean>
     
+    <bean id="endososGrupoManagerImpl" class="mx.com.gseguros.portal.endosos.service.impl.EndososGrupoManagerImpl">
+        <property name="endososGrupoDAO" ref="endososGrupoDAOImpl" />
+    </bean>
+    
 </beans>

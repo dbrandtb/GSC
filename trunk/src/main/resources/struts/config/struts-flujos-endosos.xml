@@ -339,6 +339,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="endososGrupo" class="endososGrupoAction" method="endososGrupo">
+            <result name="success">/jsp-script/proceso/endosos/marcoEndosos.jsp</result>
+        </action>
+        
     </package>
 
 </struts>
