@@ -121,6 +121,46 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _0_obtenerSumaAseguradaRamo6()
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarSumaAsegurada
+                        ,params  :
+                        {
+                            'smap1.modelo'    : _fieldByName('parametros.pv_otvalor04').getValue()
+                                                .substr(_fieldByName('parametros.pv_otvalor04').getValue().length-4,4)
+                            ,'smap1.version'  : _fieldByName('parametros.pv_otvalor05').getValue()
+                            ,'smap1.cdsisrol' : _0_smap1.cdsisrol
+                            ,'smap1.cdramo'   : _0_smap1.cdramo
+                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('### json response obtener suma asegurada:',json);
+                            if(json.exito)
+                            {
+                                _fieldByName('parametros.pv_otvalor25').setValue(json.smap1.SUMASEG);
+                                _fieldByName('parametros.pv_otvalor25').setMinValue((json.smap1.SUMASEG-0)*(1-(json.smap1.FACREDUC-0)));
+                                _fieldByName('parametros.pv_otvalor25').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
+                                _fieldByName('parametros.pv_otvalor25').isValid();
+                            }
+                            else
+                            {
+                                mensajeWarning(json.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+
 function _0_funcionFechaChange(field,value)
 {
     try
@@ -1084,6 +1124,12 @@ function _0_cotizar(boton)
                             select : _0_tarifaSelect
                         }
                     });
+                    
+                    if(_0_smap1.cdramo+'x'=='6x')
+                    {
+                        Ext.getCmp('_0_botDetallesId').setDisabled(true);
+                        Ext.getCmp('_0_botCoberturasId').setDisabled(true);
+                    }
 					
 					_0_panelPri.add(_0_gridTarifas);
 					_0_panelPri.doLayout();
@@ -1209,8 +1255,11 @@ function _0_tarifaSelect(selModel, record, row, column, eOpts)
     	
     	Ext.getCmp('_0_botDetallesId').setDisabled(false);
     	Ext.getCmp('_0_botCoberturasId').setDisabled(false);
-    	Ext.getCmp('_0_botMailId').setDisabled(false);
-    	Ext.getCmp('_0_botImprimirId').setDisabled(false);
+    	if(_0_smap1.cdramo+'x'!='6x')
+    	{
+    	    Ext.getCmp('_0_botMailId').setDisabled(false);
+    	    Ext.getCmp('_0_botImprimirId').setDisabled(false);
+    	}
     	Ext.getCmp('_0_botComprarId').setDisabled(false);
     }
 }
@@ -2529,7 +2578,7 @@ Ext.onReady(function()
         //modelo
         if(_0_smap1.cdtipsit+'x'=='ATx')
         {
-            _fieldByName('parametros.pv_otvalor04').on(
+            _fieldByLabel('VERSION').on(
             {
                 'select' : function()
                 {
@@ -2540,7 +2589,7 @@ Ext.onReady(function()
                         ,params  :
                         {
                             'smap1.cdramo'  : _0_smap1.cdramo
-                            ,'smap1.modelo' : _fieldByName('parametros.pv_otvalor04').getValue()
+                            ,'smap1.modelo' : _fieldByLabel('MODELO').getValue()
                         }
                         ,success : function(response)
                         {
@@ -2558,10 +2607,22 @@ Ext.onReady(function()
                                     ,callback : function(records)
                                     {
                                         debug('callback records:',records);
+                                        var valor=json.smap1.CLAVEGS
+                                                  +' - '+_fieldByLabel('TIPO DE UNIDAD').findRecord('key',_fieldByLabel('TIPO DE UNIDAD').getValue()).get('value')
+                                                  +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
+                                                  +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
+                                                  +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
+                                                  +' - '+_fieldByLabel('VERSION').findRecord('key',_fieldByLabel('VERSION').getValue()).get('value');
+                                        debug('valor para el auto:',valor);
+                                        _fieldByName('parametros.pv_otvalor22').setValue(
+                                            _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
+                                        );
+                                        /*
                                         if(records.length>0)
                                         {
                                             _fieldByName('parametros.pv_otvalor22').setValue(records[0]);
                                         }
+                                        */
                                     }
                                 });
                             }
@@ -2585,8 +2646,42 @@ Ext.onReady(function()
         {
             _fieldByName('parametros.pv_otvalor22').on(
             {
-                'select' : function()
+                'select' : function(comp,arr)
                 {
+                    debug('auto seleccionado:',arr[0]);
+                    var value    = arr[0].get('value');
+                    var splt     = value.split(' - ');
+                    var tipo     = splt[1];
+                    var marca    = splt[2];
+                    var submarca = splt[3];
+                    var modelo   = splt[4];
+                    var version  = splt[5];
+                    debug('tipo:',tipo);
+                    debug('marca:',marca);
+                    debug('submarca:',submarca);
+                    debug('modelo:',modelo);
+                    debug('version:',version);
+                    
+                    _fieldByLabel('TIPO DE UNIDAD').setValue(_fieldByLabel('TIPO DE UNIDAD').findRecord('value',tipo));
+                    _fieldByLabel('MARCA').heredar(true,function()
+                    {
+                        _fieldByLabel('MARCA').setValue(_fieldByLabel('MARCA').findRecord('value',marca));
+                        _fieldByLabel('SUBMARCA').heredar(true,function()
+                        {
+                            _fieldByLabel('SUBMARCA').setValue(_fieldByLabel('SUBMARCA').findRecord('value',submarca));
+                            _fieldByLabel('MODELO').heredar(true,function()
+                            {
+                                _fieldByLabel('MODELO').setValue(_fieldByLabel('MODELO').findRecord('value',modelo));
+                                _fieldByLabel('VERSION').heredar(true,function()
+                                {
+                                    _fieldByLabel('VERSION').setValue(_fieldByLabel('VERSION').findRecord('value',version));    
+                                    _0_obtenerSumaAseguradaRamo6();                        
+                                });
+                            });
+                        });
+                    });
+                    
+                    /*
                     _0_panelPri.setLoading(true);
                     Ext.Ajax.request(
                     {
@@ -2631,6 +2726,7 @@ Ext.onReady(function()
                             errorComunicacion();
                         }
                     });
+                    */
                 }
             });
         }
@@ -2640,45 +2736,7 @@ Ext.onReady(function()
         {
             _fieldByName('parametros.pv_otvalor05').on(
             {
-                'select' : function()
-                {
-                    _0_panelPri.setLoading(true);
-                    Ext.Ajax.request(
-                    {
-                        url      : _0_urlCargarSumaAsegurada
-                        ,params  :
-                        {
-                            'smap1.modelo'    : _fieldByName('parametros.pv_otvalor04').getValue()
-                                                .substr(_fieldByName('parametros.pv_otvalor04').getValue().length-4,4)
-                            ,'smap1.version'  : _fieldByName('parametros.pv_otvalor05').getValue()
-                            ,'smap1.cdsisrol' : _0_smap1.cdsisrol
-                            ,'smap1.cdramo'   : _0_smap1.cdramo
-                            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-                        }
-                        ,success : function(response)
-                        {
-                            _0_panelPri.setLoading(false);
-                            var json=Ext.decode(response.responseText);
-                            debug('### json response obtener suma asegurada:',json);
-                            if(json.exito)
-                            {
-                                _fieldByName('parametros.pv_otvalor25').setValue(json.smap1.SUMASEG);
-                                _fieldByName('parametros.pv_otvalor25').setMinValue((json.smap1.SUMASEG-0)*(1-(json.smap1.FACREDUC-0)));
-                                _fieldByName('parametros.pv_otvalor25').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
-                                _fieldByName('parametros.pv_otvalor25').isValid();
-                            }
-                            else
-                            {
-                                mensajeWarning(json.respuesta);
-                            }
-                        }
-                        ,failure : function()
-                        {
-                            _0_panelPri.setLoading(false);
-                            errorComunicacion();
-                        }
-                    });
-                }
+                'select' : _0_obtenerSumaAseguradaRamo6
             });
         }
         
