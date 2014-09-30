@@ -2,7 +2,7 @@ package mx.com.gseguros.portal.consultas.dao;
 
 import java.util.List;
 
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
@@ -83,7 +83,7 @@ public interface IConsultasPolizaDAO {
      * @return
      * @throws Exception
      */
-    public List<ConsultaDatosAseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception;
+    public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception;
     
 
     /**
@@ -92,7 +92,7 @@ public interface IConsultasPolizaDAO {
      * @return
      * @throws Exception
      */
-    public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza) throws Exception;
+    public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     
     /**
