@@ -9,33 +9,33 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author JAGC
  *
  */
-public class ConsultaDatosAseguradoVO implements Serializable{
+public class AseguradoVO implements Serializable{
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8555353864912795413L;
 
+	/**
+	 * Codigo de la persona
+	 */
 	private String cdperson;
+	
 	private String nmsituac;
 	private String cdtipsit;
 	private String nombre;
 	private String cdrfc;
 	private String cdrol;
 	private String dsrol;
-	private String Sexo;
+	private String sexo;
 	private String fenacimi;
 	private String status;
 	private String parentesco;
 
 		
 	public String getSexo() {
-		return Sexo;
+		return sexo;
 	}
 
 	public void setSexo(String sexo) {
-		Sexo = sexo;
+		this.sexo = sexo;
 	}
 
 	public String getFenacimi() {

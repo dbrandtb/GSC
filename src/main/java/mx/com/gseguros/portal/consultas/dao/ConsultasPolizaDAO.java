@@ -13,7 +13,7 @@ import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
@@ -570,7 +570,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
-    		ConsultaDatosAseguradoVO consulta = new ConsultaDatosAseguradoVO();
+    		AseguradoVO consulta = new AseguradoVO();
     		consulta.setCdperson(rs.getString("cdperson"));
     		consulta.setCdrfc(rs.getString("cdrfc"));
     		consulta.setCdrol(rs.getString("cdrol"));

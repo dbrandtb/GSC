@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
@@ -174,15 +174,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<ConsultaDatosAseguradoVO> obtieneAsegurados(PolizaVO poliza)
+	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza)
-			throws Exception {
+	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
