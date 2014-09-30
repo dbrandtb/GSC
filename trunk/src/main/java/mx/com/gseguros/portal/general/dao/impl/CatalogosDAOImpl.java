@@ -13,6 +13,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -612,6 +613,61 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("pv_cdpostal_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cvezona_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO> cargarDescuentosPorAgente(
+    		String tipoUnidad
+    		,String uso
+    		,String zona
+    		,String promotoria
+    		,String cdagente
+    		,String cdtipsit
+    		,String cdatribu)throws Exception
+    {
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("tipoUnidad" , tipoUnidad);
+		params.put("uso"        , uso);
+		params.put("zona"       , zona);
+		params.put("promotoria" , promotoria);
+		params.put("cdagente"   , cdagente);
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("cdatribu"   , cdatribu);
+		Map<String,Object>procedureResult = ejecutaSP(new CargarDescuentosPorAgente(getDataSource()),params);
+		List<Map<String,String>>lista     = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		List<GenericVO>listaGen           = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>it:lista)
+			{
+				listaGen.add(new GenericVO(it.get("codigo"),it.get("descripcion")));
+			}
+		}
+		return listaGen;
+    }
+	
+	protected class CargarDescuentosPorAgente extends StoredProcedure
+	{
+		protected CargarDescuentosPorAgente(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_VALIDA_DESCUENTO_COMERCIAL");
+			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("uso"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("zona"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("promotoria" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"codigo"
+					,"descripcion"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

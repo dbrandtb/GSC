@@ -178,4 +178,30 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	{
 		return catalogosDAO.asociaZonaCodigoPostal(params);
 	}
+	
+	@Override
+	public List<GenericVO> cargarDescuentosPorAgente(
+    		String tipoUnidad
+    		,String uso
+    		,String zona
+    		,String promotoria
+    		,String cdagente
+    		,String cdtipsit
+    		,String cdatribu)throws Exception
+    {
+		logger.info(
+				new StringBuilder()
+				.append("\n#######################################")
+				.append("\n###### cargarDescuentosPorAgente ######")
+				.append("\n###### tipoUnidad").append(tipoUnidad)
+				.append("\n###### uso").append(uso)
+				.append("\n###### zona").append(zona)
+				.append("\n###### promotoria").append(promotoria)
+				.append("\n###### cdagente").append(cdagente)
+				.append("\n###### cdtipsit").append(cdtipsit)
+				.append("\n###### cdatribu").append(cdatribu)
+				.toString()
+				);
+		return catalogosDAO.cargarDescuentosPorAgente(tipoUnidad,uso,zona,promotoria,cdagente,cdtipsit,cdatribu);
+    }
 }

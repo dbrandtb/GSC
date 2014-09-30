@@ -336,6 +336,17 @@ public class CotizacionAction extends PrincipalCoreAction
 								temp.add(listaAuxComboAutos.get(0));
 							}
 						}
+						//descuento
+						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("21"))
+						{
+							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									,cdtipsit                              ,  "W"         , cdsisrol
+									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "21");
+							temp.remove(tatriIte);
+							componenteSustitutoListaAux.get(0).setSwsuscri("N");
+							temp.add(componenteSustitutoListaAux.get(0));
+						}
 					}
 				}
 		        tatrisit=temp;
