@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.wizard.configuracion.producto.conceptosCobertura.model.ConceptosCoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.datosFijos.model.DatoFijoVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -1554,5 +1554,26 @@ protected class BorraVarTmp extends StoredProcedure {
 		compile();
 	}
 }
+
+
+	@Override
+	public List<Map<String, String>> obtieneTablasApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneTablasApoyo(getDataSource()), params);
+		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneTablasApoyo extends StoredProcedure {
+		protected ObtieneTablasApoyo(DataSource dataSource) {
+	        super(dataSource,"PKG_LISTAS.P_OBTIENE_TABLAS_APOYO");
+	        declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("PV_CDTABLA_I" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("PV_DSTABLA_I" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("PV_OTTIPOTB_I" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+	        declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+	        compile();
+		}
+	}
 
 }

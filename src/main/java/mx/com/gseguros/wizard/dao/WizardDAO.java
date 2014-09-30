@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.wizard.configuracion.producto.conceptosCobertura.model.ConceptosCoberturaVO;
@@ -87,6 +88,9 @@ public interface WizardDAO {
 	public void asociarVariablesDelProducto(Map<String, Object> params) throws Exception;
 	public void desasociarVariablesDelProducto(Map<String, Object> params) throws Exception;
 	public void borraVarTmp(Map<String, Object> params) throws Exception;
+
+	
+	public List<Map<String, String>> obtieneTablasApoyo(Map<String,String> params) throws Exception;
 
 	
 }

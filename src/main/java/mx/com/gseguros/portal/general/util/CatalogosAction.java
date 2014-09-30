@@ -56,6 +56,11 @@ public class CatalogosAction extends PrincipalCoreAction {
     private List<GenericVO> lista = new ArrayList<GenericVO>(0);
     
     /**
+     * Lista de elementos a cargar en grid por tipo Map
+     */
+    private List<Map<String, String>> loadList;
+    
+    /**
      * Lista personalizada, puede contener cualquier tipo de objeto 
      */
     private List<?> listaGenerica;
@@ -436,6 +441,21 @@ public class CatalogosAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
     
+    public String obtieneTablasApoyo()throws Exception{
+    	
+    	try{
+    		loadList = catalogosManager.obtieneTablasApoyo(params);
+    	}catch(Exception ex){
+    		logger.error("Error al obtieneTablasApoyo",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+    
     
     // Getters and setters
 	public boolean isSuccess() {
@@ -514,6 +534,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setMsgRespuesta(String msgRespuesta) {
 		this.msgRespuesta = msgRespuesta;
+	}
+
+	public List<Map<String, String>> getLoadList() {
+		return loadList;
+	}
+
+	public void setLoadList(List<Map<String, String>> loadList) {
+		this.loadList = loadList;
 	}
 	
 }

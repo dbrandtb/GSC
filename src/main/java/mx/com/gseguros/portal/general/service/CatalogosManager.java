@@ -62,6 +62,8 @@ public interface CatalogosManager {
 
     public String asociaZonaCodigoPostal(Map<String, String> params)throws Exception;
     
+    public List<Map<String, String>> obtieneTablasApoyo(Map<String,String> params) throws Exception;
+    
     public List<GenericVO> cargarDescuentosPorAgente(
     		String tipoUnidad
     		,String uso
