@@ -12,7 +12,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
@@ -68,7 +68,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private ConsultaDatosAgenteVO datosAgente;
     
-    private List<ConsultaDatosAseguradoVO> datosAsegurados;
+    private List<AseguradoVO> datosAsegurados;
     
     private List<CopagoVO> datosCopagosPoliza;
 
@@ -350,7 +350,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     				params.get("cdunieco"), params.get("cdramo"),
     				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
     		
-    		datosAsegurados = (ArrayList<ConsultaDatosAseguradoVO>) result.getItemList();
+    		datosAsegurados = (ArrayList<AseguradoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosAsegurado:" + datosAsegurados);
     		
@@ -481,11 +481,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     //Getters and setters:
     
-	public List<ConsultaDatosAseguradoVO> getDatosAsegurados() {
+	public List<AseguradoVO> getDatosAsegurados() {
 		return datosAsegurados;
 	}
 
-	public void setDatosAsegurados(List<ConsultaDatosAseguradoVO> datosAsegurados) {
+	public void setDatosAsegurados(List<AseguradoVO> datosAsegurados) {
 		this.datosAsegurados = datosAsegurados;
 	}
 
