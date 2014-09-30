@@ -2982,7 +2982,14 @@ Ext.onReady(function() {
 					if(respuesta.listaDatosSiniestro != null)
 					{
 						var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
-						Ext.getCmp('idDeducible').setValue(json.deducible);
+						
+						if(json.deducible == null || json.deducible =='')
+						{
+							Ext.getCmp('idDeducible').setValue('NA');
+						}else{
+							Ext.getCmp('idDeducible').setValue(json.deducible);
+						}
+						
 		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 		            	Ext.getCmp('idCopago').setValue(json.copago);
 		            	
@@ -3020,12 +3027,15 @@ Ext.onReady(function() {
 						}else{
 							if(Ext.getCmp('idCopago').getValue() =="NA"||Ext.getCmp('idCopago').getValue()=="NO"){
 								Ext.getCmp('idCopagoFin').setValue('0');
+								Ext.getCmp('idCopagoPrevio').setValue('0');
 							}else{
 								Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopago').getValue());
+								Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopago').getValue());
 							}
 							
 							if(Ext.getCmp('idEstatusTramite').getValue() == "2"){
 								Ext.getCmp('idCopagoFin').setValue('0');
+								Ext.getCmp('idCopagoPrevio').setValue('0');
 							}
 							Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				        	Ext.getCmp('idPenalCambioZona').setValue('0');
