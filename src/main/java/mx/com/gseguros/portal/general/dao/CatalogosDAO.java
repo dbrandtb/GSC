@@ -52,4 +52,13 @@ public interface CatalogosDAO {
 	public String agregaCodigoPostal(Map<String,String>params)throws Exception;
 
 	public String asociaZonaCodigoPostal(Map<String,String>params)throws Exception;
+	
+	public List<GenericVO> cargarDescuentosPorAgente(
+    		String tipoUnidad
+    		,String uso
+    		,String zona
+    		,String promotoria
+    		,String cdagente
+    		,String cdtipsit
+    		,String cdatribu)throws Exception;
 }
