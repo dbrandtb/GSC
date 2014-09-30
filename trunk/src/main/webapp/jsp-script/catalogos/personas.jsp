@@ -153,7 +153,7 @@ Ext.onReady(function()
 	        	        }
 	        	    }
 	        	    ,{
-                        text     : 'Documentos'
+                        text     : 'Ver Documentos'
                         ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
                         ,handler : function(){_p22_guardarClic(_p22_documentosClic);}
                     }
@@ -1121,7 +1121,7 @@ function _p22_formDatosAdicionales()
 function _p22_documentosClic()
 {
     debug('>_p22_documentosClic');
-    Ext.create('Ext.window.Window',
+    var windowDocsPer = Ext.create('Ext.window.Window',
     {
         title        : 'Documentos'
         ,modal       : true
@@ -1139,7 +1139,8 @@ function _p22_documentosClic()
             ,scripts  : true
             ,autoLoad : true
         }
-    });
+    }).show();
+    centrarVentanaInterna(windowDocsPer);
     debug('<_p22_documentosClic');
 }
 

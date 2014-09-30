@@ -136,6 +136,7 @@ public class TablaCincoClavesAction extends Padre{
 	public String insertarTabla()throws Exception{
 		boolean isDebugEnabled = log.isDebugEnabled();
 		if(isDebugEnabled){
+			log.debug("*********   ENTRANDO A INSERTAR TABLA DE APOYO  ***************");
 			log.debug("Nombre1"+nombre1);
 			log.debug("Descripcion1"+descripcion1);
 			log.debug("Num1"+num1);

@@ -12,13 +12,19 @@ import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.wizard.dao.WizardDAO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CatalogosManagerImpl implements CatalogosManager {
 	
 	private CatalogosDAO catalogosDAO;
+	
+	@Autowired
+	private WizardDAO wizardDAO;
+	
 	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
 	
@@ -177,6 +183,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public String asociaZonaCodigoPostal(Map<String, String> params)throws Exception
 	{
 		return catalogosDAO.asociaZonaCodigoPostal(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneTablasApoyo(Map<String,String> params) throws Exception
+	{
+		return wizardDAO.obtieneTablasApoyo(params);
 	}
 	
 	@Override

@@ -21,7 +21,7 @@
        	var view = grid.getView();
        	view.showPreview = pressed;
        	view.refresh();
-    	}
+    }
 
     function Tabla5Claves(){        		        				
  			var urlTabla5Claves='expresiones/ComboTabla.action'; 			 		 			

@@ -389,6 +389,24 @@
             <result type="json" />
        </action>
 
+		<action name="tablasDeApoyo" class="catalogoAction">
+            <result>/jsp-script/catalogos/tablasDeApoyo.jsp</result>
+        </action>
+        
+        <action name="obtieneTablasApoyo" class="catalogoAction" method="obtieneTablasApoyo">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
+	   <action name="includes/agregaTablaApoyo" class="catalogoAction">
+            <result>/jsp-script/catalogos/includes/agregaTablaApoyo.jsp</result>
+        </action>
+        
 	</package>
 
 </struts>
