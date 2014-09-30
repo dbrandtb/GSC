@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.cotizacion.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1270,7 +1271,44 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 		return resp;
 	}
-			
+	
+	@Override
+	public void movimientoTdescsup(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String cdtipsup
+			,Date feemisio
+			,String nmsolici
+			,Date fesolici
+			,Date ferefere
+			,String cdseqpol
+			,String cdusuari
+			,String nusuasus
+			,String nlogisus
+			,String cdperson
+			,String accion)throws Exception
+	{
+		cotizacionDAO.movimientoTdescsup(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nsuplogi
+				,cdtipsup
+				,feemisio
+				,nmsolici
+				,fesolici
+				,ferefere
+				,cdseqpol
+				,cdusuari
+				,nusuasus
+				,nlogisus
+				,cdperson
+				,accion);
+	}
 	
 	///////////////////////////////
 	////// getters y setters //////

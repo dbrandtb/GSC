@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,4 +53,21 @@ public interface CotizacionDAO
 			,String nmpoliza
 			,String nmsuplem
 			,String ntramite)throws DaoException,ApplicationException;
+	public void movimientoTdescsup(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String cdtipsup
+			,Date feemisio
+			,String nmsolici
+			,Date fesolici
+			,Date ferefere
+			,String cdseqpol
+			,String cdusuari
+			,String nusuasus
+			,String nlogisus
+			,String cdperson
+			,String accion)throws Exception;
 }
