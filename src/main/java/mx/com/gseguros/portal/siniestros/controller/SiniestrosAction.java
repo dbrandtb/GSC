@@ -3601,9 +3601,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
         		if(tipoCopago.equalsIgnoreCase("%")){
         			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
+        			if(copagoPenaPorcentaje <= 0){
+        				copagoPenaPorcentaje= 0d;
+        			}
         			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
         		}else{
         			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp;
+        			if(copagoPenaPorcentaje <= 0){
+        				copagoPenaPorcentaje= 0d;
+        			}
         			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
         			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
         		}
