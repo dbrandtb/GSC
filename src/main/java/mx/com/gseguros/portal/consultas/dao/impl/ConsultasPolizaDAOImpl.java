@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.AgenteVO;
+import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
@@ -32,7 +33,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 	
 	@SuppressWarnings("unchecked")
-	@Override
+	//@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodPoliza) throws Exception {
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -153,13 +154,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 	@Override
 	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
-			String nmpoliex, String icodpoliza) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
 			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -171,7 +165,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
@@ -188,7 +181,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
+	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -202,17 +202,21 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<AgenteVO> obtieneAgentesPoliza(PolizaVO poliza) throws Exception {
+	public List<AgenteVO> obtieneAgentesPoliza(PolizaVO poliza)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ConsultaReciboAgenteVO> obtieneRecibosPoliza(PolizaVO poliza)
+	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
 
 
 

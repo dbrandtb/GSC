@@ -18,6 +18,10 @@ public class ConsultaDatosPolizaAgenteVO implements Serializable{
 	private static final long serialVersionUID = -8555353864912795413L;
 
 	private String cdagente;
+	/**
+	 * Nombre completo del agente
+	 */
+	private String nombre;
 	private String cdtipoAg;
 	private String descripl;
 	private String porparti;
@@ -26,62 +30,83 @@ public class ConsultaDatosPolizaAgenteVO implements Serializable{
 	private String nmcuadro;
 	private String cdsucurs;
 	
-	
-	
-	
-	public String getNmsuplem() {
-		return nmsuplem;
-	}
-	public void setNmsuplem(String nmsuplem) {
-		this.nmsuplem = nmsuplem;
-	}
-	public String getNmcuadro() {
-		return nmcuadro;
-	}
-	public void setNmcuadro(String nmcuadro) {
-		this.nmcuadro = nmcuadro;
-	}
-	public String getCdsucurs() {
-		return cdsucurs;
-	}
-	public void setCdsucurs(String cdsucurs) {
-		this.cdsucurs = cdsucurs;
-	}
-	public String getCdagente() {
-		return cdagente;
-	}
-	public void setCdagente(String cdagente) {
-		this.cdagente = cdagente;
-	}
-	public String getCdtipoAg() {
-		return cdtipoAg;
-	}
-	public void setCdtipoAg(String cdtipoAg) {
-		this.cdtipoAg = cdtipoAg;
-	}
-	public String getDescripl() {
-		return descripl;
-	}
-	public void setDescripl(String descripl) {
-		this.descripl = descripl;
-	}
-	public String getPorparti() {
-		return porparti;
-	}
-	public void setPorparti(String porparti) {
-		this.porparti = porparti;
-	}
-	public String getPorredau() {
-		return porredau;
-	}
-	public void setPorredau(String porredau) {
-		this.porredau = porredau;
-	}
-
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
 	}
 	
-		
+	
+	//Getters and setters:
+
+	public String getCdagente() {
+		return cdagente;
+	}
+
+	public void setCdagente(String cdagente) {
+		this.cdagente = cdagente;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getCdtipoAg() {
+		return cdtipoAg;
+	}
+
+	public void setCdtipoAg(String cdtipoAg) {
+		this.cdtipoAg = cdtipoAg;
+	}
+
+	public String getDescripl() {
+		return descripl;
+	}
+
+	public void setDescripl(String descripl) {
+		this.descripl = descripl;
+	}
+
+	public String getPorparti() {
+		return porparti;
+	}
+
+	public void setPorparti(String porparti) {
+		this.porparti = porparti;
+	}
+
+	public String getPorredau() {
+		return porredau;
+	}
+
+	public void setPorredau(String porredau) {
+		this.porredau = porredau;
+	}
+
+	public String getNmsuplem() {
+		return nmsuplem;
+	}
+
+	public void setNmsuplem(String nmsuplem) {
+		this.nmsuplem = nmsuplem;
+	}
+
+	public String getNmcuadro() {
+		return nmcuadro;
+	}
+
+	public void setNmcuadro(String nmcuadro) {
+		this.nmcuadro = nmcuadro;
+	}
+
+	public String getCdsucurs() {
+		return cdsucurs;
+	}
+
+	public void setCdsucurs(String cdsucurs) {
+		this.cdsucurs = cdsucurs;
+	}
 	
 }
