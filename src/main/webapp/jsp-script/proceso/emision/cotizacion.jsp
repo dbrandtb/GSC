@@ -51,7 +51,6 @@ var _0_urlRecuperarCliente                   = '<s:url namespace="/"            
 var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"             />';
 var _0_urlObtenerParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
 var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
-var _0_urlCargarClaveGSPorAuto               = '<s:url namespace="/emision"         action="cargarClaveGSPorAuto"               />';
 var _0_urlCargarSumaAsegurada                = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"            />';
 
 var _0_modeloExtraFields = [
@@ -122,53 +121,25 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 /*///////////////////*/
 function _0_obtenerClaveGSPorAuto()
 {
-    _0_panelPri.setLoading(true);
-    Ext.Ajax.request(
+    _fieldByName('parametros.pv_otvalor22').getStore().load(
     {
-        url      : _0_urlCargarClaveGSPorAuto
-        ,params  :
+        params :
         {
-            'smap1.cdramo'  : _0_smap1.cdramo
-            ,'smap1.modelo' : _fieldByLabel('MODELO').getValue()
+            'params.substr' : _fieldByLabel('VERSION').getValue()
         }
-        ,success : function(response)
+        ,callback : function(records)
         {
-            _0_panelPri.setLoading(false);
-            var json=Ext.decode(response.responseText);
-            debug('### obtener clavegs por auto json response:',json);
-            if(json.exito)
-            {
-                _fieldByName('parametros.pv_otvalor22').getStore().load(
-                {
-                    params :
-                    {
-                        'params.substr' : json.smap1.CLAVEGS
-                    }
-                    ,callback : function(records)
-                    {
-                        debug('callback records:',records);
-                        var valor=json.smap1.CLAVEGS
-                            +' - '+_fieldByLabel('TIPO DE UNIDAD').findRecord('key',_fieldByLabel('TIPO DE UNIDAD').getValue()).get('value')
-                            +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
-                            +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
-                            +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
-                            +' - '+_fieldByLabel('VERSION').findRecord('key',_fieldByLabel('VERSION').getValue()).get('value');
-                        debug('valor para el auto:',valor);
-                        _fieldByName('parametros.pv_otvalor22').setValue(
-                            _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
-                        );
-                    }
-                });
-            }
-            else
-            {
-                mensajeWarning(json.respuesta);
-            }
-        }
-        ,failure : function()
-        {
-            _0_panelPri.setLoading(false);
-            errorComunicacion();
+            debug('callback records:',records);
+            var valor=_fieldByLabel('VERSION').getValue()
+                +' - '+_fieldByLabel('TIPO DE UNIDAD').findRecord('key',_fieldByLabel('TIPO DE UNIDAD').getValue()).get('value')
+                +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
+                +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
+                +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
+                +' - '+_fieldByLabel('VERSION').findRecord('key',_fieldByLabel('VERSION').getValue()).get('value');
+            debug('valor para el auto:',valor);
+            _fieldByName('parametros.pv_otvalor22').setValue(
+                _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
+            );
         }
     });
 }
