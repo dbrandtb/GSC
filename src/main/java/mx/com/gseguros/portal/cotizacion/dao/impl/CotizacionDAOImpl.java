@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.cotizacion.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -994,5 +995,70 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
 	}
-			
+	
+	@Override
+	public void movimientoTdescsup(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String cdtipsup
+			,Date feemisio
+			,String nmsolici
+			,Date fesolici
+			,Date ferefere
+			,String cdseqpol
+			,String cdusuari
+			,String nusuasus
+			,String nlogisus
+			,String cdperson
+			,String accion)throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("feemisio" , feemisio);
+		params.put("nmsolici" , nmsolici);
+		params.put("fesolici" , fesolici);
+		params.put("ferefere" , ferefere);
+		params.put("cdseqpol" , cdseqpol);
+		params.put("cdusuari" , cdusuari);
+		params.put("nusuasus" , nusuasus);
+		params.put("nlogisus" , nlogisus);
+		params.put("cdperson" , cdperson);
+		params.put("accion"   , accion);
+		ejecutaSP(new MovimientoTdescsup(getDataSource()),params);
+	}
+	
+	protected class MovimientoTdescsup extends StoredProcedure
+	{
+		protected MovimientoTdescsup(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_TDESCSUP");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feemisio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fesolici" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("ferefere" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdseqpol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nusuasus" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nlogisus" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

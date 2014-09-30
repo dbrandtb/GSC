@@ -772,7 +772,41 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp  = System.currentTimeMillis();
 				exito           = false;
-				respuesta       = "Error al emitir #"+timestamp;
+				respuesta       = "Error al insertar historico #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//tdescsup
+		if(exito)
+		{
+			try
+			{
+				cotizacionManager.movimientoTdescsup(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0"//nsuplogi
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()//cdtipsup
+						,renderFechas.parse(fechaIni)
+						,nmpoliza//nmsolici
+						,new Date()//fesolici
+						,new Date()//ferefere
+						,null//cdseqpol
+						,cdusuari
+						,null//nusuasus
+						,null//nlogisus
+						,cdperson
+						,Constantes.INSERT_MODE
+						);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al guardar descripcion de emision #"+timestamp;
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -3644,7 +3678,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdunieco , cdramo     , nmpoliza
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
-					,true
+					,true     , null/*ntramite*/, null/*cdagente*/
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -3702,6 +3736,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdelemento       = usuario.getEmpresa().getElementoId();
 			String nombreCenso      = null;
 			String ntramite         = smap1.get("ntramite");
+			String cdagente         = smap1.get("cdagente");
 			String ntramiteVacio    = smap1.get("ntramiteVacio");
 			String tipoCenso        = smap1.get("tipoCenso");
 			//String ptajepar         = smap1.get("cdreppag");
@@ -4268,7 +4303,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdunieco , cdramo     , nmpoliza
 						,cdtipsit , hayTramite , hayTramiteVacio
 						,user     , cdelemento , ntramiteVacio
-						,false
+						,false    , ntramite   , cdagente
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -4562,6 +4597,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdelemento
 			,String ntramiteVacio
 			,boolean reinsertaContratante
+			,String ntramite
+			,String cdagente
 			)
 	{
 		logger.debug(
@@ -4581,6 +4618,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## cdelemento: ")          .append(cdelemento)
 				.append("\n## ntramiteVacio: ")       .append(ntramiteVacio)
 				.append("\n## reinsertaContratante: ").append(reinsertaContratante)
+				.append("\n## ntramite: ")            .append(ntramite)
+				.append("\n## cdagente: ")            .append(cdagente)
 				.toString()
 				);
 		
@@ -4918,7 +4957,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_cdsucdoc_i"   , cdunieco);
 					params.put("pv_cdtiptra_i"   , TipoTramite.POLIZA_NUEVA.getCdtiptra());
 					params.put("pv_ferecepc_i"   , new Date());
-					params.put("pv_cdagente_i"   , smap1.get("cdagente"));
+					params.put("pv_cdagente_i"   , cdagente);
 					params.put("pv_referencia_i" , null);
 					params.put("pv_nombre_i"     , null);
 					params.put("pv_festatus_i"   , new Date());
@@ -4957,6 +4996,58 @@ public class CotizacionAction extends PrincipalCoreAction
 				resp.respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
+		}
+		
+		//mpoliage
+		if(resp.exito&&(!hayTramite||hayTramiteVacio))
+		{
+			try
+			{
+				Map<String,String>datosAgenteExterno=cotizacionManager.obtenerDatosAgente(cdagente,cdramo);
+    			String nmcuadro=datosAgenteExterno.get("NMCUADRO");
+				
+				Map<String,Object>map3=new LinkedHashMap<String,Object>(0);
+		        map3.put("pv_cdunieco_i" , cdunieco);
+		        map3.put("pv_cdramo_i"   , cdramo);
+		        map3.put("pv_estado_i"   , "W");
+		        map3.put("pv_nmpoliza_i" , nmpoliza);
+		        map3.put("pv_cdagente_i" , cdagente);
+		        map3.put("pv_nmsuplem_i" , "0");
+		        map3.put("pv_status_i"   , "V");
+		        map3.put("pv_cdtipoag_i" , "1");
+		        map3.put("pv_porredau_i" , "0");
+		        map3.put("pv_nmcuadro_i" , nmcuadro);
+		        map3.put("pv_cdsucurs_i" , null);
+		        map3.put("pv_accion_i"   , "I");
+		        if(!hayTramite)
+		        {
+		        	map3.put("pv_ntramite_i" , smap1.get("ntramite"));
+		        }
+		        else if(hayTramiteVacio)
+		        {
+		        	map3.put("pv_ntramite_i" , ntramiteVacio);
+		        }
+		        else
+		        {
+		        	map3.put("pv_ntramite_i" , ntramite);//nunca deberia ir por aqui 
+		        }
+		        map3.put("pv_porparti_i" , "100");
+		        kernelManager.movMPoliage(map3);
+			}
+			catch(Exception ex)
+			{
+				long timestamp       = System.currentTimeMillis();
+				resp.exito           = false;
+				resp.respuesta       = "Error al insertar datos del agente #"+timestamp;
+				resp.respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//TDESCSUP
+		if(resp.exito&&(!hayTramite||hayTramiteVacio))
+		{
+			
 		}
 		
 		//sigsvalipol
