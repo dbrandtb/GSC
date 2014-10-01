@@ -402,15 +402,39 @@
                 </param>
             </result>
 	   </action>
-	   
+
 	   <action name="includes/agregaTablaApoyo" class="catalogoAction">
             <result>/jsp-script/catalogos/includes/agregaTablaApoyo.jsp</result>
         </action>
         
         <action name="guardaTablaApoyo" class="catalogoAction" method="guardaTablaApoyo">
-            <result type="json" />
-       </action>
-        
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+       
+       <action name="obtieneClavesTablaApoyo" class="catalogoAction" method="obtieneClavesTablaApoyo">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success
+                </param>
+            </result>
+	   </action>
+
+       <action name="obtieneAtributosTablaApoyo" class="catalogoAction" method="obtieneAtributosTablaApoyo">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
 	</package>
 
 </struts>

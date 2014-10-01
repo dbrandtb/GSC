@@ -1603,4 +1603,75 @@ protected class BorraVarTmp extends StoredProcedure {
 		}
 	}
 
+	@Override
+	public String guardaClavesTablaApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new GuardaClavesTablaApoyo(getDataSource()), params);
+		return (String) resultado.get("pv_title_o");
+	}
+	
+	protected class GuardaClavesTablaApoyo extends StoredProcedure {
+		protected GuardaClavesTablaApoyo(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_GUARDA_CLAVES");
+			declareParameter(new SqlParameter("pi_tip_tran" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsclave1" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swforma1" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin1" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax1" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsclave2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swforma2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsclave3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swforma3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsclave4" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swforma4" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin4" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax4" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsclave5" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swforma5" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin5" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax5" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneClavesTablaApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneClavesTablaApoyo(getDataSource()), params);
+		return (List<Map<String, String>>) resultado.get("pv_registro_o");
+	}
+	
+	protected class ObtieneClavesTablaApoyo extends StoredProcedure {
+		protected ObtieneClavesTablaApoyo(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_CLAVES");
+			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneAtributosTablaApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosTablaApoyo(getDataSource()), params);
+		return (List<Map<String, String>>) resultado.get("pv_registro_o");
+	}
+	
+	protected class ObtieneAtributosTablaApoyo extends StoredProcedure {
+		protected ObtieneAtributosTablaApoyo(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
+			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }
