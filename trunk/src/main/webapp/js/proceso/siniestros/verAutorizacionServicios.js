@@ -82,7 +82,7 @@ Ext.onReady(function() {
     
     cmbRamos2 = Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan	   :2,			fieldLabel   : 'Ramo ',			id        : 'cmbRamos2',		allowBlank     : false,			width:500	
+		colspan	   :2,			fieldLabel   : 'Producto',			id        : 'cmbRamos2',		allowBlank     : false,			width:500	
 	    ,editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : true,
 	    labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos2', readOnly   : true
 	    ,store : storeRamos2
@@ -397,8 +397,6 @@ Ext.onReady(function() {
     	                    name       : 'nmautant',			labelWidth	: 170,										readOnly   : true
     	                }
     				 	,
-    				 	sucursalConsulta
-    				 	,
     				 	cmbRamos2
     				 	,
     				 	{
@@ -431,18 +429,20 @@ Ext.onReady(function() {
 		 					 ,allowBlank : false,				labelWidth: 170,				name:'nmpolizaCom',	readOnly   : true, Width: 1100
 			 			 }
     				 	,
+    				 	sucursalConsulta
+    				 	,
     				 	{
     		                 colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada1'
     		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza', hidden:true
     		             }
     				 	,
     				 	{
-    	                    xtype       : 'textfield',			fieldLabel : 'Cobertura',				id  : 'cobertura1',
+    	                    colspan:2,   xtype       : 'textfield',			fieldLabel : 'Cobertura Afectada',				id  : 'cobertura1',
     	                    name       : 'descGarantia',			labelWidth	: 170,										readOnly   : true
     	                },
     	                {
-    	                    xtype       : 'textfield',			fieldLabel : 'Sucobertura',				id  : 'subcobertura1',
-    	                    name       : 'descGarantia',			labelWidth	: 170,										readOnly   : true
+    	                    colspan:2,   xtype       : 'textfield',			fieldLabel : 'Sucobertura',				id  : 'subcobertura1',
+    	                    name       : 'descGarantia',			labelWidth	: 170,										readOnly   : true, width:600
     	                }
     	               ,
     	                {
@@ -470,11 +470,11 @@ Ext.onReady(function() {
     						 labelWidth: 170,					hidden:true
     		 			},
     				 	{
-    	                    xtype       : 'textfield',			fieldLabel : 'Medico',				id  : 'medico1',
+    	                    colspan:2,xtype       : 'textfield',			fieldLabel : 'Medico',				id  : 'medico1',
     	                    name       : 'nombreMedico',			labelWidth	: 170,										readOnly   : true
     	                },
     	                {
-    	                    xtype       : 'textfield',			fieldLabel : 'Especialidad',			id  : 'especialidad1',
+    	                    colspan:2,xtype       : 'textfield',			fieldLabel : 'Especialidad',			id  : 'especialidad1',
     	                   labelWidth	: 170,										readOnly   : true
     	                },
     				 	{
@@ -494,11 +494,11 @@ Ext.onReady(function() {
     	                    labelWidth	: 170,										readOnly   : true,		width:500
     	                },
     	                {
-							xtype       : 'textfield',			fieldLabel : 'Penalizaci&oacute;n circulo hospitalario',				id  : 'porpenal1',// 		hidden:true,
+							colspan:2,   xtype       : 'textfield',			fieldLabel : 'Penalizaci&oacute;n circulo hospitalario',				id  : 'porpenal1',// 		hidden:true,
 						    name       : 'porpenal',			labelWidth	: 170,					readOnly   : true
 						},
     				 	{
-    				 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute;n por cambio de zona'						,id       : 'copagofiMS'
+    				 		colspan:2,   xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute;n por cambio de zona'						,id       : 'idPenalCambioZona1'
     			 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona1'
     				 	},
     	                {
@@ -691,131 +691,131 @@ Ext.onReady(function() {
 														Ext.getCmp('idzonaHospProv1').setValue(json.zonaHospitalaria);
 													}
 													
-													Ext.Ajax.request(
-													{
-														url     : _URL_LISTA_TMANTENI1
-														,params : 
+														Ext.Ajax.request(
 														{
-															'params.cdtabla' : 'TPENALIZACIONES',
-															'params.codigo' : Ext.getCmp('porpenal1').getValue()
-														}
-														,success : function (response)
-														{
-															if(Ext.decode(response.responseText).listaConsultaManteni != null)
-															{
-																var json=Ext.decode(response.responseText).listaConsultaManteni[0];							            	
-																Ext.getCmp('penalizacion1').setValue(json.descripc);
+															url     : _URL_CATALOGOS
+															,params:{
+																'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
+																catalogo         : _CAT_MEDICOS,
+																catalogoGenerico : true
 															}
-															
-															Ext.Ajax.request(
+															,success : function (response)
 															{
-																url     : _URL_CATALOGOS
-																,params:{
-																	'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
-																	catalogo         : _CAT_MEDICOS,
-																	catalogoGenerico : true
-																}
-																,success : function (response)
+																if(Ext.decode(response.responseText).listaGenerica != null)
 																{
-																	if(Ext.decode(response.responseText).listaGenerica != null)
+																	var json=Ext.decode(response.responseText).listaGenerica[0];
+																	Ext.getCmp('especialidad1').setValue(json.descesp);
+																	panelInicialPrincipal1.down('textfield[name=nombreMedico]').setValue(json.nombre);
+																}
+																
+																
+																Ext.Ajax.request(
+																{
+																	url     : _URL_POLIZA_UNICA
+																	,params : 
 																	{
-																		var json=Ext.decode(response.responseText).listaGenerica[0];
-																		Ext.getCmp('especialidad1').setValue(json.descesp);
-																		panelInicialPrincipal1.down('textfield[name=nombreMedico]').setValue(json.nombre);
+																		'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+																		'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+																		'params.estado':Ext.getCmp('idEstado').getValue(),
+																		'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+																		'params.cdperson':Ext.getCmp('idAsegurado').getValue()
 																	}
-																	
-																	
-																	Ext.Ajax.request(
+																	,success : function (response)
 																	{
-																		url     : _URL_POLIZA_UNICA
-																		,params : 
+																		if(Ext.decode(response.responseText).polizaUnica != null)
 																		{
-																			'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-																			'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-																			'params.estado':Ext.getCmp('idEstado').getValue(),
-																			'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-																			'params.cdperson':Ext.getCmp('idAsegurado').getValue()
-																		}
-																		,success : function (response)
-																		{
-																			if(Ext.decode(response.responseText).polizaUnica != null)
-																			{
-																				var json=Ext.decode(response.responseText).polizaUnica[0];
-																				Ext.getCmp('idZonaContratadaPoliza1').setValue(json.zonaContratada);
-																				Ext.getCmp('polizaAfectadaCom1').setValue(json.numPoliza);
-																				Ext.getCmp('iddsplanAsegurado1').setValue(json.dsplan);
-																				// aqui ya todos tienen sus valores
-																				
-																				/*var copagoOrig = Ext.getCmp('copago1').getValue() ;
-																				var tipoCopago = Ext.getCmp('tipoCapago1').getValue() ;
-																				
-																				var sumatoria = 0;
-																			    if( copagoOrig =="NO" || copagoOrig =="NA")
-																			    {
-																			        sumatoria = + Ext.getCmp('porpenal1').getValue() +  +Ext.getCmp('copagofi').getValue();
-																			        Ext.getCmp('copagofiMS').setValue(sumatoria);
-																			    }
-																			    else if(tipoCopago =="$")
-																			    {
-																			    	sumatoria = + Ext.getCmp('porpenal1').getValue() + + Ext.getCmp('copagofi').getValue();
-																			        if(sumatoria > 0){
-																			        	Ext.getCmp('copagofiMS').setValue("$"+copagoOrig +" y "+ sumatoria +"%");
-																			        }else{
-																			        	Ext.getCmp('copagofiMS').setValue(copagoOrig);
-																			        }
-																			        
-																			        return true;
-																			    }
-																			    else if(tipoCopago =="%")
-																			    {
-																			    	sumatoria = + Ext.getCmp('porpenal1').getValue() + +Ext.getCmp('copagofi').getValue() +  +copagoOrig.replace("%","");
-																			        Ext.getCmp('copagofiMS').setValue(sumatoria);
-																			        return true;
-																			    }
-																			    else{
-																			    	sumatoria = + Ext.getCmp('porpenal1').getValue() + +Ext.getCmp('copagofi').getValue() +  +copagoOrig;//.replace("%","");
-																			        Ext.getCmp('copagofiMS').setValue(sumatoria);
-																			        return true;
-																			    }*/
-																				
+																			var json=Ext.decode(response.responseText).polizaUnica[0];
+																			Ext.getCmp('idZonaContratadaPoliza1').setValue(json.zonaContratada);
+																			Ext.getCmp('polizaAfectadaCom1').setValue(json.numPoliza);
+																			Ext.getCmp('iddsplanAsegurado1').setValue(json.dsplan);
+																			// aqui ya todos tienen sus valores
 
-																			}
-																		},
-																		failure : function ()
-																		{
-																			me.up().up().setLoading(false);
-																			Ext.Msg.show({
-																				title:'Error',
-																				msg: 'Error de comunicaci&oacute;n',
-																				buttons: Ext.Msg.OK,
-																				icon: Ext.Msg.ERROR
-																			});
+											    				    		Ext.Ajax.request(
+																		    {
+																		        url     : _URL_EXCLUSION_PENALIZACION
+																		        ,params:{
+																		            'params.cdunieco':Ext.getCmp('unieco1').getValue(),
+																		            'params.estado':Ext.getCmp('estado1').getValue(),
+																		            'params.cdramo':Ext.getCmp('cdramo1').getValue(),
+																		            'params.nmpoliza':Ext.getCmp('polizaAfectada1').getValue(),
+																		            'params.nmsituac':Ext.getCmp('nmsituac1').getValue()
+																		        }
+																		        ,success : function (response)
+																		        {
+																		            //asignamos el valor de la exclusion al campo para su posterior uso
+																		            Ext.getCmp('idExclusionPenalizacion1').setValue(Ext.decode(response.responseText).existePenalizacion);
+																		            // realizamos la validación del circulo hospitalario
+																				    if(Ext.getCmp('idExclusionPenalizacion1').getValue()=="S")
+																				    {
+																				        Ext.getCmp('idPenalCambioZona1').setValue("0");
+																				    }else{
+																				        //Mandamos a llamar la información del porcentaje que se tiene para idpenalizacion
+																				        if(Ext.getCmp('idCausaSiniestro2').getValue() == _CODIGO_CAUSA_ACCIDENTE1 || Ext.getCmp('idCausaSiniestro2').getValue() == _CODIGO_CAUSA_MATERNIDAD1)
+																                        {
+																                            Ext.getCmp('idPenalCambioZona1').setValue("0");
+																                        }else{
+																                            Ext.Ajax.request(
+																                            {
+																                                url     : _URL_PORCENTAJE_PENALIZACION1
+																                                ,params:{
+																                                    'params.zonaContratada': Ext.getCmp('idZonaContratadaPoliza1').getValue(),
+																                                    'params.zonaAtencion': Ext.getCmp('idzonaHospProv1').getValue()
+																                                }
+																                                ,success : function (response)
+																                                {
+																                                    
+																                                    Ext.getCmp('idPenalCambioZona1').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+																                                },
+																                                failure : function ()
+																                                {
+																                                    me.up().up().setLoading(false);
+																                                    centrarVentanaInterna(Ext.Msg.show({
+																                                        title:'Error',
+																                                        msg: 'Error de comunicaci&oacute;n',
+																                                        buttons: Ext.Msg.OK,
+																                                        icon: Ext.Msg.ERROR
+																                                    }));
+																                                }
+																                            });
+																                        }
+																				    }
+																		        },
+																		        failure : function ()
+																		        {
+																		            me.up().up().setLoading(false);
+																		            centrarVentanaInterna(Ext.Msg.show({
+																		                title:'Error',
+																		                msg: 'Error de comunicaci&oacute;n',
+																		                buttons: Ext.Msg.OK,
+																		                icon: Ext.Msg.ERROR
+																		            }));
+																		        }
+																		    });
 																		}
-																	});
-																},
-																failure : function ()
-																{
-																	me.up().up().setLoading(false);
-																	Ext.Msg.show({
-																		title:'Error',
-																		msg: 'Error de comunicaci&oacute;n',
-																		buttons: Ext.Msg.OK,
-																		icon: Ext.Msg.ERROR
-																	});
-																}
-															});
-														},
-														failure : function ()
-														{
-															me.up().up().setLoading(false);
-															Ext.Msg.show({
-																title:'Error',
-																msg: 'Error de comunicaci&oacute;n',
-																buttons: Ext.Msg.OK,
-																icon: Ext.Msg.ERROR
-															});
-														}
-													});
+																	},
+																	failure : function ()
+																	{
+																		me.up().up().setLoading(false);
+																		Ext.Msg.show({
+																			title:'Error',
+																			msg: 'Error de comunicaci&oacute;n',
+																			buttons: Ext.Msg.OK,
+																			icon: Ext.Msg.ERROR
+																		});
+																	}
+																});
+															},
+															failure : function ()
+															{
+																me.up().up().setLoading(false);
+																Ext.Msg.show({
+																	title:'Error',
+																	msg: 'Error de comunicaci&oacute;n',
+																	buttons: Ext.Msg.OK,
+																	icon: Ext.Msg.ERROR
+																});
+															}
+														});
 												},
 												failure : function ()
 												{
