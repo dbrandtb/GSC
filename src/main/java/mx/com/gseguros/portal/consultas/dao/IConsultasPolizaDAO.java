@@ -8,7 +8,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
-import mx.com.gseguros.portal.general.model.AgenteVO;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -120,7 +120,7 @@ public interface IConsultasPolizaDAO {
      * @return
      * @throws Exception
      */
-    public List<AgenteVO> obtieneAgentesPoliza(PolizaVO poliza) throws Exception;
+    public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza) throws Exception;
     
     
     /**

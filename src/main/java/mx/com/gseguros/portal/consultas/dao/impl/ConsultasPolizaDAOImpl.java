@@ -15,8 +15,8 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.general.model.AgenteVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -201,7 +201,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<AgenteVO> obtieneAgentesPoliza(PolizaVO poliza)
+	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

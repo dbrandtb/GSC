@@ -6,17 +6,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
+ * Representa al agente asociado a una poliza
  * @author hector.lopez
  *
  */
-public class ConsultaDatosPolizaAgenteVO implements Serializable{
+public class AgentePolizaVO implements Serializable{
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8555353864912795413L;
 
+	/**
+	 * Codigo del agente
+	 */
 	private String cdagente;
 	/**
 	 * Nombre completo del agente
