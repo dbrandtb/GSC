@@ -354,6 +354,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					//version
 					Version version=new Version();
 					version.setDescripcion(row.get("DESCRIPCION"));
+					version.setAmis(Integer.valueOf(m.get("AMIS")));
 					incisoIterado.setVersion(version);
 					
 					ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
