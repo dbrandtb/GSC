@@ -57,6 +57,11 @@ public class ReciboVO implements Serializable {
 	 * Descripci&oacute;n del tipo de recibo
 	 */
 	private String dstipore;
+	
+	/**
+	 * C&oacute;digo del recibo usado en SISA
+	 */
+	private String icodrecibo;
 
 	
 	//Getters and setters:
@@ -133,7 +138,14 @@ public class ReciboVO implements Serializable {
 		this.dstipore = dstipore;
 	}
 	
-	
+	public String getIcodrecibo() {
+		return icodrecibo;
+	}
+
+	public void setIcodrecibo(String icodrecibo) {
+		this.icodrecibo = icodrecibo;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
