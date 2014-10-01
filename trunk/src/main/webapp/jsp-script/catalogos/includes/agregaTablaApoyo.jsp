@@ -42,13 +42,13 @@ Ext.onReady(function() {
 						},
             			items: [{
 									xtype      : 'textfield',
-									name       : 'params.',
+									name       : 'params.pi_nmtabla',
 									fieldLabel : 'N&uacute;mero de Tabla',
 									value      : _parametros.nmtabla,
 									readOnly      : true
 								},{
 						        	xtype      : 'textfield',
-						    		name       : 'params.',
+						    		name       : 'params.pi_cdtabla',
 						    		fieldLabel : 'C&oacute;digo de la Tabla',
 						    		regex      : /^[a-zA-Z0-9]+$/,
 									regexText  : 'El nombre solo puede contener letras y n&uacute;meros',
@@ -59,7 +59,7 @@ Ext.onReady(function() {
 						    		allowBlank    : false
 						        },{
 			                        xtype         : 'combo',
-			                        name          : 'params.',
+			                        name          : 'params.pi_clnatura',
 			                        fieldLabel    : 'Naturaleza',
 			                        readOnly      : editMode,
 						    		allowBlank    : false,
@@ -119,20 +119,21 @@ Ext.onReady(function() {
 			                    		   var cdnatura = records[0].get('key');
 			                    		   var fieldUnCla = panelTablaApoyo.down('#fieldUnaClave');
 			                    		   var combTipAcc = panelTablaApoyo.down('#tipoAccId');
+			                    		   
+			                    		   combTipAcc.select('U');
+			                    		   
 			                    		   if(1 != cdnatura){
 			                    		   		fieldUnCla.hide();
-			                    		   		combTipAcc.select('T');
 			                    		   		combTipAcc.setReadOnly(false);
 			                    		   }else {
 			                    			   	fieldUnCla.show();
-			                    			   	combTipAcc.select('U');
 			                    			   	combTipAcc.setReadOnly(true);
 			                    		   }
 			                    	   }
 			                       }
 						        },{
 						        	xtype      : 'textfield',
-						    		name       : 'params.',
+						    		name       : 'params.pi_dstabla',
 						    		allowBlank : false,
 						    		fieldLabel : 'Descripci&oacute;n de la Tabla',
 						    		width      : 545,
@@ -142,7 +143,7 @@ Ext.onReady(function() {
 						    		value      : _parametros.dstabla
 						        },{
 						            xtype         : 'combobox',
-						            name          : 'params.',
+						            name          : 'params.pi_ottipoac',
 						            fieldLabel    : 'Tipo Acceso',
 						            itemId        : 'tipoAccId',
 						            valueField    : 'key',
@@ -178,7 +179,7 @@ Ext.onReady(function() {
 									},
 			            			items: [{
 								        	xtype       : 'combo',
-								        	name        : 'params.',
+								        	name        : 'params.pi_cdtablj1',
 								        	fieldLabel  : 'Cat&aacute;logo 1',
 								        	width       : 290,
 								        	labelWidth  : 55,
@@ -210,7 +211,7 @@ Ext.onReady(function() {
 											})
 								        },{
 								        	xtype       : 'combo',
-								        	name        : 'params.',
+								        	name        : 'params.pi_cdtablj2',
 								        	fieldLabel  : 'Cat&aacute;logo 2',
 								        	width       : 290,
 								        	labelWidth  : 55,
@@ -242,7 +243,7 @@ Ext.onReady(function() {
 											})
 								        },{
 								        	xtype       : 'combo',
-								        	name        : 'params.',
+								        	name        : 'params.pi_cdtablj3',
 								        	fieldLabel  : 'Clave',
 								        	labelWidth  : 35,
 								        	hidden      : editMode,
@@ -284,16 +285,16 @@ Ext.onReady(function() {
         		
         		if (form.isValid()) {
         			
-        			var msjeConfirmaGuardadoUsuario;
+        			var msjeConfirmaGuardado;
         			if(editMode){
-        				msjeConfirmaGuardadoUsuario = '&iquest;Esta seguro que desea actualizar este usuario?';
+        				msjeConfirmaGuardado = '&iquest;Esta seguro que desea actualizar esta tabla?';
         			}else{
-        				msjeConfirmaGuardadoUsuario = '&iquest;Esta seguro que desea crear este usuario?';
+        				msjeConfirmaGuardado = '&iquest;Esta seguro que desea crear esta tabla?';
         			}
         			
         			Ext.Msg.show({
     		            title: 'Confirmar acci&oacute;n',
-    		            msg: msjeConfirmaGuardadoUsuario,
+    		            msg: msjeConfirmaGuardado,
     		            buttons: Ext.Msg.YESNO,
     		            fn: function(buttonId, text, opt) {
     		            	if(buttonId == 'yes') {
@@ -306,7 +307,7 @@ Ext.onReady(function() {
 				    	                        break;
 				    	                    case Ext.form.action.Action.SERVER_INVALID:
 				    	                    case Ext.form.action.Action.LOAD_FAILURE:
-				    	                    	 var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, verifique su sesi&oacute;n' : action.result.errorMessage;
+				    	                    	 var msgServer = Ext.isEmpty(action.result.msgRespuesta) ? 'Error interno del servidor, verifique su sesi&oacute;n' : action.result.msgRespuesta;
 				    	                         Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
 				    	                        break;
 				    	                }
@@ -314,7 +315,7 @@ Ext.onReady(function() {
 			    					success: function(form, action) {
 			    						recargaGridUsuarios();
 			    						windowLoader.close();
-			    						mensajeCorrecto('\u00C9xito', 'El usuario se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
+			    						mensajeCorrecto('\u00C9xito', 'La tabla se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
 			    						form.reset();
 			    					}
 			    				});

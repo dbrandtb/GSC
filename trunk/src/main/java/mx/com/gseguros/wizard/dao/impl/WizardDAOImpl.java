@@ -24,6 +24,7 @@ import mx.com.gseguros.wizard.model.MensajesVO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -1573,6 +1574,32 @@ protected class BorraVarTmp extends StoredProcedure {
 	        declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 	        compile();
+		}
+	}
+
+	@Override
+	public String guardaTablaApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new GuardaTablaApoyo(getDataSource()), params);
+		return (String) resultado.get("pi_nmtabla");
+	}
+	
+	protected class GuardaTablaApoyo extends StoredProcedure {
+		protected GuardaTablaApoyo(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_GUARDA_TABLA");
+			declareParameter(new SqlParameter("pi_cdtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlInOutParameter("pi_nmtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dstabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_ottipoac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_ottipotb" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swmodifi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swerror" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_clnatura" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdtablj1" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdtablj2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdtablj3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 

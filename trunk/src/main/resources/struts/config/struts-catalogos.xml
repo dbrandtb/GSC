@@ -407,6 +407,10 @@
             <result>/jsp-script/catalogos/includes/agregaTablaApoyo.jsp</result>
         </action>
         
+        <action name="guardaTablaApoyo" class="catalogoAction" method="guardaTablaApoyo">
+            <result type="json" />
+       </action>
+        
 	</package>
 
 </struts>
