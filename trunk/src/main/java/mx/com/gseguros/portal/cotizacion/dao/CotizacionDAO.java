@@ -6,6 +6,7 @@ import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 public interface CotizacionDAO
@@ -19,7 +20,7 @@ public interface CotizacionDAO
 	public List<Map<String,String>>cargarTvalogarsGrupo(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarTarifasPorEdad(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarTarifasPorCobertura(Map<String,String>params)throws Exception;
-	public String cargarNombreAgenteTramite(Map<String,String>params)throws Exception;
+	public String cargarNombreAgenteTramite(String ntramite)throws Exception;
 	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception;
 	public Map<String,String>obtieneTipoValorAutomovil(Map<String,String>params)throws Exception;
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
@@ -70,4 +71,5 @@ public interface CotizacionDAO
 			,String nlogisus
 			,String cdperson
 			,String accion)throws Exception;
+	public DatosUsuario cargarInformacionUsuario(String cdusuari,String cdtipsit)throws Exception;
 }

@@ -265,6 +265,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    @Deprecated
     public DatosUsuario obtenerDatosUsuario(String cdusuario,String cdtipsit) throws ApplicationException
     {
         Map<String,Object>parameters=new HashMap<String,Object>(0);

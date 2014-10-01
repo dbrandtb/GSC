@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -241,4 +242,16 @@ public interface CotizacionManager
 			,String nlogisus
 			,String cdperson
 			,String accion)throws Exception;
+	
+	public ManagerRespuestaImapSmapVO pantallaCotizacionGrupo(
+			String cdramo
+			,String cdtipsit
+			,String ntramite
+			,String ntramiteVacio
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String nombreUsuario
+			,String cdagente
+			);
 }

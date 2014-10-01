@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.cotizacion.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -21,6 +24,7 @@ import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -333,8 +337,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public String cargarNombreAgenteTramite(Map<String,String>params)throws Exception
+	public String cargarNombreAgenteTramite(String ntramite)throws Exception
 	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("ntramite",ntramite);
 		Map<String,Object>resultado=ejecutaSP(new CargarNombreAgenteTramite(getDataSource()), params);
 		return (String)resultado.get("pv_nombre_o");
 	}
@@ -1061,4 +1067,59 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public DatosUsuario cargarInformacionUsuario(String cdusuari,String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdtipsit" , cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** pkg_satelites.p_get_info_usuario ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new CargarInformacionUsuario(getDataSource()),params);
+		List<DatosUsuario>listaAux   = (List<DatosUsuario>)procResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new Exception("No hay datos de usuario");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class CargarInformacionUsuario extends StoredProcedure
+    {
+    	protected CargarInformacionUsuario(DataSource dataSource)
+        {
+            super(dataSource,"pkg_satelites.p_get_info_usuario");
+            declareParameter(new SqlParameter(   "cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter(   "cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneDatosUsuarioMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    protected class ObtieneDatosUsuarioMapper implements RowMapper
+    {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+        {
+            DatosUsuario datosUsuario=new DatosUsuario();
+            datosUsuario.setCdagente(rs.getString("cdagente"));
+            datosUsuario.setCdperson(rs.getString("cdperson"));
+            datosUsuario.setCdramo  (rs.getString("cdramo"));
+            datosUsuario.setCdtipsit(rs.getString("cdtipsit"));
+            datosUsuario.setCdunieco(rs.getString("cdunieco"));
+            datosUsuario.setCdusuari(rs.getString("cdusuari"));
+            datosUsuario.setNmcuadro(rs.getString("nmcuadro"));
+            datosUsuario.setNombre  (rs.getString("nombre"));
+            return datosUsuario;
+        }
+    }
 }

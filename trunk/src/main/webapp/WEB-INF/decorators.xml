@@ -115,8 +115,10 @@
         <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacion.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionGrupo.jsp</pattern>
+        <pattern>/jsp-script/proceso/emision/cotizacionGrupo2.jsp</pattern>
         <pattern>/emision/cotizacion.action</pattern>
         <pattern>/emision/cotizacionGrupo.action</pattern>
+        <pattern>/emision/cotizacionGrupo2.action</pattern>
         
         <pattern>/siniestros/*.action</pattern>
         <pattern>/jsp-script/proceso/siniestros/*.jsp</pattern>
