@@ -572,7 +572,7 @@ Ext.onReady(function() {
     	matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeProveedor,
     	minChars  : 2,					triggerAction: 'all',			hideTrigger:true,
 		listeners : {
-			change:function(e){
+			'select':function(e){//change:function(e){
 				obtieneInformacion();
     		}
         }
@@ -591,6 +591,8 @@ Ext.onReady(function() {
 	    		Ext.getCmp('idDeducible').setValue('');
 	    		Ext.getCmp('idTipoCopago').setValue('');
 		    	Ext.getCmp('idCopago').setValue('');
+		    	Ext.getCmp('idCopagoFin').setValue('');
+				Ext.getCmp('idCopagoPrevio').setValue('');
 	    		storeSubcobertura.removeAll();
 	        	storeSubcobertura.load({
 	                params:{
@@ -608,8 +610,8 @@ Ext.onReady(function() {
     	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
 		listeners : {
-					change:function(e){
-						obtieneInformacion();
+					'select':function(e){//change:function(e){
+						//obtieneInformacion();
 						Ext.Ajax.request(
 						{
 							url    : _URL_MONTO_DISP_PROVEEDOR
@@ -663,6 +665,7 @@ Ext.onReady(function() {
 										}
 									});
 								}
+								obtieneInformacion();
 							},
 							failure : function ()
 							{
@@ -981,6 +984,7 @@ Ext.onReady(function() {
 			        case '3' : // MATERNIDAD
 			        	Ext.getCmp('notaInterna').setValue('');
 			        	Ext.getCmp('idCopagoFin').setValue('0');
+			        	Ext.getCmp('idCopagoPrevio').setValue('0');
 			        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			        	Ext.getCmp('idPenalCambioZona').setValue('0');
 			        	if(e.getValue() == _CODIGO_CAUSA_MATERNIDAD){
@@ -1429,11 +1433,11 @@ Ext.onReady(function() {
     	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
     	   }
     	   
-    	   if(Ext.getCmp('idValSesiones').getValue() =="1"){
+    	   /*<-- INCIO -->if(Ext.getCmp('idValSesiones').getValue() =="1"){
 				var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
 				Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
 				Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
-    	   }
+    	   }<-- FIN -->*/
 		   this.getStore().removeAt(rowIndex);
 	   }
 	});
@@ -2531,8 +2535,6 @@ Ext.onReady(function() {
 		,success : function (response)
 		{
 			var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-			debug("VALOR DEL JSON ===>");
-			debug(json);
 			Ext.getCmp('idUnieco').setValue(json.cdunieco);
 			Ext.getCmp('idEstado').setValue(json.estado);
 			Ext.getCmp('idcdRamo').setValue(json.cdramo);
@@ -2687,16 +2689,6 @@ Ext.onReady(function() {
 						//Fecha Autorización
 						Ext.getCmp('fechaAutorizacion').setValue(dateFechaAutorizacion);
 						
-						if(Ext.getCmp('idcdtipsit').getValue() =="SL"){
-							Ext.getCmp('idCopagoFin').show();
-							Ext.getCmp('idPenalCircHospitalario').show();
-							Ext.getCmp('idPenalCambioZona').show();
-						}else{
-							Ext.getCmp('idCopagoFin').hide();
-							Ext.getCmp('idPenalCircHospitalario').hide();
-							Ext.getCmp('idPenalCambioZona').hide();
-						}
-						
             		}
 	            },
 	            failure : function ()
@@ -2739,6 +2731,145 @@ Ext.onReady(function() {
 			storeCausaSinestro.load();
 			Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);
 			
+			
+			
+			//OBTENEMOS LOS VALORES DE DEDUCIBLE Y COPAGO
+			Ext.Ajax.request(
+	        {
+	            url     : _URL_CONSULTA_DEDUCIBLE_COPAGO
+	            ,params : 
+	            {
+	            	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+	            	'params.estado':Ext.getCmp('idEstado').getValue(),
+	            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+	            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+	            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue(),
+	            	'params.cdgarant':Ext.getCmp('idCobAfectada').getValue(),
+	            	'params.subcober':Ext.getCmp('idSubcobertura').getValue(),
+	            	'params.cdpresta':Ext.getCmp('idProveedor').getValue()
+	            	
+	            }
+	            ,success : function (response)
+	            {
+	            	var respuesta= Ext.decode(response.responseText);
+					if(respuesta.listaDatosSiniestro != null)
+					{
+						var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
+						
+						if(json.deducible == null || json.deducible =='')
+						{
+							Ext.getCmp('idDeducible').setValue('NA');
+						}else{
+							Ext.getCmp('idDeducible').setValue(json.deducible);
+						}
+						
+		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
+		            	Ext.getCmp('idCopago').setValue(json.copago);
+		            	
+		            	Ext.Ajax.request(
+    					{
+    					    url     : _URL_CATALOGOS
+    					    ,params:{
+    							'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
+    							catalogo         : _CAT_PROVEEDORES,
+       						    catalogoGenerico : true
+    		                }
+    					    ,success : function (response)
+    					    {
+    					    	if(Ext.getCmp('idProveedor').getValue()!= null)//if(Ext.decode(response.responseText).listaGenerica != null)
+    				    		{
+    				    			var json=Ext.decode(response.responseText).listaGenerica[0];
+    	    				        Ext.getCmp('idCirculoHospProv').setValue(json.circulo);
+    	    				        Ext.getCmp('codPostalProv').setValue(json.codpos);
+    	    				        Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
+    				    		}
+    				    		
+    				    		Ext.Ajax.request(
+							    {
+							        url     : _URL_EXCLUSION_PENALIZACION
+							        ,params:{
+							            'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+							            'params.estado':Ext.getCmp('idEstado').getValue(),
+							            'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+							            'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+							            'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
+							        }
+							        ,success : function (response)
+							        {
+							            //asignamos el valor de la exclusion al campo para su posterior uso
+							            Ext.getCmp('idExclusionPenalizacion').setValue(Ext.decode(response.responseText).existePenalizacion);
+							            // realizamos la validación del circulo hospitalario
+									    if(Ext.getCmp('idExclusionPenalizacion').getValue()=="S")
+									    {
+									        Ext.getCmp('idPenalCambioZona').setValue("0");
+									    }else{
+									        //Mandamos a llamar la información del porcentaje que se tiene para idpenalizacion
+									        if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD)
+					                        {
+					                            Ext.getCmp('idPenalCambioZona').setValue("0");
+					                        }else{
+					                            Ext.Ajax.request(
+					                            {
+					                                url     : _URL_PORCENTAJE_PENALIZACION
+					                                ,params:{
+					                                    'params.zonaContratada': Ext.getCmp('idZonaContratadaPoliza').getValue(),
+					                                    'params.zonaAtencion': Ext.getCmp('idzonaHospProv').getValue()
+					                                }
+					                                ,success : function (response)
+					                                {
+					                                    
+					                                    Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+					                                },
+					                                failure : function ()
+					                                {
+					                                    me.up().up().setLoading(false);
+					                                    centrarVentanaInterna(Ext.Msg.show({
+					                                        title:'Error',
+					                                        msg: 'Error de comunicaci&oacute;n',
+					                                        buttons: Ext.Msg.OK,
+					                                        icon: Ext.Msg.ERROR
+					                                    }));
+					                                }
+					                            });
+					                        }
+									    }
+							        },
+							        failure : function ()
+							        {
+							            me.up().up().setLoading(false);
+							            centrarVentanaInterna(Ext.Msg.show({
+							                title:'Error',
+							                msg: 'Error de comunicaci&oacute;n',
+							                buttons: Ext.Msg.OK,
+							                icon: Ext.Msg.ERROR
+							            }));
+							        }
+							    });
+    					    },
+    					    failure : function ()
+    					    {
+    					        me.up().up().setLoading(false);
+    					        centrarVentanaInterna(Ext.Msg.show({
+    					            title:'Error',
+    					            msg: 'Error de comunicaci&oacute;n',
+    					            buttons: Ext.Msg.OK,
+    					            icon: Ext.Msg.ERROR
+    					        }));
+    					    }
+    					});
+					}
+	            },
+	            failure : function ()
+	            {
+	                me.up().up().setLoading(false);
+	                centrarVentanaInterna(Ext.Msg.show({
+	                    title:'Error',
+	                    msg: 'Error de comunicaci&oacute;n',
+	                    buttons: Ext.Msg.OK,
+	                    icon: Ext.Msg.ERROR
+	                }));
+	            }
+	        });
 		},
 		failure : function ()
 		{
@@ -2958,6 +3089,7 @@ Ext.onReady(function() {
 		Ext.getCmp('idDeducible').setValue('');
     	Ext.getCmp('idCopago').setValue('');
     	Ext.getCmp('idCopagoFin').setValue('');
+    	Ext.getCmp('idCopagoPrevio').setValue('');
     	Ext.getCmp('idTipoCopago').setValue('');
     	Ext.getCmp('idPenalCircHospitalario').setValue('');
     	Ext.getCmp('idPenalCambioZona').setValue('');
@@ -3004,9 +3136,9 @@ Ext.onReady(function() {
 			    		                }
 			    					    ,success : function (response)
 			    					    {
-			    					    	if(Ext.decode(response.responseText).listaGenerica != null)
+			    					    	if(Ext.getCmp('idProveedor').getValue()!= null)//if(Ext.decode(response.responseText).listaGenerica != null)
 			    				    		{
-			    					    		var json=Ext.decode(response.responseText).listaGenerica[0];
+			    				    			var json=Ext.decode(response.responseText).listaGenerica[0];
 			    	    				        Ext.getCmp('idCirculoHospProv').setValue(json.circulo);
 			    	    				        Ext.getCmp('codPostalProv').setValue(json.codpos);
 			    	    				        Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
@@ -3061,6 +3193,7 @@ Ext.onReady(function() {
 		Ext.getCmp('idExclusionPenalizacion').setValue('');
 		Ext.getCmp('idPenalCambioZona').setValue('');
 		Ext.getCmp('idCopagoFin').setValue('');
+		Ext.getCmp('idCopagoPrevio').setValue('');
     	Ext.getCmp('idPenalCircHospitalario').setValue('');
 		Ext.getCmp('idPenalCambioZona').setValue('');
 		
@@ -3068,6 +3201,7 @@ Ext.onReady(function() {
 		if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD)
 		{
 			Ext.getCmp('idCopagoFin').setValue('0');
+			Ext.getCmp('idCopagoPrevio').setValue('0');
         	Ext.getCmp('idPenalCircHospitalario').setValue('0');
         	Ext.getCmp('idPenalCambioZona').setValue('0');
 		}else{
@@ -3189,7 +3323,6 @@ Ext.onReady(function() {
 	
 	function validacionCopagoTotal()
 	{
-		debug("ENTRA A validacionCopagoTotal");
 		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
 		var tipoCopago = Ext.getCmp('idTipoCopago').getValue() ;
 		var sumatoria = 0;
@@ -3197,6 +3330,16 @@ Ext.onReady(function() {
 	    {
 	        sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() +  +Ext.getCmp('idPenalCambioZona').getValue();
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+	        if(+sumatoria <= 0){
+	        	Ext.getCmp('idCopagoFin').setValue("0");
+	        }
+	        
+			if(Ext.getCmp('idValSesiones').getValue() =="1"){
+				var copagoPrevio = Ext.getCmp('idCopagoPrevio').setValue("0");
+			}else{
+				Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+			}
+	        //.....
 	        return true;
 	    }
 	    if(tipoCopago =="$")
@@ -3204,21 +3347,48 @@ Ext.onReady(function() {
 	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + + Ext.getCmp('idPenalCambioZona').getValue();
 	        if(sumatoria > 0){
 	        	Ext.getCmp('idCopagoFin').setValue("$"+copagoOrig +" y "+ sumatoria +"%");
+	        	//.....
 	        }else{
 	        	Ext.getCmp('idCopagoFin').setValue(copagoOrig);
+	        	//.....
 	        }
-	        
+	        //Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+	        if(Ext.getCmp('idValSesiones').getValue() =="1"){
+				var copagoPrevio = Ext.getCmp('idCopagoPrevio').setValue("0");
+			}else{
+				Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+			}
 	        return true;
 	    }
 	    if(tipoCopago =="%")
 	    {
 	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+	        if(+sumatoria <= 0){
+	        	Ext.getCmp('idCopagoFin').setValue("0");
+	        }
+	        //Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+	        if(Ext.getCmp('idValSesiones').getValue() =="1"){
+				var copagoPrevio = Ext.getCmp('idCopagoPrevio').setValue("0");
+			}else{
+				Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+			}
+	        //.....
 	        return true;
 	    }
 	    else{
 	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig;//.replace("%","");
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+	        if(+sumatoria <= 0){
+	        	Ext.getCmp('idCopagoFin').setValue("0");
+	        }
+	        //Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+	        if(Ext.getCmp('idValSesiones').getValue() =="1"){
+				var copagoPrevio = Ext.getCmp('idCopagoPrevio').setValue("0");
+			}else{
+				Ext.getCmp('idCopagoPrevio').setValue(Ext.getCmp('idCopagoFin').getValue());
+			}
+	        //.....
 	        return true;
 	    }
 	    return true;
