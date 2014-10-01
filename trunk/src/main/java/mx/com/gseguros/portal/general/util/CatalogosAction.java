@@ -62,6 +62,11 @@ public class CatalogosAction extends PrincipalCoreAction {
     private List<Map<String, String>> loadList;
     
     /**
+     * Lista para guardar varios elementos
+     */
+    private List<Map<String, String>> saveList;
+    
+    /**
      * Lista personalizada, puede contener cualquier tipo de objeto 
      */
     private List<?> listaGenerica;
@@ -137,6 +142,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TCUMULOS:
 				case TESTADOS:
 				case TZONAS:
+				case TFORMATOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
@@ -474,6 +480,10 @@ public class CatalogosAction extends PrincipalCoreAction {
     		
     		String nmtabla = catalogosManager.guardaTablaApoyo(params);
     		logger.debug(" >>>>>>>>>  Numero de Tabla Guardada: " + nmtabla);
+    		
+    		logger.debug("Guardando Claves... ");
+    		catalogosManager.guardaClavesTablaApoyo(params, saveList);
+    		
     	}catch(Exception ex){
     		logger.error("Error al guardaTablaApoyo",ex);
     		msgRespuesta = ex.getMessage();
@@ -485,6 +495,35 @@ public class CatalogosAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
     
+    public String obtieneClavesTablaApoyo()throws Exception{
+    	
+    	try{
+    		loadList = catalogosManager.obtieneClavesTablaApoyo(params);
+    	}catch(Exception ex){
+    		logger.error("Error al obtieneTablasApoyo",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+
+    public String obtieneAtributosTablaApoyo()throws Exception{
+    	
+    	try{
+    		loadList = catalogosManager.obtieneAtributosTablaApoyo(params);
+    	}catch(Exception ex){
+    		logger.error("Error al obtieneAtributosTablaApoyo",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
     
     // Getters and setters
 	public boolean isSuccess() {
@@ -571,6 +610,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setLoadList(List<Map<String, String>> loadList) {
 		this.loadList = loadList;
+	}
+
+	public List<Map<String, String>> getSaveList() {
+		return saveList;
+	}
+
+	public void setSaveList(List<Map<String, String>> saveList) {
+		this.saveList = saveList;
 	}
 	
 }

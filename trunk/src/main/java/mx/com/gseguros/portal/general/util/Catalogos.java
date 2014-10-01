@@ -68,7 +68,8 @@ public enum Catalogos {
 	TESTADOS("TESTADOS"),
 	MUNICIPIOS(""),
 	ZONAS_POR_PRODUCTO(""),
-	TZONAS("TZONAS");
+	TZONAS("TZONAS"),
+	TFORMATOS("TFORMATOS");
 
 	private String cdTabla;
 

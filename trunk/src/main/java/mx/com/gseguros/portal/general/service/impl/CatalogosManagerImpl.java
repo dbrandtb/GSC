@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
@@ -190,11 +191,198 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	{
 		return wizardDAO.obtieneTablasApoyo(params);
 	}
-	
+
 	@Override
 	public String guardaTablaApoyo(Map<String,String> params) throws Exception
 	{
 		return wizardDAO.guardaTablaApoyo(params);
+	}
+	
+	@Override
+	public boolean guardaClavesTablaApoyo(Map<String, String> params, List<Map<String, String>> saveList) throws Exception
+	{
+		
+		boolean add1 = false;
+		boolean add2 = false;
+		boolean add3 = false;
+		boolean add4 = false;
+		boolean add5 = false;
+		
+		HashMap<String, Map<String, String>> existentes =  new HashMap<String, Map<String, String>>();
+		List<Map<String, String>> inexistentes = new ArrayList<Map<String,String>>();
+		inexistentes.addAll(saveList);
+		
+		//Identificando que llaves ya existen y quitandolas de la lista de inexistentes
+		for(Map<String, String> clave : saveList){
+			if(StringUtils.isNotBlank(clave.get("NUMCLAVE"))){
+				if("1".equals(clave.get("NUMCLAVE"))){
+					existentes.put("1", clave);
+					inexistentes.remove(clave);
+				}else if("2".equals(clave.get("NUMCLAVE"))){
+					existentes.put("2", clave);
+					inexistentes.remove(clave);
+				}else if("3".equals(clave.get("NUMCLAVE"))){
+					existentes.put("3", clave);
+					inexistentes.remove(clave);
+				}else if("4".equals(clave.get("NUMCLAVE"))){
+					existentes.put("4", clave);
+					inexistentes.remove(clave);
+				}else if("5".equals(clave.get("NUMCLAVE"))){
+					existentes.put("5", clave);
+					inexistentes.remove(clave);
+				}
+			}
+		}
+		
+		logger.debug("Claves existentes: "+ existentes);
+		logger.debug("Claves nuevas/ a generar: "+ inexistentes);
+		
+		Map<String, String> claveAgregar = null;
+		
+		//Agregando Existentes
+		if(existentes.containsKey("1")){
+			claveAgregar = existentes.get("1");
+			params.put("pi_dsclave1", claveAgregar.get("DSCLAVE1"));
+			params.put("pi_swforma1", claveAgregar.get("SWFORMA1"));
+			params.put("pi_nmlmin1", claveAgregar.get("NMLMIN1"));
+			params.put("pi_nmlmax1", claveAgregar.get("NMLMAX1"));
+		}else {
+			add1 = true;
+		}
+		if(existentes.containsKey("2")){
+			claveAgregar = existentes.get("2");
+			params.put("pi_dsclave2", claveAgregar.get("DSCLAVE1"));
+			params.put("pi_swforma2", claveAgregar.get("SWFORMA1"));
+			params.put("pi_nmlmin2", claveAgregar.get("NMLMIN1"));
+			params.put("pi_nmlmax2", claveAgregar.get("NMLMAX1"));
+		}else {
+			add2 = true;
+		}
+		if(existentes.containsKey("3")){
+			claveAgregar = existentes.get("3");
+			params.put("pi_dsclave3", claveAgregar.get("DSCLAVE1"));
+			params.put("pi_swforma3", claveAgregar.get("SWFORMA1"));
+			params.put("pi_nmlmin3", claveAgregar.get("NMLMIN1"));
+			params.put("pi_nmlmax3", claveAgregar.get("NMLMAX1"));
+		}else {
+			add3 = true;
+		}
+		if(existentes.containsKey("4")){
+			claveAgregar = existentes.get("4");
+			params.put("pi_dsclave4", claveAgregar.get("DSCLAVE1"));
+			params.put("pi_swforma4", claveAgregar.get("SWFORMA1"));
+			params.put("pi_nmlmin4", claveAgregar.get("NMLMIN1"));
+			params.put("pi_nmlmax4", claveAgregar.get("NMLMAX1"));
+		}else {
+			add4 = true;
+		}
+		if(existentes.containsKey("5")){
+			claveAgregar = existentes.get("5");
+			params.put("pi_dsclave5", claveAgregar.get("DSCLAVE1"));
+			params.put("pi_swforma5", claveAgregar.get("SWFORMA1"));
+			params.put("pi_nmlmin5", claveAgregar.get("NMLMIN1"));
+			params.put("pi_nmlmax5", claveAgregar.get("NMLMAX1"));
+		}else {
+			add5 = true;
+		}
+		
+		//Agregando las que aun no existen
+		if(add1){
+			if(!inexistentes.isEmpty()){
+				claveAgregar = new HashMap<String, String>(inexistentes.get(0));
+				params.put("pi_dsclave1", claveAgregar.get("DSCLAVE1"));
+				params.put("pi_swforma1", claveAgregar.get("SWFORMA1"));
+				params.put("pi_nmlmin1", claveAgregar.get("NMLMIN1"));
+				params.put("pi_nmlmax1", claveAgregar.get("NMLMAX1"));
+				inexistentes.remove(0);
+			}else{
+				params.put("pi_dsclave1", null);
+				params.put("pi_swforma1", null);
+				params.put("pi_nmlmin1", null);
+				params.put("pi_nmlmax1", null);
+			}
+		}
+		
+		if(add2){
+			if(!inexistentes.isEmpty()){
+				claveAgregar = new HashMap<String, String>(inexistentes.get(0));
+				params.put("pi_dsclave2", claveAgregar.get("DSCLAVE1"));
+				params.put("pi_swforma2", claveAgregar.get("SWFORMA1"));
+				params.put("pi_nmlmin2", claveAgregar.get("NMLMIN1"));
+				params.put("pi_nmlmax2", claveAgregar.get("NMLMAX1"));
+				inexistentes.remove(0);
+			}else{
+				params.put("pi_dsclave2", null);
+				params.put("pi_swforma2", null);
+				params.put("pi_nmlmin2", null);
+				params.put("pi_nmlmax2", null);
+			}
+		}
+		
+		if(add3){
+			if(!inexistentes.isEmpty()){
+				claveAgregar = new HashMap<String, String>(inexistentes.get(0));
+				params.put("pi_dsclave3", claveAgregar.get("DSCLAVE1"));
+				params.put("pi_swforma3", claveAgregar.get("SWFORMA1"));
+				params.put("pi_nmlmin3", claveAgregar.get("NMLMIN1"));
+				params.put("pi_nmlmax3", claveAgregar.get("NMLMAX1"));
+				inexistentes.remove(0);
+			}else{
+				params.put("pi_dsclave3", null);
+				params.put("pi_swforma3", null);
+				params.put("pi_nmlmin3", null);
+				params.put("pi_nmlmax3", null);
+			}
+		}
+		
+		if(add4){
+			if(!inexistentes.isEmpty()){
+				claveAgregar = new HashMap<String, String>(inexistentes.get(0));
+				params.put("pi_dsclave4", claveAgregar.get("DSCLAVE1"));
+				params.put("pi_swforma4", claveAgregar.get("SWFORMA1"));
+				params.put("pi_nmlmin4", claveAgregar.get("NMLMIN1"));
+				params.put("pi_nmlmax4", claveAgregar.get("NMLMAX1"));
+				inexistentes.remove(0);
+			}else{
+				params.put("pi_dsclave4", null);
+				params.put("pi_swforma4", null);
+				params.put("pi_nmlmin4", null);
+				params.put("pi_nmlmax4", null);
+			}
+		}
+		
+		if(add5){
+			if(!inexistentes.isEmpty()){
+				claveAgregar = new HashMap<String, String>(inexistentes.get(0));
+				params.put("pi_dsclave5", claveAgregar.get("DSCLAVE1"));
+				params.put("pi_swforma5", claveAgregar.get("SWFORMA1"));
+				params.put("pi_nmlmin5", claveAgregar.get("NMLMIN1"));
+				params.put("pi_nmlmax5", claveAgregar.get("NMLMAX1"));
+				inexistentes.remove(0);
+			}else{
+				params.put("pi_dsclave5", null);
+				params.put("pi_swforma5", null);
+				params.put("pi_nmlmin5", null);
+				params.put("pi_nmlmax5", null);
+			}
+		}
+		
+		
+		wizardDAO.guardaClavesTablaApoyo(params);
+		
+		return true;
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneClavesTablaApoyo(Map<String,String> params) throws Exception
+	{
+		return wizardDAO.obtieneClavesTablaApoyo(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneAtributosTablaApoyo(Map<String,String> params) throws Exception
+	{
+		return wizardDAO.obtieneAtributosTablaApoyo(params);
 	}
 	
 	@Override

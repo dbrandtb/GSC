@@ -31,7 +31,7 @@ Ext.onReady(function(){
 	{
 		extend : 'Ext.data.Model'
 		,fields :
-		['NMTABLA','CDTABLA','DSTABLA','OTTIPOTB','OTTIPOTB_DESC']
+		['NMTABLA','CDTABLA','DSTABLA','OTTIPOTB','OTTIPOTB_DESC','OTTIPOAC','CDTABLJ1','CDTABLJ2','CDTABLJ3','CLNATURA']
 	});
 	
 	/*/////////////////*/
@@ -88,16 +88,16 @@ Ext.onReady(function(){
         },
         tbar: [{
             icon    : '${ctx}/resources/fam3icons/icons/add.png',
-            text    : 'Agregar tabla',
+            text    : 'Agregar Tabla',
             handler : function()
             {
             	windowLoader = Ext.create('Ext.window.Window',
                 {
-                    title        : 'Agregar Tabla'
+                    title        : 'Agregar Tabla de Apoyo'
                     ,modal       : true
                     ,buttonAlign : 'center'
                     ,width       : 900
-                    ,height      : 600
+                    ,height      : 750
                     ,autoScroll  : true
                     ,loader      :
                     {
@@ -116,7 +116,7 @@ Ext.onReady(function(){
             }
         },{
             icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-            text    : 'Editar tabla',
+            text    : 'Editar Tabla',
             handler : function()
             {
             	var model =  gridTablas.getSelectionModel();
@@ -131,11 +131,11 @@ Ext.onReady(function(){
             		
             		windowLoader = Ext.create('Ext.window.Window',
                             {
-                                title        : 'Editar Tabla'
+                                title        : 'Editar Tabla de Apoyo'
                                 ,modal       : true
                                 ,buttonAlign : 'center'
-                                ,width       : 800
-                                ,height      : 600
+                                ,width       : 900
+                                ,height      : 750
                                 ,autoScroll  : true
                                 ,loader      :
                                 {
@@ -147,22 +147,16 @@ Ext.onReady(function(){
                                         method   : 'POST'
                                     },
                                     params: {
-                                    	'params.edit' : 'S',
-                                    	'params.cdsisrol': record.get('cdrol'),
-                                    	'params.cdmodgra': record.get('esAdmin'),
-                                    	'params.cdunieco': record.get('cdunieco'),
-                                    	'params.cdusuario': record.get('cdUsuario'),
-                                    	'params.nombre': nombre,
-                                    	'params.snombre': snombre,
-                                    	'params.appat': appat,
-                                    	'params.apmat': apmat,
-                                    	'params.sexo': record.get('otSexo'),
-                                    	'params.fecnac': record.get('feNacimi'),
-                                    	'params.rfc': record.get('cdrfc'),
-                                    	'params.curp': record.get('curp'),
-                                    	'params.email': record.get('dsEmail'),
-                                    	'params.feini': record.get('feini'),
-                                    	'params.fefin': record.get('fefinlic')
+                                    	'params.edit'    : 'S',
+                                    	'params.cdtabla' : record.get('CDTABLA'),
+                                    	'params.dstabla' : record.get('DSTABLA'),
+                                    	'params.nmtabla' : record.get('NMTABLA'),
+                                    	'params.tipotab' : record.get('OTTIPOTB'),
+                                    	'params.tipoacc' : record.get('OTTIPOAC'),
+                                    	'params.catuno'  : record.get('CDTABLJ1'),
+                                    	'params.catdos'  : record.get('CDTABLJ2'),
+                                    	'params.clavecat': record.get('CDTABLJ3'),
+                                    	'params.cdnatura': record.get('CLNATURA')
                                     }
                                 }
                             }).show();
@@ -195,7 +189,7 @@ Ext.onReady(function(){
 
             							if(jsonRes.success == true){
             								mensajeCorrecto('Aviso','Se ha eliminado la tabla correctamente.');
-    										recargaGridUsuarios();        							
+    										recargagridTablas();        							
                    						}else {
                    							mensajeError('No se pudo eliminar la tabla.');
                    						}
@@ -366,6 +360,6 @@ Ext.onReady(function(){
 
 </head>
 <body>
-<div id="mainDivTabs" style="height:500px;"></div>
+<div id="mainDivTabs" style="height:650px;"></div>
 </body>
 </html>
