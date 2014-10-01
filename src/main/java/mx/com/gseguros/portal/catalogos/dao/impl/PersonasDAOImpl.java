@@ -480,6 +480,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public List<Map<String,String>>cargarDocumentosPersona(Map<String,String> params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_DOCUMENTOS_PERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new CargarDocumentosPersona(getDataSource()), params);
 		return (List<Map<String,String>>)resultado.get("pv_registro_o");
 	}

@@ -8,12 +8,14 @@ import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
@@ -27,6 +29,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 	private static final Logger logger = Logger.getLogger(CotizacionManagerImpl.class);
 	private CotizacionDAO cotizacionDAO;
+	private PantallasDAO  pantallasDAO;
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -439,10 +442,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\ncdsisrol "+cdsisrol
 				+ "\nstatus "+status
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdsisrol" , cdsisrol);
-		params.put("status"   , status);
-		Map<String,String>res=cotizacionDAO.cargarPermisosPantallaGrupo(params);
+		Map<String,String>res=cotizacionDAO.cargarPermisosPantallaGrupo(cdsisrol,status);
 		logger.info(""
 				+ "\nresponse "+res
 				+ "\n###### cargarPermisosPantallaGrupo ######"
@@ -1350,7 +1350,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setSmap(new HashMap<String,String>());
 			if(StringUtils.isBlank(status))
 			{
-				resp.getSmap().put("status", "0");
+				status = "0";
 			}
 		}
 		catch(Exception ex)
@@ -1361,6 +1361,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setRespuestaOculta(ex.getMessage());
 			logger.error(resp.getRespuesta(),ex);
 		}
+		//retocar datos de entrada
 		
 		String nombreAgente = null;
 		
@@ -1395,12 +1396,243 @@ public class CotizacionManagerImpl implements CotizacionManager
 				logger.error(resp.getRespuesta(),ex);
 			}
 		}
+		//datos del agente
+		
+		GeneradorCampos gc = null;
 		
 		//componentes
 		if(resp.isExito())
 		{
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			try
+			{
+				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdramo(cdramo);
+				gc.setCdtipsit(cdtipsit);
+				resp.setImap(new HashMap<String,Item>());
+				
+				//columnas base
+				List<ComponenteVO>tatrisitBase = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+				List<ComponenteVO>aux          = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitBase)
+				{
+					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+							&&iTatri.getSwsuscri().equals("N")
+							&&iTatri.getSwGrupo().equals("S")
+							)
+					{
+						aux.add(iTatri);
+					}
+				}
+				tatrisitBase = aux;
+				if(tatrisitBase.size()>0)
+				{
+					gc.generaComponentes(tatrisitBase, true, true, false, true, true, false);
+					resp.getImap().put("colsBaseFields"  , gc.getFields());
+					resp.getImap().put("colsBaseColumns" , gc.getColumns());
+				}
+				else
+				{
+					resp.getImap().put("colsBaseFields"  , null);
+					resp.getImap().put("colsBaseColumns" , null);
+				}
+				
+				//columnas extendidas
+				List<ComponenteVO>tatrisitExt = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+				aux = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitExt)
+				{
+					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+							&&iTatri.getSwsuscri().equals("N")
+							&&iTatri.getSwGrupoLinea().equals("S")
+							)
+					{
+						aux.add(iTatri);
+					}
+				}
+				tatrisitExt = aux;
+				aux         = null;
+				if(tatrisitExt.size()>0)
+				{
+					gc.generaComponentes(tatrisitBase, true, true, false, true, true, false);
+					resp.getImap().put("colsExtFields"  , gc.getFields());
+					resp.getImap().put("colsExtColumns" , gc.getColumns());
+				}
+				else
+				{
+					resp.getImap().put("colsExtFields"  , null);
+					resp.getImap().put("colsExtColumns" , null);
+				}
+				
+				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "CONTRATANTE", null);
+				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
+				resp.getImap().put("itemsContratante"  , gc.getItems());
+				resp.getImap().put("fieldsContratante" , gc.getFields());
+				
+				List<ComponenteVO>componentesRiesgo=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "RIESGO", null);
+				gc.generaComponentes(componentesRiesgo, true,true,true,false,false,false);
+				resp.getImap().put("itemsRiesgo"  , gc.getItems());
+				resp.getImap().put("fieldsRiesgo" , gc.getFields());
+				
+				List<ComponenteVO>componentesAgente=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "AGENTE", null);
+				componentesAgente.get(0).setDefaultValue(nombreAgente);
+				componentesAgente.get(1).setDefaultValue(cdagente);
+				gc.generaComponentes(componentesAgente, true,false,true,false,false,false);
+				resp.getImap().put("itemsAgente"  , gc.getItems());
+				
+				List<ComponenteVO>columnaEditorPlan=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_PLANES2", null);
+				gc.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
+				resp.getImap().put("editorPlanesColumn",gc.getColumns());
+				
+				List<ComponenteVO>comboFormaPago=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
+				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
+				resp.getImap().put("comboFormaPago"  , gc.getItems());
+				
+				List<ComponenteVO>comboRepartoPago=pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_REPARTO_PAGO", null);
+				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
+				resp.getImap().put("comboRepartoPago"  , gc.getItems());
+				
+				List<ComponenteVO>botones=pantallasDAO.obtenerComponentes(
+						null, null, "|"+status+"|",
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "BOTONES", null);
+				if(botones!=null&&botones.size()>0)
+				{
+					gc.generaComponentes(botones, true, false, false, false, false, true);
+					resp.getImap().put("botones" , gc.getButtons());
+				}
+				else
+				{
+					resp.getImap().put("botones" , null);
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener componentes #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
 		}
+		//componentes
+		
+		//permisos
+		if(resp.isExito())
+		{
+			try
+			{
+				resp.getSmap().put("status" , status);
+				resp.getSmap().putAll(cotizacionDAO.cargarPermisosPantallaGrupo(cdsisrol,status));
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener permisos #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		//permisos
+		
+		//campos de asegurados
+		if(resp.isExito() && resp.getSmap().containsKey("ASEGURADOS")
+				 && StringUtils.isNotBlank(resp.getSmap().get("ASEGURADOS"))
+				 && resp.getSmap().get("ASEGURADOS").equals("S"))
+		{
+			try
+			{
+				
+				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "ASEGURADOS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+				resp.getImap().put("aseguradosColumns" , gc.getColumns());
+				resp.getImap().put("aseguradosFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener componentes de asegurados #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		//campos de asegurados
+		
+		//campos para extraprimas
+		if(resp.isExito() && resp.getSmap().containsKey("EXTRAPRIMAS")
+				 && StringUtils.isNotBlank(resp.getSmap().get("EXTRAPRIMAS"))
+				 && resp.getSmap().get("EXTRAPRIMAS").equals("S"))
+		{
+			try
+			{
+				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+				resp.getImap().put("extraprimasColumns" , gc.getColumns());
+				resp.getImap().put("extraprimasFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener componentes de extraprimas #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		//campos para extraprimas
+		
+		//campos para recuperados
+		if(resp.isExito() && resp.getSmap().containsKey("ASEGURADOS_EDITAR")
+				 && StringUtils.isNotBlank(resp.getSmap().get("ASEGURADOS_EDITAR"))
+				 && resp.getSmap().get("ASEGURADOS_EDITAR").equals("S"))
+		{
+			try
+			{
+				List<ComponenteVO>componentesRecuperados=pantallasDAO.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "RECUPERADOS", null);
+				gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+				resp.getImap().put("recuperadosColumns" , gc.getColumns());
+				resp.getImap().put("recuperadosFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener componentes de recuperados #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		//campos para recuperados
 		
 		logger.info(
 				new StringBuilder()
@@ -1412,10 +1644,58 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSmapVO cargarClienteCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarClienteCotizacion @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			resp.setSmap(cotizacionDAO.cargarClienteCotizacion(cdunieco,cdramo,estado,nmpoliza));
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener cliente de cotizacion #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarClienteCotizacion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public void setPantallasDAO(PantallasDAO pantallasDAO) {
+		this.pantallasDAO = pantallasDAO;
 	}
 	
 }

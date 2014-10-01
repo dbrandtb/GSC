@@ -52,6 +52,7 @@ var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"     
 var _0_urlObtenerParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
 var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
 var _0_urlCargarSumaAsegurada                = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"            />';
+var _0_urlObtenerCliente                     = '<s:url namespace="/emision"         action="cargarClienteCotizacion"         />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -179,7 +180,7 @@ function _0_obtenerClaveGSPorAuto()
     });
 }
 
-function _0_obtenerSumaAseguradaRamo6(mostrarError)
+function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
 {
     _0_panelPri.setLoading(true);
     Ext.Ajax.request(
@@ -201,7 +202,14 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError)
             debug('### json response obtener suma asegurada:',json);
             if(json.exito)
             {
-                _fieldByName('parametros.pv_otvalor25').setValue(json.smap1.SUMASEG);
+                if(Ext.isEmpty(respetarValue)||respetarValue==false)
+                {
+                    _fieldByName('parametros.pv_otvalor25').setValue(json.smap1.SUMASEG);
+                }
+                else
+                {
+                    debug('SE RESPETA VALUE de VALOR COMERCIAL');
+                }
                 _fieldByName('parametros.pv_otvalor25').setMinValue((json.smap1.SUMASEG-0)*(1-(json.smap1.FACREDUC-0)));
                 _fieldByName('parametros.pv_otvalor25').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
                 _fieldByName('parametros.pv_otvalor25').isValid();
@@ -909,10 +917,21 @@ function _0_cargar()
                             }
                             debug('store:',_0_storeIncisos);
                             var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                            if(_0_smap1.cdramo=='6')
+                            {
+                                primerInciso.set('parametros.pv_otvalor24','S');
+                            }
                             debug('primerInciso:',primerInciso);
                             //leer elementos anidados
                             var form      = _0_formAgrupados;
                             var formItems = form.items.items;
+                            var hayDerechos = false;
+                            <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
+                                hayDerechos = true;
+                                formItems = form.items.items[0].items.items;
+                            </s:if>
+                            debug('hayDerechos:' , hayDerechos);
+                            debug('formItems:'   , formItems);
                             var numBlurs  = 0;
                             for(var i=0;i<formItems.length;i++)
                             {
@@ -948,7 +967,7 @@ function _0_cargar()
                                         var iItem  = formItems[j]; 
                                         var iItem2 = formItems[j+1];
                                         debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
-                                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store)
+                                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store&&iItem2.heredar)
                                         {
                                             debug('tiene blur y lo hacemos heredar',formItems[j]);
                                             iItem2.heredar(true);
@@ -960,8 +979,44 @@ function _0_cargar()
                                 {
                             	    _0_fieldNmpoliza.setValue(value);
                             	    _0_panelPri.setLoading(false);
+                            	    if(_0_smap1.cdramo=='6')
+                            	    {
+                            	        if(_0_smap1.cdtipsit=='AT')
+                            	        {
+                            	            _0_obtenerClaveGSPorAuto();
+                            	            _0_obtenerSumaAseguradaRamo6(true,true);
+                            	        }
+                            	        if(_fieldByLabel('FOLIO').getValue()==0)
+                            	        {
+                            	            _fieldByLabel('FOLIO').reset();
+                        	                if(_0_smap1.cdsisrol=='SUSCRIAUTO')
+                            	            {
+                            	                _fieldByLabel('AGENTE').getStore().load(
+                            	                {
+                            	                    params :
+                        	                        {
+                            	                        'params.agente' : primerInciso.get('parametros.pv_otvalor17')
+                            	                    }
+                            	                    ,callback : function()
+                            	                    {
+                            	                        _fieldByLabel('AGENTE').setValue(
+                            	                            _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
+                            	                        );
+                            	                    }
+                            	                });
+                            	            }
+                            	            else
+                            	            {
+                            	                var cdagente=_fieldByLabel('AGENTE').getValue();
+                            	                _fieldByLabel('FOLIO').reset();
+                            	                _fieldByLabel('AGENTE').setValue(
+                            	                    _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
+                            	                );
+                            	            }
+                            	        }
+                            	    }
                                 }
-                            }
+                            };
                             _0_panelPri.setLoading(true);
                             renderiza();
                         }
@@ -2316,7 +2371,7 @@ Ext.onReady(function()
             }
             ,'blur' : function()
             {
-                if(!Ext.isEmpty(folio.getValue()))
+                if(!Ext.isEmpty(folio.getValue())&&folio.getValue()>0)
                 {
                     _0_panelPri.setLoading(true);
                     Ext.Ajax.request(
@@ -2518,7 +2573,7 @@ Ext.onReady(function()
                 _0_recordClienteRecuperado=null;
             }
             //recuperar cliente
-            else
+            else if(combcl.getValue()=='N')
             {
                 codpos.reset();
                 _0_storeIncisos.removeAll();
@@ -2572,7 +2627,7 @@ Ext.onReady(function()
                                                     'map1.pv_rfc_i'     : rfc,
                                                     'map1.cdtipsit'     : _0_smap1.cdtipsit,
                                                     'map1.pv_cdtipsit_i': _0_smap1.cdtipsit,
-                                        			'map1.pv_cdunieco_i': _0_smap1.cdunieco,
+                                    			    'map1.pv_cdunieco_i': _0_smap1.cdunieco,
                                                		'map1.pv_cdramo_i'  : _0_smap1.cdramo,
                                                		'map1.pv_estado_i'  : 'W',
                                                		'map1.pv_nmpoliza_i': _0_fieldNmpoliza.getValue()
@@ -2580,7 +2635,7 @@ Ext.onReady(function()
                                             });
                                         }
                                     }
-                                 }
+                                }
                             ]
                         }
                         ,Ext.create('Ext.grid.Panel',

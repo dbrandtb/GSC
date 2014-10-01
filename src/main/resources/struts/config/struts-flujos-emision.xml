@@ -186,6 +186,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarClienteCotizacion" class="CotizacionAction" method="cargarClienteCotizacion">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

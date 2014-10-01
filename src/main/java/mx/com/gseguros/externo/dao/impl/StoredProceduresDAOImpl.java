@@ -245,6 +245,14 @@ public class StoredProceduresDAOImpl extends AbstractManagerDAO implements Store
 			LinkedHashMap<String,Object>paramsValues,
 			String[] paramsTypes) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** ").append(storedProcedureName)
+				.append("\n****** params=").append(paramsValues)
+				.append("\n*******************************************")
+				.toString()
+				);
 		Map<String,Object>result = this.ejecutaSP(new ProcedureListCall(storedProcedureName, paramsValues, getDataSource(),paramsTypes), paramsValues);
 		return (List<Map<String,String>>) result.get("pv_registro_o");
 	}

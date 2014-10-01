@@ -2505,6 +2505,10 @@ public class CotizacionAction extends PrincipalCoreAction
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
 				status        = smap1.get("status");
+				if(StringUtils.isBlank(status))
+				{
+					status = "0";
+				}
 			}
 			catch(Exception ex)
 			{
@@ -6631,6 +6635,91 @@ public class CotizacionAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### validarDescuentoAgente ######")
 				.append("\n####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarClienteCotizacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### cargarClienteCotizacion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio la poliza");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSmapVO resp = cotizacionManager.cargarClienteCotizacion(cdunieco,cdramo,estado,nmpoliza);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarClienteCotizacion ######")
+				.append("\n#####################################")
 				.toString()
 				);
 		return SUCCESS;

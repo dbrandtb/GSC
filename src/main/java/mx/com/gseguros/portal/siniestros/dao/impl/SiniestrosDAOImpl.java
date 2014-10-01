@@ -751,7 +751,14 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    @Override
 		public List<HashMap<String, String>> loadListaDocumentos(
 				HashMap<String, String> params) throws DaoException {
-			
+			logger.debug(
+					new StringBuilder()
+					.append("\n****************************************************")
+					.append("\n****** PKG_LISTAS.P_GET_DOCUMENTOS_SINIESTROS ******")
+					.append("\n****** params=").append(params)
+					.append("\n****************************************************")
+					.toString()
+					);
 			Map<String, Object> mapResult = ejecutaSP(new LoadListaDocumentos(getDataSource()), params);
 			
 			return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");

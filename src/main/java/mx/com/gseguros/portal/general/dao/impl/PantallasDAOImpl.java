@@ -26,7 +26,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 {
 	
-	private static Logger logger = Logger.getLogger(PantallasDAOImpl.class);
+	private static final Logger logger = Logger.getLogger(PantallasDAOImpl.class);
 	
 	/////////////////////////////////
 	////// obtener componentes //////
@@ -37,6 +37,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public List<ComponenteVO> obtenerComponentes(Map<String, String> params) throws Exception
 	{
+		logger.debug(
+			new StringBuilder()
+			.append("\n***********************************************")
+			.append("\n****** PKG_CONF_PANTALLAS.P_GET_TCONFCMP ******")
+			.append("\n****** params=").append(params)
+			.append("\n***********************************************")
+			.toString()
+			);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		return (List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
 	}
@@ -62,6 +70,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDTIPTRA_I" , cdtiptra);
 		params.put("PV_ORDEN_I"    , orden);
 		params.put("PV_SECCION_I"  , seccion);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_GET_TCONFCMP ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		List<ComponenteVO>lista=(List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
 		if(lista==null)
@@ -263,6 +279,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public List<Map<String,String>> obtenerParametros(Map<String, String> params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_GET_TCONFCMP ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerParametros(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
 	}
@@ -303,6 +327,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public void movParametros(Map<String, String> params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_MOV_TCONFCMP ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
 		this.ejecutaSP(new MovParametros(this.getDataSource()), params);
 	}
 	
@@ -340,6 +372,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public void insertarParametros(Map<String, String> params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_INSERTA_TCONFCMP ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
 		this.ejecutaSP(new InsertarParametros(this.getDataSource()), params);
 	}
 	
@@ -403,6 +443,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public List<Map<String,String>> obtenerArbol() throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_OBT_ARBOL_TCONFCMP ******")
+				.append("\n****** sin parametros                          ******")
+				.append("\n*****************************************************")
+				.toString()
+				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerArbol(this.getDataSource()), new HashMap<String,String>());
 		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
 	}
@@ -426,6 +474,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	@Override
 	public List<Map<String,String>> obtienePantalla(Map<String, String> params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_GET_PANTALLA_FINAL ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
 		Map<String,Object> resultadoMap = this.ejecutaSP(new ObtienePantalla(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
 	}
@@ -451,6 +507,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDPANTALLA_I", cdpantalla);
 		params.put("PV_DATOS_I", datos);
 		params.put("PV_COMPONENTES_I", componentes);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONF_PANTALLAS.P_MOV_TPANTALLAS ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new InsertaPantalla(this.getDataSource()), params);
 		logger.debug("resultadoMap=" + resultadoMap);
 		logger.debug("PV_MSG_ID_O=" + resultadoMap.get("PV_MSG_ID_O"));

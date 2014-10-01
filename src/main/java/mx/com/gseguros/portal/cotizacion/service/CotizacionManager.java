@@ -254,4 +254,10 @@ public interface CotizacionManager
 			,String nombreUsuario
 			,String cdagente
 			);
+	
+	public ManagerRespuestaSmapVO cargarClienteCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza);
 }

@@ -272,11 +272,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         parameters.put("pv_cdusuari_i",cdusuario);
         parameters.put("pv_cdtipsit_i",cdtipsit);
         log.debug("### kernel sustituto obtenerDatosUsuario map: "+parameters);
+        log.debug(
+        		new StringBuilder()
+        		.append("\n**********************************************")
+        		.append("\n****** pkg_satelites.p_get_info_usuario ******")
+        		.append("\n****** params=").append(parameters)
+        		.append("\n**********************************************")
+        		.toString()
+        		);
         DatosUsuario res=(DatosUsuario) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DATOS_USUARIO);
         log.debug("### kernel sustituto obtenerDatosUsuario return: "+res);
         return res;
     }
     
+    @Deprecated
     public List<ComponenteVO> obtenerTatrisit(String cdtipsit,String cdusuari) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
@@ -413,6 +422,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto getTmanteni tabla: "+tabla);
         Map<String,String> parameters=new HashMap<String,String>(0);
         parameters.put("pv_cdtabla",tabla);
+        log.debug(
+        		new StringBuilder()
+        		.append("\n***************************************")
+        		.append("\n****** PKG_LISTAS.P_GET_TMANTENI ******")
+        		.append("\n****** params=").append(parameters)
+        		.append("\n***************************************")
+        		.toString()
+        		);
         List<GenericVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TMANTENI);
         lista=lista!=null?lista:new ArrayList<GenericVO>(0);
         log.debug("### kernel sustituto obtenerTatrisit lista size: "+lista.size());
@@ -790,6 +807,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>parameters) throws ApplicationException
 	{
 		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);
+		log.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** PKG_CONSULTA.P_Get_documentos ******")
+				.append("\n****** params=").append(parameters)
+				.append("\n*******************************************")
+				.toString()
+				);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DOCUMENTOS_POLIZA);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto obtenerDocumentosPoliza lista size: "+lista.size());
