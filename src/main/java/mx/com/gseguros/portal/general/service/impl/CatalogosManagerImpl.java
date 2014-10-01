@@ -192,6 +192,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
+	public String guardaTablaApoyo(Map<String,String> params) throws Exception
+	{
+		return wizardDAO.guardaTablaApoyo(params);
+	}
+	
+	@Override
 	public List<GenericVO> cargarDescuentosPorAgente(
     		String tipoUnidad
     		,String uso

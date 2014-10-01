@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -447,6 +448,34 @@ public class CatalogosAction extends PrincipalCoreAction {
     		loadList = catalogosManager.obtieneTablasApoyo(params);
     	}catch(Exception ex){
     		logger.error("Error al obtieneTablasApoyo",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+
+    public String guardaTablaApoyo()throws Exception{
+    	
+    	try{
+    		logger.debug("Guardando Tabla de Apoyo...");
+    		logger.debug("Parametros: " + params);
+    		
+    		String naturalezaTabla = params.get("pi_clnatura");
+    		if(StringUtils.isNotBlank(naturalezaTabla) && "1".equals(naturalezaTabla)){
+    			params.put("pi_ottipotb", "1");
+    		}else{
+    			params.put("pi_ottipotb", "5");
+    		}
+    		params.put("pi_swmodifi", "S");
+    		params.put("pi_swerror", "S");
+    		
+    		String nmtabla = catalogosManager.guardaTablaApoyo(params);
+    		logger.debug(" >>>>>>>>>  Numero de Tabla Guardada: " + nmtabla);
+    	}catch(Exception ex){
+    		logger.error("Error al guardaTablaApoyo",ex);
     		msgRespuesta = ex.getMessage();
     		success = false;
     		return SUCCESS;
