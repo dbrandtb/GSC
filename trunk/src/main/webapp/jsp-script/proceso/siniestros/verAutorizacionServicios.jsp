@@ -22,6 +22,10 @@
     var _CAT_RAMOS2		       				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
     var _UR_LISTA_RAMO_SALUD2				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
     
+    var _CODIGO_CAUSA_ENFERMEDAD1		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ENFERMEDAD.codigo"/>';
+    var _CODIGO_CAUSA_ACCIDENTE1			    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
+    var _CODIGO_CAUSA_MATERNIDAD1		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@MATERNIDAD.codigo"/>';
+    
     // Obtenemos el contenido en formato JSON de la propiedad solicitada:
     var valorAction = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
     
