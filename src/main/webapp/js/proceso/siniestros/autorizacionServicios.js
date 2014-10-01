@@ -1433,11 +1433,12 @@ Ext.onReady(function() {
     	   		Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
     	   }
     	   
-    	   /*<-- INCIO -->if(Ext.getCmp('idValSesiones').getValue() =="1"){
+    	   /*<-- INCIO -->*/
+    	   if(Ext.getCmp('idValSesiones').getValue() =="1"){
 				var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
 				Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
 				Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
-    	   }<-- FIN -->*/
+    	   }/*<-- FIN -->*/
 		   this.getStore().removeAt(rowIndex);
 	   }
 	});
@@ -2544,7 +2545,7 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('idAaapertu').setValue(json.aaapertu);
 			
-			if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
+			if(Ext.getCmp('claveTipoAutoriza').getValue() == 2 )
 			{
 				//Número de autorización
 				Ext.getCmp('idNoAutorizacion').setValue();
@@ -2644,12 +2645,10 @@ Ext.onReady(function() {
 		        ,success : function (response)
 		        {
 		        	var jsonRes=Ext.decode(response.responseText).datosInformacionAdicional[0];
-		        	var montoDisponible = json.SUMADISP;
-		        	
 		        	Ext.getCmp('idSalarioMin').setValue(jsonRes.SUMADISP);
 		        	Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);
 		        	Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);
-		        	Ext.getCmp('idValSesiones').setValue(json.VALSESIONES);
+		        	Ext.getCmp('idValSesiones').setValue(jsonRes.VALSESIONES);
 		        },
 		        failure : function ()
 		        {
@@ -2832,6 +2831,8 @@ Ext.onReady(function() {
 					                                }
 					                            });
 					                        }
+					                        
+					                        //---->>>>>
 									    }
 							        },
 							        failure : function ()
