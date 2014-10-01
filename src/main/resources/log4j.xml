@@ -10,7 +10,7 @@
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="6"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
     </appender>
 	
@@ -22,7 +22,7 @@
 		<param name="MaxFileSize" value="50MB"/>
 		<param name="MaxBackupIndex" value="6"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
 		</layout>
 	</appender>
 	
@@ -34,7 +34,7 @@
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="6"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
     </appender>
 	
@@ -42,7 +42,7 @@
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
         <param name="Threshold" value="TRACE" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
     </appender>
     
