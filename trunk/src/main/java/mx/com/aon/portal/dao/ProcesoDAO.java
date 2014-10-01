@@ -19,7 +19,7 @@ import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
@@ -4457,7 +4457,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
-    		ConsultaDatosPolizaAgenteVO consulta = new ConsultaDatosPolizaAgenteVO();
+    		AgentePolizaVO consulta = new AgentePolizaVO();
     		consulta.setCdagente(rs.getString("cdagente"));
     		consulta.setCdtipoAg(rs.getString("cdtipoag"));
     		consulta.setDescripl(rs.getString("descripl"));

@@ -11,7 +11,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
-import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 
 public class AgentesAction extends PrincipalCoreAction
 {
@@ -25,7 +25,7 @@ public class AgentesAction extends PrincipalCoreAction
 	private List<GenericVO> datosGeneralesAgente;    
     private ConsultaDatosAgenteVO datosAgente;
     private HashMap<String,String> params;
-    private List<ConsultaDatosPolizaAgenteVO> datosPolizaAgente;
+    private List<AgentePolizaVO> datosPolizaAgente;
     private boolean success;
     private KernelManagerSustituto kernelManager;
     
@@ -70,7 +70,7 @@ public class AgentesAction extends PrincipalCoreAction
 						params.get("cdunieco"), params.get("cdramo"),
 						params.get("estado"), params.get("nmpoliza"));
 	   		
-	   		datosPolizaAgente = (ArrayList<ConsultaDatosPolizaAgenteVO>) result.getItemList();
+	   		datosPolizaAgente = (ArrayList<AgentePolizaVO>) result.getItemList();
 	   		
 	   		logger.debug("Resultado de la consultaDatosPolizaAgente:" + datosPolizaAgente);
 	   		
@@ -174,12 +174,12 @@ public class AgentesAction extends PrincipalCoreAction
 		this.params = params;
 	}
 
-	public List<ConsultaDatosPolizaAgenteVO> getDatosPolizaAgente() {
+	public List<AgentePolizaVO> getDatosPolizaAgente() {
 		return datosPolizaAgente;
 	}
 
 	public void setDatosPolizaAgente(
-			List<ConsultaDatosPolizaAgenteVO> datosPolizaAgente) {
+			List<AgentePolizaVO> datosPolizaAgente) {
 		this.datosPolizaAgente = datosPolizaAgente;
 	}
 
