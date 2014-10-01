@@ -299,7 +299,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
 					paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
 					paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
-					paramsR.put("pv_copagofi_i",params.get("copagoPrevio")); // Copago Final
+					paramsR.put("pv_copagofi_i",params.get("copagoTotal"));   // Copago Final  copagoTotal
 					paramsR.put("pv_porpenal_i",params.get("idPenalCircHospitalario")); // penalizacion por circulo hospitalario
 					paramsR.put("pv_cdicd_i",params.get("cdicd"));
 					paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
