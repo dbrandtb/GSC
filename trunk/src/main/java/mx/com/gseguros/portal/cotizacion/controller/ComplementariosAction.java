@@ -2154,7 +2154,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				){
 					
 					String parametros = null;
-					String urlCaratula = this.getText("caratula.impresion.autos.url");
+					
+					String urlCaratula = null;
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+						urlCaratula = this.getText("caratula.impresion.autos.url");
+					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+					}
+					
 					String urlRecibo = this.getText("recibo.impresion.autos.url");
 					String urlCaic = this.getText("caic.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
@@ -2651,7 +2658,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				){
 					
 					String parametros = null;
-					String urlCaratula = this.getText("caratula.impresion.autos.url");
+					
+					String urlCaratula = null;
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+						urlCaratula = this.getText("caratula.impresion.autos.url");
+					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+					}
+					
 					String urlRecibo = this.getText("recibo.impresion.autos.url");
 					String urlCaic = this.getText("caic.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
@@ -2970,7 +2984,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 					){
 						
 						String parametros = null;
-						String urlCaratula = this.getText("caratula.impresion.autos.url");
+						
+						String urlCaratula = null;
+						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+							urlCaratula = this.getText("caratula.impresion.autos.url");
+						}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+							urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+						}
+						
 						String urlRecibo = this.getText("recibo.impresion.autos.url");
 						String urlCaic = this.getText("caic.impresion.autos.url");
 						String urlAp = this.getText("ap.impresion.autos.url");
