@@ -60,6 +60,9 @@ public class ComponenteVO
 	private String swpresen = null;
 	private String codidocu = null;
 	private String tieneDocu = null;
+	
+	private String swGrupo      = null;
+	private String swGrupoLinea = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -451,5 +454,21 @@ public class ComponenteVO
 
 	public void setTieneDocu(String tieneDocu) {
 		this.tieneDocu = tieneDocu;
+	}
+
+	public String getSwGrupo() {
+		return swGrupo;
+	}
+
+	public void setSwGrupo(String swGrupo) {
+		this.swGrupo = swGrupo;
+	}
+
+	public String getSwGrupoLinea() {
+		return swGrupoLinea;
+	}
+
+	public void setSwGrupoLinea(String swGrupoLinea) {
+		this.swGrupoLinea = swGrupoLinea;
 	}
 }

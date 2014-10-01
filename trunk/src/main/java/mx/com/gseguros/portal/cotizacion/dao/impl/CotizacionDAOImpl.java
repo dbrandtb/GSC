@@ -359,8 +359,18 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception
+	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception
 	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("status"   , status);
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_PERMISOS_PANTALLA_GRUPO ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString());
 		Map<String,Object>resultado=ejecutaSP(new CargarPermisosPantallaGrupo(getDataSource()), params);
 		List<Map<String,String>>listaDatos=(List<Map<String,String>>)resultado.get("pv_registro_o");
 		Map<String,String>datos=new HashMap<String,String>();
@@ -378,7 +388,22 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_PERMISOS_PANTALLA_GRUPO");
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]
+					{
+					"LINEA_EXTENDIDA"
+					,"DETALLE_LINEA"
+					,"COBERTURAS"
+					,"FACTORES_EN_COBERTURAS"
+					,"FACTORES"
+					,"BLOQUEO_CONCEPTO"
+					,"BLOQUEO_EDITORES"
+					,"VENTANA_DOCUMENTOS"
+					,"EXTRAPRIMAS"
+					,"EXTRAPRIMAS_EDITAR"
+					,"ASEGURADOS"
+					,"ASEGURADOS_EDITAR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -852,8 +877,54 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	public List<ComponenteVO>cargarTatrisit(String cdtipsit,String cdusuari)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdusuari" , cdusuari);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_SITUACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************")
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new CargarTatrisit(getDataSource()),params);
+		List<ComponenteVO>lista      = (List<ComponenteVO>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new Exception("No hay tatrisit");
+		}
+		return lista;
+	}
+	
+	protected class CargarTatrisit extends StoredProcedure
+    {
+    	protected CargarTatrisit(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SITUACION");
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
 	public ComponenteVO cargarComponenteTatrisit(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_UNICO_SITUACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
 		Map<String,Object>procedureResult=ejecutaSP(new CargarComponenteTatrisit(getDataSource()),params);
 		List<ComponenteVO>lista=(List<ComponenteVO>)procedureResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -1096,8 +1167,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	protected CargarInformacionUsuario(DataSource dataSource)
         {
             super(dataSource,"pkg_satelites.p_get_info_usuario");
-            declareParameter(new SqlParameter(   "cdusuari" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter(   "cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneDatosUsuarioMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1121,5 +1192,55 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             datosUsuario.setNombre  (rs.getString("nombre"));
             return datosUsuario;
         }
+    }
+    
+    @Override
+    public Map<String,String>cargarClienteCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception
+    {
+    	Map<String,String>params=new HashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	logger.debug(
+    			new StringBuilder()
+    			.append("\n***************************************************")
+    			.append("\n****** PKG_CONSULTA.P_GET_CLIENTE_COTIZACION ******")
+    			.append("\n****** params=").append(params)
+    			.append("\n***************************************************")
+    			.toString()
+    			);
+    	Map<String,Object>procResult=ejecutaSP(new CargarClienteCotizacion(getDataSource()),params);
+    	List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new Exception("No se encontraron datos");
+    	}
+    	if(lista.size()>1)
+    	{
+    		throw new Exception("Datos duplicados");
+    	}
+    	return lista.get(0);
+    }
+	
+	protected class CargarClienteCotizacion extends StoredProcedure
+    {
+    	protected CargarClienteCotizacion(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA.P_GET_CLIENTE_COTIZACION");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols=new String[]
+            		{
+            		"NOMBRE"
+            		,"CDPERSON"
+            		};
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
     }
 }

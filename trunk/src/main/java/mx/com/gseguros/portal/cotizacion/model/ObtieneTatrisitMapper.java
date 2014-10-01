@@ -91,6 +91,20 @@ public class ObtieneTatrisitMapper implements RowMapper
 		result.setValue(rs.getString("OTVALOR01"));
 		result.setSoloLectura(!(StringUtils.isNotBlank(rs.getString("SWACTUAL")) && rs
 				.getString("SWACTUAL").equalsIgnoreCase("S")));
+		
+		String swGrupo = rs.getString("SWGRUPO");
+		if(StringUtils.isBlank(swGrupo))
+		{
+			swGrupo="N";
+		}
+		result.setSwGrupo(swGrupo);
+		
+		String swGrupoLinea = rs.getString("SWGRUPOLINEA");
+		if(StringUtils.isBlank(swGrupoLinea))
+		{
+			swGrupoLinea="N";
+		}
+		result.setSwGrupoLinea(swGrupoLinea);
 
 		return result;
 	}

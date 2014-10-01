@@ -21,7 +21,7 @@ public interface CotizacionDAO
 	public List<Map<String,String>>cargarTarifasPorEdad(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarTarifasPorCobertura(Map<String,String>params)throws Exception;
 	public String cargarNombreAgenteTramite(String ntramite)throws Exception;
-	public Map<String,String>cargarPermisosPantallaGrupo(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception;
 	public Map<String,String>obtieneTipoValorAutomovil(Map<String,String>params)throws Exception;
 	public void guardarCensoCompleto(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosExtraprimas(Map<String,String>params)throws Exception;
@@ -72,4 +72,6 @@ public interface CotizacionDAO
 			,String cdperson
 			,String accion)throws Exception;
 	public DatosUsuario cargarInformacionUsuario(String cdusuari,String cdtipsit)throws Exception;
+	public List<ComponenteVO>cargarTatrisit(String cdtipsit,String cdusuari)throws Exception;
+	public Map<String,String>cargarClienteCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
 }

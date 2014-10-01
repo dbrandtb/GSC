@@ -36,7 +36,14 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		try {
 			Map<String,Object> params=new HashMap<String,Object>(0);
 			params.put("pv_cdtabla", cdTabla);
-
+			logger.debug(
+	        		new StringBuilder()
+	        		.append("\n***************************************")
+	        		.append("\n****** PKG_LISTAS.P_GET_TMANTENI ******")
+	        		.append("\n****** params=").append(params)
+	        		.append("\n***************************************")
+	        		.toString()
+	        		);
 			Map<String, Object> resultado = ejecutaSP(new ObtenerTmanteni(getDataSource()), params);
 			return (List<GenericVO>) resultado.get("pv_registro_o");
 			
@@ -181,7 +188,14 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             params.put("pv_cdatribu_i",cdAtribu);
             params.put("pv_cdtipsit_i",cdTipSit);
             params.put("pv_otvalor_i",otValor);
-    		
+    		logger.debug(
+    				new StringBuilder()
+    				.append("\n********************************************")
+    				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_SIT ******")
+    				.append("\n****** params=").append(params)
+    				.append("\n********************************************")
+    				.toString()
+    				);
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSit(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
