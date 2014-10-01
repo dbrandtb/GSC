@@ -22,6 +22,7 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -2347,6 +2348,125 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String pantallaCotizacionGrupo2()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### pantallaCotizacionGrupo2 ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdramo        = null;
+		String cdtipsit      = null;
+		String ntramite      = null;
+		String ntramiteVacio = null;
+		String status        = null;
+		String cdusuari      = null;
+		String cdsisrol      = null;
+		String nombreUsuario = null;
+		String cdagente      = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdramo   = smap1.get("cdramo");
+			cdtipsit = smap1.get("cdtipsit");
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el ramo");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			ntramite      = smap1.get("ntramite");
+			ntramiteVacio = smap1.get("ntramiteVacio");
+			status        = smap1.get("status");
+			cdagente      = smap1.get("cdagente");
+			if(StringUtils.isBlank(status))
+			{
+				status = "0";
+			}
+			
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			if(usuario==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			cdusuari      = usuario.getUser();
+			cdsisrol      = usuario.getRolActivo().getObjeto().getValue();
+			nombreUsuario = usuario.getName();
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
+					cdramo
+					,cdtipsit
+					,ntramite
+					,ntramiteVacio
+					,status
+					,cdusuari
+					,cdsisrol
+					,nombreUsuario
+					,cdagente
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				imap=resp.getImap();
+			}
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### pantallaCotizacionGrupo2 ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return result;
+	}
+	
 	public String pantallaCotizacionGrupo()
 	{
 		logger.info(
@@ -2385,10 +2505,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
 				status        = smap1.get("status");
-				if(StringUtils.isBlank(status))
-				{
-					status="0";
-				}
 			}
 			catch(Exception ex)
 			{

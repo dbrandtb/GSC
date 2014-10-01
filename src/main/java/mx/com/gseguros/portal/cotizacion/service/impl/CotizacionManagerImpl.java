@@ -7,15 +7,20 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 public class CotizacionManagerImpl implements CotizacionManager 
 {
@@ -416,9 +421,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\n###### cargarNombreAgenteTramite ######"
 				+ "\nntramite "+ntramite
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("ntramite",ntramite);
-		String nombre=cotizacionDAO.cargarNombreAgenteTramite(params);
+		String nombre=cotizacionDAO.cargarNombreAgenteTramite(ntramite);
 		logger.info("cargarNombreAgenteTramite nombre: "+nombre);
 		logger.info(""
 				+ "\n###### cargarNombreAgenteTramite ######"
@@ -1308,6 +1311,105 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,nlogisus
 				,cdperson
 				,accion);
+	}
+	
+	@Override
+	public ManagerRespuestaImapSmapVO pantallaCotizacionGrupo(
+			String cdramo
+			,String cdtipsit
+			,String ntramite
+			,String ntramiteVacio
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String nombreUsuario
+			,String cdagente
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ pantallaCotizacionGrupo @@@@@@")
+				.append("\n@@@@@@ cdramo=")       .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=")     .append(cdtipsit)
+				.append("\n@@@@@@ ntramite=")     .append(ntramite)
+				.append("\n@@@@@@ ntramiteVacio=").append(ntramiteVacio)
+				.append("\n@@@@@@ status=")       .append(status)
+				.append("\n@@@@@@ cdusuari=")     .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")     .append(cdsisrol)
+				.append("\n@@@@@@ nombreUsuario=").append(nombreUsuario)
+				.append("\n@@@@@@ cdagente=")     .append(cdagente)
+				.toString()
+				);
+		
+		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
+
+		//retocar datos de entrada
+		try
+		{
+			resp.setSmap(new HashMap<String,String>());
+			if(StringUtils.isBlank(status))
+			{
+				resp.getSmap().put("status", "0");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al procesar datos #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		String nombreAgente = null;
+		
+		//datos del agente
+		if(resp.isExito())
+		{
+			try
+			{
+				//si entran como agente
+				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
+				{
+				    DatosUsuario datUsu = cotizacionDAO.cargarInformacionUsuario(cdusuari,cdtipsit);
+				    String cdunieco     = datUsu.getCdunieco();
+	        		
+				    resp.getSmap().put("cdunieco",cdunieco);
+				    
+	        		cdagente     = datUsu.getCdagente();
+	        		nombreAgente = nombreUsuario;
+				}
+				//si entran por tramite o tramite vacio
+				else if(StringUtils.isNotBlank(ntramite)||StringUtils.isNotBlank(ntramiteVacio))
+				{
+					nombreAgente = cotizacionDAO.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener datos del agente #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		//componentes
+		if(resp.isExito())
+		{
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ pantallaCotizacionGrupo @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
 	}
 	
 	///////////////////////////////

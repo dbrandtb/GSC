@@ -17,6 +17,11 @@
             <result name="success">/jsp-script/proceso/emision/cotizacionGrupo.jsp</result>
         </action>
         
+        <action name="cotizacionGrupo2" class="CotizacionAction" method="pantallaCotizacionGrupo2">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionGrupo2.jsp</result>
+        </action>
+        
         <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
