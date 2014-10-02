@@ -734,7 +734,7 @@ Ext.onReady(function() {
 						    			contadorClaves++;
 						    		}
 						    	});
-						    	if(!validacionMinMax) return;
+						    	if(!validacionMinMax) return; // saliendo de la funcion principal
 						    	if(numPermitidas == 1 && contadorClaves > 1){
 						    		mensajeWarning("Para este tipo de Tabla solo se Permite una Clave.");
 						    		return;
@@ -757,7 +757,7 @@ Ext.onReady(function() {
 						    			contadorAtributos++;
 						    		}
 						    	});
-						    	if(!validacionMinMax) return;
+						    	if(!validacionMinMax) return; // saliendo de la funcion principal
 						    	if(numPermitidas == 1 && contadorAtributos > 1){
 						    		mensajeWarning("Para este tipo de Tabla solo se Permite un Atributo.");
 						    		return;
