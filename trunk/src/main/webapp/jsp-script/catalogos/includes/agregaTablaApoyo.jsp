@@ -198,6 +198,7 @@ Ext.onReady(function() {
 		                xtype             : 'numberfield'
 		                ,allowBlank       : false
 		                ,allowDecimals    : false
+		                ,minValue: 0
 		            }
 		        },{
 		            header     : 'Valor M&aacute;ximo'
@@ -208,6 +209,7 @@ Ext.onReady(function() {
 		                xtype             : 'numberfield'
 		                ,allowBlank       : false
 		                ,allowDecimals    : false
+		                ,minValue: 0
 		            }
 		        }
 		    ]
@@ -385,6 +387,7 @@ Ext.onReady(function() {
 		                xtype             : 'numberfield'
 		                ,allowBlank       : false
 		                ,allowDecimals    : false
+		                ,minValue: 0
 		            }
 		        },{
 		            header     : 'Valor M&aacute;ximo'
@@ -395,6 +398,7 @@ Ext.onReady(function() {
 		                xtype             : 'numberfield'
 		                ,allowBlank       : false
 		                ,allowDecimals    : false
+		                ,minValue: 0
 		            }
 		        }
 		    ]
@@ -684,20 +688,27 @@ Ext.onReady(function() {
     		            fn: function(buttonId, text, opt) {
     		            	if(buttonId == 'yes') {
     		            		
-    		            		var saveList = [];
-    		            		
+    		            		var saveList = [];//para claves
     		            		clavesStore.each(function(record){
 						    		if(!Ext.isEmpty(record.get('DSCLAVE1'))) saveList.push(record.data);
 						    	});
 						    	debug('Claves A Grabar: ', saveList);
     		            		
+								var saveList2 = [];//para atributos
+    		            		atributosStore.getNewRecords().forEach(function(record,index,arr){
+						    		if(record.dirty) saveList2.push(record.data);
+						    	});
+						    	debug('Atributos Added: ', saveList);
+						    	
+						    	
     		            		panelTablaApoyo.setLoading(true);
     		            		
     		            		Ext.Ajax.request({
 				    	            url: _URL_GuardaTablaApoyo,
 				    	            jsonData : {
 				    	            	params: panelTablaApoyo.getValues(),
-				    	                'saveList'   : saveList
+				    	                'saveList'   : saveList,
+				    	                'saveList2'   : saveList2
 				    	            },
 				    	            success  : function(response){
 				    	                panelTablaApoyo.setLoading(false);

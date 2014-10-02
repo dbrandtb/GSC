@@ -65,6 +65,8 @@ public class CatalogosAction extends PrincipalCoreAction {
      * Lista para guardar varios elementos
      */
     private List<Map<String, String>> saveList;
+
+    private List<Map<String, String>> saveList2;
     
     /**
      * Lista personalizada, puede contener cualquier tipo de objeto 
@@ -483,6 +485,11 @@ public class CatalogosAction extends PrincipalCoreAction {
     		
     		logger.debug("Guardando Claves... ");
     		catalogosManager.guardaClavesTablaApoyo(params, saveList);
+    		logger.debug("Claves Guardadas... ");
+
+    		logger.debug("Guardando Atributos... ");
+    		catalogosManager.guardaAtributosTablaApoyo(params, saveList2);
+    		logger.debug("Atributos Guardadas... ");
     		
     	}catch(Exception ex){
     		logger.error("Error al guardaTablaApoyo",ex);
@@ -618,6 +625,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setSaveList(List<Map<String, String>> saveList) {
 		this.saveList = saveList;
+	}
+
+	public List<Map<String, String>> getSaveList2() {
+		return saveList2;
+	}
+
+	public void setSaveList2(List<Map<String, String>> saveList2) {
+		this.saveList2 = saveList2;
 	}
 	
 }

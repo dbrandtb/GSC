@@ -67,6 +67,8 @@ public interface CatalogosManager {
     public String guardaTablaApoyo(Map<String,String> params) throws Exception;
 
     public boolean guardaClavesTablaApoyo(Map<String, String> params, List<Map<String, String>> saveList) throws Exception;
+
+    public boolean guardaAtributosTablaApoyo(Map<String, String> params, List<Map<String, String>> saveList) throws Exception;
     
     public List<Map<String, String>> obtieneClavesTablaApoyo(Map<String,String> params) throws Exception;
 

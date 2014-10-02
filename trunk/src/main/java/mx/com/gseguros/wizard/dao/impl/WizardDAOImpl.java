@@ -1639,6 +1639,28 @@ protected class BorraVarTmp extends StoredProcedure {
 			compile();
 		}
 	}
+
+	@Override
+	public String guardaAtributosTablaApoyo(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new GuardaAtributosTablaApoyo(getDataSource()), params);
+		return (String) resultado.get("pv_title_o");
+	}
+	
+	protected class GuardaAtributosTablaApoyo extends StoredProcedure {
+		protected GuardaAtributosTablaApoyo(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_GUARDA_ATRIBUTOS");
+			declareParameter(new SqlParameter("pi_tip_tran" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swformat" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmin" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmlmax" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public List<Map<String, String>> obtieneClavesTablaApoyo(Map<String,String> params) throws Exception {
