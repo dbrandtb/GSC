@@ -95,6 +95,8 @@ public interface WizardDAO {
 	public String guardaTablaApoyo(Map<String,String> params) throws Exception;
 
 	public String guardaClavesTablaApoyo(Map<String,String> params) throws Exception;
+	
+	public String guardaAtributosTablaApoyo(Map<String,String> params) throws Exception;
 
 	public List<Map<String, String>> obtieneClavesTablaApoyo(Map<String,String> params) throws Exception;
 
