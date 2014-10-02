@@ -375,12 +375,10 @@ public class CatalogosManagerImpl implements CatalogosManager {
 
 	@Override
 	public boolean guardaAtributosTablaApoyo(Map<String, String> params, List<Map<String, String>> saveList) throws Exception{
-		boolean allUpdated = true;
 		
 		params.put("pi_tip_tran", "1");//Para que haga inserts
 		
 		for(Map<String, String> atributo : saveList){
-			try {
 				params.put("pi_cdatribu", atributo.get("CDATRIBU"));
 				params.put("pi_dsatribu", atributo.get("DSATRIBU"));
 				params.put("pi_swformat", atributo.get("SWFORMAT"));
@@ -388,13 +386,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				params.put("pi_nmlmax",   atributo.get("NMLMAX"));
 				
 				wizardDAO.guardaAtributosTablaApoyo(params);
-			} catch (DaoException daoExc) {
-				logger.error("Error al guardar atributo ",daoExc);
-				allUpdated = false;
-			}
 		}
 		
-		return allUpdated; 
+		return true; 
 	}
 	
 	@Override

@@ -483,6 +483,8 @@ public class CatalogosAction extends PrincipalCoreAction {
     		String nmtabla = catalogosManager.guardaTablaApoyo(params);
     		logger.debug(" >>>>>>>>>  Numero de Tabla Guardada: " + nmtabla);
     		
+    		params.put("pi_nmtabla", nmtabla);
+    		
     		logger.debug("Guardando Claves... ");
     		catalogosManager.guardaClavesTablaApoyo(params, saveList);
     		logger.debug("Claves Guardadas... ");

@@ -64,7 +64,7 @@ Ext.onReady(function() {
 		
 		var clavesStore = Ext.create('Ext.data.Store',
 			    {
-					pageSize : 20
+					pageSize : 100
 			        ,model   : 'modeloClaves'
 			        ,proxy   :
 			        {
@@ -126,23 +126,26 @@ Ext.onReady(function() {
 		                		mensajeInfo('No se permiten mas claves para este tipo de tabla. Verifique la Naturaleza de la tabla.');
 		                		return false;
 		                	}
-		                	clavesStore.add(new modeloClaves());
+		                	clavesStore.insert(clavesStore.getCount(),new modeloClaves());
 		                	gridClaves.getPlugin('clavesRowId').startEdit(clavesStore.getCount()-1,0);
 		                }
 		            },{
 		                text     : 'Eliminar'
 			                ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
 			                ,handler : function(){
-			                	
-			                	var record = gridClaves.getSelectionModel().getLastSelected();
-			                	/**
-				    			 *Para inhabilitar la eliminacion de rows que ya esten en la Base de Datos 
-				    			 */
-				    			if(!record.phantom){
-				    				mensajeInfo('Esta clave ya no puede ser eliminada.');
-				    				return false;
-				    			}
-			                	clavesStore.remove(record);
+			                	if(gridClaves.getSelectionModel().hasSelection()){
+									var record = gridClaves.getSelectionModel().getLastSelected();
+				                	/**
+					    			 *Para inhabilitar la eliminacion de rows que ya esten en la Base de Datos 
+					    			 */
+					    			if(!record.phantom){
+					    				mensajeInfo('Esta clave ya no puede ser eliminada.');
+					    				return false;
+					    			}
+			                	clavesStore.remove(record);			                		
+			                	}else{
+				            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+				            	}
 			                }
 			            }
 		        ]
@@ -253,7 +256,7 @@ Ext.onReady(function() {
 		
 		var atributosStore = Ext.create('Ext.data.Store',
 			    {
-					pageSize : 20
+					pageSize : 100
 			        ,model   : 'modeloAtributos'
 			        ,proxy   :
 			        {
@@ -315,23 +318,27 @@ Ext.onReady(function() {
 		                		mensajeInfo('No se permiten mas claves para este tipo de tabla. Verifique la Naturaleza de la tabla.');
 		                		return false;
 		                	}
-		                	atributosStore.add(new modeloAtributos());
+		                	
+		                	atributosStore.insert(atributosStore.getCount(),new modeloAtributos());
 		                	gridAtributos.getPlugin('atributosRowId').startEdit(atributosStore.getCount()-1,0);
 		                }
 		            },{
 		                text     : 'Eliminar'
 			                ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
 			                ,handler : function(){
-			                	
-			                	var record = gridAtributos.getSelectionModel().getLastSelected();
-			                	/**
-				    			 *Para inhabilitar la eliminacion de rows que ya esten en la Base de Datos 
-				    			 */
-				    			if(!record.phantom){
-				    				mensajeInfo('Este atributo ya no puede ser eliminado.');
-				    				return false;
-				    			}
-			                	atributosStore.remove(record);
+			                	if(gridAtributos.getSelectionModel().hasSelection()){
+			                		var record = gridAtributos.getSelectionModel().getLastSelected();
+				                	/**
+					    			 *Para inhabilitar la eliminacion de rows que ya esten en la Base de Datos 
+					    			 */
+					    			if(!record.phantom){
+					    				mensajeInfo('Este atributo ya no puede ser eliminado.');
+					    				return false;
+					    			}
+				                	atributosStore.remove(record);
+			                	}else{
+				            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+				            	}
 			                }
 			            }
 		        ]
@@ -625,10 +632,25 @@ Ext.onReady(function() {
 						                        	load: function (){
 						                        		if(editMode){
 						                        			panelTablaApoyo.getForm().findField('pi_cdtablj2').setValue(_parametros.catdos);
+						                        			panelTablaApoyo.getForm().findField('pi_cdtablj3').getStore().load({
+						                        				params: {
+						                        					'codigoTabla': _parametros.catdos
+						                        				}
+						                        			});
 						                        		}
 						                        	}
 						                        }
-											})
+											}),
+											listeners: {
+													select: function(comb, records){
+						                        		var selValue = records[0].get("cdCatalogo1");
+						                        		panelTablaApoyo.getForm().findField('pi_cdtablj3').getStore().load({
+						                        				params: {
+						                        					'codigoTabla': selValue
+						                        				}
+						                        		});
+						                        	}
+											}
 								        },{
 								        	xtype       : 'combo',
 								        	name        : 'pi_cdtablj3',
@@ -642,7 +664,6 @@ Ext.onReady(function() {
 						            		anyMatch      : true,
 											store       : Ext.create('Ext.data.Store', {
 												model : 'Generic',
-												autoLoad : true,
 												proxy : {
 													type : 'ajax',
 													url : _URL_CatalogoClave,
@@ -688,16 +709,59 @@ Ext.onReady(function() {
     		            fn: function(buttonId, text, opt) {
     		            	if(buttonId == 'yes') {
     		            		
+    		            		var tipoTabSel = panelTablaApoyo.getForm().findField('pi_clnatura').getValue();
+			                	var numPermitidas = 0;
+			                	
+			                	if(!Ext.isEmpty(tipoTabSel)){
+			                		if(tipoTabSel == 1) numPermitidas = 1;
+			                	}
+			                	
+    		            		var validacionMinMax = true;
+    		            		var contadorClaves = 0;
+    		            		var contadorAtributos = 0;
+    		            		
+
+    		            		// PARA AGREGAR CLAVES A GUARDAR Y AL MISMO TIEMPO VALIDAR VALORES MINIMOS Y MAXIMOS
     		            		var saveList = [];//para claves
     		            		clavesStore.each(function(record){
-						    		if(!Ext.isEmpty(record.get('DSCLAVE1'))) saveList.push(record.data);
+						    		if(!Ext.isEmpty(record.get('DSCLAVE1'))){
+						    			saveList.push(record.data);
+						    			if(record.get("NMLMIN1") > record.get("NMLMAX1")){
+						    				validacionMinMax = false;
+						    				mensajeWarning("El valor m&iacute;nimo debe ser menor al valor m&aacute;ximo de la clave: " + record.get("DSCLAVE1"));
+						    				return false;  //break here
+						    			}
+						    			contadorClaves++;
+						    		}
 						    	});
+						    	if(!validacionMinMax) return;
+						    	if(numPermitidas == 1 && contadorClaves > 1){
+						    		mensajeWarning("Para este tipo de Tabla solo se Permite una Clave.");
+						    		return;
+						    	}
 						    	debug('Claves A Grabar: ', saveList);
     		            		
+						    	
+						    	// PARA AGREGAR ATRIBUTOS A GUARDAR Y AL MISMO TIEMPO VALIDAR VALORES MINIMOS Y MAXIMOS
 								var saveList2 = [];//para atributos
     		            		atributosStore.getNewRecords().forEach(function(record,index,arr){
-						    		if(record.dirty) saveList2.push(record.data);
+						    		if(record.dirty){
+						    			saveList2.push(record.data);
+						    			if(record.get("NMLMIN") > record.get("NMLMAX")){
+						    				validacionMinMax = false;
+						    				mensajeWarning("El valor m&iacute;nimo debe ser menor al valor m&aacute;ximo del atributo: " + record.get("DSATRIBU"));
+						    				return false; //break here
+						    			}
+						    			contadorAtributos++;
+						    		}else if(!Ext.isEmpty(record.get('DSATRIBU'))){
+						    			contadorAtributos++;
+						    		}
 						    	});
+						    	if(!validacionMinMax) return;
+						    	if(numPermitidas == 1 && contadorAtributos > 1){
+						    		mensajeWarning("Para este tipo de Tabla solo se Permite un Atributo.");
+						    		return;
+						    	}
 						    	debug('Atributos Added: ', saveList);
 						    	
 						    	
