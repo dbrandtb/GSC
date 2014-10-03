@@ -20,6 +20,7 @@ import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.HttpUtil;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -233,14 +234,15 @@ public class RenovacionManagerImpl implements RenovacionManager
 				for(Map<String,String>iPoliza:polizasRenovadas)
 				{
 					logger.debug(new StringBuilder("\n@@@@@@ Documentacion para poliza=").append(iPoliza));
-					String cdunieco = iPoliza.get("cdunieco");
-					String cdramo   = iPoliza.get("cdramo");
-					String estado   = iPoliza.get("estado");
-					String nmpoliza = iPoliza.get("nmpoliza");
-					String nmsuplem = iPoliza.get("nmsuplem");
-					String ntramite = iPoliza.get("ntramite");
-					String cdtipopc = iPoliza.get("cdtipopc");
-					String nmpolant = iPoliza.get("nmpolant");
+					String cdunieco  = iPoliza.get("cdunieco");
+					String cdramo    = iPoliza.get("cdramo");
+					String estado    = iPoliza.get("estado");
+					String nmpoliza  = iPoliza.get("nmpoliza");
+					String nmsuplem  = iPoliza.get("nmsuplem");
+					String ntramite  = iPoliza.get("ntramite");
+					String cdtipopc  = iPoliza.get("cdtipopc");
+					String nmpolant  = iPoliza.get("nmpolant");
+					String uniecoant = iPoliza.get("uniecoant");
 					
 					List<Map<String,String>>iPolizaDocs =
 							cotizacionDAO.impresionDocumentosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
@@ -285,15 +287,50 @@ public class RenovacionManagerImpl implements RenovacionManager
 						HttpUtil.generaArchivo(url,iPolizaRutaCarpeta+"/"+descripc);
 					}
 					
-					renovacionDAO.actualizaRenovacionDocumentos(anio,mes,cdtipopc,cdunieco,cdramo,nmpolant);
+					//copiar documentos de usuario
+					List<Map<String,String>>iPolizaUserDocs=renovacionDAO.cargarDocumentosSubidosPorUsuario(uniecoant,cdramo,estado,nmpolant);
+					for(Map<String,String>iUserDoc:iPolizaUserDocs)
+					{
+						String ntramiteAnt = iUserDoc.get("ntramite");
+						String cddocume    = iUserDoc.get("cddocume");
+						
+						File doc = new File(
+								new StringBuilder(rutaDocumentosPoliza)
+								.append("/")
+								.append(ntramiteAnt)
+								.append("/")
+								.append(cddocume)
+								.toString()
+								);
+						
+						File newDoc = new File(
+								new StringBuilder(rutaDocumentosPoliza)
+								.append("/")
+								.append(ntramite)
+								.append("/")
+								.append(cddocume)
+								.toString()
+								);
+						
+						if(doc!=null&&doc.exists())
+						{
+							try
+							{
+								FileUtils.copyFile(doc, newDoc);
+							}
+							catch(Exception ex)
+							{
+								logger.error("Error copiando archivo de usuario",ex);
+							}
+						}
+					}
+					
+					renovacionDAO.actualizaRenovacionDocumentos(anio,mes,cdtipopc,uniecoant,cdramo,nmpolant);
 					
 					respBuilder
-					    .append("<br/>De la sucural ").append(cdunieco)
-					    .append(". Antes ")
-					    .append(nmpolant).append(", ahora ")
-					    .append(nmpoliza)
-					    .append(" con tr&aacute;mite ")
-					    .append(ntramite);
+					    .append("<br/>Antes ").append(uniecoant).append(" - ").append(nmpolant)
+					    .append(", ahora ")   .append(cdunieco) .append(" - ").append(nmpoliza)
+					    .append(" con tr&aacute;mite ").append(ntramite);
 				}
 			}
 			catch(ApplicationException ax)

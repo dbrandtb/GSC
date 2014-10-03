@@ -30,4 +30,6 @@ public interface RenovacionDAO
 			,String cdunieco
 			,String cdramo
 			,String nmpoliza)throws Exception;
+	
+	public List<Map<String,String>>cargarDocumentosSubidosPorUsuario(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
 }

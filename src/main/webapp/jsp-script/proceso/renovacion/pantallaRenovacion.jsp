@@ -14,6 +14,8 @@ var _p24_ultimosParams;
 
 Ext.onReady(function()
 {
+    Ext.Ajax.timeout = 60000;
+
     ////// modelos //////
     Ext.define('_p24_modeloPoliza',
     {
