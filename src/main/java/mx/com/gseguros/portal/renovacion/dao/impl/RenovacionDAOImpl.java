@@ -31,6 +31,14 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdramo"   , cdramo);
 		params.put("anio"     , anio);
 		params.put("mes"      , mes);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_POLIZAS_RENOVABLES ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
 		Map<String,Object>procedureResult=ejecutaSP(new BuscarPolizasRenovables(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(lista==null)
@@ -79,7 +87,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			,Date   feemisio
 			,String swrenova
 			,String swaproba
-			,String nmsituac)throws Exception
+			,String nmsituac
+			,String cducreno)throws Exception
 	{
 		Map<String,Object>params=new HashMap<String,Object>();
 		params.put("anio"     , anio);
@@ -93,6 +102,15 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("swrenova" , swrenova);
 		params.put("swaproba" , swaproba);
 		params.put("nmsituac" , nmsituac);
+		params.put("cducreno" , cducreno);
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************")
+				.append("\n****** PKG_RENOVA.P_MARCAR_POLIZA ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************")
+				.toString()
+				);
 		ejecutaSP(new MarcarPoliza(getDataSource()),params);
 	}
 	
@@ -112,6 +130,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("swrenova" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swaproba" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cducreno" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -126,6 +145,14 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("anio"     , anio);
 		params.put("mes"      , mes);
 		params.put("cdtipopc" , cdtipopc);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_RENOVA.P_RENUEVA_X_LISTA_POLIZAS ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************")
+				.toString()
+				);
 		Map<String,Object>procedureResult        = ejecutaSP(new RenovarPolizas(getDataSource()),params);
 		List<Map<String,String>>polizasRenovadas = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(polizasRenovadas==null||polizasRenovadas.size()==0)
@@ -181,6 +208,14 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_RENOVA.P_ACTUALIZA_TCARTERA_SWIMPDOC ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************************")
+				.toString()
+				);
 		ejecutaSP(new ActualizaRenovacionDocumentos(getDataSource()),params);
 	}
 	

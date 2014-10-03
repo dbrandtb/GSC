@@ -63,6 +63,7 @@ public class ComponenteVO
 	
 	private String swGrupo      = null;
 	private String swGrupoLinea = null;
+	private String swGrupoFact  = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -470,5 +471,13 @@ public class ComponenteVO
 
 	public void setSwGrupoLinea(String swGrupoLinea) {
 		this.swGrupoLinea = swGrupoLinea;
+	}
+
+	public String getSwGrupoFact() {
+		return swGrupoFact;
+	}
+
+	public void setSwGrupoFact(String swGrupoFact) {
+		this.swGrupoFact = swGrupoFact;
 	}
 }

@@ -30,8 +30,15 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// variables //////
-var _p25_urlSubirCenso        = '<s:url namespace="/emision"         action="subirCenso"                    />';
-var _p25_urlVentanaDocumentos = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p25_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                    />';
+var _p25_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p25_urlBuscarPersonas               = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
+var _p25_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
+var _p25_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
+var _p25_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"          />';
+var _p25_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
+var _p25_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo2"          />';
+var _p25_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
@@ -39,12 +46,15 @@ debug('_p25_smap1:',_p25_smap1);
 var _p25_TARIFA_LINEA       = 1;
 var _p25_TARIFA_MODIFICADA  = 2;
 var _p25_semaforoPlanChange = true;
-var _p25_ntramite           = Ext.isEmpty(_p25_smap1.ntramite) ? false : _p25_smap1.ntramite;
+var _p25_ntramite           = Ext.isEmpty(_p25_smap1.ntramite) ? false      : _p25_smap1.ntramite;
+var _p25_ntramiteVacio      = Ext.isEmpty(_p25_smap1.ntramiteVacio) ? false : _p25_smap1.ntramiteVacio;
+debug('_p25_ntramite:',_p25_ntramite,'_p25_ntramiteVacio:',_p25_ntramiteVacio);
 
 var _p25_clasif;
 var _p25_storeGrupos;
 var _p25_tabGrupos;
 var _p25_tabGruposLineal;
+var _p25_tabGruposModifi;
 var _p25_gridTarifas;
 
 var _p25_editorNombreGrupo=
@@ -57,6 +67,67 @@ var _p25_editorNombreGrupo=
 var _p25_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p25_editorPlan.on('change',_p25_editorPlanChange);
 debug('_p25_editorPlan:',_p25_editorPlan);
+
+var _p25_colsExtColumns =
+[
+    <s:if test='%{getImap().get("colsExtColumns")!=null}'>
+        <s:property value="imap.colsExtColumns" escapeHtml="false" />
+    </s:if>
+];
+debug('_p25_colsExtColumns:',_p25_colsExtColumns);
+
+_p25_colsBaseColumns =
+[
+    <s:if test='%{getImap().get("colsBaseColumns")!=null}'>
+        <s:property value="imap.colsBaseColumns" escapeHtml="false" />
+    </s:if>
+];
+debug('_p25_colsBaseColumns:',_p25_colsBaseColumns);
+
+for(var i=0;i<_p25_colsExtColumns.length;i++)
+{
+    var esExt = true;
+    _p25_colsExtColumns[i]['flex']=0;
+    _p25_colsExtColumns[i]['width']=150;
+    for(var j=0;j<_p25_colsBaseColumns.length;j++)
+    {
+        if(i==0)
+        {
+            _p25_colsBaseColumns[j]['flex']=0;
+            _p25_colsBaseColumns[j]['width']=150;
+        }
+        if(_p25_colsExtColumns[i].dataIndex==_p25_colsBaseColumns[j].dataIndex)
+        {
+            esExt = false;
+        }
+    }
+    if(esExt)
+    {
+        _p25_colsExtColumns[i]['hidden']=_p25_smap1.LINEA_EXTENDIDA=='N';
+    }
+}
+debug('_p25_colsExtColumns despues de marcar extendidas:',_p25_colsExtColumns);
+
+var _p25_factoresColumns =
+[
+    <s:if test='%{getImap().get("factoresColumns")!=null}'>
+        <s:property value="imap.factoresColumns" escapeHtml="false" />
+    </s:if>
+];
+debug('_p25_factoresColumns:',_p25_factoresColumns);
+
+var _p25_itemsRiesgo =
+[
+    <s:if test='%{getImap().get("itemsRiesgo")!=null}'>
+        <s:property value="imap.itemsRiesgo" escapeHtml="false" />
+    </s:if>
+];
+
+for(var i=0;i<_p25_itemsRiesgo.length;i++)
+{
+    _p25_itemsRiesgo[i].name='tvalopol_'+_p25_itemsRiesgo[i].name;
+}
+debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 
 ////// variables //////
 
@@ -79,12 +150,25 @@ Ext.onReady(function()
     ];
     debug('_p25_colsExtFields:',_p25_colsExtFields);
     
+    var _p25_factoresFields =
+    [
+        <s:if test='%{getImap().get("factoresFields")!=null}'>
+            <s:property value="imap.factoresFields" escapeHtml="false" />
+        </s:if>
+    ];
+    debug('_p25_factoresFields:',_p25_factoresFields);
+    
     var _p25_modeloGrupoFields =
     [
         'letra'
         ,'nombre'
         ,'cdplan'
     ];
+    
+    for(var i=0;i<_p25_factoresFields.length;i++)
+    {
+        _p25_modeloGrupoFields.push(_p25_factoresFields[i]);
+    }
     
     for(var i=0;i<_p25_colsBaseFields.length;i++)
     {
@@ -114,6 +198,38 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields : _p25_modeloGrupoFields
     });
+    
+    Ext.define('RFCPersona',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"
+        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT']
+    });
+    
+    Ext.define('_p25_modeloTarifaEdad',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'EDAD'
+            ,'HOMBRES'
+            ,'MUJERES'
+            ,'TARIFA_UNICA_HOMBRES'
+            ,'TARIFA_UNICA_MUJERES'
+            ,'TARIFA_TOTAL_HOMBRES'
+            ,'TARIFA_TOTAL_MUJERES'
+        ]
+    });
+    
+    Ext.define('_p25_modeloTarifaCobertura',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'DSGARANT'
+            ,{type:'float',name:'PRIMA_PROMEDIO'}
+        ]
+    });
     ////// modelos //////
     
     ////// stores //////
@@ -124,6 +240,26 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+    var botoneslinea = [];
+    if(_p25_smap1.DETALLE_LINEA=='S')
+    {
+        botoneslinea.push(
+        {
+            tooltip   : 'Editar'
+            ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
+            //,handler  : _p25_editarGrupoClic
+        });
+    }
+    if(!_p25_ntramite)
+    {
+        botoneslinea.push(
+        {
+            tooltip  : 'Borrar subgrupo'
+            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler : _p25_borrarGrupoClic
+        });
+    }
+    
     _p25_tabGruposLinealCols =
     [
         {
@@ -132,13 +268,13 @@ Ext.onReady(function()
             ,width     : 40
         }
         ,{
-            header     : 'Nombre'
+            header     : 'NOMBRE'
             ,dataIndex : 'nombre'
             ,width     : 150
             ,editor    : _p25_editorNombreGrupo
         }
         ,{
-            header     : 'Plan'
+            header     : 'PLAN'
             ,dataIndex : 'cdplan'
             ,width     : 100
             ,editor    : _p25_editorPlan
@@ -148,6 +284,21 @@ Ext.onReady(function()
             }
         }
     ];
+    
+    Ext.Array.each(_p25_colsExtColumns,function(col)
+    {
+        _p25_tabGruposLinealCols.push(col);
+    });
+    
+    _p25_tabGruposLinealCols.push(
+    {
+        xtype         : 'actioncolumn'
+        ,sortable     : false
+        ,menuDisabled : true
+        ,width        : (botoneslinea.length*20) + 10
+        ,items        : botoneslinea
+    });
+    
     _p25_tabGruposLineal =
     {
         title     : 'RESUMEN SUBGRUPOS'
@@ -161,82 +312,132 @@ Ext.onReady(function()
                 {
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-                    //,handler : _p25_agregarGrupoClic
+                    ,handler : _p25_agregarGrupoClic
                     ,hidden  : _p25_ntramite ? true : false
                 }
             ]
             ,columns : _p25_tabGruposLinealCols
-            /*
-            [
-                {
-                    header     : 'Suma asegurada'
-                    ,dataIndex : 'ptsumaaseg'
-                    ,width     : 120
-                    ,editor    : _p25_editorSumaAseg
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'ptsumaaseg');
-                    }
-                }
-                ,{
-                    header     : 'Deducible'
-                    ,dataIndex : 'deducible'
-                    ,width     : 100
-                    ,editor    : _p25_editorDeducible
-                    ,hidden    : _p25_smap1.cdramo!='4'||_p25_smap1.LINEA_EXTENDIDA=='N'
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'deducible');
-                    }
-                }
-                ,{
-                    header     : 'Ayuda Maternidad'
-                    ,dataIndex : 'ayudamater'
-                    ,width     : 140
-                    ,editor    : _p25_editorAyudaMater
-                    ,hidden    : _p25_smap1.cdramo!='4'||_p25_smap1.LINEA_EXTENDIDA=='N'
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'ayudamater');
-                    }
-                }
-                ,{
-                    header     : 'Asis. Inter. Viajes'
-                    ,dataIndex : 'asisinte'
-                    ,width     : 140
-                    ,editor    : _p25_editorAsisInter
-                    ,hidden    : _p25_smap1.cdramo!='4'||_p25_smap1.LINEA_EXTENDIDA=='N'
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'asisinte');
-                    }
-                }
-                ,{
-                    header     : 'Emergencia extranjero'
-                    ,dataIndex : 'emerextr'
-                    ,width     : 140
-                    ,editor    : _p25_editorEmerextr
-                    ,hidden    : _p25_smap1.cdramo!='4'||_p25_smap1.LINEA_EXTENDIDA=='N'
-                    ,renderer  : function(v)
-                    {
-                        return rendererColumnasDinamico(v,'emerextr');
-                    }
-                }
-                ,{
-                    xtype         : 'actioncolumn'
-                    ,sortable     : false
-                    ,menuDisabled : true
-                    ,width        : (botoneslinea.length*20) + 10
-                    ,items        : botoneslinea
-                }
-            ]
-            */
             ,store   : _p25_storeGrupos
             ,height  : 250
             ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
             {
                 clicksToEdit  : 1
                 ,errorSummary : false
+            })
+        })
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Continuar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    _p25_setActiveConcepto();
+                }
+            }
+        ]
+    };
+    
+    _p25_tabGruposModifiCols =
+    [
+        {
+            header     : 'ID'
+            ,dataIndex : 'letra'
+            ,width     : 40
+        }
+        ,{
+            header     : 'NOMBRE'
+            ,dataIndex : 'nombre'
+            ,width     : 150
+            ,editor    : _p25_editorNombreGrupo
+        }
+        ,{
+            header     : 'PLAN'
+            ,dataIndex : 'cdplan'
+            ,width     : 100
+            ,editor    : _p25_editorPlan
+            ,renderer  : function(v)
+            {
+                return rendererColumnasDinamico(v,'cdplan');
+            }
+        }
+    ];
+    
+    Ext.Array.each(_p25_colsBaseColumns,function(col)
+    {
+        _p25_tabGruposModifiCols.push(col);
+    });
+    
+    var botonesModificada =
+    [
+        {
+            tooltip  : 'Editar'
+            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+            ,handler : _p25_editarGrupoClic
+        }
+    ];
+    if(!_p25_ntramite)
+    {
+        botonesModificada.push(
+        {
+            tooltip   : 'Borrar subgrupo'
+            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler  : _p25_borrarGrupoClic
+        });
+    }
+    if(_p25_smap1.ASEGURADOS=='S')
+    {
+        botonesModificada.push(
+        {
+            tooltip  : 'Asegurados'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
+            //,handler : _p25_aseguradosClic
+        });
+    }
+    if(_p25_smap1.EXTRAPRIMAS=='S')
+    {
+        botonesModificada.push(
+        {
+            tooltip  : 'Revisar extraprimas'
+            ,icon    : '${ctx}/resources/fam3icons/icons/group_error.png'
+            //,handler : _p25_revisarAseguradosClic
+        });
+    }
+    
+    _p25_tabGruposModifiCols.push(
+    {
+        xtype         : 'actioncolumn'
+        ,sortable     : false
+        ,menuDisabled : true
+        ,width        : (botonesModificada.length*20) + 10
+        ,items        : botonesModificada
+    });
+    
+    _p25_tabGruposModifi =
+    {
+        title     : 'RESUMEN SUBGRUPOS'
+        ,itemId   : '_p25_tabGruposModifi'
+        ,defaults : { style : 'margin:5px' }
+        ,border   : 0
+        ,items    : Ext.create('Ext.grid.Panel',
+        {
+            tbar     :
+            [
+                {
+                    text     : 'Agregar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                    ,handler : _p25_agregarGrupoClic
+                    ,hidden  : _p25_ntramite ? true : false
+                }
+            ]
+            ,columns : _p25_tabGruposModifiCols
+            ,store   : _p25_storeGrupos
+            ,height  : 250
+            ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+            {
+                clicksToEdit  : 1
+                ,errorSummary : true
             })
         })
         ,buttonAlign : 'center'
@@ -287,9 +488,15 @@ Ext.onReady(function()
                                 ,items  : [ <s:property value="imap.itemsContratante" /> ]
                             }
                             ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">INFORMACIÓN DEL RIESGO</span>'
-                                ,items : [ <s:property value="imap.itemsRiesgo" /> ]
+                                xtype     : 'fieldset'
+                                ,title    : '<span style="font:bold 14px Calibri;">INFORMACIÓN DEL RIESGO</span>'
+                                ,layout   :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                                ,defaults : {  style : 'margin : 5px;' }
+                                ,items    : _p25_itemsRiesgo
                             }
                             ,{
                                 xtype     : 'fieldset'
@@ -396,7 +603,7 @@ Ext.onReady(function()
                                         xtype    : 'button'
                                         ,text    : '50 o más asegurados'
                                         ,scale   : 'medium'
-                                        //,handler : _p25_construirModificada
+                                        ,handler : _p25_construirModificada
                                     }
                                 ]
                             }
@@ -493,7 +700,9 @@ Ext.onReady(function()
                         debug('modificados:',records.length);
                         if(
                             grid.up('panel').title!='RESUMEN SUBGRUPOS'
-                            &&records.length>0)
+                            &&records.length>0
+                            &&grid.title!='FACTORES DEL SUBGRUPO'
+                            )
                         {
                             conCambios = true;
                             debug('cambios:',records);
@@ -544,6 +753,44 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    _fieldByLabel('RFC').on(
+    {
+        'blur'    : _p25_rfcBlur
+        ,'change' : function()
+        {
+            _fieldByName('cdperson').reset();
+        }
+    });
+    
+    _fieldByName('cdreppag').on(
+    {
+        select : function(comp,arr)
+        {
+            var val=_fieldByName('cdreppag').getValue();
+            debug('reparto pago select valor:',val);
+            if(val==1)
+            {
+                _fieldByName('pcpgocte').hide();
+                _fieldByName('pcpgocte').setValue(100);
+                _fieldByName('pcpgotit').hide();
+                _fieldByName('pcpgotit').setValue(0);
+            }
+            else if(val==2)
+            {
+                _fieldByName('pcpgocte').show();
+                _fieldByName('pcpgocte').setValue(50);
+                _fieldByName('pcpgotit').show();
+                _fieldByName('pcpgotit').setValue(50);
+            }
+            else
+            {
+                _fieldByName('pcpgocte').hide();
+                _fieldByName('pcpgocte').setValue(0);
+                _fieldByName('pcpgotit').hide();
+                _fieldByName('pcpgotit').setValue(100);
+            }
+        }
+    });
     ////// custom //////
     
     ////// loaders //////
@@ -712,6 +959,961 @@ function _p25_editarClic()
     _p25_tabConcepto().remove(_p25_gridTarifas,true);
     window.parent.scrollTo(0, 0);
     debug('<_p25_editarClic');
+}
+
+function _p25_construirModificada(button,event,confirmado)
+{
+    debug('>_p25_construirModificada');
+    var valido = true;
+    
+    //validar confirmacion
+    if(valido)
+    {
+        valido=confirmado==true;
+        if(!valido)
+        {
+            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrarán los subgrupos existentes<br>¿Desea continuar?', function(btn)
+            {
+                if(btn === 'yes')
+                {
+                    _p25_construirModificada(button,event,true);
+                }
+            }));
+        }
+    }
+    debug('<_p25_construirModificada');
+    
+    //agregar tab grupos
+    if(valido)
+    {
+        _p25_quitarTabsDetalleGrupo();
+        _p25_clasif = _p25_TARIFA_MODIFICADA;
+        _p25_agregarTabGrupos();
+    }
+}
+
+function _p25_setActiveConcepto()
+{
+    debug('>_p25_setActiveConcepto');
+    _p25_setActiveTab('_p25_tabConcepto');
+    window.parent.scrollTo(0, 0);
+    debug('<_p25_setActiveConcepto');
+}
+
+function _p25_agregarGrupoClic()
+{
+    debug('>_p25_agregarGrupoClic');
+    _p25_storeGrupos.add(new _p25_modeloGrupo({letra:'99'}));
+    _p25_storeGrupos.sort('letra','ASC');
+    _p25_renombrarGrupos(true);
+    _p25_storeGrupos.commitChanges();
+    debug('<_p25_agregarGrupoClic');
+}
+
+function _p25_renombrarGrupos(sinBorrarPestañas)
+{
+    debug('>_p25_renombrarGrupos');
+    if(!sinBorrarPestañas)
+    {
+        _p25_quitarTabsDetalleGrupo();
+    }
+    var letras=['1','2','3','4','5','6','7','8','9','91','92','93','94','95','96','97','98','99'];
+    var i=0;
+    _p25_storeGrupos.each(function(record)
+    {
+        record.set('letra',letras[i]);
+        i=i+1;
+    });
+    debug('<_p25_renombrarGrupos');
+}
+
+function _p25_rfcBlur(field)
+{
+    debug('>_p25_rfcBlur:',field);
+    var value=field.getValue();
+    debug('value:',value);
+    
+    var valido = true;
+    
+    if(valido)
+    {
+        valido = _p25_smap1.BLOQUEO_CONCEPTO=='N';
+    }
+    
+    if(valido)
+    {
+        valido = value&&value.length>8&&value.length<14;
+    }
+    
+    if(valido)
+    {
+        _p25_tabpanel().setLoading(true);
+        Ext.Ajax.request
+        ({
+            url     : _p25_urlBuscarPersonas
+            ,params :
+            {
+                'map1.pv_rfc_i'       : value
+                ,'map1.cdtipsit'      : _p25_smap1.cdtipsit
+                ,'map1.pv_cdunieco_i' : _p25_smap1.cdunieco
+                ,'map1.pv_cdramo_i'   : _p25_smap1.cdramo
+                ,'map1.pv_estado_i'   : 'W'
+                ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+                ,'map1.esContratante' : 'S'
+            }
+            ,success:function(response)
+            {
+                _p25_tabpanel().setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('json response:',json);
+                if(json&&json.slist1&&json.slist1.length>0)
+                {
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    {
+                        width        : 600
+                        ,height      : 400
+                        ,modal       : true
+                        ,autoScroll  : true
+                        ,title       : 'Coincidencias'
+                        ,items       : Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model     : 'RFCPersona'
+                                ,autoLoad : true
+                                ,proxy :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                    ,data   : json['slist1']
+                                }
+                            })
+                            ,columns :
+                            [
+                                {
+                                    xtype         : 'actioncolumn'
+                                    ,menuDisabled : true
+                                    ,width        : 30
+                                    ,items        :
+                                    [
+                                        {
+                                            icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                            ,tooltip : 'Seleccionar usuario'
+                                            ,handler : function(grid, rowIndex, colIndex)
+                                            {
+                                                var record = grid.getStore().getAt(rowIndex);
+                                                debug('record:',record);
+                                                _fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
+                                                _fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
+                                                _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
+                                                _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+                                                _fieldByName('cdedo')    .setValue(record.get('CDEDO'));
+                                                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+                                                _fieldByName('cdmunici') .heredar(true);
+                                                _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
+                                                _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
+                                                _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+                                                /*debug('cliente obtenido de WS? ', json.clienteWS);
+                                                gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+                                                if(json.clienteWS)
+                                                {
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+                                                }
+                                                else
+                                                {
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                }
+                                                */
+                                                grid.up().up().destroy();
+                                            }
+                                        }
+                                    ]
+                                }
+                                ,{
+                                    header     : 'RFC'
+                                    ,dataIndex : 'RFCCLI'
+                                    ,flex      : 1
+                                }
+                                ,{
+                                    header     : 'Nombre'
+                                    ,dataIndex : 'NOMBRECLI'
+                                    ,flex      : 1
+                                }
+                                ,{
+                                    header     : 'Direcci&oacute;n'
+                                    ,dataIndex : 'DIRECCIONCLI'
+                                    ,flex      : 3
+                                }
+                            ]
+                        })
+                    }).show());
+                }
+                else
+                {
+                    mensajeWarning('No hay coincidencias de RFC');
+                }
+            }
+            ,failure:function()
+            {
+                _p25_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p25_rfcBlur');
+}
+
+function _p25_borrarGrupoClic(grid,rowIndex)
+{
+    var record = grid.getStore().getAt(rowIndex);
+    debug('>_p25_borrarGrupoClic:',record.data);
+    centrarVentanaInterna(Ext.Msg.confirm('Borrar grupo','¿Desea borrar el grupo '+record.get('letra')+' y renombrar los grupos en orden alfabético?<br>Esta acci&oacute;n cerrará las pestañas de detalle de subgrupos y podría perder los cambios no guardados.',
+    function(button){
+        debug('clicked:',button);
+        if(button=='yes')
+        {
+            _p25_storeGrupos.remove(record);
+            _p25_renombrarGrupos();
+        }
+    }));
+    debug('<_p25_borrarGrupoClic');
+}
+
+function _p25_editarGrupoClic(grid,rowIndex)
+{
+    var record = grid.getStore().getAt(rowIndex);
+    debug('>_p25_editarGrupoClic:',record);
+    
+    var valido = true;
+    
+    if(valido)
+    {
+        valido = !Ext.isEmpty(record.get('cdplan'));
+        if(!valido)
+        {
+            mensajeWarning('Favor de seleccionar un plan para el subgrupo');
+        }
+    }
+    
+    if(valido)
+    {
+        _p25_quitarTabsDetalleGrupo(record.get('letra'));
+        _p25_tabpanel().setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p25_urlObtenerCoberturas
+            ,params  :
+            {
+                'smap1.cdramo'    : _p25_smap1.cdramo
+                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+                ,'smap1.cdplan'   : record.get('cdplan')
+            }
+            ,success : function(response)
+            {
+                _p25_tabpanel().setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('json response:',json);
+                if(json.exito)
+                {
+                    var numCoberturas=json.slist1.length;
+                    debug('numCoberturas:',numCoberturas);
+                    var contadorCoberturas=0;
+                    _p25_tabpanel().setLoading(true);
+                    for(var i=0;i<numCoberturas;i++)
+                    {
+                        Ext.Ajax.request(
+                        {
+                            url      : _p25_urlObtenerHijosCobertura
+                            ,params  :
+                            {
+                                'smap1.cdramo'    : _p25_smap1.cdramo
+                                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+                                ,'smap1.cdplan'   : record.get('cdplan')
+                                ,'smap1.cdgarant' : json.slist1[i].CDGARANT
+                                ,'smap1.indice'   : i
+                            }
+                            ,success : function(response)
+                            {
+                                var json2=Ext.decode(response.responseText);
+                                debug('json response ['+json2.smap1.indice+']:',json2);
+                                if(json2.exito)
+                                {
+                                    contadorCoberturas=contadorCoberturas+1;
+                                    json.slist1[json2.smap1.indice]['hijos']       = Ext.decode(json2.respuesta.substr("items:".length));
+                                    json.slist1[json2.smap1.indice]['modeloHijos'] = Ext.decode(json2.respuestaOculta.substr("fields:".length));
+                                    if(contadorCoberturas==numCoberturas)
+                                    {
+                                        var items = [];
+                                        for(var j=0;j<numCoberturas;j++)
+                                        {
+                                            var hijos = json.slist1[j].hijos;
+                                            for(var k=0;k<hijos.length;k++)
+                                            {
+                                                var hijo = hijos[k];
+                                                if(hijo.maxValue&&hijo.maxValue<999999999)
+                                                {
+                                                    hijo.on('change',function(comp,value)
+                                                    {
+                                                        debug('change:',value,comp.maxValue,comp);
+                                                        if(value!=comp.maxValue)
+                                                        {
+                                                            comp.addCls('valorNoOriginal');
+                                                        }
+                                                        else
+                                                        {
+                                                            comp.removeCls('valorNoOriginal');
+                                                        }
+                                                    });
+                                                }
+                                            } 
+                                            var item = Ext.create('Ext.form.Panel',
+                                            {
+                                                width       : 440
+                                                ,frame      : true
+                                                ,height     : 140
+                                                ,autoScroll : true
+                                                ,defaults   : { style : 'margin:5px;', labelWidth : 100 }
+                                                ,items      : hijos
+                                                ,cdgarant   : json.slist1[j].CDGARANT
+                                                ,tbar       :
+                                                [
+                                                    {
+                                                        xtype       : 'displayfield'
+                                                        ,fieldLabel : '<span style="color:white;">'+json.slist1[j].DSGARANT+'</span>'
+                                                        ,labelWidth : 300
+                                                    }
+                                                    ,{
+                                                        xtype       : 'checkbox' 
+                                                        ,boxLabel   : 'Amparada'
+                                                        ,name       : 'amparada'
+                                                        ,inputValue : 'S'
+                                                        ,checked    : true
+                                                        ,disabled   : _p25_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
+                                                        ,style      : 'color:white;'
+                                                        ,listeners  :
+                                                        {
+                                                            change : function(checkbox,value)
+                                                            {
+                                                                debug('checkbox change:',value);
+                                                                var form = checkbox.up().up();
+                                                                for(var l=0;l<form.items.items.length;l++)
+                                                                {
+                                                                    form.items.items[l].setDisabled(!value);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    ,{
+                                                        xtype  : 'hidden'
+                                                        ,name  : 'swobliga'
+                                                        ,value : json.slist1[j].SWOBLIGA
+                                                    }
+                                                    ,{
+                                                        xtype  : 'hidden'
+                                                        ,name  : 'cdgarant'
+                                                        ,value : json.slist1[j].CDGARANT
+                                                    }
+                                                ]
+                                            });
+                                            if(record.valido)
+                                            {
+                                                debug('GRUPO VALIDO');
+                                                Ext.define('_p25_modelo'+json.slist1[j].CDGARANT,
+                                                {
+                                                    extend  : 'Ext.data.Model'
+                                                    ,fields : json.slist1[j].modeloHijos
+                                                });
+                                                tvalogars = record.tvalogars;
+                                                tvalogar  = null;
+                                                for(var k=0;k<tvalogars.length;k++)
+                                                {
+                                                    if(tvalogars[k].cdgarant==json.slist1[j].CDGARANT)
+                                                    {
+                                                        tvalogar = tvalogars[k];
+                                                    }
+                                                }
+                                                var datosAnteriores = Ext.create('_p25_modelo'+json.slist1[j].CDGARANT,tvalogar);
+                                                debug('Datos a cargar para '+json.slist1[j].CDGARANT+':',datosAnteriores,'con:',tvalogar);
+                                                item.valido          = true;
+                                                item.datosAnteriores = datosAnteriores;
+                                            }
+                                            else
+                                            {
+                                                debug('GRUPO NO VALIDO');
+                                                item.valido = false;
+                                            }
+                                            items.push(item);
+                                        }
+                                        _p25_tabpanel().setLoading(false);
+                                        grid.editingPlugin.cancelEdit();
+                                        _p25_agregarTab(
+                                        {
+                                            title       : 'DETALLE DE SUBGRUPO '+record.get('letra')
+                                            ,itemId     : 'id'+(new Date().getTime())
+                                            ,letraGrupo : record.get('letra')
+                                            ,tipo       : 'tabDetalleGrupo'
+                                            ,defaults   : { style : 'margin:5px;' }
+                                            ,items      :
+                                            [
+                                                Ext.create('Ext.panel.Panel',
+                                                {
+                                                    title        : 'COBERTURAS DEL SUBGRUPO'
+                                                    ,maxHeight   : 490
+                                                    ,hidden      : _p25_smap1.COBERTURAS=='N'
+                                                    ,autoScroll  : true
+                                                    ,collapsible : true
+                                                    ,layout      :
+                                                    {
+                                                        type     : 'table'
+                                                        ,columns : 2
+                                                    }
+                                                    ,defaults    : { style : 'margin:5px' }
+                                                    ,items       : items
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title    : 'FACTORES DEL SUBGRUPO'
+                                                    ,height  : 150
+                                                    ,hidden  : _p25_smap1.FACTORES=='N'
+                                                    ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+                                                    {
+                                                        clicksToEdit  : 1
+                                                        ,errorSummary : false
+                                                        /*
+                                                        ,listeners    :
+                                                        {
+                                                            beforeedit : function(editor)
+                                                            {
+                                                                centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el factor de incremento de inflaci&oacute;n<br/>y/o el factor de extraprima o renovaci&oacute;n entonces<br/>se cambiar&aacute; para todas las coberturas<br/>¿Desea continuar?', function(btn)
+                                                                {
+                                                                    if(btn=='yes')
+                                                                    {
+                                                                        _p25_incrinflAux = record.get('incrinfl');
+                                                                        _p25_extrrenoAux = record.get('extrreno');
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        editor.cancelEdit();
+                                                                    }
+                                                                }));
+                                                            }
+                                                            ,edit : function(editor,e)
+                                                            {
+                                                                var letraGrupo  = e.record.get('letra');
+                                                                var incrinfl    = e.record.get('incrinfl');
+                                                                var extrreno    = e.record.get('extrreno');
+                                                                debug('letraGrupo:',letraGrupo);
+                                                                debug('_p25_incrinflAux:',_p25_incrinflAux,'incrinfl:',incrinfl);
+                                                                debug('_p25_extrrenoAux:',_p25_extrrenoAux,'extrreno:',extrreno);
+                                                                if(_p25_incrinflAux!=incrinfl)
+                                                                {
+                                                                    var pestania=Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    debug('pestania:',pestania);
+                                                                    $.each(_p25_arrayNombresIncrinfl,function(i,nombre)
+                                                                    {
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        debug('componentes para poner factor incrinfl:',componentes);
+                                                                        $.each(componentes,function(i,comp)
+                                                                        {
+                                                                            debug('poniendo valor en:',comp);
+                                                                            comp.setValue(incrinfl);
+                                                                        });
+                                                                    });
+                                                                }
+                                                                if(_p25_extrrenoAux!=extrreno)
+                                                                {
+                                                                    var pestania=Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    debug('pestania:',pestania);
+                                                                    $.each(_p25_arrayNombresExtrreno,function(i,nombre)
+                                                                    {
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        debug('componentes para poner factor extrreno:',componentes);
+                                                                        $.each(componentes,function(i,comp)
+                                                                        {
+                                                                            debug('poniendo valor en:',comp);
+                                                                            comp.setValue(extrreno);
+                                                                        });
+                                                                    });
+                                                                }
+                                                            }
+                                                        }
+                                                        */
+                                                    })
+                                                    ,columns : _p25_factoresColumns
+                                                    ,store   : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model : '_p25_modeloGrupo'
+                                                        ,data : record
+                                                    })
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title      : 'TARIFA POR EDADES ('
+                                                         +(
+                                                         _p25_ntramite?
+                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
+                                                         :''
+                                                         )+')'
+                                                    ,minHeight : 100
+                                                    ,hidden    : _p25_ntramite ? false : true
+                                                    ,maxHeight : 250
+                                                    ,store     : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model     : '_p25_modeloTarifaEdad'
+                                                        ,autoLoad : _p25_ntramite ? true : false
+                                                        ,proxy    :
+                                                        {
+                                                            type         : 'ajax'
+                                                            ,extraParams :
+                                                            {
+                                                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                                                ,'smap1.estado'   : _p25_smap1.estado
+                                                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                                                ,'smap1.nmsuplem' : '0'
+                                                                ,'smap1.cdplan'   : record.get('cdplan')
+                                                                ,'smap1.cdgrupo'  : record.get('letra')
+                                                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+                                                            }
+                                                            ,url         : _p25_urlObtenerTarifaEdad
+                                                            ,reader      :
+                                                            {
+                                                                type  : 'json'
+                                                                ,root : 'slist1'
+                                                            }
+                                                        }
+                                                    })
+                                                    ,columns   :
+                                                    [
+                                                        {
+                                                            header     : 'Edad'
+                                                            ,width     : 60
+                                                            ,dataIndex : 'EDAD'
+                                                        }
+                                                        ,{
+                                                            header     : 'No. Hombres'
+                                                            ,width     : 100
+                                                            ,dataIndex : 'HOMBRES'
+                                                        }
+                                                        ,{
+                                                            header     : 'No. Mujeres'
+                                                            ,width     : 100
+                                                            ,dataIndex : 'MUJERES'
+                                                        }
+                                                        ,{
+                                                            header     : 'Tarifa por hombre'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Tarifa por mujer'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_UNICA_MUJERES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Total hombres'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                        ,{
+                                                            header     : 'Total mujeres'
+                                                            ,flex      : 1
+                                                            ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+                                                            ,renderer  : Ext.util.Format.usMoney
+                                                        }
+                                                    ]
+                                                })
+                                                ,Ext.create('Ext.grid.Panel',
+                                                {
+                                                    title      : 'PRIMA PROMEDIO ('
+                                                         +(
+                                                         _p25_ntramite?
+                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
+                                                         :''
+                                                         )+')'
+                                                    ,minHeight : 100
+                                                    ,hidden    : _p25_ntramite ? false : true
+                                                    ,maxHeight : 250
+                                                    ,store     : Ext.create('Ext.data.Store',
+                                                    {
+                                                        model     : '_p25_modeloTarifaCobertura'
+                                                        ,autoLoad : _p25_ntramite ? true : false
+                                                        ,proxy    :
+                                                        {
+                                                            type         : 'ajax'
+                                                            ,extraParams :
+                                                            {
+                                                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                                                ,'smap1.estado'   : _p25_smap1.estado
+                                                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                                                ,'smap1.nmsuplem' : '0'
+                                                                ,'smap1.cdplan'   : record.get('cdplan')
+                                                                ,'smap1.cdgrupo'  : record.get('letra')
+                                                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+                                                            }
+                                                            ,url         : _p25_urlObtenerTarifaCobertura
+                                                            ,reader      :
+                                                            {
+                                                                type  : 'json'
+                                                                ,root : 'slist1'
+                                                            }
+                                                        }
+                                                    })
+                                                    ,columns   :
+                                                    [
+                                                        {
+                                                            header           : 'Cobertura'
+                                                            ,dataIndex       : 'DSGARANT'
+                                                            ,flex            : 3
+                                                            ,summaryType     : 'count'
+                                                            ,summaryRenderer : function(value, summaryData, dataIndex) 
+                                                            {
+                                                                return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header       : 'Prima'
+                                                            ,flex        : 1
+                                                            ,dataIndex   : 'PRIMA_PROMEDIO'
+                                                            ,renderer    : Ext.util.Format.usMoney
+                                                            ,summaryType : 'sum'
+                                                        }
+                                                    ]
+                                                    ,features  :
+                                                    [
+                                                        {
+                                                            ftype: 'summary'
+                                                        }
+                                                    ]
+                                                })
+                                            ]
+                                            ,buttonAlign : 'center'
+                                            ,buttons     :
+                                            [
+                                                {
+                                                    text     : 'Guardar'
+                                                    ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                                    ,handler : function(button){_p25_guardarGrupo(button.up().up());}
+                                                    ,hidden  : _p25_smap1.COBERTURAS=='N'
+                                                }
+                                            ]
+                                        });
+                                        var formsValidos = Ext.ComponentQuery.query('[valido=true]');
+                                        debug('formsValidos:',formsValidos);
+                                        for(var k=0;k<formsValidos.length;k++)
+                                        {
+                                            var form = formsValidos[k];
+                                            debug('intento cargar:',form,'con:',form.datosAnteriores);
+                                            form.loadRecord(form.datosAnteriores);
+                                            if(form.datosAnteriores.raw.amparada=='N')
+                                            {
+                                                form.down('[name=amparada]').setValue(false);
+                                                debug('se "descheckeo" el box');
+                                            }
+                                            debug('cargado:',form);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    _p25_tabpanel().setLoading(false);
+                                    mensajeError(json2.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _p25_tabpanel().setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                _p25_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p25_editarGrupoClic');
+}
+
+function _p25_guardarGrupo(panelGrupo)
+{
+     debug('>_p25_guardarGrupo:',panelGrupo);
+     
+     var letraGrupo  = panelGrupo.letraGrupo;
+     debug('letraGrupo:',letraGrupo);
+     
+     var formsTatrigar = panelGrupo.down('[title=COBERTURAS DEL SUBGRUPO]').items.items;
+     debug('formsTatrigar:',formsTatrigar);
+     
+     var tvalogars = [];
+     var valido    = true;
+     if(_p25_clasif==_p25_TARIFA_MODIFICADA||_p25_smap1.LINEA_EXTENDIDA=='N')
+     {
+         for(var i=0;i<formsTatrigar.length;i++)
+         {
+             var iFormTatrigar = formsTatrigar[i];
+             valido            = valido && iFormTatrigar.isValid();
+             var tvalogar      = iFormTatrigar.getValues();
+             if(tvalogar.swobliga=='S'&&_p25_smap1.cdsisrol!='COTIZADOR')
+             {
+                 tvalogar['amparada']='S';
+             }
+             else
+             {
+                 if(!tvalogar.amparada)
+                 {
+                     tvalogar['amparada']='N';
+                 }
+             }
+             tvalogars.push(tvalogar);
+         }
+         if(!valido)
+         {
+             datosIncompletos();
+         }
+     }
+     
+     if(valido)
+     {
+         debug('tvalogars:',tvalogars);
+         var recordGrupo=_p25_obtenerGrupoPorLetra(letraGrupo);
+         recordGrupo['tvalogars'] = tvalogars;
+         recordGrupo['valido']    = true;
+         debug('recordGrupo:',recordGrupo);
+         mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p25_setActiveResumen);
+     }
+     
+     debug('<_p25_guardarGrupo');
+}
+
+function _p25_obtenerGrupoPorLetra(letra)
+{
+    debug('>_p25_obtenerGrupoPorLetra:',letra);
+    var recordGrupo = null;
+    _p25_storeGrupos.each(function(record)
+    {
+        if(record.get('letra')==letra)
+        {
+            recordGrupo = record;
+        }
+    });
+    debug('<_p25_obtenerGrupoPorLetra:',recordGrupo);
+    return recordGrupo;
+}
+
+function _p25_setActiveResumen()
+{
+    debug('>_p25_setActiveResumen');
+    _p25_setActiveTab(_p25_tabGrupos.itemId);
+    window.parent.scrollTo(0, 0);
+    debug('<_p25_setActiveResumen');
+}
+
+function _p25_generarTramiteClic(callback)
+{
+    debug('>_p25_generarTramiteClic');
+    var valido = true;
+    
+    if(valido)
+    {
+        valido = _p25_tabConcepto().down('[xtype=form]').isValid();
+        if(!valido)
+        {
+            mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p25_setActiveConcepto);
+        }
+    }
+    
+    if(valido)
+    {    
+        valido = _p25_storeGrupos.getCount()>0;
+        debug('_p25_storeGrupos.getCount()>0:',_p25_storeGrupos.getCount()>0);
+        if(!valido)
+        {
+            if(!_p25_tabGrupos)
+            {
+                mensajeWarning('Debe introducir el n&uacute;mero de asegurados',_p25_setActiveConcepto);
+            }
+            else
+            {
+                mensajeWarning('Debe introducir al menos un grupo',_p25_setActiveResumen);
+            }
+        }
+    }
+    
+    if(valido&&_p25_clasif==_p25_TARIFA_LINEA)
+    {
+        var mensajeDeError = 'Falta definir los datos para el(los) grupo(s): ';
+        _p25_storeGrupos.each(function(record)
+        {
+            if(Ext.isEmpty(record.get('cdplan')))
+            {
+                valido         = false;
+                mensajeDeError = mensajeDeError + record.get('letra') + ' ';
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning(mensajeDeError,_p25_setActiveResumen);
+        }
+    }
+    
+    if(valido&&(_p25_clasif==_p25_TARIFA_MODIFICADA||_p25_smap1.LINEA_EXTENDIDA=='N'))
+    {
+        var mensajeDeError = 'Falta definir o guardar el detalle para el(los) grupo(s): ';
+        _p25_storeGrupos.each(function(record)
+        {
+            if(!record.valido)
+            {
+                valido         = false;
+                mensajeDeError = mensajeDeError + record.get('letra') + ' ';
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning(mensajeDeError,_p25_setActiveResumen);
+        }
+    }
+    
+    if(valido)
+    {
+        var form=_p25_tabConcepto().down('[xtype=form]');
+        form.setLoading(true);
+        var timestamp = new Date().getTime();
+        form.submit(
+        {
+            params   :
+            {
+                'smap1.timestamp' : timestamp
+                ,'smap1.ntramite' : _p25_ntramite ? _p25_ntramite : ''
+            }
+            ,success : function()
+            {
+                var conceptos = form.getValues();
+                conceptos['timestamp']       = timestamp;
+                conceptos['clasif']          = _p25_clasif;
+                conceptos['LINEA_EXTENDIDA'] = _p25_smap1.LINEA_EXTENDIDA;
+                conceptos['cdunieco']        = _p25_smap1.cdunieco;
+                conceptos['cdramo']          = _p25_smap1.cdramo;
+                conceptos['cdtipsit']        = _p25_smap1.cdtipsit;
+                conceptos['ntramiteVacio']   = _p25_ntramiteVacio ? _p25_ntramiteVacio : ''
+                var grupos = [];
+                _p25_storeGrupos.each(function(record)
+                {
+                    var grupo = record.data;
+                    grupo['tvalogars']=record.tvalogars;
+                    grupos.push(grupo);
+                });
+                Ext.Ajax.request(
+                {
+                    url       : _p25_urlGenerarTramiteGrupo
+                    ,jsonData :
+                    {
+                        smap1   : conceptos
+                        ,olist1 : grupos
+                    }
+                    ,success  : function(response)
+                    {
+                        form.setLoading(false);
+                        var json=Ext.decode(response.responseText);
+                        debug('json response:',json);
+                        if(json.exito)
+                        {
+                            if(_p25_ntramite||_p25_ntramiteVacio)
+                            {
+                                if(callback)
+                                {
+                                    callback(json);
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta+'<br/>Se guard&oacute; la informaci&oacute;n pero no hay callback');
+                                }
+                            }
+                            else
+                            {
+                                _p25_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                                _p25_fieldNtramite().setValue(json.smap1.ntramite);
+                                _p25_tabpanel().setDisabled(true);
+                                
+                                mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                                {
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                    {
+                                        width        : 600
+                                        ,height      : 400
+                                        ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                        ,closable    : false
+                                        ,modal       : true
+                                        ,loadingMask : true
+                                        ,loader      :
+                                        {
+                                            url       : _p25_urlVentanaDocumentos
+                                            ,scripts  : true
+                                            ,autoLoad : true
+                                            ,params   :
+                                            {
+                                                'smap1.cdunieco'  : json.smap1.cdunieco
+                                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                                ,'smap1.estado'   : 'W'
+                                                ,'smap1.nmpoliza' : '0'
+                                                ,'smap1.nmsuplem' : '0'
+                                                ,'smap1.ntramite' : json.smap1.ntramite
+                                                ,'smap1.tipomov'  : '0'
+                                            }
+                                        }
+                                    }).show());
+                                });
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta,function(){});
+                        }
+                    }
+                    ,failure  : function()
+                    {
+                        form.setLoading(false);
+                        errorComunicacion();
+                    }
+                });
+            }
+            ,failure : function()
+            {
+                form.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p25_generarTramiteClic');
+}
+
+function _p25_fieldNtramite()
+{
+    debug('>_p25_fieldNtramite<');
+    return _p25_query('#_p25_fieldNtramite')[0];
+}
+
+function _p25_fieldNmpoliza()
+{
+    debug('>_p25_fieldNmpoliza<');
+    return _p25_query('#_p25_fieldNmpoliza')[0];
 }
 ////// funciones //////
 

@@ -18,7 +18,8 @@ public interface RenovacionDAO
 			,Date   feemisio
 			,String swrenova
 			,String swaproba
-			,String nmsituac)throws Exception;
+			,String nmsituac
+			,String cducreno)throws Exception;
 	
 	public List<Map<String,String>>renovarPolizas(String cdusuari,String anio,String mes,String cdtipopc)throws Exception;
 	
