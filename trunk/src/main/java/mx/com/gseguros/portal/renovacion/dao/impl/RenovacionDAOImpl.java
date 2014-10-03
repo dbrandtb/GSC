@@ -183,6 +183,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 					,"nmanno"
 					,"nmmes"
 					,"cdtipopc"
+					,"uniecoant"
 					,"nmpolant"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -230,6 +231,60 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>cargarDocumentosSubidosPorUsuario(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new CargarDocumentosSubidosPorUsuario(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA ******")
+				.append("\n****** result=").append(lista)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		return lista;
+	}
+	
+	protected class CargarDocumentosSubidosPorUsuario extends StoredProcedure
+	{
+		protected CargarDocumentosSubidosPorUsuario(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"cddocume"
+					,"ntramite"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
