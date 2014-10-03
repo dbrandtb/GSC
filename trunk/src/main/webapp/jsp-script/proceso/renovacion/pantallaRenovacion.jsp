@@ -98,6 +98,13 @@ Ext.onReady(function()
                         ,disabled : true
                     }
                 ]
+                ,plugins     :
+                [
+                    Ext.create('Ext.grid.plugin.CellEditing',
+                    {
+                        clicksToEdit: 1
+                    })
+                ]
             })
         ]
     });
@@ -167,7 +174,14 @@ function _p24_buscarClic(button,e)
 function _p24_storePolizasLoadCallback(records,op,success)
 {
     debug('>_p24_storePolizasLoad',records,success,'dummy');
-    if(!success)
+    if(success)
+    {
+        for(var i=0;i<records.length;i++)
+        {
+            records[i].set('cducreno',records[i].get('cdunieco'));
+        }
+    }
+    else
     {
         var error=op.getError();
         debug('error:',error);
@@ -191,7 +205,9 @@ function _p24_renovarClic(button,e)
     var arr    = _fieldById('_p24_grid').getSelectionModel().getSelection();
     Ext.Array.each(arr,function(record)
     {
-        slist1.push(record.raw);
+        var val=record.raw;
+        val['cducreno']=record.get('cducreno');
+        slist1.push(val);
     });
     json['slist1'] = slist1;
     json['smap1']  = _p24_ultimosParams;

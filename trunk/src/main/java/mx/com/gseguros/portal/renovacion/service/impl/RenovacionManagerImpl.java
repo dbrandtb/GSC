@@ -174,6 +174,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 						,"S"//swrenova
 						,"S"//swaproba
 						,"1"//nmsituac
+						,poliza.get("cducreno")
 						);
 			}
 		}

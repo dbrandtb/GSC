@@ -3836,6 +3836,25 @@ public class CotizacionAction extends PrincipalCoreAction
 		public String  respuestaOculta = null;
 	}
 	
+	public String generarTramiteGrupo2()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################")
+				.append("\n###### generarTramiteGrupo2 ######")
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### olist1=").append(olist1)
+				.toString()
+				);
+		logger.info(
+				new StringBuilder()
+				.append("\n###### generarTramiteGrupo2 ######")
+				.append("\n##################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	public String generarTramiteGrupo()
 	{
 		this.session=ActionContext.getContext().getSession();

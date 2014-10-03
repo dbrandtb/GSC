@@ -1418,8 +1418,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
 							&&iTatri.getSwsuscri().equals("N")
 							&&iTatri.getSwGrupo().equals("S")
+							&&iTatri.getSwGrupoLinea().equals("N")
 							)
 					{
+						iTatri.setColumna("S");
 						aux.add(iTatri);
 					}
 				}
@@ -1443,9 +1445,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 				{
 					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
 							&&iTatri.getSwsuscri().equals("N")
-							&&iTatri.getSwGrupoLinea().equals("S")
+							&&iTatri.getSwGrupo().equals("S")
 							)
 					{
+						iTatri.setColumna("S");
 						aux.add(iTatri);
 					}
 				}
@@ -1453,7 +1456,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				aux         = null;
 				if(tatrisitExt.size()>0)
 				{
-					gc.generaComponentes(tatrisitBase, true, true, false, true, true, false);
+					gc.generaComponentes(tatrisitExt, true, true, false, true, true, false);
 					resp.getImap().put("colsExtFields"  , gc.getFields());
 					resp.getImap().put("colsExtColumns" , gc.getColumns());
 				}
@@ -1463,23 +1466,57 @@ public class CotizacionManagerImpl implements CotizacionManager
 					resp.getImap().put("colsExtColumns" , null);
 				}
 				
+				//factores
+				List<ComponenteVO>factores = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+				aux = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:factores)
+				{
+					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+							&&iTatri.getSwsuscri().equals("N")
+							&&iTatri.getSwGrupo().equals("N")
+							&&iTatri.getSwGrupoFact().equals("S")
+							)
+					{
+						iTatri.setColumna("S");
+						aux.add(iTatri);
+					}
+				}
+				factores = aux;
+				aux      = null;
+				if(factores.size()>0)
+				{
+					gc.generaComponentes(factores, true, true, false, true, true, false);
+					resp.getImap().put("factoresFields"  , gc.getFields());
+					resp.getImap().put("factoresColumns" , gc.getColumns());
+				}
+				else
+				{
+					resp.getImap().put("factoresFields"  , null);
+					resp.getImap().put("factoresColumns" , null);
+				}
+				//factores
+				
+				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo);
+				if(tatripol!=null&&tatripol.size()>0)
+				{
+					gc.generaComponentes(tatripol,true,false,true,false,false,false);
+					resp.getImap().put("itemsRiesgo",gc.getItems());
+				}
+				else
+				{
+					resp.getImap().put("itemsRiesgo" , null);
+				}
+				
 				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
-				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
+				gc.generaComponentes(componentesContratante, true,false,true,false,false,false);
 				resp.getImap().put("itemsContratante"  , gc.getItems());
-				resp.getImap().put("fieldsContratante" , gc.getFields());
-				
-				List<ComponenteVO>componentesRiesgo=pantallasDAO.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"COTIZACION_GRUPO", "RIESGO", null);
-				gc.generaComponentes(componentesRiesgo, true,true,true,false,false,false);
-				resp.getImap().put("itemsRiesgo"  , gc.getItems());
-				resp.getImap().put("fieldsRiesgo" , gc.getFields());
 				
 				List<ComponenteVO>componentesAgente=pantallasDAO.obtenerComponentes(
 						null, null, null,
@@ -1514,7 +1551,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				List<ComponenteVO>botones=pantallasDAO.obtenerComponentes(
 						null, null, "|"+status+"|",
 						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "BOTONES", null);
+						"COTIZACION_GRUPO", "BOTO2NES", null);
 				if(botones!=null&&botones.size()>0)
 				{
 					gc.generaComponentes(botones, true, false, false, false, false, true);

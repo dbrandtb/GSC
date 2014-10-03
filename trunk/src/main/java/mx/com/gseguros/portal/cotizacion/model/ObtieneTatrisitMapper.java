@@ -105,6 +105,13 @@ public class ObtieneTatrisitMapper implements RowMapper
 			swGrupoLinea="N";
 		}
 		result.setSwGrupoLinea(swGrupoLinea);
+		
+		String swGrupoFact = rs.getString("SWGRUPOFACT");
+		if(StringUtils.isBlank(swGrupoFact))
+		{
+			swGrupoLinea="N";
+		}
+		result.setSwGrupoFact(swGrupoFact);
 
 		return result;
 	}

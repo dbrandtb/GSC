@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.aon.portal.dao.ObtieneTatripolMapper;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -907,6 +908,38 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public List<ComponenteVO>cargarTatripol(String cdramo)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdramo" , cdramo);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new CargarTatripol(getDataSource()),params);
+		List<ComponenteVO>lista      = (List<ComponenteVO>)procResult.get("pv_registro_o");
+		return lista;
+	}
+	
+	protected class CargarTatripol extends StoredProcedure
+    {
+    	protected CargarTatripol(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_POLIZA");
+            declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatripolMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
