@@ -1,226 +1,117 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
+import mx.com.gseguros.portal.general.model.ClausulaVO;
+import mx.com.gseguros.portal.general.model.DetalleReciboVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.ReciboVO;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-public class ConsultasPolizaManagerImpl extends
-		AbstractManagerJdbcTemplateInvoke implements ConsultasPolizaManager {
-
-	public WrapperResultados consultaPoliza(String cdunieco, String cdramo,
-			String estado, String nmpoliza) throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_POLIZA);
-
-		return result;
-	}
-
-	public String consultaMensajeAgente(String cdunieco, String cdramo,
-			String estado, String nmpoliza) throws ApplicationException {
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_MENSAJE_AGENTE);
-		
-		return (String) result.getItemMap().get("MensajeAgente");
-	}
-
-	public WrapperResultados consultaSuplemento(String nmpoliex)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_nmpoliex_i", nmpoliex);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO);
-		return result;
-	}
-
-	public WrapperResultados consultaSituacion(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmsituac)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		params.put("pv_nmsituac_i", nmsituac);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION);
-
-		return result;
-	}
-
-	public WrapperResultados consultaCoberturas(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmsituac)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		params.put("pv_nmsituac_i", nmsituac);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS);
-
-		return result;
-	}
-
-	public WrapperResultados obtienePolizasAsegurado(String rfc, String cdPerson, String nombre)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdrfc", rfc);
-		params.put("pv_cdperson", cdPerson);
-		params.put("pv_nombre", nombre);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO);
-
-		return result;
-	}
-
-	public WrapperResultados consultaDatosTarifa(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String nmsuplem)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA);
-
-		return result;
-	}
-
-	public WrapperResultados consultaPolizasAgente(String cdagente)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdagente_i", cdagente);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE);
-
-		return result;
-	}
-
-	public WrapperResultados consultaRecibosAgente(String cdunieco,
-			String cdramo, String estado, String nmpoliza)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE);
-
-		return result;
-	}
-
-	public WrapperResultados consultaAgente(String cdagente)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdagente_i", cdagente);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE);
-
-		return result;
-	}
+@Service("consultasPolizaManagerImpl")
+public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
-	public List<Map<String, String>> consultaAgentesPoliza(Map<String, String> params) throws Exception{
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_AGENTES_POLIZA);
-		return (List<Map<String, String>>) result.getItemList();
-	}
-
-	public WrapperResultados consultaDatosAsegurado(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String nmsuplem)
-			throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO);
-
-		return result;
-	}
+	@Autowired
+	@Qualifier("consultasDAOICEImpl")
+	private IConsultasPolizaDAO consultasPolizaDAOICE;
 	
-	public WrapperResultados consultaCopagosPoliza(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String nmsuplem)
-			throws ApplicationException {
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_COPAGOS);
-		
-		// Agregamos un campo que agrupe los resultados:
-		ArrayList<CopagoVO> copagos = (ArrayList<CopagoVO>) result.getItemList();
-		String agrupador = null;
-		
-		Iterator<CopagoVO> itCopagos = copagos.iterator();
-		while (itCopagos.hasNext()) {
-			CopagoVO copagoVO = itCopagos.next();
-			// Si el copago tiene Nivel Padre se asigna como agrupador:
-			if(copagoVO.getNivel() == 1) {
-				agrupador = copagoVO.getDescripcion();
-			}
-			if(StringUtils.isBlank(copagoVO.getValor())) {
-				itCopagos.remove();
-			}
-			copagoVO.setAgrupador(agrupador);
-		}
+	@Autowired
+	@Qualifier("consultasDAOSISAImpl")
+	private IConsultasPolizaDAO consultasPolizaDAOSISA;
 
-		return result;
+	@Override
+	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc,
+			String cdperson, String nombre) throws Exception {
+		
+		List<ConsultaPolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegurado(rfc, cdperson, nombre);
+		List<ConsultaPolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(rfc, cdperson, nombre);
+		
+		// Fusionamos las listas:
+        List<ConsultaPolizaAseguradoVO> polizasFusionadas = polizasICE;
+        if(polizasFusionadas == null) {
+        	polizasFusionadas = new ArrayList<ConsultaPolizaAseguradoVO>();
+        }
+        polizasFusionadas.addAll(polizasSISA);
+        
+		return polizasFusionadas;
 	}
+
+	@Override
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DetalleReciboVO> obtieneDetalleRecibo(PolizaVO poliza,
+			ReciboVO recibo) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }
