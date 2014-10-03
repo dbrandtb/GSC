@@ -323,6 +323,10 @@ public class RenovacionManagerImpl implements RenovacionManager
 								logger.error("Error copiando archivo de usuario",ex);
 							}
 						}
+						else
+						{
+							logger.error(new StringBuilder("No existe el documento").append(doc).toString());
+						}
 					}
 					
 					renovacionDAO.actualizaRenovacionDocumentos(anio,mes,cdtipopc,uniecoant,cdramo,nmpolant);
