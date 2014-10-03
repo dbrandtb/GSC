@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.ServletActionContext;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
@@ -23,14 +21,23 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManagerOLD;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author HMLT
  */
+@Controller("ConsultasPolizaAction")
+@Scope(value="prototype")
 public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private static final long serialVersionUID = -6321288906841302337L;
@@ -44,8 +51,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private String mensajeRes;
     
+    //TODO: Eliminar Manager:
+    @Autowired
+    @Qualifier("consultasPolizaManagerOLDImpl")
+    private ConsultasPolizaManagerOLD consultasPolizaManagerOLD;
+    
+    @Autowired
+    @Qualifier("consultasPolizaManagerImpl")
     private ConsultasPolizaManager consultasPolizaManager;
     
+    @Autowired
     private KernelManagerSustituto kernelManager;
     
     private HashMap<String,String> params;
@@ -87,7 +102,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     public String consultaDatosPoliza(){
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {
-			WrapperResultados result = consultasPolizaManager.consultaPoliza(
+			WrapperResultados result = consultasPolizaManagerOLD.consultaPoliza(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"));
 			
@@ -116,14 +131,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	mensajeRes = "";
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaSuplemento(params.get("nmpoliex"));
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaSuplemento(params.get("nmpoliex"));
     		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
     		
     		if(datosSuplemento != null && !datosSuplemento.isEmpty()){
     			try{
-    				mensajeRes = consultasPolizaManager.consultaMensajeAgente(datosSuplemento.get(0).getCdunieco(), datosSuplemento.get(0).getCdramo(),
+    				mensajeRes = consultasPolizaManagerOLD.consultaMensajeAgente(datosSuplemento.get(0).getCdunieco(), datosSuplemento.get(0).getCdramo(),
 							  datosSuplemento.get(0).getEstado(), datosSuplemento.get(0).getNmpoliza());
     				logger.debug("Mensaje para Agente: "+ mensajeRes);
     			}catch(Exception e){
@@ -151,7 +166,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosSituacion ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaSituacion(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaSituacion(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),
 					params.get("suplemento"), params.get("nmsituac"));
@@ -179,7 +194,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosCoberturas ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaCoberturas(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaCoberturas(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),
 					params.get("suplemento"), params.get("nmsituac"));
@@ -206,9 +221,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
-    		
-    		polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
+    		//logger.debug("Nueva implementacion...");
+    		polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
+
+    		// Vieja implementacion:
+    		//logger.debug("Vieja implementacion...");
+    		//WrapperResultados result = consultasPolizaManagerOLD.obtienePolizasAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
+    		//polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la obtienePolizasAsegurado:" + polizasAsegurado);
     		
@@ -230,7 +249,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosTarifaPoliza ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaDatosTarifa(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaDatosTarifa(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),
 					params.get("suplemento"));
@@ -258,7 +277,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaPolizasAgente ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaPolizasAgente(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaPolizasAgente(
     				params.get("cdagente"));
     		
     		polizasAgente = (ArrayList<ConsultaPolizaAgenteVO>) result.getItemList();
@@ -284,7 +303,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaRecibosAgente ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaRecibosAgente(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaRecibosAgente(
     				params.get("cdunieco"), params.get("cdramo"),
     				params.get("estado"), params.get("nmpoliza"));
     		
@@ -309,7 +328,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     public String consultaDatosAgente(){
     	logger.debug(" **** Entrando a Consulta de Agente ****");
         try {
-        	WrapperResultados result = consultasPolizaManager.consultaAgente(params.get("cdagente"));
+        	WrapperResultados result = consultasPolizaManagerOLD.consultaAgente(params.get("cdagente"));
         	ArrayList<ConsultaDatosAgenteVO> lista = (ArrayList<ConsultaDatosAgenteVO>) result.getItemList();
         	
         	if(lista!=null && !lista.isEmpty())	datosAgente = lista.get(0);
@@ -327,7 +346,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     public String consultaAgentesPoliza() throws Exception {
        	try {
-       		loadList = consultasPolizaManager.consultaAgentesPoliza(params);
+       		loadList = consultasPolizaManagerOLD.consultaAgentesPoliza(params);
+       		logger.debug("loadList=" +loadList);
        	}catch( Exception e){
        		logger.error("Error en consultaAgentesPoliza",e);
        		success =  false;
@@ -346,7 +366,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosAsegurado ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaDatosAsegurado(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaDatosAsegurado(
     				params.get("cdunieco"), params.get("cdramo"),
     				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
     		
@@ -373,7 +393,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaCopagosPoliza ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaCopagosPoliza(
+    		WrapperResultados result = consultasPolizaManagerOLD.consultaCopagosPoliza(
     				params.get("cdunieco"), params.get("cdramo"),
     				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
     		
@@ -535,11 +555,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	public void setConsultasPolizaManager(
-			ConsultasPolizaManager consultasPolizaManager) {
-		this.consultasPolizaManager = consultasPolizaManager;
 	}
 
 	public List<ConsultaPolizaAseguradoVO> getPolizasAsegurado() {

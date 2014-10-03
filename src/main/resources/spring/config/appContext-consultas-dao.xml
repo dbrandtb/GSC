@@ -12,4 +12,8 @@
     
     <bean id="consultasDAOImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="consultasDAOICEImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPolizaDAOImpl" parent="abstractManagerDAO"/>
+    
+    <bean id="consultasDAOSISAImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultaPolizasDAOSISAImpl" parent="abstractManagerDAOSISA"/>
+    
 </beans>

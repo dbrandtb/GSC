@@ -83,7 +83,7 @@
     <!-- <bean id="procesoResultadoDAOSISA" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/> -->
     
     <bean id="abstractManagerDAOSISA" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSISA">
-        <!-- <property name="procesoResultadoDAO" ref="procesoResultadoDAOSISA"/> -->
+        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
     </bean>
     
     <!-- ******************** Fin de Beans de Nuevo patron de Spring JDBC: ******************** -->
