@@ -614,7 +614,8 @@ Ext.onReady(function() {
             {type:'string', name:'estado'},
             {type:'string', name:'nmpoliex'},
             {type:'string', name:'nmpoliza'},
-            {type:'string', name:'nombreAsegurado'}
+            {type:'string', name:'nombreAsegurado'},
+            {type:'string', name:'icodpoliza'}
         ]
     });
     
@@ -650,7 +651,8 @@ Ext.onReady(function() {
             {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 220},
             {text: 'Sucursal', dataIndex: 'dsunieco', width: 180},
             {text: 'Producto', dataIndex: 'dsramo', width:180},
-            {text: 'Estado', dataIndex: 'estado', width: 100}
+            {text: 'Estado', dataIndex: 'estado', width: 100},
+            {text: 'C&oacute;digo de la p&oacuteliza',  dataIndex: 'icodpoliza', hidden:true}
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
     });
@@ -672,6 +674,7 @@ Ext.onReady(function() {
                     var rowPolizaSelected = gridPolizasAsegurado.getSelectionModel().getSelection()[0];
                     var formBusqueda = panelBusqueda.down('form').getForm();
                     formBusqueda.findField("params.nmpoliex").setValue(rowPolizaSelected.get('nmpoliex'));
+                    formBusqueda.findField("params.icodpoliza").setValue(rowPolizaSelected.get('icodpoliza'));
                     
                     gridPolizasAsegurado.getStore().removeAll();
                     windowPolizas.close();
@@ -1012,6 +1015,9 @@ Ext.onReady(function() {
                                         },{
                                             xtype: 'hiddenfield',
                                             name : 'params.cdagente'
+                                        },{
+                                        	xtype: 'hiddenfield',
+                                            name : 'params.icodpoliza'
                                         }
                                     ]
                                 },
