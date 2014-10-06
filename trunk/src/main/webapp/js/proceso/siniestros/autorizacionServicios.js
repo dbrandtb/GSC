@@ -609,7 +609,7 @@ Ext.onReady(function() {
     	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
 		listeners : {
 					change:function(e){
-						obtieneInformacion();
+						//obtieneInformacion();
 						Ext.Ajax.request(
 						{
 							url    : _URL_MONTO_DISP_PROVEEDOR
@@ -661,6 +661,7 @@ Ext.onReady(function() {
 										}
 									});
 								}
+								obtieneInformacion();
 							},
 							failure : function ()
 							{
@@ -2523,6 +2524,7 @@ Ext.onReady(function() {
 			Ext.getCmp('idcdRamo').setValue(json.cdramo);
 			Ext.getCmp('idNmSituac').setValue(json.nmsituac);
 			Ext.getCmp('idEstatusTramite').setValue(json.status);
+			Ext.getCmp('idstatus').setValue(json.status);
 			//Ext.getCmp('').getValue()
 			
 			Ext.getCmp('idAaapertu').setValue(json.aaapertu);
