@@ -6069,31 +6069,55 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdramo   = null;
 		String clavegs  = null;
 		String cdtipsit = null;
+		String cdsisrol = null;
 		
 		//datos
 		try
 		{
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			cdsisrol=usuario.getRolActivo().getObjeto().getValue();
+			if(StringUtils.isBlank(cdsisrol))
+			{
+				throw new ApplicationException("El usuario no tiene rol");
+			}
+			
 			cdramo   = smap1.get("cdramo");
 			clavegs  = smap1.get("clavegs");
 			cdtipsit = smap1.get("cdtipsit");
 			if(StringUtils.isBlank(clavegs))
 			{
-				throw new Exception("No se recibio el ramo");
+				throw new ApplicationException("No se recibio el ramo");
 			}
 			if(StringUtils.isBlank(clavegs))
 			{
-				throw new Exception("No se recibio la clave gs");
+				throw new ApplicationException("No se recibio la clave gs");
 			}
 			if(StringUtils.isBlank(cdtipsit))
 			{
-				throw new Exception("No se recibio la situacion");
+				throw new ApplicationException("No se recibio la situacion");
 			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
 		}
 		catch(Exception ex)
 		{
 			long timestamp  = System.currentTimeMillis();
 			exito           = false;
-			respuesta       = "Datos incompletos #"+timestamp;
+			respuesta       = "Error al validar datos #"+timestamp;
 			respuestaOculta = ex.getMessage();
 			logger.error(respuesta,ex);
 		}
@@ -6103,7 +6127,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				ManagerRespuestaSmapVO resp = cotizacionManager.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit);
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit,cdsisrol);
 				
 				exito           = resp.isExito();
 				respuesta       = resp.getRespuesta();
