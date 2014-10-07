@@ -15,6 +15,9 @@
     <constant name="struts.multipart.parser" value="monitored"/>
     <!-- Allow slashes in your action names: -->
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
+    <!-- Scan Struts2 annotations -->
+    <constant name="struts.convention.action.packages" value="mx.com.gseguros" />
+    
     <!-- <constant name="struts.multipart.maxSize" value="2097152150"/>
     <constant name="struts.action.extension" value="action"/>
     <constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper"/> -->
