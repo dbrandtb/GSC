@@ -435,6 +435,16 @@
             </result>
 	   </action>
 	   
+	   <action name="obtieneValoresTablaApoyo5claves" class="tablasApoyoAction" method="obtieneValoresTablaApoyo5claves">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
 	</package>
 
 </struts>
