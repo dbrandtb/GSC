@@ -701,8 +701,13 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public Map<String,String> cargarAutoPorClaveGS(Map<String,String>params)throws Exception
+	public Map<String,String> cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol)throws Exception
 	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("clavegs"  , clavegs);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdsisrol" , cdsisrol);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
@@ -740,6 +745,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

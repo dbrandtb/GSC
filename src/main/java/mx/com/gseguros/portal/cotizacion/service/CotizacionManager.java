@@ -175,7 +175,7 @@ public interface CotizacionManager
 			,String clave4
 			,String clave5)throws Exception;
 	
-	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit) throws Exception;
+	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol) throws Exception;
 	
 	public ManagerRespuestaSmapVO cargarClaveGSPorAuto(String cdramo,String modelo) throws Exception;
 	

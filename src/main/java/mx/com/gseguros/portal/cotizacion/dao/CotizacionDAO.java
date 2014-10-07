@@ -32,7 +32,7 @@ public interface CotizacionDAO
 	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception;
 	public Map<String,String>obtenerDatosAgente(Map<String,String>params)throws Exception;
 	public Map<String,String>obtenerParametrosCotizacion(Map<String,String>params)throws Exception;
-	public Map<String,String>cargarAutoPorClaveGS(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol)throws Exception;
 	public Map<String,String>cargarClaveGSPorAuto(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarSumaAseguradaAuto(Map<String,String>params)throws Exception;
 	public void movimientoMpolicotICD(Map<String,String>params)throws Exception;
