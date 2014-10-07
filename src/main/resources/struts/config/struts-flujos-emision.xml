@@ -198,6 +198,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarConceptosGlobalesGrupo" class="CotizacionAction" method="cargarConceptosGlobalesGrupo">
+           <result type="json" />
+       </action>
+       
     </package>
     
 </struts>

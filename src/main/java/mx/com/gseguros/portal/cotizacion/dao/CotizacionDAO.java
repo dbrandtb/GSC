@@ -75,4 +75,11 @@ public interface CotizacionDAO
 	public List<ComponenteVO>cargarTatrisit(String cdtipsit,String cdusuari)throws Exception;
 	public List<ComponenteVO>cargarTatripol(String cdramo)throws Exception;
 	public Map<String,String>cargarClienteCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
+	public Map<String,String>cargarConceptosGlobalesGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdperpag)throws ApplicationException,Exception;
 }

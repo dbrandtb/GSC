@@ -6744,6 +6744,104 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarConceptosGlobalesGrupo()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##########################################")
+				.append("\n###### cargarConceptosGlobalesGrupo ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsuplem = null;
+		String cdperpag = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsuplem = smap1.get("nmsuplem");
+			cdperpag = smap1.get("cdperpag");
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("Falta la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("Falta el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("Falta el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("Falta la poliza");
+			}
+			if(StringUtils.isBlank(nmsuplem))
+			{
+				throw new ApplicationException("Falta el suplemento");
+			}
+			if(StringUtils.isBlank(cdperpag))
+			{
+				throw new ApplicationException("Falta el tipo de pago");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSmapVO resp = cotizacionManager.cargarConceptosGlobalesGrupo(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdperpag);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### cargarConceptosGlobalesGrupo ######")
+				.append("\n##########################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
