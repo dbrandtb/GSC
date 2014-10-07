@@ -260,4 +260,12 @@ public interface CotizacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza);
+	
+	public ManagerRespuestaSmapVO cargarConceptosGlobalesGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdperpag);
 }

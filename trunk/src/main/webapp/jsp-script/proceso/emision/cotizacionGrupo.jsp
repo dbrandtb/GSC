@@ -61,6 +61,7 @@ var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         
 var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"             />';
 var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
 var _p21_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
+var _p21_urlCargarConceptosGlobales      = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"  />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -247,6 +248,12 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : [ <s:property value='%{getImap().containsKey("recuperadosFields")?getImap().get("recuperadosFields").toString():""}' /> ]
+    });
+    
+    Ext.define('_p21_vpModelo',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : [ 'concepto' , { name : 'importe',type :'float' }]
     });
     ////// modelos //////
     
@@ -960,7 +967,7 @@ Ext.onReady(function()
                                 if(porc-0==100)
                                 {
                                     _fieldByName('cdreppag').setValue('1');
-                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _p21_fieldByName(prop).setValue('100');
                                     _fieldByName('pcpgocte').hide();
                                     _fieldByName('pcpgotit').hide();
                                     _fieldByName('cdreppag').getStore().on(
@@ -968,7 +975,7 @@ Ext.onReady(function()
                                         'load' : function()
                                         {
                                             _fieldByName('cdreppag').setValue('1');
-                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                            _p21_fieldByName(prop).setValue('100');
                                             _fieldByName('pcpgocte').hide();
                                             _fieldByName('pcpgotit').hide();
                                             _fieldByName('pcpgocte').setAllowBlank(true);
@@ -979,7 +986,7 @@ Ext.onReady(function()
                                 else if(porc-0==0)
                                 {
                                     _fieldByName('cdreppag').setValue('3');
-                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _p21_fieldByName(prop).setValue('0');
                                     _fieldByName('pcpgocte').hide();
                                     _fieldByName('pcpgotit').hide();
                                     _fieldByName('cdreppag').getStore().on(
@@ -987,7 +994,7 @@ Ext.onReady(function()
                                         'load' : function()
                                         {
                                             _fieldByName('cdreppag').setValue('3');
-                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                            _p21_fieldByName(prop).setValue('0');
                                             _fieldByName('pcpgocte').hide();
                                             _fieldByName('pcpgotit').hide();
                                         }
@@ -3274,6 +3281,96 @@ function _p21_generarVentanaVistaPrevia()
         });
         centrarVentanaInterna(ventana.show());
     }
+    
+    itemsVistaPrevia.push(
+    Ext.create('Ext.grid.Panel',
+    {
+        title     : 'CONCEPTOS GLOBALES'
+        ,stores   : Ext.create('Ext.data.Store',
+        {
+            model : '_p21_vpModelo'
+        })
+        ,features :
+        [
+            {
+                ftype: 'summary'
+            }
+        ]
+        ,columns  :
+        [
+            {
+                text             : 'CONCEPTO'
+                ,dataIndex       : 'concepto'
+                ,sortable        : false
+                ,width           : 200
+                ,summaryType     : 'count'
+                ,summaryRenderer : function(value, summaryData, dataIndex)
+                {
+                    return Ext.String.format('TOTAL DE {0} CONCEPTOS', value);
+                }
+            }
+            ,{
+                text         : 'IMPORTE'
+                ,dataIndex   : 'importe'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 200
+                ,summaryType : 'sum'
+            }
+        ]
+        ,listeners :
+        {
+            render : function(me)
+            {
+                Ext.Ajax.request(
+                {
+                    url     : _p21_urlCargarConceptosGlobales
+                    ,params :
+                    {
+                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                        ,'smap1.estado'   : _p21_smap1.estado
+                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                        ,'smap1.nmsuplem' : '0'
+                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### obtener conceptos globales:',json);
+                        if(json.exito)
+                        {
+                            me.getStore().add(new _p21_vpModelo(
+                            {
+                                concepto : 'PRIMA NETA'
+                                ,importe : json.smap1.PRIMA_NETA
+                            }));
+                            me.getStore().add(new _p21_vpModelo(
+                            {
+                                concepto : 'DERECHOS DE POLIZA'
+                                ,importe : json.smap1.DERPOL
+                            }));
+                            me.getStore().add(new _p21_vpModelo(
+                            {
+                                concepto : 'RECARGOS'
+                                ,importe : json.smap1.RECARGOS
+                            }));
+                            me.getStore().add(new _p21_vpModelo(
+                            {
+                                concepto : 'IVA'
+                                ,importe : json.smap1.IVA
+                            }));
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                });
+            }
+        }
+    }));
     
     _p21_storeGrupos.each(function(record)
     {

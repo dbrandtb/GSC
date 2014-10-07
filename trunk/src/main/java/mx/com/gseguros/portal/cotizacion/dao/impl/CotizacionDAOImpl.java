@@ -703,6 +703,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	@Override
 	public Map<String,String> cargarAutoPorClaveGS(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
 		Map<String,Object>procedureResult=ejecutaSP(new CargarAutoPorClaveGS(getDataSource()),params);
 		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
@@ -711,7 +719,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 		if(listaAux.size()>1)
 		{
-			logger.debug("lista: "+listaAux);
+			logger.debug(
+					new StringBuilder()
+					.append("\n******************************************")
+					.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS ******")
+					.append("\n****** lista=").append(listaAux)
+					.append("\n******************************************")
+					.toString()
+					);
 			//throw new Exception("Auto duplicado");
 		}
 		return listaAux.get(0);
@@ -1269,6 +1284,68 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             		{
             		"NOMBRE"
             		,"CDPERSON"
+            		};
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public Map<String,String>cargarConceptosGlobalesGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdperpag)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdperpag" , cdperpag);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** PKG_COTIZA.P_OBTIENE_CPTOS_GOBALES_COLECT ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarConceptosGlobalesGrupo(getDataSource()),params);
+		List<Map<String,String>>listaAux=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new ApplicationException("No se encontraron conceptos globales");
+		}
+		if(listaAux.size()>1)
+		{
+			throw new ApplicationException("Se encontraron conceptos globales repetidos");
+		}
+		return listaAux.get(0);
+	}
+	
+	protected class CargarConceptosGlobalesGrupo extends StoredProcedure
+    {
+    	protected CargarConceptosGlobalesGrupo(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_OBTIENE_CPTOS_GOBALES_COLECT");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+            String[] cols=new String[]
+            		{
+            		"PRIMA_NETA"
+            		,"DERPOL"
+            		,"RECARGOS"
+            		,"IVA"
             		};
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
