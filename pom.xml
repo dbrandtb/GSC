@@ -165,7 +165,13 @@
             <artifactId>struts2-config-browser-plugin</artifactId>
             <version>${struts2.version}</version>
         </dependency>
-        <!-- ************************** -->
+        <!-- Struts 2 convention plugin (and enable annotations) -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-convention-plugin</artifactId>
+            <version>${struts2.version}</version>
+        </dependency>
+
 
         <!-- Dependencia para JSON LIB, transformar de objetos java y xml a tipo 
             json -->
