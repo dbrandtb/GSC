@@ -41,6 +41,10 @@ public class TablasApoyoAction extends PrincipalCoreAction {
      */
     private String msgRespuesta;
 
+    
+    public String execute() throws Exception {
+    	return SUCCESS;
+    }
 	
 	public String obtieneValoresTablaApoyo5claves()throws Exception{
     	

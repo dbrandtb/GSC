@@ -20,43 +20,44 @@ Ext.onReady(function() {
     Ext.define('CincoClavesModel', {
         extend: 'Ext.data.Model',
         fields: [
-            {name: 'nmtabla'},
-            {name: 'otclave1'},
-            {name: 'otclave2'},
-            {name: 'otclave3'},
-            {name: 'otclave4'},
-            {name: 'otclave5'},
-            {name: 'fedesde'},
-            {name: 'fehasta'},
-            {name: 'otvalor01'},
-            {name: 'otvalor02'},
-            {name: 'otvalor03'},
-            {name: 'otvalor04'},
-            {name: 'otvalor05'},
-            {name: 'otvalor06'},
-            {name: 'otvalor07'},
-            {name: 'otvalor08'},
-            {name: 'otvalor09'},
-            {name: 'otvalor10'},
-            {name: 'otvalor11'},
-            {name: 'otvalor12'},
-            {name: 'otvalor13'},
-            {name: 'otvalor14'},
-            {name: 'otvalor15'},
-            {name: 'otvalor16'},
-            {name: 'otvalor17'},
-            {name: 'otvalor18'},
-            {name: 'otvalor19'},
-            {name: 'otvalor20'},
-            {name: 'otvalor21'},
-            {name: 'otvalor22'},
-            {name: 'otvalor23'},
-            {name: 'otvalor24'},
-            {name: 'otvalor25'},
-            {name: 'otvalor26'}
+            {name: 'NMTABLA'},
+            {name: 'OTCLAVE1'},
+            {name: 'OTCLAVE2'},
+            {name: 'OTCLAVE3'},
+            {name: 'OTCLAVE4'},
+            {name: 'OTCLAVE5'},
+            {name: 'FEDESDE'},
+            {name: 'FEHASTA'},
+            {name: 'OTVALOR01'},
+            {name: 'OTVALOR02'},
+            {name: 'OTVALOR03'},
+            {name: 'OTVALOR04'},
+            {name: 'OTVALOR05'},
+            {name: 'OTVALOR06'},
+            {name: 'OTVALOR07'},
+            {name: 'OTVALOR08'},
+            {name: 'OTVALOR09'},
+            {name: 'OTVALOR10'},
+            {name: 'OTVALOR11'},
+            {name: 'OTVALOR12'},
+            {name: 'OTVALOR13'},
+            {name: 'OTVALOR14'},
+            {name: 'OTVALOR15'},
+            {name: 'OTVALOR16'},
+            {name: 'OTVALOR17'},
+            {name: 'OTVALOR18'},
+            {name: 'OTVALOR19'},
+            {name: 'OTVALOR20'},
+            {name: 'OTVALOR21'},
+            {name: 'OTVALOR22'},
+            {name: 'OTVALOR23'},
+            {name: 'OTVALOR24'},
+            {name: 'OTVALOR25'},
+            {name: 'OTVALOR26'}
         ]
     });
 	
+    
     //Stores:
     
     var storeCabecerasClaves = new Ext.data.Store({
@@ -84,24 +85,23 @@ Ext.onReady(function() {
     });
     
     
+    /*
     //fields:
     var claves = [];
-    
-    var ed = Ext.create('CabeceraClaveModel', {name: 'Ed Spencer'});
 	
     var fields = [
         {name: 'id', type: 'int'}, 
-        'nmtabla', 
-        'otclave1', 'otclave2', 'otclave3', 'otclave4', 'otclave5',
-        {name: 'fedesde', type: 'date'},
-        {name: 'fehasta', type: 'date', format: 'd/m/Y'},
-        //{name: 'fehasta', type: 'date', format: 'd/m/Y'},
-        'otvalor1',  'otvalor2',  'otvalor3',  'otvalor4',  'otvalor5',
-        'otvalor6',  'otvalor7',  'otvalor8',  'otvalor9',  'otvalor10',
-        'otvalor11', 'otvalor12', 'otvalor13', 'otvalor14', 'otvalor15',
-        'otvalor16', 'otvalor17', 'otvalor18', 'otvalor19', 'otvalor20',
-        'otvalor21', 'otvalor22', 'otvalor23', 'otvalor24', 'otvalor25',
-        'otvalor26'
+        'NMTABLA', 
+        'OTCLAVE1', 'OTCLAVE2', 'OTCLAVE3', 'OTCLAVE4', 'OTCLAVE5',
+        {name: 'FEDESDE', type: 'date'},
+        {name: 'FEHASTA', type: 'date', format: 'd/m/Y'},
+        //{name: 'FEHASTA', type: 'date', format: 'd/m/Y'},
+        'OTVALOR1',  'OTVALOR2',  'OTVALOR3',  'OTVALOR4',  'OTVALOR5',
+        'OTVALOR6',  'OTVALOR7',  'OTVALOR8',  'OTVALOR9',  'OTVALOR10',
+        'OTVALOR11', 'OTVALOR12', 'OTVALOR13', 'OTVALOR14', 'OTVALOR15',
+        'OTVALOR16', 'OTVALOR17', 'OTVALOR18', 'OTVALOR19', 'OTVALOR20',
+        'OTVALOR21', 'OTVALOR22', 'OTVALOR23', 'OTVALOR24', 'OTVALOR25',
+        'OTVALOR26'
     ];
 
     var localDataStore = new Ext.data.Store({
@@ -115,15 +115,14 @@ Ext.onReady(function() {
         },
         fields: fields
     });
+    */
     
     
     // Create an instance of the Spread panel
     var spreadPanel = new Spread.grid.Panel({
-
     	//renderTo: Ext.getBody(),
-    	
-        store: localDataStore,
-        
+        //store: localDataStore,
+        store: storeTablaCincoClaves,
         tbar: [{
             text: 'Habilitar edici&oacute;n',
             handler: function() {
@@ -157,71 +156,63 @@ Ext.onReady(function() {
                 this.up('spread').setEditable(true);//Aplicar estilo
             }
         }],
-        
-        // You can supply your own viewConfig to change
-        // the config of Spread.grid.View!
-        /*
-        viewConfig: {
-            stripeRows: true
-        },
-        */
-
+        // You can supply your own viewConfig to change the config of Spread.grid.View!
+        //viewConfig: {
+            //stripeRows: true
+        //},
         listeners: {
         	render: function(grid, eOpts) {
         		console.log('Grid columns:', grid.columns);
         		// Cambiamos los textos de encabezados:
-        		//cambiarEncabezados(grid);
+        		cambiarEncabezados(grid);
         	},
             covercell: function(view, position, coverEl, eOpts) {
                 console.log('External listener to covercell', arguments);
                 console.log(view, position, coverEl, eOpts);
             }
         },
-
         // Setting if editing is allowed initially
         editable: true,
-
         // Setting if edit mode styling shall be activated
         editModeStyling: true,
-
         // Configure visible grid columns
         columns: [
         	{xtype: 'spreadheadercolumn', text: 'ID'},
-            {text: 'NMTABLA',   dataIndex: 'nmtabla'},
-            {text: 'OTCLAVE1',  dataIndex: 'otclave1'},
-            {text: 'OTCLAVE2',  dataIndex: 'otclave2'},
-            {text: 'OTCLAVE3',  dataIndex: 'otclave3'},
-            {text: 'OTCLAVE4',  dataIndex: 'otclave4'},
-            {text: 'OTCLAVE5',  dataIndex: 'otclave5'},
-            //{text: 'Fecha inicio', dataIndex: 'fedesde'},
-            {text: 'Fecha inicio', dataIndex: 'fedesde', xtype: 'datecolumn',   format:'d/m/Y'},
-            {text: 'Fecha fin',    dataIndex: 'fehasta', renderer: Ext.util.Format.dateRenderer('d/m/Y')},
-            {text: 'OTVALOR1',  dataIndex: 'otvalor1'},
-            {text: 'OTVALOR2',  dataIndex: 'otvalor2'},
-            {text: 'OTVALOR3',  dataIndex: 'otvalor3'},
-            {text: 'OTVALOR4',  dataIndex: 'otvalor4'},
-            {text: 'OTVALOR5',  dataIndex: 'otvalor5'},
-            {text: 'OTVALOR6',  dataIndex: 'otvalor6'},
-            {text: 'OTVALOR7',  dataIndex: 'otvalor7'},
-            {text: 'OTVALOR8',  dataIndex: 'otvalor8'},
-            {text: 'OTVALOR9',  dataIndex: 'otvalor9'},
-            {text: 'OTVALOR10', dataIndex: 'otvalor10'},
-            {text: 'OTVALOR11', dataIndex: 'otvalor11'},
-            {text: 'OTVALOR12', dataIndex: 'otvalor12'},
-            {text: 'OTVALOR13', dataIndex: 'otvalor13'},
-            {text: 'OTVALOR14', dataIndex: 'otvalor14'},
-            {text: 'OTVALOR15', dataIndex: 'otvalor15'},
-            {text: 'OTVALOR16', dataIndex: 'otvalor16'},
-            {text: 'OTVALOR17', dataIndex: 'otvalor17'},
-            {text: 'OTVALOR18', dataIndex: 'otvalor18'},
-            {text: 'OTVALOR19', dataIndex: 'otvalor19'},
-            {text: 'OTVALOR20', dataIndex: 'otvalor20'},
-            {text: 'OTVALOR21', dataIndex: 'otvalor21'},
-            {text: 'OTVALOR22', dataIndex: 'otvalor22'},
-            {text: 'OTVALOR23', dataIndex: 'otvalor23'},
-            {text: 'OTVALOR24', dataIndex: 'otvalor24'},
-            {text: 'OTVALOR25', dataIndex: 'otvalor25'},
-            {text: 'OTVALOR26', dataIndex: 'otvalor26'}
+            {text: 'NMTABLA',   dataIndex: 'NMTABLA'},
+            {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true},
+            {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true},
+            {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true},
+            {dataIndex: 'OTCLAVE4', itemId: 'OTCLAVE4', hidden: true},
+            {dataIndex: 'OTCLAVE5', itemId: 'OTCLAVE5', hidden: true},
+            //{text: 'Fecha inicio', dataIndex: 'FEDESDE'},
+            {text: 'Fecha inicio', dataIndex: 'FEDESDE', xtype: 'datecolumn',   format:'d/m/Y'},
+            {text: 'Fecha fin',    dataIndex: 'FEHASTA', renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+            {text: 'OTVALOR1',  dataIndex: 'OTVALOR1'},
+            {text: 'OTVALOR2',  dataIndex: 'OTVALOR2'},
+            {text: 'OTVALOR3',  dataIndex: 'OTVALOR3'},
+            {text: 'OTVALOR4',  dataIndex: 'OTVALOR4'},
+            {text: 'OTVALOR5',  dataIndex: 'OTVALOR5'},
+            {text: 'OTVALOR6',  dataIndex: 'OTVALOR6'},
+            {text: 'OTVALOR7',  dataIndex: 'OTVALOR7'},
+            {text: 'OTVALOR8',  dataIndex: 'OTVALOR8'},
+            {text: 'OTVALOR9',  dataIndex: 'OTVALOR9'},
+            {text: 'OTVALOR10', dataIndex: 'OTVALOR10'},
+            {text: 'OTVALOR11', dataIndex: 'OTVALOR11'},
+            {text: 'OTVALOR12', dataIndex: 'OTVALOR12'},
+            {text: 'OTVALOR13', dataIndex: 'OTVALOR13'},
+            {text: 'OTVALOR14', dataIndex: 'OTVALOR14'},
+            {text: 'OTVALOR15', dataIndex: 'OTVALOR15'},
+            {text: 'OTVALOR16', dataIndex: 'OTVALOR16'},
+            {text: 'OTVALOR17', dataIndex: 'OTVALOR17'},
+            {text: 'OTVALOR18', dataIndex: 'OTVALOR18'},
+            {text: 'OTVALOR19', dataIndex: 'OTVALOR19'},
+            {text: 'OTVALOR20', dataIndex: 'OTVALOR20'},
+            {text: 'OTVALOR21', dataIndex: 'OTVALOR21'},
+            {text: 'OTVALOR22', dataIndex: 'OTVALOR22'},
+            {text: 'OTVALOR23', dataIndex: 'OTVALOR23'},
+            {text: 'OTVALOR24', dataIndex: 'OTVALOR24'},
+            {text: 'OTVALOR25', dataIndex: 'OTVALOR25'},
+            {text: 'OTVALOR26', dataIndex: 'OTVALOR26'}
         ]
     });
 
@@ -231,22 +222,40 @@ Ext.onReady(function() {
     
     // Show spread inside a window
     var spreadWnd = new Ext.window.Window({
-        title: 'Spread Example',
+        title: 'Tabla de Cinco Claves',
         layout: 'fit',
-        maximizable: true,
-        resizable: true,
-        width: 1000,
-        height: 300,
+        closable: false,
+        maximized: true,
+        //resizable: true,
+        //maximizable: true,
+        //width: 1000,
+        //height: 600,
         items: [spreadPanel]
     });
     
-
+    
+    /////////////////////////////////////// INIT //////////////////////
+    
     // Show the spread window
     spreadWnd.show();
 
     // And center it
     spreadWnd.center();
     
+    // Cargamos los valores de la tabla:
+    storeTablaCincoClaves.load({
+        params : {
+            'params.PV_NMTABLA_I' : _NMTABLA 
+        },
+        callback: function(records, operation, success) {
+        	//Agregamos rows vacios por defecto:
+        	spreadPanel.getStore().add( creaRows(20, spreadPanel.getStore().count()) );
+        }
+    });
+    
+    
+    
+    //Functions:
     
     /**
      * Crea rows para el grid excel
@@ -272,33 +281,28 @@ Ext.onReady(function() {
         
             data.push({
                 id       : initialRowNumber+1,
-                nmtabla  : '',
-                otclave1 : '', otclave2 : '', otclave3 : '', otclave4 : '', otclave5 : '',
-                fedesde  : Ext.Date.format(new Date(), 'd/m/Y'),
-                fehasta  : curDate,
-                otvalor1 : '', otvalor2 : '', otvalor3 : '', otvalor4 : '', otvalor5 : '',
-                otvalor6 : '', otvalor7 : '', otvalor8 : '', otvalor9 : '', otvalor10: '',
-                otvalor11: '', otvalor12: '', otvalor13: '', otvalor14: '', otvalor15: '',
-                otvalor16: '', otvalor17: '', otvalor18: '', otvalor19: '', otvalor20: '', 
-                otvalor21: '', otvalor22: '', otvalor23: '', otvalor24: '', otvalor25: '',
-                otvalor26: ''
+                NMTABLA  : '',
+                OTCLAVE1 : '', OTCLAVE2 : '', OTCLAVE3 : '', OTCLAVE4 : '', OTCLAVE5 : '',
+                FEDESDE  : Ext.Date.format(new Date(), 'd/m/Y'),
+                FEHASTA  : curDate,
+                OTVALOR1 : '', OTVALOR2 : '', OTVALOR3 : '', OTVALOR4 : '', OTVALOR5 : '',
+                OTVALOR6 : '', OTVALOR7 : '', OTVALOR8 : '', OTVALOR9 : '', OTVALOR10: '',
+                OTVALOR11: '', OTVALOR12: '', OTVALOR13: '', OTVALOR14: '', OTVALOR15: '',
+                OTVALOR16: '', OTVALOR17: '', OTVALOR18: '', OTVALOR19: '', OTVALOR20: '', 
+                OTVALOR21: '', OTVALOR22: '', OTVALOR23: '', OTVALOR24: '', OTVALOR25: '',
+                OTVALOR26: ''
             });
             initialRowNumber++;
         }
         console.log('data', data);
         return data;
     };
+
     
-    
-    // Cargamos los valores 
-    storeTablaCincoClaves.load({
-        params : {
-            'params.nmtabla' : _NMTABLA 
-        }
-    });
-    
-    
-    /*
+    /**
+     * Se cambian los encabezados de las columnas de clave según el nmtabla
+     * @param grid grid al que se le cambiaran los encabezados
+     */
     function cambiarEncabezados(grid) {
     	
     	storeCabecerasClaves.load({
@@ -306,17 +310,21 @@ Ext.onReady(function() {
                 'params.pi_nmtabla' : _NMTABLA 
             },
             callback: function(records, operation, success) {
-                
                 Ext.each(records, function(record, index) {
-                    console.log('record:', record);
-                    console.log('index:', index);
-                    claves.push(record.get('DSCLAVE1'));
+                    //console.log('record:', record);
+                    //console.log('index:', index);
+                    //console.log('columna:', grid.getView().headerCt.child("#OTCLAVE"+(index+1)));
+                    //claves.push(record.get('DSCLAVE1'));
+                    
+                    // Asignamos la descripción de las columnas:
+                    grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setText(record.get('DSCLAVE1'));
+                    grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setVisible(true);
                 });
-                console.log('claves:', claves);
-                console.log('dataindex:', grid.getView().getHeaderAtIndex(colIdx).dataIndex);
+                //console.log('claves:', claves);
+                //console.log('dataindex:', grid.getView().getHeaderAtIndex(colIdx).dataIndex);
                 //spreadPanel.columns
             }
         });
     }
-    */
+    
 });
