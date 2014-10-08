@@ -208,7 +208,7 @@ Ext.onReady(function(){
             		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
             }
-        },'->',{
+        },'-',{
             icon    : '${ctx}/resources/fam3icons/icons/database_add.png',
             text    : 'Consulta y Actualizaci&oacute;n de Valores',
             handler : function()
@@ -223,7 +223,7 @@ Ext.onReady(function(){
                                 ,modal       : true
                                 ,buttonAlign : 'center'
                                 ,width       : 950
-                                ,height      : 750
+                                ,height      : 760
                                 //,layout: 'fit'
                                 //,maximized: true
                                 //,autoScroll  : true

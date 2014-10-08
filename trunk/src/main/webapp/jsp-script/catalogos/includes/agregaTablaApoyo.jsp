@@ -693,7 +693,7 @@ Ext.onReady(function() {
         	icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
         	handler: function(btn, e) {
         		
-        		if (panelTablaApoyo) {
+        		if (panelTablaApoyo.isValid()) {
         			
         			var msjeConfirmaGuardado;
         			if(editMode){
@@ -762,7 +762,7 @@ Ext.onReady(function() {
 						    		mensajeWarning("Para este tipo de Tabla solo se Permite un Atributo.");
 						    		return;
 						    	}
-						    	debug('Atributos Added: ', saveList);
+						    	debug('Atributos Added: ', saveList2);
 						    	
 						    	
     		            		panelTablaApoyo.setLoading(true);
