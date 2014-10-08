@@ -13,6 +13,7 @@
 		<script type="text/javascript">
             var _CONTEXT = '${ctx}';
             var _URL_CONSULTA_CABECERAS_CLAVES = '<s:url namespace="/catalogos" action="obtieneClavesTablaApoyo" />';
+            var _URL_CONSULTA_CABECERAS_ATRIBUTOS = '<s:url namespace="/catalogos" action="obtieneAtributosTablaApoyo" />';
             var _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo5claves" />';
             var _NMTABLA = '<s:property value="params.nmtabla" />';
             var _CDTABLA = '<s:property value="params.cdtabla" />';
