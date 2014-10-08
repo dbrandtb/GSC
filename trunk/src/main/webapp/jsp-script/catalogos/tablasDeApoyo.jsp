@@ -13,7 +13,7 @@
 var _UrlObtieneTablas       = '<s:url namespace="/catalogos"    action="obtieneTablasApoyo" />';
 var _UrlEliminarTabla       = '<s:url namespace="/catalogos"    action="eliminaTablaApoyo" />';
 var _URL_LOADER_NUEVA_TABLA = '<s:url namespace="/catalogos"    action="includes/agregaTablaApoyo" />';
-var _URL_LOADER_DATOS_TABLA = '<s:url namespace="/catalogos"    action="includes/datosTablaApoyo" />';
+var _URL_LOADER_DATOS_TABLA = '<s:url namespace="/catalogos"    action="tablaApoyo5claves" />';
 
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
@@ -213,21 +213,17 @@ Ext.onReady(function(){
             text    : 'Consulta y Actualizaci&oacute;n de Valores',
             handler : function()
             {
-            	var model =  gridUsuarios.getSelectionModel();
+            	var model =  gridTablas.getSelectionModel();
             	if(model.hasSelection()){
             		var record = model.getLastSelected();
             		
-            		if('EJECUTIVOCUENTA' != record.get('cdrol')){
-            			mensajeWarning('No se pueden editar los productos para un usuario que no sea Agente.');
-            			return;
-            		}
             		windowLoader = Ext.create('Ext.window.Window',
                             {
-                                title        : 'Ver/Editar Productos del usuario: ' + record.get('cdUsuario')
+                                title        : 'Consulta y Actualizaci&oacute;n de Valores'
                                 ,modal       : true
                                 ,buttonAlign : 'center'
-                                ,width       : 500
-                                ,height      : 350
+                                ,width       : 900
+                                ,height      : 750
                                 ,autoScroll  : true
                                 ,loader      :
                                 {
@@ -239,7 +235,10 @@ Ext.onReady(function(){
                                         method   : 'POST'
                                     },
                                     params: {
-                                    	'params.cdagente': record.get('cdUsuario')
+                                    	'params.cdtabla' : record.get('CDTABLA'),
+                                    	'params.dstabla' : record.get('DSTABLA'),
+                                    	'params.nmtabla' : record.get('NMTABLA'),
+                                    	'params.tipotab' : record.get('OTTIPOTB')
                                     }
                                 }
                             }).show();
