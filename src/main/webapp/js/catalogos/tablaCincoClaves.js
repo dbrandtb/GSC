@@ -20,6 +20,7 @@ Ext.onReady(function() {
     Ext.define('CincoClavesModel', {
         extend: 'Ext.data.Model',
         fields: [
+            //{name: 'id'},
             {name: 'NMTABLA'},
             {name: 'OTCLAVE1'},
             {name: 'OTCLAVE2'},
@@ -85,39 +86,6 @@ Ext.onReady(function() {
     });
     
     
-    /*
-    //fields:
-    var claves = [];
-	
-    var fields = [
-        {name: 'id', type: 'int'}, 
-        'NMTABLA', 
-        'OTCLAVE1', 'OTCLAVE2', 'OTCLAVE3', 'OTCLAVE4', 'OTCLAVE5',
-        {name: 'FEDESDE', type: 'date'},
-        {name: 'FEHASTA', type: 'date', format: 'd/m/Y'},
-        //{name: 'FEHASTA', type: 'date', format: 'd/m/Y'},
-        'OTVALOR1',  'OTVALOR2',  'OTVALOR3',  'OTVALOR4',  'OTVALOR5',
-        'OTVALOR6',  'OTVALOR7',  'OTVALOR8',  'OTVALOR9',  'OTVALOR10',
-        'OTVALOR11', 'OTVALOR12', 'OTVALOR13', 'OTVALOR14', 'OTVALOR15',
-        'OTVALOR16', 'OTVALOR17', 'OTVALOR18', 'OTVALOR19', 'OTVALOR20',
-        'OTVALOR21', 'OTVALOR22', 'OTVALOR23', 'OTVALOR24', 'OTVALOR25',
-        'OTVALOR26'
-    ];
-
-    var localDataStore = new Ext.data.Store({
-        //storeId: 'storeTabla5Claves',
-        data: creaRows(100),
-        proxy: {
-            type: 'memory',
-            reader: {
-                type: 'json'
-            }
-        },
-        fields: fields
-    });
-    */
-    
-    
     // Create an instance of the Spread panel
     var spreadPanel = new Spread.grid.Panel({
     	//renderTo: Ext.getBody(),
@@ -126,7 +94,7 @@ Ext.onReady(function() {
         tbar: [{
             text: 'Habilitar edici&oacute;n',
             handler: function() {
-            	console.log('this', this);
+            	//console.log('this', this);
                 this.up('spread').setEditable(true);
             }
         }, {
@@ -162,13 +130,13 @@ Ext.onReady(function() {
         //},
         listeners: {
         	render: function(grid, eOpts) {
-        		console.log('Grid columns:', grid.columns);
+        		//console.log('Grid columns:', grid.columns);
         		// Cambiamos los textos de encabezados:
         		cambiarEncabezados(grid);
         	},
             covercell: function(view, position, coverEl, eOpts) {
-                console.log('External listener to covercell', arguments);
-                console.log(view, position, coverEl, eOpts);
+                //console.log('External listener to covercell', arguments);
+                //console.log(view, position, coverEl, eOpts);
             }
         },
         // Setting if editing is allowed initially
@@ -177,7 +145,7 @@ Ext.onReady(function() {
         editModeStyling: true,
         // Configure visible grid columns
         columns: [
-        	{xtype: 'spreadheadercolumn', text: 'ID'},
+        	{text: 'ID',        /*dataIndex: 'id',*/    xtype: 'spreadheadercolumn'},
             {text: 'NMTABLA',   dataIndex: 'NMTABLA'},
             {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true},
             {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true},
@@ -215,10 +183,6 @@ Ext.onReady(function() {
             {text: 'OTVALOR26', dataIndex: 'OTVALOR26'}
         ]
     });
-
-    // Evil global reference for fast & easy console access
-    //window.spreadPanel = spreadPanel;
-
     
     // Show spread inside a window
     var spreadWnd = new Ext.window.Window({
@@ -248,6 +212,11 @@ Ext.onReady(function() {
             'params.PV_NMTABLA_I' : _NMTABLA 
         },
         callback: function(records, operation, success) {
+        	//Agregamos los IDs a los records obtenidos:
+        	Ext.each(records, function(record, index) {
+        		console.log('record:', record);
+        		record.set('id', index+1 );
+            });
         	//Agregamos rows vacios por defecto:
         	spreadPanel.getStore().add( creaRows(20, spreadPanel.getStore().count()) );
         }
@@ -294,7 +263,7 @@ Ext.onReady(function() {
             });
             initialRowNumber++;
         }
-        console.log('data', data);
+        //console.log('data', data);
         return data;
     };
 
@@ -311,18 +280,10 @@ Ext.onReady(function() {
             },
             callback: function(records, operation, success) {
                 Ext.each(records, function(record, index) {
-                    //console.log('record:', record);
-                    //console.log('index:', index);
-                    //console.log('columna:', grid.getView().headerCt.child("#OTCLAVE"+(index+1)));
-                    //claves.push(record.get('DSCLAVE1'));
-                    
-                    // Asignamos la descripción de las columnas:
+                    // Asignamos la descripción de las columnas de forma dinamica:
                     grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setText(record.get('DSCLAVE1'));
                     grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setVisible(true);
                 });
-                //console.log('claves:', claves);
-                //console.log('dataindex:', grid.getView().getHeaderAtIndex(colIdx).dataIndex);
-                //spreadPanel.columns
             }
         });
     }
