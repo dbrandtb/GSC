@@ -88,9 +88,10 @@ Ext.onReady(function() {
     
     // Create an instance of the Spread panel
     var spreadPanel = new Spread.grid.Panel({
-    	//renderTo: Ext.getBody(),
+    	renderTo: 'dvCincoClaves',
         //store: localDataStore,
         store: storeTablaCincoClaves,
+        height: 600,
         tbar: [{
             text: 'Habilitar edici&oacute;n',
             handler: function() {
@@ -145,8 +146,8 @@ Ext.onReady(function() {
         editModeStyling: true,
         // Configure visible grid columns
         columns: [
-        	{text: 'ID',        /*dataIndex: 'id',*/    xtype: 'spreadheadercolumn'},
-            {text: 'NMTABLA',   dataIndex: 'NMTABLA'},
+        	{text: 'ID',        /*dataIndex: 'id',*/  columnWidth: 40,     xtype: 'spreadheadercolumn'},
+            {text: 'NMTABLA',     dataIndex: 'NMTABLA', hidden: true},
             {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true},
             {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true},
             {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true},
@@ -185,27 +186,27 @@ Ext.onReady(function() {
     });
     
     // Show spread inside a window
-    var spreadWnd = new Ext.window.Window({
-        title: 'Tabla de Cinco Claves',
-        layout: 'fit',
-        closable: false,
-        maximized: true,
-        //resizable: true,
-        //maximizable: true,
-        //width: 1000,
-        //height: 600,
-        items: [spreadPanel]
-    });
+//    var spreadWnd = new Ext.window.Window({
+//        title: 'Tabla de Cinco Claves',
+//        layout: 'fit',
+//        //closable: false,
+//        //maximized: true,
+//        //resizable: true,
+//        //maximizable: true,
+//        //width: 1000,
+//        //height: 600,
+//        items: [spreadPanel]
+//    });
     
     
     /////////////////////////////////////// INIT //////////////////////
     
-    // Show the spread window
-    spreadWnd.show();
-
-    // And center it
-    spreadWnd.center();
-    
+//    // Show the spread window
+//    spreadWnd.show();
+//
+//    // And center it
+//    spreadWnd.center();
+//    
     // Cargamos los valores de la tabla:
     storeTablaCincoClaves.load({
         params : {

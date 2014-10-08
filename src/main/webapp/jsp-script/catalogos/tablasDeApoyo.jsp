@@ -13,7 +13,7 @@
 var _UrlObtieneTablas       = '<s:url namespace="/catalogos"    action="obtieneTablasApoyo" />';
 var _UrlEliminarTabla       = '<s:url namespace="/catalogos"    action="eliminaTablaApoyo" />';
 var _URL_LOADER_NUEVA_TABLA = '<s:url namespace="/catalogos"    action="includes/agregaTablaApoyo" />';
-var _URL_LOADER_DATOS_TABLA = '<s:url namespace="/catalogos"    action="tablaApoyo5claves" />';
+var _URL_LOADER_DATOS_TABLA = '<s:url namespace="/catalogos"    action="includes/tablaApoyo5claves" />';
 
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
@@ -222,9 +222,11 @@ Ext.onReady(function(){
                                 title        : 'Consulta y Actualizaci&oacute;n de Valores'
                                 ,modal       : true
                                 ,buttonAlign : 'center'
-                                ,width       : 900
+                                ,width       : 950
                                 ,height      : 750
-                                ,autoScroll  : true
+                                //,layout: 'fit'
+                                //,maximized: true
+                                //,autoScroll  : true
                                 ,loader      :
                                 {
                                     url       : _URL_LOADER_DATOS_TABLA
