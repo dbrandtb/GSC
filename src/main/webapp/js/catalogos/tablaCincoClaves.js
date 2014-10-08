@@ -3,6 +3,9 @@
  */
 Ext.onReady(function() {
 	
+	var loadMaskTabla = new Ext.LoadMask('dvCincoClaves', {msg:"Cargando Tabla..."});
+	loadMaskTabla.show();
+	
 	//Models:
 	
     Ext.define('CabeceraClaveModel', {
@@ -15,6 +18,18 @@ Ext.onReady(function() {
             {name: 'NMLMAX1', type:'int'},
             {name: 'NUMCLAVE', type:'int'}
         ]
+    });
+
+    Ext.define('CabeceraAtributoModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+	             'CDATRIBU'
+	            ,'DSATRIBU'
+	            ,'SWFORMAT'
+	            ,'DSFORMAT'
+	            ,'NMLMIN'
+	            ,'NMLMAX'
+	        ]
     });
     
     Ext.define('CincoClavesModel', {
@@ -66,6 +81,18 @@ Ext.onReady(function() {
         proxy: {
             type: 'ajax',
             url : _URL_CONSULTA_CABECERAS_CLAVES,
+            reader: {
+                type: 'json',
+                root: 'loadList'
+            }
+        }
+    });
+
+    var storeCabecerasAtributos = new Ext.data.Store({
+        model: 'CabeceraAtributoModel',
+        proxy: {
+            type: 'ajax',
+            url : _URL_CONSULTA_CABECERAS_ATRIBUTOS,
             reader: {
                 type: 'json',
                 root: 'loadList'
@@ -156,32 +183,32 @@ Ext.onReady(function() {
             //{text: 'Fecha inicio', dataIndex: 'FEDESDE'},
             {text: 'Fecha inicio', dataIndex: 'FEDESDE', xtype: 'datecolumn',   format:'d/m/Y', menuDisabled: true, sortable: false},
             {text: 'Fecha fin',    dataIndex: 'FEHASTA', renderer: Ext.util.Format.dateRenderer('d/m/Y'), menuDisabled: true, sortable: false},
-            {text: 'OTVALOR1',  dataIndex: 'OTVALOR1', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR2',  dataIndex: 'OTVALOR2', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR3',  dataIndex: 'OTVALOR3', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR4',  dataIndex: 'OTVALOR4', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR5',  dataIndex: 'OTVALOR5', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR6',  dataIndex: 'OTVALOR6', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR7',  dataIndex: 'OTVALOR7', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR8',  dataIndex: 'OTVALOR8', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR9',  dataIndex: 'OTVALOR9', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR10', dataIndex: 'OTVALOR10', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR11', dataIndex: 'OTVALOR11', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR12', dataIndex: 'OTVALOR12', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR13', dataIndex: 'OTVALOR13', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR14', dataIndex: 'OTVALOR14', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR15', dataIndex: 'OTVALOR15', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR16', dataIndex: 'OTVALOR16', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR17', dataIndex: 'OTVALOR17', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR18', dataIndex: 'OTVALOR18', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR19', dataIndex: 'OTVALOR19', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR20', dataIndex: 'OTVALOR20', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR21', dataIndex: 'OTVALOR21', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR22', dataIndex: 'OTVALOR22', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR23', dataIndex: 'OTVALOR23', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR24', dataIndex: 'OTVALOR24', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR25', dataIndex: 'OTVALOR25', menuDisabled: true, sortable: false},
-            {text: 'OTVALOR26', dataIndex: 'OTVALOR26', menuDisabled: true, sortable: false}
+            {text: 'OTVALOR1',  itemId: 'OTVALOR1',  dataIndex: 'OTVALOR01', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR2',  itemId: 'OTVALOR2',  dataIndex: 'OTVALOR02', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR3',  itemId: 'OTVALOR3',  dataIndex: 'OTVALOR03', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR4',  itemId: 'OTVALOR4',  dataIndex: 'OTVALOR04', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR5',  itemId: 'OTVALOR5',  dataIndex: 'OTVALOR05', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR6',  itemId: 'OTVALOR6',  dataIndex: 'OTVALOR06', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR7',  itemId: 'OTVALOR7',  dataIndex: 'OTVALOR07', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR8',  itemId: 'OTVALOR8',  dataIndex: 'OTVALOR08', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR9',  itemId: 'OTVALOR9',  dataIndex: 'OTVALOR09', hidden: true,  menuDisabled: true, sortable: false},
+            {text: 'OTVALOR10', itemId: 'OTVALOR10', dataIndex: 'OTVALOR10', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR11', itemId: 'OTVALOR11', dataIndex: 'OTVALOR11', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR12', itemId: 'OTVALOR12', dataIndex: 'OTVALOR12', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR13', itemId: 'OTVALOR13', dataIndex: 'OTVALOR13', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR14', itemId: 'OTVALOR14', dataIndex: 'OTVALOR14', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR15', itemId: 'OTVALOR15', dataIndex: 'OTVALOR15', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR16', itemId: 'OTVALOR16', dataIndex: 'OTVALOR16', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR17', itemId: 'OTVALOR17', dataIndex: 'OTVALOR17', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR18', itemId: 'OTVALOR18', dataIndex: 'OTVALOR18', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR19', itemId: 'OTVALOR19', dataIndex: 'OTVALOR19', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR20', itemId: 'OTVALOR20', dataIndex: 'OTVALOR20', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR21', itemId: 'OTVALOR21', dataIndex: 'OTVALOR21', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR22', itemId: 'OTVALOR22', dataIndex: 'OTVALOR22', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR23', itemId: 'OTVALOR23', dataIndex: 'OTVALOR23', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR24', itemId: 'OTVALOR24', dataIndex: 'OTVALOR24', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR25', itemId: 'OTVALOR25', dataIndex: 'OTVALOR25', hidden: true, menuDisabled: true, sortable: false},
+            {text: 'OTVALOR26', itemId: 'OTVALOR26', dataIndex: 'OTVALOR26', hidden: true, menuDisabled: true, sortable: false}
         ]
     });
     
@@ -329,6 +356,7 @@ Ext.onReady(function() {
 //    spreadWnd.center();
 //    
     // Cargamos los valores de la tabla:
+    
     storeTablaCincoClaves.load({
         params : {
             'params.PV_NMTABLA_I' : _NMTABLA 
@@ -406,8 +434,24 @@ Ext.onReady(function() {
                     grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setText(record.get('DSCLAVE1'));
                     grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setVisible(true);
                 });
+                
+                storeCabecerasAtributos.load({
+		            params : {
+		                'params.pi_nmtabla' : _NMTABLA 
+		            },
+		            callback: function(records, operation, success) {
+		                Ext.each(records, function(record, index) {
+		                    // Asignamos la descripción de las columnas de forma dinamica:
+		                    grid.getView().headerCt.child("#OTVALOR"+(index+1)).setText(record.get('DSATRIBU'));
+		                    grid.getView().headerCt.child("#OTVALOR"+(index+1)).setVisible(true);
+		                });
+		                
+		                loadMaskTabla.hide();
+		            }
+		        });
             }
         });
+        
     }
     
 });
