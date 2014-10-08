@@ -46,6 +46,7 @@ public class UserVO implements Serializable {
     private String lastName;
     private String perfil;
     private PerfilVO fuentesPerfil;
+    private String cdUnieco;
 
     private String user;
     private String personId;
@@ -395,6 +396,14 @@ public class UserVO implements Serializable {
 
 	public void setClaveUsuarioCaptura(String claveUsuarioCaptura) {
 		this.claveUsuarioCaptura = claveUsuarioCaptura;
+	}
+
+	public String getCdUnieco() {
+		return cdUnieco;
+	}
+
+	public void setCdUnieco(String cdUnieco) {
+		this.cdUnieco = cdUnieco;
 	}
 
 }
