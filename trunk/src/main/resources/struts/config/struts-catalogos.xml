@@ -436,8 +436,8 @@
 	   </action>
 	   
 	   
-	   <action name="tablaApoyo5claves" class="tablasApoyoAction">
-           <result>/jsp/catalogos/tablaCincoClaves.jsp</result>
+	   <action name="includes/tablaApoyo5claves" class="tablasApoyoAction">
+           <result>/jsp/catalogos/includes/tablaCincoClaves.jsp</result>
        </action>
 	   
 	   <action name="obtieneValoresTablaApoyo5claves" class="tablasApoyoAction" method="obtieneValoresTablaApoyo5claves">
