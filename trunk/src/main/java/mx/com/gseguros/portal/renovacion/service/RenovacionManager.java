@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.renovacion.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -19,5 +20,6 @@ public interface RenovacionManager
 			,String rutaDocumentosPoliza
 			,String rutaServidorReports
 			,String passServidorReports
+			,UserVO usuario
 			);
 }

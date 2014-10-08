@@ -6,5 +6,7 @@
         <property name="renovacionDAO" ref="renovacionDAOImpl" />
         <property name="pantallasDAO"  ref="pantallasDAOImpl"  />
         <property name="cotizacionDAO" ref="cotizacionDAOImpl" />
+        <property name="ice2sigsService"         ref="ice2sigsServiceImpl"         />
+        <property name="recibosSigsService"      ref="recibosSigsServiceImpl"      />
     </bean>
 </beans>
