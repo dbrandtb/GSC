@@ -15,6 +15,8 @@
             var _URL_CONSULTA_CABECERAS_CLAVES = '<s:url namespace="/catalogos" action="obtieneClavesTablaApoyo" />';
             var _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo5claves" />';
             var _NMTABLA = '<s:property value="params.nmtabla" />';
+            var _CDTABLA = '<s:property value="params.cdtabla" />';
+            var _DSTABLA = '<s:property value="params.dstabla" />';
             console.log('_NMTABLA:', _NMTABLA);
             //var _NMTABLA = '2556';//2556//1855//1975
         </script>

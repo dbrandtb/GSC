@@ -88,32 +88,32 @@ Ext.onReady(function() {
     
     // Create an instance of the Spread panel
     var spreadPanel = new Spread.grid.Panel({
-    	renderTo: 'dvCincoClaves',
-        //store: localDataStore,
         store: storeTablaCincoClaves,
         height: 600,
         tbar: [{
+        	icon: _CONTEXT + '/resources/fam3icons/icons/table_edit.png',
             text: 'Habilitar edici&oacute;n',
             handler: function() {
             	//console.log('this', this);
                 this.up('spread').setEditable(true);
             }
         }, {
+        	icon: _CONTEXT + '/resources/fam3icons/icons/lock.png',
             text: 'Deshabilitar edici&oacute;n',
             handler: function() {
                 this.up('spread').setEditable(false);
             }
-        }, {
+        },'-',{
             xtype      : 'numberfield',
             name       : 'rowsToCreate',
-            fieldLabel : 'Agregar',
+//            fieldLabel : 'Agregar',
             minValue   : 0,
             maxValue   : 500,
-            labelWidth : 50,
-            width      : 165,
+            width      : 100,
             labelAlign : 'right'
-        }, {
-            text: 'Filas',
+        },{
+        	icon: _CONTEXT + '/resources/fam3icons/icons/table_add.png',
+            text: 'Agregar Filas',
             handler: function() {
             	if(!this.previousSibling().isValid()){
                     Ext.Msg.alert('Aviso', 'Ingrese un n&uacute;mero v&aacute;lido');
@@ -146,42 +146,42 @@ Ext.onReady(function() {
         editModeStyling: true,
         // Configure visible grid columns
         columns: [
-        	{text: 'ID',        /*dataIndex: 'id',*/  columnWidth: 40,     xtype: 'spreadheadercolumn'},
-            {text: 'NMTABLA',     dataIndex: 'NMTABLA', hidden: true},
-            {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true},
-            {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true},
-            {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true},
-            {dataIndex: 'OTCLAVE4', itemId: 'OTCLAVE4', hidden: true},
-            {dataIndex: 'OTCLAVE5', itemId: 'OTCLAVE5', hidden: true},
+        	{text: 'ID',        /*dataIndex: 'id',*/  columnWidth: 40,     xtype: 'spreadheadercolumn', sortable: false},
+            {text: 'NMTABLA',     dataIndex: 'NMTABLA', hidden: true, menuDisabled: true, sortable: false},
+            {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true, menuDisabled: true, sortable: false},
+            {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true, menuDisabled: true, sortable: false},
+            {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true, menuDisabled: true, sortable: false},
+            {dataIndex: 'OTCLAVE4', itemId: 'OTCLAVE4', hidden: true, menuDisabled: true, sortable: false},
+            {dataIndex: 'OTCLAVE5', itemId: 'OTCLAVE5', hidden: true, menuDisabled: true, sortable: false},
             //{text: 'Fecha inicio', dataIndex: 'FEDESDE'},
-            {text: 'Fecha inicio', dataIndex: 'FEDESDE', xtype: 'datecolumn',   format:'d/m/Y'},
-            {text: 'Fecha fin',    dataIndex: 'FEHASTA', renderer: Ext.util.Format.dateRenderer('d/m/Y')},
-            {text: 'OTVALOR1',  dataIndex: 'OTVALOR1'},
-            {text: 'OTVALOR2',  dataIndex: 'OTVALOR2'},
-            {text: 'OTVALOR3',  dataIndex: 'OTVALOR3'},
-            {text: 'OTVALOR4',  dataIndex: 'OTVALOR4'},
-            {text: 'OTVALOR5',  dataIndex: 'OTVALOR5'},
-            {text: 'OTVALOR6',  dataIndex: 'OTVALOR6'},
-            {text: 'OTVALOR7',  dataIndex: 'OTVALOR7'},
-            {text: 'OTVALOR8',  dataIndex: 'OTVALOR8'},
-            {text: 'OTVALOR9',  dataIndex: 'OTVALOR9'},
-            {text: 'OTVALOR10', dataIndex: 'OTVALOR10'},
-            {text: 'OTVALOR11', dataIndex: 'OTVALOR11'},
-            {text: 'OTVALOR12', dataIndex: 'OTVALOR12'},
-            {text: 'OTVALOR13', dataIndex: 'OTVALOR13'},
-            {text: 'OTVALOR14', dataIndex: 'OTVALOR14'},
-            {text: 'OTVALOR15', dataIndex: 'OTVALOR15'},
-            {text: 'OTVALOR16', dataIndex: 'OTVALOR16'},
-            {text: 'OTVALOR17', dataIndex: 'OTVALOR17'},
-            {text: 'OTVALOR18', dataIndex: 'OTVALOR18'},
-            {text: 'OTVALOR19', dataIndex: 'OTVALOR19'},
-            {text: 'OTVALOR20', dataIndex: 'OTVALOR20'},
-            {text: 'OTVALOR21', dataIndex: 'OTVALOR21'},
-            {text: 'OTVALOR22', dataIndex: 'OTVALOR22'},
-            {text: 'OTVALOR23', dataIndex: 'OTVALOR23'},
-            {text: 'OTVALOR24', dataIndex: 'OTVALOR24'},
-            {text: 'OTVALOR25', dataIndex: 'OTVALOR25'},
-            {text: 'OTVALOR26', dataIndex: 'OTVALOR26'}
+            {text: 'Fecha inicio', dataIndex: 'FEDESDE', xtype: 'datecolumn',   format:'d/m/Y', menuDisabled: true, sortable: false},
+            {text: 'Fecha fin',    dataIndex: 'FEHASTA', renderer: Ext.util.Format.dateRenderer('d/m/Y'), menuDisabled: true, sortable: false},
+            {text: 'OTVALOR1',  dataIndex: 'OTVALOR1', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR2',  dataIndex: 'OTVALOR2', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR3',  dataIndex: 'OTVALOR3', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR4',  dataIndex: 'OTVALOR4', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR5',  dataIndex: 'OTVALOR5', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR6',  dataIndex: 'OTVALOR6', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR7',  dataIndex: 'OTVALOR7', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR8',  dataIndex: 'OTVALOR8', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR9',  dataIndex: 'OTVALOR9', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR10', dataIndex: 'OTVALOR10', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR11', dataIndex: 'OTVALOR11', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR12', dataIndex: 'OTVALOR12', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR13', dataIndex: 'OTVALOR13', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR14', dataIndex: 'OTVALOR14', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR15', dataIndex: 'OTVALOR15', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR16', dataIndex: 'OTVALOR16', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR17', dataIndex: 'OTVALOR17', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR18', dataIndex: 'OTVALOR18', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR19', dataIndex: 'OTVALOR19', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR20', dataIndex: 'OTVALOR20', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR21', dataIndex: 'OTVALOR21', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR22', dataIndex: 'OTVALOR22', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR23', dataIndex: 'OTVALOR23', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR24', dataIndex: 'OTVALOR24', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR25', dataIndex: 'OTVALOR25', menuDisabled: true, sortable: false},
+            {text: 'OTVALOR26', dataIndex: 'OTVALOR26', menuDisabled: true, sortable: false}
         ]
     });
     
@@ -198,6 +198,127 @@ Ext.onReady(function() {
 //        items: [spreadPanel]
 //    });
     
+    var panelValoresTablaApoyo = Ext.create('Ext.form.Panel', {
+    	renderTo: 'dvCincoClaves',
+		border: false,
+		defaults: {
+			style : 'margin:5px;'
+		},
+	    items    : [{
+			            layout: 'column',
+            			columns: 3,
+            			border: false,
+            			defaults: {
+							style : 'margin:5px;'
+						},
+            			items: [{
+									xtype      : 'textfield',
+									name       : 'pi_nmtabla',
+									fieldLabel : 'N&uacute;mero de Tabla',
+									value      : _NMTABLA,
+									readOnly      : true
+								},{
+						        	xtype      : 'textfield',
+						    		name       : 'pi_cdtabla',
+						    		fieldLabel : 'C&oacute;digo de la Tabla',
+									maxLength  : 30,
+									maxLengthText: 'Longitud m&aacute;xima de 30 caracteres',
+						    		value      : _CDTABLA,
+						    		readOnly      : true,
+						    		allowBlank    : false
+						        },{
+						        	xtype      : 'textfield',
+						    		name       : 'pi_dstabla',
+						    		allowBlank : false,
+						    		fieldLabel : 'Descripci&oacute;n de la Tabla',
+						    		width      : 545,
+						    		labelWidth : 130,
+						    		maxLength  : 60,
+									maxLengthText: 'Longitud m&aacute;xima de 60 caracteres',
+						    		value      : _DSTABLA
+						        }]
+					}, spreadPanel],
+					buttonAlign : 'center',
+							    buttons:
+							    	[{
+						        	text: 'Guardar Valores',
+						        	itemId: 'botonGuardarValoresId',
+						        	icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
+						        	handler: function(btn, e) {
+						        		
+						        		if (panelValoresTablaApoyo.isValid()) {
+						        			
+						        			Ext.Msg.show({
+						    		            title: 'Confirmar acci&oacute;n',
+						    		            msg: '&iquest;Esta seguro que desea actualizar esta tabla?',
+						    		            buttons: Ext.Msg.YESNO,
+						    		            fn: function(buttonId, text, opt) {
+						    		            	if(buttonId == 'yes') {
+						    		            		
+						    		            		// PARA AGREGAR NUEVAS FILAS A  GUARDAR
+						    		            		var saveList = [];
+						    		            		
+						    		            		storeTablaCincoClaves.getNewRecords().forEach(function(record,index,arr){
+												    		if(record.dirty){
+												    			saveList.push(record.data);
+//												    			if(record.get("NMLMIN") > record.get("NMLMAX")){
+//												    				validacionMinMax = false;
+//												    				mensajeWarning("El valor m&iacute;nimo debe ser menor al valor m&aacute;ximo del atributo: " + record.get("DSATRIBU"));
+//												    				return false; //break here
+//												    			}
+												    		}
+//												    		else if(!Ext.isEmpty(record.get('DSATRIBU'))){
+//												    			contadorAtributos++;
+//												    		}
+												    	});
+												    	debug('Filas Added: ', saveList);
+												    	
+												    	
+						    		            		panelValoresTablaApoyo.setLoading(true);
+						    		            		
+//						    		            		Ext.Ajax.request({
+//										    	            url: _URL_GuardaTablaApoyo,
+//										    	            jsonData : {
+//										    	            	params: panelValoresTablaApoyo.getValues(),
+//										    	                'saveList'   : saveList,
+//										    	                'saveList2'   : saveList2
+//										    	            },
+//										    	            success  : function(response){
+//										    	                panelValoresTablaApoyo.setLoading(false);
+//										    	                var json = Ext.decode(response.responseText);
+//										    	                if(json.success){
+//										    	                	recargagridTablas();
+//										    						windowLoader.close();
+//										    						mensajeCorrecto('\u00C9xito', 'La tabla se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
+//										    						panelValoresTablaApoyo.getForm().reset();
+//										    	                }else{
+//										    	                    mensajeError(json.msgRespuesta);
+//										    	                }
+//										    	            }
+//										    	            ,failure  : function()
+//										    	            {
+//										    	                panelValoresTablaApoyo.setLoading(false);
+//										    	                errorComunicacion();
+//										    	            }
+//												    	});
+						    		            	}
+						            			},
+						    		            animateTarget: btn,
+						    		            icon: Ext.Msg.QUESTION
+						        			});
+						    			} else {
+						    				Ext.Msg.show({
+						    					title: 'Aviso',
+						    		            msg: 'Complete la informaci&oacute;n requerida',
+						    		            buttons: Ext.Msg.OK,
+						    		            animateTarget: btn,
+						    		            icon: Ext.Msg.WARNING
+						    				});
+						    			}
+						        	}
+						        }
+						      ]
+		});
     
     /////////////////////////////////////// INIT //////////////////////
     
