@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -19,8 +20,11 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -33,6 +37,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 	private RenovacionDAO renovacionDAO;
 	private PantallasDAO  pantallasDAO;
 	private CotizacionDAO cotizacionDAO;
+	
+	private transient Ice2sigsService ice2sigsService;
+	private transient RecibosSigsService recibosSigsService;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -140,6 +147,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			,String rutaDocumentosPoliza
 			,String rutaServidorReports
 			,String passServidorReports
+			,UserVO usuario
 			)
 	{
 		logger.info(
@@ -233,7 +241,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			{
 				for(Map<String,String>iPoliza:polizasRenovadas)
 				{
-					logger.debug(new StringBuilder("\n@@@@@@ Documentacion para poliza=").append(iPoliza));
+					String esDxN     = iPoliza.get("SWDXN");
 					String cdunieco  = iPoliza.get("cdunieco");
 					String cdramo    = iPoliza.get("cdramo");
 					String estado    = iPoliza.get("estado");
@@ -243,6 +251,39 @@ public class RenovacionManagerImpl implements RenovacionManager
 					String cdtipopc  = iPoliza.get("cdtipopc");
 					String nmpolant  = iPoliza.get("nmpolant");
 					String uniecoant = iPoliza.get("uniecoant");
+					
+					try
+					{
+						if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+						{	
+							// Ejecutamos el Web Service de Recibos:
+							ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
+									estado, nmpoliza, 
+									nmsuplem, rutaDocumentosPoliza,
+									cdunieco, nmpoliza, ntramite, 
+									false, "33", //tipMov 33 para Renovacion
+									usuario);
+							// Ejecutamos el Web Service de Recibos DxN:
+							recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, nmpoliza, ntramite, usuario);
+						}
+						else
+						{
+							// Ejecutamos el Web Service de Recibos:
+							ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
+									estado, nmpoliza, 
+									nmsuplem, rutaDocumentosPoliza,
+									cdunieco, nmpoliza,ntramite, 
+									true, "33",//tipMov 33 para Renovacion
+									usuario);
+						}
+					}
+					catch(Exception ex)
+					{
+						logger.error("Error al lanzar ws recibos en Renovacion",ex);
+					}
+					
+
+					logger.debug(new StringBuilder("\n@@@@@@ Documentacion para poliza=").append(iPoliza));
 					
 					List<Map<String,String>>iPolizaDocs =
 							cotizacionDAO.impresionDocumentosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
@@ -386,5 +427,13 @@ public class RenovacionManagerImpl implements RenovacionManager
 
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
+	}
+
+	public void setRecibosSigsService(RecibosSigsService recibosSigsService) {
+		this.recibosSigsService = recibosSigsService;
 	}
 }

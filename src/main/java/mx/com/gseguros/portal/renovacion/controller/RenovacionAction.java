@@ -208,6 +208,8 @@ public class RenovacionAction extends PrincipalCoreAction
 		String mes      = null;
 		String cdusuari = null;
 		
+		UserVO usuario = null;
+		
 		//datos completos
 		try
 		{
@@ -220,7 +222,7 @@ public class RenovacionAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException("No hay usuario en la sesion");
 			}
-			UserVO usuario = (UserVO)session.get("USUARIO");
+			usuario = (UserVO)session.get("USUARIO");
 			cdusuari       = usuario.getUser();
 			if(StringUtils.isBlank(cdusuari))
 			{
@@ -273,6 +275,7 @@ public class RenovacionAction extends PrincipalCoreAction
 					,getText("ruta.documentos.poliza")
 					,getText("ruta.servidor.reports")
 					,getText("pass.servidor.reports")
+					,usuario
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
