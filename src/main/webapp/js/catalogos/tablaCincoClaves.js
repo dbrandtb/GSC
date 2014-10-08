@@ -214,7 +214,7 @@ Ext.onReady(function() {
         callback: function(records, operation, success) {
         	//Agregamos los IDs a los records obtenidos:
         	Ext.each(records, function(record, index) {
-        		console.log('record:', record);
+        		//console.log('record:', record);
         		record.set('id', index+1 );
             });
         	//Agregamos rows vacios por defecto:
@@ -236,8 +236,8 @@ Ext.onReady(function() {
 
     	initialRowNumber = initialRowNumber || 0;
     	
-    	console.log('count', count);
-    	console.log('initialRowNumber', initialRowNumber);
+    	//console.log('count', count);
+    	//console.log('initialRowNumber', initialRowNumber);
     	
         var data = [], curDate = new Date();
     
