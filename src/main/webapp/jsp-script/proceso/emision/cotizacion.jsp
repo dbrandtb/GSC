@@ -273,8 +273,7 @@ function _0_comprar()
             	Ext.getCmp('_0_botEditarId').hide();
             	Ext.getCmp('_0_botMailId').hide();
             	Ext.getCmp('_0_botImprimirId').hide();
-                
-                window.parent.scrollTo(0, 0);
+                //window.parent.scrollTo(0, 0);//ELIMINADA
                 
                 debug("mostrar documentos");
                 
@@ -282,43 +281,45 @@ function _0_comprar()
                 debug("ntramite",ntramite);
                 if (!(_0_smap1.ntramite&&_0_smap1.ntramite>0))
                 {
-                    Ext.create('Ext.window.Window',
-                    {
-                    	width        : 600
-                    	,height      : 400
-                    	,title       : 'Subir documentos de tu tr&aacute;mite'
-                    	,closable    : false
-                    	,modal       : true
-                    	,buttonAlign : 'center'
-                    	,loadingMask : true
-                    	,loader      :
-                    	{
-                    		url       : _0_urlVentanaDocumentos
-                    		,scripts  : true
-                    		,autoLoad : true
-                    		,params   :
-                    		{
-                    			'smap1.cdunieco'  : _0_smap1.cdunieco
-                    			,'smap1.cdramo'   : _0_smap1.cdramo
-                    			,'smap1.estado'   : 'W'
-                    			,'smap1.nmpoliza' : _0_fieldNmpoliza.getValue()
-                    			,'smap1.nmsuplem' : '0'
-                    			,'smap1.ntramite' : ntramite
-                    			,'smap1.tipomov'  : '0'
-                    		}
-                    	}
-                    	,buttons     :
-                    	[
-                    	    {
-                    	    	text     : 'Aceptar'
-                    	    	,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                    	    	,handler : function()
-                    	    	{
-                    	    		this.up().up().destroy();
-                    	    	}
-                    	    }
-                    	]
-                    }).show();
+                    centrarVentanaInterna(
+                        Ext.create('Ext.window.Window',
+                        {
+                        	width        : 600
+                        	,height      : 400
+                        	,title       : 'Subir documentos de tu tr&aacute;mite'
+                        	,closable    : false
+                        	,modal       : true
+                        	,buttonAlign : 'center'
+                        	,loadingMask : true
+                        	,loader      :
+                        	{
+                        		url       : _0_urlVentanaDocumentos
+                        		,scripts  : true
+                        		,autoLoad : true
+                        		,params   :
+                        		{
+                        			'smap1.cdunieco'  : _0_smap1.cdunieco
+                        			,'smap1.cdramo'   : _0_smap1.cdramo
+                        			,'smap1.estado'   : 'W'
+                        			,'smap1.nmpoliza' : _0_fieldNmpoliza.getValue()
+                        			,'smap1.nmsuplem' : '0'
+                        			,'smap1.ntramite' : ntramite
+                        			,'smap1.tipomov'  : '0'
+                        		}
+                        	}
+                        	,buttons     :
+                        	[
+                        	    {
+                        	    	text     : 'Aceptar'
+                        	    	,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                        	    	,handler : function()
+                        	    	{
+                        	    		this.up().up().destroy();
+                        	    	}
+                        	    }
+                        	]
+                        }).show()
+                    );
                     if(_0_smap1.SITUACION=='AUTO')
                     {
                         debug("_0_smap1.SITUACION=='AUTO'");
@@ -583,7 +584,20 @@ function _0_bloquear(b)
 	_0_botonera.setDisabled(b);
 	if(b)
 	{
-		window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());
+		//window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());//ELIMINADA
+        // Se aplica el focus en algun boton habilitado del grid de tarifas:
+        try {
+           _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
+        } catch(e) {
+            console.log(e);
+        }
+	} else {
+		// Se aplica el focus en el numero de poliza:
+        try {
+            _0_fieldNmpoliza.focus();
+        } catch(e) {
+            console.log(e);
+        }
 	}
 }
 
@@ -1108,7 +1122,13 @@ function _0_agregarAsegu(boton)
 		_0_storeIncisos.add(record);
 		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
 		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
-		window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+		// Se aplica el focus en algun boton habilitado del grid de incisos:
+		try {
+            _0_botonera.down('button[disabled=false]').focus();
+		} catch(e) {
+        	console.log(e);
+        }
+		//window.parent.scrollTo(0, _0_formAgrupados.getHeight());//ELIMINADA
 	}
 }
 
@@ -1246,7 +1266,13 @@ function _0_cotizar(boton)
 					
 					_0_panelPri.add(_0_gridTarifas);
 					_0_panelPri.doLayout();
-                    setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);
+					//setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);//ELIMINADO
+					// Se aplica el focus en algun boton habilitado del grid de tarifas:
+					try {
+					   _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
+					} catch(e) {
+                        console.log(e);
+                    }
 				}
 				else
 				{
