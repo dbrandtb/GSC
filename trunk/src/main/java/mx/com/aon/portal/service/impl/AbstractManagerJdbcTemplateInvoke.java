@@ -51,7 +51,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar getBackBoneInvoke para el endpoint ").append(endpointName);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar el endpoint ").append(endpointName);
 			logger.error(msgExc, e);
 			throw new ApplicationException(msgExc.toString(), e);
         }
@@ -92,7 +92,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar returnBackBoneInvoke para el endpoint ").append(endpointName);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar el endpoint ").append(endpointName);
 			logger.error(msgExc, e);
 			throw new ApplicationException(msgExc.toString(), e);
         }
@@ -119,7 +119,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar returnResult para el endpoint ").append(endpointName);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar el endpoint ").append(endpointName);
 			logger.error(msgExc, e);
 			throw new ApplicationException(msgExc.toString(), e);
         }
@@ -139,7 +139,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar getAllBackBoneInvoke para el endpoint ").append(endpointName);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar el endpoint ").append(endpointName);
 			logger.error(msgExc, e);
 			throw new ApplicationException(msgExc.toString(), e);
         }
@@ -178,7 +178,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (Exception e) {
-        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar pagedBackBoneInvoke para el endpoint ").append(endpointName);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar el endpoint ").append(endpointName);
 			logger.error(msgExc, e);
 			throw new ApplicationException(msgExc.toString(), e);
 		}
