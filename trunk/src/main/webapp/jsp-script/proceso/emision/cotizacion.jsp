@@ -589,14 +589,14 @@ function _0_bloquear(b)
         try {
            _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
         } catch(e) {
-            console.log(e);
+            debug(e);
         }
 	} else {
 		// Se aplica el focus en el numero de poliza:
         try {
             _0_fieldNmpoliza.focus();
         } catch(e) {
-            console.log(e);
+            debug(e);
         }
 	}
 }
@@ -1126,7 +1126,7 @@ function _0_agregarAsegu(boton)
 		try {
             _0_botonera.down('button[disabled=false]').focus();
 		} catch(e) {
-        	console.log(e);
+        	debug(e);
         }
 		//window.parent.scrollTo(0, _0_formAgrupados.getHeight());//ELIMINADA
 	}
@@ -1271,7 +1271,7 @@ function _0_cotizar(boton)
 					try {
 					   _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
 					} catch(e) {
-                        console.log(e);
+                        debug(e);
                     }
 				}
 				else
@@ -1735,7 +1735,7 @@ Ext.onReady(function()
 		                ,hidden  : (!_0_smap1.ntramite) || _0_smap1.ntramite.length==0
 		                ,handler : function()
 		                {
-		                    //console.log(form.getValues());
+		                    //debug(form.getValues());
 		                    Ext.create('Ext.window.Window',
 		                    {
 		                        title        : 'Guardar detalle'
