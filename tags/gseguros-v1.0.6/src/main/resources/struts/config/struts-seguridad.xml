@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="seguridad" namespace="/seguridad" extends="struts-default, json-default">
+
+		<interceptors>
+			<interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+			<interceptor name="deviceInterceptor"         class="deviceInterceptor"/>
+			<interceptor-stack name="loggingStack">
+			    <interceptor-ref name="deviceInterceptor"/>
+				<interceptor-ref name="authenticationInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		
+		
+		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
+            <result name="success" type="json">         
+                <param name="root">listaRolCliente</param>
+            </result>
+        </action>
+        
+        <action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
+            <result name="success" type="json">
+                <param name="ignoreHierarchy">false</param>
+            </result>
+            <result name="input">/jsp/portal/treeRolElemento.jsp</result>
+            <result name="confcompleta" type="json">
+                <param name="ignoreHierarchy">false</param>
+            </result>
+        </action>
+        
+        <action name="seleccionaRolClienteJson" class="loadClientesRolesAction" method="obtenRolesClientes">
+            <result name="success" type="json" />
+            <result name="load"    type="json" />
+        </action>
+
+		<action name="login">
+			<interceptor-ref name="loggingStack"></interceptor-ref>
+			<result name="loginform">/jsp/portal/login.jsp</result>
+			<result name="loginform_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+            </result>
+			<result name="tree" type="redirectAction">
+                <param name="actionName">seleccionaRolCliente</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="tree_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">arbol</param>
+            </result>
+			<result name="load" type="redirectAction">
+                <param name="actionName">load</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="load_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">menu</param>
+            </result>
+		</action>
+		
+		<action name="logout" class="autenticacionAction"
+            method="logoutUsuario">
+            <result name="success">/jsp/portal/login.jsp</result>
+        </action>
+        
+        <action name="logoutJson" class="autenticacionAction" method="logoutUsuario">
+            <result type="json" />
+        </action>
+
+		<action name="existeUsuarioLDAP" class="autenticacionAction"
+			method="existeUsuarioLDAP">
+			<result name="success" type="json" />
+		</action>
+		
+		<action name="autenticaUsuario" class="autenticacionAction"
+			method="autenticaUsuario">
+			<result name="success" type="json" />
+		</action>
+		
+		<!-- Acceso directo desde la Oficina Virtual de GS para acceder sin el login: -->
+        <action name="accesoDirecto" class="accesoDirectoAction" method="accesoDirecto">
+            <result name="login" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/seguridad</param>
+            </result>
+            <result name="cotizador" type="redirectAction">
+                <param name="actionName">cotizacion</param>
+                <param name="namespace">/emision</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+            </result>
+		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
+        </action>
+        
+	</package>
+	
+	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">
+        <action name="application" class="ExternoAction" method="aplicacionMovil">
+            <result name="success">/touchApp/index.jsp</result>
+        </action>
+    </package>
+
+</struts>
