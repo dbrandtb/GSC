@@ -932,7 +932,7 @@ Ext.onReady(function()
     
     if(_p21_ntramiteVacio)
     {
-        _p21_fieldByName('ntramite').setValue(_p21_ntramiteVacio);
+        _fieldByName('ntramite').setValue(_p21_ntramiteVacio);
     }
     else if(_p21_ntramite)
     {
@@ -967,7 +967,7 @@ Ext.onReady(function()
                                 if(porc-0==100)
                                 {
                                     _fieldByName('cdreppag').setValue('1');
-                                    _p21_fieldByName(prop).setValue('100');
+                                    _fieldByName('pcpgocte').setValue('100');
                                     _fieldByName('pcpgocte').hide();
                                     _fieldByName('pcpgotit').hide();
                                     _fieldByName('cdreppag').getStore().on(
@@ -975,10 +975,10 @@ Ext.onReady(function()
                                         'load' : function()
                                         {
                                             _fieldByName('cdreppag').setValue('1');
-                                            _p21_fieldByName(prop).setValue('100');
+                                            _fieldByName('pcpgocte').setValue('100');
                                             _fieldByName('pcpgocte').hide();
                                             _fieldByName('pcpgotit').hide();
-                                            _fieldByName('pcpgocte').setAllowBlank(true);
+                                            _fieldByName('pcpgocte').allowBlank=true;
                                             _fieldByName('pcpgocte').isValid();
                                         }
                                     });
@@ -986,7 +986,7 @@ Ext.onReady(function()
                                 else if(porc-0==0)
                                 {
                                     _fieldByName('cdreppag').setValue('3');
-                                    _p21_fieldByName(prop).setValue('0');
+                                    _fieldByName('pcpgocte').setValue('0');
                                     _fieldByName('pcpgocte').hide();
                                     _fieldByName('pcpgotit').hide();
                                     _fieldByName('cdreppag').getStore().on(
@@ -994,7 +994,7 @@ Ext.onReady(function()
                                         'load' : function()
                                         {
                                             _fieldByName('cdreppag').setValue('3');
-                                            _p21_fieldByName(prop).setValue('0');
+                                            _fieldByName('pcpgocte').setValue('0');
                                             _fieldByName('pcpgocte').hide();
                                             _fieldByName('pcpgotit').hide();
                                         }
@@ -1003,24 +1003,24 @@ Ext.onReady(function()
                                 else
                                 {
                                     _fieldByName('cdreppag').setValue('2');
-                                    _p21_fieldByName(prop).setValue(json.params[prop]);
+                                    _fieldByName('pcpgocte').setValue(porc);
                                     _fieldByName('cdreppag').getStore().on(
                                     {
                                         'load' : function()
                                         {
                                             _fieldByName('cdreppag').setValue('2');
-                                            _p21_fieldByName(prop).setValue(json.params[prop]);
+                                            _fieldByName('pcpgocte').setValue(porc);
                                         }
                                     });
                                 }
                             }
                             else
                             {
-                                _p21_fieldByName(prop).setValue(json.params[prop]);
+                                _fieldByName(prop).setValue(json.params[prop]);
                             }
                         }
                     }
-                    _p21_fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                    _fieldByName('cdmunici').setValue(json.params['cdmunici']);
                     _p21_clasif = json.params['clasif'];
                     debug('_p21_clasif:',_p21_clasif);
                     var auxCargarGrupos=function(callback)
@@ -1047,7 +1047,7 @@ Ext.onReady(function()
                                 }
                                 else
                                 {
-                                    mensajeError(json.respuesta);
+                                    mensajeError(json2.respuesta);
                                 }
                             }
                             ,failure : function()
@@ -1722,7 +1722,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     title      : 'TARIFA POR EDADES ('
                                                          +(
                                                          _p21_ntramite?
-                                                         (_p21_fieldByName('cdperpag').findRecord('key',_p21_fieldByName('cdperpag').getValue()).get('value'))
+                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
                                                          :''
                                                          )+')'
                                                     ,minHeight : 100
@@ -1744,7 +1744,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,'smap1.nmsuplem' : '0'
                                                                 ,'smap1.cdplan'   : record.get('cdplan')
                                                                 ,'smap1.cdgrupo'  : record.get('letra')
-                                                                ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                                                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
                                                             }
                                                             ,url         : _p21_urlObtenerTarifaEdad
                                                             ,reader      :
@@ -1802,7 +1802,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     title      : 'PRIMA PROMEDIO ('
                                                          +(
                                                          _p21_ntramite?
-                                                         (_p21_fieldByName('cdperpag').findRecord('key',_p21_fieldByName('cdperpag').getValue()).get('value'))
+                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
                                                          :''
                                                          )+')'
                                                     ,minHeight : 100
@@ -1824,7 +1824,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,'smap1.nmsuplem' : '0'
                                                                 ,'smap1.cdplan'   : record.get('cdplan')
                                                                 ,'smap1.cdgrupo'  : record.get('letra')
-                                                                ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                                                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
                                                             }
                                                             ,url         : _p21_urlObtenerTarifaCobertura
                                                             ,reader      :
@@ -2373,7 +2373,7 @@ function _p21_reload(json,status,nmpoliza)
             ,'smap1.estado'   : _p21_smap1.estado
             ,'smap1.nmpoliza' : Ext.isEmpty(nmpoliza) ? json.smap1.nmpoliza : nmpoliza
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
-            ,'smap1.cdagente' : _p21_fieldByName('cdagente').getValue()
+            ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
             ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
         }
     });
@@ -2855,12 +2855,6 @@ function _p21_fieldRfc()
     return Ext.ComponentQuery.query('[name=cdrfc]')[0];
 }
 
-function _p21_fieldByName(name)
-{
-    debug('_p21_fieldByName:',name);
-    return Ext.ComponentQuery.query('[name='+name+']')[0];
-}
-
 function _p21_rfcBlur(field)
 {
     debug('>_p21_rfcBlur:',field);
@@ -2937,16 +2931,16 @@ function _p21_rfcBlur(field)
                                             {
                                                 var record = grid.getStore().getAt(rowIndex);
                                                 debug('record:',record);
-                                                _p21_fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
-                                                _p21_fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
-                                                _p21_fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
-                                                _p21_fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
-                                                _p21_fieldByName('cdedo')    .setValue(record.get('CDEDO'));
-                                                _p21_fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
-                                                _p21_fieldByName('cdmunici') .heredar(true);
-                                                _p21_fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
-                                                _p21_fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
-                                                _p21_fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+                                                _fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
+                                                _fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
+                                                _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
+                                                _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+                                                _fieldByName('cdedo')    .setValue(record.get('CDEDO'));
+                                                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+                                                _fieldByName('cdmunici') .heredar(true);
+                                                _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
+                                                _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
+                                                _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
                                                 /*debug('cliente obtenido de WS? ', json.clienteWS);
                                                 gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                 if(json.clienteWS)
@@ -3396,7 +3390,7 @@ function _p21_generarVentanaVistaPrevia()
                         ,'smap1.nmsuplem' : '0'
                         ,'smap1.cdplan'   : record.get('cdplan')
                         ,'smap1.cdgrupo'  : record.get('letra')
-                        ,'smap1.cdperpag' : _p21_fieldByName('cdperpag').getValue()
+                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
                     }
                     ,url         : _p21_urlObtenerTarifaEdad
                     ,reader      :

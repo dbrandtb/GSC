@@ -65,11 +65,25 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String ntramite) throws Exception;
 	
+	public ManagerRespuestaSmapVO cargarDatosCotizacionGrupo2(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite);
+	
 	public List<Map<String,String>>cargarGruposCotizacion(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza)throws Exception;
+	
+	public ManagerRespuestaSlistVO cargarGruposCotizacion2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza);
 	
 	public Map<String,String>cargarDatosGrupoLinea(
 			String cdunieco
@@ -268,4 +282,54 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdperpag);
+	
+	public ManagerRespuestaSmapVO generarTramiteGrupo(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,Map<String,String> tvalopol
+			,String ntramite
+			,String ntramiteVacio
+			,String miTimestamp
+			,String rutaDocumentosTemporal
+			,String tipoCenso
+			,String dominioServerLayouts
+			,String userServerLeyouts
+			,String passServerLayouts
+			,String directorioServerLayouts
+			,String cdtipsit
+			,List<Map<String,Object>>grupos
+			,String codpostal
+			,String cdedo
+			,String cdmunici
+			,String cdagente
+			,String cdusuari
+			,String cdsisrol
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String cdelemen
+			);
+	
+	public ManagerRespuestaSlistVO obtenerTiposSituacion();
+	
+	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			);
+	
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones);
 }

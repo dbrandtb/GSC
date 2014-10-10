@@ -94,7 +94,15 @@
            <result type="json" />
        </action>
        
+       <action name="cargarDatosCotizacionGrupo2" class="CotizacionAction" method="cargarDatosCotizacionGrupo2">
+           <result type="json" />
+       </action>
+       
        <action name="cargarGruposCotizacion" class="CotizacionAction" method="cargarGruposCotizacion">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarGruposCotizacion2" class="CotizacionAction" method="cargarGruposCotizacion2">
            <result type="json" />
        </action>
        
@@ -122,6 +130,10 @@
            <result type="json" />
        </action>
        
+       <action name="cargarAseguradosExtraprimas2" class="CotizacionAction" method="cargarAseguradosExtraprimas2">
+           <result type="json" />
+       </action>
+       
        <action name="guardarExtraprimasAsegurados" class="CotizacionAction" method="guardarExtraprimasAsegurados">
            <interceptor-ref name="json">
                <param name="enableSMD">true</param>
@@ -139,6 +151,14 @@
        </action>
        
        <action name="guardarAseguradosCotizacion" class="CotizacionAction" method="guardarAseguradosCotizacion">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
+       <action name="guardarValoresSituaciones" class="CotizacionAction" method="guardarValoresSituaciones">
            <interceptor-ref name="json">
                <param name="enableSMD">true</param>
                <param name="ignoreSMDMethodInterfaces">false</param>
@@ -199,6 +219,10 @@
        </action>
        
        <action name="cargarConceptosGlobalesGrupo" class="CotizacionAction" method="cargarConceptosGlobalesGrupo">
+           <result type="json" />
+       </action>
+       
+       <action name="obtenerTiposSituacion" class="CotizacionAction" method="obtenerTiposSituacion">
            <result type="json" />
        </action>
        

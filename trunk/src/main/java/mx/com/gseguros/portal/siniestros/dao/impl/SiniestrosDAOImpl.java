@@ -1167,6 +1167,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
 	
 	@Override
+	@Deprecated
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws DaoException {
 		Map<String, Object> mapResult = ejecutaSP(new ActualizaOTValorMesaControl(this.getDataSource()), params);
 		return (String) mapResult.get("pv_title_o");

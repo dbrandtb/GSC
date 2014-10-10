@@ -8,6 +8,7 @@ public enum ParametroCotizacion
 	,MENSAJE_TURNAR("MENSAJETURNAR")
 	,MINIMOS_Y_MAXIMOS("MINMAXVALUES")
 	,NUMERO_PASAJEROS_SERV_PUBL("6NUMPASAJE")
+	,PROCEDURE_CENSO("PL_CENSO")
 	;
 	
 	private String parametro;

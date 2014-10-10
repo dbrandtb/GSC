@@ -2409,6 +2409,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdusuari      = usuario.getUser();
 			cdsisrol      = usuario.getRolActivo().getObjeto().getValue();
 			nombreUsuario = usuario.getName();
+			
+			smap1.put("cdsisrol" , cdsisrol);
 		}
 		catch(ApplicationException ax)
 		{
@@ -3846,6 +3848,161 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n###### olist1=").append(olist1)
 				.toString()
 				);
+		
+		this.session=ActionContext.getContext().getSession();
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco                = null;
+		String cdramo                  = null;
+		String nmpoliza                = null;
+		String feini                   = null;
+		String fefin                   = null;
+		String cdperpag                = null;
+		String pcpgocte                = null;
+		String ntramite                = null;
+		String ntramiteVacio           = null;
+		String miTimestamp             = null;
+		String rutaDocumentosTemporal  = null;
+		String tipoCenso               = null;
+		String dominioServerLayouts    = null;
+		String userServerLayouts       = null;
+		String passServerLayouts       = null;
+		String directorioServerLayouts = null;
+		String cdtipsit                = null;
+		String codpostal               = null;
+		String cdedo                   = null;
+		String cdmunici                = null;
+		String cdagente                = null;
+		String cdusuari                = null;
+		String cdsisrol                = null;
+		String clasif                  = null;
+		String LINEA_EXTENDIDA         = null;
+		String cdpersonCli             = null;
+		String nombreCli               = null;
+		String rfcCli                  = null;
+		String dsdomiciCli             = null;
+		String nmnumeroCli             = null;
+		String nmnumintCli             = null;
+		String cdelemen                = null;
+		
+		//datos de entrada
+		try
+		{
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion"); 
+			}
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdusuari       = usuario.getUser();
+			cdsisrol       = usuario.getRolActivo().getObjeto().getValue();
+			cdelemen       = usuario.getEmpresa().getElementoId();
+			
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco        = smap1.get("cdunieco");
+			cdramo          = smap1.get("cdramo");
+			nmpoliza        = smap1.get("nmpoliza");
+			feini           = smap1.get("feini");
+			fefin           = smap1.get("fefin");
+			cdperpag        = smap1.get("cdperpag");
+			pcpgocte        = smap1.get("pcpgocte");
+			ntramite        = smap1.get("ntramite");
+			ntramiteVacio   = smap1.get("ntramiteVacio");
+			miTimestamp     = smap1.get("timestamp");
+			tipoCenso       = smap1.get("tipoCenso");
+			cdtipsit        = smap1.get("cdtipsit");
+			codpostal       = smap1.get("codpostal");
+			cdedo           = smap1.get("cdedo");
+			cdmunici        = smap1.get("cdmunici");
+			cdagente        = smap1.get("cdagente");
+			clasif          = smap1.get("clasif");
+			LINEA_EXTENDIDA = smap1.get("LINEA_EXTENDIDA");
+			cdpersonCli     = smap1.get("cdperson");
+			nombreCli       = smap1.get("nombre");
+			rfcCli          = smap1.get("cdrfc");
+			dsdomiciCli     = smap1.get("dsdomici");
+			nmnumeroCli     = smap1.get("nmnumero");
+			nmnumintCli     = smap1.get("nmnumint");
+			
+			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
+			dominioServerLayouts    = getText("dominio.server.layouts");
+			userServerLayouts       = getText("user.server.layouts");
+			passServerLayouts       = getText("pass.server.layouts");
+			directorioServerLayouts = getText("directorio.server.layouts");
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSmapVO resp=cotizacionManager.generarTramiteGrupo(
+					cdunieco
+					,cdramo
+					,nmpoliza
+					,feini
+					,fefin
+					,cdperpag
+					,pcpgocte
+					,smap1
+					,ntramite
+					,ntramiteVacio
+					,miTimestamp
+					,rutaDocumentosTemporal
+					,tipoCenso
+					,dominioServerLayouts
+					,userServerLayouts
+					,passServerLayouts
+					,directorioServerLayouts
+					,cdtipsit
+					,olist1
+					,codpostal
+					,cdedo
+					,cdmunici
+					,cdagente
+					,cdusuari
+					,cdsisrol
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,cdelemen
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		
 		logger.info(
 				new StringBuilder()
 				.append("\n###### generarTramiteGrupo2 ######")
@@ -5095,7 +5252,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				if(!hayTramite)//es agente
+				if(!hayTramiteVacio)//es agente
 				{
 					Map<String,Object>params=new HashMap<String,Object>();
 					params.put("pv_cdunieco_i"   , cdunieco);
@@ -5316,6 +5473,190 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### cargarDatosCotizacionGrupo ######"
 				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarDatosCotizacionGrupo2()
+	{
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### cargarDatosCotizacionGrupo2 ######"
+				+ "\n###### smap1 "+smap1
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String cdtipsit = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String ntramite = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new Exception("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			cdtipsit = smap1.get("cdtipsit");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			ntramite = smap1.get("ntramite");
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la situacion");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de cotizacion");
+			}
+			if(StringUtils.isBlank(ntramite))
+			{
+				throw new ApplicationException("No se recibio el numero de tramite");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos para cargar cotizacion #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSmapVO resp=cotizacionManager.cargarDatosCotizacionGrupo2(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,ntramite);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				params = resp.getSmap();
+			}
+		}
+		
+		logger.info(""
+				+ "\n###### cargarDatosCotizacionGrupo2 ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarGruposCotizacion2()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### cargarGruposCotizacion2 ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new Exception("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio la poliza");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos para cargar grupos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSlistVO resp = cotizacionManager.cargarGruposCotizacion2(cdunieco,cdramo,estado,nmpoliza);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarGruposCotizacion2 ######")
+				.append("\n#####################################")
+				.toString()
 				);
 		return SUCCESS;
 	}
@@ -5556,6 +5897,120 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug(""
 				+ "\n###### cargarAseguradosExtraprimas ######"
 				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarAseguradosExtraprimas2()
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n##########################################")
+				.append("\n###### cargarAseguradosExtraprimas2 ######")
+				.append("\n######smap1=").append(smap1)
+				);
+		
+		success = true;
+		exito   = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsuplem = null;
+		String cdgrupo  = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsuplem = smap1.get("nmsuplem");
+			cdgrupo  = smap1.get("cdgrupo");
+			
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de cotizacion");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de cotizacion");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de cotizacion");
+			}
+			if(StringUtils.isBlank(nmsuplem))
+			{
+				throw new ApplicationException("No se recibio el suplemento");
+			}
+			if(StringUtils.isBlank(cdgrupo))
+			{
+				throw new ApplicationException("No se recibio la clave de grupo");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos para cargar extraprimas #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+		    ManagerRespuestaSlistVO resp = cotizacionManager.cargarAseguradosExtraprimas2(
+		    		cdunieco
+		    		,cdramo
+		    		,estado
+		    		,nmpoliza
+		    		,nmsuplem
+		    		,cdgrupo
+		    		);
+		    exito           = resp.isExito();
+		    respuesta       = resp.getRespuesta();
+		    respuestaOculta = resp.getRespuestaOculta();
+		    if(exito)
+		    {
+		    	slist1 = resp.getSlist();
+		    }
+		}
+		
+		success = exito;
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n###### cargarAseguradosExtraprimas2 ######")
+				.append("\n##########################################")
+				.toString()
 				);
 		return SUCCESS;
 	}
@@ -6861,6 +7316,84 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n###### smap1=").append(smap1)
 				.append("\n###### cargarConceptosGlobalesGrupo ######")
 				.append("\n##########################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String obtenerTiposSituacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###################################")
+				.append("\n###### obtenerTiposSituacion ######")
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		ManagerRespuestaSlistVO resp=cotizacionManager.obtenerTiposSituacion();
+		exito           = resp.isExito();
+		respuesta       = resp.getRespuesta();
+		respuestaOculta = resp.getRespuestaOculta();
+		if(exito)
+		{
+			slist1 = resp.getSlist();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### obtenerTiposSituacion ######")
+				.append("\n###################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarValoresSituaciones()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#######################################")
+				.append("\n###### guardarValoresSituaciones ######")
+				.append("\n###### slist1=").append(slist1)
+				.toString()
+				);
+
+		exito   = true;
+		success = true;
+		
+		//datos completos
+		try
+		{
+			if(slist1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituaciones(slist1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### guardarValoresSituaciones ######")
+				.append("\n#######################################")
 				.toString()
 				);
 		return SUCCESS;

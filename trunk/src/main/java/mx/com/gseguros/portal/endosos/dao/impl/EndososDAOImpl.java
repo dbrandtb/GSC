@@ -994,6 +994,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	 * PKG_SATELITES.P_MOV_MPOLIAGE
 	 */
 	@Override
+	@Deprecated
 	public void pMovMpoliage(Map<String, String> params) throws Exception
 	{
 		this.ejecutaSP(new PMovMpoliage(this.getDataSource()), params);

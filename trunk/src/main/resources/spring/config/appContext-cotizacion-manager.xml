@@ -10,8 +10,10 @@
 	</bean>
 	
 	<bean id="cotizacionManagerImpl" class="mx.com.gseguros.portal.cotizacion.service.impl.CotizacionManagerImpl">
-        <property name="cotizacionDAO" ref="cotizacionDAOImpl" />
-        <property name="pantallasDAO"  ref="pantallasDAOImpl" />
+        <property name="cotizacionDAO"  ref="cotizacionDAOImpl"  />
+        <property name="pantallasDAO"   ref="pantallasDAOImpl"   />
+        <property name="personasDAO"    ref="personasDAOImpl"    />
+        <property name="mesaControlDAO" ref="mesaControlDAOImpl" />
     </bean>
 	
 </beans>
