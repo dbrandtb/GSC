@@ -366,9 +366,10 @@ function _fieldById(id)
     return comp;
 }
 
-function _fieldByName(name,parent)
+function _fieldByName(name,parent,ocultarErrores)
 {
-    debug('_fieldByName:',name);
+    debug('_fieldByName:',name,parent,'DUMMY');
+    debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
     if(parent)
@@ -379,7 +380,7 @@ function _fieldByName(name,parent)
     {
         arr = Ext.ComponentQuery.query('[name='+name+']');
     }
-    if(arr.length==0)
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
     {
         mensajeError('No se encuentra el campo con name "'+name+'"');
     }

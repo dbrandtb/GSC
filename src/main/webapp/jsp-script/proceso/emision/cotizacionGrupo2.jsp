@@ -39,6 +39,20 @@ var _p25_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         
 var _p25_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
 var _p25_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo2"          />';
 var _p25_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
+var _p25_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
+var _p25_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
+var _p25_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
+var _p25_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
+var _p25_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"             />';
+var _p25_urlCargarDatosCotizacion        = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo2"   />';
+var _p25_urlCargarGrupos                 = '<s:url namespace="/emision"         action="cargarGruposCotizacion2"       />';
+var _p25_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"          />';
+var _p25_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas2"  />';
+var _p25_urlGuardarSituaciones           = '<s:url namespace="/emision"         action="guardarValoresSituaciones"     />';
+
+var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
+var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports"     />';
+var _p25_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
@@ -133,6 +147,9 @@ debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 
 Ext.onReady(function()
 {
+
+    Ext.Ajax.timeout = 600000;
+
     ////// modelos //////
     var _p25_colsBaseFields =
     [
@@ -230,6 +247,25 @@ Ext.onReady(function()
             ,{type:'float',name:'PRIMA_PROMEDIO'}
         ]
     });
+    
+    var _p25_extraprimaFields =
+    [
+        'nmsituac'
+        ,'nombre'
+        ,'familia'
+        ,'titular'
+        ,'parentesco'
+        ,'agrupador'
+        <s:if test='%{getImap().containsKey("extraprimasFields")&&getImap().get("extraprimasFields")!=null}'>
+            ,<s:property value="imap.extraprimasFields" escapeHtml="false" />
+        </s:if>
+    ];
+    debug('_p25_extraprimaFields:',_p25_extraprimaFields);
+    Ext.define('_p25_modeloExtraprima',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : _p25_extraprimaFields
+    });
     ////// modelos //////
     
     ////// stores //////
@@ -247,7 +283,7 @@ Ext.onReady(function()
         {
             tooltip   : 'Editar'
             ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
-            //,handler  : _p25_editarGrupoClic
+            ,handler  : _p25_editarGrupoClic
         });
     }
     if(!_p25_ntramite)
@@ -401,7 +437,7 @@ Ext.onReady(function()
         {
             tooltip  : 'Revisar extraprimas'
             ,icon    : '${ctx}/resources/fam3icons/icons/group_error.png'
-            //,handler : _p25_revisarAseguradosClic
+            ,handler : _p25_revisarAseguradosClic
         });
     }
     
@@ -794,6 +830,248 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    if(_p25_ntramiteVacio)
+    {
+        _fieldByName('ntramite').setValue(_p25_ntramiteVacio);
+    }
+    else if(_p25_ntramite)
+    {
+        _p25_tabpanel().setLoading(true);
+        Ext.Ajax.request(
+        {
+            url     : _p25_urlCargarDatosCotizacion
+            ,params :
+            {
+                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+                ,'smap1.estado'   : _p25_smap1.estado
+                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                ,'smap1.ntramite' : _p25_smap1.ntramite
+            }
+            ,success : function(response)
+            {
+                _p25_tabpanel().setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('### cargar cotizacion response:',json);
+                if(json.exito)
+                {
+                    for(var prop in json.params)
+                    {
+                        if(prop!='cdmunici'&&prop!='clasif')
+                        {
+                            if(prop=='pcpgocte')
+                            {
+                                var porc = json.params[prop];
+                                debug('porcentaje pago cliente:',porc);
+                                if(porc-0==100)
+                                {
+                                    _fieldByName('cdreppag').setValue('1');
+                                    _fieldByName('pcpgocte').setValue('100');
+                                    _fieldByName('pcpgocte').hide();
+                                    _fieldByName('pcpgotit').hide();
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('1');
+                                            _fieldByName('pcpgocte').setValue('100');
+                                            _fieldByName('pcpgocte').hide();
+                                            _fieldByName('pcpgotit').hide();
+                                            _fieldByName('pcpgocte').allowBlank=true;
+                                            _fieldByName('pcpgocte').isValid();
+                                        }
+                                    });
+                                }
+                                else if(porc-0==0)
+                                {
+                                    _fieldByName('cdreppag').setValue('3');
+                                    _fieldByName('pcpgocte').setValue('0');
+                                    _fieldByName('pcpgocte').hide();
+                                    _fieldByName('pcpgotit').hide();
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('3');
+                                            _fieldByName('pcpgocte').setValue('0');
+                                            _fieldByName('pcpgocte').hide();
+                                            _fieldByName('pcpgotit').hide();
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    _fieldByName('cdreppag').setValue('2');
+                                    _fieldByName('pcpgocte').setValue(porc);
+                                    _fieldByName('cdreppag').getStore().on(
+                                    {
+                                        'load' : function()
+                                        {
+                                            _fieldByName('cdreppag').setValue('2');
+                                            _fieldByName('pcpgocte').setValue(porc);
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                var comp=_fieldByName(prop,null,true);
+                                if(!Ext.isEmpty(comp))
+                                {
+                                    comp.setValue(json.params[prop]);
+                                }
+                            }
+                        }
+                    }
+                    _fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                    _p25_clasif = json.params['clasif'];
+                    debug('_p25_clasif:',_p25_clasif);
+                    var auxCargarGrupos=function(callback)
+                    {
+                        _p25_tabpanel().setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p25_urlCargarGrupos
+                            ,params  :
+                            {
+                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                ,'smap1.estado'   : _p25_smap1.estado
+                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                            }
+                            ,success : function(response)
+                            {
+                                _p25_tabpanel().setLoading(false);
+                                var json2=Ext.decode(response.responseText);
+                                debug('### cargar grupos response:',json2);
+                                if(json2.exito)
+                                {
+                                    callback(json2);
+                                }
+                                else
+                                {
+                                    mensajeError(json2.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _p25_tabpanel().setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    };
+                    if(_p25_clasif==_p25_TARIFA_LINEA&&_p25_smap1.LINEA_EXTENDIDA=='S')
+                    {
+                        debug('>cargar linea');
+                        auxCargarGrupos(function(resp)
+                        {
+                            debug('>callback linea');
+                            _p25_construirLinea(0,0,true);
+                            _p25_setActiveConcepto();
+                            var aux=resp.slist1.length;
+                            var aux2=0;
+                            for(var i=0;i<aux;i++)
+                            {
+                                _p25_storeGrupos.add(new _p25_modeloGrupo(resp.slist1[i]));
+                                _p25_storeGrupos.sort('letra','ASC');
+                                _p25_storeGrupos.commitChanges();
+                            }
+                        });
+                        debug('<cargar linea');
+                    }
+                    else
+                    {
+                        debug('>cargar modificada');
+                        auxCargarGrupos(function(resp)
+                        {
+                            debug('>callback modificada');
+                            if(_p25_clasif==_p25_TARIFA_LINEA)
+                            {
+                                _p25_construirLinea(0,0,true);
+                                _p25_setActiveConcepto();
+                            }
+                            else
+                            {
+                                _p25_construirModificada(0,0,true);
+                                _p25_setActiveConcepto();
+                            }
+                            var aux=resp.slist1.length;
+                            var aux2=0;
+                            debug('cargar:',aux);
+                            _p25_tabpanel().setLoading(true);
+                            if(aux==0)
+                            {
+                                mensajeError('No hay grupos para cargar');
+                            }
+                            for(var i=0;i<aux;i++)
+                            {
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p25_urlObtenerTvalogarsGrupo
+                                    ,params  :
+                                    {
+                                        'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                        ,'smap1.estado'   : _p25_smap1.estado
+                                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                        ,'smap1.letra'    : resp.slist1[i].letra
+                                        ,'smap1.i'        : i
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        var tvalogars=Ext.decode(response.responseText);
+                                        debug('### tvalogars:',tvalogars);
+                                        if(tvalogars.exito)
+                                        {
+                                            aux2=aux2+1;
+                                            debug('cargadas:',aux2);
+                                            var grupo=new _p25_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
+                                            grupo.tvalogars=tvalogars.slist1;
+                                            grupo.valido=true;
+                                            _p25_storeGrupos.add(grupo);
+                                            _p25_storeGrupos.sort('letra','ASC');
+                                            _p25_storeGrupos.commitChanges();
+                                            if(aux2==aux)//tenemos todas las respuestas
+                                            {
+                                                _p25_tabpanel().setLoading(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _p25_tabpanel().setLoading(false);
+                                            mensajeError(tvalogars.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _p25_tabpanel().setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            debug('<callback modificada');
+                        });
+                        debug('<cargar modificada');
+                    }
+                }
+                else
+                {
+                     mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                _p25_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    _fieldByName('nmnumero').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
     ////// loaders //////
 });
 
@@ -1914,6 +2192,464 @@ function _p25_fieldNmpoliza()
 {
     debug('>_p25_fieldNmpoliza<');
     return _p25_query('#_p25_fieldNmpoliza')[0];
+}
+
+function _p25_turnar(status,titulo,closable)
+{
+    debug('>_p25_turnar:',status);
+    var ventana=Ext.create('Ext.window.Window',
+    {
+        title        : !Ext.isEmpty(titulo) ? titulo : 'Turnar tr&aacute;mite'
+        ,width       : 500
+        ,height      : 300
+        ,modal       : true
+        ,closable    : closable==undefined ? true : closable
+        ,items       :
+        [
+            {
+                xtype       : 'textarea'
+                ,labelAlign : 'top'
+                ,fieldLabel : 'Comentarios'
+                ,itemId     : '_p25_turnarCommentsItem'
+                ,width      : 480
+                ,height     : 200
+            }
+        ]
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Aceptar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function(button)
+                {
+                    ventana.setLoading(true);
+                    if(status+'x'=='17x')
+                    {
+                        Ext.Ajax.request(
+                        {
+                            url     : _p25_guardarReporteCotizacion
+                            ,params :
+                            {
+                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                ,'smap1.estado'   : _p25_smap1.estado
+                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+                                ,'smap1.ntramite' : _p25_smap1.ntramite
+                            }
+                        });
+                    }
+                    Ext.Ajax.request(
+                    {
+                        url     : _p25_urlActualizarStatus
+                        ,params :
+                        {
+                            'smap1.status'    : status
+                            ,'smap1.ntramite' : _p25_ntramite ? _p25_ntramite : _p25_ntramiteVacio
+                            ,'smap1.comments' : Ext.ComponentQuery.query('#_p25_turnarCommentsItem')[0].getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            ventana.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response:',json);
+                            if(json.success)
+                            {
+                                ventana.setLoading(true);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p25_urlCargarParametros
+                                    ,params  :
+                                    {
+                                        'smap1.parametro' : 'MENSAJE_TURNAR'
+                                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                        ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+                                        ,'smap1.clave4'   : status
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        ventana.setLoading(false);
+                                        var json=Ext.decode(response.responseText);
+                                        debug('### json response parametro mensaje turnar:',json);
+                                        if(json.exito)
+                                        {
+                                            mensajeCorrecto('Tr&aacute;mite guardado',json.smap1.P1VALOR,function()
+                                            {
+                                                button.up().up().destroy();
+                                                if(status+'x'=='19x')
+                                                {
+                                                    _p25_reload(null,19,_p25_smap1.nmpoliza);
+                                                }
+                                                else
+                                                {
+                                                    _p25_mesacontrol();
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeWarning(json.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        ventana.setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            ventana.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        ]
+    }).show();
+    centrarVentanaInterna(ventana);
+    debug('<_p25_turnar');
+}
+
+function _p25_reload(json,status,nmpoliza)
+{
+    debug('>_p25_reload params:');
+    debug(json,status,nmpoliza,'dummy');
+    _p25_tabpanel().setLoading(true);
+    Ext.create('Ext.form.Panel').submit(
+    {
+        standardSubmit : true
+        ,params        :
+        {
+            'smap1.cdunieco'  : _p25_smap1.cdunieco
+            ,'smap1.cdramo'   : _p25_smap1.cdramo
+            ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+            ,'smap1.estado'   : _p25_smap1.estado
+            ,'smap1.nmpoliza' : Ext.isEmpty(nmpoliza) ? json.smap1.nmpoliza : nmpoliza
+            ,'smap1.ntramite' : _p25_ntramite ? _p25_ntramite : _p25_ntramiteVacio
+            ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
+            ,'smap1.status'   : Ext.isEmpty(status) ? _p25_smap1.status : status
+        }
+    });
+    debug('<_p25_reload');
+}
+
+function _p25_mesacontrol(json)
+{
+    _p25_tabpanel().setLoading(true);
+    Ext.create('Ext.form.Panel').submit(
+    {
+        standardSubmit : true
+        ,url           : _p25_urlMesaControl
+        ,params        :
+        {
+            'smap1.gridTitle'      : 'Tareas'
+            ,'smap2.pv_cdtiptra_i' : 1
+        }
+    });
+}
+
+function _p25_imprimir()
+{
+    debug('>_p25_imprimir');
+    var urlRequestImpCotiza = _p25_urlImprimirCotiza
+            + '?p_unieco='      + _p25_smap1.cdunieco
+            + '&p_ramo='        + _p25_smap1.cdramo
+            + '&p_estado=W'
+            + '&p_poliza='      + _p25_smap1.nmpoliza
+            + '&p_suplem=0'
+            + '&p_cdplan='
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p25_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p25_nombreReporteCotizacion
+            + "&paramform=no";
+    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p25_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p25_imprimir');
+}
+
+function _p25_revisarAseguradosClic(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p25_revisarAseguradosClic record:',record);
+    _p25_quitarTabExtraprima(record.get('letra'));
+    var timestamp = new Date().getTime();
+    _p25_agregarTab(
+    {
+        title                 : 'EXTRAPRIMAS DE SUBGRUPO '+record.get('letra')
+        ,itemId               : 'id'+(new Date().getTime())
+        ,extraprimaLetraGrupo : record.get('letra')
+        ,defaults             : { style : 'margin:5px;' }
+        ,border               : 0
+        ,items                :
+        [
+            Ext.create('Ext.grid.Panel',
+            {
+                columns     :
+                [
+                    {
+                        text       : 'NO.'
+                        ,dataIndex : 'nmsituac'
+                    }
+                    ,{
+                        text       : 'PARENTESCO'
+                        ,dataIndex : 'parentesco'
+                    }
+                    ,{
+                        text       : 'NOMBRE'
+                        ,dataIndex : 'nombre'
+                    }
+                    <s:if test='%{getImap().containsKey("extraprimasColumns")&&getImap().get("extraprimasColumns")!=null}'>
+                        ,<s:property value="imap.extraprimasColumns" escapeHtml='false' />
+                    </s:if>
+                ]
+                ,minHeight  : 150
+                ,maxHeight  : 500
+                ,plugins    : _p25_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
+                {
+                    clicksToEdit  : 1
+                    ,errorSummary : false
+                }) : null
+                ,tbar       :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,listeners  :
+                        {
+                            change : function(comp,val)
+                            {
+                                debug('extraprimas filtro change:',val);
+                                var grid=comp.up().up();
+                                debug('grid:',grid);
+                                grid.getStore().filterBy(function(record, id)
+                                {
+                                    var nombre = record.get('nombre').toUpperCase().replace(/ /g,'');
+                                    var filtro = val.toUpperCase().replace(/ /g,'');
+                                    var posNombre = nombre.lastIndexOf(filtro);
+                                    
+                                    if(posNombre > -1)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                ]
+                ,store      : Ext.create('Ext.data.Store',
+                {
+                    model       : '_p25_modeloExtraprima'
+                    ,groupField : 'agrupador'
+                    ,autoLoad   : true
+                    ,proxy      :
+                    {
+                        type         : 'ajax'
+                        ,url         : _p25_urlCargarAseguradosExtraprimas
+                        ,extraParams :
+                        {
+                            'smap1.cdunieco'   : _p25_smap1.cdunieco
+                            ,'smap1.cdramo'    : _p25_smap1.cdramo
+                            ,'smap1.estado'    : _p25_smap1.estado
+                            ,'smap1.nmpoliza'  : _p25_smap1.nmpoliza
+                            ,'smap1.nmsuplem'  : '0'
+                            ,'smap1.cdgrupo'   : record.get('letra')
+                            ,'smap1.timestamp' : timestamp
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
+                        }
+                    }
+                    ,listeners :
+                    {
+                        load : function(me,records,success,e)
+                        {
+                            if(success)
+                            {
+                                debug('### records de extraprimas:',records);
+                                me.removeAll();
+                                Ext.each(records,function(record)
+                                {
+                                    me.add(new _p25_modeloExtraprima(record.raw));
+                                });
+                                me.commitChanges();
+                            }
+                            else
+                            {
+                                mensajeError('Error al cargar situaciones #'+timestamp);
+                            }
+                        }
+                    }
+                })
+                ,viewConfig : viewConfigAutoSize
+                ,features   :
+                [
+                    {
+                        groupHeaderTpl :
+                        [
+                            '{name:this.formatName}'
+                            ,{
+                                formatName : function(name)
+                                {
+                                    return name.split("_")[1];
+                                }
+                            }
+                        ]
+                        ,ftype          : 'groupingsummary'
+                        ,startCollapsed : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,hidden  : _p25_smap1.EXTRAPRIMAS_EDITAR=='N'
+                        ,handler : function()
+                        {
+                            _p25_guardarExtraprimas(record.get('letra'));
+                        }
+                    }
+                ]
+            })
+        ]
+    });
+    debug('<_p25_revisarAseguradosClic');
+}
+
+function _p25_quitarTabExtraprima(letra)
+{
+    debug('>_p25_quitarTabExtraprima letra:',letra);
+    var tabsExtraprima = Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']');
+    if(tabsExtraprima.length>0)
+    {
+        for(var i=0;i<tabsExtraprima.length;i++)
+        {
+            tabsExtraprima[i].destroy();
+        }
+    }
+    debug('<_p25_quitarTabExtraprima');
+}
+
+function _p25_guardarExtraprimas(letra)
+{
+    debug('>_p25_guardarExtraprimas:',letra);
+    var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
+    debug('tab a guardar:',tab);
+    var grid=tab.down('[xtype=grid]');
+    debug('grid a guardar:',grid);
+    var store=grid.getStore();
+    debug('store a guardar:',store);
+    var records=store.getModifiedRecords();
+    debug('records a guardar:',records);
+    if(records.length==0)
+    {
+        mensajeWarning('No hay cambios');
+    }
+    else
+    {
+        var asegurados = [];
+        $.each(records,function(i,record)
+        {
+            var asegurado =
+            {
+                cdunieco   : _p25_smap1.cdunieco
+                ,cdramo    : _p25_smap1.cdramo
+                ,estado    : _p25_smap1.estado
+                ,nmpoliza  : _p25_smap1.nmpoliza
+                ,nmsuplem  : '0'
+                ,nmsituac  : record.get('nmsituac')
+            };
+            for(var i=1;i<=50;i++)
+            {
+                var valor = record.get('parametros.pv_otvalor'+(('00'+i).slice(-2)));
+                debug('valor:',valor,'typeof valor:',typeof valor);
+                if(typeof valor=='object')
+                {
+                    valor = Ext.Date.format(valor,'d/m/Y');
+                }
+                asegurado['otvalor'+(('00'+i).slice(-2))]=valor;
+            }
+            asegurados.push(asegurado);
+        });
+        debug('situaciones a guardar:',asegurados);
+        tab.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p25_urlGuardarSituaciones
+            ,jsonData :
+            {
+                slist1 : asegurados
+            }
+            ,success  : function(response)
+            {
+                tab.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('respuesta del guardado de extraprimas:',json);
+                if(json.exito)
+                {
+                    store.commitChanges();
+                    mensajeCorrecto('Datos guardados',json.respuesta);
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                tab.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    debug('<_p25_guardarExtraprimas');
 }
 ////// funciones //////
 

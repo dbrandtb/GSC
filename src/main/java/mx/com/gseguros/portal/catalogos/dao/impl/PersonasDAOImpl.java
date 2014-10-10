@@ -2,7 +2,7 @@ package mx.com.gseguros.portal.catalogos.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 {
 	
-	private final Logger logger = Logger.getLogger(PersonasDAOImpl.class);
+	private static final Logger logger = Logger.getLogger(PersonasDAOImpl.class);
 	
 	/**
 	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
@@ -36,6 +36,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_MPERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
 		Map<String, Object> resultado = ejecutaSP(new ObtenerPersonasPorRFC(getDataSource()), params);
 		List<Map<String,String>>listaPersonas=(List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaPersonas==null)
@@ -64,6 +72,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
 		Map<String, Object> resultado         = ejecutaSP(new ObtenerPersonaPorCdperson(getDataSource()), params);
 		List<Map<String,String>>listaPersonas = (List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaPersonas==null||listaPersonas.size()==0)
@@ -111,7 +127,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String residencia
 			,String accion) throws Exception
 	{
-		Map<String,Object>params=new HashMap<String,Object>();
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdperson"    , cdperson);
 		params.put("cdtipide"    , cdtipide);
 		params.put("cdideper"    , cdideper);
@@ -132,6 +148,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("ptcumupr"    , ptcumupr);
 		params.put("residencia"  , residencia);
 		params.put("accion"      , accion);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_MPERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
 		ejecutaSP(new MovimientosMpersona(getDataSource()), params);
 	}
 	
@@ -172,8 +196,16 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson) throws Exception
 	{
 		Map<String,String>domicilio = null;
-		Map<String,String>params    = new HashMap<String,String>();
+		Map<String,String>params    = new LinkedHashMap<String,String>();
 		params.put("cdperson",cdperson);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_MDOMICIL ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
 		Map<String, Object> resultado = ejecutaSP(new ObtenerDomicilioPorCdperson(getDataSource()), params);
 		List<Map<String,String>>listaDomicilios=(List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaDomicilios==null)
@@ -206,7 +238,15 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public String obtenerNuevoCdperson() throws Exception
 	{
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_GEN_CDPERSON ******")
+				.append("\n****** sin parametros")
+				.append("\n******************************************")
+				.toString()
+				);
 		Map<String, Object> resultado = ejecutaSP(new ObtenerNuevoCdperson(getDataSource()), params);
 		String cdperson = (String)resultado.get("pv_cdperson_o");
 		if(StringUtils.isBlank(cdperson))
@@ -242,7 +282,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String nmnumint
 			,String accion) throws Exception
 	{
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdperson" , cdperson);
 		params.put("nmorddom" , nmorddom);
 		params.put("dsdomici" , dsdomici);
@@ -254,6 +294,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("nmnumero" , nmnumero);
 		params.put("nmnumint" , nmnumint);
 		params.put("accion"   , accion);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_MDOMICIL ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
 		ejecutaSP(new MovimientosMdomicil(getDataSource()), params);
 	}
 	
@@ -284,8 +332,16 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public List<ComponenteVO> obtenerAtributosPersona(String cdperson) throws Exception
 	{
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdperson" , cdperson);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRIPER ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************")
+				.toString()
+				);
 		Map<String,Object>resultado = ejecutaSP(new ObtenerAtributosPersona(getDataSource()), params);
 		List<ComponenteVO>atributos=(List<ComponenteVO>) resultado.get("pv_registro_o");
 		if(atributos==null)
@@ -314,12 +370,20 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public Map<String,String> obtenerTvaloper(String cdrol,String cdperson) throws Exception
 	{
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdrol"    , cdrol);
 		params.put("cdperson" , cdperson);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_TVALOPER ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
 		Map<String,Object>respuesta=ejecutaSP(new ObtenerTvaloper(getDataSource()), params);
 		List<Map<String,String>>listaTvaloper=(List<Map<String,String>>)respuesta.get("pv_registro_o");
-		Map<String,String>tvaloper=new HashMap<String,String>();
+		Map<String,String>tvaloper=new LinkedHashMap<String,String>();
 		if(listaTvaloper!=null&&listaTvaloper.size()>0)
 		{
 			tvaloper=listaTvaloper.get(0);
@@ -358,7 +422,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
 			)throws Exception
 	{
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdrol"        , cdrol);
 		params.put("cdperson"     , cdperson);
 		params.put("pv_otvalor01" , otvalor01);
@@ -411,6 +475,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_otvalor48" , otvalor48);
 		params.put("pv_otvalor49" , otvalor49);
 		params.put("pv_otvalor50" , otvalor50);
+		logger.debug(
+				new StringBuilder()
+				.append("\n************************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_TVALOPER_NUEVO ******")
+				.append("\n****** params=").append(params)
+				.append("\n************************************************")
+				.toString()
+				);
 		ejecutaSP(new MovimientosTvaloper(getDataSource()), params);
 	}
 	
@@ -517,6 +589,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public List<Map<String,String>>obtieneAccionistas(Map<String,String> params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_ESTRUC_CORPORATIVA ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new ObtieneAccionistas(getDataSource()), params);
 		return (List<Map<String,String>>)resultado.get("pv_registro_o");
 	}
@@ -540,6 +620,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public void validarDocumentosPersona(Map<String,String> params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_SATELITES.P_VALIDA_DOCTOS_OBLIGATORIOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
 		ejecutaSP(new ValidarDocumentosPersona(getDataSource()), params);
 	}
 	
@@ -558,6 +646,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public String cargarNombreDocumentoPersona(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_NOMBRE_CDDOCUME_PERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new CargarNombreDocumentoPersona(getDataSource()), params);
 		return (String)resultado.get("pv_cddocume_o");
 	}
@@ -579,6 +675,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public String guardaAccionista(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_TESCOPER ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new GuardaAccionista(getDataSource()), params);
 		return (String)resultado.get("pv_msg_id_o");
 	}
@@ -605,6 +709,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public String eliminaAccionistas(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES.P_ELIMINA_TESCOPER ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new EliminaAccionistas(getDataSource()), params);
 		return (String)resultado.get("pv_msg_id_o");
 	}
@@ -625,6 +737,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	@Override
 	public String actualizaStatusPersona(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=ejecutaSP(new ActualizaStatusPersona(getDataSource()), params);
 		return (String)resultado.get("pv_dsstatus_o");
 	}

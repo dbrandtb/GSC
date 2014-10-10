@@ -9,17 +9,20 @@ debug('###################################');
 
 ///////////////////////
 ////// variables //////
-var mesConUrlDocu             = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"     />';
-var mesConUrlDatCom           = '<s:url namespace="/"            action="datosComplementarios"        />';
-var mesConUrlCotizar          = '<s:url namespace="/emision"     action="cotizacion"                  />';
-var mesConUrlDetMC            = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"      />';
-var mesConUrlFinDetalleMC     = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC"   />';
-var mesConUrlComGrupo         = '<s:url namespace="/emision"     action="cotizacionGrupo"             />';
-var mesConUrlUpdateStatus     = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"     />';
-var mesConUrlCargarParametros = '<s:url namespace="/emision"     action="obtenerParametrosCotizacion" />';
+var mesConUrlDocu               = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"     />';
+var mesConUrlDatCom             = '<s:url namespace="/"            action="datosComplementarios"        />';
+var mesConUrlCotizar            = '<s:url namespace="/emision"     action="cotizacion"                  />';
+var mesConUrlDetMC              = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"      />';
+var mesConUrlFinDetalleMC       = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC"   />';
+var mesConUrlComGrupo           = '<s:url namespace="/emision"     action="cotizacionGrupo"             />';
+var mesConUrlComGrupo2          = '<s:url namespace="/emision"     action="cotizacionGrupo2"            />';
+var mesConUrlUpdateStatus       = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"     />';
+var mesConUrlCargarParametros   = '<s:url namespace="/emision"     action="obtenerParametrosCotizacion" />';
+var _mescon_urlObtenerTipoRamos = '<s:url namespace="/emision"     action="obtenerTiposSituacion"       />';
+var _mescon_mapaTiposRamo = {};
 
-var ROL_MESA_DE_CONTROL    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
-var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
+var ROL_MESA_DE_CONTROL = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
+var ROL_SUSCRIPTOR      = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
 
 ////// variables //////
 ///////////////////////
@@ -246,15 +249,26 @@ function _4_onComplementariosClick(rowIndex)
     debug(record);
     if(record.get('estado')=='W'&&record.get('status')!='4'&&record.get('status')!='11')
     {
+        var agrupacion = _mescon_mapaTiposRamo[record.get('cdramo')+'_'+record.get('cdtipsit')+'_AGRUPACION'];
+        debug(record.get('cdramo')+'_'+record.get('cdtipsit')+'_AGRUPACION',agrupacion);
+        var situacionParametrizada = !Ext.isEmpty(agrupacion);
+        if(!situacionParametrizada)
+        {
+            mensajeError('Falta clasificar el ramo (TTIPRAM)');
+            return;
+        }
+        
         if(record.get('nmsolici')>0)
         {
-        	if(EstatusTramite.EnRevisionMedica == record.get('status') && (ROL_MESA_DE_CONTROL == mcdinSesion['rol'] || ROL_SUSCRIPTOR == mcdinSesion['rol'] )){
+        	if(EstatusTramite.EnRevisionMedica == record.get('status')
+        	    && (ROL_MESA_DE_CONTROL == mcdinSesion['rol'] || ROL_SUSCRIPTOR == mcdinSesion['rol'] ))
+        	{
         		mensajeWarning('Usted no puede realizar esta acci&oacute;n.');
         		return;
         	}
         	if(record.get('cdtipsit')=='MSC')
         	{
-        		Ext.create('Ext.form.Panel').submit(
+        	    Ext.create('Ext.form.Panel').submit(
                 {
                     url             : mesConUrlComGrupo
                     ,standardSubmit : true
@@ -271,22 +285,48 @@ function _4_onComplementariosClick(rowIndex)
                     }
                 });
         	}
-        	else
-        	{
-	            Ext.create('Ext.form.Panel').submit(
-	            {
-	                url             : mesConUrlDatCom
-	                ,standardSubmit : true
-	                ,params         :
+      	    else
+      	    {
+      	        if(agrupacion=='GRUPO')
+       	        {
+       	            Ext.create('Ext.form.Panel').submit(
+                    {
+                        url             : mesConUrlComGrupo2
+                        ,standardSubmit : true
+                        ,params         :
+                        {
+                            'smap1.cdunieco'  : record.get('cdunieco')
+                            ,'smap1.cdramo'   : record.get('cdramo')
+                            ,'smap1.cdtipsit' : record.get('cdtipsit')
+                            ,'smap1.estado'   : record.get('estado')
+                            ,'smap1.nmpoliza' : record.get('nmsolici')
+                            ,'smap1.ntramite' : record.get('ntramite')
+                            ,'smap1.cdagente' : record.get('cdagente')
+                            ,'smap1.status'   : record.get('status')
+                        }
+                    });
+                }
+                else if(agrupacion=='SOLO')
+                {
+    	            Ext.create('Ext.form.Panel').submit(
 	                {
-	                    cdunieco  : record.get('cdunieco')
-	                    ,cdramo   : record.get('cdramo')
-	                    ,estado   : record.get('estado')
-	                    ,nmpoliza : record.get('nmsolici')
-	                    ,'map1.ntramite' : record.get('ntramite')
-	                    ,cdtipsit : record.get('cdtipsit')
-	                }
-	            });
+    	                url             : mesConUrlDatCom
+	                    ,standardSubmit : true
+	                    ,params         :
+	                    {
+    	                    cdunieco  : record.get('cdunieco')
+	                        ,cdramo   : record.get('cdramo')
+	                        ,estado   : record.get('estado')
+    	                    ,nmpoliza : record.get('nmsolici')
+	                        ,'map1.ntramite' : record.get('ntramite')
+	                        ,cdtipsit : record.get('cdtipsit')
+	                    }
+	                });
+	            }
+                else
+	            {
+	                mensajeError('Ramo mal clasificado (TTIPRAM)');
+	            }
         	}
         }
         else
@@ -313,18 +353,44 @@ function _4_onComplementariosClick(rowIndex)
             }
             else
             {
-	            Ext.create('Ext.form.Panel').submit(
-	            {
-	                url             : mesConUrlCotizar
-	                ,standardSubmit : true
-	                ,params         :
+                if(agrupacion=='GRUPO')
+                {
+                    Ext.create('Ext.form.Panel').submit(
+                    {
+                        url             : mesConUrlComGrupo2
+                        ,standardSubmit : true
+                        ,params         :
+                        {
+                            'smap1.cdunieco'       : record.get('cdunieco')
+                            ,'smap1.cdramo'        : record.get('cdramo')
+                            ,'smap1.cdtipsit'      : record.get('cdtipsit')
+                            ,'smap1.estado'        : record.get('estado')
+                            ,'smap1.nmpoliza'      : ''
+                            ,'smap1.ntramiteVacio' : record.get('ntramite')
+                            ,'smap1.cdagente'      : record.get('cdagente')
+                            ,'smap1.status'        : record.get('status')
+                        }
+                    });
+                }
+                else if(agrupacion=='SOLO')
+                {
+	                Ext.create('Ext.form.Panel').submit(
 	                {
-	                    'smap1.ntramite'  : record.get('ntramite')
-	                    ,'smap1.cdunieco' : record.get('cdunieco')
-	                    ,'smap1.cdramo'   : record.get('cdramo')
-	                    ,'smap1.cdtipsit' : record.get('cdtipsit')
-	                }
-	            });
+    	                url             : mesConUrlCotizar
+	                    ,standardSubmit : true
+	                    ,params         :
+	                    {
+	                        'smap1.ntramite'  : record.get('ntramite')
+	                        ,'smap1.cdunieco' : record.get('cdunieco')
+	                        ,'smap1.cdramo'   : record.get('cdramo')
+	                        ,'smap1.cdtipsit' : record.get('cdtipsit')
+	                    }
+	                });
+	            }
+	            else
+                {
+                    mensajeError('Ramo mal clasificado (TTIPRAM)');
+                }
             }
         }
     }
@@ -572,6 +638,32 @@ function _4_onClockClick(rowIndex)
 
 Ext.onReady(function()
 {
+	Ext.Ajax.request(
+	{
+	    url      : _mescon_urlObtenerTipoRamos
+	    ,success : function(response)
+	    {
+	        var json=Ext.decode(response.responseText);
+	        debug('### obtener tipo ramos:',json);
+	        if(json.exito)
+	        {
+	            for(var i=0;i<json.slist1.length;i++)
+	            {
+	                _mescon_mapaTiposRamo[json.slist1[i].CDRAMO+'_'+json.slist1[i].CDTIPSIT+'_AGRUPACION']=json.slist1[i].AGRUPACION;
+	                _mescon_mapaTiposRamo[json.slist1[i].CDRAMO+'_'+json.slist1[i].CDTIPSIT+'_SITUACION']=json.slist1[i].SITUACION;
+	            }
+	            debug('_mescon_mapaTiposRamo:',_mescon_mapaTiposRamo);
+	        }
+	        else
+	        {
+	            mensajeError(json.respuesta);
+	        }
+	    }
+	    ,failure : function()
+	    {
+	        mensajeError('Error al obtener tipo de productos');
+	    }
+	});
 	
 	/////////////////////
 	////// modelos //////

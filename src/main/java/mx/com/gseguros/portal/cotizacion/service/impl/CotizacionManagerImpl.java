@@ -1,12 +1,21 @@
 package mx.com.gseguros.portal.cotizacion.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -18,19 +27,31 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.FTPSUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 
 public class CotizacionManagerImpl implements CotizacionManager 
 {
 
-	private static final Logger logger = Logger.getLogger(CotizacionManagerImpl.class);
-	private CotizacionDAO cotizacionDAO;
-	private PantallasDAO  pantallasDAO;
+	private static final Logger           logger       = Logger.getLogger(CotizacionManagerImpl.class);
+	private static final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private CotizacionDAO  cotizacionDAO;
+	private PantallasDAO   pantallasDAO;
+	private PersonasDAO    personasDAO;
+	private MesaControlDAO mesaControlDAO;
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -46,37 +67,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdatribu
 			,String valor)throws Exception
 	{
-		logger.info(""
-				+ "\n#####################################"
-				+ "\n###### movimientoTvalogarGrupo ######"
-				+ "\ncdunieco "+cdunieco
-				+ "\ncdramo "+cdramo
-				+ "\nestado "+estado
-				+ "\nnmpoliza "+nmpoliza
-				+ "\nnmsuplem "+nmsuplem
-				+ "\ncdtipsit "+cdtipsit
-				+ "\ncdgrupo "+cdgrupo
-				+ "\ncdgarant "+cdgarant
-				+ "\nstatus "+status
-				+ "\ncdatribu "+cdatribu
-				+ "\nvalor "+valor
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ movimientoTvalogarGrupo @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
+				.append("\n@@@@@@ cdgarant=").append(cdgarant)
+				.append("\n@@@@@@ status=")  .append(status)
+				.append("\n@@@@@@ cdatribu=").append(cdatribu)
+				.append("\n@@@@@@ valor=")   .append(valor)
+				.toString()
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
-		params.put("estado"   , estado);
-		params.put("nmpoliza" , nmpoliza);
-		params.put("nmsuplem" , nmsuplem);
-		params.put("cdtipsit" , cdtipsit);
-		params.put("cdgrupo"  , cdgrupo);
-		params.put("cdgarant" , cdgarant);
-		params.put("status"   , status);
-		params.put("cdatribu" , cdatribu);
-		params.put("valor"    , valor);
-		cotizacionDAO.movimientoTvalogarGrupo(params);
-		logger.info(""
-				+ "\n###### movimientoTvalogarGrupo ######"
-				+ "\n#####################################"
+		cotizacionDAO.movimientoTvalogarGrupo(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdtipsit
+				,cdgrupo
+				,cdgarant
+				,status
+				,cdatribu
+				,valor
+				);
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ movimientoTvalogarGrupo @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
 				);
 	}
 	
@@ -151,37 +176,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdmoneda
 			,String accion)throws Exception
 	{
-		logger.info(""
-				+ "\n#####################################"
-				+ "\n###### movimientoMpoligarGrupo ######"
-				+ "\n cdunieco : "+cdunieco
-				+ "\n cdramo : "+cdramo
-				+ "\n estado : "+estado
-				+ "\n nmpoliza : "+nmpoliza
-				+ "\n nmsuplem : "+nmsuplem
-				+ "\n cdtipsit : "+cdtipsit
-				+ "\n cdgrupo : "+cdgrupo
-				+ "\n cdgarant : "+cdgarant
-				+ "\n status : "+status
-				+ "\n cdmoneda : "+cdmoneda
-				+ "\n accion : "+accion
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ movimientoMpoligarGrupo @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
+				.append("\n@@@@@@ cdgarant=").append(cdgarant)
+				.append("\n@@@@@@ status=")  .append(status)
+				.append("\n@@@@@@ cdmoneda=").append(cdmoneda)
+				.append("\n@@@@@@ accion=")  .append(accion)
+				.toString()
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
-		params.put("estado"   , estado);
-		params.put("nmpoliza" , nmpoliza);
-		params.put("nmsuplem" , nmsuplem);
-		params.put("cdtipsit" , cdtipsit);
-		params.put("cdgrupo"  , cdgrupo);
-		params.put("cdgarant" , cdgarant);
-		params.put("status"   , status);
-		params.put("cdmoneda" , cdmoneda);
-		params.put("accion"   , accion);
-		cotizacionDAO.movimientoMpoligarGrupo(params);
-		logger.info(""
-				+ "\n###### movimientoMpoligarGrupo ######"
-				+ "\n#####################################"
+		cotizacionDAO.movimientoMpoligarGrupo(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdtipsit
+				,cdgrupo
+				,cdgarant
+				,status
+				,cdmoneda
+				,accion
+				);
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ movimientoMpoligarGrupo @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
 				);
 	}
 	
@@ -221,6 +250,162 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\n########################################"
 				);
 		return datos;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarDatosCotizacionGrupo2(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarDatosCotizacionGrupo2 @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ ntramite=").append(ntramite)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			Map<String,String>mapaDatos=cotizacionDAO.cargarDatosCotizacionGrupo2(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,ntramite
+					);
+			
+			Map<String,String>mapaDatosAux = new HashMap<String,String>();
+			for(Entry<String,String>en:mapaDatos.entrySet())
+			{
+				String key = en.getKey();
+				if(StringUtils.isNotBlank(key)
+						&&key.length()>"otvalor".length()
+						&&key.substring(0, "otvalor".length()).equals("otvalor")
+						)
+				{
+					mapaDatosAux.put(new StringBuilder("tvalopol_parametros.pv_").append(key).toString(),en.getValue());
+				}
+				else
+				{
+					mapaDatosAux.put(key,en.getValue());
+				}
+			}
+			resp.setSmap(mapaDatosAux);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al cargar cotizacion #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarDatosCotizacionGrupo2 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO cargarGruposCotizacion2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarGruposCotizacion2 @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			List<Map<String,String>>listaAux    =cotizacionDAO.cargarGruposCotizacion2(cdunieco,cdramo,estado,nmpoliza);
+			List<Map<String,String>>listaGrupos = new ArrayList<Map<String,String>>();
+			
+			for(Map<String,String>grupo:listaAux)
+			{
+				Map<String,String>grupoEditado=new HashMap<String,String>();
+				
+				for(Entry<String,String>en:grupo.entrySet())
+				{
+					String key = en.getKey();
+					if(StringUtils.isNotBlank(key)
+							&&key.length()>"otvalor".length()
+							&&key.substring(0, "otvalor".length()).equals("otvalor")
+							)
+					{
+						grupoEditado.put(new StringBuilder("parametros.pv_").append(key).toString(),en.getValue());
+					}
+					else
+					{
+						grupoEditado.put(key,en.getValue());
+					}
+				}
+				listaGrupos.add(grupoEditado);
+			}
+			
+			resp.setSlist(listaGrupos);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al cargar grupos #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarGruposCotizacion2 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
 	}
 	
 	@Override
@@ -719,10 +904,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		.append("\ncdramo=").append(cdramo)
 		.toString()
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdagente" , cdagente);
-		params.put("cdramo"   , cdramo);
-		Map<String,String>datos=cotizacionDAO.obtenerDatosAgente(params);
+		Map<String,String>datos=cotizacionDAO.obtenerDatosAgente(cdagente,cdramo);
 		logger.info(new StringBuilder()
 		.append("\ndatos=").append(datos)
 		.append("\n###### obtenerDatosAgente ######")
@@ -756,13 +938,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		try
 		{
-			Map<String,String>params=new HashMap<String,String>();
-			params.put("parametro" , parametro.getParametro());
-			params.put("cdramo"    , cdramo);
-			params.put("cdtipsit"  , cdtipsit);
-			params.put("clave4"    , clave4);
-			params.put("clave5"    , clave5);
-			Map<String,String>valores=cotizacionDAO.obtenerParametrosCotizacion(params);
+			Map<String,String>valores=cotizacionDAO.obtenerParametrosCotizacion(parametro,cdramo,cdtipsit,clave4,clave5);
 			resp.setSmap(valores);
 		}
 		catch(Exception ex)
@@ -906,13 +1082,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String suma      = valores.get(claveSuma);
 			Double dSuma     = Double.valueOf(suma);
 			
-			Map<String,String>paramsDeprecio=new HashMap<String,String>();
-			paramsDeprecio.put("parametro" , ParametroCotizacion.DEPRECIACION.getParametro());
-			paramsDeprecio.put("cdramo"    , cdramo);
-			paramsDeprecio.put("cdtipsit"  , cdtipsit);
-			paramsDeprecio.put("clave4"    , cdsisrol);
-			paramsDeprecio.put("clave5"    , null);
-			Map<String,String>valoresDeprecio=cotizacionDAO.obtenerParametrosCotizacion(paramsDeprecio);
+			Map<String,String>valoresDeprecio=cotizacionDAO.obtenerParametrosCotizacion(
+					ParametroCotizacion.DEPRECIACION
+					,cdramo
+					,cdtipsit
+					,cdsisrol
+					,null
+					);
+			
 			logger.debug(
 					new StringBuilder()
 					.append("depreciacion=")
@@ -1396,22 +1573,26 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//datos del agente
 		
-		GeneradorCampos gc = null;
+		GeneradorCampos gcTatri            = null;
+		GeneradorCampos gcGral             = null;
+		List<ComponenteVO>tatrisitOriginal = null;
 		
 		//componentes
 		if(resp.isExito())
 		{
 			try
 			{
-				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.setCdramo(cdramo);
-				gc.setCdtipsit(cdtipsit);
+				gcTatri = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcTatri.setCdramo(cdramo);
+				gcTatri.setCdtipsit(cdtipsit);
 				resp.setImap(new HashMap<String,Item>());
 				
+				//TATRISIT ORIGINAL
+				tatrisitOriginal = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+				
 				//columnas base
-				List<ComponenteVO>tatrisitBase = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-				List<ComponenteVO>aux          = new ArrayList<ComponenteVO>();
-				for(ComponenteVO iTatri:tatrisitBase)
+				List<ComponenteVO>tatrisitColsBase = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitOriginal)
 				{
 					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
 							&&iTatri.getSwsuscri().equals("N")
@@ -1419,55 +1600,55 @@ public class CotizacionManagerImpl implements CotizacionManager
 							&&iTatri.getSwGrupoLinea().equals("N")
 							)
 					{
+						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA BASE ").append(iTatri).toString());
 						iTatri.setColumna("S");
-						aux.add(iTatri);
+						tatrisitColsBase.add(iTatri);
 					}
 				}
-				tatrisitBase = aux;
-				if(tatrisitBase.size()>0)
+				
+				if(tatrisitColsBase.size()>0)
 				{
-					gc.generaComponentes(tatrisitBase, true, true, false, true, true, false);
-					resp.getImap().put("colsBaseFields"  , gc.getFields());
-					resp.getImap().put("colsBaseColumns" , gc.getColumns());
+					gcTatri.generaComponentes(tatrisitColsBase, true, true, false, true, true, false);
+					resp.getImap().put("colsBaseFields"  , gcTatri.getFields());
+					resp.getImap().put("colsBaseColumns" , gcTatri.getColumns());
 				}
 				else
 				{
 					resp.getImap().put("colsBaseFields"  , null);
 					resp.getImap().put("colsBaseColumns" , null);
 				}
+				//columnas base
 				
-				//columnas extendidas
-				List<ComponenteVO>tatrisitExt = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-				aux = new ArrayList<ComponenteVO>();
-				for(ComponenteVO iTatri:tatrisitExt)
+				//columnas extendidas (de coberturas)
+				List<ComponenteVO> tatrisitColsCober = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitOriginal)
 				{
 					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
 							&&iTatri.getSwsuscri().equals("N")
 							&&iTatri.getSwGrupo().equals("S")
 							)
 					{
+						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA DE COBERTURA ").append(iTatri).toString());
 						iTatri.setColumna("S");
-						aux.add(iTatri);
+						tatrisitColsCober.add(iTatri);
 					}
 				}
-				tatrisitExt = aux;
-				aux         = null;
-				if(tatrisitExt.size()>0)
+				if(tatrisitColsCober.size()>0)
 				{
-					gc.generaComponentes(tatrisitExt, true, true, false, true, true, false);
-					resp.getImap().put("colsExtFields"  , gc.getFields());
-					resp.getImap().put("colsExtColumns" , gc.getColumns());
+					gcTatri.generaComponentes(tatrisitColsCober, true, true, false, true, true, false);
+					resp.getImap().put("colsExtFields"  , gcTatri.getFields());
+					resp.getImap().put("colsExtColumns" , gcTatri.getColumns());
 				}
 				else
 				{
 					resp.getImap().put("colsExtFields"  , null);
 					resp.getImap().put("colsExtColumns" , null);
 				}
+				//columnas extendidas (de coberturas)
 				
 				//factores
-				List<ComponenteVO>factores = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-				aux = new ArrayList<ComponenteVO>();
-				for(ComponenteVO iTatri:factores)
+				List<ComponenteVO>factores = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitOriginal)
 				{
 					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
 							&&iTatri.getSwsuscri().equals("N")
@@ -1475,17 +1656,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 							&&iTatri.getSwGrupoFact().equals("S")
 							)
 					{
+						logger.debug(new StringBuilder("SE AGREGA PARA FACTOR ").append(iTatri).toString());
 						iTatri.setColumna("S");
-						aux.add(iTatri);
+						factores.add(iTatri);
 					}
 				}
-				factores = aux;
-				aux      = null;
 				if(factores.size()>0)
 				{
-					gc.generaComponentes(factores, true, true, false, true, true, false);
-					resp.getImap().put("factoresFields"  , gc.getFields());
-					resp.getImap().put("factoresColumns" , gc.getColumns());
+					gcTatri.generaComponentes(factores, true, true, false, true, true, false);
+					resp.getImap().put("factoresFields"  , gcTatri.getFields());
+					resp.getImap().put("factoresColumns" , gcTatri.getColumns());
 				}
 				else
 				{
@@ -1494,27 +1674,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 				}
 				//factores
 				
-				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo);
 				if(tatripol!=null&&tatripol.size()>0)
 				{
-					gc.generaComponentes(tatripol,true,false,true,false,false,false);
-					resp.getImap().put("itemsRiesgo",gc.getItems());
+					gcGral.generaComponentes(tatripol,true,false,true,false,false,false);
+					resp.getImap().put("itemsRiesgo",gcGral.getItems());
 				}
 				else
 				{
 					resp.getImap().put("itemsRiesgo" , null);
 				}
 				
-				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
-				gc.generaComponentes(componentesContratante, true,false,true,false,false,false);
-				resp.getImap().put("itemsContratante"  , gc.getItems());
+				gcGral.generaComponentes(componentesContratante, true,false,true,false,false,false);
+				resp.getImap().put("itemsContratante"  , gcGral.getItems());
 				
 				List<ComponenteVO>componentesAgente=pantallasDAO.obtenerComponentes(
 						null, null, null,
@@ -1522,29 +1700,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 						"COTIZACION_GRUPO", "AGENTE", null);
 				componentesAgente.get(0).setDefaultValue(nombreAgente);
 				componentesAgente.get(1).setDefaultValue(cdagente);
-				gc.generaComponentes(componentesAgente, true,false,true,false,false,false);
-				resp.getImap().put("itemsAgente"  , gc.getItems());
+				gcGral.generaComponentes(componentesAgente, true,false,true,false,false,false);
+				resp.getImap().put("itemsAgente"  , gcGral.getItems());
 				
 				List<ComponenteVO>columnaEditorPlan=pantallasDAO.obtenerComponentes(
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "EDITOR_PLANES2", null);
-				gc.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
-				resp.getImap().put("editorPlanesColumn",gc.getColumns());
+				gcGral.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
+				resp.getImap().put("editorPlanesColumn",gcGral.getColumns());
 				
 				List<ComponenteVO>comboFormaPago=pantallasDAO.obtenerComponentes(
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
-				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
-				resp.getImap().put("comboFormaPago"  , gc.getItems());
+				gcGral.generaComponentes(comboFormaPago, true,false,true,false,false,false);
+				resp.getImap().put("comboFormaPago"  , gcGral.getItems());
 				
 				List<ComponenteVO>comboRepartoPago=pantallasDAO.obtenerComponentes(
 						null, null, null,
 						null, null, null,
 						"COTIZACION_GRUPO", "COMBO_REPARTO_PAGO", null);
-				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
-				resp.getImap().put("comboRepartoPago"  , gc.getItems());
+				gcGral.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
+				resp.getImap().put("comboRepartoPago"  , gcGral.getItems());
 				
 				List<ComponenteVO>botones=pantallasDAO.obtenerComponentes(
 						null, null, "|"+status+"|",
@@ -1552,8 +1730,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 						"COTIZACION_GRUPO", "BOTO2NES", null);
 				if(botones!=null&&botones.size()>0)
 				{
-					gc.generaComponentes(botones, true, false, false, false, false, true);
-					resp.getImap().put("botones" , gc.getButtons());
+					gcGral.generaComponentes(botones, true, false, false, false, false, true);
+					resp.getImap().put("botones" , gcGral.getButtons());
 				}
 				else
 				{
@@ -1590,33 +1768,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//permisos
 		
-		//campos de asegurados
-		if(resp.isExito() && resp.getSmap().containsKey("ASEGURADOS")
-				 && StringUtils.isNotBlank(resp.getSmap().get("ASEGURADOS"))
-				 && resp.getSmap().get("ASEGURADOS").equals("S"))
-		{
-			try
-			{
-				
-				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
-						null  , null , null
-						,null , null , cdsisrol
-						,"COTIZACION_GRUPO", "ASEGURADOS", null);
-				gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
-				resp.getImap().put("aseguradosColumns" , gc.getColumns());
-				resp.getImap().put("aseguradosFields"  , gc.getFields());
-			}
-			catch(Exception ex)
-			{
-				long timestamp = System.currentTimeMillis();
-				resp.setExito(false);
-				resp.setRespuesta(new StringBuilder("Error al obtener componentes de asegurados #").append(timestamp).toString());
-				resp.setRespuestaOculta(ex.getMessage());
-				logger.error(resp.getRespuesta(),ex);
-			}
-		}
-		//campos de asegurados
-		
 		//campos para extraprimas
 		if(resp.isExito() && resp.getSmap().containsKey("EXTRAPRIMAS")
 				 && StringUtils.isNotBlank(resp.getSmap().get("EXTRAPRIMAS"))
@@ -1624,13 +1775,31 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
-				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
-						null  , null , null
-						,null , null , cdsisrol
-						,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
-				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
-				resp.getImap().put("extraprimasColumns" , gc.getColumns());
-				resp.getImap().put("extraprimasFields"  , gc.getFields());
+				List<ComponenteVO>tatrisitExtraprima = new ArrayList<ComponenteVO>();
+				for(ComponenteVO iTatri:tatrisitOriginal)
+				{
+					if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+							&&iTatri.getSwsuscri().equals("S")
+							&&iTatri.getSwGrupoExtr().equals("S")
+							)
+					{
+						logger.debug(new StringBuilder("SE AGREGA PARA EXTRAPRIMA ").append(iTatri).toString());
+						iTatri.setColumna("S");
+						tatrisitExtraprima.add(iTatri);
+					}
+				}
+				
+				if(tatrisitExtraprima.size()>0)
+				{
+					gcTatri.generaComponentes(tatrisitExtraprima, true, true, false, true, true, false);
+					resp.getImap().put("extraprimasFields"  , gcTatri.getFields());
+					resp.getImap().put("extraprimasColumns" , gcTatri.getColumns());
+				}
+				else
+				{
+					resp.getImap().put("extraprimasFields"  , null);
+					resp.getImap().put("extraprimasColumns" , null);
+				}
 			}
 			catch(Exception ex)
 			{
@@ -1643,6 +1812,33 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//campos para extraprimas
 		
+		//campos de asegurados
+		if(resp.isExito() && resp.getSmap().containsKey("ASEGURADOS")
+				 && StringUtils.isNotBlank(resp.getSmap().get("ASEGURADOS"))
+				 && resp.getSmap().get("ASEGURADOS").equals("S"))
+		{
+			try
+			{
+				
+				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "ASEGURADOS", null);
+				gcGral.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+				resp.getImap().put("aseguradosColumns" , gcGral.getColumns());
+				resp.getImap().put("aseguradosFields"  , gcGral.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al obtener componentes de asegurados #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		//campos de asegurados
+		
 		//campos para recuperados
 		if(resp.isExito() && resp.getSmap().containsKey("ASEGURADOS_EDITAR")
 				 && StringUtils.isNotBlank(resp.getSmap().get("ASEGURADOS_EDITAR"))
@@ -1654,9 +1850,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 						null  , null , null
 						,null , null , cdsisrol
 						,"COTIZACION_GRUPO", "RECUPERADOS", null);
-				gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
-				resp.getImap().put("recuperadosColumns" , gc.getColumns());
-				resp.getImap().put("recuperadosFields"  , gc.getFields());
+				gcGral.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+				resp.getImap().put("recuperadosColumns" , gcGral.getColumns());
+				resp.getImap().put("recuperadosFields"  , gcGral.getFields());
 			}
 			catch(Exception ex)
 			{
@@ -1779,6 +1975,1567 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSmapVO generarTramiteGrupo(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,Map<String,String> tvalopol
+			,String ntramite
+			,String ntramiteVacio
+			,String miTimestamp
+			,String rutaDocumentosTemporal
+			,String tipoCenso
+			,String dominioServerLayouts
+			,String userServerLayouts
+			,String passServerLayouts
+			,String directorioServerLayouts
+			,String cdtipsit
+			,List<Map<String,Object>>grupos
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,String cdagente
+			,String cdusuari
+			,String cdsisrol
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String cdelemen
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ generarTramiteGrupo @@@@@@")
+				.append("\n@@@@@@ cdunieco=")               .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")                 .append(cdramo)
+				.append("\n@@@@@@ nmpoliza=")               .append(nmpoliza)
+				.append("\n@@@@@@ feini=")                  .append(feini)
+				.append("\n@@@@@@ fefin=")                  .append(fefin)
+				.append("\n@@@@@@ cdperpag=")               .append(cdperpag)
+				.append("\n@@@@@@ pcpgocte=")               .append(pcpgocte)
+				.append("\n@@@@@@ smap=")                   .append(tvalopol)
+				.append("\n@@@@@@ ntramite=")               .append(ntramite)
+				.append("\n@@@@@@ ntramiteVacio=")          .append(ntramiteVacio)
+				.append("\n@@@@@@ miTimestamp=")            .append(miTimestamp)
+				.append("\n@@@@@@ rutaDocumentosTemporal=") .append(rutaDocumentosTemporal)
+				.append("\n@@@@@@ tipoCenso=")              .append(tipoCenso)
+				.append("\n@@@@@@ dominioServerLayouts=")   .append(dominioServerLayouts)
+				.append("\n@@@@@@ userServerLayouts=")      .append(userServerLayouts)
+				.append("\n@@@@@@ passServerLayouts=")      .append(passServerLayouts)
+				.append("\n@@@@@@ directorioServerLayouts=").append(directorioServerLayouts)
+				.append("\n@@@@@@ cdtipsit=")               .append(cdtipsit)
+				.append("\n@@@@@@ grupos=")                 .append(grupos)
+				.append("\n@@@@@@ codpostalCli=")           .append(codpostalCli)
+				.append("\n@@@@@@ cdedoCli=")               .append(cdedoCli)
+				.append("\n@@@@@@ cdmuniciCli=")            .append(cdmuniciCli)
+				.append("\n@@@@@@ cdagente=")               .append(cdagente)
+				.append("\n@@@@@@ cdusuari=")               .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")               .append(cdsisrol)
+				.append("\n@@@@@@ clasif=")                 .append(clasif)
+				.append("\n@@@@@@ LINEA_EXTENDIDA=")        .append(LINEA_EXTENDIDA)
+				.append("\n@@@@@@ cdpersonCli=")            .append(cdpersonCli)
+				.append("\n@@@@@@ nombreCli=")              .append(nombreCli)
+				.append("\n@@@@@@ rfcCli=")                 .append(rfcCli)
+				.append("\n@@@@@@ dsdomiciCli=")            .append(dsdomiciCli)
+				.append("\n@@@@@@ nmnumeroCli=")            .append(nmnumeroCli)
+				.append("\n@@@@@@ nmnumintCli=")            .append(nmnumintCli)
+				.append("\n@@@@@@ cdelemen=")               .append(cdelemen)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
+		resp.setSmap(new HashMap<String,String>());
+		
+		//nmpoliza
+		if(resp.isExito()&&StringUtils.isBlank(nmpoliza))
+		{
+			try
+			{
+				nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco,cdramo,"W");
+				resp.getSmap().put("nmpoliza",nmpoliza);
+			}
+			catch(ApplicationException ax)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+				resp.setRespuestaOculta(ax.getMessage());
+				logger.error(resp.getRespuesta(),ax);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al calcular numero de poliza #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		Date fechaHoy = new Date();
+		
+		//nmpoliza
+		if(resp.isExito())
+		{
+			try
+			{
+				cotizacionDAO.movimientoPoliza(
+						cdunieco
+						,cdramo
+						,"W"      //estado
+						,nmpoliza
+						,"0"      //nmsuplem
+						,"V"      //status
+						,"0"      //swestado
+						,null     //nmsolici
+			            ,null     //feautori
+			            ,null     //cdmotanu
+			            ,null     //feanulac
+			            ,"N"      //swautori
+			            ,"001"    //cdmoneda
+			            ,null     //feinisus
+			            ,null     //fefinsus
+			            ,"R"      //ottempot
+			            ,feini
+			            ,"12:00"  //hhefecto
+			            ,fefin
+			            ,null     //fevencim
+			            ,"0"      //nmrenova
+			            ,null     //ferecibo
+			            ,null     //feultsin
+			            ,"0"      //nmnumsin
+			            ,"N"      //cdtipcoa
+			            ,"A"      //swtarifi
+			            ,null     //swabrido
+			            ,renderFechas.format(fechaHoy) //feemisio
+			            ,cdperpag
+			            ,null     //nmpoliex
+			            ,"P1"     //nmcuadro
+			            ,"100"    //porredau
+			            ,"S"      //swconsol
+			            ,null     //nmpolant
+			            ,null     //nmpolnva
+			            ,renderFechas.format(fechaHoy) //fesolici
+			            ,null     //cdramant
+			            ,null     //cdmejred
+			            ,null     //nmpoldoc
+			            ,null     //nmpoliza2
+			            ,null     //nmrenove
+			            ,null     //nmsuplee
+			            ,null     //ttipcamc
+			            ,null     //ttipcamv
+			            ,null     //swpatent
+			            ,pcpgocte
+			            ,"U"      //accion
+						);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al guardar poliza #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		//tvalopol
+		if(resp.isExito())
+		{
+			try
+			{
+				Map<String,String>valores = new HashMap<String,String>();
+				for(Entry<String,String>atrib:tvalopol.entrySet())
+				{
+					String key = atrib.getKey();
+					if(StringUtils.isNotBlank(key)
+							&&key.length()>="tvalopol_".length())
+					{
+						if(key.substring(0, "tvalopol_".length()).equals("tvalopol_"))
+						{
+							valores.put(key.substring("tvalopol_parametros.pv_".length(), key.length()),atrib.getValue());
+						}
+					}
+				}
+				if(valores.size()>0)
+				{
+					logger.debug(new StringBuilder("SE GUARDAN VALORES EN TVALOPOL=").append(valores).toString());
+					cotizacionDAO.movimientoTvalopol(
+							cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,"0" //nmsuplem
+							,"V" //status
+							,valores
+							);
+				}
+				else
+				{
+					logger.debug("NO SE GUARDAN VALORES EN TVALOPOL");
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al guardar datos adicionales de poliza #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
+		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+		boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
+		String  nombreCenso     = null;
+		
+		//enviar censo
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		{
+			FileInputStream input       = null;
+			XSSFSheet       sheet       = null;
+			File            archivoTxt  = null;
+			PrintStream     output      = null;
+			
+			//instanciar
+			try
+			{
+				File censo            = new File(new StringBuilder(rutaDocumentosTemporal).append("/censo_").append(miTimestamp).toString());
+				input                 = new FileInputStream(censo);
+				XSSFWorkbook workbook = new XSSFWorkbook(input);
+				sheet                 = workbook.getSheetAt(0);
+				nombreCenso           = new StringBuilder("censo_").append(miTimestamp).append("_").append(nmpoliza).append(".txt").toString();
+				archivoTxt            = new File(new StringBuilder(rutaDocumentosTemporal).append("/").append(nombreCenso).toString());
+				output                = new PrintStream(archivoTxt);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al procesar censo #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+			
+			//crear pipes y ejecutar procedure
+			if(resp.isExito())
+			{
+				//pipes para censo solo
+				if(esCensoSolo)
+				{
+					//Iterate through each rows one by one
+					logger.debug(
+							new StringBuilder()
+							.append("\n----------------------------------------------")
+							.append("\n------ ").append(archivoTxt.getAbsolutePath())
+							.toString()
+							);
+		            Iterator<Row> rowIterator = sheet.iterator();
+		            int fila = 0;
+		            while (rowIterator.hasNext()&&resp.isExito()) 
+		            {
+		                Row  row     = rowIterator.next();
+		                Date auxDate = null;
+		                Cell auxCell = null;
+		                
+		                fila = fila + 1;
+		                
+		                if(resp.isExito())
+		                {
+			                try
+			                {	
+				                auxCell=row.getCell(0);
+				                logger.debug(
+				                		new StringBuilder("NOMBRE: ")
+				                		.append(
+				                				auxCell!=null?
+				                					new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                					:"|"
+				                				)
+				                		.toString()
+				                		);
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                				:"|"
+				                );
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Nombre' (")
+			                			.append("A")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString()
+			                			);
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+			                try
+			                {
+				                auxCell=row.getCell(1);
+				                logger.debug(
+				                		new StringBuilder("APELLIDO: ")
+				                		.append(
+				                				auxCell!=null?
+				                					new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                					:"|"
+				                		).toString()
+				                );
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                				:"|"
+				                );
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Apellido paterno' (")
+			                			.append("B")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #").append(timestamp)
+			                			.toString()
+			                			);
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(2);
+				                logger.debug(
+				                		new StringBuilder("APELLIDO 2: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                						:"|"
+				                		).toString()
+				                		);
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                				:"|"
+				                		);
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Apellido materno' (")
+			                			.append("C")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString()
+			                			);
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(3);
+				                logger.debug(
+				                		new StringBuilder("EDAD: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(String.format("%.0f",auxCell.getNumericCellValue())).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(String.format("%.0f",auxCell.getNumericCellValue())).append("|").toString()
+				                				:"|"
+				                		);
+				                
+				                auxDate=row.getCell(4).getDateCellValue();
+				                logger.debug(
+				                		new StringBuilder("FENACIMI: ")
+				                		.append(
+				                				auxDate!=null?
+				                						new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxDate!=null?
+				                				new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+				                				:"|"
+				                		);
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Edad' o 'Fecha de nacimiento' (")
+			                			.append("D")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString()
+			                			);
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("SEXO: ")
+				                		.append(row.getCell(5).getStringCellValue())
+				                		.append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(row.getCell(5).getStringCellValue()).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Sexo' (")
+			                			.append("F")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("PARENTESCO: ")
+				                		.append(row.getCell(6).getStringCellValue())
+				                		.append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(row.getCell(6).getStringCellValue()).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Parentesco' (")
+			                			.append("G")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(7);
+				                logger.debug(
+				                		new StringBuilder("OCUPACION: ")
+				                		.append(
+				                				auxCell!=null?
+				                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                				:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+				                				:"|");
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Ocupacion' (")
+			                			.append("H")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(8);
+				                logger.debug(
+				                		new StringBuilder("EXTRAPRIMA OCUPACION: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                				:"|");
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Extraprima de ocupacion' (")
+			                			.append("I")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(9);
+				                logger.debug(
+				                		new StringBuilder("PESO: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                				:"|");
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Peso' (")
+			                			.append("J")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(10);
+				                logger.debug(
+				                		new StringBuilder("ESTATURA: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                				:"|");
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Estatura' (")
+			                			.append("K")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                auxCell=row.getCell(11);
+				                logger.debug(
+				                		new StringBuilder("EXTRAPRIMA SOBREPESO: ")
+				                		.append(
+				                				auxCell!=null?
+				                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                						:"|"
+				                		).toString());
+				                output.print(
+				                		auxCell!=null?
+				                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+				                				:"|");
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Extraprima de sobrepeso' (")
+			                			.append("L")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("GRUPO: ")
+				                		.append(
+				                				String.format("%.0f",row.getCell(12).getNumericCellValue()))
+				                		.append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(String.format("%.0f",row.getCell(12).getNumericCellValue())).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Grupo' (")
+			                			.append("M")
+			                			.append(") de la fila ")
+			                			.append(fila).append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                output.println("");
+		                logger.debug("** NUEVA_FILA **");
+		            }
+		            
+		            try
+		            {
+		                input.close();
+		            }
+		            catch(IOException ex)
+		            {
+		            	long timestamp = System.currentTimeMillis();
+		            	resp.setExito(false);
+		            	resp.setRespuesta(new StringBuilder("Error en el buffer #").append(timestamp).toString());
+		            	resp.setRespuestaOculta(ex.getMessage());
+		            	logger.error(resp.getRespuesta(),ex);
+		            }
+		            
+		            output.close();
+		            logger.debug(
+		            		new StringBuilder()
+		            		.append("\n------ ").append(archivoTxt.getAbsolutePath())
+							.append("\n----------------------------------------------")
+							.toString()
+							);
+				}
+				//pipes para censo agrupado
+				else
+				{
+					//Iterate through each rows one by one
+					logger.debug(
+							new StringBuilder()
+							.append("\n----------------------------------------------")
+							.append("\n------ ").append(archivoTxt.getAbsolutePath())
+							.toString()
+							);
+		            Iterator<Row> rowIterator = sheet.iterator();
+		            int fila = 0;
+		            while (rowIterator.hasNext()&&resp.isExito()) 
+		            {
+		                Row row = rowIterator.next();
+		                
+		                fila = fila + 1;
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("EDAD: ")
+				                		.append(String.format("%.0f",row.getCell(0).getNumericCellValue())).append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(String.format("%.0f",row.getCell(0).getNumericCellValue())).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Edad' (")
+			                			.append("A")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("SEXO: ").append(row.getCell(1).getStringCellValue()).append("|").toString());
+				                output.print(
+				                		new StringBuilder(row.getCell(1).getStringCellValue()).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Sexo' (").
+			                			append("B")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("CUANTOS: ")
+				                		.append(String.format("%.0f",row.getCell(2).getNumericCellValue()))
+				                		.append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(String.format("%.0f",row.getCell(2).getNumericCellValue())).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Cantidad' (")
+			                			.append("C")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                if(resp.isExito())
+		                {
+		                	try
+		                	{
+				                logger.debug(
+				                		new StringBuilder("GRUPO: ")
+				                		.append(String.format("%.0f",row.getCell(3).getNumericCellValue()))
+				                		.append("|")
+				                		.toString());
+				                output.print(
+				                		new StringBuilder(String.format("%.0f",row.getCell(3).getNumericCellValue())).append("|").toString());
+			                }
+			                catch(Exception ex)
+			                {
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(
+			                			new StringBuilder("Error en el campo 'Grupo' (")
+			                			.append("D")
+			                			.append(") de la fila ")
+			                			.append(fila)
+			                			.append(" #")
+			                			.append(timestamp)
+			                			.toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+			                }
+		                }
+		                
+		                output.println("");
+		                logger.debug("** NUEVA_FILA **");
+		            }
+		            
+		            try
+		            {
+		            	input.close();
+		            }
+		            catch(IOException ex)
+		            {
+		            	long timestamp = System.currentTimeMillis();
+		            	resp.setExito(false);
+		            	resp.setRespuesta(new StringBuilder("Error en el buffer #").append(timestamp).toString());
+		            	resp.setRespuestaOculta(ex.getMessage());
+		            	logger.error(resp.getRespuesta(),ex);
+		            }
+		            
+		            output.close();
+		            logger.debug(
+		            		new StringBuilder()
+		            		.append("\n------ ").append(archivoTxt.getAbsolutePath())
+							.append("\n----------------------------------------------")
+		            		.toString()
+							);
+				}
+				
+				//enviar archivo
+				if(resp.isExito())
+				{
+					resp.setExito(FTPSUtils.upload(
+							dominioServerLayouts,
+							userServerLayouts,
+							passServerLayouts,
+							archivoTxt.getAbsolutePath(),
+							new StringBuilder(directorioServerLayouts).append("/").append(nombreCenso).toString())
+							);
+					
+					if(!resp.isExito())
+					{
+						long timestamp = System.currentTimeMillis();
+						resp.setExito(false);
+						resp.setRespuesta(
+								new StringBuilder("Error al transferir archivo al servidor #").append(timestamp).toString());
+						resp.setRespuestaOculta(resp.getRespuesta());
+						logger.error(resp.getRespuesta());
+					}
+				}
+			}
+		}
+		
+		//pl censo
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		{
+			String nombreProcedureCenso = null;
+			String tipoCensoParam       = "INDIVIDUAL";
+			if(!esCensoSolo)
+			{
+				tipoCensoParam = "AGRUPADO";
+			}
+			
+			//obtener el PL
+			try
+			{
+				Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.PROCEDURE_CENSO
+						,cdramo
+						,cdtipsit
+						,tipoCensoParam
+						,null
+						);
+				nombreProcedureCenso = mapaAux.get("P1VALOR");
+				if(StringUtils.isBlank(nombreProcedureCenso))
+				{
+					throw new ApplicationException("No se encontraron datos");
+				}
+			}
+            catch(ApplicationException ax)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(
+            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
+            			.append(ax.getMessage())
+            			.append(" #")
+            			.append(timestamp)
+            			.toString());
+            	resp.setRespuestaOculta(ax.getMessage());
+            	logger.error(resp.getRespuesta(),ax);
+            }
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al obtener el nombre del procedimiento para el censo #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+			
+			//ejecutar el PL
+			if(resp.isExito())
+			{
+				try
+				{
+					cotizacionDAO.procesarCenso(
+							nombreProcedureCenso
+							,cdusuari
+							,cdsisrol
+							,nombreCenso
+							,cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,cdtipsit
+							,cdagente
+							,codpostalCli
+							,cdedoCli
+							,cdmuniciCli
+							);
+				}
+	            catch(Exception ex)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	resp.setExito(false);
+	            	resp.setRespuesta(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
+	            	resp.setRespuestaOculta(ex.getMessage());
+	            	logger.error(resp.getRespuesta(),ex);
+	            }
+			}
+		}
+		
+		//mpolisit y tvalosit
+		if(resp.isExito())
+		{
+			try
+			{
+				for(Map<String,Object>grupoIte:grupos)
+				{
+					String grupoIteCdgrupo = (String)grupoIte.get("letra");
+					String grupoIteCdplan  = (String)grupoIte.get("cdplan");
+					String grupoIteNombre  = (String)grupoIte.get("nombre");
+					
+					Map<String,String>grupoIteValoresSit = new HashMap<String,String>();
+					for(Entry<String,Object>grupoIteAtribIte:grupoIte.entrySet())
+					{
+						String key = grupoIteAtribIte.getKey();
+						if(StringUtils.isNotBlank(key)
+								&&key.length()>="parametros.pv_".length()
+								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_")
+								)
+						{
+							grupoIteValoresSit.put(key.substring("parametros.pv_".length(), key.length()),String.valueOf(grupoIteAtribIte.getValue()));
+						}
+					}
+					
+					cotizacionDAO.actualizaMpolisitTvalositGrupo(
+							cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,grupoIteCdgrupo
+							,grupoIteNombre
+							,grupoIteCdplan
+							,grupoIteValoresSit
+							);
+				}
+			}
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al actualizar grupos #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+		}
+		
+		//sigsvdef
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		{
+			try
+			{
+				cotizacionDAO.valoresPorDefecto(
+						cdunieco
+						,cdramo
+						,"W"
+						,nmpoliza
+						,"0"    //nmsituac
+						,"0"    //nmsuplem
+						,"TODO" //cdgarant
+						,"1"    //cdtipsup
+						);
+			}
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al insertar valores por defecto #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+		}
+		
+		final String LINEA = "1";
+		
+		//tvalogar
+		if(resp.isExito()&&(
+				(!clasif.equals(LINEA))
+				||LINEA_EXTENDIDA.equals("N")
+				)
+				)
+		{
+			try
+			{
+				for(Map<String,Object>grupoIte:grupos)
+				{
+					String grupoIteCdgrupo                     = (String)grupoIte.get("letra");
+					List<Map<String,String>>grupoIteCoberturas = (List<Map<String,String>>)grupoIte.get("tvalogars");
+					for(Map<String,String>grupoIteCoberturaIte:grupoIteCoberturas)
+					{
+						String grupoIteCoberturaIteCdgarant = grupoIteCoberturaIte.get("cdgarant");
+						boolean grupoIteCoberturaIteAmparada = StringUtils.isNotBlank(grupoIteCoberturaIte.get("amparada"))
+								&&grupoIteCoberturaIte.get("amparada").equalsIgnoreCase("S");
+						if(grupoIteCoberturaIteAmparada)
+						{
+							cotizacionDAO.movimientoMpoligarGrupo(
+									cdunieco
+									,cdramo
+									,"W"      //estado
+									,nmpoliza
+									,"0"      //nmsuplem
+									,cdtipsit
+									,grupoIteCdgrupo
+									,grupoIteCoberturaIteCdgarant
+									,"V"      //status
+									,"001"    //cdmoneda
+									,Constantes.INSERT_MODE
+									);
+							boolean grupoIteCoberturaIteTieneAtrib          = false;
+							Map<String,String>grupoIteCoberturaIteTvalogars = new HashMap<String,String>();
+							for(Entry<String,String>grupoIteCoberturaIteAtribIte:grupoIteCoberturaIte.entrySet())
+							{
+								String grupoIteCoberturaIteAtribIteKey=grupoIteCoberturaIteAtribIte.getKey();
+								if(StringUtils.isNotBlank(grupoIteCoberturaIteAtribIteKey)
+										&&grupoIteCoberturaIteAtribIteKey.length()>"parametros.pv_otvalor".length()
+										&&grupoIteCoberturaIteAtribIteKey.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor")
+										&&grupoIteCoberturaIteAtribIte.getValue()!=null
+										)
+								{
+									grupoIteCoberturaIteTieneAtrib=true;
+									grupoIteCoberturaIteTvalogars.put(
+											grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length()
+													,grupoIteCoberturaIteAtribIteKey.length()),String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
+								}
+							}
+							if(grupoIteCoberturaIteTieneAtrib)
+							{
+								cotizacionDAO.movimientoTvalogarGrupoCompleto(
+										cdunieco
+										,cdramo
+										,"W"      //estado
+										,nmpoliza
+										,"0"      //nmsuplem
+										,cdtipsit
+										,grupoIteCdgrupo
+										,grupoIteCoberturaIteCdgarant
+										,"V"      //status
+										,grupoIteCoberturaIteTvalogars
+										);
+							}
+						}
+					}
+				}
+			}
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al guardar atributos de coberturas #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+		}
+		
+		//contratante
+		if(resp.isExito())
+		{
+			try
+			{
+				String swexiper = "S";
+				if(StringUtils.isBlank(cdpersonCli))
+				{
+					cdpersonCli = personasDAO.obtenerNuevoCdperson();
+					swexiper = "N";
+				}
+				
+				if(swexiper.equals("N")||true)//TODO hace falta separar en otro metodo con "reinsertaContratante"
+				{
+					personasDAO.movimientosMpersona(
+							cdpersonCli
+							,"1"         //cdtipide
+							,null        //cdideper
+							,nombreCli
+							,"1"         //cdtipper
+							,"M"         //otfisjur
+							,"H"         //otsexo
+							,new Date()  //fenacimi
+							,rfcCli
+							,""          //dsemail
+							,null        //dsnombre1
+							,null        //dsapellido
+							,null        //dsapellido1
+							,new Date()  //feingreso
+							,null        //cdnacion
+							,null        //canaling
+							,null        //conducto
+							,null        //ptcumupr
+							,null        //residencia
+							,Constantes.INSERT_MODE
+							);
+				}
+				
+				cotizacionDAO.movimientoMpoliper(
+						cdunieco
+						,cdramo
+						,"W"
+						,nmpoliza
+						,"0"       //nmsituac
+						,"1"       //cdrol
+						,cdpersonCli
+						,"0"       //nmsuplem
+						,"V"       //status
+						,"1"       //nmorddom
+						,null      //swreclam
+						,Constantes.INSERT_MODE
+						,swexiper
+						);
+				
+				personasDAO.movimientosMdomicil(
+						cdpersonCli
+						,"1"        //nmorddom
+						,dsdomiciCli
+						,null       //nmtelefo
+						,codpostalCli
+						,cdedoCli
+						,cdmuniciCli
+						,null       //cdcoloni
+						,nmnumeroCli
+						,nmnumintCli
+						,Constantes.INSERT_MODE
+						);
+			}
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al guardar el contratante #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+		}
+		
+		//tramite
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		{
+			try
+			{
+				if(!hayTramiteVacio)//es agente
+				{
+					Map<String,String>otvalorMesaControl=new HashMap<String,String>();
+					otvalorMesaControl.put("otvalor01",clasif);
+					ntramite = mesaControlDAO.movimientoMesaControl(
+							cdunieco
+							,cdramo
+							,"W"       //estado
+							,"0"
+							,"0"       //nmsuplem
+							,cdunieco
+							,cdunieco
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,new Date()
+							,cdagente
+							,null      //referencia
+							,null      //nombre
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,null      //comments
+							,nmpoliza
+							,cdtipsit
+							,otvalorMesaControl);
+					resp.getSmap().put("ntramite" , ntramite);
+					
+					mesaControlDAO.movimientoDetalleTramite(
+							ntramite
+							,new Date()
+							,null       //cdclausu
+							,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"
+							,cdusuari
+							,null       //cdmotivo
+							);
+				}
+				else
+				{
+					mesaControlDAO.actualizarNmsoliciTramite(ntramiteVacio, nmpoliza);
+					
+					Map<String,String>valoresTramite=new HashMap<String,String>();
+					valoresTramite.put("otvalor01" , clasif);
+					mesaControlDAO.actualizaValoresTramite(
+							ntramiteVacio
+							,null    //cdramo
+							,null    //cdtipsit
+							,null    //cdsucadm
+							,null    //cdsucdoc
+							,null    //comments
+							,valoresTramite);
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al guardar tramite #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		//mpoliage
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		{
+			try
+			{
+				Map<String,String>datosAgenteExterno=cotizacionDAO.obtenerDatosAgente(cdagente,cdramo);
+    			String nmcuadro=datosAgenteExterno.get("NMCUADRO");
+    			
+    			String paramNtramite = ntramite;
+    			if(hayTramiteVacio)
+    			{
+    				paramNtramite = ntramiteVacio;
+    			}
+				
+    			cotizacionDAO.movimientoMpoliage(
+    					cdunieco
+    					,cdramo
+    					,"W"      //estado
+    					,nmpoliza
+    					,cdagente
+    					,"0"      //nmsuplem
+    					,"V"      //status
+    					,"1"      //cdtipoag
+    					,"0"      //porredau
+    					,nmcuadro
+    					,null     //cdsucurs
+    					,Constantes.INSERT_MODE
+    					,paramNtramite
+    					,"100"    //porparti
+    					);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al guardar datos del agente #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		//sigsvalipol
+		if(resp.isExito())
+		{
+			try
+			{
+				cotizacionDAO.tarificaEmi(
+						cdusuari
+						,cdelemen
+						,cdunieco
+						,cdramo
+						,"W"       //estado
+						,nmpoliza
+						,"0"       //nmstiuac
+						,"0"       //nmsuplem
+						,cdtipsit);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al tarificar #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		if(resp.isExito())
+		{
+			resp.setRespuesta(new StringBuilder("Se gener&oacute; el tr&aacute;mite ").append(ntramite).toString());
+			resp.setRespuestaOculta("Todo OK");
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ generarTramiteGrupo @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	public ManagerRespuestaSlistVO obtenerTiposSituacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ obtenerTiposSituacion @@@@@@")
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			resp.setSlist(cotizacionDAO.obtenerTiposSituacion());
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener tipos de situacion #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ obtenerTiposSituacion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		//cargar situaciones grupo
+		try
+		{
+			List<Map<String,String>>situaciones=cotizacionDAO.cargarSituacionesGrupo(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdgrupo);
+			
+			List<Map<String,String>>editadas=new ArrayList<Map<String,String>>();
+			for(Map<String,String>situacion:situaciones)
+		    {
+		    	String tpl = null;
+		    	if(StringUtils.isBlank(situacion.get("titular")))
+		    	{
+		    		tpl = "Asegurados";
+		    	}
+		    	else
+		    	{
+		    		tpl = new StringBuilder()
+    	                    .append("Familia (")
+    	                    .append(situacion.get("familia"))
+    	                    .append(") de ")
+    	                    .append(situacion.get("titular"))
+    	            		.toString();
+		    	}
+		    	situacion.put("agrupador",
+		    			new StringBuilder()
+		    	            .append(StringUtils.leftPad(situacion.get("familia"),3,"0"))
+		    	            .append("_")
+		    	            .append(tpl)
+		    	            .toString());
+		    	
+		    	Map<String,String>editada=new HashMap<String,String>();
+		    	for(Entry<String,String>en:situacion.entrySet())
+		    	{
+		    		String key = en.getKey();
+		    		if(StringUtils.isNotBlank(key)
+		    				&&key.length()>"otvalor".length()
+		    				&&key.substring(0, "otvalor".length()).equals("otvalor")
+		    				)
+		    		{
+		    			editada.put(new StringBuilder("parametros.pv_").append(key).toString(),en.getValue());
+		    		}
+		    		else
+		    		{
+		    			editada.put(key,en.getValue());
+		    		}
+		    	}
+		    	editadas.add(editada);
+		    }
+			
+			resp.setSlist(editadas);
+		}
+		catch(DaoException dx)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener situaciones #").append(timestamp).toString());
+			resp.setRespuestaOculta(dx.getMessage());
+			logger.error(resp.getRespuesta(),dx);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
+				.append("\n@@@@@@ situaciones=").append(situaciones)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		//actualizar situaciones
+		try
+		{
+			for(Map<String,String>situacion:situaciones)
+			{
+				Map<String,String>valores=new HashMap<String,String>();
+				for(Entry<String,String>en:situacion.entrySet())
+				{
+					String key = en.getKey();
+					if(StringUtils.isNotBlank(key)
+							&&key.length()>"otvalor".length()
+							&&key.substring(0,"otvalor".length()).equals("otvalor")
+							)
+					{
+						valores.put(key,en.getValue());
+					}
+				}
+				cotizacionDAO.actualizaValoresSituacion(
+						situacion.get("cdunieco")
+						,situacion.get("cdramo")
+						,situacion.get("estado")
+						,situacion.get("nmpoliza")
+						,situacion.get("nmsuplem")
+						,situacion.get("nmsituac")
+						,valores
+						);
+			}
+			resp.setRespuesta("Se guardaron todos los datos");
+		}
+		catch(DaoException dx)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al guardar situacion #").append(timestamp).toString());
+			resp.setRespuestaOculta(dx.getMessage());
+			logger.error(resp.getRespuesta(),dx);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
@@ -1787,6 +3544,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 	public void setPantallasDAO(PantallasDAO pantallasDAO) {
 		this.pantallasDAO = pantallasDAO;
+	}
+
+	public void setPersonasDAO(PersonasDAO personasDAO) {
+		this.personasDAO = personasDAO;
+	}
+
+	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
+		this.mesaControlDAO = mesaControlDAO;
 	}
 	
 }
