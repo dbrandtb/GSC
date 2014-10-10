@@ -137,7 +137,7 @@ function validarRFC(rfc,tper)
 			[
 			    {
 			    	xtype : 'label'
-			    	,text : 'El RFC "'+rfc+'" no es válido para persona '+(tper=='F'?'Física':(tper=='M'?'Moral':'tipo régimen simplificado'))
+			    	,text : 'El RFC "'+rfc+'" no es v&aacute;lido para persona '+(tper=='F'?'F&iacute;sica':(tper=='M'?'Moral':'tipo r&eacute;gimen simplificado'))
 			    }
 			]
 		    ,buttonAlign : 'center'
@@ -277,14 +277,22 @@ function heredarPanel(formPanel)
  */
 function centrarVentana(ventana)
 {
-	ventana.setPosition(ventana.getPosition()[0], $(window.parent).scrollTop() + 50);
+    try {
+        ventana.setPosition(ventana.getPosition()[0], $(window.parent).scrollTop() + 50);
+    } catch(e) {
+        debug(e);
+    }
 }
 
 function centrarVentanaInterna(ventana)
 {
-	var y = $(window.parent).scrollTop() + 50;
-	debug('y:',y);
-	ventana.setPosition(ventana.getPosition()[0],y);
+    try {
+        var y = $(window.parent).scrollTop() + 50;
+        debug('y:',y);
+        ventana.setPosition(ventana.getPosition()[0],y);
+    } catch(e) {
+        debug(e);
+    }
 }
 
 /** 
