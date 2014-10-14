@@ -1676,7 +1676,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
-				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo);
+				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
 				if(tatripol!=null&&tatripol.size()>0)
 				{
 					gcGral.generaComponentes(tatripol,true,false,true,false,false,false);
@@ -1864,6 +1864,26 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		//campos para recuperados
+		
+		//atributo variable para recuperar tatrigar
+		if(resp.isExito())
+		{
+			try
+			{
+				Map<String,String>atrivarTatrigar=cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.ATRIBUTO_VARIABLE_TATRIGAR
+						,cdramo
+						,cdtipsit
+						,null
+						,null);
+				resp.getSmap().put("ATRIVAR_TATRIGAR" , atrivarTatrigar.get("P1VALOR"));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("ATRIVAR_TATRIGAR" , "XX");
+			}
+		}
+		//atributo variable para recuperar tatrigar
 		
 		logger.info(
 				new StringBuilder()
@@ -3531,6 +3551,213 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO subirCensoCompleto(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,String rutaDocsTemp
+			,String censoTimestamp
+			,String dominioServerLayout
+			,String usuarioServerLayout
+			,String passwordServerLayout
+			,String direcServerLayout
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ subirCensoCompleto @@@@@@")
+				.append("\n@@@@@@ cdunieco=")            .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")              .append(cdramo)
+				.append("\n@@@@@@ nmpoliza=")            .append(nmpoliza)
+				.append("\n@@@@@@ feini=")               .append(feini)
+				.append("\n@@@@@@ fefin=")               .append(fefin)
+				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
+				.append("\n@@@@@@ pcpgocte=")            .append(pcpgocte)
+				.append("\n@@@@@@ rutaDocsTemp=")        .append(rutaDocsTemp)
+				.append("\n@@@@@@ censoTimestamp=")      .append(censoTimestamp)
+				.append("\n@@@@@@ dominioServerLayout=") .append(dominioServerLayout)
+				.append("\n@@@@@@ usuarioServerLayout=") .append(usuarioServerLayout)
+				.append("\n@@@@@@ passwordServerLayout=").append(passwordServerLayout)
+				.append("\n@@@@@@ direcServerLayout=")   .append(direcServerLayout)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		Date fechaHoy = new Date();
+		
+		//mpolizas
+		try
+		{
+			cotizacionDAO.movimientoPoliza(
+					cdunieco
+					,cdramo
+					,"W"      //estado
+					,nmpoliza
+					,"0"      //nmsuplem
+					,"V"      //status
+					,"0"      //swestado
+					,null     //nmsolici
+		            ,null     //feautori
+		            ,null     //cdmotanu
+		            ,null     //feanulac
+		            ,"N"      //swautori
+		            ,"001"    //cdmoneda
+		            ,null     //feinisus
+		            ,null     //fefinsus
+		            ,"R"      //ottempot
+		            ,feini
+		            ,"12:00"  //hhefecto
+		            ,fefin
+		            ,null     //fevencim
+		            ,"0"      //nmrenova
+		            ,null     //ferecibo
+		            ,null     //feultsin
+		            ,"0"      //nmnumsin
+		            ,"N"      //cdtipcoa
+		            ,"A"      //swtarifi
+		            ,null     //swabrido
+		            ,renderFechas.format(fechaHoy) //feemisio
+		            ,cdperpag
+		            ,null     //nmpoliex
+		            ,"P1"     //nmcuadro
+		            ,"100"    //porredau
+		            ,"S"      //swconsol
+		            ,null     //nmpolant
+		            ,null     //nmpolnva
+		            ,renderFechas.format(fechaHoy) //fesolici
+		            ,null     //cdramant
+		            ,null     //cdmejred
+		            ,null     //nmpoldoc
+		            ,null     //nmpoliza2
+		            ,null     //nmrenove
+		            ,null     //nmsuplee
+		            ,null     //ttipcamc
+		            ,null     //ttipcamv
+		            ,null     //swpatent
+		            ,pcpgocte
+		            ,"U"      //accion
+					);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al guardar poliza #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		//crear pipes
+		if(resp.isExito())
+		{
+			File            censo       = new File(new StringBuilder(rutaDocsTemp).append("/censo_").append(censoTimestamp).toString());
+			FileInputStream input       = null;
+			XSSFWorkbook    workbook    = null;
+			XSSFSheet       sheet       = null;
+			Long            inTimestamp = null;
+			String          nombreCenso = null;
+			File            archivoTxt  = null;
+			PrintStream     output      = null;
+			
+			try
+			{	
+				input       = new FileInputStream(censo);
+				workbook    = new XSSFWorkbook(input);
+				sheet       = workbook.getSheetAt(0);
+				inTimestamp = System.currentTimeMillis();
+				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
+				archivoTxt  = new File(new StringBuilder(rutaDocsTemp).append("/").append(nombreCenso).toString());
+				output      = new PrintStream(archivoTxt);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al procesar censo #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+			
+			if(resp.isExito())
+			{
+				logger.debug(
+						new StringBuilder()
+						.append("\n-------------------------------------")
+						.append("\n------ PROCESAR CENSO COMPLETO ------")
+						.append("\n------ NOMBRE CENSO=").append(archivoTxt.getAbsolutePath())
+						.toString()
+						);
+				Iterator<Row> rowIterator = sheet.iterator();
+	            int fila = 0;
+	            while (rowIterator.hasNext()&&resp.isExito()) 
+	            {
+	            }
+	            
+	            if(resp.isExito())
+	            {
+	            	try
+	            	{
+	            		input.close();
+	            		output.close();
+	            	}
+	            	catch(Exception ex)
+	            	{
+	            		long timestamp = System.currentTimeMillis();
+	            		resp.setExito(false);
+	            		resp.setRespuesta(new StringBuilder("Error al transformar el archivo #").append(timestamp).toString());
+	            		resp.setRespuestaOculta(ex.getMessage());
+	            		logger.error(resp.getRespuesta(),ex);
+	            	}
+	            }
+	            
+	            logger.debug(
+						new StringBuilder()
+						.append("\n------ PROCESAR CENSO COMPLETO ------")
+						.append("\n-------------------------------------")
+						.toString()
+						);
+	            
+
+	            if(resp.isExito())
+	            {
+					resp.setExito(FTPSUtils.upload(
+							dominioServerLayout,
+							usuarioServerLayout,
+							passwordServerLayout,
+							archivoTxt.getAbsolutePath(),
+							new StringBuilder(direcServerLayout).append("/").append(nombreCenso).toString()
+							)
+							);
+					
+					if(!resp.isExito())
+					{
+						long timestamp = System.currentTimeMillis();
+						resp.setExito(false);
+						resp.setRespuesta(new StringBuilder("Error al transferir archivo al servidor #").append(timestamp).toString());
+						resp.setRespuestaOculta(resp.getRespuesta());
+						logger.error(resp.getRespuesta());
+					}
+	            }
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ subirCensoCompleto @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

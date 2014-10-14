@@ -326,20 +326,57 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public List<ComponenteVO> obtenerTatripol(String args[]) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
-        parameters.put("pv_cdramo",args[0]);
+        parameters.put("pv_cdramo"   , args[0]);
+        parameters.put("pv_cdtipsit" , args[1]);
         log.debug("### kernel sustituto obtenerTatripol map: "+parameters);
+		log.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** params=").append(parameters)
+				.append("\n******************************************")
+				.toString()
+				);
         List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPOL);
         lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
-        log.debug("### kernel sustituto obtenerTatripol lista size: "+lista.size());
+		log.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** params=").append(parameters)
+				.append("\n****** registro=").append(lista)
+				.append("\n******************************************")
+				.toString()
+				);
         return lista;
     }
     
+    @Deprecated
     public List<ComponenteVO> obtenerTatrigar(Map<String,String>parameters) throws ApplicationException
     {
-        log.debug("### kernel sustituto obtenerTatrigar map: "+parameters);
+    	if(!parameters.containsKey("pv_cdatrivar_i"))
+    	{
+    		parameters.put("pv_atrivar_i" , null);
+    	}
+        log.debug(
+        		new StringBuilder()
+        		.append("\n********************************************")
+        		.append("\n****** PKG_LISTAS.P_GET_ATRI_GARANTIA ******")
+        		.append("\n****** params=").append(parameters)
+        		.append("\n********************************************")
+        		.toString()
+        		);
         List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIGAR);
         lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
-        log.debug("### kernel sustituto obtenerTatrigar lista size: "+lista.size());
+        log.debug(
+        		new StringBuilder()
+        		.append("\n********************************************")
+        		.append("\n****** PKG_LISTAS.P_GET_ATRI_GARANTIA ******")
+        		.append("\n****** params=")  .append(parameters)
+        		.append("\n****** registro=").append(lista)
+        		.append("\n********************************************")
+        		.toString()
+        		);
         return lista;
     }
     

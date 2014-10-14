@@ -332,4 +332,20 @@ public interface CotizacionManager
 			);
 	
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones);
+	
+	public ManagerRespuestaVoidVO subirCensoCompleto(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,String rutaDocsTemp
+			,String censoTimestamp
+			,String dominioServerLayout
+			,String usuarioServerLayout
+			,String passwordServerLayout
+			,String direcServerLayout
+			);
 }

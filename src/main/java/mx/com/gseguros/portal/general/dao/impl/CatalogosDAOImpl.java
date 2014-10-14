@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +29,13 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO {
 
-	protected final transient Logger logger = Logger.getLogger(CatalogosDAOImpl.class);
+	protected static final transient Logger logger = Logger.getLogger(CatalogosDAOImpl.class);
 	
 	@Override
 	public List<GenericVO> obtieneTmanteni(String cdTabla) throws DaoException{
 		
 		try {
-			Map<String,Object> params=new HashMap<String,Object>(0);
+			Map<String,Object> params=new LinkedHashMap<String,Object>(0);
 			params.put("pv_cdtabla", cdTabla);
 			logger.debug(
 	        		new StringBuilder()
@@ -76,7 +77,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     
     public List<GenericVO> obtieneColonias(String codigoPostal) throws DaoException {
     	try {
-    		HashMap<String,Object> params =  new HashMap<String, Object>();
+    		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_codpostal_i", codigoPostal);
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtenCatalogoColonias(getDataSource()), params);
@@ -112,7 +113,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
     public List<GenericVO> obtieneMunicipios(String cdEstado) throws DaoException {
     	try {
-    		HashMap<String,Object> params =  new HashMap<String, Object>();
+    		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_estado_i", cdEstado);
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneMunicipios(getDataSource()), params);
@@ -147,7 +148,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
     public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws DaoException {
     	try {
-    		HashMap<String,Object> params =  new HashMap<String, Object>();
+    		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_cdtipsit_i", cdtipsit);
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneZonasPorModalidad(getDataSource()), params);
@@ -184,7 +185,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	@Override
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
 		try {
-    		HashMap<String,Object> params = new HashMap<String,Object>();
+    		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
             params.put("pv_cdatribu_i",cdAtribu);
             params.put("pv_cdtipsit_i",cdTipSit);
             params.put("pv_otvalor_i",otValor);
@@ -227,7 +228,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     @Override
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
 		try {
-    		HashMap<String,Object> params = new HashMap<String,Object>();
+    		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
             params.put("pv_cdatribu_i",cdAtribu);
             params.put("pv_cdtipsit_i",cdTipSit);
             params.put("pv_otvalor_i",otValor);
@@ -264,7 +265,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws DaoException {
 		
 		try {
-			HashMap<String,Object> params = new HashMap<String,Object>();
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
 			params.put("pv_cdatribu_i", cdAtribu);
 			params.put("pv_cdramo_i", cdRamo);
 			params.put("pv_otvalor_i", otValor);
@@ -302,7 +303,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant)
 			throws DaoException {
 		try {
-			HashMap<String,Object> params = new HashMap<String,Object>();
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
 			params.put("pv_cdramo_i"  ,cdRamo);
 			params.put("pv_cdtipsit_i",cdTipSit);
 			params.put("pv_cdgarant_i",cdGarant);
@@ -345,7 +346,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			String cdTipSit, String cdRamo, String valAnt, String cdRol)
 			throws DaoException {
 		try {
-			HashMap<String,Object> params = new HashMap<String,Object>();
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
 			params.put("pv_cdramo_i", cdRamo);
 			params.put("pv_cdrol_i", cdRol);
 			params.put("pv_cdatribu_i", cdAtribu);
@@ -386,7 +387,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 	@Override
 	public List<GenericVO> obtieneRolesSistema(String dsRol) throws DaoException {
-		HashMap<String,Object> params =  new HashMap<String, Object>();
+		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_dssysrol_i", dsRol);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneRolesSistema(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("PV_REGISTRO_O");
@@ -414,7 +415,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	@Override
 	public List<GenericVO> obtieneAgentes(String claveONombre) throws DaoException {
 		try {
-			HashMap<String,Object> params =  new HashMap<String, Object>();
+			HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 			params.put("pv_nombre_i", claveONombre);
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAgentes(getDataSource()), params);
@@ -468,7 +469,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	
 	@Override
 	public List<GenericVO> obtieneSucursales(String cdunieco) throws DaoException {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("pv_suc_admon_i", cdunieco);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneSucursales(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("pv_registro_o");
@@ -494,7 +495,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	
 	@Override
 	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("pv_cdramo_i"   , cdramo);
 		params.put("pv_cdtipsit_i" , cdtipsit);
 		params.put("pv_cdtiptra_i" , tipoTramite.getCdtiptra());
@@ -643,7 +644,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		,String cdtipsit
     		,String cdatribu)throws Exception
     {
-		Map<String,String>params=new HashMap<String,String>();
+		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("tipoUnidad" , tipoUnidad);
 		params.put("uso"        , uso);
 		params.put("zona"       , zona);
@@ -676,6 +677,73 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdatribu"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"codigo"
+					,"descripcion"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarListaNegocioServicioPublico(
+			String cdtipsit
+			,String cdatribu
+			,String tipoUnidad
+			,String cdagente)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("cdatribu"   , cdatribu);
+		params.put("tipoUnidad" , tipoUnidad);
+		params.put("cdagente"   , cdagente);
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_NEG ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************")
+				.toString()
+				);
+		Map<String,Object>procResult     = ejecutaSP(new CargarListaNegocioServicioPublico(getDataSource()),params);
+		List<GenericVO>lista             = new ArrayList<GenericVO>();
+		List<Map<String,String>>listaAux = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_NEG ******")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(listaAux)
+				.append("\n********************************************")
+				.toString()
+				);
+		if(listaAux==null)
+		{
+			lista.add(new GenericVO("0","TRADICIONAL"));
+		}
+		else
+		{
+			for(Map<String,String>elem:listaAux)
+			{
+				lista.add(new GenericVO(elem.get("codigo"),elem.get("descripcion")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class CargarListaNegocioServicioPublico extends StoredProcedure
+	{
+		protected CargarListaNegocioServicioPublico(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_ATRIBUTOS_NEG");
+			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 					"codigo"

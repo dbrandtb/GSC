@@ -349,6 +349,37 @@ public class CotizacionAction extends PrincipalCoreAction
 							temp.add(componenteSustitutoListaAux.get(0));
 						}
 					}
+		        	
+		        	//SERV PUBL MICRO
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit()))
+					{
+						//NEGOCIO
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("30"))
+						{
+							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									,cdtipsit                              ,  "W"         , cdsisrol
+									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "30");
+							temp.remove(tatriIte);
+							componenteSustitutoListaAux.get(0).setSwsuscri("N");
+							temp.add(componenteSustitutoListaAux.get(0));
+						}
+					}
+		        	//SERV PUBL AUTO
+					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+					{
+						//NEGOCIO
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("31"))
+						{
+							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									,cdtipsit                              ,  "W"         , cdsisrol
+									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "31");
+							temp.remove(tatriIte);
+							componenteSustitutoListaAux.get(0).setSwsuscri("N");
+							temp.add(componenteSustitutoListaAux.get(0));
+						}
+					}
 				}
 		        tatrisit=temp;
 		        
@@ -3111,9 +3142,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			success = true;
 			exito   = true;
 			Map<String,String>params=new HashMap<String,String>();
-			params.put("pv_cdramo_i"   , smap1.get("cdramo"));
-			params.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
-			params.put("pv_cdgarant_i" , smap1.get("cdgarant"));
+			params.put("pv_cdramo_i"    , smap1.get("cdramo"));
+			params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
+			params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
+			params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
 			List<ComponenteVO>componentesTatrigar=kernelManager.obtenerTatrigar(params);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(smap1.get("cdramo"));
@@ -3163,6 +3195,115 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### subirCenso ######"
 				+ "\n########################"
+				);
+		return SUCCESS;
+	}
+	
+	public String subirCensoCompleto2()
+	{
+		this.session=ActionContext.getContext().getSession();
+		logger.info(
+				new StringBuilder()
+				.append("\n#################################")
+				.append("\n###### subirCensoCompleto2 ######")
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### olist1=").append(olist1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String censoTimestamp  = null;
+		String clasif          = null;
+		String LINEA_EXTENDIDA = null;
+		String cdunieco        = null;
+		String cdramo          = null;
+		String cdtipsit        = null;
+		String nmpoliza        = null;
+		String cdperpag        = null;
+		String pcpgocte        = null;
+		String cdusuari        = null;
+		String cdelemen        = null;
+		String rutaDocsTemp    = null;
+		String feini           = null;
+		String fefin           = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			censoTimestamp   = smap1.get("timestamp");
+			clasif           = smap1.get("clasif");
+			LINEA_EXTENDIDA  = smap1.get("LINEA_EXTENDIDA");
+			cdunieco         = smap1.get("cdunieco");
+			cdramo           = smap1.get("cdramo");
+			cdtipsit         = smap1.get("cdtipsit");
+			nmpoliza         = smap1.get("nmpoliza");
+			cdperpag         = smap1.get("cdperpag");
+			pcpgocte         = smap1.get("pcpgocte");
+			feini            = smap1.get("feini");
+			fefin            = smap1.get("fefin");
+			
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No usuario en la sesion");
+			}
+			UserVO user = (UserVO)session.get("USUARIO");
+			cdusuari = user.getUser();
+			cdelemen = user.getEmpresa().getElementoId();
+			
+			rutaDocsTemp = getText("ruta.documentos.temporal");
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			cotizacionManager.subirCensoCompleto(
+					cdunieco
+					,cdramo
+					,nmpoliza
+					,feini
+					,fefin
+					,cdperpag
+					,pcpgocte
+					,rutaDocsTemp
+					,censoTimestamp
+					,getText("dominio.server.layouts")
+					,getText("user.server.layouts")
+					,getText("pass.server.layouts")
+					,getText("directorio.server.layouts")
+					);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### subirCensoCompleto2 ######")
+				.append("\n#################################")
+				.toString()
 				);
 		return SUCCESS;
 	}

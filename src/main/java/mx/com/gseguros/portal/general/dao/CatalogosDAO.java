@@ -61,4 +61,10 @@ public interface CatalogosDAO {
     		,String cdagente
     		,String cdtipsit
     		,String cdatribu)throws Exception;
+	
+	public List<GenericVO>cargarListaNegocioServicioPublico(
+			String cdtipsit
+			,String cdatribu
+			,String tipoUnidad
+			,String cdagente)throws Exception;
 }

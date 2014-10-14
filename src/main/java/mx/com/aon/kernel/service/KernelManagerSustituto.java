@@ -111,6 +111,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
 	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;
 	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException;
+    @Deprecated
 	public List<ComponenteVO> obtenerTatrigar(Map<String, String> smap1) throws ApplicationException;
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatrigar(Map<String, String> param) throws ApplicationException;

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
@@ -428,4 +427,41 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return catalogosDAO.cargarDescuentosPorAgente(tipoUnidad,uso,zona,promotoria,cdagente,cdtipsit,cdatribu);
     }
+	
+	@Override
+	public List<GenericVO>cargarListaNegocioServicioPublico(
+			String cdtipsit
+			,String cdatribu
+			,String tipoUnidad
+			,String cdagente)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarListaNegocioServicioPublico @@@@@@")
+				.append("\n@@@@@@ cdtipsit=")  .append(cdtipsit)
+				.append("\n@@@@@@ cdatribu=")  .append(cdatribu)
+				.append("\n@@@@@@ tipoUnidad=").append(tipoUnidad)
+				.append("\n@@@@@@ cdagente=")  .append(cdagente)
+				.toString()
+				);
+		List<GenericVO>lista = null;
+		try
+		{
+			lista = catalogosDAO.cargarListaNegocioServicioPublico(cdtipsit,cdatribu,tipoUnidad,cdagente);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al cargar negocios para serv. publico",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarListaNegocioServicioPublico @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }
