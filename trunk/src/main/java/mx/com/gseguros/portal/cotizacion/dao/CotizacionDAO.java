@@ -124,7 +124,7 @@ public interface CotizacionDAO
 			,String accion)throws Exception;
 	public DatosUsuario cargarInformacionUsuario(String cdusuari,String cdtipsit)throws Exception;
 	public List<ComponenteVO>cargarTatrisit(String cdtipsit,String cdusuari)throws Exception;
-	public List<ComponenteVO>cargarTatripol(String cdramo)throws Exception;
+	public List<ComponenteVO>cargarTatripol(String cdramo,String cdtipsit)throws Exception;
 	public Map<String,String>cargarClienteCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
 	public Map<String,String>cargarConceptosGlobalesGrupo(
 			String cdunieco

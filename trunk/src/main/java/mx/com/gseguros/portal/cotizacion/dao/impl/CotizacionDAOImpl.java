@@ -1254,10 +1254,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
 	
 	@Override
-	public List<ComponenteVO>cargarTatripol(String cdramo)throws Exception
+	public List<ComponenteVO>cargarTatripol(String cdramo,String cdtipsit)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("cdramo" , cdramo);
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
@@ -1268,6 +1269,15 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				);
 		Map<String,Object>procResult = ejecutaSP(new CargarTatripol(getDataSource()),params);
 		List<ComponenteVO>lista      = (List<ComponenteVO>)procResult.get("pv_registro_o");
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(lista)
+				.append("\n******************************************")
+				.toString()
+				);
 		return lista;
 	}
 	
@@ -1276,7 +1286,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	protected CargarTatripol(DataSource dataSource)
         {
             super(dataSource,"PKG_LISTAS.P_GET_ATRI_POLIZA");
-            declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatripolMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

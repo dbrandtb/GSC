@@ -408,6 +408,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 								);
 					}
 					break;
+				case SERVICIO_PUBLICO_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarListaNegocioServicioPublico(
+							params.get("cdtipsit")
+							,params.get("cdatribu")
+							,params.get("tipoUnidad")
+							,params.get("cdagente")
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

@@ -1416,7 +1416,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected ObtieneTatripol(DataSource dataSource)
 		{
 			super(dataSource,"PKG_LISTAS.P_GET_ATRI_POLIZA");
-			declareParameter(new SqlParameter("pv_cdramo",      	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo"   ,      	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit" ,      	OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatripolMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -1443,13 +1444,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected ObtieneTatrigar(DataSource dataSource)
 		{
 			super(dataSource,"PKG_LISTAS.P_GET_ATRI_GARANTIA");
-			declareParameter(new SqlParameter("pv_cdramo_i",      	OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgarant_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrigarMapper()));
-			declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatrivar_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrigarMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception {

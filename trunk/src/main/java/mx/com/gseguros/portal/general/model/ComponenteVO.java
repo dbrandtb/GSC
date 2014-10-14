@@ -391,7 +391,7 @@ public class ComponenteVO
 	@Override
 	public String toString()
 	{
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new StringBuilder("NAME/CDATRIBU=").append(this.nameCdatribu).append(",LABEL=").append(this.label).toString();
 	}
 
 	public boolean isComboVacio() {

@@ -37,4 +37,10 @@ public class GenericVO implements Serializable {
         this.value = value;
     }
     
+    @Override
+    public String toString()
+    {
+    	return new StringBuilder(this.key).append(" - ").append(this.value).toString();
+    }
+    
 }

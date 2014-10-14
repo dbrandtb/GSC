@@ -2236,6 +2236,45 @@ Ext.onReady(function()
     {
         debug('>parche para ramo 6');
         
+        //negocio
+        _fieldLikeLabel('NEGOCIO').on(
+        {
+            focus : function()
+            {
+                var valido = !Ext.isEmpty(_fieldByLabel('TIPO DE UNIDAD').getValue());
+                if(!valido)
+                {
+                    mensajeWarning('Seleccione el tipo de unidad');
+                }
+                
+                if(valido)
+                {
+                    valido = !Ext.isEmpty(_fieldByLabel('AGENTE').getValue());
+                    if(!valido)
+                    {
+                        mensajeWarning('Seleccione el agente');
+                    }
+                }
+                
+                if(valido)
+                {
+                    _fieldLikeLabel('NEGOCIO').setLoading(true);
+                    _fieldLikeLabel('NEGOCIO').getStore().load(
+                    {
+                        params :
+                        {
+                            'params.tipoUnidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
+                            ,'params.cdagente'  : _fieldByLabel('AGENTE').getValue()
+                        }
+                        ,callback : function()
+                        {
+                            _fieldLikeLabel('NEGOCIO').setLoading(false);
+                        }
+                    });
+                }
+            }
+        });
+        
         //descuento
         _fieldLikeLabel('DESCUENTO').on(
         {
