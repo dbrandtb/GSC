@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -30,82 +29,82 @@ public interface SiniestrosManager {
 	 * Obtiene la informaci�n de la Autorizaci�n de servicio en especifico
 	 * @param nmautser
 	 * @return List AutorizacionServicioVO
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
-	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws ApplicationException;
+	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception;
 
 	/**
 	 * Obtiene la lista de los asegurados
 	 * @return List GenericVO
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
-	public List<GenericVO> getConsultaListaAsegurado(String cdperson) throws ApplicationException;
+	public List<GenericVO> getConsultaListaAsegurado(String cdperson) throws Exception;
 	
 	/**
 	 * Obtiene la informaci�n de la lista de autorizaciones
 	 * @param cdperson
 	 * @return List AutorizaServiciosVO  
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
-	public List<AutorizaServiciosVO> getConsultaListaAutorizaciones(String tipoAut,String cdperson) throws ApplicationException;
+	public List<AutorizaServiciosVO> getConsultaListaAutorizaciones(String tipoAut,String cdperson) throws Exception;
 	
 	/**
 	 * Obtiene la lista de los Proveedores y Medicos
 	 * @param tipoprov
 	 * @param cdpresta
 	 * @return List GenericVO
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
-	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws ApplicationException;
+	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws Exception;
 	
 	
-	//public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws ApplicationException;
+	//public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws Exception;
 	
 	
-	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(HashMap<String, Object> paramCobertura) throws ApplicationException;
+	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(HashMap<String, Object> paramCobertura) throws Exception;
 	
-	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws ApplicationException;
+	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob) throws ApplicationException;
+	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob) throws Exception;
 	
-	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws ApplicationException;
+	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
-	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws ApplicationException;
+	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws Exception;
 	
-	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws ApplicationException;
+	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws Exception;
 	
-	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws ApplicationException;
+	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws Exception;
 	
-	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws ApplicationException;
+	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException;
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws Exception;
 	
-	public void getEliminacionRegistros(String nmautser) throws ApplicationException;
+	public void getEliminacionRegistros(String nmautser) throws Exception;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
 	
-	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR) throws ApplicationException;
+	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR) throws Exception;
 	
-	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws ApplicationException;
+	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws Exception;
 
-	public String generaContraRecibo(HashMap<String, Object> params) throws ApplicationException;
+	public String generaContraRecibo(HashMap<String, Object> params) throws Exception;
 
-	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params) throws ApplicationException;
+	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params) throws Exception;
 
-	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
+	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws Exception;
 
-	public List<Map<String, String>> loadListaRechazos() throws ApplicationException;
+	public List<Map<String, String>> loadListaRechazos() throws Exception;
 
-	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
+	public boolean rechazarTramite(HashMap<String, String> params) throws Exception;
 
-	public List<SiniestroVO> solicitudPagoEnviada(Map<String, String> params) throws ApplicationException;
+	public List<SiniestroVO> solicitudPagoEnviada(Map<String, String> params) throws Exception;
 
-	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws ApplicationException;
+	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws Exception;
 
-	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException;
+	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws Exception;
 
-	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException;
+	public List<GenericVO> getConsultaListaPlaza() throws Exception;
 	
 	public String guardaListaFacMesaControl(
 			String ntramite,
@@ -123,7 +122,7 @@ public interface SiniestrosManager {
 			String ptimporta,
 			String dctonuex,
 			String tipoAccion
-			) throws ApplicationException;
+			) throws Exception;
 
 	public String movFacMesaControl(
 			String ntramite,
@@ -141,26 +140,26 @@ public interface SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex
-			) throws ApplicationException;
+			) throws Exception;
 
-	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException;
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
-	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException;
+	public String getAltaSiniestroAutServicio(String nmautser) throws Exception;
 
-	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException;
+	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception;
 
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws ApplicationException;
+			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception;
 	
-	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException;
+	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
-	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws ApplicationException;
+	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws Exception;
 
-	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws ApplicationException;
+	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception;
 	
-	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException;
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception;
 	
-	public String actualizaOTValorMesaControl(Map<String, Object> params) throws ApplicationException;
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
@@ -464,7 +463,7 @@ public interface SiniestrosManager {
 	
 	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura,String cdramo) throws Exception;
 	
-	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException;
+	public List<GenericVO> getConsultaListaRamoSalud() throws Exception;
 
 	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception;
 

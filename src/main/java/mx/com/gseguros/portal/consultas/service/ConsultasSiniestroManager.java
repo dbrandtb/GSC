@@ -2,8 +2,6 @@ package mx.com.gseguros.portal.consultas.service;
 
 import java.util.List;
 
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
 
 /**
@@ -14,8 +12,8 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
  */
 public interface ConsultasSiniestroManager {
 	
-	public List<ConsultaDatosSiniestrosVO> getConsultaAseguradosPagoReembolso(String cdperson)throws ApplicationException;
+	public List<ConsultaDatosSiniestrosVO> getConsultaAseguradosPagoReembolso(String cdperson)throws Exception;
 
-	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura)throws ApplicationException;
+	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura)throws Exception;
 	
 }

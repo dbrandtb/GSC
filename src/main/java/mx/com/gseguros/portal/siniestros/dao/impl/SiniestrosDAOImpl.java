@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.siniestros.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +12,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -48,7 +46,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	private static Logger logger = Logger.getLogger(SiniestrosDAOImpl.class);
 	
 	@Override
-	public List<AutorizacionServicioVO> obtieneDatosAutorizacionEsp(String nmautser) throws DaoException {
+	public List<AutorizacionServicioVO> obtieneDatosAutorizacionEsp(String nmautser) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmautser_i", nmautser);
 		
@@ -118,7 +116,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	
     /******************************		ARCHIVO QUE SE TIENE QUE MODIFICAR 		***************************************/    
     @SuppressWarnings("unchecked")
-	public List<GenericVO> obtieneListadoAsegurado(String cdperson) throws DaoException {
+	public List<GenericVO> obtieneListadoAsegurado(String cdperson) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		
@@ -148,7 +146,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     }
     
 	@Override
-	public List<AutorizaServiciosVO> obtieneListadoAutorizaciones(String tipoAut,String cdperson) throws DaoException {
+	public List<AutorizaServiciosVO> obtieneListadoAutorizaciones(String tipoAut,String cdperson) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_tipo_aut_i", tipoAut);
 		params.put("pv_cdperson_i", cdperson);
@@ -193,7 +191,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws DaoException {
+	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_tipoprov_i", tipoprov);
 		params.put("pv_cdpresta_i", cdpresta);
@@ -233,7 +231,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
 	@Override
 	public List<CoberturaPolizaVO> obtieneListadoCoberturaPoliza(
-			HashMap<String, Object> paramCobertura) throws DaoException {
+			HashMap<String, Object> paramCobertura) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCoberturaSP(getDataSource()), paramCobertura);
 		
 		@SuppressWarnings("unchecked")
@@ -268,7 +266,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
 	@Override
 	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(
-			HashMap<String, Object> paramDatSubGral) throws DaoException {
+			HashMap<String, Object> paramDatSubGral) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoDatSubGeneralSP(getDataSource()), paramDatSubGral);
 		
 		@SuppressWarnings("unchecked")
@@ -316,7 +314,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
     @Override
 	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant,
-			String cdsubcob) throws DaoException {
+			String cdsubcob) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdgarant_i", cdgarant);
 		params.put("pv_cdsubcob_i", cdsubcob);
@@ -350,7 +348,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
     
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave)
-			throws DaoException {
+			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdtabla_i", cdtabla);
 		params.put("pv_otclave_i", otclave);
@@ -389,7 +387,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
 	@Override
 	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser)
-			throws DaoException {
+			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmautser_i", nmautser);
 		
@@ -438,7 +436,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 
 	@Override
 	public List<AutorizacionServicioVO>  guardarAutorizacionServicio(Map<String, Object> paramsR)
-			throws DaoException {
+			throws Exception {
 		
 		Map<String, Object> mapResult = ejecutaSP(new GuardaAutorizacionServicioSP(getDataSource()), paramsR);
 		
@@ -501,7 +499,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 
 	@Override
 	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts)
-			throws DaoException {
+			throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> mapResult = ejecutaSP(new GuardaListaTDeTautsSP(getDataSource()), paramsTDeTauts);
 		return (String) mapResult.get("pv_registro_o");
@@ -540,7 +538,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 
 	@Override
 	public List<ConsultaTTAPVAATVO> obtieneListadoTTAPVAAT(
-			HashMap<String, Object> paramTTAPVAAT) throws DaoException {
+			HashMap<String, Object> paramTTAPVAAT) throws Exception {
 Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSource()), paramTTAPVAAT);
 		
 		@SuppressWarnings("unchecked")
@@ -588,7 +586,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public List<ConsultaManteniVO> obtieneListadoManteni(
-			String cdtabla, String codigo) throws DaoException {
+			String cdtabla, String codigo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdtabla_i", cdtabla);
 		params.put("pv_codigo_i", codigo);
@@ -627,7 +625,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public List<ConsultaPorcentajeVO> obtieneListadoPorcentaje(String cdcpt,
-			String cdtipmed,String mtobase) throws DaoException {
+			String cdtipmed,String mtobase) throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdcpt_i", cdcpt);
@@ -668,7 +666,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo)
-			throws DaoException {
+			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		params.put("pv_cdramo_i", cdramo);
@@ -731,7 +729,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public void eliminacionRegistrosTabla(String nmautser)
-			throws DaoException {
+			throws Exception {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("pv_nmautser_i", nmautser);
 			Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
@@ -750,7 +748,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		
 	    @Override
 		public List<HashMap<String, String>> loadListaDocumentos(
-				HashMap<String, String> params) throws DaoException {
+				HashMap<String, String> params) throws Exception {
 			logger.debug(
 					new StringBuilder()
 					.append("\n****************************************************")
@@ -795,7 +793,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	    @Override
 	    public List<Map<String, String>> loadListaIncisosRechazos(
-	    		Map<String, String> params) throws DaoException {
+	    		Map<String, String> params) throws Exception {
 	    	
 	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaIncisosRechazos(getDataSource()), params);
 	    	
@@ -818,7 +816,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    }
 
 	    @Override
-	    public List<Map<String, String>> loadListaRechazos() throws DaoException {
+	    public List<Map<String, String>> loadListaRechazos() throws Exception {
 	    	Map<String, Object> params = new HashMap<String, Object>();
 	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaRechazos(getDataSource()), params);
 	    	
@@ -841,7 +839,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 		@Override
 		public String guardaEstatusDocumento(HashMap<String, String> params)
-				throws DaoException {
+				throws Exception {
 			
 			logger.debug("parms: "+params);
 			Map<String, Object> mapResult = ejecutaSP(new GuardaEstatusDocumento(getDataSource()), params);
@@ -866,7 +864,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 
 		@Override
-		public List<GenericVO> obtieneListadoPlaza() throws DaoException {
+		public List<GenericVO> obtieneListadoPlaza() throws Exception {
 			Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListaPlazas(this.getDataSource()), new HashMap<String,String>());
 			return (List<GenericVO>) resultadoMap.get("pv_registro_o");
 		}
@@ -895,7 +893,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		
 		@Override
 		public String rechazarTramite(HashMap<String, String> params)
-				throws DaoException {
+				throws Exception {
 			
 			logger.debug("parms: "+params);
 			Map<String, Object> mapResult = ejecutaSP(new RechazarTramite(getDataSource()), params);
@@ -920,7 +918,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 
 		@Override
-		public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws DaoException {
+		public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
 				Map<String, Object> mapResult = ejecutaSP(new guardaFacMesaControlSP(getDataSource()), paramsFacMesaCtrl);
 				return (String) mapResult.get("pv_msg_id_o");
 		}
@@ -951,7 +949,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws DaoException {
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new guardaListaTworkSinSP(getDataSource()), paramsTworkSin);
 		return (String) mapResult.get("pv_msg_id_o");
 	}
@@ -979,7 +977,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String guardaAltaSiniestroAutServicio(String nmautser) throws DaoException {
+	public String guardaAltaSiniestroAutServicio(String nmautser) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmautser_i", nmautser);
 		Map<String, Object> mapResult = ejecutaSP(new GuardAltaSiniestroAutServicio(this.getDataSource()), params);
@@ -1000,7 +998,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException {
+	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaSiniestroAltaTramite(this.getDataSource()), params);
@@ -1022,7 +1020,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException {
+	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new guardaAltaMsinivalSP(getDataSource()), paramMsinival);
 		return (String) mapResult.get("pv_msg_id_o");
 	}
@@ -1057,7 +1055,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException {
+	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoFacturasSP(getDataSource()), paramFact);
 		List<ListaFacturasVO> listaDatosPoliza = (List<ListaFacturasVO>)mapResult.get("pv_registro_o");
 		return listaDatosPoliza;
@@ -1094,7 +1092,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws DaoException {
+	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new BajaMsinivalSP(this.getDataSource()), paramBajasinival);
 		return (String) mapResult.get("pv_msg_id_o");
 	}
@@ -1116,7 +1114,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public String generaContraRecibo(HashMap<String, Object> params) throws DaoException {
+	public String generaContraRecibo(HashMap<String, Object> params) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new GeneraContraRecibo(this.getDataSource()), params);
 		return (String) mapResult.get("pv_title_o");
 	}
@@ -1134,7 +1132,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException {
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_cdtipsit_i", cdtipsit);
@@ -1168,7 +1166,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	@Override
 	@Deprecated
-	public String actualizaOTValorMesaControl(Map<String, Object> params) throws DaoException {
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new ActualizaOTValorMesaControl(this.getDataSource()), params);
 		return (String) mapResult.get("pv_title_o");
 	}
@@ -2621,7 +2619,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
 	
 	@Override
-	public void eliminacionTworksin(String ntramite) throws DaoException {
+	public void eliminacionTworksin(String ntramite) throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmtramite_i", ntramite);
@@ -2646,7 +2644,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public void eliminacionTFacMesaControl(String ntramite) throws DaoException {
+	public void eliminacionTFacMesaControl(String ntramite) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmtramite_i", ntramite);
 		 
@@ -2665,7 +2663,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public List<SiniestroVO>  solicitudPagoEnviada(Map params)throws DaoException {
+	public List<SiniestroVO>  solicitudPagoEnviada(Map params)throws Exception {
 		Map<String,Object> resultadoMap=this.ejecutaSP(new SolicitudPagoEnviada(this.getDataSource()), params);
 		return (List<SiniestroVO>) resultadoMap.get("pv_registro_o");	
 	}
@@ -2701,7 +2699,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	
 	/*	public void eliminacionRegistrosTabla(String nmautser)
-			throws DaoException {
+			throws Exception {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("pv_nmautser_i", nmautser);
 			Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
@@ -3023,7 +3021,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia)throws DaoException {
+			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia)throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_cdunieco_i", cdunieco);
@@ -3179,7 +3177,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public List<GenericVO> obtieneListadoRamoSalud() throws DaoException {
+	public List<GenericVO> obtieneListadoRamoSalud() throws Exception {
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoRamoSalud(this.getDataSource()), new HashMap<String,String>());
 		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
 	}
@@ -3225,7 +3223,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws DaoException {
+	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new eliminaAseguradoRegistrado(getDataSource()), paramsTworkSin);
 		return (String) mapResult.get("pv_msg_id_o");
 	}

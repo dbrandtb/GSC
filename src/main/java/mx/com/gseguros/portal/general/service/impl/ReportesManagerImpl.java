@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.ReportesDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
@@ -24,7 +23,7 @@ public class ReportesManagerImpl implements ReportesManager {
 
 
 	@Override
-	public List<ReporteVO> obtenerListaReportes() throws DaoException {
+	public List<ReporteVO> obtenerListaReportes() throws Exception {
 		return reportesDAO.obtenerListaReportes();
 	}
 

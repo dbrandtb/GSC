@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
@@ -33,12 +32,12 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	
 	@Override
-	public String creaEditaRolSistema(Map params) throws DaoException {
+	public String creaEditaRolSistema(Map params) throws Exception {
 		try {
 			Map<String, Object> result = ejecutaSP(new CreaEditaRolSistema(getDataSource()), params);
 			return (String) result.get("pv_title_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -56,7 +55,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	}
 	
 	@Override
-	public GenericVO guardaUsuario(Map params) throws DaoException {
+	public GenericVO guardaUsuario(Map params) throws Exception {
 		try {
 			HashMap<String, Object> parametros = new HashMap<String, Object>();
 			parametros.put("PV_CDUSUARI_I", params.get("cdusuari"));
@@ -84,7 +83,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			respuestaVO.setValue(result.get("msg_title").toString());
 	    	return respuestaVO;
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 
@@ -116,11 +115,11 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	}
 
 	@Override
-	public void cambiaEstatusUsuario(Map params) throws DaoException {
+	public void cambiaEstatusUsuario(Map params) throws Exception {
 		try {
 			ejecutaSP(new CambiaEstatusUsuario(getDataSource()), params);
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -138,7 +137,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	
 	@Override
-	public List<UsuarioRolEmpresaVO> obtieneRolesCliente(String user) throws DaoException {
+	public List<UsuarioRolEmpresaVO> obtieneRolesCliente(String user) throws Exception {
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("PV_CDUSUARIO_I", user);
@@ -175,7 +174,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     
     //TODO: Implementar el uso de este metodo, ya que actualmente se utiliza la forma anterior
     @Override
-    public IsoVO obtieneVariablesIso(String user) throws DaoException {
+    public IsoVO obtieneVariablesIso(String user) throws Exception {
     	
     	HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("P_USUARIO", user);
@@ -211,7 +210,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     }
  
     @Override
-	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException {
+	public List<UsuarioVO> obtieneUsuarios(Map params) throws Exception {
 		Map<String, Object> resultado = ejecutaSP(new ObtieneUsuarios(getDataSource()), params);
 		return (List<UsuarioVO>) resultado.get("PV_REGISTRO_O");
 	}
@@ -259,7 +258,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     }
 
     @Override
-	public List<GenericVO> obtienerRolesPorPrivilegio(Map params) throws DaoException {
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map params) throws Exception {
 		Map<String, Object> resultado = ejecutaSP(new ObtienerRolesPorPrivilegio(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("PV_REGISTRO_O");
 	}
@@ -283,7 +282,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     }
     
     @Override
-    public List<Map<String, String>> obtieneRolesUsuario(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneRolesUsuario(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneRolesUsuario(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
     }
@@ -302,7 +301,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     
     @Override
 	public String guardaRolUsuario(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params guardaRolUsuario: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaRolUsuario(getDataSource()), params);
 		
@@ -324,7 +323,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneProductosAgente(Map params) throws DaoException {
+	public List<Map<String, String>> obtieneProductosAgente(Map params) throws Exception {
 		Map<String, Object> resultado = ejecutaSP(new ObtieneProductosAgente(getDataSource()), params);
 		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
 	}
@@ -343,7 +342,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	@Override
 	public String guardaProductoAgente(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params guardaProductoAgente: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaProductoAgente(getDataSource()), params);
 		

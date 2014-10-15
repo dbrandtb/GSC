@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.WebServicesDAO;
@@ -21,7 +20,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
 	private Logger logger = Logger.getLogger(WebServicesDAOImpl.class);
 	
     @Override
-    public List<Map<String, String>> obtienePeticionesFallidasWS(Map params) throws DaoException {
+    public List<Map<String, String>> obtienePeticionesFallidasWS(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesLiga(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -42,7 +41,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     }
 
     @Override
-    public List<Map<String, String>> obtieneDetallePeticionWS(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneDetallePeticionWS(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneDetallePeticionWS(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -62,7 +61,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     
     @Override
 	public String eliminaPeticionWS(Map params)
-			throws DaoException {
+			throws Exception {
 		
 		Map<String, Object> mapResult = ejecutaSP(new EliminaPeticionWS(getDataSource()), params);
 		

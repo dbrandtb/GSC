@@ -11,8 +11,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.ObtieneTatripolMapper;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
@@ -47,7 +45,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String cdgarant
 			,String status
 			,Map<String,String>valores
-			)throws DaoException
+			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -267,7 +265,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String estado
 			,String nmpoliza
 			,String ntramite
-			)throws ApplicationException,Exception
+			)throws Exception,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -288,7 +286,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaDatos = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(listaDatos==null||listaDatos.size()==0)
 		{
-			throw new ApplicationException("No se pudo cargar la poliza");
+			throw new Exception("No se pudo cargar la poliza");
 		}
 		return listaDatos.get(0);
 	}
@@ -387,7 +385,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public List<Map<String,String>>cargarGruposCotizacion2(String cdunieco,String cdramo,String estado,String nmpoliza)throws DaoException, ApplicationException
+	public List<Map<String,String>>cargarGruposCotizacion2(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception, Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -406,7 +404,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaGrupos = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(listaGrupos==null||listaGrupos.size()==0)
 		{
-			throw new ApplicationException("No se encontraron grupos");
+			throw new Exception("No se encontraron grupos");
 		}
 		return listaGrupos;
 	}
@@ -971,7 +969,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String cdramo
 			,String cdtipsit
 			,String clave4
-			,String clave5)throws ApplicationException,Exception
+			,String clave5)throws Exception,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("parametro" , parametro.getParametro());
@@ -991,11 +989,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaAux  = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
 		{
-			throw new ApplicationException("No hay parametros");
+			throw new Exception("No hay parametros");
 		}
 		if(listaAux.size()>1)
 		{
-			throw new ApplicationException("Parametros duplicados");
+			throw new Exception("Parametros duplicados");
 		}
 		return listaAux.get(0);
 	}
@@ -1412,7 +1410,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String ntramite)throws DaoException,ApplicationException
+			,String ntramite)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -1425,7 +1423,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaDocumentos=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(listaDocumentos==null||listaDocumentos.size()==0)
 		{
-			throw new ApplicationException("No hay documentos parametrizados");
+			throw new Exception("No hay documentos parametrizados");
 		}
 		logger.debug(new StringBuilder("\n&&&&&& Lista documentos size=").append(listaDocumentos.size()).toString());
 		return listaDocumentos;
@@ -1633,7 +1631,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdperpag)throws ApplicationException,Exception
+			,String cdperpag)throws Exception,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -1654,11 +1652,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaAux=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
 		{
-			throw new ApplicationException("No se encontraron conceptos globales");
+			throw new Exception("No se encontraron conceptos globales");
 		}
 		if(listaAux.size()>1)
 		{
-			throw new ApplicationException("Se encontraron conceptos globales repetidos");
+			throw new Exception("Se encontraron conceptos globales repetidos");
 		}
 		return listaAux.get(0);
 	}
@@ -1689,7 +1687,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
 	
 	@Override
-	public String calculaNumeroPoliza(String cdunieco,String cdramo,String estado)throws Exception,ApplicationException
+	public String calculaNumeroPoliza(String cdunieco,String cdramo,String estado)throws Exception,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -1707,7 +1705,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		String nmpoliza = (String)procResult.get("pv_nmpoliza_o");
 		if(StringUtils.isBlank(nmpoliza))
 		{
-			throw new ApplicationException("No se puede calcular el numero de poliza");
+			throw new Exception("No se puede calcular el numero de poliza");
 		}
 		return nmpoliza;
 	}
@@ -2418,7 +2416,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
-			throw new ApplicationException("No hay tipos de situacion");
+			throw new Exception("No hay tipos de situacion");
 		}
 		return lista;
 	}
@@ -2449,7 +2447,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdgrupo)throws DaoException,ApplicationException
+			,String cdgrupo)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -2470,7 +2468,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>situaciones=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(situaciones==null||situaciones.size()==0)
 		{
-			throw new ApplicationException("No hay situaciones para el grupo");
+			throw new Exception("No hay situaciones para el grupo");
 		}
 		return situaciones;
 	}
@@ -2515,7 +2513,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
-			,Map<String,String>valores)throws DaoException
+			,Map<String,String>valores)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);

@@ -29,19 +29,14 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
      * @throws DaoException
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws DaoException {
-		try {
-			Map<String, Object> mapResult = storedProcedure.execute(parameters);
-			
-	        BaseVO mensajeRespuesta = traduceMensaje(mapResult);
-	        mapResult.put("msg_id", mensajeRespuesta.getKey());
-	        mapResult.put("msg_title", mensajeRespuesta.getValue());
-	        
-	        return mapResult;
-	        
-		} catch (Exception ex) {
-			throw new DaoException(ex.getMessage(), ex);
-		}
+	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws Exception {
+    	
+		Map<String, Object> mapResult = storedProcedure.execute(parameters);
+		
+        BaseVO mensajeRespuesta = traduceMensaje(mapResult);
+        mapResult.put("msg_id", mensajeRespuesta.getKey());
+        mapResult.put("msg_title", mensajeRespuesta.getValue());
+        return mapResult;
     }
     
     
@@ -63,7 +58,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         	msgTitle = mapResult.get("PV_TITLE_O")  != null ? mapResult.get("PV_TITLE_O").toString()  : "";  
         }
         
-        logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
+        logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle).toString());
         
         // Obtenemos el msgText a partir del msgId:
         String msgText = "";
@@ -79,15 +74,19 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
             if (StringUtils.isBlank(msgText)) {
     			String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
     			logger.error(msgException);
-    			throw new ApplicationException(msgException);
+    			throw new DaoException(msgException);
     		}
             
-            logger.info( new StringBuilder("MsgText=").append(msgText) );
+            logger.info( new StringBuilder("MsgText=").append(msgText).toString() );
         }
         
-        // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
+        // Si msgTitle es de tipo ERROR o WARNING lanzamos la excepción con el msgText obtenido:
  		if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
- 			logger.error(new StringBuilder("Error de SP: ").append(msgText));
+ 			logger.error(new StringBuilder("Error de SP: ").append(msgText).toString());
+ 			throw new DaoException(msgText);
+ 			
+ 		} else if(msgTitle.equals(Constantes.MSG_TITLE_WARNING)) {
+ 			logger.warn(new StringBuilder("Mensaje de Warning para Aplicacion: ").append(msgText).toString());
  			throw new ApplicationException(msgText);
  		}
         

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 
 

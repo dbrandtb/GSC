@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.List;
 
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasSiniestroDAO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
@@ -13,11 +12,11 @@ public class ConsultasSiniestroManagerImpl implements ConsultasSiniestroManager 
 	private ConsultasSiniestroDAO consultasSiniestroDAO;
 		
 	@Override
-	public List<ConsultaDatosSiniestrosVO> getConsultaAseguradosPagoReembolso(String cdperson) throws ApplicationException {
+	public List<ConsultaDatosSiniestrosVO> getConsultaAseguradosPagoReembolso(String cdperson) throws Exception {
 		try {
 			return consultasSiniestroDAO.obtieneConsultaAseguradosPagoReembolso(cdperson);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -26,11 +25,11 @@ public class ConsultasSiniestroManagerImpl implements ConsultasSiniestroManager 
 	}
 
 	@Override
-	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura) throws ApplicationException {
+	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura) throws Exception {
 		try {
 			return consultasSiniestroDAO.obtieneConsultaFacturasPagoDirecto(cdperson,cdproveedor,cdfactura);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	

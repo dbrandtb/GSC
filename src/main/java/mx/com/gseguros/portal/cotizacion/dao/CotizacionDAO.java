@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -23,7 +21,7 @@ public interface CotizacionDAO
 			,String cdgarant
 			,String status
 			,Map<String,String>valores
-			)throws DaoException;
+			)throws Exception;
 	public void movimientoTvalogarGrupo(
 			String cdunieco
 			,String cdramo
@@ -59,9 +57,9 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			,String ntramite
-			)throws ApplicationException,Exception;
+			)throws Exception;
 	public List<Map<String,String>>cargarGruposCotizacion(Map<String,String>params)throws Exception;
-	public List<Map<String,String>>cargarGruposCotizacion2(String cdunieco,String cdramo,String estado,String nmpoliza)throws DaoException,ApplicationException;
+	public List<Map<String,String>>cargarGruposCotizacion2(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
 	public Map<String,String>cargarDatosGrupoLinea(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarTvalogarsGrupo(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarTarifasPorEdad(Map<String,String>params)throws Exception;
@@ -82,7 +80,7 @@ public interface CotizacionDAO
 			,String cdramo
 			,String cdtipsit
 			,String clave4
-			,String clave5)throws ApplicationException,Exception;
+			,String clave5)throws Exception;
 	public Map<String,String>cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol)throws Exception;
 	public Map<String,String>cargarClaveGSPorAuto(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarSumaAseguradaAuto(Map<String,String>params)throws Exception;
@@ -104,7 +102,7 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String ntramite)throws DaoException,ApplicationException;
+			,String ntramite)throws Exception;
 	public void movimientoTdescsup(
 			String cdunieco
 			,String cdramo
@@ -132,8 +130,8 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdperpag)throws ApplicationException,Exception;
-	public String calculaNumeroPoliza(String cdunieco,String cdramo,String estado)throws Exception,ApplicationException;
+			,String cdperpag)throws Exception;
+	public String calculaNumeroPoliza(String cdunieco,String cdramo,String estado)throws Exception;
 	public void movimientoPoliza(
 			String cdunieco
 			,String cdramo
@@ -270,7 +268,7 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdgrupo)throws DaoException,ApplicationException;
+			,String cdgrupo)throws Exception;
 	public void actualizaValoresSituacion(
 			String cdunieco
 			,String cdramo
@@ -278,5 +276,5 @@ public interface CotizacionDAO
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
-			,Map<String,String>valores)throws DaoException;
+			,Map<String,String>valores)throws Exception;
 }

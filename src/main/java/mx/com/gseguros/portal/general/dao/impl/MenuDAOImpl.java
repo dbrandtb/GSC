@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.MenuDAO;
@@ -21,7 +20,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 	private Logger logger = Logger.getLogger(MenuDAOImpl.class);
 	
     @Override
-    public List<Map<String, String>> obtieneOpcionesLiga(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneOpcionesLiga(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesLiga(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -40,7 +39,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     }
 
     @Override
-    public List<Map<String, String>> obtieneMenusPorRol(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneMenusPorRol(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneMenusPorRol(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -61,7 +60,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     }
 
     @Override
-    public List<Map<String, String>> obtieneOpcionesMenu(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneOpcionesMenu(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesMenu(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -80,7 +79,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     }
 
     @Override
-    public List<Map<String, String>> obtieneOpcionesSubMenu(Map params) throws DaoException {
+    public List<Map<String, String>> obtieneOpcionesSubMenu(Map params) throws Exception {
     	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesSubMenu(getDataSource()), params);
     	return (List<Map<String, String>>) resultado.get("pv_registro_o");
     }
@@ -101,7 +100,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     
     @Override
 	public String guardaOpcionLiga(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params guardaOpcionLiga: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaOpcionLiga(getDataSource()), params);
 		
@@ -125,7 +124,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 
 	@Override
 	public String guardaMenu(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params guardaMenu: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaMenu(getDataSource()), params);
 		
@@ -154,7 +153,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 
 	@Override
 	public String guardaOpcionMenu(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params guardaOpcionMenu: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaOpcionMenu(getDataSource()), params);
 		
@@ -183,7 +182,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 
 	@Override
 	public String eliminaOpcionLiga(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params eliminaOpcionLiga: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new EliminaOpcionLiga(getDataSource()), params);
 		
@@ -205,7 +204,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 
 	@Override
 	public String eliminaMenu(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params eliminaMenu: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new EliminaMenu(getDataSource()), params);
 		
@@ -227,7 +226,7 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 
 	@Override
 	public String eliminaOpcionMenu(Map params)
-			throws DaoException {
+			throws Exception {
 		logger.debug("Params eliminaOpcionMenu: "+ params);
 		Map<String, Object> mapResult = ejecutaSP(new EliminaOpcionMenu(getDataSource()), params);
 		

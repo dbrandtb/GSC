@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -26,80 +25,74 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 public interface SiniestrosDAO {
 
-	public List<AutorizacionServicioVO> obtieneDatosAutorizacionEsp(String nmautser) throws DaoException;
+	public List<AutorizacionServicioVO> obtieneDatosAutorizacionEsp(String nmautser) throws Exception;
 
-	public List<GenericVO> obtieneListadoAsegurado(String cdperson) throws DaoException;
+	public List<GenericVO> obtieneListadoAsegurado(String cdperson) throws Exception;
 
-	public List<AutorizaServiciosVO> obtieneListadoAutorizaciones(String tipoAut,String cdperson) throws DaoException;
+	public List<AutorizaServiciosVO> obtieneListadoAutorizaciones(String tipoAut,String cdperson) throws Exception;
 	
-	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws DaoException;
+	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws Exception;
 	
-	
-	//public List<GenericVO> obtieneListadoCausaSiniestro(String cdcausa) throws DaoException;
-	
-	public List<CoberturaPolizaVO> obtieneListadoCoberturaPoliza(HashMap<String, Object> paramCobertura) throws DaoException;
+	public List<CoberturaPolizaVO> obtieneListadoCoberturaPoliza(HashMap<String, Object> paramCobertura) throws Exception;
 
-	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws DaoException;
+	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws DaoException;
+	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws Exception;
 	
-	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws DaoException;
+	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws Exception;
 
-	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws DaoException;
+	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws Exception;
 
-	public String generaContraRecibo(HashMap<String, Object> params) throws DaoException;
+	public String generaContraRecibo(HashMap<String, Object> params) throws Exception;
 
-	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params) throws DaoException;
+	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params) throws Exception;
 
-	public List<Map<String, String>> loadListaRechazos() throws DaoException;
+	public List<Map<String, String>> loadListaRechazos() throws Exception;
 	
-	public String guardaEstatusDocumento(HashMap<String, String> params) throws DaoException;
+	public String guardaEstatusDocumento(HashMap<String, String> params) throws Exception;
 
-	public String rechazarTramite(HashMap<String, String> params) throws DaoException;
-
-	//public List<GenericVO> obtieneListadoMovRechazo(String cdmotRechazo) throws DaoException;
+	public String rechazarTramite(HashMap<String, String> params) throws Exception;
 	
-	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser) throws DaoException;
+	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser) throws Exception;
 	
-	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws DaoException;
+	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
-	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo) throws DaoException;
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo) throws Exception;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
-	public List<AutorizacionServicioVO> guardarAutorizacionServicio(Map<String, Object> paramsR) throws DaoException;
+	public List<AutorizacionServicioVO> guardarAutorizacionServicio(Map<String, Object> paramsR) throws Exception;
 
-	public List<ConsultaTTAPVAATVO> obtieneListadoTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws DaoException;
+	public List<ConsultaTTAPVAATVO> obtieneListadoTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws Exception;
 
-	public List<ConsultaManteniVO> obtieneListadoManteni(String cdtabla, String codigo) throws DaoException;
+	public List<ConsultaManteniVO> obtieneListadoManteni(String cdtabla, String codigo) throws Exception;
 
-	public List<ConsultaPorcentajeVO> obtieneListadoPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws DaoException;
+	public List<ConsultaPorcentajeVO> obtieneListadoPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws Exception;
 
-	public void eliminacionRegistrosTabla(String nmautser) throws DaoException;
+	public void eliminacionRegistrosTabla(String nmautser) throws Exception;
 
-	public List<GenericVO> obtieneListadoPlaza() throws DaoException;
+	public List<GenericVO> obtieneListadoPlaza() throws Exception;
 
-	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws DaoException;
+	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
 
-	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws DaoException;
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
-	public String guardaAltaSiniestroAutServicio(String nmautser) throws DaoException;
+	public String guardaAltaSiniestroAutServicio(String nmautser) throws Exception;
 
-	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException;
-
+	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception;
 	
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws DaoException;
+			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception;
 	
-	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException;
+	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
-	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException;
+	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws Exception;
 
-	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws DaoException;
+	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception;
 	
-	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception;
 
-	public String actualizaOTValorMesaControl(Map<String, Object> params) throws DaoException;
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
@@ -381,7 +374,7 @@ public interface SiniestrosDAO {
 
 	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception;
 	
-	public List<GenericVO> obtieneListadoRamoSalud()  throws DaoException;
+	public List<GenericVO> obtieneListadoRamoSalud()  throws Exception;
 
 	public List<Map<String, String>> obtieneDatosAdicionales(Map<String, Object> params) throws Exception;
 
