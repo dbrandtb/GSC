@@ -1704,7 +1704,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramSigsvdefEnd.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
 			paramSigsvdefEnd.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 			paramSigsvdefEnd.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-			paramSigsvdefEnd.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+			paramSigsvdefEnd.put("pv_nmsituac_i" , "0");//smap1.get("nmsituac"));
 			paramSigsvdefEnd.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 			paramSigsvdefEnd.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
 			if(smap1.get("altabaja").equalsIgnoreCase("alta")) {
@@ -2711,6 +2711,25 @@ public class EndososAction extends PrincipalCoreAction
 				smap1.get("estado"), smap1.get("nmpoliza"),
 				TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
 		error = resp.getMensaje();
+		
+		try
+		{
+			List<ComponenteVO>autocompleterICD=pantallasManager.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null
+					, null, null, null
+					, "PANTALLA_EXCLUSION", "COMBO_ICD", null);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(autocompleterICD, true, false, true, false, false, false);
+			
+			item1=gc.getItems();
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			logger.error(new StringBuilder("Error al obtener combo de icd #").append(timestamp).toString(),ex);
+		}
 		
 		logger.debug(new StringBuilder()
 		        .append("\n######                                  ######")
