@@ -13,6 +13,10 @@
 {
     visibility : hidden;
 }
+.tatrigarHide
+{
+    display : none;
+}
 </style>
 <script>
 ////// overrides //////
@@ -1591,6 +1595,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                             for(var k=0;k<hijos.length;k++)
                                             {
                                                 var hijo = hijos[k];
+                                                hijo.fieldLabel='['+hijo.cdatribu+'] '+hijo.fieldLabel;
                                                 if(hijo.maxValue&&hijo.maxValue<999999999)
                                                 {
                                                     hijo.on('change',function(comp,value)
@@ -1668,16 +1673,19 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                        var val=me.getValue().toLowerCase().replace(/s/g,'');
                                                                        if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
                                                                        {
-                                                                           item.show();
+                                                                           //item.show();
+                                                                           item.removeCls('tatrigarHide');
                                                                        }
                                                                        else
                                                                        {
-                                                                           item.hide();
+                                                                           //item.hide();
+                                                                           item.addCls('tatrigarHide');
                                                                        }
                                                                    }
                                                                    else
                                                                    {
-                                                                       item.show();
+                                                                       //item.show();
+                                                                       item.removeCls('tatrigarHide');
                                                                    }
                                                                });
                                                                },1000); 
