@@ -12,6 +12,9 @@
     var venExcluUrlAddExcluDetalle   = '<s:url namespace="/" action="agregarExclusionDetalle" />';
     var venExcluUrlSaveHtml     = '<s:url namespace="/" action="guardarHtmlExclusion" />';
     var venExcluUrlCargarTipos  = '<s:url namespace="/" action="cargarTiposClausulasExclusion" />';
+    var _endpnx_urlAgregarIcd      = '<s:url namespace="/emision" action="agregarClausulaICD"            />';
+    var _endpnx_urlCargarIcdClausu = '<s:url namespace="/emision" action="cargarClausulaICD"             />';
+    var _endpnx_urlBorrarIcd       = '<s:url namespace="/emision" action="borrarClausulaICD"             />';
     var venExcluContexto        = '${ctx}';
     var inputCduniecopx         = '<s:property value="smap1.cdunieco" />';
     var inputCdramopx           = '<s:property value="smap1.cdramo" />';
@@ -154,6 +157,15 @@ Ext.onReady(function(){
     {
         extend:'Ext.data.Model',
         fields:['cdtipcla','dstipcla','swgrapol']
+    });
+    
+    Ext.define('_endpnx_modeloICD',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'ICD','DESCRIPCION'
+        ]
     });
     /*/////////////////*/
     ////// modelos //////
@@ -588,6 +600,14 @@ Ext.onReady(function(){
                                                                 }                                                                
                                                             }
                                                         }
+                                                        ,{
+                                                            text     : "Relaci&oacute;n de ICD's"
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pill.png'
+                                                            ,handler : function ()
+                                                            {
+                                                                _endpnx_windowIcd(record.get('cdclausu'));
+                                                            }
+                                                        }
                                                     ]
                                                 }).show();
                                             }
@@ -797,6 +817,14 @@ Ext.onReady(function(){
                                                 }
                                             }
                                         }
+                                        ,{
+                                            text     : "Relaci&oacute;n de ICD's"
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/pill.png'
+                                            ,handler : function ()
+                                            {
+                                                _endpnx_windowIcd(record.get('cdclausu'));
+                                            }
+                                        }
                                     ]
                                 }).show();
                             }//end if cell index = 1
@@ -878,5 +906,173 @@ Ext.onReady(function(){
     //////////////////////
     
 });
+
+////// funciones //////
+function _endpnx_windowIcd(cdclausu)
+{
+    debug('>_endpnx_windowIcd:',cdclausu);
+    var ventana;
+    var combo = <s:property value="item1" />;
+    combo.on(
+    {
+        'select' : function(comp,val)
+        {
+            debug('combo icd select:',val[0]);
+            ventana.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _endpnx_urlAgregarIcd
+                ,params  :
+                {
+                    'smap1.cdunieco'  : inputCduniecopx
+                    ,'smap1.cdramo'   : inputCdramopx
+                    ,'smap1.estado'   : inputEstadopx
+                    ,'smap1.nmpoliza' : inputNmpolizapx
+                    ,'smap1.nmsituac' : inputNmsituacpx
+                    ,'smap1.cdclausu' : cdclausu
+                    ,'smap1.nmsuplem' : panendExInput['nmsuplem']
+                    ,'smap1.icd'      : val[0].get('key')
+                }
+                ,success : function(response)
+                {
+                    comp.reset();
+                    ventana.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('### agregar icd response:',json);
+                    if(json.exito)
+                    {
+                        mensajeCorrecto('ICD relacionado','Se ha relacionado correctamente el ICD',function()
+                        {
+                            combo.up().down('grid').getStore().load();
+                        });
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    comp.reset();
+                    ventana.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+    });
+    ventana = Ext.create('Ext.window.Window',
+    {
+        title   : "Relaci&oacute;n de ICD's"
+        ,width  : 600
+        ,height : 400
+        ,modal  : true
+        ,items  :
+        [
+            combo
+            ,Ext.create('Ext.grid.Panel',
+            {
+                minHeight   : 100
+                ,maxHeight  : 250
+                ,autoScroll : true
+                ,columns    :
+                [
+                    {
+                        header     : 'ICD'
+                        ,dataIndex : 'DESCRIPCION'
+                        ,flex      : 1
+                    }
+                    ,{
+                        xtype  : 'actioncolumn'
+                        ,width : 20
+                        ,items :
+                        [
+                            {
+                                icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+                                ,tooltip : 'Quitar'
+                                ,handler : function(view,row,col,item,e,record)
+                                {
+                                    _endpnx_quitarICD(cdclausu,record.get('ICD'),combo.up().down('grid').getStore(),ventana);
+                                }
+                            }
+                        ]
+                    }
+                ]
+                ,store : Ext.create('Ext.data.Store',
+                {
+                    model     : '_endpnx_modeloICD'
+                    ,autoLoad : true
+                    ,proxy    :
+                    {
+                        url          : _endpnx_urlCargarIcdClausu
+                        ,type        : 'ajax'
+                        ,extraParams :
+                        {
+                            'smap1.cdunieco'  : inputCduniecopx
+                            ,'smap1.cdramo'   : inputCdramopx
+                            ,'smap1.estado'   : inputEstadopx
+                            ,'smap1.nmpoliza' : inputNmpolizapx
+                            ,'smap1.nmsituac' : inputNmsituacpx
+                            ,'smap1.cdclausu' : cdclausu
+                            ,'smap1.nmsuplem' : panendExInput['nmsuplem']
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
+                        }
+                    }
+                })
+            })
+        ]
+    }).show();
+    centrarVentanaInterna(ventana);
+    debug('<_endpnx_windowIcd');
+}
+
+function _endpnx_quitarICD(cdclausu,icd,store,ventana)
+{
+    debug('>_endpnx_quitarICD:',cdclausu,icd,'dummy');
+    debug(store,ventana,'dummy');
+    ventana.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _endpnx_urlBorrarIcd
+        ,params  :
+        {
+            'smap1.cdunieco'  : inputCduniecopx
+            ,'smap1.cdramo'   : inputCdramopx
+            ,'smap1.estado'   : inputEstadopx
+            ,'smap1.nmpoliza' : inputNmpolizapx
+            ,'smap1.nmsituac' : inputNmsituacpx
+            ,'smap1.cdclausu' : cdclausu
+            ,'smap1.nmsuplem' : panendExInput['nmsuplem']
+            ,'smap1.icd'      : icd
+        }
+        ,success : function(response)
+        {
+            ventana.setLoading(false);
+            var json=Ext.decode(response.responseText);
+            debug('### borrar icd response:',json);
+            if(json.exito)
+            {
+                mensajeCorrecto('ICD borrado','El ICD ha sido borrado',function()
+                {
+                    store.load();
+                });
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            ventana.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_endpnx_quitarICD');
+}
+////// funciones //////
 </script>
 <div id="maindiv_scr_exclu" style="height:500px;border:0px solid red;"></div>
