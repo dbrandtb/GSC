@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -32,7 +31,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	protected static final transient Logger logger = Logger.getLogger(CatalogosDAOImpl.class);
 	
 	@Override
-	public List<GenericVO> obtieneTmanteni(String cdTabla) throws DaoException{
+	public List<GenericVO> obtieneTmanteni(String cdTabla) throws Exception{
 		
 		try {
 			Map<String,Object> params=new LinkedHashMap<String,Object>(0);
@@ -49,7 +48,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			return (List<GenericVO>) resultado.get("pv_registro_o");
 			
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -75,7 +74,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     }
     
     
-    public List<GenericVO> obtieneColonias(String codigoPostal) throws DaoException {
+    public List<GenericVO> obtieneColonias(String codigoPostal) throws Exception {
     	try {
     		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_codpostal_i", codigoPostal);
@@ -83,7 +82,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtenCatalogoColonias(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
     }
     
@@ -111,7 +110,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	}
     }
 
-    public List<GenericVO> obtieneMunicipios(String cdEstado) throws DaoException {
+    public List<GenericVO> obtieneMunicipios(String cdEstado) throws Exception {
     	try {
     		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_estado_i", cdEstado);
@@ -119,7 +118,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneMunicipios(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
     	} catch (Exception e) {
-    		throw new DaoException(e.getMessage(), e);
+    		throw new Exception(e.getMessage(), e);
     	}
     }
     
@@ -146,7 +145,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	}
     }
 
-    public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws DaoException {
+    public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws Exception {
     	try {
     		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
     		params.put("pv_cdtipsit_i", cdtipsit);
@@ -154,7 +153,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneZonasPorModalidad(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
     	} catch (Exception e) {
-    		throw new DaoException(e.getMessage(), e);
+    		throw new Exception(e.getMessage(), e);
     	}
     }
     
@@ -183,7 +182,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 
 	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor) throws Exception {
 		try {
     		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
             params.put("pv_cdatribu_i",cdAtribu);
@@ -200,7 +199,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSit(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -226,7 +225,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     }
     
     @Override
-	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
+	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String otValor) throws Exception {
 		try {
     		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
             params.put("pv_cdatribu_i",cdAtribu);
@@ -236,7 +235,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSin(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
     
@@ -262,7 +261,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     }
 
 	@Override
-	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws DaoException {
+	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws Exception {
 		
 		try {
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
@@ -273,7 +272,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosPol(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -301,7 +300,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 	@Override
 	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant)
-			throws DaoException {
+			throws Exception {
 		try {
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
 			params.put("pv_cdramo_i"  ,cdRamo);
@@ -313,7 +312,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosGar(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -344,7 +343,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	@Override
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu,
 			String cdTipSit, String cdRamo, String valAnt, String cdRol)
-			throws DaoException {
+			throws Exception {
 		try {
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
 			params.put("pv_cdramo_i", cdRamo);
@@ -356,7 +355,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosRol(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
     
@@ -386,7 +385,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 
 	@Override
-	public List<GenericVO> obtieneRolesSistema(String dsRol) throws DaoException {
+	public List<GenericVO> obtieneRolesSistema(String dsRol) throws Exception {
 		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_dssysrol_i", dsRol);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneRolesSistema(getDataSource()), params);
@@ -413,7 +412,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 
 	@Override
-	public List<GenericVO> obtieneAgentes(String claveONombre) throws DaoException {
+	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception {
 		try {
 			HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 			params.put("pv_nombre_i", claveONombre);
@@ -421,7 +420,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAgentes(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 	
@@ -468,7 +467,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     }
 	
 	@Override
-	public List<GenericVO> obtieneSucursales(String cdunieco) throws DaoException {
+	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("pv_suc_admon_i", cdunieco);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneSucursales(getDataSource()), params);

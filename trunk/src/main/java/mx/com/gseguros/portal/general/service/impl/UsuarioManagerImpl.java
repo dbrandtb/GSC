@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.general.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl;
@@ -55,27 +53,27 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	}
 
 	@Override
-	public List<GenericVO> obtienerRolesPorPrivilegio(Map<String, String> params) throws ApplicationException{
+	public List<GenericVO> obtienerRolesPorPrivilegio(Map<String, String> params) throws Exception{
 		try {
 			return usuarioDAO.obtienerRolesPorPrivilegio(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 		
 	}
 	
 	@Override
-	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws ApplicationException{
+	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws Exception{
 		try {
 			return usuarioDAO.obtieneRolesUsuario(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	
 	}
 	
 	@Override
-	public boolean guardaRolesUsuario(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException{
+	public boolean guardaRolesUsuario(Map<String, String> params, List<Map<String, String>> saveList) throws Exception{
 		boolean allUpdated = true;
 		
 		for(Map<String, String> rol : saveList){
@@ -93,17 +91,17 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneProductosAgente(Map<String, String> params) throws ApplicationException{
+	public List<Map<String, String>> obtieneProductosAgente(Map<String, String> params) throws Exception{
 		try {
 			return usuarioDAO.obtieneProductosAgente(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 		
 	}
 	
 	@Override
-	public boolean guardaProductosAgente(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException{
+	public boolean guardaProductosAgente(Map<String, String> params, List<Map<String, String>> saveList) throws Exception{
 		boolean allUpdated = true;
 		
 		for(Map<String, String> rol : saveList){
@@ -126,7 +124,7 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	 * de Rol y Cliente
 	 * @param User - usuario admitido desde el login
 	 * @return Lista con elementos del Arbol.
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
 	//TODO: Implementar el uso de este metodo, ya que actualmente se utiliza la forma anterior
 	@Override

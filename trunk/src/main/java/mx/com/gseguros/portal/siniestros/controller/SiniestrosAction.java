@@ -16,7 +16,6 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -5218,7 +5217,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     }
     
     
-    public String ProcesoAltaTramite(String msgResult) throws ApplicationException
+    public String ProcesoAltaTramite(String msgResult) throws Exception
     {
         // si tipo de pago es Directo
         if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo()))

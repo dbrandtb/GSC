@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.dao.RecibosDAO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
@@ -23,7 +22,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ReciboVO> obtieneRecibos(Map<String, Object> params) throws DaoException {
+	public List<ReciboVO> obtieneRecibos(Map<String, Object> params) throws Exception {
 		Map<String, Object> result = ejecutaSP(new ObtieneRecibos(getDataSource()), params);
 		return (List<ReciboVO>) result.get("pv_registro_o");
 	}
@@ -61,7 +60,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
 
 	
 	@Override
-	public List<DetalleReciboVO> obtieneDetalleRecibo(Map<String, Object> params) throws DaoException {
+	public List<DetalleReciboVO> obtieneDetalleRecibo(Map<String, Object> params) throws Exception {
 		Map<String, Object> result = ejecutaSP(new ConsultaDetalleRecibo(getDataSource()), params); 
 		return (List<DetalleReciboVO>) result.get("pv_RegDatos_o");
 	}

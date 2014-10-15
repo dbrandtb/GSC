@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
@@ -39,67 +38,67 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	
 	@Override
-	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws ApplicationException {
+	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
 		try {
 			return siniestrosDAO.obtieneDatosAutorizacionEsp(nmautser);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
-	public List<GenericVO> getConsultaListaAsegurado(String cdperson) throws ApplicationException {
+	public List<GenericVO> getConsultaListaAsegurado(String cdperson) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoAsegurado(cdperson);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<AutorizaServiciosVO> getConsultaListaAutorizaciones(
-			String tipoAut, String cdperson) throws ApplicationException {
+			String tipoAut, String cdperson) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoAutorizaciones(tipoAut,cdperson);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoProvMedico(tipoprov,cdpresta);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(
-			HashMap<String, Object> paramCobertura) throws ApplicationException {
+			HashMap<String, Object> paramCobertura) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoCoberturaPoliza(paramCobertura);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(
 			HashMap<String, Object> paramDatSubGral)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoDatSubGeneral(paramDatSubGral);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant,
-			String cdsubcob) throws ApplicationException {
+			String cdsubcob) throws Exception {
 		try {
 			log.debug("getConsultaListaSubcobertura cdgarant: "+cdgarant+", cdsubcob: "+cdsubcob);
 			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob);
@@ -110,53 +109,53 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
 			return lista;
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoCPTICD(cdtabla,otclave);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.loadListaDocumentos(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public String generaContraRecibo(HashMap<String, Object> params)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.generaContraRecibo(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.loadListaIncisosRechazos(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList)
-			throws ApplicationException {
+			throws Exception {
 		
 		boolean allUpdated = true;
 		
@@ -176,17 +175,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	@Override
 	public List<Map<String, String>> loadListaRechazos()
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.loadListaRechazos();
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public boolean rechazarTramite(HashMap<String, String> params)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			siniestrosDAO.rechazarTramite(params);
 		} catch (DaoException daoExc) {
@@ -198,7 +197,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	@Override
 	public List<SiniestroVO>  solicitudPagoEnviada(Map<String, String> params)
-			throws ApplicationException {
+			throws Exception {
 		
 		List<SiniestroVO> siniestros  = null;
 		try {
@@ -216,86 +215,86 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	@Override
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoTDeTauts(nmautser);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public void getEliminacionRegistros(String nmautser)
-			throws ApplicationException {
+			throws Exception {
 			try {
 				siniestrosDAO.eliminacionRegistrosTabla(nmautser);
 			} catch (DaoException daoExc) {
-				throw new ApplicationException(daoExc.getMessage(), daoExc);
+				throw new Exception(daoExc.getMessage(), daoExc);
 			}
 	}
 	
 	@Override
-	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR)throws ApplicationException {
+	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR)throws Exception {
 		try {
 			return siniestrosDAO.guardarAutorizacionServicio(paramsR);			
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts)
-			throws ApplicationException {
+			throws Exception {
 		try {
 			return siniestrosDAO.guardarListaTDeTauts(paramsTDeTauts);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
 	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(
-			HashMap<String, Object> paramTTAPVAAT) throws ApplicationException {
+			HashMap<String, Object> paramTTAPVAAT) throws Exception {
 		 try {
 		        return siniestrosDAO.obtieneListadoTTAPVAAT(paramTTAPVAAT);
 		    } catch (DaoException daoExc) {
-		        throw new ApplicationException(daoExc.getMessage(), daoExc);
+		        throw new Exception(daoExc.getMessage(), daoExc);
 		    }
 	}
 
 	@Override
-	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws ApplicationException {
+	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoManteni(cdtabla,codigo);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException {
+	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoPorcentaje(cdcpt,cdtipmed,mtobase);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws ApplicationException {
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException {
+	public List<GenericVO> getConsultaListaPlaza() throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoPlaza();
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -315,7 +314,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex,
-			String tipoAccion) throws ApplicationException {
+			String tipoAccion) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			String accion = null;
@@ -344,9 +343,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (ParseException parseExc) {
-			throw new ApplicationException(parseExc.getMessage(), parseExc);
+			throw new Exception(parseExc.getMessage(), parseExc);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -366,7 +365,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String cdmoneda,
 			String tasacamb,
 			String ptimporta,
-			String dctonuex) throws ApplicationException {
+			String dctonuex) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
@@ -389,94 +388,94 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (ParseException parseExc) {
-			throw new ApplicationException(parseExc.getMessage(), parseExc);
+			throw new Exception(parseExc.getMessage(), parseExc);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException {
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaListaTworkSin(paramsTworkSin);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException {
+	public String getAltaSiniestroAutServicio(String nmautser) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroAutServicio(nmautser);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException {
+	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroAltaTramite(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws ApplicationException {
+												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
 					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
-	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException {
+	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaMsinival(paramMsinival);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws ApplicationException {
+	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoFacturas(paramFact);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
 	@Override
-	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws ApplicationException {
+	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception {
 		try {
 			return siniestrosDAO.bajaMsinival(paramBajasinival);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	//public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
 	
-	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException {
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoCobertura(cdramo,cdtipsit);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
-	public String actualizaOTValorMesaControl(Map<String, Object> params) throws ApplicationException {
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception {
 		try
 		{
 			String[] keys = new String[]{
@@ -501,7 +500,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 		catch (DaoException daoExc)
 		{
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -631,7 +630,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.consultaPolizaUnica(paramPolUnica);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -640,7 +639,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.validaExclusionPenalizacion(paramExclusion);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -1002,7 +1001,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.validaPorcentajePenalizacion(zonaContratada,zonaAtencion);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1011,7 +1010,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.obtieneAutorizacionProceso(nmAutSer);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1020,7 +1019,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.validaDocumentosCargados(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1029,7 +1028,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.obtieneDatosReclamoWS(params);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1056,7 +1055,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.consultaListaAltaTramite(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1065,7 +1064,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.consultaListaMesaControl(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1074,7 +1073,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			siniestrosDAO.eliminacionTworksin(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1083,7 +1082,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			siniestrosDAO.eliminacionTFacMesaControl(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -1162,7 +1161,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.validaDocumentosAutServicio(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -1221,7 +1220,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.obtieneMontoArancelCPT(tipoConcepto, idProveedor, idConceptoTipo );
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1231,7 +1230,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			siniestrosDAO.eliminacionDocumentosxTramite(ntramite);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1241,7 +1240,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
@@ -1251,7 +1250,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.requiereAutorizacionServicio(cobertura, subcobertura);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}*/
 	
@@ -1265,11 +1264,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<GenericVO> getConsultaListaRamoSalud() throws ApplicationException {
+	public List<GenericVO> getConsultaListaRamoSalud() throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoRamoSalud();
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 
@@ -1289,7 +1288,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try {
 			return siniestrosDAO.eliminarAsegurado(paramsTworkSin);
 		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
+			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 

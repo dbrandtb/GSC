@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasSiniestroDAO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -23,7 +22,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements ConsultasSiniestroDAO {
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultaDatosSiniestrosVO> obtieneConsultaAseguradosPagoReembolso(String cdperson) throws DaoException {
+	public List<ConsultaDatosSiniestrosVO> obtieneConsultaAseguradosPagoReembolso(String cdperson) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaListaAseguradosPagoReembolso(getDataSource()), params);
@@ -61,7 +60,7 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
     }
 	
 	@SuppressWarnings("unchecked")
-	public List<ConsultaDatosSiniestrosVO> obtieneConsultaFacturasPagoDirecto(String cdperson, String cdproveerdor, String cdfactura) throws DaoException {
+	public List<ConsultaDatosSiniestrosVO> obtieneConsultaFacturasPagoDirecto(String cdperson, String cdproveerdor, String cdfactura) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		params.put("pv_proveedor_i", cdproveerdor);

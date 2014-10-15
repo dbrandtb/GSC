@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.dao.ReportesDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -34,7 +33,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ReporteVO> obtenerListaReportes() throws DaoException {
+	public List<ReporteVO> obtenerListaReportes() throws Exception {
     	Map<String, Object> result = ejecutaSP(new ObtieneListaReportesSP(this.getDataSource()), new HashMap<String, Object>());
 		return (List<ReporteVO>)result.get("pv_registro_o");
     }
@@ -63,7 +62,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     @SuppressWarnings("unchecked")
 	@Override
-	public List<ComponenteVO> obtenerParametrosReporte(Map<String, Object> params) throws DaoException {
+	public List<ComponenteVO> obtenerParametrosReporte(Map<String, Object> params) throws Exception {
     	Map<String, Object> result = ejecutaSP(new ObtieneParametrosReportesSP(this.getDataSource()), params);
 		return (List<ComponenteVO>)result.get("pv_registro_o");
     }
@@ -237,7 +236,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     
 	@Override
-	public Map<String, Object> actualizarParametroReporte(String cdreporte, String username, ParamReporteVO paramReporteVO) throws DaoException {
+	public Map<String, Object> actualizarParametroReporte(String cdreporte, String username, ParamReporteVO paramReporteVO) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdreporte_i", cdreporte);
@@ -263,7 +262,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     
 	@Override
-	public void armarReporte(String cdreporte, String username) throws DaoException {
+	public void armarReporte(String cdreporte, String username) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdreporte_i", cdreporte);
 		params.put("pv_usuario_i", username);
@@ -282,7 +281,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     @SuppressWarnings("unchecked")
 	@Override
-	public InputStream obtenerReporte(String cdreporte, String username) throws DaoException {
+	public InputStream obtenerReporte(String cdreporte, String username) throws Exception {
     	
     	Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdreporte_i", cdreporte);
@@ -297,7 +296,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
 			ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
 			archivo = inputList.get(0);
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 		
 		return archivo;
