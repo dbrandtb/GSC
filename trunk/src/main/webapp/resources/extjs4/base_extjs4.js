@@ -400,9 +400,11 @@ function _fieldByName(name,parent,ocultarErrores)
     return comp;
 }
 
-function _fieldByLabel(label,parent)
+function _fieldByLabel(label,parent,ocultarErrores)
 {
     debug('_fieldByLabel:',label);
+    debug('ocultarErrores:',ocultarErrores,'DUMMY');
+    
     var comp;
     var arr = [];
     if(parent)
@@ -413,7 +415,7 @@ function _fieldByLabel(label,parent)
     {
         arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
     }
-    if(arr.length==0)
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
     {
         mensajeError('No se encuentra el campo "'+label+'"');
     }
