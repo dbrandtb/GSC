@@ -107,7 +107,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
         }
     }
 	
-    
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception {
@@ -136,7 +135,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     protected class PolizaAseguradoMapper  implements RowMapper<ConsultaPolizaAseguradoVO> {
     	
     	public ConsultaPolizaAseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		
     		ConsultaPolizaAseguradoVO polizaAsegurado = new ConsultaPolizaAseguradoVO();
     		polizaAsegurado.setCdramo(rs.getString("codigo_ramo"));
     		polizaAsegurado.setCdunieco(rs.getString("compania"));
@@ -152,12 +150,47 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     }
 
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliex_i", polizaAsegurado.getNmpoliex());
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaSuplementosSP(getDataSource()), params);
+		return (List<ConsultaDatosSuplementoVO>) mapResult.get("pv_registro_o");
 	}
+	
+	protected class ConsultaSuplementosSP extends StoredProcedure {
+		protected ConsultaSuplementosSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
+    protected class DatosSuplementoMapper  implements RowMapper<ConsultaDatosSuplementoVO> {
+    	
+    	public ConsultaDatosSuplementoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		ConsultaDatosSuplementoVO suplemento = new ConsultaDatosSuplementoVO();
+    		suplemento.setCdunieco(rs.getString("cdunieco"));
+    		suplemento.setCdramo(rs.getString("cdramo"));
+    		suplemento.setEstado(rs.getString("estado"));
+    		suplemento.setNmpoliza(rs.getString("nmpoliza"));
+    		suplemento.setFeinival(Utilerias.formateaFecha(rs.getString("feinival")));
+    		suplemento.setNsuplogi(rs.getString("nsuplogi"));
+    		suplemento.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
+    		suplemento.setNlogisus(rs.getString("nlogisus"));
+    		suplemento.setDstipsup(rs.getString("dstipsup"));
+    		suplemento.setPtpritot(rs.getString("ptpritot"));
+    		suplemento.setNmsuplem(rs.getString("nmsuplem"));
+    		suplemento.setOrigen(rs.getString("origen"));
+    		return suplemento;
+    	}
+    }
+    
 
 	@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(

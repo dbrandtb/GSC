@@ -50,10 +50,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		return consultasPolizaDAOICE.obtieneHistoricoPoliza(polizaAsegurado);
 	}
 
 	@Override
