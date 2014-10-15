@@ -81,6 +81,8 @@ var _p25_tabGruposLineal;
 var _p25_tabGruposModifi;
 var _p25_gridTarifas;
 
+var _p25_filtroCobTimeout;
+
 var _p22_parentCallback = false;
 
 var _p25_editorNombreGrupo=
@@ -1607,7 +1609,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                             } 
                                             var item = Ext.create('Ext.form.Panel',
                                             {
-                                                width       : 440
+                                                width       : 470
                                                 ,frame      : true
                                                 ,height     : 140
                                                 ,autoScroll : true
@@ -1619,7 +1621,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     {
                                                         xtype       : 'displayfield'
                                                         ,fieldLabel : '<span style="color:white;">'+json.slist1[j].DSGARANT+'</span>'
-                                                        ,labelWidth : 300
+                                                        ,labelWidth : 220
                                                     }
                                                     ,{
                                                         xtype       : 'checkbox' 
@@ -1639,6 +1641,46 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
                                                                 }
+                                                            }
+                                                        }
+                                                    }
+                                                    ,{
+                                                        xtype       : 'displayfield'
+                                                        ,fieldLabel : '<span style="color:white;">Buscar</span>'
+                                                        ,labelWidth : 35
+                                                    }
+                                                    ,{
+                                                        xtype       : 'textfield'
+                                                        ,width      : 85
+                                                        ,listeners  :
+                                                        {
+                                                            change : function(me)
+                                                            {
+                                                                var form=me.up('form');
+                                                                debug('form:',form);
+                                                                clearTimeout(_p25_filtroCobTimeout);
+                                                                _p25_filtroCobTimeout = setTimeout(function()
+                                                                {
+                                                               Ext.Array.each(form.items.items,function(item)
+                                                               {
+                                                                   if(me.getValue()+'x'!='x')
+                                                                   {
+                                                                       var val=me.getValue().toLowerCase().replace(/s/g,'');
+                                                                       if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
+                                                                       {
+                                                                           item.show();
+                                                                       }
+                                                                       else
+                                                                       {
+                                                                           item.hide();
+                                                                       }
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       item.show();
+                                                                   }
+                                                               });
+                                                               },1000); 
                                                             }
                                                         }
                                                     }
