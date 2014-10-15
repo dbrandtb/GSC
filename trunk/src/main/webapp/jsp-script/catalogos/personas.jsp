@@ -295,7 +295,7 @@ function _p22_buscarClic()
 function _p22_formBusqueda()
 {
     debug('>_p22_formBusqueda<');
-	return Ext.ComponentQuery.query('#_p22_formBusqueda')[0];
+	return Ext.ComponentQuery.query('#_p22_formBusqueda')[Ext.ComponentQuery.query('#_p22_formBusqueda').length-1];
 }
 
 function _p22_heredarColonia()
@@ -390,7 +390,7 @@ function _p22_tipoPersonaChange(combo,value)
 function _p22_comboColonias()
 {
     debug('>_p22_comboColonias<');
-    return Ext.ComponentQuery.query('[name=CDCOLONI]')[0];
+    return Ext.ComponentQuery.query('[name=CDCOLONI]')[Ext.ComponentQuery.query('[name=CDCOLONI]').length-1];
 }
 
 function _p22_comboCodPostal()
@@ -402,25 +402,25 @@ function _p22_comboCodPostal()
 function _p22_fieldSegundoNombre()
 {
     debug('>_p22_fieldSegundoNombre<');
-    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[0];
+    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[Ext.ComponentQuery.query('[name=DSNOMBRE1]').length-1];
 }
 
 function _p22_fieldApat()
 {
     debug('>_p22_fieldApat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[0];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[Ext.ComponentQuery.query('[name=DSAPELLIDO]').length-1];
 }
 
 function _p22_fieldAmat()
 {
     debug('>_p22_fieldAmat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[0];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[Ext.ComponentQuery.query('[name=DSAPELLIDO1]').length-1];
 }
 
 function _p22_fieldSexo()
 {
     debug('>_p22_fieldSexo<');
-    return Ext.ComponentQuery.query('[name=OTSEXO]')[0];
+    return Ext.ComponentQuery.query('[name=OTSEXO]')[Ext.ComponentQuery.query('[name=OTSEXO]').length-1];
 }
 
 function _p22_fieldTipoPersona()
@@ -641,13 +641,13 @@ function _p22_fieldRFC()
 function _p22_fieldCdperson()
 {
     debug('>_p22_fieldCdperson<');
-    return Ext.ComponentQuery.query('[name=CDPERSON]')[0];
+    return Ext.ComponentQuery.query('[name=CDPERSON]')[Ext.ComponentQuery.query('[name=CDPERSON]').length-1];
 }
 
 function _p22_fieldConsecutivo()
 {
     debug('>_p22_fieldConsecutivo<');
-    return Ext.ComponentQuery.query('[name=NMORDDOM]')[0];
+    return Ext.ComponentQuery.query('[name=NMORDDOM]')[Ext.ComponentQuery.query('[name=NMORDDOM]').length-1];
 }
 
 function _p22_nuevoClic()
@@ -757,7 +757,7 @@ function _p22_datosAdicionalesClic()
                         	text: 'Cerrar'
                         	,icon: '${ctx}/resources/fam3icons/icons/cancel.png'
                         	,handler: function(){
-                        		Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].close();
+                        		Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].close();
                         	}
                         }
                         ,'->'
@@ -1115,7 +1115,7 @@ function _p22_guardarDatosAdicionalesClic()
 function _p22_formDatosAdicionales()
 {
     debug('>_p22_formDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[0];
+    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[Ext.ComponentQuery.query('#_p22_formDatosAdicionales').length-1];
 }
 
 function _p22_documentosClic()
@@ -1280,7 +1280,7 @@ function _p22_subirArchivo(cdperson,codidocu,descrip)
 function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
 {
     debug('>_p22_cargarArchivo',cdperson,codidocu,dsdocume);
-    Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(true);
+    Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(true);
     Ext.Ajax.request(
     {
         url      : _p22_urlCargarNombreArchivo
@@ -1291,7 +1291,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
         }
         ,success : function(response)
         {
-            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(false);
+            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(false);
             var json=Ext.decode(response.responseText);
             debug('json response:',json);
             if(json.exito)
@@ -1325,7 +1325,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
         }
         ,failure : function()
         {
-            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[0].setLoading(false);
+            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(false);
             errorComunicacion();
         }
     });

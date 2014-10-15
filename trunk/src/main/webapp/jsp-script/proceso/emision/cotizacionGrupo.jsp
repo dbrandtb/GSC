@@ -4150,6 +4150,7 @@ function _p21_editarAsegurado(grid,rowIndex)
         record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
         record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
         record.set('NACIONALIDAD'     , json.smap1.CDNACION);
+        mensajeCorrecto('Datos guardados','Se actualiz&oacute; la persona');
     };
     debug('<_p21_editarAsegurado');
 }
@@ -4194,7 +4195,7 @@ function _p21_guardarAsegurados(grid,callback)
     {
         debug('guardar:',asegurados);
         var slist1 = [];
-        $.each(asegurados,function(i,irecord)
+        store.each(function(irecord)
         {
             debug('iterando para guardar:',irecord);
             slist1.push(
