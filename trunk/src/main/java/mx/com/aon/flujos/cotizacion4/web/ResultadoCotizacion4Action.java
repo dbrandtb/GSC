@@ -48,9 +48,6 @@ import com.opensymphony.xwork2.ActionContext;
  */
 public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
-    /**
-     * 
-     */
     private static final long serialVersionUID = 468349054462501325L;
 
     private final static Logger logger= Logger.getLogger(ResultadoCotizacion4Action.class);
@@ -143,17 +140,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String comprarCdciaaguradora;
     private String comprarCdunieco;
     private Map<String,String> smap1;
-
-    //para los hilos
-    private int incisosProcesados;
-    private int contador;
-    private DatosUsuario datosUsuario;
-    private String numeroPoliza;
-    private IncisoSaludVO incisoActualIterado;
-    long t;
-    private UserVO usuario;
-    private boolean errorHilos=false;
-    private Exception exceptionHilo;
     
     private String cdunieco;
     private String cdramo;
@@ -775,7 +761,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
             t1=System.currentTimeMillis();
             logger.debug("######$ tiempo antes de asigsvalipol "+t1);
-            WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
+            //WrapperResultados wr4=
+            kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
             t2=System.currentTimeMillis();
             logger.debug("######$ tiempo despues de asigsvalipol "+t2);
             logger.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
@@ -1169,7 +1156,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
 	    		try
 	    		{
-	            	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
+	            	//WrapperResultados mesaContWr=
+	            	kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
 	            	
 	            	logger.debug("se inserta detalle nuevo");
 	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
@@ -1402,11 +1390,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						    			tipoPersona = "S";
 						    		}
 						    	}
-						    	
+						    	/*
 						    	String nacionalidad = "001";// Nacional
 						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
 						    		nacionalidad = "002";
 						    	}
+						    	*/
 						    	
 						    	if(cli.getFecnacCli()!= null){
 						    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
