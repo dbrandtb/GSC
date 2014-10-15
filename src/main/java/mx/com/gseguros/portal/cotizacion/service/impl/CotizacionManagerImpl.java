@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -3579,14 +3578,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			
 			resp.setSlist(editadas);
 		}
-		catch(DaoException dx)
-		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(new StringBuilder("Error al obtener situaciones #").append(timestamp).toString());
-			resp.setRespuestaOculta(dx.getMessage());
-			logger.error(resp.getRespuesta(),dx);
-		}
 		catch(ApplicationException ax)
 		{
 			long timestamp = System.currentTimeMillis();
@@ -3594,6 +3585,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
 			resp.setRespuestaOculta(ax.getMessage());
 			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception dx)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener situaciones #").append(timestamp).toString());
+			resp.setRespuestaOculta(dx.getMessage());
+			logger.error(resp.getRespuesta(),dx);
 		}
 		
 		logger.info(
@@ -3647,7 +3646,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 			resp.setRespuesta("Se guardaron todos los datos");
 		}
-		catch(DaoException dx)
+		catch(Exception dx)
 		{
 			long timestamp = System.currentTimeMillis();
 			resp.setExito(false);
