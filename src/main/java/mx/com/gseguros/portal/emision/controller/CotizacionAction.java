@@ -3228,6 +3228,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		String rutaDocsTemp    = null;
 		String feini           = null;
 		String fefin           = null;
+		String cdsisrol        = null;
+		String cdagente        = null;
+		String codpostalCli    = null;
+		String cdedoCli        = null;
+		String cdmuniciCli     = null;
+		String ntramite        = null;
+		String ntramiteVacio   = null;
+		String cdpersonCli     = null;
+		String nombreCli       = null;
+		String rfcCli          = null;
+		String dsdomiciCli     = null;
+		String nmnumeroCli     = null;
+		String nmnumintCli     = null;
 		
 		//datos completos
 		try
@@ -3236,17 +3249,29 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException("No se recibieron datos");
 			}
-			censoTimestamp   = smap1.get("timestamp");
-			clasif           = smap1.get("clasif");
-			LINEA_EXTENDIDA  = smap1.get("LINEA_EXTENDIDA");
-			cdunieco         = smap1.get("cdunieco");
-			cdramo           = smap1.get("cdramo");
-			cdtipsit         = smap1.get("cdtipsit");
-			nmpoliza         = smap1.get("nmpoliza");
-			cdperpag         = smap1.get("cdperpag");
-			pcpgocte         = smap1.get("pcpgocte");
-			feini            = smap1.get("feini");
-			fefin            = smap1.get("fefin");
+			censoTimestamp  = smap1.get("timestamp");
+			clasif          = smap1.get("clasif");
+			LINEA_EXTENDIDA = smap1.get("LINEA_EXTENDIDA");
+			cdunieco        = smap1.get("cdunieco");
+			cdramo          = smap1.get("cdramo");
+			cdtipsit        = smap1.get("cdtipsit");
+			nmpoliza        = smap1.get("nmpoliza");
+			cdperpag        = smap1.get("cdperpag");
+			pcpgocte        = smap1.get("pcpgocte");
+			feini           = smap1.get("feini");
+			fefin           = smap1.get("fefin");
+			cdagente        = smap1.get("cdagente");
+			codpostalCli    = smap1.get("codpostal");
+			cdedoCli        = smap1.get("cdedo");
+			cdmuniciCli     = smap1.get("cdmunici");
+			ntramite        = smap1.get("ntramite");
+			ntramiteVacio   = smap1.get("ntramiteVacio");
+			cdpersonCli     = smap1.get("cdperson");
+			nombreCli       = smap1.get("nombre");
+			rfcCli          = smap1.get("cdrfc");
+			dsdomiciCli     = smap1.get("dsdomici");
+			nmnumeroCli     = smap1.get("nmnumero");
+			nmnumintCli     = smap1.get("nmnumint");
 			
 			if(session==null)
 			{
@@ -3259,6 +3284,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			UserVO user = (UserVO)session.get("USUARIO");
 			cdusuari = user.getUser();
 			cdelemen = user.getEmpresa().getElementoId();
+			cdsisrol = user.getRolActivo().getObjeto().getValue();
 			
 			rutaDocsTemp = getText("ruta.documentos.temporal");
 		}
@@ -3282,7 +3308,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			cotizacionManager.subirCensoCompleto(
+			ManagerRespuestaVoidVO resp = cotizacionManager.subirCensoCompleto(
 					cdunieco
 					,cdramo
 					,nmpoliza
@@ -3296,7 +3322,29 @@ public class CotizacionAction extends PrincipalCoreAction
 					,getText("user.server.layouts")
 					,getText("pass.server.layouts")
 					,getText("directorio.server.layouts")
+					,cdtipsit
+					,cdusuari
+					,cdsisrol
+					,cdagente
+					,codpostalCli
+					,cdedoCli
+					,cdmuniciCli
+					,olist1
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,ntramite
+					,ntramiteVacio
+					,cdelemen
 					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
 		logger.info(

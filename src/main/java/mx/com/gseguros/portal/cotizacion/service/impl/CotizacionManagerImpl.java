@@ -2105,7 +2105,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		Date fechaHoy = new Date();
 		
-		//nmpoliza
+		//mpolizas
 		if(resp.isExito())
 		{
 			try
@@ -2975,6 +2975,115 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		
+		if(resp.isExito())
+		{
+			ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
+					grupos
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,hayTramite
+					,hayTramiteVacio
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdtipsit
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,codpostalCli
+					,cdedoCli
+					,cdmuniciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,ntramite
+					,ntramiteVacio
+					,cdagente
+					,cdusuari
+					,cdelemen
+					,false //reinsertarContratante
+					);
+			
+			resp.setExito(respInterna.isExito());
+			resp.setRespuesta(respInterna.getRespuesta());
+			resp.setRespuestaOculta(respInterna.getRespuestaOculta());
+			if(resp.isExito())
+			{
+				resp.getSmap().putAll(respInterna.getSmap());
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ generarTramiteGrupo @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	private ManagerRespuestaSmapVO procesoColectivoInterno(
+			List<Map<String,Object>>grupos
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,boolean hayTramite
+			,boolean hayTramiteVacio
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdtipsit
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String ntramite
+			,String ntramiteVacio
+			,String cdagente
+			,String cdusuari
+			,String cdelemen
+			,boolean reinsertaContratante
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ procesoColectivoInterno @@@@@@")
+				.append("\n@@@@@@ grupos=")              .append(grupos)
+				.append("\n@@@@@@ cdunieco=")            .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")              .append(cdramo)
+				.append("\n@@@@@@ nmpoliza=")            .append(nmpoliza)
+				.append("\n@@@@@@ hayTramite=")          .append(hayTramite)
+				.append("\n@@@@@@ hayTramiteVacio=")     .append(hayTramiteVacio)
+				.append("\n@@@@@@ clasif=")              .append(clasif)
+				.append("\n@@@@@@ LINEA_EXTENDIDA=")     .append(LINEA_EXTENDIDA)
+				.append("\n@@@@@@ cdtipsit=")            .append(cdtipsit)
+				.append("\n@@@@@@ cdpersonCli=")         .append(cdpersonCli)
+				.append("\n@@@@@@ nombreCli=")           .append(nombreCli)
+				.append("\n@@@@@@ rfcCli=")              .append(rfcCli)
+				.append("\n@@@@@@ dsdomiciCli=")         .append(dsdomiciCli)
+				.append("\n@@@@@@ codpostalCli=")        .append(codpostalCli)
+				.append("\n@@@@@@ cdedoCli=")            .append(cdedoCli)
+				.append("\n@@@@@@ cdmuniciCli=")         .append(cdmuniciCli)
+				.append("\n@@@@@@ nmnumeroCli=")         .append(nmnumeroCli)
+				.append("\n@@@@@@ nmnumintCli=")         .append(nmnumintCli)
+				.append("\n@@@@@@ ntramite=")            .append(ntramite)
+				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
+				.append("\n@@@@@@ cdagente=")            .append(cdagente)
+				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
+				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
+				.append("\n@@@@@@ reinsertaContratante=").append(reinsertaContratante)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		resp.setSmap(new HashMap<String,String>());
+		
 		//mpolisit y tvalosit
 		if(resp.isExito())
 		{
@@ -3140,7 +3249,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					swexiper = "N";
 				}
 				
-				if(swexiper.equals("N")||true)//TODO hace falta separar en otro metodo con "reinsertaContratante"
+				if(swexiper.equals("N")||reinsertaContratante)
 				{
 					personasDAO.movimientosMpersona(
 							cdpersonCli
@@ -3344,11 +3453,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setRespuestaOculta("Todo OK");
 		}
 		
+
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ generarTramiteGrupo @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ procesoColectivoInterno @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
@@ -3571,6 +3681,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String usuarioServerLayout
 			,String passwordServerLayout
 			,String direcServerLayout
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,List<Map<String,Object>>grupos
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String ntramite
+			,String ntramiteVacio
+			,String cdelemen
 			)
 	{
 		logger.info(
@@ -3590,6 +3719,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ usuarioServerLayout=") .append(usuarioServerLayout)
 				.append("\n@@@@@@ passwordServerLayout=").append(passwordServerLayout)
 				.append("\n@@@@@@ direcServerLayout=")   .append(direcServerLayout)
+				.append("\n@@@@@@ cdtipsit=")            .append(cdtipsit)
+				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
+				.append("\n@@@@@@ cdagente=")            .append(cdagente)
+				.append("\n@@@@@@ codpostalCli=")        .append(codpostalCli)
+				.append("\n@@@@@@ cdedoCli=")            .append(cdedoCli)
+				.append("\n@@@@@@ cdmuniciCli=")         .append(cdmuniciCli)
+				.append("\n@@@@@@ grupos=")              .append(grupos)
+				.append("\n@@@@@@ clasif=")              .append(clasif)
+				.append("\n@@@@@@ LINEA_EXTENDIDA=")     .append(LINEA_EXTENDIDA)
+				.append("\n@@@@@@ cdpersonCli=")         .append(cdpersonCli)
+				.append("\n@@@@@@ nombreCli=")           .append(nombreCli)
+				.append("\n@@@@@@ dsdomiciCli=")         .append(dsdomiciCli)
+				.append("\n@@@@@@ nmnumeroCli=")         .append(nmnumeroCli)
+				.append("\n@@@@@@ nmnumintCli=")         .append(nmnumintCli)
+				.append("\n@@@@@@ ntramite=")            .append(ntramite)
+				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
+				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
 				.toString()
 				);
 		
@@ -3659,24 +3806,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 			logger.error(resp.getRespuesta(),ex);
 		}
 		
+		String nombreCenso = null;
+		
 		//crear pipes
 		if(resp.isExito())
 		{
-			File            censo       = new File(new StringBuilder(rutaDocsTemp).append("/censo_").append(censoTimestamp).toString());
+			
 			FileInputStream input       = null;
-			XSSFWorkbook    workbook    = null;
 			XSSFSheet       sheet       = null;
-			Long            inTimestamp = null;
-			String          nombreCenso = null;
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
 			try
 			{	
-				input       = new FileInputStream(censo);
-				workbook    = new XSSFWorkbook(input);
-				sheet       = workbook.getSheetAt(0);
-				inTimestamp = System.currentTimeMillis();
+				File censo            = new File(new StringBuilder(rutaDocsTemp).append("/censo_").append(censoTimestamp).toString());
+				input                 = new FileInputStream(censo);
+				XSSFWorkbook workbook = new XSSFWorkbook(input);
+				sheet                 = workbook.getSheetAt(0);
+				Long inTimestamp      = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
 				archivoTxt  = new File(new StringBuilder(rutaDocsTemp).append("/").append(nombreCenso).toString());
 				output      = new PrintStream(archivoTxt);
@@ -3703,6 +3850,541 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            int fila = 0;
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
+	                Row row        = rowIterator.next();
+	                Date   auxDate = null;
+	                Cell   auxCell = null;
+	                
+	                fila = fila + 1;
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("GRUPO: ")
+			                        .append(
+			                        		String.format("%.0f",row.getCell(0).getNumericCellValue())
+			                        ).append("|").toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(
+			                		    String.format("%.0f",row.getCell(0).getNumericCellValue())
+			                		    ).append("|").toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Grupo' (").append("A").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("PARENTESCO: ")
+			                		.append(row.getCell(1).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(1).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Parentesco' (").append("B").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("PATERNO: ")
+			                		.append(row.getCell(2).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(2).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Apellido paterno' (").append("C").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("MATERNO: ")
+			                		.append(row.getCell(3).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(3).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Apellido materno' (").append("D").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("NOMBRE: ")
+			                		.append(row.getCell(4).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(4).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Nombre' (").append("E").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(5);
+			                logger.debug(
+			                		new StringBuilder("SEGUNDO NOMBRE: ")
+			                		.append(
+			                				auxCell!=null?
+			                						auxCell.getStringCellValue()
+			                						:""
+			                		)
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxCell!=null?
+			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Segundo nombre' (").append("F").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("SEXO: ")
+			                		.append(row.getCell(6).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(6).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Sexo' (").append("G").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxDate=row.getCell(7).getDateCellValue();
+			                logger.debug(
+			                		new StringBuilder("FECHA NACIMIENTO: ")
+			                		.append(
+			                				auxDate!=null?
+			                						renderFechas.format(auxDate)
+			                						:""
+			                		)
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxDate!=null?
+			                				new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Fecha de nacimiento' (").append("H").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("COD POSTAL: ")
+			                		.append(String.format("%.0f",row.getCell(8).getNumericCellValue()))
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(String.format("%.0f",row.getCell(8).getNumericCellValue()))
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Codigo postal' (").append("I").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("ESTADO: ")
+			                		.append(row.getCell(9).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(9).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Estado' (").append("J").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("MUNICIPIO: ")
+			                		.append(row.getCell(10).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(10).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Municipio' (").append("K").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("COLONIA: ")
+			                		.append(row.getCell(11).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(11).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Colonia' (").append("L").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("CALLE: ")
+			                		.append(row.getCell(12).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(12).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Calle' (").append("M").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("NUM EXT: ")
+			                		.append(String.format("%.0f",row.getCell(13).getNumericCellValue()))
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(String.format("%.0f",row.getCell(13).getNumericCellValue()))
+			                		.append("|")
+			                		.toString()
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Numero exterior' (").append("N").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(14);
+			                logger.debug(
+			                		new StringBuilder("NUM INT: ")
+			                		.append(
+			                				auxCell!=null?
+			                						String.format("%.0f",auxCell.getNumericCellValue())
+			                						:""
+			                		)
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxCell!=null?
+			                				new StringBuilder(String.format("%.0f",auxCell.getNumericCellValue())).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Numero interior' (").append("O").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                logger.debug(
+			                		new StringBuilder("RFC: ")
+			                		.append(row.getCell(15).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		new StringBuilder(row.getCell(15).getStringCellValue())
+			                		.append("|")
+			                		.toString()
+			                		);
+			                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
+			                {
+			                	throw new Exception("Sin rfc");
+			                }
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'RFC' (").append("P").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(16);
+			                logger.debug(
+			                		new StringBuilder("CORREO: ")
+			                		.append(
+			                				auxCell!=null?
+			                						auxCell.getStringCellValue()
+			                						:""
+			                		).append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxCell!=null?
+			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Correo' (").append("Q").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(17);
+			                logger.debug(
+			                		new StringBuilder("TELEFONO: ")
+			                		.append(
+			                				auxCell!=null?
+			                						String.format("%.0f",auxCell.getNumericCellValue())
+			                						:""
+			                		)
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxCell!=null?
+			                				new StringBuilder(String.format("%.0f",auxCell.getNumericCellValue())).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Telefono' (").append("R").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                if(resp.isExito())
+	                {
+	                	try
+	                	{
+			                auxCell=row.getCell(18);
+			                logger.debug(
+			                		new StringBuilder("IDENTIDAD: ")
+			                		.append(
+			                				auxCell!=null?
+			                						auxCell.getStringCellValue()
+			                						:""
+			                		)
+			                		.append("|")
+			                		.toString()
+			                		);
+			                output.print(
+			                		auxCell!=null?
+			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+			                				:"|"
+			                		);
+	                	}
+		                catch(Exception ex)
+		                {
+		                	long timestamp = System.currentTimeMillis();
+		                	resp.setExito(false);
+		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Identidad' (").append("S").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+		                	resp.setRespuestaOculta(ex.getMessage());
+		                	logger.error(resp.getRespuesta(),ex);
+		                }
+	                }
+	                
+	                output.println("");
+	                logger.debug("** NUEVA_FILA **");
 	            }
 	            
 	            if(resp.isExito())
@@ -3751,6 +4433,114 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 	            }
 			}
+		}
+		
+		//pl censo
+		if(resp.isExito())
+		{
+			String nombreProcedureCenso = null;
+			String tipoCensoParam       = "COMPLETO";
+			
+			//obtener el PL
+			try
+			{
+				Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.PROCEDURE_CENSO
+						,cdramo
+						,cdtipsit
+						,tipoCensoParam
+						,null
+						);
+				nombreProcedureCenso = mapaAux.get("P1VALOR");
+				if(StringUtils.isBlank(nombreProcedureCenso))
+				{
+					throw new ApplicationException("No se encontraron datos");
+				}
+			}
+            catch(ApplicationException ax)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(
+            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
+            			.append(ax.getMessage())
+            			.append(" #")
+            			.append(timestamp)
+            			.toString());
+            	resp.setRespuestaOculta(ax.getMessage());
+            	logger.error(resp.getRespuesta(),ax);
+            }
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al obtener el nombre del procedimiento para el censo #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+			
+			//ejecutar el PL
+			if(resp.isExito())
+			{
+				try
+				{
+					cotizacionDAO.procesarCenso(
+							nombreProcedureCenso
+							,cdusuari
+							,cdsisrol
+							,nombreCenso
+							,cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,cdtipsit
+							,cdagente
+							,codpostalCli
+							,cdedoCli
+							,cdmuniciCli
+							);
+				}
+	            catch(Exception ex)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	resp.setExito(false);
+	            	resp.setRespuesta(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
+	            	resp.setRespuestaOculta(ex.getMessage());
+	            	logger.error(resp.getRespuesta(),ex);
+	            }
+			}
+		}
+		
+		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
+		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+		
+		if(resp.isExito())
+		{
+			ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
+					grupos
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,hayTramite
+					,hayTramiteVacio
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdtipsit
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,codpostalCli
+					,cdedoCli
+					,cdmuniciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,ntramite
+					,ntramiteVacio
+					,cdagente
+					,cdusuari
+					,cdelemen
+					,true);
 		}
 		
 		logger.info(

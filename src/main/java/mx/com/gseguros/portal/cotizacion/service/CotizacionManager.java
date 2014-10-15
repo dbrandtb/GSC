@@ -347,5 +347,24 @@ public interface CotizacionManager
 			,String usuarioServerLayout
 			,String passwordServerLayout
 			,String direcServerLayout
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,List<Map<String,Object>>grupos
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String ntramite
+			,String ntramiteVacio
+			,String cdelemen
 			);
 }
