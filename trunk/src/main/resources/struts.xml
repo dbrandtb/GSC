@@ -11,10 +11,11 @@
     <constant name="struts.devMode" value="false"/>
     <!-- Load custom default resource bundles: -->
     <constant name="struts.custom.i18n.resources" value="global, messages-database, reportes"/>
-    <!-- Parser to handle HTTP POST requests, encoded using the MIME-type multipart/form-data -->
+    <!-- Parser to handle HTTP POST requests, encoded using the MIME-type multipart/form-data: -->
     <constant name="struts.multipart.parser" value="monitored"/>
-    <!-- Allow slashes in your action names: -->
+    <!-- Allow slashes and parameters in action names: -->
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
+    <constant name="struts.mapper.alwaysSelectFullNamespace" value="false" />
     <!-- Scan Struts2 annotations -->
     <constant name="struts.convention.action.packages" value="mx.com.gseguros" />
     
