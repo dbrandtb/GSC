@@ -764,13 +764,13 @@ function _p22_datosAdicionalesClic()
                     ]
                 }).show(); 
                 
-                fieldMail=_fieldByLabel('Correo electrónico');
+                fieldMail=_fieldByLabel('Correo electrónico', null, true);
                 if(fieldMail)
                 {
                     fieldMail.regex = /^[_A-Z0-9-]+(\.[_A-Z0-9-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/;
                 }
                 
-				fieldEstCorp = _fieldByLabel('Estructura corporativa');
+				fieldEstCorp = _fieldByLabel('Estructura corporativa', null, true);
 				var fieldEstCorpAux = Ext.clone(fieldEstCorp);
 				
 				if(fieldEstCorp){
