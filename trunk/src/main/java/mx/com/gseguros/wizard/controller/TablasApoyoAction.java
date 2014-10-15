@@ -35,6 +35,16 @@ public class TablasApoyoAction extends PrincipalCoreAction {
      * Lista para guardar varios elementos
      */
     private List<Map<String, String>> saveList;
+
+    /**
+     * Lista para guardar varios elementos
+     */
+    private List<Map<String, String>> deleteList;
+    
+    /**
+     * Lista para guardar varios elementos
+     */
+    private List<Map<String, String>> updateList;
     
     /**
      * Mensaje de respuesta del servicio
@@ -49,9 +59,43 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 	public String obtieneValoresTablaApoyo5claves()throws Exception{
     	
     	try{
+    		params.put("PV_OTCLAVE1_I", null);
+    		params.put("PV_OTCLAVE2_I", null);
+    		params.put("PV_OTCLAVE3_I", null);
+    		params.put("PV_OTCLAVE4_I", null);
+    		params.put("PV_OTCLAVE5_I", null);
+    		params.put("PV_FEDESDE_I", null);
+    		params.put("PV_FEHASTA_I", null);
+    		params.put("PV_LIMITE_I" , "1000");
+    		
+    		logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
     		loadList = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
     	}catch(Exception ex){
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ex);
+    		msgRespuesta = ex.getMessage();
+    		success = false;
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+	
+	public String guardaValoresTablaApoyo()throws Exception{
+    	
+    	try{
+    		logger.debug("Guardando Valores de la Tabla de Apoyo...");
+    		logger.debug("Parametros: " + params);
+    		logger.debug("DeleteList: " + deleteList);
+    		logger.debug("SaveList:   " + saveList);
+    		logger.debug("UdateList:  " + updateList);
+    		
+    		tablasApoyoManager.guardaValoresTablaApoyo(params,deleteList,saveList,updateList);
+    		
+    		logger.debug("Valores de Tabla Guardados... ");
+    		
+    	}catch(Exception ex){
+    		logger.error("Error al guardaValoresTablaApoyo",ex);
     		msgRespuesta = ex.getMessage();
     		success = false;
     		return SUCCESS;
@@ -109,5 +153,21 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 
 	public void setMsgRespuesta(String msgRespuesta) {
 		this.msgRespuesta = msgRespuesta;
+	}
+
+	public List<Map<String, String>> getDeleteList() {
+		return deleteList;
+	}
+
+	public void setDeleteList(List<Map<String, String>> deleteList) {
+		this.deleteList = deleteList;
+	}
+
+	public List<Map<String, String>> getUpdateList() {
+		return updateList;
+	}
+
+	public void setUpdateList(List<Map<String, String>> updateList) {
+		this.updateList = updateList;
 	}
 }

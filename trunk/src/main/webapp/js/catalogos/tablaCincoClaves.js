@@ -3,74 +3,34 @@
  */
 Ext.onReady(function() {
 	
-	var loadMaskTabla = new Ext.LoadMask('dvCincoClaves', {msg:"Cargando Tabla..."});
+	
+	var  _NUM_MAX_FILAS = 1000;
+	
+	var loadMaskTabla = new Ext.LoadMask('mainDivTabs', {msg:"Cargando Tabla..."});
 	loadMaskTabla.show();
 	
 	//Models:
 	
     Ext.define('CabeceraClaveModel', {
         extend: 'Ext.data.Model',
-        fields: [
-        	{name: 'DSCLAVE1'},
-            {name: 'SWFORMA1'},
-            {name: 'DSFORMA'},
-            {name: 'NMLMIN1', type:'int'},
-            {name: 'NMLMAX1', type:'int'},
-            {name: 'NUMCLAVE', type:'int'}
-        ]
+        fields: ['DSCLAVE1','SWFORMA1','DSFORMA','NMLMIN1','NMLMAX1','NUMCLAVE']
     });
 
     Ext.define('CabeceraAtributoModel', {
         extend: 'Ext.data.Model',
-        fields: [
-	             'CDATRIBU'
-	            ,'DSATRIBU'
-	            ,'SWFORMAT'
-	            ,'DSFORMAT'
-	            ,'NMLMIN'
-	            ,'NMLMAX'
-	        ]
+        fields: ['CDATRIBU','DSATRIBU','SWFORMAT','DSFORMAT','NMLMIN','NMLMAX']
     });
     
     Ext.define('CincoClavesModel', {
         extend: 'Ext.data.Model',
-        fields: [
-            //{name: 'id'},
-            {name: 'NMTABLA'},
-            {name: 'OTCLAVE1'},
-            {name: 'OTCLAVE2'},
-            {name: 'OTCLAVE3'},
-            {name: 'OTCLAVE4'},
-            {name: 'OTCLAVE5'},
-            {name: 'FEDESDE'},
-            {name: 'FEHASTA'},
-            {name: 'OTVALOR01'},
-            {name: 'OTVALOR02'},
-            {name: 'OTVALOR03'},
-            {name: 'OTVALOR04'},
-            {name: 'OTVALOR05'},
-            {name: 'OTVALOR06'},
-            {name: 'OTVALOR07'},
-            {name: 'OTVALOR08'},
-            {name: 'OTVALOR09'},
-            {name: 'OTVALOR10'},
-            {name: 'OTVALOR11'},
-            {name: 'OTVALOR12'},
-            {name: 'OTVALOR13'},
-            {name: 'OTVALOR14'},
-            {name: 'OTVALOR15'},
-            {name: 'OTVALOR16'},
-            {name: 'OTVALOR17'},
-            {name: 'OTVALOR18'},
-            {name: 'OTVALOR19'},
-            {name: 'OTVALOR20'},
-            {name: 'OTVALOR21'},
-            {name: 'OTVALOR22'},
-            {name: 'OTVALOR23'},
-            {name: 'OTVALOR24'},
-            {name: 'OTVALOR25'},
-            {name: 'OTVALOR26'}
-        ]
+        fields: ['NMTABLA','OTCLAVE1','OTCLAVE2','OTCLAVE3','OTCLAVE4','OTCLAVE5',
+        		 {name: 'FEDESDE', defaultValue: Ext.Date.format(new Date(), 'd/m/Y')},
+        		 {name: 'FEHASTA', defaultValue: Ext.Date.format(new Date(), 'd/m/Y')},
+        		 'OTVALOR01','OTVALOR02','OTVALOR03','OTVALOR04','OTVALOR05',
+        		 'OTVALOR06','OTVALOR07','OTVALOR08','OTVALOR09','OTVALOR10',
+        		 'OTVALOR11','OTVALOR12','OTVALOR13','OTVALOR14','OTVALOR15',
+        		 'OTVALOR16','OTVALOR17','OTVALOR18','OTVALOR19','OTVALOR20',
+        		 'OTVALOR21','OTVALOR22','OTVALOR23','OTVALOR24','OTVALOR25','OTVALOR26']
     });
 	
     
@@ -105,6 +65,7 @@ Ext.onReady(function() {
         proxy: {
             type: 'ajax',
             url : _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES,
+            timeout: 100000,
             reader: {
                 type: 'json',
                 root: 'loadList'
@@ -114,30 +75,27 @@ Ext.onReady(function() {
     
     
     // Create an instance of the Spread panel
-    var spreadPanel = new Spread.grid.Panel({
+    var panelValoresTabCincoClaves = new Spread.grid.Panel({
         store: storeTablaCincoClaves,
         height: 600,
         tbar: [{
         	icon: _CONTEXT + '/resources/fam3icons/icons/table_edit.png',
             text: 'Habilitar edici&oacute;n',
             handler: function() {
-            	//console.log('this', this);
-                this.up('spread').setEditable(true);
+                panelValoresTabCincoClaves.setEditable(true);
             }
         }, {
         	icon: _CONTEXT + '/resources/fam3icons/icons/lock.png',
             text: 'Deshabilitar edici&oacute;n',
             handler: function() {
-                this.up('spread').setEditable(false);
+                panelValoresTabCincoClaves.setEditable(false);
             }
         },'-',{
             xtype      : 'numberfield',
             name       : 'rowsToCreate',
-//            fieldLabel : 'Agregar',
             minValue   : 0,
-            maxValue   : 500,
-            width      : 100,
-            labelAlign : 'right'
+            maxValue   : 100,
+            width      : 100
         },{
         	icon: _CONTEXT + '/resources/fam3icons/icons/table_add.png',
             text: 'Agregar Filas',
@@ -147,9 +105,35 @@ Ext.onReady(function() {
                     return;
                 }
                 var numFilas = this.previousSibling().getValue();
-            	var storeSpread = this.up('spread').getStore(); 
-                storeSpread.add( creaRows(numFilas, storeSpread.count()) );
-                this.up('spread').setEditable(true);//Aplicar estilo
+                
+                var totalFilas = storeTablaCincoClaves.getCount() + numFilas;
+                if(totalFilas > _NUM_MAX_FILAS){
+                	mensajeWarning("El valor m&aacute;ximo de filas a editar es: " + _NUM_MAX_FILAS);
+                	return;
+                }
+                
+                for(var count=0 ;count<numFilas; count++){
+        			storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
+        		}
+                panelValoresTabCincoClaves.setEditable(true);//Comienza a Mode Edicion de la tabla
+            }
+        },{
+        	icon: _CONTEXT + '/resources/fam3icons/icons/table_delete.png',
+            text: 'Eliminar Fila/Clave',
+            handler: function(btn,e) {
+            	Ext.Msg.show({
+    		            title: 'Aviso',
+    		            msg: '&iquest;Esta seguro que desea eliminar la fila de la celda seleccionada?',
+    		            buttons: Ext.Msg.YESNO,
+    		            fn: function(buttonId, text, opt) {
+    		            	if(buttonId == 'yes') {
+    		            		var rowIndex = panelValoresTabCincoClaves.getSelectionModel().getCurrentFocusPosition().row;
+                				storeTablaCincoClaves.removeAt(rowIndex);
+    		            	}
+            			},
+    		            animateTarget: btn,
+    		            icon: Ext.Msg.QUESTION
+        		});
             }
         }],
         // You can supply your own viewConfig to change the config of Spread.grid.View!
@@ -158,31 +142,95 @@ Ext.onReady(function() {
         //},
         listeners: {
         	render: function(grid, eOpts) {
-        		//console.log('Grid columns:', grid.columns);
-        		// Cambiamos los textos de encabezados:
         		cambiarEncabezados(grid);
-        	},
-            covercell: function(view, position, coverEl, eOpts) {
-                //console.log('External listener to covercell', arguments);
-                //console.log(view, position, coverEl, eOpts);
-            }
+        	}
         },
-        // Setting if editing is allowed initially
-        editable: true,
-        // Setting if edit mode styling shall be activated
+        editable: false,
         editModeStyling: true,
-        // Configure visible grid columns
+        enableKeyNav: true,
         columns: [
-        	{text: 'ID',        /*dataIndex: 'id',*/  columnWidth: 40,     xtype: 'spreadheadercolumn', sortable: false},
-            {text: 'NMTABLA',     dataIndex: 'NMTABLA', hidden: true, menuDisabled: true, sortable: false},
-            {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true, menuDisabled: true, sortable: false},
-            {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true, menuDisabled: true, sortable: false},
-            {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true, menuDisabled: true, sortable: false},
-            {dataIndex: 'OTCLAVE4', itemId: 'OTCLAVE4', hidden: true, menuDisabled: true, sortable: false},
-            {dataIndex: 'OTCLAVE5', itemId: 'OTCLAVE5', hidden: true, menuDisabled: true, sortable: false},
-            //{text: 'Fecha inicio', dataIndex: 'FEDESDE'},
-            {text: 'Fecha inicio', dataIndex: 'FEDESDE', xtype: 'datecolumn',   format:'d/m/Y', menuDisabled: true, sortable: false},
-            {text: 'Fecha fin',    dataIndex: 'FEHASTA', renderer: Ext.util.Format.dateRenderer('d/m/Y'), menuDisabled: true, sortable: false},
+        	{
+        		text: '#', xtype: 'rownumberer', sortable: false, editable: false, resizable: true, width: 40,
+        		tdCls: Ext.baseCSSPrefix + 'grid-cell-header ' + Ext.baseCSSPrefix + 'grid-cell-special'
+        	},
+            {text: 'NMTABLA',     dataIndex: 'NMTABLA', hidden: true, menuDisabled: true, sortable: false, editable: false},
+            {dataIndex: 'OTCLAVE1', itemId: 'OTCLAVE1', hidden: true, menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('OTCLAVE1');
+		    		}
+		           return newValue;
+		       }
+            },
+            {dataIndex: 'OTCLAVE2', itemId: 'OTCLAVE2', hidden: true, menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('OTCLAVE2');
+		    		}
+		           return newValue;
+		       }
+            },
+            {dataIndex: 'OTCLAVE3', itemId: 'OTCLAVE3', hidden: true, menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('OTCLAVE3');
+		    		}
+		           return newValue;
+		       }
+            },
+            {dataIndex: 'OTCLAVE4', itemId: 'OTCLAVE4', hidden: true, menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('OTCLAVE4');
+		    		}
+		           return newValue;
+		       }
+            },
+            {dataIndex: 'OTCLAVE5', itemId: 'OTCLAVE5', hidden: true, menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('OTCLAVE5');
+		    		}
+		           return newValue;
+		       }
+            },
+            {text: 'Fecha inicio', dataIndex: 'FEDESDE', menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('FEDESDE');
+		    		}
+		           return newValue;
+		       }
+            },
+            {text: 'Fecha fin',    dataIndex: 'FEHASTA', menuDisabled: true, sortable: false,
+            	cellwriter: function(newValue, position) {
+		           /**
+		    		 *Para inhabilitar la edicion de rows que ya esten en la Base de Datos 
+		    		 */
+					if(!position.record.phantom){
+		    			return position.record.get('FEHASTA');
+		    		}
+		           return newValue;
+		       }
+            },
             {text: 'OTVALOR1',  itemId: 'OTVALOR1',  dataIndex: 'OTVALOR01', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR2',  itemId: 'OTVALOR2',  dataIndex: 'OTVALOR02', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR3',  itemId: 'OTVALOR3',  dataIndex: 'OTVALOR03', hidden: true, menuDisabled: true, sortable: false},
@@ -191,7 +239,7 @@ Ext.onReady(function() {
             {text: 'OTVALOR6',  itemId: 'OTVALOR6',  dataIndex: 'OTVALOR06', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR7',  itemId: 'OTVALOR7',  dataIndex: 'OTVALOR07', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR8',  itemId: 'OTVALOR8',  dataIndex: 'OTVALOR08', hidden: true, menuDisabled: true, sortable: false},
-            {text: 'OTVALOR9',  itemId: 'OTVALOR9',  dataIndex: 'OTVALOR09', hidden: true,  menuDisabled: true, sortable: false},
+            {text: 'OTVALOR9',  itemId: 'OTVALOR9',  dataIndex: 'OTVALOR09', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR10', itemId: 'OTVALOR10', dataIndex: 'OTVALOR10', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR11', itemId: 'OTVALOR11', dataIndex: 'OTVALOR11', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR12', itemId: 'OTVALOR12', dataIndex: 'OTVALOR12', hidden: true, menuDisabled: true, sortable: false},
@@ -208,22 +256,24 @@ Ext.onReady(function() {
             {text: 'OTVALOR23', itemId: 'OTVALOR23', dataIndex: 'OTVALOR23', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR24', itemId: 'OTVALOR24', dataIndex: 'OTVALOR24', hidden: true, menuDisabled: true, sortable: false},
             {text: 'OTVALOR25', itemId: 'OTVALOR25', dataIndex: 'OTVALOR25', hidden: true, menuDisabled: true, sortable: false},
-            {text: 'OTVALOR26', itemId: 'OTVALOR26', dataIndex: 'OTVALOR26', hidden: true, menuDisabled: true, sortable: false}
+            {text: 'OTVALOR26', itemId: 'OTVALOR26', dataIndex: 'OTVALOR26', hidden: true, menuDisabled: true, sortable: false}/*,
+            {
+			 	xtype: 'actioncolumn',
+			 	width: 30,
+			 	sortable: false,
+			 	menuDisabled: true,
+			 	items: [{
+			 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+			 		tooltip: 'Eliminar Clave',
+			 		handler: function(grid, rowIndex){
+			 					debug('eliminando',rowIndex);
+						 		storeTablaCincoClaves.removeAt(rowIndex);
+						 	}
+		 		}]
+			}*/
         ]
     });
     
-    // Show spread inside a window
-//    var spreadWnd = new Ext.window.Window({
-//        title: 'Tabla de Cinco Claves',
-//        layout: 'fit',
-//        //closable: false,
-//        //maximized: true,
-//        //resizable: true,
-//        //maximizable: true,
-//        //width: 1000,
-//        //height: 600,
-//        items: [spreadPanel]
-//    });
     
     var panelValoresTablaApoyo = Ext.create('Ext.form.Panel', {
     	renderTo: 'dvCincoClaves',
@@ -240,7 +290,7 @@ Ext.onReady(function() {
 						},
             			items: [{
 									xtype      : 'textfield',
-									name       : 'pi_nmtabla',
+									name       : 'PV_NMTABLA_I',
 									fieldLabel : 'N&uacute;mero de Tabla',
 									value      : _NMTABLA,
 									readOnly      : true
@@ -264,7 +314,7 @@ Ext.onReady(function() {
 									maxLengthText: 'Longitud m&aacute;xima de 60 caracteres',
 						    		value      : _DSTABLA
 						        }]
-					}, spreadPanel],
+					}, panelValoresTabCincoClaves],
 					buttonAlign : 'center',
 							    buttons:
 							    	[{
@@ -283,51 +333,64 @@ Ext.onReady(function() {
 						    		            	if(buttonId == 'yes') {
 						    		            		
 						    		            		// PARA AGREGAR NUEVAS FILAS A  GUARDAR
+						    		            		var deleteList = [];
 						    		            		var saveList = [];
+						    		            		var updateList = [];
+    													
+						    		            		storeTablaCincoClaves.getRemovedRecords().forEach(function(record,index,arr){
+												        	deleteList.push(record.data);
+												    	});
 						    		            		
 						    		            		storeTablaCincoClaves.getNewRecords().forEach(function(record,index,arr){
 												    		if(record.dirty){
 												    			saveList.push(record.data);
-//												    			if(record.get("NMLMIN") > record.get("NMLMAX")){
-//												    				validacionMinMax = false;
-//												    				mensajeWarning("El valor m&iacute;nimo debe ser menor al valor m&aacute;ximo del atributo: " + record.get("DSATRIBU"));
-//												    				return false; //break here
-//												    			}
 												    		}
-//												    		else if(!Ext.isEmpty(record.get('DSATRIBU'))){
-//												    			contadorAtributos++;
-//												    		}
 												    	});
-												    	debug('Filas Added: ', saveList);
+												    	
+												    	storeTablaCincoClaves.getUpdatedRecords().forEach(function(record,index,arr){
+												    		updateList.push(record.data);
+												    	});
+												    	
+													    debug('Claves Removed: ' , deleteList);
+													    debug('Claves Added: '   , saveList);
+													    debug('Claves Updated: ' , updateList);
 												    	
 												    	
 						    		            		panelValoresTablaApoyo.setLoading(true);
 						    		            		
-//						    		            		Ext.Ajax.request({
-//										    	            url: _URL_GuardaTablaApoyo,
-//										    	            jsonData : {
-//										    	            	params: panelValoresTablaApoyo.getValues(),
-//										    	                'saveList'   : saveList,
-//										    	                'saveList2'   : saveList2
-//										    	            },
-//										    	            success  : function(response){
-//										    	                panelValoresTablaApoyo.setLoading(false);
-//										    	                var json = Ext.decode(response.responseText);
-//										    	                if(json.success){
-//										    	                	recargagridTablas();
-//										    						windowLoader.close();
-//										    						mensajeCorrecto('\u00C9xito', 'La tabla se guard\u00F3 correctamente', Ext.Msg.OK, Ext.Msg.INFO);
-//										    						panelValoresTablaApoyo.getForm().reset();
-//										    	                }else{
-//										    	                    mensajeError(json.msgRespuesta);
-//										    	                }
-//										    	            }
-//										    	            ,failure  : function()
-//										    	            {
-//										    	                panelValoresTablaApoyo.setLoading(false);
-//										    	                errorComunicacion();
-//										    	            }
-//												    	});
+						    		            		Ext.Ajax.request({
+										    	            url: _URL_GuardaValoresTablaApoyo,
+										    	            jsonData : {
+										    	            	params: panelValoresTablaApoyo.getValues(),
+										    	                'deleteList' : deleteList,
+										    	                'saveList'   : saveList,
+										    	                'updateList' : updateList
+										    	            },
+										    	            success  : function(response){
+										    	                panelValoresTablaApoyo.setLoading(false);
+										    	                var json = Ext.decode(response.responseText);
+										    	                if(json.success){
+										    	                	storeTablaCincoClaves.load({
+																        params : {
+																            'params.PV_NMTABLA_I' : _NMTABLA 
+																        },
+																        callback: function(records, operation, success) {
+																        	//Agregamos 10 rows vacios por defecto:
+																        	for(var count=0 ;count<10; count++){
+																        		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
+																        	}
+																        }
+																    });
+										    	                }else{
+										    	                    mensajeError(json.msgRespuesta);
+										    	                }
+										    	            }
+										    	            ,failure  : function()
+										    	            {
+										    	                panelValoresTablaApoyo.setLoading(false);
+										    	                errorComunicacion();
+										    	            }
+												    	});
 						    		            	}
 						            			},
 						    		            animateTarget: btn,
@@ -349,12 +412,6 @@ Ext.onReady(function() {
     
     /////////////////////////////////////// INIT //////////////////////
     
-//    // Show the spread window
-//    spreadWnd.show();
-//
-//    // And center it
-//    spreadWnd.center();
-//    
     // Cargamos los valores de la tabla:
     
     storeTablaCincoClaves.load({
@@ -362,61 +419,12 @@ Ext.onReady(function() {
             'params.PV_NMTABLA_I' : _NMTABLA 
         },
         callback: function(records, operation, success) {
-        	//Agregamos los IDs a los records obtenidos:
-        	Ext.each(records, function(record, index) {
-        		//console.log('record:', record);
-        		record.set('id', index+1 );
-            });
-        	//Agregamos rows vacios por defecto:
-        	spreadPanel.getStore().add( creaRows(20, spreadPanel.getStore().count()) );
+        	//Agregamos 10 rows vacios por defecto:
+        	for(var count=0 ;count<10; count++){
+        		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
+        	}
         }
     });
-    
-    
-    
-    //Functions:
-    
-    /**
-     * Crea rows para el grid excel
-     * @param count RFC del asegurado
-     * @param initialRowNumber (Optional) Numero de Renglón inicial para los nuevos datos
-     * @return datos para el grid
-     */
-    function creaRows(count, initialRowNumber) {
-
-    	initialRowNumber = initialRowNumber || 0;
-    	
-    	//console.log('count', count);
-    	//console.log('initialRowNumber', initialRowNumber);
-    	
-        var data = [], curDate = new Date();
-    
-        // Clear milliseconds because toString() will loose them
-        // and data change will be detected false-positively...
-        curDate.setMilliseconds(0);
-    
-        // Generate data rows
-        for (var i = 0; i < count; i++) {
-        
-            data.push({
-                id       : initialRowNumber+1,
-                NMTABLA  : '',
-                OTCLAVE1 : '', OTCLAVE2 : '', OTCLAVE3 : '', OTCLAVE4 : '', OTCLAVE5 : '',
-                FEDESDE  : Ext.Date.format(new Date(), 'd/m/Y'),
-                FEHASTA  : curDate,
-                OTVALOR1 : '', OTVALOR2 : '', OTVALOR3 : '', OTVALOR4 : '', OTVALOR5 : '',
-                OTVALOR6 : '', OTVALOR7 : '', OTVALOR8 : '', OTVALOR9 : '', OTVALOR10: '',
-                OTVALOR11: '', OTVALOR12: '', OTVALOR13: '', OTVALOR14: '', OTVALOR15: '',
-                OTVALOR16: '', OTVALOR17: '', OTVALOR18: '', OTVALOR19: '', OTVALOR20: '', 
-                OTVALOR21: '', OTVALOR22: '', OTVALOR23: '', OTVALOR24: '', OTVALOR25: '',
-                OTVALOR26: ''
-            });
-            initialRowNumber++;
-        }
-        //console.log('data', data);
-        return data;
-    };
-
     
     /**
      * Se cambian los encabezados de las columnas de clave según el nmtabla

@@ -15,6 +15,7 @@
             var _URL_CONSULTA_CABECERAS_CLAVES = '<s:url namespace="/catalogos" action="obtieneClavesTablaApoyo" />';
             var _URL_CONSULTA_CABECERAS_ATRIBUTOS = '<s:url namespace="/catalogos" action="obtieneAtributosTablaApoyo" />';
             var _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo5claves" />';
+            var _URL_GuardaValoresTablaApoyo = '<s:url namespace="/catalogos" action="guardaValoresTablaApoyo" />';
             var _NMTABLA = '<s:property value="params.nmtabla" />';
             var _CDTABLA = '<s:property value="params.cdtabla" />';
             var _DSTABLA = '<s:property value="params.dstabla" />';

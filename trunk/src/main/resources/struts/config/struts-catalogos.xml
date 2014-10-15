@@ -414,6 +414,14 @@
             </interceptor-ref>
             <result name="success" type="json" />
         </action>
+
+        <action name="guardaValoresTablaApoyo" class="tablasApoyoAction" method="guardaValoresTablaApoyo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
        
        <action name="obtieneClavesTablaApoyo" class="catalogoAction" method="obtieneClavesTablaApoyo">
 	       <result type="json">
