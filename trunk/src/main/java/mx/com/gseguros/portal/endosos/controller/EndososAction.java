@@ -1715,7 +1715,7 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si")) {
-				/*
+				
 				endososManager.actualizaTvalositCoberturasAdicionales(
 						(String)omap1.get("pv_cdunieco_i")
 						,(String)omap1.get("pv_cdramo_i")
@@ -1727,14 +1727,13 @@ public class EndososAction extends PrincipalCoreAction
 								TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString()
 								:TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString()
 						);
-						*/
-				
+						
 				Map<String,Object>paramCalcValorEndoso=new LinkedHashMap<String,Object>(0);
 				paramCalcValorEndoso.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
 				paramCalcValorEndoso.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
 				paramCalcValorEndoso.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 				paramCalcValorEndoso.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-				paramCalcValorEndoso.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+				paramCalcValorEndoso.put("pv_nmsituac_i" , "0");//smap1.get("nmsituac"));
 				paramCalcValorEndoso.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				paramCalcValorEndoso.put("pv_feinival_i" , (Date)omap1.get("pv_fecha_i"));
 				if(smap1.get("altabaja").equalsIgnoreCase("alta")) {
