@@ -6,10 +6,11 @@ public interface Constantes {
 	public static final String CDUNIECO = "1";
 	public static final String FORMATO_FECHA = "dd/MM/yyyy";
 	
-	public static final String MSG_ID_ERROR = "100000";
-	public static final String MSG_ID_OK    = "200000";
-	public static final String MSG_TITLE_ERROR = "1";
-	public static final String MSG_TITLE_OK    = "2";
+	public static final String MSG_ID_ERROR      = "100000";
+	public static final String MSG_ID_OK         = "200000";
+	public static final String MSG_TITLE_ERROR   = "1";
+	public static final String MSG_TITLE_OK      = "2";
+	public static final String MSG_TITLE_WARNING = "4";
     
     public static final String INSERT_MODE = "I";
     public static final String UPDATE_MODE = "U";
