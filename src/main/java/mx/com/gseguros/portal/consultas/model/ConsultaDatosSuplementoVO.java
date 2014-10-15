@@ -75,6 +75,11 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	 */
 	private String icodpoliza;
 	
+	/**
+	 * Origen de la poliza (SISA, ICE, etc)
+	 */
+	private String origen;
+	
 	
 	public String getNmsuplem() {
 		return nmsuplem;
@@ -148,6 +153,12 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	}
 	public void setIcodpoliza(String icodpoliza) {
 		this.icodpoliza = icodpoliza;
+	}
+	public String getOrigen() {
+		return origen;
+	}
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
