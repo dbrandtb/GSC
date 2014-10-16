@@ -14,6 +14,7 @@
     --%>
     var urlCargarCoberturasp3 = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
     var urlCargarCoberturasDispp3 = '<s:url namespace="/endosos" action="obtenerCoberturasDisponibles" />';
+    var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos" action="obtenerComponenteSituacionCobertura" />';
     var inputCduniecop3 = '<s:property value="smap1.pv_cdunieco" />';
     var inputCdramop3 = '<s:property value="smap1.pv_cdramo" />';
     var inputEstadop3 = '<s:property value="smap1.pv_estado" />';
@@ -96,6 +97,8 @@
                     ,ptvalbas : record.get('ptvalbas')
                     ,swmanual : record.get('swmanual')
                     ,swreas   : record.get('swreas')
+                    ,cdatribu : record.get('cdatribu')
+                    ,otvalor  : record.get('otvalor')
                 });
             });
             json['slist2']=slist2;
@@ -363,7 +366,10 @@
                         dateFormat : 'd/m/Y'
                     }, {
                         name : 'swrevalo'
-                    } ]
+                    }
+                    ,'cdatribu'
+                    ,'otvalor'
+                    ]
                 });
 
                 Ext.define('ModeloAdicionalesp3', {
@@ -477,7 +483,7 @@
 								{
 								    header     : 'Cobertura'
 								    ,dataIndex : 'NOMBRE_GARANTIA'
-								    ,flex      : 1
+                                    ,width     : 180
 								}
 								,{
 								    header     : 'Suma asegurada'
@@ -535,7 +541,7 @@
                                 {
                                     header     : 'Cobertura'
                                     ,dataIndex : 'NOMBRE_GARANTIA'
-                                    ,flex      : 1
+                                    ,width     : 180
                                 }
                                 ,{
                                     header     : 'Suma asegurada'
@@ -587,7 +593,7 @@
                                 {
                                     header     : 'Cobertura'
                                     ,dataIndex : 'NOMBRE_GARANTIA'
-                                    ,flex      : 1
+                                    ,width     : 180
                                 }
                                 ,{
                                     header     : 'Suma asegurada'
@@ -610,8 +616,81 @@
                                      debug('cellclick');
                                      if(cellIndex==2)
                                      {
-                                         storeCoberturasAgregarp3.add(record);
-                                         storeCoberturasDispp3.remove(record);
+                                    	 Ext.Ajax.request(
+                                         {
+                                        	 url     : _endcob_urlObtenerComponenteSituacionCobertura
+                                        	 ,params :
+                                        	 {
+                                        	     'smap1.cdramo'    : inputCdramop3
+                                        	     ,'smap1.cdtipsit' : inputCdtipsitp3
+                                        	     ,'smap1.cdgarant' : record.get('GARANTIA')
+                                        	     ,'smap1.cdtipsup' : inputAltabajap3=='alta'?'6':'7'
+                                        	 }
+                                        	 ,success : function(response)
+                                        	 {
+                                        	     var json = Ext.decode(response.responseText);
+                                        	     debug('### obtener componente situacion cobertura:',json);
+                                        	     if(json.exito)
+                                        	     {
+                                        	         if(json.smap1.CONITEM=='true')
+                                        	         {
+                                        	             centrarVentanaInterna(
+                                        	                 Ext.create('Ext.window.Window',
+                                        	                 {
+                                        	                     title   : 'Valor de cobertura'
+                                        	                     ,modal  : true
+                                        	                     ,width  : 300
+                                        	                     ,height : 150
+                                        	                     ,items  :
+                                        	                     [
+                                        	                         Ext.decode(json.smap1.item)
+                                        	                     ]
+                                        	                     ,buttonAlign : 'center'
+                                        	                     ,buttons     :
+                                        	                     [
+                                        	                         {
+                                        	                             text     : 'Aceptar'
+                                        	                             ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                        	                             ,handler : function(me)
+                                        	                             {
+                                        	                                 var item=me.up().up().items.items[0];
+                                        	                                 var valido = !Ext.isEmpty(item.getValue());
+                                        	                                 if(!valido)
+                                        	                                 {
+                                        	                                     datosIncompletos();
+                                        	                                 }
+                                        	                                 
+                                        	                                 if(valido)
+                                        	                                 {
+                                        	                                     storeCoberturasAgregarp3.add(record);
+                                        	                                     storeCoberturasDispp3.remove(record);
+                                        	                                     record.set('cdatribu' , item.cdatribu);
+                                        	                                     record.set('otvalor'  , item.getValue());
+                                        	                                     debug('record:',record);
+                                        	                                     me.up().up().destroy();
+                                        	                                 }
+                                        	                             }
+                                        	                         }
+                                        	                     ]
+                                        	                 }).show()
+                                        	             );
+                                        	         }
+                                        	         else
+                                        	         {
+                                        	             storeCoberturasAgregarp3.add(record);
+                                        	             storeCoberturasDispp3.remove(record);
+                                        	         }
+                                        	     }
+                                        	     else
+                                        	     {
+                                        	         mensajeError(json.respuesta);
+                                        	     }
+                                        	 }
+                                        	 ,failure : function()
+                                        	 {
+                                        	     errorComunicacion();
+                                        	 }
+                                         });
                                      }
                                  }
                              }
@@ -640,7 +719,7 @@
                                 {
                                     header     : 'Cobertura'
                                     ,dataIndex : 'NOMBRE_GARANTIA'
-                                    ,flex      : 1
+                                    ,width     : 180
                                 }
                                 ,{
                                     header     : 'Suma asegurada'
