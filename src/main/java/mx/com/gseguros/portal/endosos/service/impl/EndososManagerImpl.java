@@ -7,11 +7,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 public class EndososManagerImpl implements EndososManager
 {
@@ -781,5 +787,113 @@ public class EndososManagerImpl implements EndososManager
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
+	}
+	
+	@Override
+	public ManagerRespuestaImapSmapVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ obtenerComponenteSituacionCobertura @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ cdtipsup=").append(cdtipsup)
+				.append("\n@@@@@@ cdgarant=").append(cdgarant)
+				.toString()
+				);
+		
+		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
+		resp.setSmap(new HashMap<String,String>());
+		resp.setImap(new HashMap<String,Item>());
+		
+		ComponenteVO comp = null;
+		
+		//obtener componente
+		try
+		{
+			comp = endososDAO.obtenerComponenteSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener componente #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		//transformarlo a item
+		if(resp.isExito())
+		{
+			try
+			{
+				if(comp==null)
+				{
+					resp.getSmap().put("CONITEM" , "false");
+				}
+				else
+				{
+					resp.getSmap().put("CONITEM" , "true");
+					
+					GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.setCdramo(cdramo);
+					gc.setCdtipsit(cdtipsit);
+					
+					List<ComponenteVO>lista=new ArrayList<ComponenteVO>();
+					lista.add(comp);
+					
+					gc.generaComponentes(lista, true, false, true, false, false, false);
+					
+					resp.getImap().put("item",gc.getItems());
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al construir componente #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ obtenerComponenteSituacionCobertura @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public void actualizaTvalositSitaucionCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdatribu
+			,String otvalor)
+	{
+		try
+		{
+			endososDAO.actualizaTvalositSitaucionCobertura(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdatribu,otvalor);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			logger.error(new StringBuilder("Error al actualizar tvalosit situacion cobertura #").append(timestamp).toString(),ex);
+		}
 	}
 }

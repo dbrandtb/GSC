@@ -14,12 +14,14 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -71,6 +73,10 @@ public class EndososAction extends PrincipalCoreAction
 	private boolean                  endosoSimple = false;
 	private ConsultasManager         consultasManager;
 	private StoredProceduresManager  storedProceduresManager;
+	
+	private boolean exito           = false;
+	private String  respuesta       = null;
+	private String  respuestaOculta = null;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -1697,6 +1703,25 @@ public class EndososAction extends PrincipalCoreAction
 							TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString()
 							:TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString()
 					);
+			
+			for(Map<String,String> nuevo:slist2)
+			{
+				String cdatribu = nuevo.get("cdatribu");
+				String otvalor  = nuevo.get("otvalor");
+				if(StringUtils.isNotBlank(cdatribu)
+						&&StringUtils.isNotBlank(otvalor))
+				{
+					endososManager.actualizaTvalositSitaucionCobertura(
+							(String)omap1.get("pv_cdunieco_i")
+							,(String)omap1.get("pv_cdramo_i")
+							,(String)omap1.get("pv_estado_i")
+							,(String)omap1.get("pv_nmpoliza_i")
+							,respEndCob.get("pv_nmsuplem_o")
+							,cdatribu
+							,otvalor
+							);
+				}
+			}
 			
 			/*
 			pv_cdusuari_i
@@ -7081,6 +7106,88 @@ public class EndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtenerComponenteSituacionCobertura()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#################################################")
+				.append("\n###### obtenerComponenteSituacionCobertura ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdramo   = null;
+		String cdtipsit = null;
+		String cdtipsup = null;
+		String cdgarant = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se han recibido datos");
+			}
+			cdramo   = smap1.get("cdramo");
+			cdtipsit = smap1.get("cdtipsit");
+			cdtipsup = smap1.get("cdtipsup");
+			cdgarant = smap1.get("cdgarant");
+			
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			if(StringUtils.isBlank(cdtipsup))
+			{
+				throw new ApplicationException("No se recibio el tipo de endoso");
+			}
+			if(StringUtils.isBlank(cdgarant))
+			{
+				throw new ApplicationException("No se recibio la cobertura");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaImapSmapVO resp=endososManager.obtenerComponenteSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				if(smap1.get("CONITEM").equals("true"))
+				{
+					smap1.put("item",resp.getImap().get("item").toString());
+				}
+			}
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### obtenerComponenteSituacionCobertura ######")
+				.append("\n#################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -7231,6 +7338,30 @@ public class EndososAction extends PrincipalCoreAction
 	public void setStoredProceduresManager(
 			StoredProceduresManager storedProceduresManager) {
 		this.storedProceduresManager = storedProceduresManager;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
 	}
 	
 }

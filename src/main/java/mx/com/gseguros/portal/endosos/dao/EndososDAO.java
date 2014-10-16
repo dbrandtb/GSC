@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+
 public interface EndososDAO
 {
     public List<Map<String,String>> obtenerEndosos(Map<String,String>params)                   throws Exception;
@@ -114,4 +117,14 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdtipsit
 			,String cdtipsup) throws Exception;
+	
+	public ComponenteVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception;
+	public void actualizaTvalositSitaucionCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdatribu
+			,String otvalor)throws Exception;
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface EndososManager
@@ -288,4 +289,14 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdtipsit
 			,String cdtipsup) throws Exception;
+	
+	public ManagerRespuestaImapSmapVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant);
+	public void actualizaTvalositSitaucionCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdatribu
+			,String otvalor);
 }

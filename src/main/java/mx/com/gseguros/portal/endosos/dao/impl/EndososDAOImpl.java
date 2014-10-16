@@ -12,10 +12,13 @@ import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
@@ -1645,6 +1648,99 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public ComponenteVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("cdgarant" , cdgarant);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new ObtenerComponenteSituacionCobertura(getDataSource()),params);
+		List<ComponenteVO>lista=(List<ComponenteVO>)procResult.get("pv_registro_o");
+		ComponenteVO comp = null;
+		if(lista!=null&&lista.size()==1)
+		{
+			comp = lista.get(0);
+		}
+		else if(lista!=null&&lista.size()>1)
+		{
+			throw new ApplicationException("Hay atributos repetidos");
+		}
+		return comp;
+	}
+	
+	protected class ObtenerComponenteSituacionCobertura extends StoredProcedure
+	{
+		protected ObtenerComponenteSituacionCobertura(DataSource dataSource)
+		{
+			super(dataSource, "PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaTvalositSitaucionCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdatribu
+			,String otvalor)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdatribu" , cdatribu);
+		params.put("otvalor"  , otvalor);
+		logger.debug(
+				new StringBuilder()
+				.append("\n************************************************")
+				.append("\n****** PKG_ENDOSOS.P_ACT_TVALOSIT_X_ATRIB ******")
+				.append("\n****** params=").append(params)
+				.append("\n************************************************")
+				.toString()
+				);
+		ejecutaSP(new ActualizaTvalositSitaucionCobertura(getDataSource()),params);
+	}
+	
+	protected class ActualizaTvalositSitaucionCobertura extends StoredProcedure
+	{
+		protected ActualizaTvalositSitaucionCobertura(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_ACT_TVALOSIT_X_ATRIB");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

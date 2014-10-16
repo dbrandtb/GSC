@@ -343,6 +343,10 @@
             <result name="success">/jsp-script/proceso/endosos/marcoEndosos.jsp</result>
         </action>
         
+        <action name="obtenerComponenteSituacionCobertura" class="EndososAction" method="obtenerComponenteSituacionCobertura">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>
