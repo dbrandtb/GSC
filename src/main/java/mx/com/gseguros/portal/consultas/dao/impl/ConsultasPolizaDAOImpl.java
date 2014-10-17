@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -31,6 +32,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsultasPolizaDAO {
 
+	private final static Logger logger = Logger.getLogger(ConsultasPolizaDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	//@Override
@@ -213,11 +215,65 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		return null;
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco", poliza.getCdunieco());
+		params.put("pv_cdramo", poliza.getCdramo());
+		params.put("pv_estado", poliza.getEstado());
+		params.put("pv_nmpoliza", poliza.getNmpoliza());
+		params.put("pv_nmsituac", poliza.getNmsituac());
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerMPolicotSP(getDataSource()), params);
+		return (List<ClausulaVO>) mapResult.get("pv_registro_o");
 	}
+	
+	protected class ObtenerMPolicotSP extends StoredProcedure {
+
+		protected ObtenerMPolicotSP(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLICOT");
+			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolicotMapper2()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ObtenerPolicotMapper implements RowMapper<ClausulaVO> {
+		public ClausulaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			ClausulaVO clausula = new ClausulaVO();
+			clausula.setCdclausu(rs.getString("cdclausu"));
+			clausula.setCdtipcla(rs.getString("cdtipcla"));
+			clausula.setContenidoClausula(rs.getString("linea_usuario"));
+			clausula.setDsclausu(rs.getString("dsclausu"));
+			clausula.setStatus(rs.getString("status"));
+			clausula.setMerged(rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
+			logger.debug("clausula=" + clausula);
+			logger.debug("linea_general=" + rs.getString("linea_general"));
+			return clausula;
+		}
+	}
+	
+	protected class ObtenerPolicotMapper2 implements RowMapper<Map<String,String>> {
+		public Map<String,String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+			String cols[]=new String[]{"cdunieco","cdramo","estado","nmpoliza","nmsituac",
+					"cdclausu","dsclausu","nmsuplem","status","cdtipcla","swmodi","linea_usuario","linea_general"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols) {
+				map.put(col,rs.getString(col));
+			}
+			map.put("merged",rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
+			logger.debug("return " + map);
+			return map;
+		}
+	}
+	
 
 	@Override
 	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
