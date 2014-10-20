@@ -253,9 +253,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 			clausula.setContenidoClausula(rs.getString("linea_usuario"));
 			clausula.setDsclausu(rs.getString("dsclausu"));
 			clausula.setStatus(rs.getString("status"));
-			clausula.setMerged(rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
-			logger.debug("clausula=" + clausula);
-			logger.debug("linea_general=" + rs.getString("linea_general"));
 			return clausula;
 		}
 	}
@@ -268,8 +265,6 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 			for(String col:cols) {
 				map.put(col,rs.getString(col));
 			}
-			map.put("merged",rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
-			logger.debug("return " + map);
 			return map;
 		}
 	}
