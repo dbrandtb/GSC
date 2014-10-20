@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.service.TablasApoyoManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,13 +67,17 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     		params.put("PV_OTCLAVE5_I", null);
     		params.put("PV_FEDESDE_I", null);
     		params.put("PV_FEHASTA_I", null);
-    		params.put("PV_LIMITE_I" , "1000");
     		
     		logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
     		loadList = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
+    	}catch(ApplicationException ae){
+    		logger.error("Error al obtieneValoresTablaApoyo5claves",ae);
+    		msgRespuesta = ae.getMessage();
+    		success = false;
+    		return SUCCESS;
     	}catch(Exception ex){
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ex);
-    		msgRespuesta = ex.getMessage();
+    		msgRespuesta = "Error al ejecutar la consulta. Consulte a Soporte.";
     		success = false;
     		return SUCCESS;
     	}

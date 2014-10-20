@@ -398,6 +398,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     loadList.*,
+                    msgRespuesta,,
                     success
                 </param>
             </result>
@@ -428,6 +429,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     loadList.*,
+                    msgRespuesta,
                     success
                 </param>
             </result>
@@ -438,6 +440,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     loadList.*,
+                    msgRespuesta,
                     success
                 </param>
             </result>
@@ -453,6 +456,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     loadList.*,
+                    msgRespuesta,
                     success
                 </param>
             </result>
