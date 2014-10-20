@@ -1,4 +1,4 @@
-package mx.com.aon.portal.dao;
+package mx.com.gseguros.portal.cotizacion.model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
