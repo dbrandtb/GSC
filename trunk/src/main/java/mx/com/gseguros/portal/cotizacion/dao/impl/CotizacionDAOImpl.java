@@ -10,10 +10,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.dao.ObtieneTatripolMapper;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
+import mx.com.gseguros.portal.cotizacion.model.ObtieneTatripolMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
