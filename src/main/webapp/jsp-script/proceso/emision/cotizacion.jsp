@@ -2957,6 +2957,43 @@ Ext.onReady(function()
         }
     });
     */
+    
+    //VIGENCIA
+    if(_0_smap1.SITUACION=='PERSONA')
+    {
+        Ext.Ajax.request(
+        {
+            url      : _0_urlObtenerParametros
+            ,params  :
+            { 
+                'smap1.parametro' : 'RANGO_VIGENCIA'
+                ,'smap1.cdramo'   : _0_smap1.cdramo
+                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+                _0_panelPri.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('### respuesta obtener rango vigencia:',json);
+                if(json.exito)
+                {
+                    _fieldByName('feini').setMinValue(Ext.Date.add(new Date(),Ext.Date.MONTH,json.smap1.P1VALOR*-1));
+                    _fieldByName('feini').setMaxValue(Ext.Date.add(new Date(),Ext.Date.MONTH,json.smap1.P2VALOR));
+                }
+                else
+                {
+                    mensajeWarning('Falta definir rango de vigencia para el producto (RANGOVIGENCIA)');
+                }
+            }
+            ,failure : function()
+            {
+                _0_panelPri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    //VIGENCIA
+    
 });
 </script>
 </head>
