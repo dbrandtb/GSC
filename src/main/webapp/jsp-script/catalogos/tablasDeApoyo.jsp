@@ -4,6 +4,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tablas de Apoyo</title>
+
+<!-- UX libraries -->
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/spreadsheet/ux-all-debug.js"></script>
+<!-- Spread library -->
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/spreadsheet/spread-all-debug.js"></script>
+
+
 <script>
 
 ///////////////////////
@@ -358,6 +365,8 @@ Ext.onReady(function(){
 	
 });
 </script>
+<!-- Spread library -->
+<link type="text/css" rel="stylesheet" href="${ctx}/resources/extjs4/plugins/spreadsheet/css/spread.css" />
 
 </head>
 <body>
