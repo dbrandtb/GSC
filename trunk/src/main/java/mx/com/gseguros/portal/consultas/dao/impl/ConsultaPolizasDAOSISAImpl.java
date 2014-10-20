@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
@@ -121,6 +122,7 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			datosSuplemento.setDstipsup(rs.getString("dstipsup"));
 			datosSuplemento.setPtpritot(rs.getString("ptpritot"));
 			datosSuplemento.setIcodpoliza(rs.getString("icodpoliza"));
+			datosSuplemento.setOrigen(rs.getString("origen"));
 			return datosSuplemento;
 		}
 	}
@@ -191,6 +193,8 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			datosPoliza.setNmpolant(rs.getString("nmpolant"));
 			datosPoliza.setDstipsit(rs.getString("dstipsit"));
 			datosPoliza.setIcodpoliza(rs.getString("icodpoliza"));
+			datosPoliza.setFepag(rs.getString("fepag"));
+			datosPoliza.setStatuspago(rs.getString("status_pago"));
 			return datosPoliza;
 		}
 	}
@@ -269,31 +273,31 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			return datosAsegurado;
 		}
 	}
-
-	// Endosos de exclusión.
+		
+	// Endosos.
 	@Override
-	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza,
+	public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
 		params.put("pv_cdperson_i", asegurado.getCdperson());
 		Map<String, Object> mapResult = ejecutaSP(
-				new ConsultaExclusionesPolizaSP(getDataSource()), params);
+				new ConsultaEndososPolizaSP(getDataSource()), params);
 		return (List<ClausulaVO>) mapResult.get("rs");
 	}
 
-	protected class ConsultaExclusionesPolizaSP extends StoredProcedure {
-		protected ConsultaExclusionesPolizaSP(DataSource dataSource) {
+	protected class ConsultaEndososPolizaSP extends StoredProcedure {
+		protected ConsultaEndososPolizaSP(DataSource dataSource) {
 			super(dataSource, "P_Obtiene_MPolicot");
 			declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));
 			declareParameter(new SqlParameter("pv_cdperson_i", Types.INTEGER));
 			declareParameter(new SqlReturnResultSet("rs",
-					new ExclusionesPolizaMapper()));
+					new EndososPolizaMapper()));
 			compile();
 		}
 	}
 
-	protected class ExclusionesPolizaMapper implements RowMapper<ClausulaVO> {
+	protected class EndososPolizaMapper implements RowMapper<ClausulaVO> {
 		public ClausulaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			ClausulaVO clausulaVO = new ClausulaVO();
 			clausulaVO.setCdclausu(rs.getString("cdclausu"));
@@ -305,6 +309,49 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 
+	//Detalle de asegurado.
+	@Override
+	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(AseguradoVO asegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", asegurado.getCdperson());
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaAseguradoDetalleSP(getDataSource()),params);
+		return (List<AseguradoDetalleVO>) mapResult.get("rs");
+	}
+	
+	protected class ConsultaAseguradoDetalleSP extends StoredProcedure{
+		protected ConsultaAseguradoDetalleSP(DataSource dataSource){
+			super(dataSource, "P_Get_Atributos_Sit");
+			declareParameter(new SqlParameter("pv_cdperson_i", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+			declareParameter(new SqlReturnResultSet("rs", new AseguradoDetalleMapper()));
+			compile();
+		}
+	}
+	
+	protected class AseguradoDetalleMapper implements RowMapper<AseguradoDetalleVO>{
+		@Override
+		public AseguradoDetalleVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			AseguradoDetalleVO aseguradoDetalleVO = new AseguradoDetalleVO();
+			aseguradoDetalleVO.setCdperson(rs.getString("icodafiliado"));
+			aseguradoDetalleVO.setEdad(rs.getString("iedad"));
+			aseguradoDetalleVO.setIdentidad(rs.getString("vchIDAfiliado"));
+			aseguradoDetalleVO.setNombre(rs.getString("vchNombre"));
+			aseguradoDetalleVO.setTiposangre(rs.getString("vchTipoSangre"));
+			aseguradoDetalleVO.setAntecedentes(rs.getString("vchAntecedentes"));
+			aseguradoDetalleVO.setOii(rs.getString("vchOII"));
+			aseguradoDetalleVO.setTelefono(rs.getString("vchTelefono"));
+			aseguradoDetalleVO.setDireccion(rs.getString("vchDomicilio"));
+			aseguradoDetalleVO.setCorreo(rs.getString("vchemailT"));
+			aseguradoDetalleVO.setMcp(rs.getString("vchMCP"));
+			aseguradoDetalleVO.setMcpespecialidad(rs.getString("vchEspMCP"));
+			aseguradoDetalleVO.setOcp(rs.getString("vchOCP"));
+			aseguradoDetalleVO.setOcpespecialidad(rs.getString("vchEspOCP"));			
+			return aseguradoDetalleVO;
+		}
+		
+	}
+	
 	// Recibos de la póliza.
 	@Override
 	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
@@ -458,5 +505,7 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			return reciboAgenteVO;
 		}
 	}
+
+	
 
 }

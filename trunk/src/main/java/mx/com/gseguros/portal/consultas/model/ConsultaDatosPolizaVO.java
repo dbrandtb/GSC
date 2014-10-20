@@ -58,6 +58,14 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	 */
 	private String icodpoliza;
 	
+	/**
+	 * Fecha de pago
+	 */
+	private String fepag;
+	/**
+	 * Status de pago
+	 */
+	private String statuspago;
 	
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
@@ -443,6 +451,26 @@ public class ConsultaDatosPolizaVO implements Serializable{
 
 	public void setIcodpoliza(String icodpoliza) {
 		this.icodpoliza = icodpoliza;
+	}
+
+
+	public String getFepag() {
+		return fepag;
+	}
+
+
+	public void setFepag(String fepag) {
+		this.fepag = fepag;
+	}
+
+
+	public String getStatuspago() {
+		return statuspago;
+	}
+
+
+	public void setStatuspago(String statuspago) {
+		this.statuspago = statuspago;
 	}
 	
 	

@@ -131,6 +131,27 @@
             </result>
         </action>
         
+        <action name="consultaEndososPoliza" class="ConsultasPolizaAction" method="consultaEndososPoliza">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosEndososPoliza.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaAseguradoDetalle" class="ConsultasPolizaAction" method="consultaAseguradoDetalle">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includePropeties">
+                    resultados.*,
+                    success
+                </param>
+            
+            </result>
+        </action>
+        
         <action name="includes/verCoberturasPoliza" class="ConsultasPolizaAction" method="verCoberturas">
             <result>/jsp/consultas/polizas/includes/verCoberturasPoliza.jsp</result>
         </action>
@@ -149,6 +170,11 @@
 		
 		<action name="includes/verDatosTatrisit" class="ConsultasPolizaAction" method="obtenerDatosTatrisit">
             <result>/jsp/consultas/polizas/includes/datosTatrisit.jsp</result>
+        </action>
+        
+        <action name="includes/verDatosTatrisit2" class="ConsultasPolizaAction" method="entradaDetalleAsegurado">
+            <result name="origen_ice">/jsp/consultas/polizas/includes/datosTatrisit.jsp</result>
+            <result name="origen_sisa">/jsp/consultas/polizas/includes/datosAseguradoSISA.jsp</result>
         </action>
 
 	</package>
