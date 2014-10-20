@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.consultas.service;
 
 import java.util.List;
 
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
@@ -69,7 +70,15 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    
+    /**
+     * 
+     * @param asegurado
+     * @return
+     * @throws Exception
+     */
+    public List<AseguradoDetalleVO> obtieneAseguradoDetalle(AseguradoVO asegurado) throws Exception;
     
     
     /**

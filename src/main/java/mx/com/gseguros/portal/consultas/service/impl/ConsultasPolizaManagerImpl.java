@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
@@ -17,6 +18,7 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -50,37 +52,72 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
-		return consultasPolizaDAOICE.obtieneHistoricoPoliza(polizaAsegurado);
+	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		
+		List<ConsultaDatosSuplementoVO> suplementos;  
+		
+		//Si iCodPoliza es nulo, es información de ICE, sino es de SISA:
+		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
+			suplementos = consultasPolizaDAOICE.obtieneHistoricoPoliza(polizaAsegurado);
+		} else {
+			suplementos = consultasPolizaDAOSISA.obtieneHistoricoPoliza(polizaAsegurado);
+		}
+				
+		return suplementos;
 	}
 
 	@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
 			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		 List<ConsultaDatosPolizaVO> datosPolizas;
+		 
+		//Si iCodPoliza no es nulo, es información de SISA.
+		 if(polizaAsegurado.getIcodpoliza() != null){
+			 datosPolizas = consultasPolizaDAOSISA.obtieneDatosPoliza(polizaAsegurado);
+		 } else {
+			 datosPolizas = consultasPolizaDAOICE.obtieneDatosPoliza(polizaAsegurado);
+		 }
+		 
+		 return datosPolizas;
 	}
 
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		//List<CopagoVO> copagos;
+		
+		//Si iCodPoliza no es nulo, es información de SISA.
+		//En copagos no se distingue si son de SISA actualmente.
+		//copagos = consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);
+		return consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);
+		//return copagos;
 	}
 
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<AseguradoVO> asegurados;
+		
+		//Si iCodPoliza no es nulo, es información de SISA.
+		//En asegurados no se distingue si son de SISA actualmente.
+		asegurados = consultasPolizaDAOSISA.obtieneAsegurados(poliza);
+		return asegurados;
 	}
 
 	@Override
-	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza,
-			AseguradoVO asegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {		
+		return consultasPolizaDAOSISA.obtieneEndososPoliza(poliza, asegurado);
 	}
+	
+	
+	@Override
+	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(
+			AseguradoVO asegurado) throws Exception {
+		return consultasPolizaDAOSISA.obtieneAseguradoDetalle(asegurado);
+	}
+	
 
 	@Override
 	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
@@ -109,6 +146,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 
 
