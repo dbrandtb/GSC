@@ -22,6 +22,8 @@
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
+            var _URL_LOADER_VER_TATRISIT2          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit2" />';
+            var _URL_LOADER_PRUEBA                = '<s:url namespace="/test" action="consultaHistorico" />';                             
             
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
@@ -32,6 +34,8 @@
             var _MSG_NMPOLIEX_INVALIDO           = 'Ingrese un numero de poliza';
             var _MSG_CDPERSON_INVALIDO           = 'Ingrese un c\u00F3digo de persona';
             var _MSG_NOMBRE_INVALIDO             = 'Ingrese el nombre';
+            
+            var _IS_USUARIO_CALL_CENTER          = <s:property value="usuarioCallCenter"/>;
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js?${now}"></script>
         

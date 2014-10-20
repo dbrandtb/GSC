@@ -9,6 +9,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
@@ -23,8 +24,11 @@ import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManagerOLD;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.RolSistema;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +71,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private ConsultaDatosPolizaVO datosPoliza;
     
+        
     private List<ConsultaDatosSuplementoVO> datosSuplemento;
     
     private List<ConsultaDatosSituacionVO> datosSituacion;
@@ -86,12 +91,34 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<AseguradoVO> datosAsegurados;
     
     private List<CopagoVO> datosCopagosPoliza;
+    
+    private List<ClausulaVO> datosEndososPoliza;
+    
+    private List<AseguradoDetalleVO> datosAseguradoDetalle;
 
     private Map<String,Item> itemMap;
     
     private List<Map<String, String>> loadList;
+    
+    /**
+     * Indica si el usuario es de CallCenter
+     */
+    private boolean usuarioCallCenter;
 
+    
+    /**
+     * Metodo de entrada a consulta de polizas
+     */
     public String execute() throws Exception {
+    	
+    	//Obtenemos el rol de sistema del usuario en sesion:
+    	UserVO usuario=(UserVO) session.get("USUARIO");
+    	String cdRolSistema = usuario.getRolActivo().getObjeto().getValue();
+    	//Si es consulta de información, no tendra permiso de ver todo:
+    	if(cdRolSistema.equals(RolSistema.CONSULTA_INFORMACION.getCdsisrol())) {
+    		usuarioCallCenter = true; 
+    	}
+    	
     	return SUCCESS;
     }
     
@@ -102,11 +129,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     public String consultaDatosPoliza(){
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {
-			WrapperResultados result = consultasPolizaManagerOLD.consultaPoliza(
+			/*WrapperResultados result = consultasPolizaManagerOLD.consultaPoliza(
 					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"));
+					params.get("estado"), params.get("nmpoliza"));*/
 			
-        	ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();
+        	/*ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();*/
+        	
+        	ConsultaPolizaAseguradoVO polizaAseguradoVO = new ConsultaPolizaAseguradoVO();
+        	polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
+        	
+        	List<ConsultaDatosPolizaVO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
         	
         	if(lista!=null && !lista.isEmpty())	datosPoliza = lista.get(0);
         	
@@ -131,8 +163,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	mensajeRes = "";
     	try {
     		
-    		WrapperResultados result = consultasPolizaManagerOLD.consultaSuplemento(params.get("nmpoliex"));
-    		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
+    		//WrapperResultados result = consultasPolizaManagerOLD.consultaSuplemento(params.get("nmpoliex"));
+    		//datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
+    		
+    		ConsultaPolizaAseguradoVO poliza = new ConsultaPolizaAseguradoVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		poliza.setNmpoliex(params.get("nmpoliex"));
+    		datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
     		
     		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
     		
@@ -366,11 +403,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosAsegurado ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManagerOLD.consultaDatosAsegurado(
+    		/*WrapperResultados result = consultasPolizaManagerOLD.consultaDatosAsegurado(
     				params.get("cdunieco"), params.get("cdramo"),
-    				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
-    		
-    		datosAsegurados = (ArrayList<AseguradoVO>) result.getItemList();
+    				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));*/
+    		    		
+    		//datosAsegurados = (ArrayList<AseguradoVO>) result.getItemList();
+    		PolizaVO poliza = new PolizaVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza);
     		
     		logger.debug("Resultado de la consultaDatosAsegurado:" + datosAsegurados);
     		
@@ -393,11 +433,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaCopagosPoliza ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManagerOLD.consultaCopagosPoliza(
+    		/*WrapperResultados result = consultasPolizaManagerOLD.consultaCopagosPoliza(
     				params.get("cdunieco"), params.get("cdramo"),
-    				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
+    				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));*/
+    		    		   		
+    		//datosCopagosPoliza = (ArrayList<CopagoVO>) result.getItemList();
     		
-    		datosCopagosPoliza = (ArrayList<CopagoVO>) result.getItemList();
+    		PolizaVO poliza = new PolizaVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));    		
+    		datosCopagosPoliza = consultasPolizaManager.obtieneCopagosPoliza(poliza);
+    		   		
     		
     		logger.debug("Resultado de consultaCopagosPoliza:" + datosCopagosPoliza);
     		
@@ -427,9 +472,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		return SUCCESS;
     }
 	
-	
 	/**
-     * Funcion para la visualizacion de las coberturas 
+     * Funcion para la visualizacion de las exclusiones 
      * @return params con los valores para hacer las consultas
      */
 	public String verExclusiones(){
@@ -442,6 +486,57 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		success = true;
 		return SUCCESS;
     }
+	
+	
+	/**
+     * Funcion para la visualizacion de las endosos 
+     * @return params con los valores para hacer las consultas
+     */
+	public String consultaEndososPoliza(){
+		logger.debug(" **** Entrando a verExclusiones ****");
+		try {
+    		    		   		
+    		PolizaVO poliza = new PolizaVO();
+    		AseguradoVO asegurado = new AseguradoVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		asegurado.setCdperson(params.get("cdperson"));
+    		datosEndososPoliza = consultasPolizaManager.obtieneEndososPoliza(poliza, asegurado);
+    		   		
+    		
+    		logger.debug("Resultado de consultaEndososPoliza:" + datosEndososPoliza);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los endosos de la poliza ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+	
+	
+	public String entradaDetalleAsegurado() {
+		return "origen_sisa";
+	}
+	
+	public String consultaAseguradoDetalle(){
+		logger.debug(" *** Entrando a ver Detalle ****");
+		try{
+			AseguradoVO asegurado = new AseguradoVO();
+			asegurado.setCdperson(params.get("cdperson"));
+			datosAseguradoDetalle = consultasPolizaManager.obtieneAseguradoDetalle(asegurado);
+			
+			logger.debug("Resultado de consultaAseguradoDetalle:" + datosAseguradoDetalle);
+			
+		}catch(Exception e){
+			logger.error("Error al obtener el detalle del asegurado.",e);
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+	
     
 	public String obtenerDatosTatrisit()
 	{
@@ -632,5 +727,32 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	public void setLoadList(List<Map<String, String>> loadList) {
 		this.loadList = loadList;
 	}
+
+	public boolean isUsuarioCallCenter() {
+		return usuarioCallCenter;
+	}
+
+	public void setUsuarioCallCenter(boolean usuarioCallCenter) {
+		this.usuarioCallCenter = usuarioCallCenter;
+	}
+
+	public List<ClausulaVO> getDatosEndososPoliza() {
+		return datosEndososPoliza;
+	}
+
+	public void setDatosEndososPoliza(List<ClausulaVO> datosEndososPoliza) {
+		this.datosEndososPoliza = datosEndososPoliza;
+	}
+
+	public List<AseguradoDetalleVO> getDatosAseguradoDetalle() {
+		return datosAseguradoDetalle;
+	}
+
+	public void setDatosAseguradoDetalle(
+			List<AseguradoDetalleVO> datosAseguradoDetalle) {
+		this.datosAseguradoDetalle = datosAseguradoDetalle;
+	}
+	
+	
 
 }
