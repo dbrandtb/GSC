@@ -144,6 +144,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
         	/*ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();*/
         	
         	ConsultaPolizaAseguradoVO polizaAseguradoVO = new ConsultaPolizaAseguradoVO();
+        	polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
+        	polizaAseguradoVO.setCdramo(params.get("cdramo"));
+        	polizaAseguradoVO.setEstado(params.get("estado"));
+        	polizaAseguradoVO.setNmpoliza(params.get("nmpoliza"));
         	polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
         	
         	List<ConsultaDatosPolizaVO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
