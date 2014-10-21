@@ -4,17 +4,17 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var venExcluUrlCargar          = '<s:url namespace="/"        action="cargarPantallaExclusion"       />';
-    var venExcluUrlCargarDisp      = '<s:url namespace="/"        action="obtenerExclusionesPorTipo"     />';
-    var venExcluUrlGuardar         = '<s:url namespace="/"        action="guardarExclusiones"            />';
-    var venExcluUrlLoadHtml        = '<s:url namespace="/"        action="cargarHtmlExclusion"           />';
-    var venExcluUrlAddExclu        = '<s:url namespace="/"        action="agregarExclusion"              />';
-    var venExcluUrlAddExcluDetalle = '<s:url namespace="/"        action="agregarExclusionDetalle"       />';
-    var venExcluUrlSaveHtml        = '<s:url namespace="/"        action="guardarHtmlExclusion"          />';
-    var venExcluUrlCargarTipos     = '<s:url namespace="/"        action="cargarTiposClausulasExclusion" />';
-    var _pnx_urlAgregarIcd         = '<s:url namespace="/emision" action="agregarClausulaICD"            />';    
-    var _pnx_urlCargarIcdClausu    = '<s:url namespace="/emision" action="cargarClausulaICD"             />';
-    var _pnx_urlBorrarIcd          = '<s:url namespace="/emision" action="borrarClausulaICD"             />';
+    var _URL_CONSULTA_CLAUSULAS_POLIZA          = '<s:url namespace="/consultasPoliza" action="consultaClausulasPoliza" />';
+    var venExcluUrlCargarDisp      = '<s:url namespace="/"                action="obtenerExclusionesPorTipo"     />';
+    var venExcluUrlGuardar         = '<s:url namespace="/"                action="guardarExclusiones"            />';
+    var venExcluUrlLoadHtml        = '<s:url namespace="/"                action="cargarHtmlExclusion"           />';
+    var venExcluUrlAddExclu        = '<s:url namespace="/"                action="agregarExclusion"              />';
+    var venExcluUrlAddExcluDetalle = '<s:url namespace="/"                action="agregarExclusionDetalle"       />';
+    var venExcluUrlSaveHtml        = '<s:url namespace="/"                action="guardarHtmlExclusion"          />';
+    var venExcluUrlCargarTipos     = '<s:url namespace="/"                action="cargarTiposClausulasExclusion" />';
+    var _pnx_urlAgregarIcd         = '<s:url namespace="/emision"         action="agregarClausulaICD"            />';    
+    var _pnx_urlCargarIcdClausu    = '<s:url namespace="/emision"         action="cargarClausulaICD"             />';
+    var _pnx_urlBorrarIcd          = '<s:url namespace="/emision"         action="borrarClausulaICD"             />';
     
     var _pnx_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
     _pnx_smap1.cdunieco = _pnx_smap1.pv_cdunieco;
@@ -51,9 +51,9 @@ Ext.onReady(function(){
         ]
     });
     
-    Ext.define('ModeloExclusion',{
+    Ext.define('ClausulaModel',{
         extend:'Ext.data.Model',
-        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
+        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
     });
     
     Ext.define('ModeloTipoClausula',
@@ -86,7 +86,7 @@ Ext.onReady(function(){
     
     venExcluStoreDisp = new Ext.data.Store(
     {
-        model      : 'ModeloExclusion'
+        model      : 'ClausulaModel'
         ,autoLoad  : false
         ,proxy     :
         {
@@ -102,24 +102,24 @@ Ext.onReady(function(){
     
     venExcluStoreUsa = new Ext.data.Store(
     {
-        model      : 'ModeloExclusion'
+        model      : 'ClausulaModel'
         ,autoLoad  : true
         ,proxy     :
         {
-            url     : venExcluUrlCargar
+            url     : _URL_CONSULTA_CLAUSULAS_POLIZA
             ,extraParams :
             {
-                'smap1.pv_cdunieco'  : _pnx_smap1.cdunieco
-                ,'smap1.pv_cdramo'   : _pnx_smap1.cdramo
-                ,'smap1.pv_estado'   : _pnx_smap1.estado
-                ,'smap1.pv_nmpoliza' : _pnx_smap1.nmpoliza
-                ,'smap1.pv_nmsituac' : _pnx_smap1.nmsituac
+            	'params.cdunieco'  : _pnx_smap1.cdunieco
+                ,'params.cdramo'   : _pnx_smap1.cdramo
+                ,'params.estado'   : _pnx_smap1.estado
+                ,'params.nmpoliza' : _pnx_smap1.nmpoliza
+                ,'params.nmsituac' : _pnx_smap1.nmsituac
             }
             ,type   : 'ajax'
             ,reader :
             {
                 type  : 'json'
-                ,root : 'slist1'
+                ,root : 'clausulasPoliza'
             }
         }
     });
@@ -475,31 +475,19 @@ Ext.onReady(function(){
                         ,flex      : 1
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width        : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                        	return '<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
                         }
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width        : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                        	return '<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
                         }
                     }
                     /*

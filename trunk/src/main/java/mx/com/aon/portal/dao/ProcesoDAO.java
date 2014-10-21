@@ -126,7 +126,6 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
     public static final String P_MOV_MPOLICOT="P_MOV_MPOLICOT";
-    public static final String OBTENER_POLICOT="OBTENER_POLICOT";
     public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
     public static final String P_MOV_TVALOSIN="P_MOV_TVALOSIN";
     public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
@@ -232,7 +231,6 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(LOAD_DETALLE_MESA_CONTROL, new ObtenerDetalleMesaControl(getDataSource()));
         addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
-        addStoredProcedure(OBTENER_POLICOT, new ObtenerPolicot(getDataSource()));
         addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOSIN, new PMovTvalosin(getDataSource()));
         addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
@@ -3345,52 +3343,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////////*/
 	////// obtener html clausula //////
 	///////////////////////////////////
-    
-	/////////////////////////////
-	////// obtener policot //////
-	/*/////////////////////////*/
-	protected class ObtenerPolicot extends CustomStoredProcedure {
 
-		protected ObtenerPolicot(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLICOT");
-			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsituac", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolicotMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
-			compile();
-		}
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-			wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	protected class ObtenerPolicotMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-		{
-			String cols[]=new String[]{"cdunieco","cdramo","estado","nmpoliza","nmsituac",
-					"cdclausu","dsclausu","nmsuplem","status","cdtipcla","swmodi","linea_usuario","linea_general"};
-			Map<String,String> map=new HashMap<String,String>(0);
-			for(String col:cols)
-			{
-				map.put(col,rs.getString(col));
-			}
-			map.put("merged",rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
-			logger.debug("return "+map);
-			return map;
-		}
-	}
-	/*/////////////////////////*/
-	////// obtener policot //////
-	/////////////////////////////
 	
 	/////////////////////////////////////
 	////// obtener mesa de control //////

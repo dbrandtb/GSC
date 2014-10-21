@@ -20,7 +20,7 @@
             var _URL_CONSULTA_COPAGOS_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
-            var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
+            var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             var _URL_LOADER_VER_TATRISIT2          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit2" />';
             var _URL_LOADER_PRUEBA                = '<s:url namespace="/test" action="consultaHistorico" />';                             

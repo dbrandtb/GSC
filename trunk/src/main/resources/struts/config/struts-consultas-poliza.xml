@@ -156,8 +156,8 @@
             <result>/jsp/consultas/polizas/includes/verCoberturasPoliza.jsp</result>
         </action>
         
-        <action name="includes/verExclusiones" class="ConsultasPolizaAction" method="verExclusiones">
-            <result>/jsp/consultas/exclusiones/includes/verExclusionesPoliza.jsp</result>
+        <action name="includes/verClausulas" class="ConsultasPolizaAction" method="verClausulasPoliza">
+            <result>/jsp/consultas/clausulas/includes/verClausulasPoliza.jsp</result>
         </action>
         
         <action name="includes/ventanaDatosPoliza" class="ConsultasPolizaAction">

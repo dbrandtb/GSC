@@ -1,11 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" %>
 <%@ include file="/taglibs.jsp"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Exclusiones de p&oacute;liza</title>
+        <title>Cl&aacute;usulas de p&oacute;liza</title>
 
 		<script type="text/javascript">
             
@@ -26,7 +25,7 @@
 				    fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
 				});
 				
-				var storeExclusionesPoliza = new Ext.data.Store({
+				var storeClausulasPoliza = new Ext.data.Store({
 			        model      : 'ClausulaModel',
 			        //autoLoad: true,
 			        proxy     : {
@@ -47,7 +46,7 @@
 			    });
 				
 				// Cargar store
-				storeExclusionesPoliza.load({
+				storeClausulasPoliza.load({
                     callback: function(records, operation, success) {
                     	if (!success) {
                             showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR);
@@ -61,15 +60,15 @@
                 });
 				
 				Ext.create('Ext.panel.Panel', {
-					name      : 'pnlExclusiones',
-					renderTo  : 'maindivExcs',
+					name      : 'pnlClausulas',
+					renderTo  : 'dvClausulasPoliza',
 					//layout:'fit',
 					defaults  : {
 						style : 'margin:5px'
 					},
 	                items: [{
 	                	xtype       : 'grid',
-					    store       : storeExclusionesPoliza,
+					    store       : storeClausulasPoliza,
 					    buttonAlign : 'center',
 					    columns     : [{
 					        header    : 'Nombre',
@@ -84,7 +83,7 @@
                                 tooltip : 'Ver detalle',
                                 handler : function(gridview, rowIndex, colIndex) {
 	                                var rec = gridview.getStore().getAt(rowIndex);
-	                                this.up('panel[name=pnlExclusiones]').down('[name=detalleExclusion]').setValue(rec.get('linea_usuario'));
+	                                this.up('panel[name=pnlClausulas]').down('[name=detalleClausula]').setValue(rec.get('linea_usuario'));
                                 }
 	                        }]
 					    }]
@@ -93,7 +92,7 @@
                         text: 'Detalles:'
                     },{
 						xtype : 'textarea',
-						name  : 'detalleExclusion',
+						name  : 'detalleClausula',
                         height: 300,
                         width : 425
 					}]
@@ -104,6 +103,6 @@
 
     </head>
     <body>
-        <div id="maindivExcs"></div>
+        <div id="dvClausulasPoliza"></div>
     </body>
 </html>

@@ -430,32 +430,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		return SUCCESS;
 	}
 	
-	public String cargarPantallaExclusion()
-	{
-		logger.debug("\n###################################"
-				+ "\n###################################"
-				+ "\n###### pantalla de exclusion ######"
-				+ "\n###### load                  ######"
-				+ "\n######                       ######");
-		logger.debug("smap1: "+smap1);
-		try
-		{
-			slist1=kernelManager.obtenerPolicot(smap1);
-			success=true;
-		}
-		catch(Exception ex)
-		{
-			logger.error("error al cargar las excepciones",ex);
-			success=false;
-		}
-		logger.debug("slist1: "+slist1);
-		logger.debug("\n######                       ######"
-				+ "\n###### load                  ######"
-				+ "\n###### pantalla de exclusion ######"
-				+ "\n###################################"
-				+ "\n###################################");
-		return SUCCESS;
-	}
 	
 	public String agregarExclusion()
 	{

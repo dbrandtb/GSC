@@ -259,9 +259,6 @@
             </interceptor-ref>
             <result name="success" type="json" />
         </action>
-        <action name="cargarPantallaExclusion" class="beanDatosComplementariosCoberturas" method="cargarPantallaExclusion">
-            <result name="success" type="json" />
-        </action>
         <action name="obtenerExclusionesPorTipo" class="beanDatosComplementariosCoberturas" method="obtenerExclusionesPorTipo">
             <result name="success" type="json" />
         </action>

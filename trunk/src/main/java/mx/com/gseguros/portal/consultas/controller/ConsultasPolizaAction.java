@@ -31,6 +31,10 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -40,6 +44,8 @@ import org.springframework.stereotype.Controller;
  *
  * @author HMLT
  */
+@ParentPackage(value="default")
+@Namespace("/consultasPoliza")
 @Controller("ConsultasPolizaAction")
 @Scope(value="prototype")
 public class ConsultasPolizaAction extends PrincipalCoreAction{
@@ -95,7 +101,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ClausulaVO> datosEndososPoliza;
     
     private List<AseguradoDetalleVO> datosAseguradoDetalle;
-
+    
+    private List<ClausulaVO> clausulasPoliza;
+    
     private Map<String,Item> itemMap;
     
     private List<Map<String, String>> loadList;
@@ -162,7 +170,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosSuplemento ****");
     	mensajeRes = "";
     	try {
-    		
     		//WrapperResultados result = consultasPolizaManagerOLD.consultaSuplemento(params.get("nmpoliex"));
     		//datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
@@ -220,6 +227,30 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	success = true;
     	return SUCCESS;
     	
+    }
+    
+    
+    /**
+     * Obtiene los endosos de una poliza
+     * @return String result
+     */
+	@Action(value = "consultaClausulasPoliza", results = { 
+			@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false", "includeProperties","clausulasPoliza.*,success" })
+	})
+    public String consultaClausulasPoliza(){
+    	logger.debug(" **** Entrando a consultaClausulasPoliza ****");
+    	try {
+    		clausulasPoliza = consultasPolizaManager.obtieneEndososPoliza(
+					new PolizaVO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"),
+								 params.get("suplemento"), null, params.get("nmsituac")), 
+					null);
+    		success = true;
+    	} catch(Exception e){
+    		logger.error("Error al obtener las cláusulas de la póliza",e);
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
     }
     
     
@@ -468,6 +499,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		}catch( Exception e){
 			logger.error(e.getMessage(), e);
 		}
+		success = true;
+		return SUCCESS;
+    }
+	
+	/**
+	 * Entrada a la pantalla de las clausulas de una poliza <br/>
+	 * Sirve para propagar los parametros del atributo params a la pantalla
+	 * @return
+	 */
+	public String verClausulasPoliza(){
 		success = true;
 		return SUCCESS;
     }
@@ -726,6 +767,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setLoadList(List<Map<String, String>> loadList) {
 		this.loadList = loadList;
+	}
+
+	public List<ClausulaVO> getClausulasPoliza() {
+		return clausulasPoliza;
+	}
+
+	public void setClausulasPoliza(List<ClausulaVO> clausulasPoliza) {
+		this.clausulasPoliza = clausulasPoliza;
 	}
 
 	public boolean isUsuarioCallCenter() {
