@@ -51786,6 +51786,36 @@
         
 
                         /**
+                        * field for DerechoAgente
+                        */
+
+                        
+                                    protected double localDerechoAgente ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return double
+                           */
+                           public  double getDerechoAgente(){
+                               return localDerechoAgente;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param DerechoAgente
+                               */
+                               public void setDerechoAgente(double param){
+                            
+                                            this.localDerechoAgente=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for DerechoPoliza
                         */
 
@@ -51810,6 +51840,36 @@
                                public void setDerechoPoliza(double param){
                             
                                             this.localDerechoPoliza=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for DerechoPromotor
+                        */
+
+                        
+                                    protected double localDerechoPromotor ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return double
+                           */
+                           public  double getDerechoPromotor(){
+                               return localDerechoPromotor;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param DerechoPromotor
+                               */
+                               public void setDerechoPromotor(double param){
+                            
+                                            this.localDerechoPromotor=param;
                                     
 
                                }
@@ -52129,6 +52189,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"derechoAgente", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"derechoAgente");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("derechoAgente");
+                                    }
+                                
+                                               if (java.lang.Double.isNaN(localDerechoAgente)) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("derechoAgente cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoAgente));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"derechoPoliza", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -52147,6 +52236,35 @@
                                                       
                                                } else {
                                                     xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoPoliza));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"derechoPromotor", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"derechoPromotor");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("derechoPromotor");
+                                    }
+                                
+                                               if (java.lang.Double.isNaN(localDerechoPromotor)) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("derechoPromotor cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoPromotor));
                                                }
                                     
                                    xmlWriter.writeEndElement();
@@ -52517,10 +52635,22 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "derechoAgente"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoAgente));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "derechoPoliza"));
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoPoliza));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "derechoPromotor"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localDerechoPromotor));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "iva"));
@@ -52642,11 +52772,49 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","derechoAgente").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setDerechoAgente(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","derechoPoliza").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setDerechoPoliza(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","derechoPromotor").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setDerechoPromotor(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
                                               
                                         reader.next();

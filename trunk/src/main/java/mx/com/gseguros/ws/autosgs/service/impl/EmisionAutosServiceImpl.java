@@ -238,6 +238,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				//recargopagofraccionado
 				totalFormaPago.setRecargoPagoFraccionado(Double.valueOf(m.get("RECARGOPAGOFRACCIONADO")));
 				
+				totalFormaPago.setDerechoAgente(Double.valueOf(m.get("DERECHOAGENTE")));
+				totalFormaPago.setDerechoPromotor(Double.valueOf(m.get("DERECHOPROMOTOR")));
+				
 				Map<String,Integer[]>mapaIndicesIncisos=new HashMap<String,Integer[]>();
 				List<Inciso> incisos=new ArrayList<Inciso>();
 				
