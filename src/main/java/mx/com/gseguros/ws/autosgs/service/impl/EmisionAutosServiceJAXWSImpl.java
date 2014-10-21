@@ -56,10 +56,11 @@ import org.springframework.stereotype.Service;
 /**
  * Implementacion de WS de Cotizacion y Emision de Autos con JAXWS
  * @author Hector
- *
+ *Deprecated, se debe de regenerar el cliente de jaxws 21-10-2014
  */
 @Service
 @Qualifier("emisionAutosServiceJAXWSImpl")
+@Deprecated
 public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceJAXWSImpl.class);
@@ -240,6 +241,12 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 				
 				//recargopagofraccionado
 				totalFormaPago.setRecargoPagoFraccionado(Double.valueOf(m.get("RECARGOPAGOFRACCIONADO")));
+				
+				/**
+				 * TODO: regenerar cliente:
+				 */
+				//totalFormaPago.setDerechoAgente(Double.valueOf(m.get("DERECHOAGENTE")));
+				//totalFormaPago.setDerechoPromotor(Double.valueOf(m.get("DERECHOPROMOTOR")));
 				
 				Map<String,Integer[]>mapaIndicesIncisos=new HashMap<String,Integer[]>();
 				List<Inciso> incisos=new ArrayList<Inciso>();
