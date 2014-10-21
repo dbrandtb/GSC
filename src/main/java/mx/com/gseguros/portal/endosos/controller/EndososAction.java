@@ -2951,7 +2951,7 @@ public class EndososAction extends PrincipalCoreAction
         CDRAMO,
         CDUNIECO
     slist1:[
-        {dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, merged=, cdtipcla=}
+        {dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, cdtipcla=}
         ]
 	*/
 	/*/////////////////////////////////////////////////////*/
@@ -3239,7 +3239,7 @@ public class EndososAction extends PrincipalCoreAction
 				/*///////////////////*/
 				for(Map<String,String>cla:slist1)
 				{
-					//{dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, merged=, cdtipcla=}
+					//{dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, cdtipcla=}
 					String cdclausu = cla.get("cdclausu");
 					String dslinea  = cla.get("linea_usuario");
 					String cdtipcla = cla.get("cdtipcla");					
@@ -6375,7 +6375,6 @@ public class EndososAction extends PrincipalCoreAction
 	    linea_usuario=TEXTO LIBRE lel,
 	    linea_general=,
 	    cdclausu=END215,
-	    merged=,
 	    cdtipcla=3
 	    }]
 	*/

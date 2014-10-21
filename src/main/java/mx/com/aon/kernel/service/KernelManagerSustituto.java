@@ -160,7 +160,6 @@ public interface KernelManagerSustituto {
 			,String swmodi
 			,String dslinea
 			,String accion) throws ApplicationException;
-	public List<Map<String, String>> obtenerPolicot(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public WrapperResultados PMovTvalosin(Map<String, Object> parTvalosin) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException;

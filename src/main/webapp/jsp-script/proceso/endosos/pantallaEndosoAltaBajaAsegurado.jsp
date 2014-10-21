@@ -139,9 +139,9 @@ Ext.onReady(function()
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
-	Ext.define('ModeloExclusion',{
+	Ext.define('ClausulaModel',{
         extend:'Ext.data.Model',
-        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
+        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
     });
     
     Ext.define('ModeloTipoClausula',
@@ -171,7 +171,7 @@ Ext.onReady(function()
 	/*////////////////*/
 	_3_storeClaUsa = new Ext.data.Store(
     {
-        model  : 'ModeloExclusion'
+        model  : 'ClausulaModel'
         ,proxy :
         {
             type    : 'memory'
@@ -198,7 +198,7 @@ Ext.onReady(function()
     
     _3_storeClaDisp = new Ext.data.Store(
     {
-        model      : 'ModeloExclusion'
+        model      : 'ClausulaModel'
         ,autoLoad  : false
         ,proxy     :
         {
@@ -512,31 +512,19 @@ Ext.onReady(function()
                         ,flex      : 1
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width        : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                        	return '<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
                         }
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width        : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                        	return '<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
                         }
                     }
                 ]

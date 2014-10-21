@@ -35,11 +35,6 @@ public class ClausulaVO implements Serializable {
 	private String contenidoClausula;
 	
 	
-	/**
-	 * Agrupador de los elementos
-	 */
-	private String merged;
-	
 	//private String swmodi; 
 	
 	
@@ -89,14 +84,6 @@ public class ClausulaVO implements Serializable {
 
 	public void setContenidoClausula(String contenidoClausula) {
 		this.contenidoClausula = contenidoClausula;
-	}
-
-	public String getMerged() {
-		return merged;
-	}
-
-	public void setMerged(String merged) {
-		this.merged = merged;
 	}
 
 }

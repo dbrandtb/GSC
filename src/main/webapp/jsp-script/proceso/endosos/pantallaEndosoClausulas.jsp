@@ -4,7 +4,7 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var venExcluUrlCargar       = '<s:url namespace="/" action="cargarPantallaExclusion" />';
+    var _URL_CONSULTA_CLAUSULAS_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaClausulasPoliza" />';
     var venExcluUrlCargarDisp   = '<s:url namespace="/" action="obtenerExclusionesPorTipo" />';
     var venExcluUrlGuardar      = '<s:url namespace="/" action="guardarExclusiones" />';
     var venExcluUrlLoadHtml     = '<s:url namespace="/" action="cargarHtmlExclusion" />';
@@ -148,9 +148,9 @@ Ext.onReady(function(){
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
-    Ext.define('ModeloExclusion',{
+    Ext.define('ClausulaModel',{
         extend:'Ext.data.Model',
-        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
+        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
     });
     
     Ext.define('ModeloTipoClausula',
@@ -192,7 +192,7 @@ Ext.onReady(function(){
     
     venExcluStoreDisp = new Ext.data.Store(
     {
-        model      : 'ModeloExclusion'
+        model      : 'ClausulaModel'
         ,autoLoad  : false
         ,proxy     :
         {
@@ -208,24 +208,24 @@ Ext.onReady(function(){
     
     venExcluStoreUsa = new Ext.data.Store(
     {
-        model      : 'ModeloExclusion'
+        model      : 'ClausulaModel'
         ,autoLoad  : true
         ,proxy     :
         {
-            url     : venExcluUrlCargar
+            url     : _URL_CONSULTA_CLAUSULAS_POLIZA
             ,extraParams :
             {
-                'smap1.pv_cdunieco'  : inputCduniecopx
-                ,'smap1.pv_cdramo'   : inputCdramopx
-                ,'smap1.pv_estado'   : inputEstadopx
-                ,'smap1.pv_nmpoliza' : inputNmpolizapx
-                ,'smap1.pv_nmsituac' : inputNmsituacpx
+                'params.cdunieco'  : inputCduniecopx
+                ,'params.cdramo'   : inputCdramopx
+                ,'params.estado'   : inputEstadopx
+                ,'params.nmpoliza' : inputNmpolizapx
+                ,'params.nmsituac' : inputNmsituacpx
             }
             ,type   : 'ajax'
             ,reader :
             {
                 type  : 'json'
-                ,root : 'slist1'
+                ,root : 'clausulasPoliza'
             }
         }
     });
@@ -655,31 +655,19 @@ Ext.onReady(function(){
                         ,flex      : 1
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width         : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                            return '<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
                         }
                     }
                     ,{
-                        dataIndex     : 'merged'
-                        ,width        : 30
+                        width         : 30
                         ,menuDisabled : true
                         ,renderer     : function(value)
                         {
-                            if(true)
-                            {
-                                value='<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
-                            }
-                            debug(value);
-                            return value;
+                            return '<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
                         }
                     }
                 ]

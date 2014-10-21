@@ -24,7 +24,7 @@
 	var _URL_INFO_GRAL_SINIESTRO    = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
 	var _URL_ACTUALIZA_INFO_GRAL_SIN= '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
 	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturasPoliza" />';
-	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
+	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
 	var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros" action="includes/historialReclamaciones" />';
 	var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
 	var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';

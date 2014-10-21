@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
@@ -34,16 +35,16 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 	private final static Logger logger = Logger.getLogger(ConsultasPolizaDAOImpl.class);
 	
+	
 	@SuppressWarnings("unchecked")
-	//@Override
-	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodPoliza) throws Exception {
-    	
-    	Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		Map<String, Object> mapResult = ejecutaSP(new ConsultaPolizasAseguradoSP(getDataSource()), params);
+	@Override
+	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", polizaAsegurado.getCdunieco());
+		params.put("pv_cdramo_i",   polizaAsegurado.getCdramo());
+		params.put("pv_estado_i",   polizaAsegurado.getEstado());
+		params.put("pv_nmpoliza_i", polizaAsegurado.getNmpoliza());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneDatosPolizaSP(getDataSource()), params);
 		return (List<ConsultaDatosPolizaVO>) mapResult.get("pv_registro_o");
 	}
 	
@@ -108,6 +109,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
             return consulta;
         }
     }
+    
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -193,24 +195,16 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     	}
     }
     
-
+    
 	@Override
-	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	
 	@Override
-	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza)
-			throws Exception {
+	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -218,7 +212,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ClausulaVO> obtieneExclusionesPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
+	public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco", poliza.getCdunieco());
 		params.put("pv_cdramo", poliza.getCdramo());
@@ -299,9 +293,11 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 
-
-
-
-
+	@Override
+	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(
+			AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

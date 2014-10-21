@@ -107,7 +107,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 
 	@Override
 	public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza,
-			AseguradoVO asegurado) throws Exception {		
+			AseguradoVO asegurado) throws Exception {
+		//TODO: agregar la invocacion a ICE
 		return consultasPolizaDAOSISA.obtieneEndososPoliza(poliza, asegurado);
 	}
 	

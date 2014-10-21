@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.com.aon.kernel.service.impl;
 
 import java.util.ArrayList;
@@ -965,15 +961,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		params.put("pv_accion_i"   , accion);
 		return this.PMovMpolicot(params);
 	}
-
-	public List<Map<String, String>> obtenerPolicot(Map<String, String> params) throws ApplicationException {
-		
-		log.debug("### kernel sustituto obtenerPolicot params: "+params);
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_POLICOT);
-        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-        log.debug("### kernel sustituto obtenerPolicot lista size: "+lista.size());
-        return lista;
-	}
+	
 	
 	public WrapperResultados PMovMesacontrol(Map<String, Object> param) throws ApplicationException
 	{
