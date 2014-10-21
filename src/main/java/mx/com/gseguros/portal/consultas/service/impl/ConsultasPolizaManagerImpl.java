@@ -73,10 +73,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		 List<ConsultaDatosPolizaVO> datosPolizas;
 		 
 		//Si iCodPoliza no es nulo, es información de SISA.
-		 if(polizaAsegurado.getIcodpoliza() != null){
-			 datosPolizas = consultasPolizaDAOSISA.obtieneDatosPoliza(polizaAsegurado);
-		 } else {
+		 if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
 			 datosPolizas = consultasPolizaDAOICE.obtieneDatosPoliza(polizaAsegurado);
+		 } else {
+			 datosPolizas = consultasPolizaDAOSISA.obtieneDatosPoliza(polizaAsegurado);
 		 }
 		 
 		 return datosPolizas;

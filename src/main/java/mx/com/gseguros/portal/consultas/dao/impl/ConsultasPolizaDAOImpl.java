@@ -149,6 +149,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     		polizaAsegurado.setNmpoliza(rs.getString("nmpoliza"));
     		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
     		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE
+    		polizaAsegurado.setOrigen(rs.getString("origen"));
     		return polizaAsegurado;
     	}
     }
