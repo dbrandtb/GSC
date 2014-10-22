@@ -12,7 +12,7 @@
 	<link href="${ctx}/resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 	<link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />
-	<link href="${ctx}/resources/css/template_css.css" rel="stylesheet" type="text/css" />
+	<link href="${ctx}/resources/css/template_css.css?yyyyMMdd" rel="stylesheet" type="text/css" />
     <decorator:head />
 </head>
 <body>
