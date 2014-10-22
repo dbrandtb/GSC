@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${ctx}/resources/css/template_css.css?yyyyMMdd" rel="stylesheet" type="text/css" />
-<link href="${ctx}/resources/css/header_light.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/resources/css/header_light.css?yyyyMMdd" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
 

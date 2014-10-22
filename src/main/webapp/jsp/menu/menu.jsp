@@ -13,14 +13,15 @@
     <body>
         <div id="header">
             <div class="wrapper">
-                <br/>
-                <font style="font-size: 17px;font-family:calibri,tahoma,arial,helvetica;padding: 20px 0px 0px 0px;">
-                    Bienvenido
+                <div style="padding: 5px;">
+                    <font style="font-size: 17px;font-family:calibri,tahoma,arial,helvetica;">
+                    Bienvenido: 
                     <s:if test="%{#session.containsKey('USUARIO')}">
-                        usuario: <s:property value="%{#session['USUARIO'].name}" />
-                        rol:     <s:property value="%{#session['USUARIO'].rolActivo.objeto.label}" />
+                        <strong><s:property value="%{#session['USUARIO'].name}" /></strong>
+                        rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.objeto.label}" /></strong>
                     </s:if>
                 </font>
+                </div>
                 <div>                   
                     <div>
                         <table class="showcase" cellspacing="1" height="120">
