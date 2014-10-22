@@ -10,7 +10,7 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
 
 <link href="resources/css/template_css.css?yyyyMMdd" rel="stylesheet" type="text/css" />
-<link href="resources/css/header_light.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/header_light.css?yyyyMMdd" rel="stylesheet" type="text/css" />
 <link href="resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
 <link href="resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
 
