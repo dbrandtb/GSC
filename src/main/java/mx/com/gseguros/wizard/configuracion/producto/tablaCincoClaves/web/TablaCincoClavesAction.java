@@ -3,16 +3,14 @@ package mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ListaDeValoresManager;
-import mx.com.gseguros.wizard.configuracion.producto.service.TablaCincoClavesManager;
 import mx.com.gseguros.wizard.configuracion.producto.service.TablaCincoClavesManagerJdbcTemplate;
-import mx.com.gseguros.wizard.configuracion.producto.service.impl.ListaDeValoresManagerJdbcTemplateImpl;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
-import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -77,17 +75,12 @@ public class TablaCincoClavesAction extends Padre{
 		if(isDebugEnabled){
 			log.debug("editar tabla de cico claves + num1="+num1);
 		}
-    	//num1= num1.replace(".action", "");
-    	if(isDebugEnabled){
-    		log.debug("!!!!!!!!despues del replace num1="+num1);
-    	}
     	editaCabeceraTabla5claves = new ArrayList<ListaDeValoresVO>();
     	
     	ListaDeValoresVO ldvVO = null;
     	if(num1 != null){
     		ldvVO = new ListaDeValoresVO();
     		cabeceraTabla5claves = listaDeValoresManager.consultaTabla(num1);
-    		//log.debug("NUMEROTABLA--- "+num1+"/"+cabeceraTabla5claves.getNumeroTabla());
     		ldvVO.setNumeroTabla(cabeceraTabla5claves.getNumeroTabla());
     		ldvVO.setNombre(cabeceraTabla5claves.getNombre());
     		ldvVO.setDescripcion(cabeceraTabla5claves.getDescripcion());
@@ -103,29 +96,8 @@ public class TablaCincoClavesAction extends Padre{
     		atributosTabla5claves = listaDeValoresManager.consultaDescripciones(num1);
     		session.put("LISTA_VEINTICINCO_ATRIBUTOS", atributosTabla5claves);
     		
-    	}  
+    	}
     	
-    	/*
-    	ldvVO.setCdAtribu("1");
-    	
-    	ldvVO.setCdCatalogo1("catalogo1");
-    	ldvVO.setCdCatalogo2("catalogo2");
-    	ldvVO.setClaveDependencia("ClaveDependencia");
-    	ldvVO.setClnatura("Lista de Valores");
-    	ldvVO.setDescripcion("descripcion");
-    	ldvVO.setDescripcionFormato("Alfanumerico");
-    	ldvVO.setDsCatalogo1("CMODULOCATBO");
-    	ldvVO.setDsCatalogo2("Descripcion");
-    	ldvVO.setEnviarTablaErrores("S");
-    	ldvVO.setFormatoDescripcion("formatoDescripcion");
-    	ldvVO.setMaximoDescripcion("34");
-    	ldvVO.setMinimoDescripcion("2");
-    	ldvVO.setModificaValores("S");
-    	ldvVO.setNombre("nombre");
-    	ldvVO.setNumeroTabla(num1);
-    	ldvVO.setOttipoac("T");
-    	ldvVO.setOttipotb("5");
-    	*/
     	editaCabeceraTabla5claves.add(ldvVO);
     	if(isDebugEnabled){
     		log.debug("!!!!!!!!!!!!!!editarListaDeValores + num1="+ldvVO.getNumeroTabla());
@@ -133,6 +105,8 @@ public class TablaCincoClavesAction extends Padre{
     	success = true;
     	return SUCCESS;
     }
+	
+	
 	public String insertarTabla()throws Exception{
 		boolean isDebugEnabled = log.isDebugEnabled();
 		if(isDebugEnabled){
@@ -518,6 +492,7 @@ public class TablaCincoClavesAction extends Padre{
 		return SUCCESS;
 		
 	}
+	
 	public String listaCincoClavesJson() throws Exception{
 		boolean isDebugEnabled = log.isDebugEnabled();
 		if(isDebugEnabled){
@@ -545,45 +520,20 @@ public class TablaCincoClavesAction extends Padre{
 					}
 					
 				}
-				//session.put("LISTA_CINCO_CLAVES_EN_SESSION","ok");	
 			}			
-		}//else
-			//listaClaves = (List<DatosClaveAtributoVO>) session.get("LISTA_CINCO_CLAVES");
+		}
 		if(listaClaves==null)
 			listaClaves = new ArrayList<DatosClaveAtributoVO>();
 		if(isDebugEnabled){
 			log.debug("listaClaves="+listaClaves);
 		}
-//		session.put("LISTA_CINCO_CLAVES", listaClaves);
-		/*
-//		num1="22";
-		if(session.containsKey("LISTA_CINCO_CLAVES")){
-			listaClaves=(List<DatosClaveAtributoVO>) session.get("LISTA_CINCO_CLAVES");
-		}else{
-			listaClaves = new ArrayList<DatosClaveAtributoVO>();
-			if(num1 != null && StringUtils.isNotBlank(num1)){
-				listaClaves=listaDeValoresManager.consultaClaves(num1);	
-				if(listaClaves==null){
-					listaClaves = new ArrayList<DatosClaveAtributoVO>();
-				}
-			}else{
-				DatosClaveAtributoVO dcaVO= new DatosClaveAtributoVO();
-//				dcaVO.setNumeroClave(1);
-//				dcaVO.setDescripcion("descripcion");
-//				dcaVO.setFormato("N");
-//				dcaVO.setDescripcionFormato("Numerico");
-//				dcaVO.setMinimo("1");
-//				dcaVO.setMaximo("2");
-//				listaClaves.add(dcaVO);
-			}
-			session.put("LISTA_CINCO_CLAVES", listaClaves);
-		}*/
 		if(!session.containsKey("LISTA_CINCO_CLAVES_NUEVOS")){
 			session.put("LISTA_CINCO_CLAVES_NUEVOS", new ArrayList<DatosClaveAtributoVO>());
 		}
 		success = true;
 		return SUCCESS;
 	}
+	
 	public String listaAtributosJson() throws ApplicationException{
 		boolean isDebugEnabled = log.isDebugEnabled();
 		if(isDebugEnabled){
