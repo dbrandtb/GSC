@@ -1,10 +1,13 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
-
-
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
-	<include file="struts-default.xml" />
 
-	<package name="wizard" extends="json-default" namespace="/wizard">
+	<package name="wizard" namespace="/wizard" extends="default">
+	
+	    <!-- ENTRADA A WIZARD DE PARAMETRIZACION: -->
+        <action name="parametrizador" class="ExpresionesAction" method="entrarWizard">
+            <result name="success">/jsp/wizard/indexWithIframe.jsp</result>
+        </action>
 	
 		<action name="ComboTabla" class="ExpresionesAction" method="listaTablaJSON">
 			<result name="success" type="json"/>				
