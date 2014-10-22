@@ -9,6 +9,7 @@
     
     <bean id="endososGrupoManagerImpl" class="mx.com.gseguros.portal.endosos.service.impl.EndososGrupoManagerImpl">
         <property name="endososGrupoDAO" ref="endososGrupoDAOImpl" />
+        <property name="pantallasDAO"    ref="pantallasDAOImpl"    />
     </bean>
     
 </beans>
