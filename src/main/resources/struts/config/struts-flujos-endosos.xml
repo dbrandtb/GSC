@@ -340,10 +340,27 @@
         </action>
         
         <action name="endososGrupo" class="endososGrupoAction" method="endososGrupo">
-            <result name="success">/jsp-script/proceso/endosos/marcoEndosos.jsp</result>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/marcoEndososGrupoPersona.jsp</result>
+        </action>
+        
+        <action name="buscarHistoricoPolizasGrupoPersona" class="endososGrupoAction" method="buscarHistoricoPolizas">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
         </action>
         
         <action name="obtenerComponenteSituacionCobertura" class="EndososAction" method="obtenerComponenteSituacionCobertura">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="cargarFamiliasPoliza" class="endososGrupoAction" method="cargarFamiliasPoliza">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="cargarIntegrantesFamilia" class="endososGrupoAction" method="cargarIntegrantesFamilia">
             <result name="success" type="json" />
         </action>
         
