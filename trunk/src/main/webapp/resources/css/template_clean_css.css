@@ -15,7 +15,7 @@ body {line-height: 125%; font-family: "Lucida Grande", Tahoma, Helvetica, sans-s
 /* size attributes */
 
 body.f-smaller {font-size: 10px;}
-body.f-default {font-size: 11px;}
+body.f-default {font-size: 12px;}
 body.f-larger {	font-size: 13px;}
 
 .small,

@@ -21,6 +21,8 @@
         <decorator:head />
         <!-- EL custom_overrides.js DEBE SER INCLUIDO DESPUES DE LOS SCRIPTS PROPIOS DE CADA JSP -->
         <script type="text/javascript" src="${ctx}/resources/scripts/util/custom_overrides.js?${now}"></script>
+        <!-- Manejo de la extension de la sesion: -->
+        <script type="text/javascript" src="${ctx}/resources/scripts/util/session_timeout.js?${now}"></script>
     </head>
     <body>
         <decorator:body />
