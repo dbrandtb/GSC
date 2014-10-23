@@ -152,6 +152,13 @@
             </result>
         </action>
         
+        <action name="consultaClausulasPoliza" class="ConsultasPolizaAction" method="consultaClausulasPoliza">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">clausulasPoliza.*,success</param>
+            </result>
+        </action>
+        
         <action name="includes/verCoberturasPoliza" class="ConsultasPolizaAction" method="verCoberturas">
             <result>/jsp/consultas/polizas/includes/verCoberturasPoliza.jsp</result>
         </action>

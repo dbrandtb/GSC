@@ -73,6 +73,15 @@ public interface ConsultasPolizaManager {
     public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     /**
+     * Obtiene las clausulas de la poliza
+     * @param poliza
+     * @param asegurado
+     * @return
+     * @throws Exception
+     */
+    public List<ClausulaVO> obtieneClausulasPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    
+    /**
      * 
      * @param asegurado
      * @return
