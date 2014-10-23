@@ -16,6 +16,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -2724,6 +2725,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				hosp.put("IVA"      	, "0");
     				hosp.put("PRECIO"   	, "0");
     				hosp.put("DESCPRECIO"   , "0");
+    				hosp.put("IMPISR"   , "0");
+    				hosp.put("IMPCED"   , "0");
     				//hospitalizacion
     				
     				//reembolso
@@ -2803,6 +2806,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							double hISR      = Double.parseDouble(hosp.get("IMPISR"));
+    							double hICED      = Double.parseDouble(hosp.get("IMPCED"));
     							double hPRECIO      = Double.parseDouble(hosp.get("PRECIO"));
     							double hDESCPRECIO  = Double.parseDouble(hosp.get("DESCPRECIO"));
     							logger.debug("base import "+hPTIMPORT);
@@ -2811,6 +2816,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hPTIMPORT 	+= PTIMPORT;
     							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
                                 hIVA      	+= PTIMPORT*(ivaprov/100d);
+                                hISR		+= PTIMPORT*(isrprov/100d);
+                                hICED		+= PTIMPORT*(cedprov/100d);
     							hPRECIO 	+= PTPRECIO;
     							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
@@ -2822,6 +2829,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hosp.put("IVA"      , hIVA+"");
     							hosp.put("PRECIO"   , hPRECIO+"");
     							hosp.put("DESCPRECIO", hDESCPRECIO+"");
+    							hosp.put("IMPISR"   , hISR+"");
+                				hosp.put("IMPCED"   , hICED+"");
     							logger.debug("<<HOSPITALIZACION");
     							//logger.debug("###### HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD  CONCEPTOS ######");
     						}
@@ -3109,8 +3118,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                         }
 						ivaSiniestroIte = Double.parseDouble(hosp.get("IVA"));//hIVA;
 						//ivrSiniestroIte = 0d;
-						isrSiniestroIte = 0d;
-						cedSiniestroIte = 0d;
+						isrSiniestroIte = Double.valueOf(hosp.get("IMPISR"));
+						cedSiniestroIte = Double.valueOf(hosp.get("IMPCED"));
 						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
@@ -3632,7 +3641,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		if(causaSiniestro!= null){
 			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				//obtenemos la penalización por el cambio de zona
-				if(existePenalizacion.equalsIgnoreCase("s")){
+				if(!existePenalizacion.equalsIgnoreCase("S")){
 					//obtenemos el valor del porcentaje
 					try{
 						//Obtenemos la informacion de la zona hospitalaria
@@ -3986,6 +3995,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				hosp.put("IVA"      	, "0");
     				hosp.put("PRECIO"   	, "0");
     				hosp.put("DESCPRECIO"   , "0");
+    				hosp.put("IMPISR"   , "0");
+    				hosp.put("IMPCED"   , "0");
     				//hospitalizacion
     				
     				//reembolso
@@ -4023,6 +4034,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						{
     							//logger.debug("######  HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD  CONCEPTOS ######");
     							logger.debug(">>HOSPITALIZACION");
+    							String cveConcepto = concepto.get("CDCONCEP");
+    							logger.debug(">>CVECONCEPTO");
+    							logger.debug(cveConcepto);
     							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
     							double DESTOPOR=Double.parseDouble(concepto.get("DESTOPOR"));
     							double DESTOIMP=Double.parseDouble(concepto.get("DESTOIMP"));
@@ -4061,6 +4075,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							double hISR      = Double.parseDouble(hosp.get("IMPISR"));
+    							double hICED      = Double.parseDouble(hosp.get("IMPCED"));
     							double hPRECIO      = Double.parseDouble(hosp.get("PRECIO"));
     							double hDESCPRECIO  = Double.parseDouble(hosp.get("DESCPRECIO"));
     							logger.debug("base import "+hPTIMPORT);
@@ -4069,6 +4085,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hPTIMPORT 	+= PTIMPORT;
     							hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
     							hIVA      	+= PTIMPORT*(ivaprov/100d);
+                                hISR		+= PTIMPORT*(isrprov/100d);
+                                hICED		+= PTIMPORT*(cedprov/100d);
     							hPRECIO 	+= PTPRECIO;
     							hDESCPRECIO += (PTPRECIO*(DESTOPOR/100d)) + (DESTOIMP);
     							logger.debug("new import "+hPTIMPORT);
@@ -4080,6 +4098,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							hosp.put("IVA"      , hIVA+"");
     							hosp.put("PRECIO"   , hPRECIO+"");
     							hosp.put("DESCPRECIO", hDESCPRECIO+"");
+    							hosp.put("IMPISR"   , hISR+"");
+                				hosp.put("IMPCED"   , hICED+"");
     							logger.debug("<<HOSPITALIZACION");
     							//logger.debug("###### HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD  CONCEPTOS ######");
     						}
@@ -4367,8 +4387,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                         }
 						ivaSiniestroIte = Double.parseDouble(hosp.get("IVA"));//hIVA;
 						//ivrSiniestroIte = 0d;
-						isrSiniestroIte = 0d;
-						cedSiniestroIte = 0d;
+						isrSiniestroIte = Double.valueOf(hosp.get("IMPISR"));
+						cedSiniestroIte = Double.valueOf(hosp.get("IMPCED"));
 						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
@@ -5217,7 +5237,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     }
     
     
-    public String ProcesoAltaTramite(String msgResult) throws Exception
+    public String ProcesoAltaTramite(String msgResult) throws ApplicationException
     {
         // si tipo de pago es Directo
         if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo()))

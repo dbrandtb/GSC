@@ -248,7 +248,9 @@ Ext.onReady(function()
             	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
             	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
-            	var total = subttDedu - copagoaplica + iva - ivaRetenido;
+            	
+            	//var ivaIS = _p12_lhosp[indice].IVARETENIDO*1.0;
+            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
             	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -256,12 +258,14 @@ Ext.onReady(function()
             	debug('copago',copago);
             	debug('tipcopag',tipcopag);
             	debug('copagoaplica',copagoaplica);
+            	
+            	totalIVA 		 = totalIVA + iva;
+            	totalISR  		 = _p12_lhosp[indice].IMPISR*1.0;
+            	totalIVARet 	 = totalIVARet + ivaRetenido;
+            	totalImpCedular  = _p12_lhosp[indice].IMPCED*1.0;
+            	var total = (subttDedu + iva) - (copagoaplica + ivaRetenido+ totalISR + totalImpCedular);
             	debug('total',total);
             	totalglobal = totalglobal + total;
-            	totalIVA 		 = totalIVA + iva;
-            	totalISR  		 = 0.0;
-            	totalIVARet 	 = totalIVARet + ivaRetenido;
-            	totalImpCedular  = 0.0;
             	var panelCuentas = Ext.create('Ext.panel.Panel',
             	{
             		title     : 'Resumen'
@@ -355,6 +359,27 @@ Ext.onReady(function()
                                 ,labelWidth : 200
                                 ,fieldLabel : 'IVA Retenido' //IVA PAGO DIRECTO HOSPI
                                 ,value      : ivaRetenido
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+            	        ,{
+                            xtype       : 'displayfield'
+                            ,labelWidth : 200
+                                ,fieldLabel : 'ISR' //IVA PAGO DIRECTO HOSPI
+                                ,value      : totalISR
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                        ////		
+                            }
+                        ,{
+                            xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'IMP. CEDULAR' //IVA PAGO DIRECTO HOSPI
+                                ,value      : totalImpCedular
                                 ,valueToRaw : function(value)
                                 {
                                     return Ext.util.Format.usMoney(value);
