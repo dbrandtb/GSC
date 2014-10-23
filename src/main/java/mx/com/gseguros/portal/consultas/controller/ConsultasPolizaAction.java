@@ -31,10 +31,6 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -44,8 +40,8 @@ import org.springframework.stereotype.Controller;
  *
  * @author HMLT
  */
-@ParentPackage(value="default")
-@Namespace("/consultasPoliza")
+//@ParentPackage(value="default") // TODO: Investigar porqué en Weblogic no se cargan los Annotations de Struts2
+//@Namespace("/consultasPoliza") // TODO: Investigar porqué en Weblogic no se cargan los Annotations de Struts2
 @Controller("ConsultasPolizaAction")
 @Scope(value="prototype")
 public class ConsultasPolizaAction extends PrincipalCoreAction{
@@ -238,13 +234,15 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
      * Obtiene los endosos de una poliza
      * @return String result
      */
+    /* TODO: Investigar porqué en Weblogic no se cargan los Annotations de Struts2
 	@Action(value = "consultaClausulasPoliza", results = { 
 			@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false", "includeProperties","clausulasPoliza.*,success" })
 	})
+	*/
     public String consultaClausulasPoliza(){
     	logger.debug(" **** Entrando a consultaClausulasPoliza ****");
     	try {
-    		clausulasPoliza = consultasPolizaManager.obtieneEndososPoliza(
+    		clausulasPoliza = consultasPolizaManager.obtieneClausulasPoliza(
 					new PolizaVO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"),
 								 params.get("suplemento"), null, params.get("nmsituac")), 
 					null);

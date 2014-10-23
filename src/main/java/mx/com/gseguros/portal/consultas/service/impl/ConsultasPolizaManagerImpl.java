@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 @Service("consultasPolizaManagerImpl")
 public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
+	//private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasPolizaManagerImpl.class);
+	
 	@Autowired
 	@Qualifier("consultasDAOICEImpl")
 	private IConsultasPolizaDAO consultasPolizaDAOICE;
@@ -110,6 +112,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			AseguradoVO asegurado) throws Exception {
 		//TODO: agregar la invocacion a ICE
 		return consultasPolizaDAOSISA.obtieneEndososPoliza(poliza, asegurado);
+	}
+	
+	@Override
+	public List<ClausulaVO> obtieneClausulasPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
+		return consultasPolizaDAOICE.obtieneEndososPoliza(poliza, asegurado);
 	}
 	
 	
