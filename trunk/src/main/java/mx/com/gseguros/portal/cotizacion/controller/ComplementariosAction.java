@@ -82,6 +82,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private Map<String, String> panel2;
 	private Map<String, String> parametros;
 	private String cdunieco;
+	private String sucursalGS;
 	private String cdramo;
 	private String estado;
 	private String nmpoliza;
@@ -2000,7 +2001,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 						if(success)
 						{
 							logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNmpoliex());
-							this.nmpolAlt = aux.getNmpoliex(); 
+							this.nmpolAlt = aux.getNmpoliex();
+							this.sucursalGS = aux.getSucursal();
 							panel2.put("nmpoliex", this.nmpolAlt);
 							cdRamoGS = aux.getSubramo();
 							
@@ -2174,7 +2176,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					/**
 					 * Para Caratula
 					 */
-					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 					
@@ -2500,6 +2502,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						{
 							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
 							this.nmpolAlt = aux.getNmpoliex();
+							this.sucursalGS = aux.getSucursal();
 							nmpoliexEmitida =  this.nmpolAlt;
 							cdRamoGS = aux.getSubramo();
 							
@@ -2678,7 +2681,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					/**
 					 * Para Caratula
 					 */
-					parametros = "?"+cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 					
@@ -2873,6 +2876,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNmpoliex());
 				this.nmpolAlt = aux.getNmpoliex();
+				this.sucursalGS = aux.getSucursal();
 				panel2.put("nmpoliex", this.nmpolAlt);
 				cdRamoGS = aux.getSubramo();
 				
@@ -3004,7 +3008,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para Caratula
 						 */
-						parametros = "?"+_cdunieco+","+cdRamoGS+","+this.nmpolAlt+",,0";
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 						logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 						

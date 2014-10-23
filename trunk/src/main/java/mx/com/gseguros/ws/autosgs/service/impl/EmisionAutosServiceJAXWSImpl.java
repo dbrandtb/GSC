@@ -451,6 +451,7 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 						emisionAutoRes = new EmisionAutosVO();
 						emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
 						emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
+						emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
 					}
 					
 				}else{

@@ -19,6 +19,8 @@ public class EmisionAutosVO implements Serializable {
      * Numero de Subramo, (Corresponde al Ramo para GS)
      */
     private String subramo;
+    
+    private String sucursal;
 	
 	@Override
 	public String toString()
@@ -40,5 +42,13 @@ public class EmisionAutosVO implements Serializable {
 
 	public void setSubramo(String subramo) {
 		this.subramo = subramo;
+	}
+
+	public String getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(String sucursal) {
+		this.sucursal = sucursal;
 	}
 }
