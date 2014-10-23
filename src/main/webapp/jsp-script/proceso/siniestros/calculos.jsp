@@ -22,7 +22,6 @@ var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='
 var _CAUSA_ACCIDENTE = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
 var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
 var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
-
 debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
@@ -144,7 +143,7 @@ Ext.onReady(function()
 	////// stores //////
 	
 	////// componentes //////
-	var totalglobal		 = 0.0;
+	var totalglobal = 0.0;
 	var totalIVA		 = 0.0;
 	var totalISR 		 = 0.0;
 	var totalIVARet 	 = 0.0;
@@ -248,7 +247,9 @@ Ext.onReady(function()
             	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
             	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
-            	var total = subttDedu - copagoaplica + iva - ivaRetenido;
+            	
+            	//var ivaIS = _p12_lhosp[indice].IVARETENIDO*1.0;
+            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
             	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -256,14 +257,13 @@ Ext.onReady(function()
             	debug('copago',copago);
             	debug('tipcopag',tipcopag);
             	debug('copagoaplica',copagoaplica);
+            	totalIVA 		 = totalIVA + iva;
+            	totalISR  		 = _p12_lhosp[indice].IMPISR*1.0;
+            	totalIVARet 	 = totalIVARet + ivaRetenido;
+            	totalImpCedular  = _p12_lhosp[indice].IMPCED*1.0;
+            	var total = (subttDedu + iva) - (copagoaplica + ivaRetenido+ totalISR + totalImpCedular);
             	debug('total',total);
             	totalglobal = totalglobal + total;
-            	
-            	totalIVA 		 = totalIVA + iva;
-            	totalISR  		 = 0.0;
-            	totalIVARet 	 = totalIVARet + ivaRetenido;
-            	totalImpCedular  = 0.0;
-            	
             	var panelCuentas = Ext.create('Ext.panel.Panel',
             	{
             		title     : 'Resumen'
@@ -365,6 +365,27 @@ Ext.onReady(function()
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
+                                ,fieldLabel : 'ISR' //IVA PAGO DIRECTO HOSPI
+                                ,value      : totalISR
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                        ////		
+                            }
+                        ,{
+                            xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'IMP. CEDULAR' //IVA PAGO DIRECTO HOSPI
+                                ,value      : totalImpCedular
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+            	        ,{
+                            xtype       : 'displayfield'
+                            ,labelWidth : 200
                             ,fieldLabel : 'Total'
                             ,value      : total
                             ,valueToRaw : function(value)
@@ -400,7 +421,6 @@ Ext.onReady(function()
             	totalISR = totalISR + _p12_lpdir[indice].iSRMostrar*1.0;
             	totalIVARet = totalIVARet + _p12_lpdir[indice].ivaRetenidoMostrar*1.0;
             	totalImpCedular = totalImpCedular + _p12_lpdir[indice].totalcedular*1.0;
-            	
             	var gridCuentas = Ext.create('Ext.grid.Panel',
             	{
             		store    : Ext.create('Ext.data.Store',
@@ -817,7 +837,7 @@ Ext.onReady(function()
             if(
                 !(!_p12_slist2[indice].COPAGOAUX
                 ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')
+                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
             )
             {
                 _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX.replace(",","");
@@ -1001,7 +1021,6 @@ Ext.onReady(function()
         	type     : 'table'
         	,columns : 1
         }
-        	
     	,items    :
     	[
     	    {
