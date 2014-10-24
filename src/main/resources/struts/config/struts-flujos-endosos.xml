@@ -364,6 +364,11 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="endosoAtributosSituacionGeneral" class="EndososAction" method="endosoAtributosSituacionGeneral">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoAtributosSituacionGeneral.jsp</result>
+        </action>
+        
     </package>
 
 </struts>
