@@ -5294,9 +5294,31 @@ public class EndososAction extends PrincipalCoreAction
 		
 		String pantalla = "ENDOSO_DEDUCIBLE";
 		
-		if(cdtipsit.equals("SL")||cdtipsit.equals("SN")) {
-			llaveDeducible    = "otvalor05";
-			cdatribuDeducible = "5";
+		//obtener campo deducible
+		if(resp.isSuccess())
+		{
+			try
+			{
+				List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+				
+				for(ComponenteVO tatri:tatrisitAux)
+				{
+					if(tatri.getLabel().lastIndexOf("DEDUCIBLE")>-1)
+					{
+						cdatribuDeducible = tatri.getNameCdatribu();
+						llaveDeducible    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+					}
+				}
+				
+				logger.debug(new StringBuilder("cdatribuDeducible=").append(cdatribuDeducible).toString());
+				logger.debug(new StringBuilder("llaveDeducible=")   .append(llaveDeducible).toString());
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al obtener componente de deducible", ex);
+				error = ex.getMessage();
+				resp.setSuccess(false);
+			}
 		}
 		
 		if(resp.isSuccess()) {
@@ -6262,9 +6284,31 @@ public class EndososAction extends PrincipalCoreAction
 		
 		String pantalla = "ENDOSO_EXTRAPRIMA";
 		
-		if(cdtipsit.equals("SL")||cdtipsit.equals("SN")) {
-			llaveExtraprima    = "otvalor18";
-			cdatribuExtraprima = "18";
+		//obtener campo extraprima
+		if(resp.isSuccess())
+		{
+			try
+			{
+				List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+				
+				for(ComponenteVO tatri:tatrisitAux)
+				{
+					if(tatri.getLabel().lastIndexOf("EXTRAPRIMA")>-1)
+					{
+						cdatribuExtraprima = tatri.getNameCdatribu();
+						llaveExtraprima    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+					}
+				}
+				
+				logger.debug(new StringBuilder("cdatribuExtraprima=").append(cdatribuExtraprima).toString());
+				logger.debug(new StringBuilder("llaveExtraprima=")   .append(llaveExtraprima).toString());
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al obtener componente de extraprima", ex);
+				error = ex.getMessage();
+				resp.setSuccess(false);
+			}
 		}
 		
 		if(resp.isSuccess()) {
@@ -7185,6 +7229,84 @@ public class EndososAction extends PrincipalCoreAction
 				.toString()
 				);
 		return SUCCESS;
+	}
+	
+	public String endosoAtributosSituacionGeneral()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#############################################")
+				.append("\n###### endosoAtributosSituacionGeneral ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsuplem = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsuplem = smap1.get("nmsuplem");
+			
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de poliza");
+			}
+			if(StringUtils.isBlank(nmsuplem))
+			{
+				throw new ApplicationException("No se recibio el suplemento");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### endosoAtributosSituacionGeneral ######")
+				.append("\n#############################################")
+				.toString()
+				);
+		return result;
 	}
 	
 	///////////////////////////////
