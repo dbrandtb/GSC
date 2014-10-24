@@ -178,7 +178,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     		poliza.setNmpoliex(params.get("nmpoliex"));
     		datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
     		
-    		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
+    		if(datosSuplemento != null) {
+    			logger.debug("Historicos encontrados: " + datosSuplemento.size());
+    		}
     		
     		if(datosSuplemento != null && !datosSuplemento.isEmpty()){
     			try{
@@ -299,7 +301,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     		//WrapperResultados result = consultasPolizaManagerOLD.obtienePolizasAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
     		//polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
     		
-    		logger.debug("Resultado de la obtienePolizasAsegurado:" + polizasAsegurado);
+    		if(polizasAsegurado != null) {
+    			logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+    		}
     		
     	}catch( Exception e){
     		logger.error("Error al obtener los obtienePolizasAsegurado ",e);
@@ -442,6 +446,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     		    		
     		//datosAsegurados = (ArrayList<AseguradoVO>) result.getItemList();
     		PolizaVO poliza = new PolizaVO();
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
     		poliza.setIcodpoliza(params.get("icodpoliza"));
     		datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza);
     		
@@ -473,7 +482,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     		//datosCopagosPoliza = (ArrayList<CopagoVO>) result.getItemList();
     		
     		PolizaVO poliza = new PolizaVO();
-    		poliza.setIcodpoliza(params.get("icodpoliza"));    		
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
     		datosCopagosPoliza = consultasPolizaManager.obtieneCopagosPoliza(poliza);
     		   		
     		

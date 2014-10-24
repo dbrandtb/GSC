@@ -25,7 +25,6 @@ import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -33,8 +32,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsultasPolizaDAO {
 
-	private final static Logger logger = Logger.getLogger(ConsultasPolizaDAOImpl.class);
-	
+	//private final static Logger logger = Logger.getLogger(ConsultasPolizaDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -169,14 +167,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		protected ConsultaSuplementosSP(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
 		}
 	}
 	
-    protected class DatosSuplementoMapper  implements RowMapper<ConsultaDatosSuplementoVO> {
+    protected class SuplementoMapper  implements RowMapper<ConsultaDatosSuplementoVO> {
     	
     	public ConsultaDatosSuplementoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
     		ConsultaDatosSuplementoVO suplemento = new ConsultaDatosSuplementoVO();
@@ -197,18 +195,99 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     }
     
     
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i", poliza.getCdramo());
+		params.put("pv_estado_i", poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneCopagosSP(getDataSource()), params);
+		return (List<CopagoVO>) mapResult.get("pv_registro_o");
 	}
 	
+    protected class ObtieneCopagosSP extends StoredProcedure {
+    	
+    	protected ObtieneCopagosSP(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CopagosMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class CopagosMapper implements RowMapper<CopagoVO> {
+    	
+    	public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		CopagoVO copago = new CopagoVO();
+    		copago.setOrden(rs.getInt("ORDEN"));
+    		copago.setDescripcion(rs.getString("DESCRIPCION"));
+    		copago.setValor(rs.getString("VALOR"));
+    		copago.setNivel(rs.getInt("NIVEL"));
+    		return copago;
+    	}
+    }
 	
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i",   poliza.getCdramo());
+		params.put("pv_estado_i",   poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneAseguradosSP(getDataSource()), params);
+		
+		return (List<AseguradoVO>) mapResult.get("pv_registro_o");
 	}
+	
+    protected class ObtieneAseguradosSP extends StoredProcedure {
+    	
+    	protected ObtieneAseguradosSP(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AseguradoMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class AseguradoMapper  implements RowMapper<AseguradoVO> {
+    	
+    	public AseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		AseguradoVO consulta = new AseguradoVO();
+    		consulta.setCdperson(rs.getString("cdperson"));
+    		consulta.setCdrfc(rs.getString("cdrfc"));
+    		consulta.setCdrol(rs.getString("cdrol"));
+    		consulta.setDsrol(rs.getString("dsrol"));
+    		consulta.setNmsituac(rs.getString("nmsituac"));
+    		consulta.setCdtipsit(rs.getString("cdtipsit"));
+    		consulta.setNombre(rs.getString("titular"));
+    		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
+    		consulta.setSexo(rs.getString("Sexo"));
+    		consulta.setStatus(rs.getString("status"));
+    		consulta.setParentesco(rs.getString("parentesco"));
+    		return consulta;
+    	}
+    }
 
 	
 	@SuppressWarnings("unchecked")
