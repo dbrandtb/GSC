@@ -643,7 +643,7 @@ Ext.onReady(function()
 	                        }
 	                    ],
 	                ftype:'groupingsummary',
-	                startCollapsed :true
+	                startCollapsed :false
 	            }]
                 ,dockedItems :
                 [

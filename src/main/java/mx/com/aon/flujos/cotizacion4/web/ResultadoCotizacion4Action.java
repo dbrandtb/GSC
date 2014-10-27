@@ -25,6 +25,7 @@ import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -1226,7 +1227,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	}
     	
     	//generar cotizacion
-    	if(exito)
+    	if(exito&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()))
     	{
             try
             {

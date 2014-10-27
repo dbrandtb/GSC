@@ -1082,6 +1082,7 @@
 										                                                        	,id      : 'botonEmitirPolizaFinalPreview'
 										                                                        	,text    : 'Vista previa'
 										                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+										                                                        	,hidden  : inputCdramo=='6'
 										                                                        	,handler : function()
 										                                                            {
 										                                                                var me=this;
