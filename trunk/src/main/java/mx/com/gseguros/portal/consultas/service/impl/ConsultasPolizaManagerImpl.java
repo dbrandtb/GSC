@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
@@ -94,7 +95,23 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		List<CopagoVO> copagos;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			
 			copagos = consultasPolizaDAOICE.obtieneCopagosPoliza(poliza);
+			
+			// Agregamos un campo que agrupe los resultados:
+			String agrupador = null;
+			Iterator<CopagoVO> itCopagos = copagos.iterator();
+			while (itCopagos.hasNext()) {
+				CopagoVO copagoVO = itCopagos.next();
+				// Si el copago tiene Nivel Padre se asigna como agrupador:
+				if(copagoVO.getNivel() == 1) {
+					agrupador = copagoVO.getDescripcion();
+				}
+				if(StringUtils.isBlank(copagoVO.getValor())) {
+					itCopagos.remove();
+				}
+				copagoVO.setAgrupador(agrupador);
+			}
 		} else {
 			copagos = consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);
 		}
