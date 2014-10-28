@@ -6,6 +6,8 @@ import java.util.Map;
 public interface TablasApoyoManager {
 
 	public List<Map<String, String>> obtieneValoresTablaApoyo5claves(Map<String,String> params) throws Exception;
+
+	public List<Map<String, String>> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception;
 	
-	public boolean guardaValoresTablaApoyo(Map<String, String> params, List<Map<String, String>> deleteList, List<Map<String, String>> saveList, List<Map<String, String>> updateList) throws Exception;
+	public boolean guardaValoresTablaApoyo(Map<String, String> params, List<Map<String, String>> deleteList, List<Map<String, String>> saveList, List<Map<String, String>> updateList, boolean es1clave) throws Exception;
 }

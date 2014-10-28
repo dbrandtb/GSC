@@ -39,7 +39,26 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlParameter("PV_FEHASTA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_LIMITE_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
-			declareParameter(new SqlOutParameter(" PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneValoresTablaApoyo1clave(getDataSource()), params);
+		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneValoresTablaApoyo1clave extends StoredProcedure {
+		protected ObtieneValoresTablaApoyo1clave(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_TTAPVAT1");
+			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_OTCLAVE1_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_LIMITE_I" ,   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();
 		}
@@ -90,6 +109,26 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlParameter("PV_OTVALOR24_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTVALOR25_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTVALOR26_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String guardaValoresTablaApoyo1Clave(Map<String,String> params) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new GuardaValoresTablaApoyo1Clave(getDataSource()), params);
+		return (String) resultado.get("PV_TITLE_O");
+	}
+	
+	protected class GuardaValoresTablaApoyo1Clave extends StoredProcedure {
+		protected GuardaValoresTablaApoyo1Clave(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_MOV_TTAPVAT1");
+			declareParameter(new SqlParameter("PV_ACCION_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SWCOMMIT_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_OTCLAVE1_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_OTVALOR01_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();

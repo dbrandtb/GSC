@@ -520,6 +520,7 @@ public class CatalogosAction extends PrincipalCoreAction {
     	
     	try{
     		loadList = catalogosManager.obtieneClavesTablaApoyo(params);
+    		//logger.debug("Claves obtenidas: " + loadList);
     	}catch(Exception ex){
     		logger.error("Error al obtieneTablasApoyo",ex);
     		msgRespuesta = ex.getMessage();
@@ -535,6 +536,7 @@ public class CatalogosAction extends PrincipalCoreAction {
     	
     	try{
     		loadList = catalogosManager.obtieneAtributosTablaApoyo(params);
+    		//logger.debug("Atributos obtenidos: " + loadList);
     	}catch(Exception ex){
     		logger.error("Error al obtieneAtributosTablaApoyo",ex);
     		msgRespuesta = ex.getMessage();

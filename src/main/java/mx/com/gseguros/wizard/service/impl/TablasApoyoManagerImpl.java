@@ -21,9 +21,15 @@ public class TablasApoyoManagerImpl implements TablasApoyoManager {
 	{
 		return tablasApoyoDAO.obtieneValoresTablaApoyo5claves(params);
 	}
+
+	@Override
+	public List<Map<String, String>> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception
+	{
+		return tablasApoyoDAO.obtieneValoresTablaApoyo1clave(params);
+	}
 	
 	@Override
-	public boolean guardaValoresTablaApoyo(Map<String, String> params, List<Map<String, String>> deleteList, List<Map<String, String>> saveList, List<Map<String, String>> updateList) throws Exception
+	public boolean guardaValoresTablaApoyo(Map<String, String> params, List<Map<String, String>> deleteList, List<Map<String, String>> saveList, List<Map<String, String>> updateList, boolean es1clave) throws Exception
 	{
 		
 		params.put("PV_SWCOMMIT_I", Constantes.SI);
@@ -72,7 +78,11 @@ public class TablasApoyoManagerImpl implements TablasApoyoManager {
 				params.put("PV_OTVALOR26_I", valoreLlaveAtri.get("OTVALOR26"));
 				
 				
-				tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				if(es1clave){
+					tablasApoyoDAO.guardaValoresTablaApoyo1Clave(params);
+				}else {
+					tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				}
 		}
 		
 		/*
@@ -119,7 +129,11 @@ public class TablasApoyoManagerImpl implements TablasApoyoManager {
 				params.put("PV_OTVALOR26_I", valoreLlaveAtri.get("OTVALOR26"));
 				
 				
-				tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				if(es1clave){
+					tablasApoyoDAO.guardaValoresTablaApoyo1Clave(params);
+				}else {
+					tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				}
 		}
 		
 		/*
@@ -166,7 +180,11 @@ public class TablasApoyoManagerImpl implements TablasApoyoManager {
 				params.put("PV_OTVALOR26_I", valoreLlaveAtri.get("OTVALOR26"));
 				
 				
-				tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				if(es1clave){
+					tablasApoyoDAO.guardaValoresTablaApoyo1Clave(params);
+				}else {
+					tablasApoyoDAO.guardaValoresTablaApoyo(params);
+				}
 		}
 		
 		return true; 
