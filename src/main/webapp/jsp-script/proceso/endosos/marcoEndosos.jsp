@@ -916,6 +916,222 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+        else if(recordOperacion.get('funcion')=='endososumaasegmas')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='34';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
+        else if(recordOperacion.get('funcion')=='endososumaasegmenos')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='35';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
+        else if(recordOperacion.get('funcion')=='endosocoasegmas')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='36';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
+        else if(recordOperacion.get('funcion')=='endosocoasegmenos')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='37';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
+        else if(recordOperacion.get('funcion')=='endosotopemas')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='38';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
+        else if(recordOperacion.get('funcion')=='endosotopemenos')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                smap1['cdtipsup']='39';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -1213,6 +1429,36 @@ Ext.onReady(function()
                     texto    : '19'
                     ,liga    : '<s:url namespace="/endosos" action="endosoAgente" />'
                     ,funcion : 'endosoagente'
+                }
+                ,{
+                    texto    : '34'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endososumaasegmas'
+                }
+                ,{
+                    texto    : '35'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endososumaasegmenos'
+                }
+                ,{
+                    texto    : '36'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endosocoasegmas'
+                }
+                ,{
+                    texto    : '37'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endosocoasegmenos'
+                }
+                ,{
+                    texto    : '38'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endosotopemas'
+                }
+                ,{
+                    texto    : '39'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
+                    ,funcion : 'endosotopemenos'
                 }
             ]
         }
