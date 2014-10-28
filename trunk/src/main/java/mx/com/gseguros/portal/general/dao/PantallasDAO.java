@@ -10,11 +10,13 @@ public interface PantallasDAO
 	/**
 	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
 	 */
+	@Deprecated
 	public List<ComponenteVO>       obtenerComponentes         (Map<String,String> params) throws Exception;
 	/**
 	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
 	 */
-	public List<ComponenteVO>       obtenerComponentes         (String cdtiptra
+	public List<ComponenteVO>       obtenerComponentes         (
+			String cdtiptra
 			,String cdunieco
 			,String cdramo
 			,String cdtipsit

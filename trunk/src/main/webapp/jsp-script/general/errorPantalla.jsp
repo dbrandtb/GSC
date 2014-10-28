@@ -7,7 +7,10 @@
 <script>
 Ext.onReady(function()
 {
-	var respuestaOculta = '<s:property value="respuestaOculta" />';
+	/*
+	ERROR:
+	<s:property value="respuestaOculta" />
+	*/
 	mensajeError('<s:property value="respuesta" />');
 });
 </script>
