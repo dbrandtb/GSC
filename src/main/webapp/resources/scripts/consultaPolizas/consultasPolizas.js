@@ -93,6 +93,7 @@ Ext.onReady(function() {
                                 //TODO: Revisar la forma de acceder al atributo origen, si lo cambiamos o no a un hidden
                                 if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                	tabDatosGeneralesPoliza.child('#tbHistorico').tab.show();
                                 } else {
                                 	tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
                                 	tabDatosGeneralesPoliza.child('#tbHistorico').tab.hide();
@@ -717,32 +718,27 @@ Ext.onReady(function() {
             	menuDisabled : true,
             	sortable     : false,
             	handler      : function(gridView, rowIndex, colIndex, item, e, record, row) {
-            		/* para ICE
+            		
             		// Se obtiene los parametros a enviar y se complementan:
-            		////var record = gridView.getStore().getAt(rowIndex);
-            		//var record = gridView.getStore().getAt(rowIndex);
-            		var values = panelBusqueda.down('form').getForm().getValues();
-            		values['params.nmsituac']=record.get('nmsituac');
-            		values['params.cdtipsit']=record.get('cdtipsit');
-            		console.log
-            		debug('parametros para obtener los datos de tatrisit:', values);
-            		// Se invoca al loader del panel que contendrá los datos de tatrisit:
-            		var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
-            		pnlDatosTatrisit.getLoader().load({
-            			params: values
-            		});
-            		pnlDatosTatrisit.setTitle('Detalle de ' + record.get('nombre') + ':');
-            		*/
-            		// para SISA
-                    // Se obtiene los parametros a enviar y se complementan:
                     var values = panelBusqueda.down('form').getForm().getValues();
-                    //record es un parámetro de salida de la función del handler.
                     values['params.nmsituac']=record.get('nmsituac');
                     values['params.cdtipsit']=record.get('cdtipsit');
-                    values['params.cdperson']=record.get('cdperson');
-                    debug('parametros para obtener los datos de tatrisit:', values);
-                    // Se invoca al loader del panel que contendrá los datos de tatrisit:
+                    
                     var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
+                    
+                    //TODO: Revisar la forma de acceder al atributo origen, si lo cambiamos o no a un hidden
+                    if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
+                    	// para SISA:
+                        values['params.cdperson']=record.get('cdperson');
+                        pnlDatosTatrisit.getLoader().url = _URL_LOADER_VER_TATRISIT2;
+                    } else {
+                    	// Para ICE:                        
+                        pnlDatosTatrisit.getLoader().url = _URL_LOADER_VER_TATRISIT;
+                    }
+                    
+                    debug('parametros para obtener los datos de tatrisit:', values);
+                    
+                    // Se carga el contenido del detalle de asegurados usando el loader del panel:
                     pnlDatosTatrisit.getLoader().load({
                         params: values
                     });
@@ -1011,7 +1007,7 @@ Ext.onReady(function() {
 					name   : 'pnlDatosTatrisit',
 					autoScroll : true,
 				    loader: {
-				        url: _URL_LOADER_VER_TATRISIT2,
+				        //url: _URL_LOADER_VER_TATRISIT,
 				        scripts  : true,
 				        loadMask : true,
 				        autoLoad : false,
