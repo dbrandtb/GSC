@@ -32,6 +32,13 @@ public class ConsultaPolizaAseguradoVO implements Serializable {
 	 */
 	private String origen;
 	
+	/**
+	 * Vigencia
+	 */
+	private String feinivigencia;
+	private String fefinvigencia;
+	
+	
 	
 	public String getCdunieco() {
 		return cdunieco;
@@ -112,9 +119,25 @@ public class ConsultaPolizaAseguradoVO implements Serializable {
 	public void setOrigen(String origen) {
 		this.origen = origen;
 	}
+	
+	public String getFeinivigencia() {
+		return feinivigencia;
+	}
+
+	public void setFeinivigencia(String feinivigencia) {
+		this.feinivigencia = feinivigencia;
+	}
+
+	public String getFefinvigencia() {
+		return fefinvigencia;
+	}
+
+	public void setFefinvigencia(String fefinvigencia) {
+		this.fefinvigencia = fefinvigencia;
+	}
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-	}
+	}	
 		
 }
