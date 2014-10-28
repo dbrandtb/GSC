@@ -14,6 +14,7 @@ import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
+import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -170,6 +171,39 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	public void confirmarEndosoB(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String nsuplogi
+    		,String cdtipsup
+    		,String dscoment
+    		)throws Exception
+    {
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_nsuplogi_i" , nsuplogi);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		params.put("pv_dscoment_i" , dscoment);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************")
+				.toString()
+				);
+		ejecutaSP(new ConfirmarEndosoB(this.getDataSource()), params);
+    }
+	
+	@Override
+	@Deprecated
 	public Map<String, String> confirmarEndosoB(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -225,6 +259,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	 * PKG_CONSULTA.P_reImp_documentos
 	 */
 	@Override
+	@Deprecated
 	public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception
 	{
 		logger.debug(
@@ -237,6 +272,39 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ReimprimeDocumentos(this.getDataSource()), params);
 		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	@Override
+	public List<Map<String,String>> reimprimeDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_tipmov_i"   , cdtipsup);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** PKG_CONSULTA.P_reImp_documentos ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************")
+				.toString()
+				);
+		Map<String,Object> procResult=this.ejecutaSP(new ReimprimeDocumentos(this.getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String, String>>) procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
 	}
 	
 	protected class ObtieneCoberturasDisponibles extends StoredProcedure
@@ -476,6 +544,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	@Deprecated
 	public Map<String, String> iniciarEndoso(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -500,6 +569,69 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				map.put(col,en.getValue()+"");
 			}
 		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** salida=").append(map)
+				.append("\n****** PKG_ENDOSOS.P_ENDOSO_INICIA ******")
+				.append("\n*****************************************")
+				.toString()
+				);
+		return map;
+	}
+	
+	@Override
+	public Map<String, String>      iniciarEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date fecha
+			,String cdelemen
+			,String cdusuari
+			,String proceso
+			,String cdtipsup)throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_fecha_i"    , fecha);
+		params.put("pv_cdelemen_i" , cdelemen);
+		params.put("pv_cdusuari_i" , cdusuari);
+		params.put("pv_proceso_i"  , proceso);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_ENDOSOS.P_ENDOSO_INICIA ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new IniciarEndoso(this.getDataSource()), params);
+		Map<String,String>map=new LinkedHashMap<String,String>(0);
+		for(Entry en:resultadoMap.entrySet())
+		{
+			String col=(String) en.getKey();
+			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
+			{
+				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+			}
+			else
+			{
+				map.put(col,en.getValue()+"");
+			}
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** salida=").append(map)
+				.append("\n****** PKG_ENDOSOS.P_ENDOSO_INICIA ******")
+				.append("\n*****************************************")
+				.toString()
+				);
 		return map;
 	}
 	
@@ -770,6 +902,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	@Deprecated
 	public List<Map<String,String>> obtenerNtramiteEmision(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -782,6 +915,34 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNtramiteEmision(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	@Override
+	public String obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_NTRAMITE_EMISION ******")
+				.append("\n****** params=").append(params)
+				.toString()
+				);
+		Map<String,Object>procResult=this.ejecutaSP(new ObtenerNtramiteEmision(this.getDataSource()), params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay tramite de emision");
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Tramite de emision duplicado");
+		}
+		return lista.get(0).get("NTRAMITE");
 	}
 	
 	protected class ObtenerNtramiteEmision extends StoredProcedure
@@ -811,6 +972,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	@Deprecated
 	public void validaEndosoAnterior(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -822,6 +984,32 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.toString()
 				);
 		this.ejecutaSP(new ValidaEndosoAnterior(this.getDataSource()), params);
+	}
+	
+	@Override
+	public void validaEndosoAnterior(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_ENDOSOS.P_VALIDA_ENDOSO_ANTERIOR ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************")
+				.toString()
+				);
+		ejecutaSP(new ValidaEndosoAnterior(this.getDataSource()), params);
 	}
 	
 	protected class ValidaEndosoAnterior extends StoredProcedure
@@ -951,6 +1139,32 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
+	}
+	
+	public List<Map<String,String>> obtenerValositPorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_NMPOLIZA_I" , nmpoliza);
+		params.put("PV_NMSUPLEM_I" , nmsuplem);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerValositPorNmsuplem(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
 	}
 	
 	//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
@@ -1746,4 +1960,150 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>obtenerParametrosEndoso(
+			ParametroEndoso parametro
+			,String cdramo
+			,String cdtipsit
+			,String cdtipsup
+			,String clave5)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("parametro" , parametro.getParametro());
+		params.put("cdramo"    , cdramo);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("cdtipsup"  , cdtipsup);
+		params.put("clave5"    , clave5);
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** PKG_LISTAS.P_GET_PARAMS_ENDOSO ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************")
+				.toString()
+				);
+		Map<String,Object>procedureResult = ejecutaSP(new ObtenerParametrosEndoso(getDataSource()),params);
+		List<Map<String,String>>listaAux  = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
+		if(listaAux==null||listaAux.size()==0)
+		{
+			throw new ApplicationException("No hay parametros");
+		}
+		if(listaAux.size()>1)
+		{
+			throw new ApplicationException("Parametros duplicados");
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** registro=").append(listaAux.get(0))
+				.append("\n****** PKG_LISTAS.P_GET_PARAMS_ENDOSO ******")
+				.append("\n********************************************")
+				.toString()
+				);
+		return listaAux.get(0);
+	}
+	
+	protected class ObtenerParametrosEndoso extends StoredProcedure
+	{
+		protected ObtenerParametrosEndoso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_PARAMS_ENDOSO");
+			declareParameter(new SqlParameter("parametro" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave5"    , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"P1CLAVE"
+					,"P1VALOR"
+					,"P2CLAVE"
+					,"P2VALOR"
+					,"P3CLAVE"
+					,"P3VALOR"
+					,"P4CLAVE"
+					,"P4VALOR"
+					,"P5CLAVE"
+					,"P5VALOR"
+					,"P6CLAVE"
+					,"P6VALOR"
+					,"P7CLAVE"
+					,"P7VALOR"
+					,"P8CLAVE"
+					,"P8VALOR"
+					,"P9CLAVE"
+					,"P9VALOR"
+					,"P10CLAVE"
+					,"P10VALOR"
+					,"P11CLAVE"
+					,"P11VALOR"
+					,"P12CLAVE"
+					,"P12VALOR"
+					,"P13CLAVE"
+					,"P13VALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarAtributosSituacionGeneral(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,Map<String,String>tvalosit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		
+		for(int i=1;i<=50;i++)
+		{
+			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		}
+		
+		params.putAll(tvalosit);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TVALOSIT_DINAM ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		ejecutaSP(new GuardarAtributosSituacionGeneral(getDataSource()),params);
+	}
+	
+	protected class GuardarAtributosSituacionGeneral extends StoredProcedure
+	{
+		protected GuardarAtributosSituacionGeneral(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_INSERTA_TVALOSIT_DINAM");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			for(int i=1;i<=50;i++)
+			{
+				declareParameter(new SqlParameter(new StringBuilder("otvalor").append(
+						StringUtils.leftPad(String.valueOf(i),2,"0")
+						).toString() , OracleTypes.VARCHAR));
+			}
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

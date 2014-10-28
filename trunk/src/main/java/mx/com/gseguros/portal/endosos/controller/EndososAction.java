@@ -22,6 +22,8 @@ import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAct
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -7233,10 +7235,135 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String endosoAtributosSituacionGeneral()
 	{
+		this.session=ActionContext.getContext().getSession();
 		logger.info(
 				new StringBuilder()
 				.append("\n#############################################")
 				.append("\n###### endosoAtributosSituacionGeneral ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String cdtipsit = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsuplem = null;
+		String cdusuari = null;
+		String cdtipsup = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdunieco = smap1.get("CDUNIECO");
+			cdramo   = smap1.get("CDRAMO");
+			cdtipsit = smap1.get("CDTIPSIT");
+			estado   = smap1.get("ESTADO");
+			nmpoliza = smap1.get("NMPOLIZA");
+			nmsuplem = smap1.get("NMSUPLEM");
+			cdtipsup = smap1.get("cdtipsup");
+			
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de poliza");
+			}
+			if(StringUtils.isBlank(nmsuplem))
+			{
+				throw new ApplicationException("No se recibio el suplemento");
+			}
+			if(StringUtils.isBlank(cdtipsup))
+			{
+				throw new ApplicationException("No se recibio el tipo de endoso");
+			}
+			
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdusuari       = usuario.getUser();
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//construir
+		if(exito)
+		{
+			ManagerRespuestaImapSmapVO resp = endososManager.endosoAtributosSituacionGeneral(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,cdusuari
+					,cdtipsup);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(resp.isExito())
+			{
+				imap1 = resp.getImap();
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### endosoAtributosSituacionGeneral ######")
+				.append("\n#############################################")
+				.toString()
+				);
+		return result;
+	}
+	
+	public String cargarTvalositTitular()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###################################")
+				.append("\n###### cargarTvalositTitular ######")
 				.append("\n###### smap1=").append(smap1)
 				.toString()
 				);
@@ -7293,20 +7420,167 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error(respuesta,ax);
 		}
 		
-		String result = SUCCESS;
-		if(!exito)
+		//proceso
+		if(exito)
 		{
-			result = ERROR;
+			ManagerRespuestaSmapVO resp = endososManager.cargarTvalositTitular(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
 		}
 		
 		logger.info(
 				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### endosoAtributosSituacionGeneral ######")
-				.append("\n#############################################")
+				.append("\n###### cargarTvalositTitular ######")
+				.append("\n###################################")
 				.toString()
 				);
-		return result;
+		return SUCCESS;
+	}
+	
+	public String guardarEndosoAtributosSituacionGeneral()
+	{
+		this.session=ActionContext.getContext().getSession();
+		logger.info(
+				new StringBuilder()
+				.append("\n####################################################")
+				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### smap2=").append(smap2)
+				.append("\n###### smap3=").append(smap3)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String cdtipsit = null;
+		String estado   = null;
+		String nmpoliza = null;
+		String nmsuplem = null;
+		String cdtipsup = null;
+		String feefecto = null;
+		String cdusuari = null;
+		String cdelemen = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos de poliza");
+			}
+			if(smap2==null)
+			{
+				throw new ApplicationException("No se recibieron datos modificables");
+			}
+			if(smap3==null)
+			{
+				throw new ApplicationException("No se recibieron datos del endoso");
+			}
+			cdunieco = smap1.get("CDUNIECO");
+			cdramo   = smap1.get("CDRAMO");
+			cdtipsit = smap1.get("CDTIPSIT");
+			estado   = smap1.get("ESTADO");
+			nmpoliza = smap1.get("NMPOLIZA");
+			nmsuplem = smap1.get("NMSUPLEM");
+			cdtipsup = smap1.get("cdtipsup");
+			
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio el numero de poliza");
+			}
+			if(StringUtils.isBlank(nmsuplem))
+			{
+				throw new ApplicationException("No se recibio el suplemento");
+			}
+			if(StringUtils.isBlank(cdtipsup))
+			{
+				throw new ApplicationException("No se recibio el tipo de endoso");
+			}
+			
+			feefecto = smap3.get("feefecto");
+			
+			if(StringUtils.isBlank(feefecto))
+			{
+				throw new ApplicationException("No se recibio la fecha de efecto del endoso");
+			}
+			
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			if(session.get("USUARIO")==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdelemen = usuario.getEmpresa().getElementoId();
+			cdusuari = usuario.getUser();
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp=endososManager.guardarEndosoAtributosSituacionGeneral(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsup
+					,feefecto
+					,smap2
+					,cdelemen
+					,cdusuari
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
+				.append("\n####################################################")
+				.toString()
+				);
+		return SUCCESS;
 	}
 	
 	///////////////////////////////

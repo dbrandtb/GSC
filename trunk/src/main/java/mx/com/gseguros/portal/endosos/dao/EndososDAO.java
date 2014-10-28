@@ -5,22 +5,53 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 public interface EndososDAO
 {
     public List<Map<String,String>> obtenerEndosos(Map<String,String>params)                   throws Exception;
     public Map<String, String>      guardarEndosoNombres(Map<String, Object> params)           throws Exception;
+    @Deprecated
     public Map<String, String>      confirmarEndosoB(Map<String, String> params)               throws Exception;
+    public void confirmarEndosoB(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String nsuplogi
+    		,String cdtipsup
+    		,String dscoment
+    		)throws Exception;
     public Map<String, String>      guardarEndosoDomicilio(Map<String, Object> params)         throws Exception;
+    @Deprecated
     public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params)              throws Exception;
+    public List<Map<String,String>> reimprimeDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup)throws Exception;
     public List<Map<String,String>> obtieneCoberturasDisponibles (Map<String,String>params)    throws Exception;
     public Map<String, String>      guardarEndosoCoberturas(Map<String, Object> params)        throws Exception;
 	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params)     throws Exception;
 	public Map<String,Object>       sigsvalipolEnd(Map<String, String> params)                 throws Exception;
 	public Map<String, String>      guardarEndosoClausulas(Map<String, Object> params)         throws Exception;
 	public Map<String, String>      calcularValorEndoso(Map<String, Object> params)            throws Exception;
+	@Deprecated
 	public Map<String, String>      iniciarEndoso(Map<String, String> params)                  throws Exception;
+	public Map<String, String>      iniciarEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date fecha
+			,String cdelemen
+			,String cdusuari
+			,String proceso
+			,String cdtipsup)throws Exception;
 	public void                     insertarTworksupEnd(Map<String, String> params)            throws Exception;
 	public void                     insertarTworksupSitTodas(Map<String, String> params)       throws Exception;
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
@@ -34,12 +65,30 @@ public interface EndososDAO
 	 * @return
 	 * @throws Exception
 	 */
+	@Deprecated
 	public List<Map<String,String>> obtenerNtramiteEmision(Map<String, String> params)         throws Exception;
+	public String obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza)throws ApplicationException,Exception;
+	@Deprecated
 	public void                     validaEndosoAnterior(Map<String, String> params)           throws Exception;
+	public void validaEndosoAnterior(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			)throws Exception;
 	public void                     actualizaDeducibleValosit(Map<String, String> params)      throws Exception;
 	public void                     actualizaCopagoValosit(Map<String, String> params)         throws Exception;
 	public Map<String, String>      pClonarPolizaReexped(Map<String, String> params)           throws Exception;
+	@Deprecated
 	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params)      throws Exception;
+	public List<Map<String,String>> obtenerValositPorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			) throws Exception;
 	public void                     actualizaExtraprimaValosit(Map<String, String> params)     throws Exception;
 	public void                     insertarPolizaCdperpag(Map<String, String> params)         throws Exception;
 	/**
@@ -127,4 +176,17 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdatribu
 			,String otvalor)throws Exception;
+	public Map<String,String>obtenerParametrosEndoso(
+			ParametroEndoso parametro
+			,String cdramo
+			,String cdtipsit
+			,String cdtipsup
+			,String clave5)throws ApplicationException,Exception;
+	public void guardarAtributosSituacionGeneral(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,Map<String,String>tvalosit)throws Exception;
 }

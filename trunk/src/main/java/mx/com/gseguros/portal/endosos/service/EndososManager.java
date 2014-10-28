@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface EndososManager
@@ -299,4 +301,29 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdatribu
 			,String otvalor);
+	public ManagerRespuestaImapSmapVO endosoAtributosSituacionGeneral(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String cdusuari
+			,String cdtipsup);
+	public ManagerRespuestaSmapVO cargarTvalositTitular(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem);
+	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup
+			,String feefecto
+			,Map<String,String>tvalosit
+			,String cdelemen
+			,String cdusuari
+			,String rutaDocsPoliza
+			,String rutaServReports
+			,String passServReports
+			);
 }
