@@ -5,12 +5,15 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.service.TablasApoyoManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 @Controller("tablasApoyoAction")
+@Scope("prototype")
 public class TablasApoyoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 3547571651089343357L;
@@ -60,18 +63,14 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 	public String obtieneValoresTablaApoyo5claves()throws Exception{
     	
     	try{
-    		params.put("PV_OTCLAVE1_I", null);
-    		params.put("PV_OTCLAVE2_I", null);
-    		params.put("PV_OTCLAVE3_I", null);
-    		params.put("PV_OTCLAVE4_I", null);
-    		params.put("PV_OTCLAVE5_I", null);
-    		params.put("PV_FEDESDE_I", null);
-    		params.put("PV_FEHASTA_I", null);
     		
     		logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
+    		
     		loadList = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
+//    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
     	}catch(ApplicationException ae){
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ae);
+//    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
     		msgRespuesta = ae.getMessage();
     		success = false;
     		return SUCCESS;
@@ -85,6 +84,31 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     	success = true;
     	return SUCCESS;
     }
+
+	public String obtieneValoresTablaApoyo1clave()throws Exception{
+		
+		try{
+			
+			logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
+			
+			loadList = tablasApoyoManager.obtieneValoresTablaApoyo1clave(params);
+    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
+		}catch(ApplicationException ae){
+			logger.error("Error al obtieneValoresTablaApoyo1clave",ae);
+    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
+			msgRespuesta = ae.getMessage();
+			success = false;
+			return SUCCESS;
+		}catch(Exception ex){
+			logger.error("Error al obtieneValoresTablaApoyo5claves",ex);
+			msgRespuesta = "Error al ejecutar la consulta. Consulte a Soporte.";
+			success = false;
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
 	
 	public String guardaValoresTablaApoyo()throws Exception{
     	
@@ -95,7 +119,7 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     		logger.debug("SaveList:   " + saveList);
     		logger.debug("UdateList:  " + updateList);
     		
-    		tablasApoyoManager.guardaValoresTablaApoyo(params,deleteList,saveList,updateList);
+    		tablasApoyoManager.guardaValoresTablaApoyo(params,deleteList,saveList,updateList, Constantes.SI.equalsIgnoreCase(params.get("ES_UNA_CLAVE")));
     		
     		logger.debug("Valores de Tabla Guardados... ");
     		

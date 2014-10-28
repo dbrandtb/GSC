@@ -448,10 +448,21 @@
 	   
 	   
 	   <action name="includes/tablaApoyo5claves" class="tablasApoyoAction">
-           <result>/jsp/catalogos/includes/tablaCincoClaves.jsp</result>
+           <result>/jsp/catalogos/includes/valoresTablasDeApoyo.jsp</result>
        </action>
 	   
 	   <action name="obtieneValoresTablaApoyo5claves" class="tablasApoyoAction" method="obtieneValoresTablaApoyo5claves">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    msgRespuesta,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
+	   <action name="obtieneValoresTablaApoyo1clave" class="tablasApoyoAction" method="obtieneValoresTablaApoyo1clave">
 	       <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
