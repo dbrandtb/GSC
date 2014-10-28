@@ -66,6 +66,7 @@ public class GeneradorCampos
      * Parcial  :
      * "{...}, ... {...}"
      */
+    @Deprecated
     public void generaParcial(List<ComponenteVO> listcomp) throws Exception
     {
         this.parcial=true;
@@ -131,6 +132,7 @@ public class GeneradorCampos
      *    {...}
      * ]"
      */
+    @Deprecated
     public void generaConEditor(List<ComponenteVO> listcomp) throws Exception
     {
     	this.conEditor=true;
@@ -154,6 +156,7 @@ public class GeneradorCampos
      * ...
      * { ... }"
      */
+    @Deprecated
     public void generaParcialConEditor(List<ComponenteVO> listcomp) throws Exception
     {
     	this.parcial=true;
@@ -163,6 +166,7 @@ public class GeneradorCampos
     	this.conEditor=false;
     }
     
+    @Deprecated
     public void genera(List<ComponenteVO> listcomp) throws Exception
     {
     	String itemsKey   = null;
@@ -891,6 +895,7 @@ public class GeneradorCampos
      * Genera el field para el modelo, el item para el formulario, la columna en caso de tener S o H, y su editor
      * en caso de haber sido llamado desde generaConEditor() o desde generaParcialConEditor()
      */
+    @Deprecated
     public void generaCampoYFieldYColumn(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
     {
     	if(this.conField)

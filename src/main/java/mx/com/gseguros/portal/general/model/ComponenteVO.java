@@ -1,8 +1,5 @@
 package mx.com.gseguros.portal.general.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 public class ComponenteVO
 {
 	public final static int TIPO_GENERICO = 0;

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
@@ -969,7 +970,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String cdramo
 			,String cdtipsit
 			,String clave4
-			,String clave5)throws Exception,Exception
+			,String clave5)throws ApplicationException,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("parametro" , parametro.getParametro());
@@ -989,12 +990,20 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaAux  = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
 		{
-			throw new Exception("No hay parametros");
+			throw new ApplicationException("No hay parametros");
 		}
 		if(listaAux.size()>1)
 		{
-			throw new Exception("Parametros duplicados");
+			throw new ApplicationException("Parametros duplicados");
 		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n************************************************")
+				.append("\n****** registro=").append(listaAux.get(0))
+				.append("\n****** PKG_LISTAS.P_GET_PARAMS_COTIZACION ******")
+				.append("\n************************************************")
+				.toString()
+				);
 		return listaAux.get(0);
 	}
 	
@@ -1008,7 +1017,36 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("clave4"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("clave5"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]
+					{
+					"P1CLAVE"
+					,"P1VALOR"
+					,"P2CLAVE"
+					,"P2VALOR"
+					,"P3CLAVE"
+					,"P3VALOR"
+					,"P4CLAVE"
+					,"P4VALOR"
+					,"P5CLAVE"
+					,"P5VALOR"
+					,"P6CLAVE"
+					,"P6VALOR"
+					,"P7CLAVE"
+					,"P7VALOR"
+					,"P8CLAVE"
+					,"P8VALOR"
+					,"P9CLAVE"
+					,"P9VALOR"
+					,"P10CLAVE"
+					,"P10VALOR"
+					,"P11CLAVE"
+					,"P11VALOR"
+					,"P12CLAVE"
+					,"P12VALOR"
+					,"P13CLAVE"
+					,"P13VALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
