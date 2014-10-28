@@ -10,6 +10,7 @@
             
             var _URL_TIPOS_CONSULTA               = _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
             var _URL_CONSULTA_DATOS_POLIZA        = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
+            var _URL_CONSULTA_DATOS_COMPLEMENTARIOS = '<s:url namespace="/consultasPoliza" action="consultaDatosComplementarios" />';
             var _URL_CONSULTA_DATOS_SUPLEMENTO    = '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurado" />';
@@ -20,9 +21,10 @@
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
+            var _URL_LOADER_VER_FARMACIA          = '<s:url namespace="/consultasPoliza" action="includes/verFarmacia" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             var _URL_LOADER_VER_TATRISIT2          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit2" />';
-            var _URL_LOADER_PRUEBA                = '<s:url namespace="/test" action="consultaHistorico" />';                             
+            var _URL_LOADER_HISTORICO             = '<s:url namespace="/consultasPoliza" action="consultaDatosHistorico" />';                             
             
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';

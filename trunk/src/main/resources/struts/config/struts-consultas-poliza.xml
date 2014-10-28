@@ -20,6 +20,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaDatosComplementarios" class="ConsultasPolizaAction"
+            method="consultaDatosComplementarios">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosComplementarios.*,
+                    success
+                </param>
+            </result>
+        </action>
+		
 		<action name="consultaDatosSuplemento" class="ConsultasPolizaAction"
 			method="consultaDatosSuplemento">
 			<result type="json">
@@ -31,6 +42,18 @@
                 </param>
 			</result>
 		</action>
+		
+		<action name="consultaDatosHistorico" class="ConsultasPolizaAction"
+            method="consultaDatosHistorico">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosHistorico.*,
+                    mensajeRes,
+                    success
+                </param>
+            </result>
+        </action>
 		
 		<action name="consultaDatosSituacion" class="ConsultasPolizaAction"
 			method="consultaDatosSituacion">
@@ -165,6 +188,10 @@
         
         <action name="includes/verClausulas" class="ConsultasPolizaAction" method="verClausulasPoliza">
             <result>/jsp/consultas/clausulas/includes/verClausulasPoliza.jsp</result>
+        </action>
+        
+        <action name="includes/verFarmacia" class="ConsultasPolizaAction" method="verHistoricoFarmacia">
+            <result>/jsp/consultas/historico/includes/verHistoricoFarmacia.jsp</result>
         </action>
         
         <action name="includes/ventanaDatosPoliza" class="ConsultasPolizaAction">

@@ -13,6 +13,8 @@ import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
@@ -21,6 +23,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManagerOLD;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -31,6 +34,10 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -40,8 +47,8 @@ import org.springframework.stereotype.Controller;
  *
  * @author HMLT
  */
-//@ParentPackage(value="default") // TODO: Investigar porqué en Weblogic no se cargan los Annotations de Struts2
-//@Namespace("/consultasPoliza") // TODO: Investigar porqué en Weblogic no se cargan los Annotations de Struts2
+@ParentPackage(value="default")
+@Namespace("/consultasPoliza")
 @Controller("ConsultasPolizaAction")
 @Scope(value="prototype")
 public class ConsultasPolizaAction extends PrincipalCoreAction{
@@ -73,8 +80,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private ConsultaDatosPolizaVO datosPoliza;
     
-        
+    private ConsultaDatosComplementariosVO datosComplementarios;
+            
     private List<ConsultaDatosSuplementoVO> datosSuplemento;
+    
+    private List<ConsultaDatosHistoricoVO> datosHistorico;
     
     private List<ConsultaDatosSituacionVO> datosSituacion;
     
@@ -99,6 +109,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<AseguradoDetalleVO> datosAseguradoDetalle;
     
     private List<ClausulaVO> clausulasPoliza;
+    
+    private List<HistoricoFarmaciaVO> historicoFarmacia;
     
     private Map<String,Item> itemMap;
     
@@ -163,6 +175,49 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     
     /**
+     * Obtiene los datos complementarios de una p&oacute;liza
+     * @return String result
+     */
+    public String consultaDatosComplementarios(){
+    	logger.debug(" **** Entrando a Consulta de Datos Complementarios ****");
+        try {
+			
+        	PolizaVO poliza = new PolizaVO();
+    		AseguradoVO asegurado = new AseguradoVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		asegurado.setCdperson(params.get("cdperson"));
+    		
+			
+			List<ConsultaDatosComplementariosVO> lista = consultasPolizaManager.obtieneDatosComplementarios(poliza, asegurado);
+			
+			if(lista!=null && !lista.isEmpty())	datosComplementarios = lista.get(0);
+			
+			logger.debug("Resultado de consultaAseguradoDetalle:" + datosComplementarios);
+        	
+        	
+        	/*ConsultaPolizaAseguradoVO polizaAseguradoVO = new ConsultaPolizaAseguradoVO();
+        	polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
+        	polizaAseguradoVO.setCdramo(params.get("cdramo"));
+        	polizaAseguradoVO.setEstado(params.get("estado"));
+        	polizaAseguradoVO.setNmpoliza(params.get("nmpoliza"));
+        	polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
+        	
+        	List<ConsultaDatosPolizaVO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
+        	
+        	if(lista!=null && !lista.isEmpty())	datosPoliza = lista.get(0);*/
+        	
+        	logger.debug("Resultado de la consulta de datos complementarios:" + datosComplementarios);
+        	
+        }catch( Exception e){
+            logger.error("Error al obtener los datos complementarios ",e);
+            return SUCCESS;
+        }
+        
+        success = true;
+        return SUCCESS;
+    }
+    
+    /**
      * Obtiene los datos de los suplementos de la poliza
      * @return String result
      */
@@ -205,6 +260,48 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     
     /**
+     * Obtiene los datos del histórico de una póliza
+     * @return String result
+     */
+    public String consultaDatosHistorico(){
+    	logger.debug(" **** Entrando a consultaDatosHistórico ****");
+    	mensajeRes = "";
+    	try {
+    		    		
+    		ConsultaPolizaAseguradoVO poliza = new ConsultaPolizaAseguradoVO();
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		poliza.setNmpoliex(params.get("nmpoliex"));
+    		
+    		datosHistorico = consultasPolizaManager.obtieneHistoricoPolizaSISA(poliza);
+    		
+    		logger.debug("Resultado de la consultaDatosHistorico:" + datosHistorico);
+    		
+    		/*if(datosSuplemento != null && !datosSuplemento.isEmpty()){
+    			try{
+    				mensajeRes = consultasPolizaManagerOLD.consultaMensajeAgente(datosSuplemento.get(0).getCdunieco(), datosSuplemento.get(0).getCdramo(),
+							  datosSuplemento.get(0).getEstado(), datosSuplemento.get(0).getNmpoliza());
+    				logger.debug("Mensaje para Agente: "+ mensajeRes);
+    			}catch(Exception e){
+    				logger.error("Error!! no se pudo obtener el mensaje para el Agente de esta poliza!",e);
+    			}
+    		}*/
+    		
+    	}catch( Exception e){
+    		success = false;
+    		logger.error("Error al obtener los consultaDatosHistorico ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    
+    
+    
+    
+    /**
      * Obtiene los datos de las situaciones de la poliza
      * @return String result
      */
@@ -243,14 +340,58 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	*/
     public String consultaClausulasPoliza(){
     	logger.debug(" **** Entrando a consultaClausulasPoliza ****");
+    	PolizaVO poliza = new PolizaVO();
+    	poliza.setCdunieco(params.get("cdunieco"));
+    	poliza.setCdramo(params.get("cdramo"));
+    	poliza.setEstado(params.get("estado"));
+    	poliza.setNmpoliza(params.get("nmpoliza"));
+    	poliza.setNmsuplem(params.get("suplemento"));
+    	poliza.setNmsituac(params.get("nmsituac"));
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+		AseguradoVO asegurado = new AseguradoVO();
+		asegurado.setCdperson(params.get("cdperson"));
     	try {
-    		clausulasPoliza = consultasPolizaManager.obtieneClausulasPoliza(
+    		/*
+    		clausulasPoliza = consultasPolizaManager.obtieneEndososPoliza(
 					new PolizaVO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"),
 								 params.get("suplemento"), null, params.get("nmsituac")), 
 					null);
+			*/
+    		clausulasPoliza = consultasPolizaManager.obtieneEndososPoliza(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
     		logger.error("Error al obtener las cláusulas de la póliza",e);
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+	
+	/**
+     * Obtiene el histórico de farmacia
+     * @return String result
+     */
+	@Action(value = "consultaHistoricoFarmacia", results = { 
+			@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false", "includeProperties","historicoFarmacia.*,success" })
+	})
+    public String consultaHistoricoFarmacia(){
+    	logger.debug(" **** Entrando a consultaHistoricoFarmacia ****");
+    	PolizaVO poliza = new PolizaVO();
+    	poliza.setCdunieco(params.get("cdunieco"));
+    	poliza.setCdramo(params.get("cdramo"));
+    	poliza.setEstado(params.get("estado"));
+    	poliza.setNmpoliza(params.get("nmpoliza"));
+    	poliza.setNmsuplem(params.get("suplemento"));
+    	poliza.setNmsituac(params.get("nmsituac"));
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+		AseguradoVO asegurado = new AseguradoVO();
+		asegurado.setCdperson(params.get("cdperson"));
+    	try {
+    		
+    		historicoFarmacia = consultasPolizaManager.obtieneHistoricoFarmacia(poliza, asegurado);
+    		success = true;
+    	} catch(Exception e){
+    		logger.error("Error al obtener el histórico de farmacia",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -528,6 +669,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		success = true;
 		return SUCCESS;
     }
+	
+	/**
+	 * Entrada a la pantalla de las histórico de farmacia <br/>
+	 * Sirve para propagar los parametros del atributo params a la pantalla
+	 * @return
+	 */
+	public String verHistoricoFarmacia(){
+		success = true;
+		return SUCCESS;
+	}
 	
 	/**
      * Funcion para la visualizacion de las exclusiones 
@@ -817,6 +968,33 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 			List<AseguradoDetalleVO> datosAseguradoDetalle) {
 		this.datosAseguradoDetalle = datosAseguradoDetalle;
 	}
+
+	public List<ConsultaDatosHistoricoVO> getDatosHistorico() {
+		return datosHistorico;
+	}
+
+	public void setDatosHistorico(List<ConsultaDatosHistoricoVO> datosHistorico) {
+		this.datosHistorico = datosHistorico;
+	}
+
+	public ConsultaDatosComplementariosVO getDatosComplementarios() {
+		return datosComplementarios;
+	}
+
+	public void setDatosComplementarios(
+			ConsultaDatosComplementariosVO datosComplementarios) {
+		this.datosComplementarios = datosComplementarios;
+	}
+
+	public List<HistoricoFarmaciaVO> getHistoricoFarmacia() {
+		return historicoFarmacia;
+	}
+
+	public void setHistoricoFarmacia(List<HistoricoFarmaciaVO> historicoFarmacia) {
+		this.historicoFarmacia = historicoFarmacia;
+	}
+	
+	
 	
 	
 

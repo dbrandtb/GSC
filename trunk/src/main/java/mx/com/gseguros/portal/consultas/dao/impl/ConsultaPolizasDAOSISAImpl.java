@@ -12,11 +12,14 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
@@ -24,6 +27,7 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -78,6 +82,8 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			polizaAsegurado.setIcodpoliza(rs.getString("icodpoliza"));
 			//Recupera el Origen
 			polizaAsegurado.setOrigen(rs.getString("origen"));
+			polizaAsegurado.setFeinivigencia(rs.getString("feinivigencia"));
+			polizaAsegurado.setFefinvigencia(rs.getString("fefinvigencia"));
 			return polizaAsegurado;
 		}
 	}
@@ -92,7 +98,8 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 				new ConsultaHistoricoPolizaSP(getDataSource()), params);
 		return (List<ConsultaDatosSuplementoVO>) mapResult.get("rs");
 	}
-
+	
+	
 	protected class ConsultaHistoricoPolizaSP extends StoredProcedure {
 		protected ConsultaHistoricoPolizaSP(DataSource dataSource) {
 			super(dataSource, "P_Get_Datos_Suplem");
@@ -126,7 +133,58 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			return datosSuplemento;
 		}
 	}
+		
+	// Histórico de la póliza seleccionada para SISA.
+	@Override
+	public List<ConsultaDatosHistoricoVO> obtieneHistoricoPolizaSISA(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		System.out.println("Entro aca ***");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliex_i", polizaAsegurado.getIcodpoliza());
+		Map<String, Object> mapResult = ejecutaSP(
+				new ConsultaHistoricoPolizaSISASP(getDataSource()), params);
+		return (List<ConsultaDatosHistoricoVO>) mapResult.get("rs");
+	}
 
+	
+	protected class ConsultaHistoricoPolizaSISASP extends StoredProcedure {
+		protected ConsultaHistoricoPolizaSISASP(DataSource dataSource) {
+			super(dataSource, "P_Get_Datos_Historico");
+			declareParameter(new SqlParameter("pv_nmpoliex_i", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+			declareParameter(new SqlReturnResultSet("rs",
+					new DatosHistoricoMapper()));
+			compile();
+		}
+	}
+	
+	protected class DatosHistoricoMapper implements
+	RowMapper<ConsultaDatosHistoricoVO> {
+public ConsultaDatosHistoricoVO mapRow(ResultSet rs, int rowNum)
+		throws SQLException {
+	ConsultaDatosHistoricoVO datosHistorico = new ConsultaDatosHistoricoVO();
+	datosHistorico.setCdunieco(rs.getString("cdunieco"));
+	datosHistorico.setCdramo(rs.getString("cdramo"));
+	datosHistorico.setEstado(rs.getString("estado"));
+	datosHistorico.setNmpoliza(rs.getString("nmpoliza"));
+	datosHistorico.setNmsuplem(rs.getString("nmsuplem"));
+	datosHistorico.setFeinival(rs.getString("feinival"));
+	datosHistorico.setFefinval(rs.getString("fefinval"));
+	datosHistorico.setNsuplogi(rs.getString("nsuplogi"));
+	datosHistorico.setFeemisio(rs.getString("feemisio"));
+	datosHistorico.setNlogisus(rs.getString("nlogisus"));
+	datosHistorico.setDstipsup(rs.getString("dstipsup"));
+	datosHistorico.setPtpritot(rs.getString("ptpritot"));
+	datosHistorico.setObserva(rs.getString("observa"));
+	datosHistorico.setDsplan(rs.getString("dsplan"));
+	datosHistorico.setIcodpoliza(rs.getString("icodpoliza"));	
+	datosHistorico.setOrigen(rs.getString("origen"));
+	return datosHistorico;
+}
+}
+	
+			
 	// Datos generales de la póliza.
 	@Override
 	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
@@ -196,6 +254,43 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			datosPoliza.setFepag(rs.getString("fepag"));
 			datosPoliza.setStatuspago(rs.getString("status_pago"));
 			return datosPoliza;
+		}
+	}
+	
+	//Datos complementarios de la póliza
+	@Override
+	public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
+		params.put("pv_cdperson_i", asegurado.getCdperson());
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosComplementariosSP(getDataSource()), params);
+		return (List<ConsultaDatosComplementariosVO>) mapResult.get("rs");
+		
+	}
+	
+	public class ConsultaDatosComplementariosSP extends StoredProcedure{
+		protected ConsultaDatosComplementariosSP(DataSource dataSource){
+			super(dataSource, "P_Get_Datos_Complementarios");
+			declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));
+			declareParameter(new SqlParameter("pv_cdperson_i", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+			declareParameter(new SqlReturnResultSet("rs", new DatosComplementariosMapper()));
+			compile();
+		}
+	}
+	
+	public class DatosComplementariosMapper implements RowMapper<ConsultaDatosComplementariosVO>{
+		public ConsultaDatosComplementariosVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			ConsultaDatosComplementariosVO datosComplementarios = new ConsultaDatosComplementariosVO();
+			datosComplementarios.setCdperson(rs.getString("cdperson"));
+			datosComplementarios.setNombre(rs.getString("vchNombre"));
+			datosComplementarios.setFenacimi(rs.getString("fenacimi"));
+			datosComplementarios.setEdad(rs.getString("iedad"));
+			datosComplementarios.setDsplan(rs.getString("dsplan"));
+			datosComplementarios.setAgente(rs.getString("agente"));
+			return datosComplementarios;
 		}
 	}
 
@@ -306,6 +401,59 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			clausulaVO.setStatus(rs.getString("status"));
 			clausulaVO.setContenidoClausula(rs.getString("linea_general"));
 			return clausulaVO;
+		}
+	}
+	
+	//Histórico de Farmacia
+	@Override
+	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
+		params.put("pv_cdperson_i", asegurado.getCdperson());		
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaHistoricoFarmaciaSP(getDataSource()), params);
+		return (List<HistoricoFarmaciaVO>) mapResult.get("rs");
+	}
+	
+	protected class ConsultaHistoricoFarmaciaSP extends StoredProcedure {
+		protected ConsultaHistoricoFarmaciaSP(DataSource dataSource){
+			super(dataSource, "P_Get_Datos_Farmacia");
+			declareParameter(new SqlParameter("pv_cdperson_i", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+			declareParameter(new SqlReturnResultSet("rs", new HistoricoFarmaciaMapper()));			
+			compile();
+		}
+	}
+	
+	public class HistoricoFarmaciaMapper implements RowMapper<HistoricoFarmaciaVO>{
+		public HistoricoFarmaciaVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+			HistoricoFarmaciaVO historicoFarmacia = new HistoricoFarmaciaVO();
+			historicoFarmacia.setCdperson(rs.getString("icodafiliado"));
+			historicoFarmacia.setTigrupo(rs.getString("tiGrupo"));
+			historicoFarmacia.setTotal(rs.getString("Total"));
+			historicoFarmacia.setPoliza(rs.getString("Poliza"));
+			historicoFarmacia.setEstatus(rs.getString("Estatus"));
+			historicoFarmacia.setDtfecini(rs.getString("dtFecini"));
+			historicoFarmacia.setDtfecfin(rs.getString("dtFecfin"));
+			historicoFarmacia.setIultimoafiliado(rs.getString("iUltimoAfiliado"));
+			historicoFarmacia.setMaximo(rs.getString("MAXIMO"));
+			historicoFarmacia.setOrden(rs.getString("Orden"));
+			historicoFarmacia.setIultimo(rs.getString("iUltimo"));
+			historicoFarmacia.setPendiente(rs.getString("Pendiente"));
+			//Gasto Total y Disponible
+			float gastoTotalAux = 0;
+			float disponibleAux = 0;
+			if(StringUtils.isBlank(historicoFarmacia.getTotal()) == false && StringUtils.isBlank(historicoFarmacia.getPendiente()) == false){
+				gastoTotalAux = Float.parseFloat(historicoFarmacia.getTotal()) + Float.parseFloat(historicoFarmacia.getPendiente());
+				if(StringUtils.isBlank(historicoFarmacia.getMaximo()) == false){
+					disponibleAux = Float.parseFloat(historicoFarmacia.getMaximo()) - gastoTotalAux - Float.parseFloat(historicoFarmacia.getPendiente());
+				}
+			}			
+			historicoFarmacia.setGastototal(Float.toString(gastoTotalAux));
+			historicoFarmacia.setDisponible(Float.toString(disponibleAux));
+			
+			return historicoFarmacia;
 		}
 	}
 
@@ -505,6 +653,10 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements
 			return reciboAgenteVO;
 		}
 	}
+
+	
+
+	
 
 	
 

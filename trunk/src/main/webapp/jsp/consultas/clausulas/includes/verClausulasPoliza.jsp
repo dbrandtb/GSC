@@ -15,6 +15,8 @@
             var _estado   =  '<s:property value="params.estado" />';
             var _nmpoliza =  '<s:property value="params.nmpoliza" />';
             var _nmsituac =  '<s:property value="params.nmsituac" />';
+            var _icodpoliza =  '<s:property value="params.icodpoliza" />';
+            var _cdperson =  '<s:property value="params.cdperson" />';
             
             var _URL_CONSULTA_CLAUSULAS_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaClausulasPoliza" />';
 		            
@@ -22,7 +24,7 @@
 		
 				Ext.define('ClausulaModel', {
 				    extend:'Ext.data.Model',
-				    fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
+				    fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','contenidoClausula']
 				});
 				
 				var storeClausulasPoliza = new Ext.data.Store({
@@ -36,7 +38,9 @@
 			                'params.cdramo'   : _cdRamo,
 			                'params.estado'   : _estado,
 			                'params.nmpoliza' : _nmpoliza,
-			                'params.nmsituac' : _nmsituac
+			                'params.nmsituac' : _nmsituac,
+			                'params.icodpoliza' : _icodpoliza,
+			                'params.cdperson'  : _cdperson
 			            },
 			            reader : {
 			                type : 'json',
@@ -83,7 +87,8 @@
                                 tooltip : 'Ver detalle',
                                 handler : function(gridview, rowIndex, colIndex) {
 	                                var rec = gridview.getStore().getAt(rowIndex);
-	                                this.up('panel[name=pnlClausulas]').down('[name=detalleClausula]').setValue(rec.get('linea_usuario'));
+	                                console.log('rec==', rec)
+	                                this.up('panel[name=pnlClausulas]').down('[name=detalleClausula]').setValue(rec.get('contenidoClausula'));
                                 }
 	                        }]
 					    }]
