@@ -367,4 +367,21 @@ public interface CotizacionManager
 			,String ntramiteVacio
 			,String cdelemen
 			);
+	public ManagerRespuestaVoidVO validarCambioZonaGMI(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String codpostal);
+	public ManagerRespuestaVoidVO validarEnfermedadCatastGMI(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String circHosp);
 }

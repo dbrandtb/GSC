@@ -32,27 +32,29 @@ var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtip
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar                            = '<s:url namespace="/emision"         action="cotizar"                            />';
-var _0_urlCotizarExterno                     = '<s:url namespace="/externo"         action="cotizar"                            />';
-var _0_urlDetalleCotizacion                  = '<s:url namespace="/"                action="detalleCotizacion"                  />';
-var _0_urlCoberturas                         = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                 />';
-var _0_urlDetalleCobertura                   = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"            />';
-var _0_urlEnviarCorreo                       = '<s:url namespace="/general"         action="enviaCorreo"                        />';
-var _0_urlViewDoc                            = '<s:url namespace ="/documentos"     action="descargaDocInline"                  />';
-var _0_urlComprar                            = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                 />';
-var _0_urlVentanaDocumentos                  = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"            />';
-var _0_urlDatosComplementarios               = '<s:url namespace="/"                action="datosComplementarios"               />';
-var _0_urlUpdateStatus                       = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"            />';
-var _0_urlMesaControl                        = '<s:url namespace="/mesacontrol"     action="mcdinamica"                         />';
-var _0_urlLoad                               = '<s:url namespace="/emision"         action="cargarCotizacion"                   />';
-var _0_urlNada                               = '<s:url namespace="/emision"         action="webServiceNada"                     />';
-var _0_urlCargarCduniecoAgenteAuto           = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"           />';
-var _0_urlRecuperarCliente                   = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
-var _0_urlCargarAgentePorFolio               = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"             />';
-var _0_urlObtenerParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
-var _0_urlCargarAutoPorClaveGS               = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"               />';
-var _0_urlCargarSumaAsegurada                = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"            />';
-var _0_urlObtenerCliente                     = '<s:url namespace="/emision"         action="cargarClienteCotizacion"         />';
+var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                     />';
+var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                     />';
+var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action="detalleCotizacion"           />';
+var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"          />';
+var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"     />';
+var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
+var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"           />';
+var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"          />';
+var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"     />';
+var _0_urlDatosComplementarios     = '<s:url namespace="/"                action="datosComplementarios"        />';
+var _0_urlUpdateStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"     />';
+var _0_urlMesaControl              = '<s:url namespace="/mesacontrol"     action="mcdinamica"                  />';
+var _0_urlLoad                     = '<s:url namespace="/emision"         action="cargarCotizacion"            />';
+var _0_urlNada                     = '<s:url namespace="/emision"         action="webServiceNada"              />';
+var _0_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"    />';
+var _0_urlRecuperarCliente         = '<s:url namespace="/"                action="buscarPersonasRepetidas"     />';
+var _0_urlCargarAgentePorFolio     = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"      />';
+var _0_urlObtenerParametros        = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion" />';
+var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"        />';
+var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"     />';
+var _0_urlObtenerCliente           = '<s:url namespace="/emision"         action="cargarClienteCotizacion"     />';
+var _0_urlValidarCambioZonaGMI     = '<s:url namespace="/emision"         action="validarCambioZonaGMI"        />';
+var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action="validarEnfermedadCatastGMI"  />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -2993,6 +2995,83 @@ Ext.onReady(function()
         });
     }
     //VIGENCIA
+    
+    //para gmi
+    if(_0_smap1.cdramo=='7'&&_0_smap1.cdtipsit=='GMI')
+    {
+        _fieldLikeLabel('POSTAL').on(
+        {
+            select : function(v,records)
+            {
+                debug('POSTAL select:',records[0].get('value'));
+                Ext.Ajax.request(
+                {
+                    url     : _0_urlValidarCambioZonaGMI
+                    ,params :
+                    {
+                        'smap1.cdramo'     : _0_smap1.cdramo
+                        ,'smap1.cdtipsit'  : _0_smap1.cdtipsit
+                        ,'smap1.codpostal' : records[0].get('value')
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### validar eliminacion cambio zona:',json);
+                        if(json.exito)
+                        {
+                            _fieldLikeLabel('CAMBIO DE ZONA').reset();
+                            _fieldLikeLabel('CAMBIO DE ZONA').show();
+                        }
+                        else
+                        {
+                            _fieldLikeLabel('CAMBIO DE ZONA').setValue('N');
+                            _fieldLikeLabel('CAMBIO DE ZONA').hide();
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+            }
+        });
+        
+        _fieldLikeLabel('CULO HOSPITALARIO').on(
+        {
+            select : function(v,records)
+            {
+                debug('CIRCULO HOSP select:',records[0].get('value'));
+                Ext.Ajax.request(
+                {
+                    url     : _0_urlValidarEnfermCatasGMI
+                    ,params :
+                    {
+                        'smap1.cdramo'    : _0_smap1.cdramo
+                        ,'smap1.circHosp' : records[0].get('value')
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### validar enfermedad catastrofica:',json);
+                        if(json.exito)
+                        {
+                            _fieldLikeLabel('ENFERMEDAD CATAS').reset();
+                            _fieldLikeLabel('ENFERMEDAD CATAS').show();
+                        }
+                        else
+                        {
+                            _fieldLikeLabel('ENFERMEDAD CATAS').setValue('N');
+                            _fieldLikeLabel('ENFERMEDAD CATAS').hide();
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+            }
+        });
+    }
     
 });
 </script>

@@ -4,8 +4,11 @@
 ////// variables //////
 /*///////////////////*/
 var pantallaValositMainContent;
-var pantallaValositUrlLoad       = '<s:url namespace="/" action="pantallaValositLoad" />';
-var pantallaValositUrlSave       = '<s:url namespace="/" action="pantallaValositSave" />';
+var pantallaValositUrlLoad                  = '<s:url namespace="/"        action="pantallaValositLoad"        />';
+var pantallaValositUrlSave                  = '<s:url namespace="/"        action="pantallaValositSave"        />';
+var pantallaValositUrlValidarCambioZonaGMI  = '<s:url namespace="/emision" action="validarCambioZonaGMI"       />';
+var pantallaValositUrlValidarEnfermCatasGMI = '<s:url namespace="/emision" action="validarEnfermedadCatastGMI" />';
+
 var pantallaValositInputCdunieco = '<s:property value="smap1.cdunieco" />';
 var pantallaValositInputCdramo   = '<s:property value="smap1.cdramo" />';
 var pantallaValositInputEstado   = '<s:property value="smap1.estado" />';
@@ -231,6 +234,84 @@ Ext.onReady(function()
     /*//////////////////*/    
     ////// cargador //////
     //////////////////////
+    
+    ////// custom //////
+    if(pantallaValositInputCdramo=='7'&&pantallaValositInputCdtipsit=='GMI')
+    {
+        _fieldLikeLabel('POSTAL',pantallaValositMainContent).on(
+        {
+            select : function(v,records)
+            {
+                debug('POSTAL select:',records[0].get('value'));
+                Ext.Ajax.request(
+                {
+                    url     : pantallaValositUrlValidarCambioZonaGMI
+                    ,params :
+                    {
+                        'smap1.cdramo'     : pantallaValositInputCdramo
+                        ,'smap1.cdtipsit'  : pantallaValositInputCdtipsit
+                        ,'smap1.codpostal' : records[0].get('value')
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### validar eliminacion cambio zona:',json);
+                        if(json.exito)
+                        {
+                            _fieldLikeLabel('CAMBIO DE ZONA',pantallaValositMainContent).reset();
+                            _fieldLikeLabel('CAMBIO DE ZONA',pantallaValositMainContent).show();
+                        }
+                        else
+                        {
+                            _fieldLikeLabel('CAMBIO DE ZONA',pantallaValositMainContent).setValue('N');
+                            _fieldLikeLabel('CAMBIO DE ZONA',pantallaValositMainContent).hide();
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+            }
+        });
+        
+        _fieldLikeLabel('CULO HOSPITALARIO',pantallaValositMainContent).on(
+        {
+            select : function(v,records)
+            {
+                debug('CIRCULO HOSP select:',records[0].get('value'));
+                Ext.Ajax.request(
+                {
+                    url     : pantallaValositUrlValidarEnfermCatasGMI
+                    ,params :
+                    {
+                        'smap1.cdramo'    : pantallaValositInputCdramo
+                        ,'smap1.circHosp' : records[0].get('value')
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### validar enfermedad catastrofica:',json);
+                        if(json.exito)
+                        {
+                            _fieldLikeLabel('ENFERMEDAD CATAS',pantallaValositMainContent).reset();
+                            _fieldLikeLabel('ENFERMEDAD CATAS',pantallaValositMainContent).show();
+                        }
+                        else
+                        {
+                            _fieldLikeLabel('ENFERMEDAD CATAS',pantallaValositMainContent).setValue('N');
+                            _fieldLikeLabel('ENFERMEDAD CATAS',pantallaValositMainContent).hide();
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+            }
+        });
+    }
+    ////// custom //////
 });
 </script>
 <div id="maindivpantallavalosit<s:property value='smap1.timestamp' />" style="height:1200px;"></div>

@@ -7588,6 +7588,149 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String validarCambioZonaGMI()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################")
+				.append("\n###### validarCambioZonaGMI ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdramo    = null;
+		String cdtipsit	 = null;
+		String codpostal = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdramo    = smap1.get("cdramo");
+			cdtipsit  = smap1.get("cdtipsit");
+			codpostal = smap1.get("codpostal");
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			if(StringUtils.isBlank(codpostal))
+			{
+				throw new ApplicationException("No se recibio el codigo postal");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp=cotizacionManager.validarCambioZonaGMI(
+					null //cdunieco
+					,cdramo
+					,cdtipsit
+					,null //estado
+					,null //nmpoliza
+					,"0"  //nmsuplem
+					,null //nmsituac
+					,codpostal);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### validarCambioZonaGMI ######")
+				.append("\n##################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String validarEnfermedadCatastGMI()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n########################################")
+				.append("\n###### validarEnfermedadCatastGMI ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdramo   = null;
+		String circHosp = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron datos");
+			}
+			cdramo   = smap1.get("cdramo");
+			circHosp = smap1.get("circHosp");
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(circHosp))
+			{
+				throw new ApplicationException("No se recibio el circulo hospitalario");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaVoidVO resp=cotizacionManager.validarEnfermedadCatastGMI(
+					null //cdunieco
+					,cdramo
+					,null //estado
+					,null //nmpoliza
+					,"0"  //nmsuplem
+					,null //nmsituac
+					,circHosp);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### validarEnfermedadCatastGMI ######")
+				.append("\n########################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

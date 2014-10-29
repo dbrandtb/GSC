@@ -233,6 +233,14 @@
        <action name="obtenerTiposSituacion" class="CotizacionAction" method="obtenerTiposSituacion">
            <result type="json" />
        </action>
+        
+        <action name="validarCambioZonaGMI" class="CotizacionAction" method="validarCambioZonaGMI">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="validarEnfermedadCatastGMI" class="CotizacionAction" method="validarEnfermedadCatastGMI">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

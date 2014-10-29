@@ -277,4 +277,21 @@ public interface CotizacionDAO
 			,String nmsuplem
 			,String nmsituac
 			,Map<String,String>valores)throws Exception;
+	public void validarCambioZonaGMI(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String codpostal)throws Exception;
+	public void validarEnfermedadCatastGMI(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String circHosp)throws Exception;
 }
