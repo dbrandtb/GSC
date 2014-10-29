@@ -2604,4 +2604,101 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void validarCambioZonaGMI(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String codpostal)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("nmsuplem"  , nmsuplem);
+		params.put("nmsituac"  , nmsituac);
+		params.put("codpostal" , codpostal);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************************")
+				.append("\n****** PKG_SATELITES2.P_VAL_ELIM_PENAL_CAM_ZONA_GMM ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************************")
+				.toString()
+				);
+		ejecutaSP(new ValidarCambioZonaGMI(getDataSource()),params);
+	}
+	
+	protected class ValidarCambioZonaGMI extends StoredProcedure
+	{
+		protected ValidarCambioZonaGMI(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_VAL_ELIM_PENAL_CAM_ZONA_GMM");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("codpostal" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void validarEnfermedadCatastGMI(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String circHosp)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		params.put("circHosp" , circHosp);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************************")
+				.append("\n****** PKG_SATELITES2.P_VAL_COB_ENFERM_CATASTROF_GMM ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************************")
+				.toString()
+				);
+		ejecutaSP(new ValidarEnfermedadCatastGMI(getDataSource()),params);
+	}
+	
+	protected class ValidarEnfermedadCatastGMI extends StoredProcedure
+	{
+		protected ValidarEnfermedadCatastGMI(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_VAL_COB_ENFERM_CATASTROF_GMM");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("circHosp" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

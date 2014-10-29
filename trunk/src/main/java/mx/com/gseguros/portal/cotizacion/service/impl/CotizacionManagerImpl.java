@@ -4552,6 +4552,108 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaVoidVO validarCambioZonaGMI(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String codpostal)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ validarCambioZonaGMI @@@@@@")
+				.append("\n@@@@@@ cdunieco=") .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")   .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=") .append(cdtipsit)
+				.append("\n@@@@@@ estado=")   .append(estado)
+				.append("\n@@@@@@ nmpoliza=") .append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=") .append(nmsuplem)
+				.append("\n@@@@@@ nmsituac=") .append(nmsituac)
+				.append("\n@@@@@@ codpostal=").append(codpostal)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		//procedimiento
+		try
+		{
+			cotizacionDAO.validarCambioZonaGMI(cdunieco,cdramo,cdtipsit,estado,nmpoliza,nmsuplem,nmsituac,codpostal);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al validar cambio de zona #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ validarCambioZonaGMI @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO validarEnfermedadCatastGMI(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String circHosp)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ validarEnfermedadCatastGMI @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ nmsituac=").append(nmsituac)
+				.append("\n@@@@@@ circHosp=").append(circHosp)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		//procedimiento
+		try
+		{
+			cotizacionDAO.validarEnfermedadCatastGMI(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,circHosp);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al validar circulo hospitalario #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ validarEnfermedadCatastGMI @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
