@@ -1,5 +1,10 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<!-- Se agregan archivos para el plugin imageviewer: -->
+<link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/plugins/imageviewer/resources/css/imageviewer.css" />
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/imageviewer/ext.imageviewer.js"></script>
+
 <script>
 ///////////////////////
 ////// overrides //////
@@ -861,7 +866,10 @@ Ext.onReady(function()
         ,onViewClick:function(record)
         {
         	var numRand=Math.floor((Math.random()*100000)+1);
-        	debug('numRand a: ',numRand);
+            debug('numRand a: ',numRand);
+        	
+        	var urlImg = panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume');
+        	
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{
         		title          : record.get('dsdocume')
@@ -869,9 +877,7 @@ Ext.onReady(function()
         		,height        : 500
         		,collapsible   : true
         		,titleCollapse : true
-        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-        		                 +'src="'+panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume')+'">'
-        		                 +'</iframe>'
+        		,layout: 'fit'
         		,listeners     :
         		{
         			resize : function(win,width,height,opt){
@@ -879,10 +885,26 @@ Ext.onReady(function()
                         $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
                     }
         		}
-        	}).show();
+        	});
+        	
+        	// Si el documento es una imagen usamos el visor de imagenes, sino usamos iframe:
+        	var arrTipoImgs   = ['bmp','gif','jpeg','jpg','png','tif'];
+        	var nombreArchivo = record.get('cddocume');
+            var extension     = nombreArchivo.substring(nombreArchivo.lastIndexOf('.')+1,nombreArchivo.length).toLowerCase();
+        	var isImagen      = Ext.Array.contains(arrTipoImgs, extension);
+        	if( !Ext.isEmpty(nombreArchivo) && isImagen ) {
+        		windowVerDocu.add({
+                    xtype: 'imageviewer',
+                    src  : urlImg
+                });
+        	} else {
+        		windowVerDocu.add({
+        			html: '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100" src="'+urlImg+'"></iframe>'
+        		});
+        	}
+        	
+        	windowVerDocu.show();
         	centrarVentanaInterna(windowVerDocu);
-        	//windowVerDocu.center();
-        	//window.open(,'_blank','width=800,height=600');
         }
     });
     /*//////////////////////*/
