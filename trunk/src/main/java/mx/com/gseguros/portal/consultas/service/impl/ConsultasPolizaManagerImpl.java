@@ -139,7 +139,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 				if(copagoVO.getNivel() == 1) {
 					agrupador = copagoVO.getDescripcion();
 				}
-				if(StringUtils.isBlank(copagoVO.getValor())) {
+				// Si el copago no es visible o no hay descripcion, lo eliminamos:
+				if(!copagoVO.isVisible() || StringUtils.isBlank(copagoVO.getDescripcion())) {
 					itCopagos.remove();
 				}
 				copagoVO.setAgrupador(agrupador);

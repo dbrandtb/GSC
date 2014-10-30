@@ -29,7 +29,15 @@ public class CopagoVO implements Serializable {
 	
 	private String agrupador;
 	
+	/**
+	 * Indica el nivel del elemento
+	 */
 	private int nivel;
+	
+	/**
+	 * Indica si el elemento debe visualizarse
+	 */
+	private boolean visible;
 
 	public int getOrden() {
 		return orden;
@@ -69,6 +77,14 @@ public class CopagoVO implements Serializable {
 
 	public void setNivel(int nivel) {
 		this.nivel = nivel;
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	@Override
