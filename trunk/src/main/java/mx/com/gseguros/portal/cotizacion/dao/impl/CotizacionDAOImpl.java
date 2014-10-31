@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
@@ -858,8 +859,17 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	@Deprecated
 	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception
 	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_TIPO_SITUACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
 		Map<String,Object>respuestaProcedure=ejecutaSP(new CargarTipoSituacion(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
 		Map<String,String>respuesta=null;
@@ -867,6 +877,46 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			respuesta=lista.get(0);
 		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** registro=").append(respuesta)
+				.append("\n****** PKG_CONSULTA.P_GET_TIPO_SITUACION ******")
+				.append("\n***********************************************")
+				.toString()
+				);
+		return respuesta;
+	}
+	
+	@Override
+	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_TIPO_SITUACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
+		Map<String,Object>respuestaProcedure=ejecutaSP(new CargarTipoSituacion(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+		Map<String,String>respuesta=null;
+		if(lista!=null&&lista.size()>0)
+		{
+			respuesta=lista.get(0);
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** registro=").append(respuesta)
+				.append("\n****** PKG_CONSULTA.P_GET_TIPO_SITUACION ******")
+				.append("\n***********************************************")
+				.toString()
+				);
 		return respuesta;
 	}
 	
@@ -1575,8 +1625,16 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<DatosUsuario>listaAux   = (List<DatosUsuario>)procResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
 		{
-			throw new Exception("No hay datos de usuario");
+			throw new ApplicationException("No hay datos de usuario");
 		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** registro=").append(listaAux.get(0))
+				.append("\n****** pkg_satelites.p_get_info_usuario ******")
+				.append("\n**********************************************")
+				.toString()
+				);
 		return listaAux.get(0);
 	}
 	
@@ -2698,6 +2756,77 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("circHosp" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String>cargarRetroactividadSuplemento(
+			String cdunieco
+			,String cdramo
+			,String cdtipsup
+			,String cdusuari
+			,String cdtipsit)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdtipsit" , cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** PKG_SATELITES.P_OBT_RETRO_DIFER ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarRetroactividadSuplemento(getDataSource()),params);
+		List<?>lista = (List<?>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("Falta parametrizar la retroactividad");
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("La retroactividad parametrizada se repite");
+		}
+		Map<?,?>retroactividad=(Map<?,?>)lista.get(0);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** salida=").append(retroactividad)
+				.append("\n****** PKG_SATELITES.P_OBT_RETRO_DIFER ******")
+				.append("\n*********************************************")
+				.toString()
+				);
+		Map<String,String>aux=new LinkedHashMap<String,String>();
+		for(Entry<?,?>en:retroactividad.entrySet())
+		{
+			aux.put((String)en.getKey(),(String)en.getValue());
+		}
+		return aux;
+	}
+	
+	protected class CargarRetroactividadSuplemento extends StoredProcedure
+	{
+		protected CargarRetroactividadSuplemento(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_OBT_RETRO_DIFER");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"retroac"
+					,"diferi"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -72,7 +73,9 @@ public interface CotizacionDAO
 	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception;
 	public List<Map<String,String>>cargarAseguradosGrupo(Map<String,String>params)throws Exception;
 	public void borrarMpoliperGrupo(Map<String,String>params)throws Exception;
+	@Deprecated
 	public Map<String,String>cargarTipoSituacion(Map<String,String>params)throws Exception;
+	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
 	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception;
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	public Map<String,String>obtenerParametrosCotizacion(
@@ -294,4 +297,10 @@ public interface CotizacionDAO
 			,String nmsuplem
 			,String nmsituac
 			,String circHosp)throws Exception;
+	public Map<String,String>cargarRetroactividadSuplemento(
+			String cdunieco
+			,String cdramo
+			,String cdtipsup
+			,String cdusuari
+			,String cdtipsit)throws ApplicationException,Exception;
 }

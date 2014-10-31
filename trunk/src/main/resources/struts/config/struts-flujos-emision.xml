@@ -241,6 +241,15 @@
         <action name="validarEnfermedadCatastGMI" class="CotizacionAction" method="validarEnfermedadCatastGMI">
             <result name="success" type="json" />
         </action>
+        
+        <action name="cotizacionAutoIndividual" class="cotizacionAutoAction" method="cotizacionAutoIndividual">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionAutoIndividual.jsp</result>
+        </action>
+        
+        <action name="cargarRetroactividadSuplemento" class="cotizacionAutoAction" method="cargarRetroactividadSuplemento">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

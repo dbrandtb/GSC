@@ -62,6 +62,7 @@ public class ComponenteVO
 	private String swGrupoLinea = null;
 	private String swGrupoFact  = null;
 	private String swGrupoExtr  = null;
+	private String nmpanelcoti  = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -485,5 +486,13 @@ public class ComponenteVO
 
 	public void setSwGrupoExtr(String swGrupoExtr) {
 		this.swGrupoExtr = swGrupoExtr;
+	}
+
+	public String getNmpanelcoti() {
+		return nmpanelcoti;
+	}
+
+	public void setNmpanelcoti(String nmpanelcoti) {
+		this.nmpanelcoti = nmpanelcoti;
 	}
 }
