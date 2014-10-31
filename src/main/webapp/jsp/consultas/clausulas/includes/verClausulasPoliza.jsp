@@ -24,7 +24,7 @@
 		
 				Ext.define('ClausulaModel', {
 				    extend:'Ext.data.Model',
-				    fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','contenidoClausula']
+				    fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
 				});
 				
 				var storeClausulasPoliza = new Ext.data.Store({
@@ -87,8 +87,7 @@
                                 tooltip : 'Ver detalle',
                                 handler : function(gridview, rowIndex, colIndex) {
 	                                var rec = gridview.getStore().getAt(rowIndex);
-	                                console.log('rec==', rec)
-	                                this.up('panel[name=pnlClausulas]').down('[name=detalleClausula]').setValue(rec.get('contenidoClausula'));
+	                                this.up('panel[name=pnlClausulas]').down('[name=detalleClausula]').setValue(rec.get('linea_usuario'));
                                 }
 	                        }]
 					    }]
