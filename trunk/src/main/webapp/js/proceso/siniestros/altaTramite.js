@@ -290,7 +290,7 @@ Ext.onReady(function() {
     	labelWidth : 250,		   width		 : 500,					emptyText:'Seleccione...',			store: storeTipoPago,
     	listeners : {
     		
-    		change:function(e){
+    'select':function(e){
 	    		Ext.getCmp('idnombreBeneficiarioProv').setValue('');
     			Ext.getCmp('idnombreAsegurado').setValue('');
 				Ext.getCmp('cmbTipoMoneda').hide();
@@ -821,9 +821,6 @@ Ext.onReady(function() {
                         }]
                     }
                 ],
-                /*selModel: {
-                    selType: 'cellmodel'
-                },*/
                 tbar: [{
                     icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
                     text: 'Agregar Asegurado',
@@ -1019,47 +1016,47 @@ Ext.onReady(function() {
     	        [
 					{
 					    xtype       : 'textfield',			fieldLabel : 'Unieco'				,id       : 'idUnieco',				name       : 'cdunieco'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'estado'				,id       : 'idEstado',				name       : 'estado'			
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'Ramo'				,id       : 'idcdRamo',					name       : 'cdramo'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},	 			
 					{
 					    xtype       : 'textfield',			fieldLabel : 'nmsituac'				,id       : 'idNmSituac',			name       : 'nmsituac'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
-					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true,	hidden:true
+					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,id       : 'idNmsolici',			name       : 'nmsolici'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,id       : 'idNmsuplem',			name       : 'nmsuplem'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,id       : 'idCdtipsit',			name       : 'cdtipsit'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'numPolizaInt'			,id       : 'idNumPolizaInt',	name       : 'numPolizaInt'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'Asegurado'			,id       : 'idnombreAsegurado',	name       : 'idnombreAsegurado'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'NumTramite'			,id       : 'idNumTramite',	name       : 'idNumTramite'
-					    ,labelWidth: 170,	hidden:true
+					    ,labelWidth: 170//,	hidden:true
 					},
     	            {
             			id:'txtContraRecibo'
