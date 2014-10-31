@@ -119,6 +119,13 @@ public class ObtieneTatrisitMapper implements RowMapper
 			swGrupoExtr="N";
 		}
 		result.setSwGrupoExtr(swGrupoExtr);
+		
+		String nmpanelcoti = rs.getString("NMPANELCOTI");
+		if(StringUtils.isBlank(nmpanelcoti))
+		{
+			nmpanelcoti = "1";
+		}
+		result.setNmpanelcoti(nmpanelcoti);
 
 		return result;
 	}
