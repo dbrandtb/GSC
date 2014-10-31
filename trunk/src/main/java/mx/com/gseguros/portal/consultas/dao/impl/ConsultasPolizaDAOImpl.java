@@ -11,11 +11,18 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
@@ -324,7 +331,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 			ClausulaVO clausula = new ClausulaVO();
 			clausula.setCdclausu(rs.getString("cdclausu"));
 			clausula.setCdtipcla(rs.getString("cdtipcla"));
-			clausula.setContenidoClausula(rs.getString("linea_usuario"));
+			clausula.setLinea_general(rs.getString("linea_usuario"));
 			clausula.setDsclausu(rs.getString("dsclausu"));
 			clausula.setStatus(rs.getString("status"));
 			return clausula;
@@ -376,6 +383,62 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	@Override
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(
 			AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaDatosHistoricoVO> obtieneHistoricoPolizaSISA(
+			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(
+			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(
+			PolizaVO poliza) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(
+			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
