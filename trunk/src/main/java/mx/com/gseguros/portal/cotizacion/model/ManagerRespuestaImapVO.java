@@ -2,11 +2,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 
 import java.util.Map;
 
-public class ManagerRespuestaImapVO
+public class ManagerRespuestaImapVO extends ManagerRespuestaBaseVO
 {
-	private boolean exito           = false;
-	private String  respuesta       = null;
-	private String  respuestaOculta = null;
 	private Map<String,Item> imap   = null;
 	
 	public ManagerRespuestaImapVO()
@@ -28,30 +25,6 @@ public class ManagerRespuestaImapVO
 	/*
 	 * Getters y setters
 	 */
-	public boolean isExito() {
-		return exito;
-	}
-
-	public void setExito(boolean exito) {
-		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
-	public String getRespuestaOculta() {
-		return respuestaOculta;
-	}
-
-	public void setRespuestaOculta(String respuestaOculta) {
-		this.respuestaOculta = respuestaOculta;
-	}
-
 	public Map<String, Item> getImap() {
 		return imap;
 	}
@@ -67,7 +40,7 @@ public class ManagerRespuestaImapVO
 		.append("Exito=").append(exito)
 		.append("\nRespuesta=").append(respuesta)
 		.append("\nRespuestaOculta=").append(respuestaOculta)
-		.append("\nImap=").append(imap)
+		.append("\nImap=").append(imap.keySet())
 		.toString();
 	}
 	

@@ -42,6 +42,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         parametros.put("pv_cdunieco_i", pv_cdunieco_i);
         parametros.put("pv_cdramo_i", pv_cdramo_i);
         parametros.put("pv_estado_i", pv_estado_i);
+        logger.debug(
+        		new StringBuilder()
+        		.append("\n********************************************")
+        		.append("\n****** PKG_SATELITES.P_CALC_NUMPOLIZA ******")
+        		.append("\n****** params=").append(parametros)
+        		.append("\n********************************************")
+        		.toString()
+        		);
         WrapperResultados res=this.returnBackBoneInvoke(parametros, ProcesoDAO.CALCULA_NUMERO_POLIZA);
         log.debug("### kernel sustituto calculaNumeroPoliza numero de poliza calculado:"+res.getItemMap().get("NUMERO_POLIZA"));
         log.debug("### kernel sustituto calculaNumeroPoliza id:"+res.getMsgId());

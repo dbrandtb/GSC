@@ -19,6 +19,21 @@ public class DatosUsuario {
     private String nombre;
     private String nmcuadro;
     
+    @Override
+    public String toString()
+    {
+    	return new StringBuilder()
+    	.append("cdunieco=") .append(cdunieco)
+    	.append(",cdramo=")  .append(cdramo)
+    	.append(",cdtipsit=").append(cdtipsit)
+    	.append(",cdusuari=").append(cdusuari)
+    	.append(",cdperson=").append(cdperson)
+    	.append(",cdagente=").append(cdagente)
+    	.append(",nombre=")  .append(nombre)
+    	.append(",nmcuadro=").append(nmcuadro)
+    	.toString();
+    }
+    
     public String getCdunieco() {
         return cdunieco;
     }

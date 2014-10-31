@@ -1,11 +1,8 @@
 package mx.com.gseguros.portal.cotizacion.model;
 
 
-public class ManagerRespuestaVoidVO
+public class ManagerRespuestaVoidVO extends ManagerRespuestaBaseVO
 {
-	private boolean exito           = false;
-	private String  respuesta       = null;
-	private String  respuestaOculta = null;
 	
 	public ManagerRespuestaVoidVO()
 	{}
@@ -19,33 +16,6 @@ public class ManagerRespuestaVoidVO
 	{
 		this.exito           = exito;
 		this.respuesta       = respuesta;
-		this.respuestaOculta = respuestaOculta;
-	}
-
-	/*
-	 * Getters y setters
-	 */
-	public boolean isExito() {
-		return exito;
-	}
-
-	public void setExito(boolean exito) {
-		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
-	public String getRespuestaOculta() {
-		return respuestaOculta;
-	}
-
-	public void setRespuestaOculta(String respuestaOculta) {
 		this.respuestaOculta = respuestaOculta;
 	}
 	

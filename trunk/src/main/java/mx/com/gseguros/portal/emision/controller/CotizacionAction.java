@@ -1282,8 +1282,15 @@ public class CotizacionAction extends PrincipalCoreAction
 			////// si no hay nmpoliza //////
 			if(nmpoliza==null||nmpoliza.length()==0)
 			{
-				WrapperResultados wrapperNumeroPoliza = kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W");
-				nmpoliza = (String)wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+				try
+				{
+					WrapperResultados wrapperNumeroPoliza = kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W");
+					nmpoliza = (String)wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+				}
+				catch(Exception ex)
+				{
+					throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
+				}
 			}
 			////// si no hay nmpoliza //////
 			////////////////////////////////
