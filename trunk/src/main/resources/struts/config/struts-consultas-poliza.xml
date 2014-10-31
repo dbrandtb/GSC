@@ -54,6 +54,17 @@
                 </param>
             </result>
         </action>
+        
+        <action name="consultaDatosContratante" class="ConsultasPolizaAction"
+            method="consultaDatosContratante">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosContratante.*,
+                    success
+                </param>
+            </result>
+        </action>
 		
 		<action name="consultaDatosSituacion" class="ConsultasPolizaAction"
 			method="consultaDatosSituacion">
@@ -104,7 +115,7 @@
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
-                     loadList.*,
+                     agentePoliza.*,
                      success
                 </param>
             </result>
@@ -115,7 +126,7 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-                    polizasAgente.*,
+                    agentePoliza.*,
                     success
                 </param>
 			</result>
@@ -149,6 +160,39 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     datosCopagosPoliza.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaCoberturasPoliza" class="ConsultasPolizaAction"
+            method="consultaCoberturasPoliza">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosCoberturas.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaCoberturasBasicas" class="ConsultasPolizaAction"
+            method="consultaCoberturasBasicas">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosCoberturasBasicas.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaDatosPlan" class="ConsultasPolizaAction"
+            method="consultaDatosPlan">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosPlan.*,
                     success
                 </param>
             </result>
@@ -192,6 +236,14 @@
         
         <action name="includes/verFarmacia" class="ConsultasPolizaAction" method="verHistoricoFarmacia">
             <result>/jsp/consultas/historico/includes/verHistoricoFarmacia.jsp</result>
+        </action>
+        
+        <action name="includes/verVigencia" class="ConsultasPolizaAction" method="verPeriodosVigencia">
+            <result>/jsp/consultas/historico/includes/verVigencia.jsp</result>
+        </action>
+        
+        <action name="includes/avisoHospitalizacion" class="ConsultasPolizaAction" method="darAvisoHospitalizacion">
+            <result>/jsp/consultas/avisos/includes/avisoHospitalizacion.jsp</result>
         </action>
         
         <action name="includes/ventanaDatosPoliza" class="ConsultasPolizaAction">

@@ -79,6 +79,29 @@ Ext.onReady(function() {
                                     }
                                 });
                                 
+                                //Datos de Coberturas
+                                storeCoberturas.load({
+                                    params: panelBusqueda.down('form').getForm().getValues(),
+                                    callback: function(records, operation, success){
+                                        if(!success){
+                                            showMessage('Error', 'Error al obtener las coberturas', 
+                                                Ext.Msg.OK, Ext.Msg.ERROR)
+                                        }
+                                    }
+                                });
+                                
+                                //Datos de Coberturas básicas
+                                storeCoberturasBasicas.load({
+                                    params: panelBusqueda.down('form').getForm().getValues(),
+                                    callback: function(records, operation, success){
+                                    	if(!success){
+                                    		showMessage('Error', 'Error al obtener las coberturas b\u00E1sicas', 
+                                                Ext.Msg.OK, Ext.Msg.ERROR)
+                                    	}
+                                    }
+                                });
+                                                                                              
+                                
                                 //Datos para asegurados
                                 storeAsegurados.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
@@ -93,9 +116,15 @@ Ext.onReady(function() {
                                 //TODO: Revisar la forma de acceder al atributo origen, si lo cambiamos o no a un hidden
                                 if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
-                                	tabDatosGeneralesPoliza.child('#tbHistorico').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabDatosContratante').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tbHistorico').tab.show();                                	
                                 } else {
                                 	tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.hide();
+                                	tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
+                                	tabDatosGeneralesPoliza.child('#tabDatosContratante').tab.hide();
                                 	tabDatosGeneralesPoliza.child('#tbHistorico').tab.hide();
                                 }
                                 
@@ -126,7 +155,8 @@ Ext.onReady(function() {
                                         		'params.PV_CDRAMO_I'   : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
                                         		'params.PV_ESTADO_I'   : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
                                         		'params.PV_NMPOLIZA_I' : panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
-                                        		'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+                                        		'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
+                                        		'params.icodpoliza' : panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
                                         	},
                                         	callback: function(records, operation, success) {
                                                 if(!success){
@@ -138,7 +168,15 @@ Ext.onReady(function() {
                                         
                                         // Obtenemos los recibos de los agentes:
                                         storeRecibosAgente.load({
-                                            params: panelBusqueda.down('form').getForm().getValues(),
+                                            //params: panelBusqueda.down('form').getForm().getValues(),
+                                        	params: {
+                                                'params.PV_CDUNIECO_I' : panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
+                                                'params.PV_CDRAMO_I'   : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                                                'params.PV_ESTADO_I'   : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
+                                                'params.PV_NMPOLIZA_I' : panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                                                'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
+                                                'params.icodpoliza' : panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
+                                            },
                                             callback: function(records, operation, success){
                                                 if(success){
                                                     if(records.length > 0){
@@ -318,6 +356,43 @@ Ext.onReady(function() {
                         }
                     });
                     
+                    // Consultar Datos del Contrante
+                    storeDatosContratante.load({
+                    params : panelBusqueda.down('form').getForm().getValues(),
+                    callback : function(records, operation, success) {
+                        if (success) {
+                            if (records.length > 0) {
+                                // Se llenan los datos del contratante
+                                panelDatosContratante.getForm().loadRecord(records[0]);
+                            } 
+                        } else {
+                        showMessage('Error', 
+                            'Error al obtener los datos del contratante, intente m\u00E1s tarde',
+                            Ext.Msg.OK, Ext.Msg.ERROR);
+                        }
+                    
+                    }
+                    });
+                    
+                    // Consultar Datos del Contrante
+                    storeDatosPlan.load({
+                    params : panelBusqueda.down('form').getForm().getValues(),
+                    callback : function(records, operation, success) {
+                        if (success) {
+                            if (records.length > 0) {
+                                // Se llenan los datos del contratante
+                                panelDatosPlan.getForm().loadRecord(records[0]);
+                            } 
+                        } else {
+                        showMessage('Error', 
+                            'Error al obtener los datos del plan, intente m\u00E1s tarde',
+                            Ext.Msg.OK, Ext.Msg.ERROR);
+                        }
+                    
+                    }
+                    });
+
+ 
                 }
             }
         }
@@ -596,6 +671,9 @@ Ext.onReady(function() {
             }
         }
     });
+    
+    
+    
     // GRID PARA LOS DATOS DE COPAGOS/COBERTURAS
     var gridCopagosPoliza = Ext.create('Ext.grid.Panel', {
         width   : 500,
@@ -624,6 +702,292 @@ Ext.onReady(function() {
             direction   : 'ASC'
         }
     ]);
+    
+    //////////////////////
+    /**INFORMACION DEL GRID DE COBERTURAS**/
+    //-------------------------------------------------------------------------------------------------------------  
+    
+    //Modelo
+    Ext.define('CoberturasModel',{
+        extend: 'Ext.data.Model',
+        fields: [              
+              {type:'string',    name:'descripcion' }
+        ]
+    });
+    
+    // Store
+    var storeCoberturas = new Ext.data.Store({
+        model: 'CoberturasModel',        
+        proxy: {
+           type: 'ajax',
+           url : _URL_CONSULTA_COBERTURAS_POLIZA,
+            reader: {
+                type: 'json',
+                root: 'datosCoberturasPoliza'
+            }
+        }
+    });
+    
+    // GRID PARA LOS DATOS DE COBERTURAS
+    var gridCoberturas = Ext.create('Ext.grid.Panel', {
+        width   : 400,
+        viewConfig: {
+            stripeRows: false,
+            enableTextSelection: true
+        },
+        title   : 'Coberturas',
+        store: storeCoberturas,
+        autoScroll:true,
+        columns: [
+            {text:'', dataIndex : 'descripcion', width:300, align:'left', sortable:false}            
+        ]
+    });
+    /////////////////////
+    
+    
+    /**INFORMACION DEL GRID DE COBERTURAS BÁSICAS**/
+    //-------------------------------------------------------------------------------------------------------------    
+    //Modelo
+    Ext.define('CoberturasBasicasModel',{
+        extend: 'Ext.data.Model',
+        fields: [
+              {type:'string',    name:'descripcion'      },
+              {type:'string',    name:'copagoporcentaje' },
+              {type:'string',    name:'copagomonto' },
+              {type:'string',    name:'incluido' },
+              {type:'string',    name:'beneficiomaximo' },
+              {type:'string',    name:'beneficiomaximovida' }
+        ]
+    });
+    // Store
+    var storeCoberturasBasicas = new Ext.data.Store({
+        model: 'CoberturasBasicasModel',
+        /*groupField : 'agrupador',*/
+        proxy: {
+           type: 'ajax',
+           url : _URL_CONSULTA_COBERTURAS_BASICAS,
+            reader: {
+                type: 'json',
+                root: 'datosCoberturasBasicas'
+            }
+        }
+    });
+    // GRID PARA LOS DATOS DE COBERTURAS BASICAS
+    var gridCoberturasBasicas = Ext.create('Ext.grid.Panel', {
+        width   : 700,
+        viewConfig: {
+            stripeRows: false,
+            enableTextSelection: true
+        },
+        //title   : 'DATOS COBERTURAS BASICAS',
+        store   : storeCoberturasBasicas,
+        autoScroll:true,
+        id      : 'gridCoberturasBasicas',
+        columns: [
+            //{text:'Orden',            dataIndex:'orden',       width:50, sortable:false, hidden:true},
+            {text:'Descripci\u00F3n', dataIndex:'descripcion', width:200, align:'left', sortable:false},
+            {text:'(%)Copago', dataIndex:'copagoporcentaje', width:100, align:'left', sortable:false},
+            {text:'($)Copago', dataIndex:'copagomonto', width:100, align:'left', sortable:false, renderer : 'usMoney'},
+            {text:'Incluido',            dataIndex:'incluido',       width:50, align:'left', sortable:false},
+            {text:'Beneficio M\u00E1ximo',            dataIndex:'beneficiomaximo',       width:100, align:'left', sortable:false, renderer : 'usMoney'},
+            {text:'Beneficio Maximo Vida',            dataIndex:'beneficiomaximovida',       width:100, align:'left', sortable:false, renderer : 'usMoney'}
+        ]
+        /*,features: [{
+            groupHeaderTpl: '{name}',
+            ftype:          'grouping',
+            startCollapsed: false
+        }]*/
+    });
+    
+    /**INFORMACION DE LA SECCION DE PLAN**/
+    //-------------------------------------------------------------------------------------------------------------
+    // Modelo
+    Ext.define('DatosPlanModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {type:'string', name:'plan'},
+            {type:'date',   name:'fecha', dateFormat: 'd/m/Y'},
+            {type:'string', name:'descripcion'},
+            {type:'string', name:'tipoprograma'},
+            {type:'string', name:'calculopor'},
+            {type:'string', name:'beneficiomaximoanual'},
+            {type:'string', name:'beneficiomaximovida'},
+            {type:'string', name:'identificadortarifa'},
+            {type:'string', name:'zona'}
+        ]
+    });
+    
+
+    // Store
+    var storeDatosPlan = new Ext.data.Store({
+        model: 'DatosPlanModel',
+        proxy: {
+            type: 'ajax',
+            url : _URL_CONSULTA_DATOS_PLAN,
+            reader: {
+                type: 'json',
+                root: 'datosPlan'
+            }
+        }
+    });
+    
+
+    
+    // FORMULARIO DATOS DE PLAN
+    var panelDatosPlan = Ext.create('Ext.form.Panel', {
+        model : 'DatosPlanModel',
+        width : 850 ,
+        border : false,
+        //height : 280,
+        defaults : {
+            bodyPadding : 5,
+            border : false
+        },
+        items : [ {
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'plan', fieldLabel: 'Plan',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'datefield', name: 'fecha', fieldLabel: 'Fecha',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 300}                
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'descripcion',   fieldLabel: 'Descripcion',      readOnly: true, labelWidth: 120, width: 600}                
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'tipoprograma',   fieldLabel: 'Tipo de Programa',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'calculopor', fieldLabel: 'Calculo Por', readOnly: true, labelWidth: 120,  width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [ 
+                {xtype:'textfield', name:'beneficiomaximoanual', fieldLabel: 'Beneficio M&aacute;ximo Anual', readOnly: true, labelWidth: 200, width: 400, renderer:'usMoney'}, 
+                {xtype:'textfield', name:'beneficiomaximovida',   fieldLabel: 'Beneficio M&aacute;ximo por Vida',         readOnly: true, labelWidth: 200,  width: 400, labelAlign: 'right', renderer:'usMoney'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [ 
+                {xtype:'textfield', name:'identificadortarifa', fieldLabel: 'Identificador de Tarifa', readOnly: true, labelWidth: 200, width: 400}, 
+                {xtype:'textfield', name:'zona',   fieldLabel: 'Zona',         readOnly: true, labelWidth: 200,  width: 400, labelAlign: 'right'}
+            ]
+        }]
+    });
+    
+    
+    
+    
+    /**INFORMACION DE LA SECCION DE CONTRATANTE**/
+    //-------------------------------------------------------------------------------------------------------------
+    // Modelo
+    Ext.define('DatosContratanteModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {type:'string', name:'razonsocial'},
+            {type:'string', name:'zonacosto'},
+            {type:'string', name:'domicilio'},
+            {type:'string', name:'ciudad'},
+            {type:'string', name:'estado'},
+            {type:'string', name:'representante'},
+            {type:'string', name:'telefono1'},
+            {type:'string', name:'area1'},
+            {type:'string', name:'telefono2'},
+            {type:'string', name:'area2'},
+            {type:'string', name:'fax'},
+            {type:'string', name:'areafax'},
+            {type:'string', name:'codigopostal'},
+            {type:'string', name:'representante'},
+            {type:'string', name:'puesto'},
+            {type:'string', name:'giro'},
+            {type:'string', name:'relacion'},
+            {type:'string', name:'tipocontratante'},
+            {type:'string', name:'rfc'},
+            {type:'string', name:'imss'}
+        ]
+    });
+    
+
+    // Store
+    var storeDatosContratante = new Ext.data.Store({
+        model: 'DatosContratanteModel',
+        proxy: {
+            type: 'ajax',
+            url : _URL_CONSULTA_DATOS_CONTRATANTE,
+            reader: {
+                type: 'json',
+                root: 'datosContratante'
+            }
+        }
+    });
+    
+
+    
+    // FORMULARIO DATOS DE CONTRATANTE
+    var panelDatosContratante = Ext.create('Ext.form.Panel', {
+        model : 'DatosContratanteModel',
+        width : 850 ,
+        border : false,
+        //height : 280,
+        defaults : {
+            bodyPadding : 5,
+            border : false
+        },
+        items : [ {
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'razonsocial', fieldLabel: 'Razon Social',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'zonacosto',   fieldLabel: 'Zona de Costo',      readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}                
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'domicilio',   fieldLabel: 'Domicilio',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'ciudad', fieldLabel: 'Ciudad', readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'estado',   fieldLabel: 'Estado',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'representante', fieldLabel: 'Representante', readOnly: true, labelWidth: 120,  width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield',                  name: 'telefono1', fieldLabel: 'Tel&eacute;fono No. 1',                readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'area1',     fieldLabel: '&Aacute;rea', readOnly: true, labelWidth: 120, width: 210, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'puesto',     fieldLabel: 'Puesto',       readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield',                  name: 'telefono2', fieldLabel: 'Tel&eacute;fono No. 2',                readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'area2',     fieldLabel: '&Aacute;rea', readOnly: true, labelWidth: 100, width: 210, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'giro',     fieldLabel: 'Giro de Empresa',       readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield',                  name: 'fax', fieldLabel: 'Fax',                readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'area',     fieldLabel: '&Aacute;rea', readOnly: true, labelWidth: 100, width: 210, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'relacion',     fieldLabel: 'Relaci&oacute;n',       readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [ 
+                {xtype:'textfield', name:'codigopostal', fieldLabel: 'C&oacute;digo Postal', readOnly: true, labelWidth: 120, width: 300}, 
+                {xtype:'textfield', name:'tipocontratante',   fieldLabel: 'Tipo de contratante',         readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [ 
+                {xtype:'textfield', name:'rfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120, width: 300}, 
+                {xtype:'textfield', name:'imss',   fieldLabel: 'Registro del IMSS',         readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
+            ]
+        }]
+    });
+    
+
     
     
     /**INFORMACION DE LA SECCION DE ASEGURADOS**/
@@ -672,12 +1036,12 @@ Ext.onReady(function() {
         }],
         columns: [
             //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:90 , align:'left'},
+            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:70 , align:'left'},
             {text:'Código <br/>Asegurado',dataIndex:'cdperson',width:90,align:'left'},
             {text:'Nombre',dataIndex:'nombre',width:190,align:'left'},
             {text:'Estatus Aseg.',dataIndex:'status',width:90,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:90,align:'left'},
-            {text:'Sexo',dataIndex:'sexo',width:70 , align:'left'},
+            {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
             {text:'Nacimiento',dataIndex:'fenacimi',width:90, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
             ,{
             	xtype        : 'actioncolumn',
@@ -769,6 +1133,72 @@ Ext.onReady(function() {
                         loader      :
                         {
                             url      : _URL_LOADER_VER_FARMACIA,
+                            scripts  : true,
+                            autoLoad : true,
+                            params   : values
+                        }
+                     }).show();
+                }
+            },{
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/calendar.png',
+                tooltip      : 'Vigencia',
+                width        : 30,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    debug('record nmsituac:',record.get('nmsituac'));
+                    values['params.nmsituac']=record.get('nmsituac');
+                    values['params.cdperson']=record.get('cdperson');
+                    values['params.estatus']=record.get('status');
+                    values['params.nombre']=record.get('nombre');
+                    debug('form values:',values);
+                    Ext.create('Ext.window.Window', {
+                        title       : 'Periodos de Vigencia',
+                        modal       : true,
+                        buttonAlign : 'center',
+                        autoScroll  : true,
+                        width       : 830,
+                        height      : 455,
+                        loader      :
+                        {
+                            url      : _URL_LOADER_VER_VIGENCIA,
+                            scripts  : true,
+                            autoLoad : true,
+                            params   : values
+                        }
+                     }).show();
+                }
+            },{
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/email.png',
+                tooltip      : 'Aviso de hospitalización',
+                width        : 30,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    debug('record nmsituac:',record.get('nmsituac'));
+                    values['params.nmsituac']=record.get('nmsituac');
+                    values['params.cdperson']=record.get('cdperson');
+                    values['params.estatus']=record.get('status');
+                    values['params.nombre']=record.get('nombre');
+                    debug('form values:',values);
+                    Ext.create('Ext.window.Window', {
+                        title       : 'Aviso de Hospitalizacion',
+                        modal       : true,
+                        buttonAlign : 'center',
+                        autoScroll  : true,
+                        width       : 650,
+                        height      : 455,
+                        loader      :
+                        {
+                            url      : _URL_LOADER_AVISO_HOSPITALIZACION,
                             scripts  : true,
                             autoLoad : true,
                             params   : values
@@ -993,11 +1423,33 @@ Ext.onReady(function() {
         	title: 'COBERTURAS',
             //itemId: 'tabDatosTarificacion',
         	itemId: 'tabDatosCopagosPoliza',
-            items:[{
-                //items: [gridDatosTarificacion]
-            	items: [gridCopagosPoliza]
+        	layout : 'hbox',
+            items: [
+                gridCopagosPoliza,
+                gridCoberturas
+            ]
+        },
+        {            
+            title: 'COBERTURAS BASICAS',            
+            itemId: 'tabDatosCoberturasBasicas',
+            items:[{                
+                items: [gridCoberturasBasicas]
             }]
-        }, {
+        },
+        {            
+            title: 'PLAN',            
+            itemId: 'tabDatosPlan',
+            items:[{                
+                items: [panelDatosPlan]
+            }]
+        },
+        {            
+            title: 'CONTRATANTE',            
+            itemId: 'tabDatosContratante',
+            items:[{                
+                items: [panelDatosContratante]
+            }]
+        },{
             title: 'ASEGURADOS',
             itemId: 'tabDatosAsegurados',
             items:[
@@ -1091,6 +1543,7 @@ Ext.onReady(function() {
     
     /**INFORMACION DE AGENTES EN POLIZA**/
     // Modelo
+    /*
     Ext.define('AgentesPolModel', {
         extend: 'Ext.data.Model',
         fields: [
@@ -1100,6 +1553,18 @@ Ext.onReady(function() {
             {type:'string', name:'DESCRIPL'},
             {type:'string', name:'PORREDAU'},
             {type:'string', name:'PORPARTI'}
+        ]
+    });
+    */
+    Ext.define('AgentesPolModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {type:'string', name:'cdagente'},
+            {type:'string', name:'nombre'},
+            {type:'string', name:'cdtipoAg'},
+            {type:'string', name:'descripl'},
+            {type:'string', name:'porredau'},
+            {type:'string', name:'porparti'}
         ]
     });
     
@@ -1113,7 +1578,7 @@ Ext.onReady(function() {
       reader:
       {
            type: 'json',
-           root: 'loadList'
+           root: 'agentePoliza'
       }
      }
     });
@@ -1125,11 +1590,11 @@ Ext.onReady(function() {
 //        width   : 830,
 //        autoScroll:true,
         columns: [
-            {text:'Agente',dataIndex:'CDAGENTE', flex:1},
-            {text:'Nombre',dataIndex:'NOMBRE', flex:2},
-            {text:'Tipo Agente',dataIndex:'DESCRIPL',flex:1},
-            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'PORREDAU',flex:1,hidden:true},
-            {text:'Participaci&oacute;n',dataIndex:'PORPARTI',flex:1,hidden:true}
+            {text:'Agente',dataIndex:'cdagente', flex:1},
+            {text:'Nombre',dataIndex:'nombre', flex:2},
+            {text:'Tipo Agente',dataIndex:'descripl',flex:1},
+            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'porredau',flex:1,hidden:true},
+            {text:'Participaci&oacute;n',dataIndex:'porparti',flex:1,hidden:true}
         ]
     });
     
@@ -1570,9 +2035,13 @@ Ext.onReady(function() {
     
     function limpiaSeccionInformacionPrincipal() {
         panelDatosPoliza.getForm().reset();
+        panelDatosContratante.getForm().reset();
         panelDatosComplementarios.getForm().reset();
+        panelDatosPlan.getForm().reset();
         //gridDatosTarificacion.getStore().removeAll();
         gridCopagosPoliza.getStore().removeAll();
+        gridCoberturas.getStore().removeAll();
+        gridCoberturasBasicas.getStore().removeAll();
         gridDatosAsegurado.getStore().removeAll();
         //Limpiamos seccion de Datos de tatrisit:
         tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').setTitle('');
