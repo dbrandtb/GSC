@@ -557,7 +557,7 @@ public ConsultaDatosHistoricoVO mapRow(ResultSet rs, int rowNum)
 			clausulaVO.setDsclausu(rs.getString("dsclausu"));
 			clausulaVO.setCdtipcla(rs.getString("cdtipcla"));
 			clausulaVO.setStatus(rs.getString("status"));
-			clausulaVO.setContenidoClausula(rs.getString("linea_general"));
+			clausulaVO.setLinea_general(rs.getString("linea_general"));
 			return clausulaVO;
 		}
 	}
