@@ -312,6 +312,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_cduser_i",usuario.getUser());
 					paramsR.put("pv_nombmedi_i",params.get("medicoPExt"));
 					paramsR.put("pv_especmed_i",params.get("especialidadPExt"));
+					paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
 					//ELIMINACION DE LOS REGISTROS EN LA TABLA
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 					
