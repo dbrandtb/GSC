@@ -4,6 +4,9 @@
  */
 package mx.com.gseguros.portal.cotizacion.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  *
  * @author Jair
@@ -22,16 +25,7 @@ public class DatosUsuario {
     @Override
     public String toString()
     {
-    	return new StringBuilder()
-    	.append("cdunieco=") .append(cdunieco)
-    	.append(",cdramo=")  .append(cdramo)
-    	.append(",cdtipsit=").append(cdtipsit)
-    	.append(",cdusuari=").append(cdusuari)
-    	.append(",cdperson=").append(cdperson)
-    	.append(",cdagente=").append(cdagente)
-    	.append(",nombre=")  .append(nombre)
-    	.append(",nmcuadro=").append(nmcuadro)
-    	.toString();
+    	return ToStringBuilder.reflectionToString(this,ToStringStyle.SHORT_PREFIX_STYLE);
     }
     
     public String getCdunieco() {
