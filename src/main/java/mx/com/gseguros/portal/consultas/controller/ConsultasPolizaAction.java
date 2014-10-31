@@ -11,14 +11,18 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
@@ -26,6 +30,7 @@ import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManagerOLD;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -80,6 +85,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private ConsultaDatosPolizaVO datosPoliza;
     
+    private ConsultaDatosContratanteVO datosContratante;
+    
+    private ConsultaDatosPlanVO datosPlan;
+    
     private ConsultaDatosComplementariosVO datosComplementarios;
             
     private List<ConsultaDatosSuplementoVO> datosSuplemento;
@@ -104,6 +113,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private List<CopagoVO> datosCopagosPoliza;
     
+    private List<CoberturasBasicasVO> datosCoberturasPoliza;
+    
+    private List<CoberturasBasicasVO> datosCoberturasBasicas;
+    
     private List<ClausulaVO> datosEndososPoliza;
     
     private List<AseguradoDetalleVO> datosAseguradoDetalle;
@@ -111,6 +124,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ClausulaVO> clausulasPoliza;
     
     private List<HistoricoFarmaciaVO> historicoFarmacia;
+    
+    private List<ConsultaPeriodosVigenciaVO> periodosVigencia;
+    
+    private AgentePolizaVO agentePoliza;
     
     private Map<String,Item> itemMap;
     
@@ -297,7 +314,35 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	
     }
     
-    
+    /**
+     * Obtiene los datos del contratante
+     * @return String result
+     */
+    public String consultaDatosContratante(){
+    	logger.debug(" **** Entrando a Consulta de Contratante ****");
+        try {
+			        	
+        	PolizaVO polizaVO = new PolizaVO();
+        	polizaVO.setCdunieco(params.get("cdunieco"));
+        	polizaVO.setCdramo(params.get("cdramo"));
+        	polizaVO.setEstado(params.get("estado"));
+        	polizaVO.setNmpoliza(params.get("nmpoliza"));
+        	polizaVO.setIcodpoliza(params.get("icodpoliza"));
+        	
+        	List<ConsultaDatosContratanteVO> lista = consultasPolizaManager.obtieneDatosContratante(polizaVO);
+        	
+        	if(lista!=null && !lista.isEmpty())	datosContratante = lista.get(0);
+        	
+        	logger.debug("Resultado de la consulta de contratante:" + datosContratante);
+        	
+        }catch( Exception e){
+            logger.error("Error al obtener los datos del contratante ",e);
+            return SUCCESS;
+        }
+        
+        success = true;
+        return SUCCESS;
+    }
     
     
     
@@ -397,8 +442,40 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	success = true;
     	return SUCCESS;
     }
-    
-    
+	
+	
+	
+	/**
+     * Obtiene periodos de vigencia
+     * @return String result
+     */
+	@Action(value = "consultaPeriodosVigencia", results = { 
+			@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false", "includeProperties","periodosVigencia.*,success" })
+	})
+    public String consultaPeriodosVigencia(){
+    	logger.debug(" **** Entrando a consultaVigencia ****");
+    	PolizaVO poliza = new PolizaVO();
+    	poliza.setCdunieco(params.get("cdunieco"));
+    	poliza.setCdramo(params.get("cdramo"));
+    	poliza.setEstado(params.get("estado"));
+    	poliza.setNmpoliza(params.get("nmpoliza"));
+    	poliza.setNmsuplem(params.get("suplemento"));
+    	poliza.setNmsituac(params.get("nmsituac"));
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+		AseguradoVO asegurado = new AseguradoVO();
+		asegurado.setCdperson(params.get("cdperson"));
+    	try {
+    		
+    		periodosVigencia = consultasPolizaManager.obtienePeriodosVigencia(poliza, asegurado);
+    		success = true;
+    	} catch(Exception e){
+    		logger.error("Error al obtener periodos de vigencia",e);
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+	
     /**
      * Obtiene los datos de las coberturas de la poliza
      * @return String result
@@ -517,12 +594,22 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     public String consultaRecibosAgente(){
     	logger.debug(" **** Entrando a consultaRecibosAgente ****");
     	try {
-    		
+    		/*
     		WrapperResultados result = consultasPolizaManagerOLD.consultaRecibosAgente(
     				params.get("cdunieco"), params.get("cdramo"),
     				params.get("estado"), params.get("nmpoliza"));
     		
     		recibosAgente = (ArrayList<ConsultaReciboAgenteVO>) result.getItemList();
+    		*/
+    		PolizaVO poliza = new PolizaVO();
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		logger.debug("Datos de la poliza" + poliza.toString());
+    		recibosAgente = consultasPolizaManager.obtieneRecibosAgente(poliza);
     		
     		logger.debug("Resultado de la consultaRecibosAgente:" + recibosAgente);
     		
@@ -560,9 +647,26 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     }
     
     public String consultaAgentesPoliza() throws Exception {
-       	try {
-       		loadList = consultasPolizaManagerOLD.consultaAgentesPoliza(params);
-       		logger.debug("loadList=" +loadList);
+    	logger.debug(" **** Entrando a consultaAgentesPoliza ****");
+       	try {       		
+       		
+       		//loadList = consultasPolizaManagerOLD.consultaAgentesPoliza(params);
+       		PolizaVO poliza = new PolizaVO();
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		logger.debug(poliza.toString());
+    		
+       		
+       		
+       		ArrayList<AgentePolizaVO> lista = (ArrayList<AgentePolizaVO>) consultasPolizaManager.obtieneAgentesPoliza(poliza);
+        	
+        	if(lista!=null && !lista.isEmpty())	agentePoliza = lista.get(0);
+       		
+        	logger.debug("Resultado de la consultaAgentesPoliza=" +agentePoliza);
        	}catch( Exception e){
        		logger.error("Error en consultaAgentesPoliza",e);
        		success =  false;
@@ -644,6 +748,96 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	
     }
     
+    /**
+     * Obtiene las coberturas
+     * @return String result
+     */
+    public String consultaCoberturasPoliza(){
+    	logger.debug(" **** Entrando a consultaCoberturasPoliza ****");
+    	try {
+    		    		
+    		PolizaVO poliza = new PolizaVO();
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		datosCoberturasPoliza = consultasPolizaManager.obtieneCoberturasPoliza(poliza);
+    		   		
+    		
+    		logger.debug("Resultado de consultaCoberturasBasicas:" + datosCoberturasBasicas);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener las coberturas basicas ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    /**
+     * Obtiene las coberturas básicas
+     * @return String result
+     */
+    public String consultaCoberturasBasicas(){
+    	logger.debug(" **** Entrando a consultaConsultaCoberturasBasicas ****");
+    	try {
+    		    		
+    		PolizaVO poliza = new PolizaVO();
+    		poliza.setCdunieco(params.get("cdunieco"));
+    		poliza.setCdramo(params.get("cdramo"));
+    		poliza.setEstado(params.get("estado"));
+    		poliza.setNmpoliza(params.get("nmpoliza"));
+    		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setIcodpoliza(params.get("icodpoliza"));
+    		datosCoberturasBasicas = consultasPolizaManager.obtieneCoberturasBasicas(poliza);
+    		   		
+    		
+    		logger.debug("Resultado de consultaCoberturasBasicas:" + datosCoberturasBasicas);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener las coberturas basicas ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    /**
+     * Obtiene los datos del plan
+     * @return String result
+     */
+    public String consultaDatosPlan(){
+    	logger.debug(" **** Entrando a Consulta de Plan ****");
+        try {
+			        	
+        	PolizaVO polizaVO = new PolizaVO();
+        	polizaVO.setCdunieco(params.get("cdunieco"));
+        	polizaVO.setCdramo(params.get("cdramo"));
+        	polizaVO.setEstado(params.get("estado"));
+        	polizaVO.setNmpoliza(params.get("nmpoliza"));
+        	polizaVO.setIcodpoliza(params.get("icodpoliza"));
+        	
+        	List<ConsultaDatosPlanVO> lista = consultasPolizaManager.obtieneDatosPlan(polizaVO);
+        	
+        	if(lista!=null && !lista.isEmpty())	datosPlan = lista.get(0);
+        	
+        	logger.debug("Resultado de la consulta de plan:" + datosPlan);
+        	
+        }catch( Exception e){
+            logger.error("Error al obtener los datos del plan ",e);
+            return SUCCESS;
+        }
+        
+        success = true;
+        return SUCCESS;
+    }
+    
     
     /**
      * Funcion para la visualizacion de las coberturas 
@@ -671,7 +865,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     }
 	
 	/**
-	 * Entrada a la pantalla de las histórico de farmacia <br/>
+	 * Entrada a la pantalla histórico de farmacia <br/>
 	 * Sirve para propagar los parametros del atributo params a la pantalla
 	 * @return
 	 */
@@ -679,6 +873,27 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		success = true;
 		return SUCCESS;
 	}
+	
+	/**
+	 * Entrada a la pantalla periodos vigencia <br/>
+	 * Sirve para propagar los parametros del atributo params a la pantalla
+	 * @return
+	 */
+	public String verPeriodosVigencia(){
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	 * Entrada a la pantalla Aviso Hospitalización <br/>
+	 * Sirve para propagar los parametros del atributo params a la pantalla
+	 * @return
+	 */
+	public String darAvisoHospitalizacion(){
+		success = true;
+		return SUCCESS;
+	}
+	
 	
 	/**
      * Funcion para la visualizacion de las exclusiones 
@@ -907,6 +1122,15 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	public void setDatosCopagosPoliza(List<CopagoVO> datosCopagosPoliza) {
 		this.datosCopagosPoliza = datosCopagosPoliza;
 	}
+	
+	public List<CoberturasBasicasVO> getDatosCoberturasBasicas() {
+		return datosCoberturasBasicas;
+	}
+
+	public void setDatosCoberturasBasicas(
+			List<CoberturasBasicasVO> datosCoberturasBasicas) {
+		this.datosCoberturasBasicas = datosCoberturasBasicas;
+	}
 
 	public Map<String, Item> getItemMap() {
 		return itemMap;
@@ -993,9 +1217,52 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	public void setHistoricoFarmacia(List<HistoricoFarmaciaVO> historicoFarmacia) {
 		this.historicoFarmacia = historicoFarmacia;
 	}
-	
-	
-	
+
+	public ConsultaDatosContratanteVO getDatosContratante() {
+		return datosContratante;
+	}
+
+	public void setDatosContratante(ConsultaDatosContratanteVO datosContratante) {
+		this.datosContratante = datosContratante;
+	}
+
+	public ConsultaDatosPlanVO getDatosPlan() {
+		return datosPlan;
+	}
+
+	public void setDatosPlan(ConsultaDatosPlanVO datosPlan) {
+		this.datosPlan = datosPlan;
+	}
+
+	public List<ConsultaPeriodosVigenciaVO> getPeriodosVigencia() {
+		return periodosVigencia;
+	}
+
+	public void setPeriodosVigencia(
+			List<ConsultaPeriodosVigenciaVO> periodosVigencia) {
+		this.periodosVigencia = periodosVigencia;
+	}
+
+	public List<CoberturasBasicasVO> getDatosCoberturasPoliza() {
+		return datosCoberturasPoliza;
+	}
+
+	public void setDatosCoberturasPoliza(
+			List<CoberturasBasicasVO> datosCoberturasPoliza) {
+		this.datosCoberturasPoliza = datosCoberturasPoliza;
+	}
+
+	public AgentePolizaVO getAgentePoliza() {
+		return agentePoliza;
+	}
+
+	public void setAgentePoliza(AgentePolizaVO agentePoliza) {
+		this.agentePoliza = agentePoliza;
+	}
+
 	
 
+	
+	
+	
 }

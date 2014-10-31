@@ -4,10 +4,14 @@ import java.util.List;
 
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
@@ -75,6 +79,34 @@ public interface ConsultasPolizaManager {
      */
     public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception;
     
+    /**
+     * Obtiene las coberturas
+     * @param poliza
+     * @return
+     */
+    public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception;
+    
+    /**
+     * Obtiene las coberturas básicas
+     * @param poliza
+     * @return
+     */
+    public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception;
+    
+    /**
+     * Obtiene los datos del plan
+     * @param poliza
+     * @return
+     */
+    public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception;
+    
+    /**
+     * Obtiene los datos del contratante
+     * @param poliza
+     * @return
+     * @throws Exception
+     */
+    public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception;
     
     /**
      * Obtiene los asegurados de la p&oacute;liza
@@ -109,6 +141,14 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    
+    /**
+     * Obtiene periodos de vigencia
+     * @param poliza
+     * @return
+     * @throws Exception
+     */
+    public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     /**
      * 

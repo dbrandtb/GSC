@@ -12,10 +12,14 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
@@ -328,6 +332,160 @@ public ConsultaDatosHistoricoVO mapRow(ResultSet rs, int rowNum)
 			return copago;
 		}
 	}
+	
+	// Coberturas póliza.
+	@Override
+	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaCoberturasPolizaSP(
+				getDataSource()), params);
+		return (List<CoberturasBasicasVO>) mapResult.get("rs");
+	}
+
+	public class ConsultaCoberturasPolizaSP extends StoredProcedure {
+		protected ConsultaCoberturasPolizaSP(DataSource dataSource) {
+			super(dataSource, "P_Get_Coberturas");
+			declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+			declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+			declareParameter(new SqlReturnResultSet("rs",
+					new CoberturasPolizaMapper()));
+			compile();
+		}
+	}
+
+	public class CoberturasPolizaMapper implements RowMapper<CoberturasBasicasVO> {
+		public CoberturasBasicasVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			CoberturasBasicasVO coberturas = new CoberturasBasicasVO();
+			coberturas.setDescripcion(rs.getString("vchDescripcion"));			
+			return coberturas;
+		}
+	}
+	
+	// Coberturas básicas.
+		@Override
+		public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza)
+				throws Exception {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
+			Map<String, Object> mapResult = ejecutaSP(new ConsultaCoberturasBasicasSP(
+					getDataSource()), params);
+			return (List<CoberturasBasicasVO>) mapResult.get("rs");
+		}
+
+		public class ConsultaCoberturasBasicasSP extends StoredProcedure {
+			protected ConsultaCoberturasBasicasSP(DataSource dataSource) {
+				super(dataSource, "P_Get_Coberturas_Basicas");
+				declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+				declareParameter(new SqlReturnResultSet("rs",
+						new CoberturasBasicasMapper()));
+				compile();
+			}
+		}
+
+		public class CoberturasBasicasMapper implements RowMapper<CoberturasBasicasVO> {
+			public CoberturasBasicasVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+				CoberturasBasicasVO coberturasBasicas = new CoberturasBasicasVO();
+				coberturasBasicas.setDescripcion(rs.getString("vchDescripcion"));
+				coberturasBasicas.setCopagoporcentaje(rs.getString("fltCopago"));
+				coberturasBasicas.setCopagomonto(rs.getString("mCopago"));
+				coberturasBasicas.setIncluido(rs.getString("tiactivo"));
+				coberturasBasicas.setBeneficiomaximo(rs.getString("mBeneficioMax"));
+				coberturasBasicas.setBeneficiomaximovida(rs.getString("mBenefMaxVida"));
+				return coberturasBasicas;
+			}
+		}
+		
+		//Datos del plan
+		@Override
+		public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmpoliza_i", poliza.getIcodpoliza());			
+			Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosPlanSP(getDataSource()), params);
+			return (List<ConsultaDatosPlanVO>) mapResult.get("rs");
+			
+		}
+		
+		public class ConsultaDatosPlanSP extends StoredProcedure{
+			protected ConsultaDatosPlanSP(DataSource dataSource){
+				super(dataSource, "P_Get_Datos_Plan");
+				declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+				declareParameter(new SqlReturnResultSet("rs", new DatosPlanMapper()));
+				compile();
+			}
+		}
+		
+		public class DatosPlanMapper implements RowMapper<ConsultaDatosPlanVO>{
+			public ConsultaDatosPlanVO mapRow(ResultSet rs, int rowNum) throws SQLException {				
+				ConsultaDatosPlanVO datosPlan = new ConsultaDatosPlanVO();
+				datosPlan.setPlan(rs.getString("vchCodPlan"));
+				datosPlan.setFecha(rs.getString("dtFecha"));
+				datosPlan.setDescripcion(rs.getString("vchDescripcion"));
+				datosPlan.setTipoprograma(rs.getString("vchDescTipoPlan"));
+				datosPlan.setCalculopor(rs.getString("chClasifica"));
+				datosPlan.setBeneficiomaximoanual(rs.getString("mBenefMaxAnual"));
+				datosPlan.setBeneficiomaximovida(rs.getString("mBenefMaxVida"));
+				datosPlan.setIdentificadortarifa(rs.getString("vchCodCosto"));
+				datosPlan.setZona(rs.getString("vchDescripcionZona"));
+				return datosPlan;
+			}
+		}
+		
+		
+		
+	
+		//Datos del contratante
+		@Override
+		public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmpoliza_i", poliza.getIcodpoliza());			
+			Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosContratanteSP(getDataSource()), params);
+			return (List<ConsultaDatosContratanteVO>) mapResult.get("rs");
+			
+		}
+		
+		public class ConsultaDatosContratanteSP extends StoredProcedure{
+			protected ConsultaDatosContratanteSP(DataSource dataSource){
+				super(dataSource, "P_Get_Datos_Contratante");
+				declareParameter(new SqlParameter("pv_nmpoliza_i", Types.INTEGER));				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+				declareParameter(new SqlReturnResultSet("rs", new DatosContratanteMapper()));
+				compile();
+			}
+		}
+		
+		public class DatosContratanteMapper implements RowMapper<ConsultaDatosContratanteVO>{
+			public ConsultaDatosContratanteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+				
+				ConsultaDatosContratanteVO datosContratante = new ConsultaDatosContratanteVO();
+				datosContratante.setRazonsocial(rs.getString("vchRazonSocial"));
+				datosContratante.setZonacosto(rs.getString("vchZonaCosto"));
+				datosContratante.setDomicilio(rs.getString("vchDomicilio"));
+				datosContratante.setCiudad(rs.getString("C"));
+				datosContratante.setEstado(rs.getString("E"));
+				datosContratante.setRepresentante(rs.getString("vchRepresen"));
+				datosContratante.setTelefono1(rs.getString("vchTelef1"));
+				datosContratante.setArea1(rs.getString("vchAreaT1"));
+				datosContratante.setPuesto(rs.getString("P"));
+				datosContratante.setTelefono2(rs.getString("vchTelef2"));
+				datosContratante.setArea2(rs.getString("vchAreaT2"));
+				datosContratante.setGiro(rs.getString("G"));
+				datosContratante.setFax(rs.getString("vchFax"));
+				datosContratante.setAreafax(rs.getString("vchAreaF"));
+				datosContratante.setCodigopostal(rs.getString("vchCP"));
+				datosContratante.setTipocontratante(rs.getString("tiTipoContratante"));
+				datosContratante.setRfc(rs.getString("vchRFC"));
+				datosContratante.setImss(rs.getString("vchRegIMSS"));
+				return datosContratante;
+			}
+		}
 
 	// Asegurados de la póliza.
 	@Override
@@ -456,6 +614,42 @@ public ConsultaDatosHistoricoVO mapRow(ResultSet rs, int rowNum)
 			return historicoFarmacia;
 		}
 	}
+	
+	//Periodos de Vigencia
+		@Override
+		public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
+				AseguradoVO asegurado) throws Exception {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
+			params.put("pv_cdperson_i", asegurado.getCdperson());		
+			Map<String, Object> mapResult = ejecutaSP(new ConsultaPeriodosVigenciaSP(getDataSource()), params);
+			return (List<ConsultaPeriodosVigenciaVO>) mapResult.get("rs");
+		}
+		
+		protected class ConsultaPeriodosVigenciaSP extends StoredProcedure {
+			protected ConsultaPeriodosVigenciaSP(DataSource dataSource){
+				super(dataSource, "P_Get_Datos_Vigencia");
+				declareParameter(new SqlParameter("pv_cdperson_i", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", Types.INTEGER));
+				declareParameter(new SqlOutParameter("pv_title_o", Types.VARCHAR));
+				declareParameter(new SqlReturnResultSet("rs", new PeriodosVigenciaMapper()));			
+				compile();
+			}
+		}
+		
+		public class PeriodosVigenciaMapper implements RowMapper<ConsultaPeriodosVigenciaVO>{
+			public ConsultaPeriodosVigenciaVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+				
+				ConsultaPeriodosVigenciaVO periodosVigencia = new ConsultaPeriodosVigenciaVO();
+				periodosVigencia.setEstatus(rs.getString("vchEstado"));
+				periodosVigencia.setDias(rs.getString("iDias"));
+				periodosVigencia.setAnios(rs.getString("iAnios"));
+				periodosVigencia.setFeinicial(rs.getString("dtFecDesde"));
+				periodosVigencia.setFefinal(rs.getString("dtFecHasta"));
+				return periodosVigencia;
+			}
+		}
+	
 
 	//Detalle de asegurado.
 	@Override

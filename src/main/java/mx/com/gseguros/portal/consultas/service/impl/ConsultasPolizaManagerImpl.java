@@ -8,10 +8,14 @@ import mx.com.gseguros.portal.consultas.controller.ConsultasPolizaAction;
 import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
@@ -150,8 +154,59 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		}
 		return copagos;
 	}
-
 	
+	@Override
+	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
+		
+		List<CoberturasBasicasVO> coberturasPoliza;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			coberturasPoliza = new ArrayList<CoberturasBasicasVO>();			
+		} else {
+			coberturasPoliza = consultasPolizaDAOSISA.obtieneCoberturasPoliza(poliza);
+		}
+		return coberturasPoliza;
+	}
+	
+	@Override
+	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
+		
+		List<CoberturasBasicasVO> coberturasBasicas;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			coberturasBasicas = new ArrayList<CoberturasBasicasVO>();			
+		} else {
+			coberturasBasicas = consultasPolizaDAOSISA.obtieneCoberturasBasicas(poliza);
+		}
+		return coberturasBasicas;
+	}
+	
+	@Override
+	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
+		List<ConsultaDatosPlanVO> datosPlan = new ArrayList<ConsultaDatosPlanVO>();
+		
+		//Si iCodPoliza no es nulo, es información de SISA.
+		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
+			 datosPlan = consultasPolizaDAOSISA.obtieneDatosPlan(poliza);
+		 }
+		 return datosPlan;
+		
+	}
+	
+
+	@Override
+	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
+		List<ConsultaDatosContratanteVO> datosContratante = new ArrayList<ConsultaDatosContratanteVO>();
+		
+		//Si iCodPoliza no es nulo, es información de SISA.
+		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
+			 datosContratante = consultasPolizaDAOSISA.obtieneDatosContratante(poliza);
+		 }
+		 return datosContratante;
+		
+	}
+	
+		
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception {
 		
@@ -214,6 +269,28 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		  return historicoFarmacia;
 	}
 	
+	@Override
+	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
+			AseguradoVO asegurado) throws Exception {
+		List<ConsultaPeriodosVigenciaVO> periodosVigencia;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			  logger.debug("Periodos Vigencia de ICE");
+			  
+			  periodosVigencia = new ArrayList<ConsultaPeriodosVigenciaVO>();
+		} else {
+			  logger.debug("Historico Farmacia de SISA");
+			  
+			  periodosVigencia = consultasPolizaDAOSISA.obtienePeriodosVigencia(poliza, asegurado);
+		}
+		  if(periodosVigencia != null && periodosVigencia.size()>0) {
+			  logger.debug("Periodos Vigencia registros:" + periodosVigencia.size());
+			  logger.debug("Periodos Vigencia:" + periodosVigencia);
+		  } else {
+			  logger.debug("No se encontraron registros de Historico Farmacia");
+		  }
+		  return periodosVigencia;
+	}
 	
 	@Override
 	public List<ClausulaVO> obtieneClausulasPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
@@ -249,16 +326,29 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Override
 	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		//System.out.println("****Entro a ManagerImpl****");
+		List<AgentePolizaVO> agentes;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			agentes = consultasPolizaDAOICE.obtieneAgentesPoliza(poliza);
+		} else {
+			agentes = consultasPolizaDAOSISA.obtieneAgentesPoliza(poliza);
+		}
+		return agentes;
 	}
 	
 	
 	@Override
 	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<ConsultaReciboAgenteVO> recibosAgente;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			recibosAgente = consultasPolizaDAOICE.obtieneRecibosAgente(poliza);
+		} else {
+			recibosAgente = consultasPolizaDAOSISA.obtieneRecibosAgente(poliza);
+		}
+		return recibosAgente;
 	}
 
 }
