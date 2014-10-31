@@ -49,6 +49,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String fesistem;
 	private String cduser;
 	private String especialidadMedico;
+	private String cveTipoAutorizaG;
 	
 	
 	public String getCopagofi() {
@@ -350,6 +351,14 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setEspecialidadMedico(String especialidadMedico) {
 		this.especialidadMedico = especialidadMedico;
+	}
+
+	public String getCveTipoAutorizaG() {
+		return cveTipoAutorizaG;
+	}
+
+	public void setCveTipoAutorizaG(String cveTipoAutorizaG) {
+		this.cveTipoAutorizaG = cveTipoAutorizaG;
 	}	
 	
 }
