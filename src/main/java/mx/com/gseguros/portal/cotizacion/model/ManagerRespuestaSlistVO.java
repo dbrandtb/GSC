@@ -3,11 +3,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 import java.util.List;
 import java.util.Map;
 
-public class ManagerRespuestaSlistVO
+public class ManagerRespuestaSlistVO extends ManagerRespuestaBaseVO
 {
-	private boolean exito                  = false;
-	private String  respuesta              = null;
-	private String  respuestaOculta        = null;
 	private List<Map<String,String>> slist = null;
 	
 	public ManagerRespuestaSlistVO()
@@ -29,30 +26,6 @@ public class ManagerRespuestaSlistVO
 	/*
 	 * Getters y setters
 	 */
-	public boolean isExito() {
-		return exito;
-	}
-
-	public void setExito(boolean exito) {
-		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
-	public String getRespuestaOculta() {
-		return respuestaOculta;
-	}
-
-	public void setRespuestaOculta(String respuestaOculta) {
-		this.respuestaOculta = respuestaOculta;
-	}
-	
 	public List<Map<String, String>> getSlist() {
 		return slist;
 	}
