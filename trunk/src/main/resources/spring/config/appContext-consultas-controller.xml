@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <!-- <bean id="ConsultasPolizaAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasPolizaAction" scope="prototype">
-        <property name="consultasPolizaManagerOLD" ref="consultasPolizaManagerOLDImpl"/>
-        <property name="consultasPolizaManager"    ref="consultasPolizaManagerImpl"/>
-        <property name="kernelManager"             ref="kernelManagerSustituto"/>
-    </bean> -->
     
     <bean id="consultasSiniestroAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasSiniestroAction" scope="prototype">
         <property name="consultaSiniestrosManager" ref="consultasSiniestroManagerImpl"/>

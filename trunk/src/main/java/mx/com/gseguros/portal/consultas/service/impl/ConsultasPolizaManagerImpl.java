@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mx.com.gseguros.portal.consultas.controller.ConsultasPolizaAction;
-import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
@@ -39,24 +39,24 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	@Autowired
 	@Qualifier("consultasDAOICEImpl")
-	private IConsultasPolizaDAO consultasPolizaDAOICE;
+	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
 	@Autowired
 	@Qualifier("consultasDAOSISAImpl")
-	private IConsultasPolizaDAO consultasPolizaDAOSISA;
+	private ConsultasPolizaDAO consultasPolizaDAOSISA;
 	
 	
 	@Override
-	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc,
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc,
 			String cdperson, String nombre) throws Exception {
 		
-		List<ConsultaPolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegurado(rfc, cdperson, nombre);
-		List<ConsultaPolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(rfc, cdperson, nombre);
+		List<PolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegurado(rfc, cdperson, nombre);
+		List<PolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(rfc, cdperson, nombre);
 		
 		// Fusionamos las listas:
-        List<ConsultaPolizaAseguradoVO> polizasFusionadas = polizasICE;
+        List<PolizaAseguradoVO> polizasFusionadas = polizasICE;
         if(polizasFusionadas == null) {
-        	polizasFusionadas = new ArrayList<ConsultaPolizaAseguradoVO>();
+        	polizasFusionadas = new ArrayList<PolizaAseguradoVO>();
         }
         polizasFusionadas.addAll(polizasSISA);
         
@@ -65,10 +65,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<SuplementoVO> obtieneHistoricoPoliza(
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		
-		List<ConsultaDatosSuplementoVO> suplementos;  
+		List<SuplementoVO> suplementos;  
 		
 		// Si iCodPoliza viene vacio, es información de ICE, sino es de SISA:
 		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
@@ -81,10 +81,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<ConsultaDatosHistoricoVO> obtieneHistoricoPolizaSISA(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<HistoricoVO> obtieneHistoricoPolizaSISA(
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		
-		List<ConsultaDatosHistoricoVO> historico = new ArrayList<ConsultaDatosHistoricoVO>();  
+		List<HistoricoVO> historico = new ArrayList<HistoricoVO>();  
 		
 		//Si iCodPoliza es nulo, es información de ICE, sino es de SISA:
 		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza()) == false){			
@@ -97,9 +97,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Override
-	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
-		 List<ConsultaDatosPolizaVO> datosPolizas;
+	public List<PolizaDTO> obtieneDatosPoliza(
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
+		 List<PolizaDTO> datosPolizas;
 		 
 		 //Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
@@ -112,9 +112,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza,
+	public List<DatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
-		List<ConsultaDatosComplementariosVO> datosComplementarios = new ArrayList<ConsultaDatosComplementariosVO>();
+		List<DatosComplementariosVO> datosComplementarios = new ArrayList<DatosComplementariosVO>();
 		
 		//Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
@@ -156,12 +156,12 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
+	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
 		
-		List<CoberturasBasicasVO> coberturasPoliza;
+		List<CoberturaBasicaVO> coberturasPoliza;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
-			coberturasPoliza = new ArrayList<CoberturasBasicasVO>();			
+			coberturasPoliza = new ArrayList<CoberturaBasicaVO>();			
 		} else {
 			coberturasPoliza = consultasPolizaDAOSISA.obtieneCoberturasPoliza(poliza);
 		}
@@ -169,12 +169,12 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
+	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
 		
-		List<CoberturasBasicasVO> coberturasBasicas;
+		List<CoberturaBasicaVO> coberturasBasicas;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
-			coberturasBasicas = new ArrayList<CoberturasBasicasVO>();			
+			coberturasBasicas = new ArrayList<CoberturaBasicaVO>();			
 		} else {
 			coberturasBasicas = consultasPolizaDAOSISA.obtieneCoberturasBasicas(poliza);
 		}
@@ -182,8 +182,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
-		List<ConsultaDatosPlanVO> datosPlan = new ArrayList<ConsultaDatosPlanVO>();
+	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
+		List<PlanVO> datosPlan = new ArrayList<PlanVO>();
 		
 		//Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
@@ -195,8 +195,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 
 	@Override
-	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
-		List<ConsultaDatosContratanteVO> datosContratante = new ArrayList<ConsultaDatosContratanteVO>();
+	public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
+		List<ContratanteVO> datosContratante = new ArrayList<ContratanteVO>();
 		
 		//Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
@@ -270,14 +270,14 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
+	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
-		List<ConsultaPeriodosVigenciaVO> periodosVigencia;
+		List<PeriodoVigenciaVO> periodosVigencia;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
 			  logger.debug("Periodos Vigencia de ICE");
 			  
-			  periodosVigencia = new ArrayList<ConsultaPeriodosVigenciaVO>();
+			  periodosVigencia = new ArrayList<PeriodoVigenciaVO>();
 		} else {
 			  logger.debug("Historico Farmacia de SISA");
 			  
@@ -298,6 +298,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	
+	@Override
+	public String obtieneMensajeAgente(PolizaVO poliza) throws Exception {
+		return consultasPolizaDAOICE.obtieneMensajeAgente(poliza);
+	}
 	
 	
 	@Override
@@ -324,9 +328,7 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	
 	@Override
-	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
-			throws Exception {
-		//System.out.println("****Entro a ManagerImpl****");
+	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza) throws Exception {
 		List<AgentePolizaVO> agentes;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
@@ -339,9 +341,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	
 	@Override
-	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
+	public List<ReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
 			throws Exception {
-		List<ConsultaReciboAgenteVO> recibosAgente;
+		List<ReciboAgenteVO> recibosAgente;
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
 			recibosAgente = consultasPolizaDAOICE.obtieneRecibosAgente(poliza);
@@ -349,6 +351,12 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			recibosAgente = consultasPolizaDAOSISA.obtieneRecibosAgente(poliza);
 		}
 		return recibosAgente;
+	}
+
+
+	@Override
+	public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception {
+		return consultasPolizaDAOICE.obtieneTarifasPoliza(poliza);
 	}
 
 }

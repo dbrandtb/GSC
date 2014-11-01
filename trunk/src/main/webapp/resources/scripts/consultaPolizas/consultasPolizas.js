@@ -144,20 +144,13 @@ Ext.onReady(function() {
                                 case 2: //Consulta de Agentes
                                     
                                     if (gridSuplementos.getSelectionModel().hasSelection()) {
-                                        
+                                    	
                                         //Mostrar seccion de agentes:
                                         tabPanelAgentes.show();
                                     
                                         //Agentes de la poliza
                                         storeAgentesPol.load({
-                                        	params: {
-                                        		'params.PV_CDUNIECO_I' : panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
-                                        		'params.PV_CDRAMO_I'   : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                                        		'params.PV_ESTADO_I'   : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-                                        		'params.PV_NMPOLIZA_I' : panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
-                                        		'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
-                                        		'params.icodpoliza' : panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
-                                        	},
+                                        	params: panelBusqueda.down('form').getForm().getValues(),
                                         	callback: function(records, operation, success) {
                                                 if(!success){
                                                     showMessage('Error', 'Error al obtener los datos del agente, intente m\u00E1s tarde',
@@ -168,15 +161,7 @@ Ext.onReady(function() {
                                         
                                         // Obtenemos los recibos de los agentes:
                                         storeRecibosAgente.load({
-                                            //params: panelBusqueda.down('form').getForm().getValues(),
-                                        	params: {
-                                                'params.PV_CDUNIECO_I' : panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
-                                                'params.PV_CDRAMO_I'   : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                                                'params.PV_ESTADO_I'   : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-                                                'params.PV_NMPOLIZA_I' : panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
-                                                'params.PV_NMSUPLEM_I' : panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
-                                                'params.icodpoliza' : panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
-                                            },
+                                        	params: panelBusqueda.down('form').getForm().getValues(),
                                             callback: function(records, operation, success){
                                                 if(success){
                                                     if(records.length > 0){
