@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author hector.lopez
  *
  */
-public class ConsultaDatosHistoricoVO implements Serializable{
+public class HistoricoVO implements Serializable{
 
 	
 	private static final long serialVersionUID = -8555353864912795413L;

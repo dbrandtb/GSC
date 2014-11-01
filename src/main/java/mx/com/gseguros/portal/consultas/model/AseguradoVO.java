@@ -28,6 +28,16 @@ public class AseguradoVO implements Serializable{
 	private String fenacimi;
 	private String status;
 	private String parentesco;
+	
+	//TODO: Agregar atributos para el Afiliado en SISA o crear un AfiliadoVO con ellos
+	/*
+	edad
+	// Se usa para SISA para PREVEX y/o numasegurado empleado
+	identidad 253785-00
+	tipo de sangre
+	antecedentes
+	*/
+	
 
 		
 	public String getSexo() {

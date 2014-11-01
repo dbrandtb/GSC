@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author hector.lopez
  *
  */
-public class ConsultaReciboAgenteVO implements Serializable{
+public class ReciboAgenteVO implements Serializable{
 
 	
 	/**

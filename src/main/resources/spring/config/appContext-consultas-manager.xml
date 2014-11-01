@@ -2,13 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<bean id="consultasPolizaManagerOLDImpl" class="mx.com.gseguros.portal.consultas.service.impl.ConsultasPolizaManagerOLDImpl" parent="abstractManagerJdbcTemplateInvoke">
-        <property name="abstractDAO">
-            <ref bean="consultasPolizaDAO"/>
-        </property>
-	</bean>
-	
 	
 	<bean id="consultasSiniestroManagerImpl" class="mx.com.gseguros.portal.consultas.service.impl.ConsultasSiniestroManagerImpl">
        <property name="consultasSiniestroDAO" ref="consultasSiniestroDAOImpl"/>

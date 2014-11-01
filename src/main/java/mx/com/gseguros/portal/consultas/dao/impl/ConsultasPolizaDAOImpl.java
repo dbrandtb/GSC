@@ -8,49 +8,52 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
-public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsultasPolizaDAO {
+public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements ConsultasPolizaDAO {
 
 	//private final static Logger logger = Logger.getLogger(ConsultasPolizaDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<PolizaDTO> obtieneDatosPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", polizaAsegurado.getCdunieco());
 		params.put("pv_cdramo_i",   polizaAsegurado.getCdramo());
 		params.put("pv_estado_i",   polizaAsegurado.getEstado());
 		params.put("pv_nmpoliza_i", polizaAsegurado.getNmpoliza());
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneDatosPolizaSP(getDataSource()), params);
-		return (List<ConsultaDatosPolizaVO>) mapResult.get("pv_registro_o");
+		return (List<PolizaDTO>) mapResult.get("pv_registro_o");
 	}
 	
 	protected class ObtieneDatosPolizaSP extends StoredProcedure {
@@ -69,11 +72,11 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		}
 	}
 	
-    protected class DatosPolizaMapper  implements RowMapper<ConsultaDatosPolizaVO> {
+    protected class DatosPolizaMapper  implements RowMapper<PolizaDTO> {
     	
-        public ConsultaDatosPolizaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public PolizaDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         	
-        	ConsultaDatosPolizaVO consulta = new ConsultaDatosPolizaVO();
+        	PolizaDTO consulta = new PolizaDTO();
         	consulta.setNmsolici(rs.getString("nmsolici"));
         	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
         	consulta.setNmpoliex(rs.getString("nmpoliex"));
@@ -118,14 +121,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception {
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdrfc_i", rfc);
 		params.put("pv_cdperson_i", cdperson);
 		params.put("pv_nombre_i", nombre);
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaPolizasAseguradoSP(getDataSource()), params);
-		return (List<ConsultaPolizaAseguradoVO>) mapResult.get("pv_registro_o");
+		return (List<PolizaAseguradoVO>) mapResult.get("pv_registro_o");
 	}
 	
 	protected class ConsultaPolizasAseguradoSP extends StoredProcedure {
@@ -141,10 +144,10 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		}
 	}
 	
-    protected class PolizaAseguradoMapper  implements RowMapper<ConsultaPolizaAseguradoVO> {
+    protected class PolizaAseguradoMapper  implements RowMapper<PolizaAseguradoVO> {
     	
-    	public ConsultaPolizaAseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		ConsultaPolizaAseguradoVO polizaAsegurado = new ConsultaPolizaAseguradoVO();
+    	public PolizaAseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		PolizaAseguradoVO polizaAsegurado = new PolizaAseguradoVO();
     		polizaAsegurado.setCdramo(rs.getString("codigo_ramo"));
     		polizaAsegurado.setCdunieco(rs.getString("compania"));
     		polizaAsegurado.setDsramo(rs.getString("descripcion_ramo"));
@@ -162,12 +165,12 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<SuplementoVO> obtieneHistoricoPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliex_i", polizaAsegurado.getNmpoliex());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaSuplementosSP(getDataSource()), params);
-		return (List<ConsultaDatosSuplementoVO>) mapResult.get("pv_registro_o");
+		return (List<SuplementoVO>) mapResult.get("pv_registro_o");
 	}
 	
 	protected class ConsultaSuplementosSP extends StoredProcedure {
@@ -181,10 +184,10 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		}
 	}
 	
-    protected class SuplementoMapper  implements RowMapper<ConsultaDatosSuplementoVO> {
+    protected class SuplementoMapper  implements RowMapper<SuplementoVO> {
     	
-    	public ConsultaDatosSuplementoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		ConsultaDatosSuplementoVO suplemento = new ConsultaDatosSuplementoVO();
+    	public SuplementoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		SuplementoVO suplemento = new SuplementoVO();
     		suplemento.setCdunieco(rs.getString("cdunieco"));
     		suplemento.setCdramo(rs.getString("cdramo"));
     		suplemento.setEstado(rs.getString("estado"));
@@ -240,6 +243,9 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
     		copago.setDescripcion(rs.getString("DESCRIPCION"));
     		copago.setValor(rs.getString("VALOR"));
     		copago.setNivel(rs.getInt("NIVEL"));
+			copago.setVisible(
+					(rs.getString("SWVISIBLE") != null && rs.getString("SWVISIBLE").equals(Constantes.SI)) ? 
+					true: false);
     		return copago;
     	}
     }
@@ -319,7 +325,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolicotMapper2()));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolicotMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
 			compile();
@@ -328,29 +334,95 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	
 	protected class ObtenerPolicotMapper implements RowMapper<ClausulaVO> {
 		public ClausulaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-			ClausulaVO clausula = new ClausulaVO();
-			clausula.setCdclausu(rs.getString("cdclausu"));
-			clausula.setCdtipcla(rs.getString("cdtipcla"));
-			clausula.setLinea_general(rs.getString("linea_usuario"));
-			clausula.setDsclausu(rs.getString("dsclausu"));
-			clausula.setStatus(rs.getString("status"));
-			return clausula;
+			
+			ClausulaVO claus = new ClausulaVO();
+			claus.setCdclausu(rs.getString("cdclausu"));
+			claus.setDsclausu(rs.getString("dsclausu"));
+			claus.setCdtipcla(rs.getString("cdtipcla"));
+			claus.setStatus(rs.getString("status"));
+			claus.setLinea_usuario(rs.getString("linea_usuario"));
+			claus.setLinea_general(rs.getString("linea_general"));
+			claus.setSwmodi(rs.getString("swmodi"));
+			claus.setCdunieco(rs.getString("cdunieco"));
+			claus.setCdramo(rs.getString("cdramo"));
+			claus.setEstado(rs.getString("estado"));
+			claus.setNmpoliza(rs.getString("nmpoliza"));
+			claus.setNmsituac(rs.getString("nmsituac"));
+			claus.setNmsuplem(rs.getString("nmsuplem"));
+			return claus;
 		}
 	}
-	
-	protected class ObtenerPolicotMapper2 implements RowMapper<Map<String,String>> {
-		public Map<String,String> mapRow(ResultSet rs, int rowNum) throws SQLException {
-			String cols[]=new String[]{"cdunieco","cdramo","estado","nmpoliza","nmsituac",
-					"cdclausu","dsclausu","nmsuplem","status","cdtipcla","swmodi","linea_usuario","linea_general"};
-			Map<String,String> map=new HashMap<String,String>(0);
-			for(String col:cols) {
-				map.put(col,rs.getString(col));
-			}
-			return map;
-		}
-	}
-	
 
+	
+	@Override
+	public String obtieneMensajeAgente (PolizaVO poliza) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i",   poliza.getCdramo());
+		params.put("pv_estado_i",   poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		Map<String, Object> result = ejecutaSP(new ObtieneMensajeAgenteSP(getDataSource()), params);
+		return (String) result.get("pv_mensaje_o");
+	}
+	
+	protected class ObtieneMensajeAgenteSP extends StoredProcedure {
+		protected ObtieneMensajeAgenteSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_Get_Datos_prevex");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_mensaje_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i", poliza.getCdramo());
+		params.put("pv_estado_i", poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneDatosTarifaSP(getDataSource()), params);
+		return (List<TarifaVO>) mapResult.get("pv_registro_o");
+	}
+	
+	
+    protected class ObtieneDatosTarifaSP extends StoredProcedure {
+    	protected ObtieneDatosTarifaSP(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Tarifa_Pol");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new TarifaMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class TarifaMapper  implements RowMapper<TarifaVO> {
+    	public TarifaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		TarifaVO consulta = new TarifaVO();
+    		consulta.setCdgarant(rs.getString("GARANTIA"));
+    		consulta.setDsgarant(rs.getString("NOMBRE_GARANTIA"));
+    		consulta.setSumaAsegurada(rs.getString("SUMA_ASEGURADA"));
+    		consulta.setMontoPrima(rs.getString("MONTO_PRIMA"));
+    		consulta.setMontoComision(rs.getString("MONTO_COMISION"));
+    		return consulta;
+    	}
+    }
+    
+    
 	@Override
 	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
 			throws Exception {
@@ -364,20 +436,90 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza) throws Exception {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("PV_CDUNIECO_I", poliza.getCdunieco());
+		params.put("PV_CDRAMO_I", poliza.getCdramo());
+		params.put("PV_ESTADO_I", poliza.getEstado());
+		params.put("PV_NMPOLIZA_I", poliza.getNmpoliza());
+		params.put("PV_NMSUPLEM_I", poliza.getNmsuplem());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneAgentesPolizaSP(getDataSource()), params);
+		return (List<AgentePolizaVO>) mapResult.get("PV_REGISTRO_O");
 	}
-
+	
+    protected class ObtieneAgentesPolizaSP extends StoredProcedure {
+		protected ObtieneAgentesPolizaSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_GET_AGENTE_POLIZA");
+			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new AgentePolizaMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+    
+    protected class AgentePolizaMapper  implements RowMapper<AgentePolizaVO> {
+    	public AgentePolizaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		AgentePolizaVO agtePoliza = new AgentePolizaVO();
+    		agtePoliza.setCdagente(rs.getString("CDAGENTE"));
+    		agtePoliza.setCdsucurs(rs.getString("CDSUCURS"));
+    		agtePoliza.setCdtipoAg(rs.getString("CDTIPOAG"));
+    		agtePoliza.setDescripl(rs.getString("DESCRIPL"));
+    		agtePoliza.setNmcuadro(rs.getString("NMCUADRO"));
+    		agtePoliza.setNmsuplem(rs.getString("NMSUPLEM"));
+    		agtePoliza.setNombre(rs.getString("NOMBRE"));
+    		agtePoliza.setPorparti(rs.getString("PORPARTI"));
+    		agtePoliza.setPorredau(rs.getString("PORREDAU"));
+    		return agtePoliza;
+    	}
+    }
+    
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza) throws Exception {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i", poliza.getCdramo());
+		params.put("pv_estado_i", poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneRecibosAgenteSP(getDataSource()), params);
+		return (List<ReciboAgenteVO>) mapResult.get("pv_registro_o");
 	}
+	
+    protected class ObtieneRecibosAgenteSP extends StoredProcedure {
+    	protected ObtieneRecibosAgenteSP(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_Get_recibos_Agente");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ReciboAgenteMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class ReciboAgenteMapper  implements RowMapper<ReciboAgenteVO> {
+    	public ReciboAgenteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		ReciboAgenteVO consulta = new ReciboAgenteVO();
+    		consulta.setNmrecibo(rs.getString("NMRECIBO"));
+    		consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("Fecha_inicio")));
+    		consulta.setFefin(Utilerias.formateaFecha(rs.getString("Fecha_fin")));
+    		consulta.setDsgarant(rs.getString("DSGARANT"));
+    		consulta.setPtimport(rs.getString("PTIMPORT"));
+    		return consulta;
+    	}
+    }
 
 
 	@Override
@@ -388,14 +530,14 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<ConsultaDatosHistoricoVO> obtieneHistoricoPolizaSISA(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+	public List<HistoricoVO> obtieneHistoricoPolizaSISA(
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(
+	public List<DatosComplementariosVO> obtieneDatosComplementarios(
 			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -409,36 +551,36 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements IConsu
 	}
 
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza)
+	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(
+	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ContratanteVO> obtieneDatosContratante(
 			PolizaVO poliza) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(
+	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(
 			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza)
-			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

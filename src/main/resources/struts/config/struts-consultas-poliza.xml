@@ -65,28 +65,6 @@
                 </param>
             </result>
         </action>
-		
-		<action name="consultaDatosSituacion" class="ConsultasPolizaAction"
-			method="consultaDatosSituacion">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-                    datosSituacion.*,
-                    success
-                </param>
-			</result>
-		</action>
-		
-		<action name="consultaDatosCoberturas" class="ConsultasPolizaAction"
-			method="consultaDatosCoberturas">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-                    datosCoberturas.*,
-                    success
-                </param>
-			</result>
-		</action>
 
 		<action name="consultaPolizasAsegurado" class="ConsultasPolizaAction"
 			method="consultaPolizasAsegurado">
@@ -120,17 +98,6 @@
                 </param>
             </result>
         </action>
-        
-        <action name="consultaPolizasAgente" class="ConsultasPolizaAction"
-			method="consultaPolizasAgente">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-                    agentePoliza.*,
-                    success
-                </param>
-			</result>
-		</action>
 		
 		<action name="consultaRecibosAgente" class="ConsultasPolizaAction"
 			method="consultaRecibosAgente">

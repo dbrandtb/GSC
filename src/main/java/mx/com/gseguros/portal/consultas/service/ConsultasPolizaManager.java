@@ -4,18 +4,19 @@ import java.util.List;
 
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
@@ -33,7 +34,7 @@ public interface ConsultasPolizaManager {
      * @return Polizas asociadas al asegurado
      * @throws Exception
      */
-	public List<ConsultaPolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception;
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception;
 	
 	
 	/**
@@ -42,7 +43,7 @@ public interface ConsultasPolizaManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<ConsultaDatosSuplementoVO> obtieneHistoricoPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
+	public List<SuplementoVO> obtieneHistoricoPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception;
 	
 	/**
 	 * 
@@ -50,7 +51,7 @@ public interface ConsultasPolizaManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<ConsultaDatosHistoricoVO> obtieneHistoricoPolizaSISA(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
+	public List<HistoricoVO> obtieneHistoricoPolizaSISA(PolizaAseguradoVO polizaAsegurado) throws Exception;
 	
     
     /**
@@ -59,7 +60,7 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception;
+    public List<PolizaDTO> obtieneDatosPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception;
     
     
     /**
@@ -69,7 +70,7 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    public List<DatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     
     /**
@@ -84,21 +85,21 @@ public interface ConsultasPolizaManager {
      * @param poliza
      * @return
      */
-    public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception;
+    public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception;
     
     /**
      * Obtiene las coberturas básicas
      * @param poliza
      * @return
      */
-    public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception;
+    public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception;
     
     /**
      * Obtiene los datos del plan
      * @param poliza
      * @return
      */
-    public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception;
+    public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception;
     
     /**
      * Obtiene los datos del contratante
@@ -106,7 +107,7 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception;
+    public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception;
     
     /**
      * Obtiene los asegurados de la p&oacute;liza
@@ -135,6 +136,22 @@ public interface ConsultasPolizaManager {
     public List<ClausulaVO> obtieneClausulasPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     /**
+     * Obtiene mensaje para el agente, para la poliza enviada 
+     * @param poliza
+     * @return
+     * @throws Exception
+     */
+    public String obtieneMensajeAgente(PolizaVO poliza) throws Exception;
+    
+    /**
+     * Obtiene las tarifas de una poliza
+     * @param poliza
+     * @return
+     * @throws Exception
+     */
+    public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception;
+    
+    /**
      * Obtiene histórico de farmacia
      * @param poliza
      * @return
@@ -148,7 +165,7 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     /**
      * 
@@ -193,6 +210,6 @@ public interface ConsultasPolizaManager {
      * @return
      * @throws Exception
      */
-    public List<ConsultaReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza) throws Exception;
+    public List<ReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza) throws Exception;
 	
 }

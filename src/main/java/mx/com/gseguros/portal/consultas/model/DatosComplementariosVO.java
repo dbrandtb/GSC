@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author MAVR
  *
  */
-public class ConsultaDatosComplementariosVO implements Serializable{
+public class DatosComplementariosVO implements Serializable{
 
 	private static final long serialVersionUID = -8555353864912795413L;
 
