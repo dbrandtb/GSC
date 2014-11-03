@@ -236,7 +236,7 @@ Ext.onReady(function()
     //////////////////////
     
     ////// custom //////
-    if(pantallaValositInputCdramo=='7'&&pantallaValositInputCdtipsit=='GMI')
+    if(pantallaValositInputCdramo=='7'&&pantallaValositInputCdtipsit=='GMI'&&pantallaValositInputAgrupado=='si')
     {
         _fieldLikeLabel('POSTAL',pantallaValositMainContent).on(
         {
