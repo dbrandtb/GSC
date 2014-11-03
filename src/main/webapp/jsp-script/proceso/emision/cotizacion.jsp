@@ -1031,6 +1031,11 @@ function _0_cargar()
                             	            }
                             	        }
                             	    }
+                            	    if(_0_smap1.cdtipsit='GMI')
+                            	    {
+                            	        _0_gmiPostalSelect(1,2,3,true);
+                            	        _0_gmiCirchospSelect(1,2,3,true);
+                            	    }
                                 }
                             };
                             _0_panelPri.setLoading(true);
@@ -1403,6 +1408,83 @@ function _0_tarifaSelect(selModel, record, row, column, eOpts)
     	}
     	Ext.getCmp('_0_botComprarId').setDisabled(false);
     }
+}
+
+function _0_gmiPostalSelect(a,b,c,sinReset)
+{
+    var postal = _fieldLikeLabel('POSTAL');
+    var zona   = _fieldLikeLabel('CAMBIO DE ZONA');
+    debug('POSTAL select:',postal.getValue(),sinReset,'<sinReset');
+    Ext.Ajax.request(
+    {
+        url     : _0_urlValidarCambioZonaGMI
+        ,params :
+        {
+            'smap1.cdramo'     : _0_smap1.cdramo
+            ,'smap1.cdtipsit'  : _0_smap1.cdtipsit
+            ,'smap1.codpostal' : postal.getValue()
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('### validar eliminacion cambio zona:',json);
+            if(json.exito)
+            {
+                if(!sinReset)
+                {
+                    zona.reset();
+                }
+                zona.show();
+            }
+            else
+            {
+                zona.setValue('N');
+                zona.hide();
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+}
+
+function _0_gmiCirchospSelect(a,b,c,sinReset)
+{
+    var circ  = _fieldLikeLabel('CULO HOSPITALARIO');
+    var enfer = _fieldLikeLabel('ENFERMEDAD CATAS');
+    debug('CIRCULO HOSP select:',circ.getValue(),sinReset,'<sinReset');
+    Ext.Ajax.request(
+    {
+        url     : _0_urlValidarEnfermCatasGMI
+        ,params :
+        {
+            'smap1.cdramo'    : _0_smap1.cdramo
+            ,'smap1.circHosp' : circ.getValue()
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('### validar enfermedad catastrofica:',json);
+            if(json.exito)
+            {
+                if(!sinReset)
+                {
+                    enfer.reset();
+                }
+                enfer.show();
+            }
+            else
+            {
+                enfer.setValue('N');
+                enfer.hide();
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
 }
 /*///////////////////*/
 ////// funciones //////
@@ -3001,75 +3083,12 @@ Ext.onReady(function()
     {
         _fieldLikeLabel('POSTAL').on(
         {
-            select : function(v,records)
-            {
-                debug('POSTAL select:',records[0].get('value'));
-                Ext.Ajax.request(
-                {
-                    url     : _0_urlValidarCambioZonaGMI
-                    ,params :
-                    {
-                        'smap1.cdramo'     : _0_smap1.cdramo
-                        ,'smap1.cdtipsit'  : _0_smap1.cdtipsit
-                        ,'smap1.codpostal' : records[0].get('value')
-                    }
-                    ,success : function(response)
-                    {
-                        var json=Ext.decode(response.responseText);
-                        debug('### validar eliminacion cambio zona:',json);
-                        if(json.exito)
-                        {
-                            _fieldLikeLabel('CAMBIO DE ZONA').reset();
-                            _fieldLikeLabel('CAMBIO DE ZONA').show();
-                        }
-                        else
-                        {
-                            _fieldLikeLabel('CAMBIO DE ZONA').setValue('N');
-                            _fieldLikeLabel('CAMBIO DE ZONA').hide();
-                        }
-                    }
-                    ,failure : function()
-                    {
-                        errorComunicacion();
-                    }
-                });
-            }
+            select : _0_gmiPostalSelect
         });
         
         _fieldLikeLabel('CULO HOSPITALARIO').on(
         {
-            select : function(v,records)
-            {
-                debug('CIRCULO HOSP select:',records[0].get('value'));
-                Ext.Ajax.request(
-                {
-                    url     : _0_urlValidarEnfermCatasGMI
-                    ,params :
-                    {
-                        'smap1.cdramo'    : _0_smap1.cdramo
-                        ,'smap1.circHosp' : records[0].get('value')
-                    }
-                    ,success : function(response)
-                    {
-                        var json=Ext.decode(response.responseText);
-                        debug('### validar enfermedad catastrofica:',json);
-                        if(json.exito)
-                        {
-                            _fieldLikeLabel('ENFERMEDAD CATAS').reset();
-                            _fieldLikeLabel('ENFERMEDAD CATAS').show();
-                        }
-                        else
-                        {
-                            _fieldLikeLabel('ENFERMEDAD CATAS').setValue('N');
-                            _fieldLikeLabel('ENFERMEDAD CATAS').hide();
-                        }
-                    }
-                    ,failure : function()
-                    {
-                        errorComunicacion();
-                    }
-                });
-            }
+            select : _0_gmiCirchospSelect
         });
     }
     
