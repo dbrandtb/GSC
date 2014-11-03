@@ -10,20 +10,20 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturaVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
-import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaVO;
 import mx.com.gseguros.portal.consultas.model.ContratanteVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
+import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CopagoVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
-import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
@@ -40,7 +40,6 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -66,7 +65,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private String mensajeRes;
 
 	@Autowired
-	@Qualifier("consultasPolizaManagerImpl")
 	private ConsultasPolizaManager consultasPolizaManager;
 
 	@Autowired
