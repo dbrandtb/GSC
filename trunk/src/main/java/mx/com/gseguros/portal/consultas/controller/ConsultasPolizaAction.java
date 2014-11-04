@@ -328,15 +328,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 * 
 	 * @return String result
 	 */
-	/*
-	 * TODO: Investigar porqué en Weblogic no se cargan los Annotations de
-	 * Struts2
-	 * 
-	 * @Action(value = "consultaClausulasPoliza", results = {
-	 * 
-	 * @Result(name = "success", type = "json", params = {"ignoreHierarchy",
-	 * "false", "includeProperties","clausulasPoliza.*,success" }) })
-	 */
+	@Action(value = "consultaClausulasPoliza", results = {
+		@Result(name = "success", type = "json", params = {"ignoreHierarchy","false", "includeProperties","clausulasPoliza.*,success" }) 
+	})
 	public String consultaClausulasPoliza() {
 		logger.debug(" **** Entrando a consultaClausulasPoliza ****");
 		PolizaVO poliza = new PolizaVO();
