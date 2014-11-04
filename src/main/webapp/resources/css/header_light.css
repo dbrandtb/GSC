@@ -1,10 +1,8 @@
 /* light header */
 
-/* ORIGINAL:
 #header {
-	background: #fff url(../images/header/light/header-bg.png) repeat-x;
+	background: #fff url(../images/header/gs_logo.gif) center no-repeat;
 }
-*/
 
 .header-dark #top {
 	color: #666;
