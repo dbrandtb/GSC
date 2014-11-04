@@ -15,10 +15,10 @@
             <div class="wrapper">
                 <div style="padding: 5px;">
                     <font style="font-size: 17px;font-family:calibri,tahoma,arial,helvetica;">
-                    Bienvenido: 
+                    Usuario: 
                     <s:if test="%{#session.containsKey('USUARIO')}">
                         <strong><s:property value="%{#session['USUARIO'].name}" /></strong>
-                        rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.objeto.label}" /></strong>
+                        Rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.objeto.label}" /></strong>
                     </s:if>
                 </font>
                 </div>
