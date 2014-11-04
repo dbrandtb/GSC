@@ -80,7 +80,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 				success = creaSesionDeUsuario(user);
 			} else {
 				logger.info("El usuario "+user+" no existe o la clave es incorrecta.");
-				errorMessage = "El usuario no existe o la clave es incorrecta";
+				errorMessage = "El usuario no existe o la contraseña es incorrecta";
 			}
 			return SUCCESS;
 
@@ -103,7 +103,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 					if(!validPass){
 						((SessionMap) session).invalidate();
 						logger.info("Password Incorrecto!!! "+user+"/"+password);
-						errorMessage = "El usuario no existe o la clave es incorrecta";
+						errorMessage = "El usuario no existe o la contraseña es incorrecta";
 					}else {
 						logger.info("Password Correcto, redireccionando a menu de Roles...");
 						success = true;
