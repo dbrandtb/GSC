@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.siniestros.controller;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,20 +79,20 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				);
 		logger.debug("params:"+params);
 		UserVO usuario= (UserVO)session.get("USUARIO");
-		params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
+		params.put("cdrol", usuario.getRolActivo().getClave());
 		
 		if(!params.containsKey("nmsinies"))
 		{
 			try{
 				String ntramite = params.get("ntramite");
 				usuario= (UserVO)session.get("USUARIO");
-				params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
+				params.put("cdrol", usuario.getRolActivo().getClave());
 				
 				Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
 				
 				for(Entry<String,String>en:paramsRes.entrySet()){
 					params.put(en.getKey().toLowerCase(),en.getValue());
-					params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
+					params.put("cdrol", usuario.getRolActivo().getClave());
 				}
 				
 			}catch(Exception ex){
@@ -125,7 +124,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   		logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
 	   		
 	   		UserVO usuario  = (UserVO)session.get("USUARIO");
-	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String cdrol    = usuario.getRolActivo().getClave();
 	    	String pantalla = "AFILIADOS_AGRUPADOS";
 	    	String seccion  = "COLUMNAS";
 	    	String cdunieco  = params.get("cdunieco");
@@ -307,7 +306,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		String commenme = params.get("commenme");
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
-		String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		String cdrol    = usuario.getRolActivo().getClave();
 		
 		logger.debug("Guarda Factura, Rol Sistema: "+cdrol);
 	   	
@@ -364,7 +363,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		String commenme = params.get("commenme");
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
-		String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		String cdrol    = usuario.getRolActivo().getClave();
 		
 		logger.debug("Actuliza Factura, Rol Sistema: "+cdrol);
 		try {

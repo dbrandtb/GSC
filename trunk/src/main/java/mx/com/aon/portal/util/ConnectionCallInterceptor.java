@@ -30,10 +30,10 @@ public class ConnectionCallInterceptor implements MethodInterceptor {
 		if (userVo == null) //Si el dato en el thread loca null no se setea el contexto de seguridad
 			return methodInvocation.proceed();
 
-		 if (userVo.getCodigoPersona() == null || userVo.getRolActivo() == null || userVo.getRolActivo().getObjeto() == null || userVo.getEmpresa().getElementoId() == null) //Si el dato en el thread loca null no se setea el contexto de seguridad
+		 if (userVo.getCodigoPersona() == null || userVo.getRolActivo() == null || userVo.getEmpresa().getElementoId() == null) //Si el dato en el thread loca null no se setea el contexto de seguridad
 	            return methodInvocation.proceed();
 		String usr = userVo.getUser();
-    	String rol = userVo.getRolActivo().getObjeto().getValue();
+    	String rol = userVo.getRolActivo().getClave();
         String cdElemento = userVo.getEmpresa().getElementoId();
         String region = userVo.getRegion().getValue();
         String idioma = userVo.getIdioma().getValue();

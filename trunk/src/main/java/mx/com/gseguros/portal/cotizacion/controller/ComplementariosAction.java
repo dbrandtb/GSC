@@ -165,7 +165,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				else
 				{
 					usuario  = (UserVO)session.get("USUARIO");
-					cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+					cdsisrol = usuario.getRolActivo().getClave();
 					
 					if(map1==null)
 					{
@@ -959,7 +959,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			try
 			{
 				UserVO usuario  = (UserVO)session.get("USUARIO");
-				String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+				String cdsisrol = usuario.getRolActivo().getClave();
 				String pantalla = "EDITAR_ASEGURADOS";
 				
 				String seccion  = "ASEGURADO";

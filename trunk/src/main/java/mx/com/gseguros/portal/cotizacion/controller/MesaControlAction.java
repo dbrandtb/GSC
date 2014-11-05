@@ -95,15 +95,14 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			//obtener el rol activo
 			UserVO usu=(UserVO) session.get("USUARIO");
-			String dsrol="";
+			String cdrol="";
 			if(usu!=null
 			    &&usu.getRolActivo()!=null
-			    &&usu.getRolActivo().getObjeto()!=null
-			    &&usu.getRolActivo().getObjeto().getValue()!=null)
+			    &&usu.getRolActivo().getClave()!=null)
 			{
-			    dsrol=usu.getRolActivo().getObjeto().getValue();
+			    cdrol=usu.getRolActivo().getClave();
 			}
-			log.debug("rol activo: "+dsrol);
+			log.debug("rol activo: "+cdrol);
 			//!obtener el rol activo
 			
 			/////////////////////////////////////////////////////////
@@ -113,7 +112,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				smap1=new LinkedHashMap<String,String>(0);
 			}
-			smap1.put("pv_dsrol_i",dsrol);
+			smap1.put("pv_cdrol_i",cdrol);
 			/*/////////////////////////////////////////////////////*/
 			////// para la nueva lectura de tareas con filtros //////
 			/////////////////////////////////////////////////////////
@@ -190,7 +189,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usu=(UserVO) session.get("USUARIO");
-			String cdsisrol = usu.getRolActivo().getObjeto().getValue();
+			String cdsisrol = usu.getRolActivo().getClave();
 			String cdusuari = usu.getUser();
 			smap1.put("pv_dsrol_i",cdsisrol);
 			smap1.put("pv_cdusuari_i",cdusuari);
@@ -338,7 +337,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			//boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
 			
 			String cdusuariSesion = usu.getUser();
-			String cdsisrolSesion = usu.getRolActivo().getObjeto().getValue();
+			String cdsisrolSesion = usu.getRolActivo().getClave();
 			String cdclausu       = null;
 			
 			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
@@ -618,7 +617,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String seccionGridButtons        = "GRIDBUTTONS";
 			String seccionBotonesTramite     = "BOTONES_TRAMITE";
 			
-			rol = usuario.getRolActivo().getObjeto().getValue();
+			rol = usuario.getRolActivo().getClave();
 			
 			////// obtener valores del formulario //////
 			List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(

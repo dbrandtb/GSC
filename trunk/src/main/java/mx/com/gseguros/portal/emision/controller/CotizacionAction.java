@@ -139,7 +139,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		    {
 		    	usuario  = (UserVO) session.get("USUARIO");
 		    	cdusuari = usuario.getUser();
-		    	cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+		    	cdsisrol = usuario.getRolActivo().getClave();
 		        cdramo   = smap1.get("cdramo");
 		        cdtipsit = smap1.get("cdtipsit");
 		        
@@ -2445,7 +2445,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				throw new ApplicationException("No hay usuario en la sesion");
 			}
 			cdusuari      = usuario.getUser();
-			cdsisrol      = usuario.getRolActivo().getObjeto().getValue();
+			cdsisrol      = usuario.getRolActivo().getClave();
 			nombreUsuario = usuario.getName();
 			
 			smap1.put("cdsisrol" , cdsisrol);
@@ -2571,7 +2571,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				UserVO usuario  = (UserVO) session.get("USUARIO");
 				cdusuari        = usuario.getUser();
-				cdsisrol        = usuario.getRolActivo().getObjeto().getValue();
+				cdsisrol        = usuario.getRolActivo().getClave();
 				nombreUsuario   = usuario.getName();
 				
 				smap1.put("cdsisrol",cdsisrol);
@@ -3291,7 +3291,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			UserVO user = (UserVO)session.get("USUARIO");
 			cdusuari = user.getUser();
 			cdelemen = user.getEmpresa().getElementoId();
-			cdsisrol = user.getRolActivo().getObjeto().getValue();
+			cdsisrol = user.getRolActivo().getClave();
 			
 			rutaDocsTemp = getText("ruta.documentos.temporal");
 		}
@@ -4096,7 +4096,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			cdusuari       = usuario.getUser();
-			cdsisrol       = usuario.getRolActivo().getObjeto().getValue();
+			cdsisrol       = usuario.getRolActivo().getClave();
 			cdelemen       = usuario.getEmpresa().getElementoId();
 			
 			if(smap1==null)
@@ -6734,7 +6734,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				throw new ApplicationException("No hay usuario en la sesion");
 			}
 			UserVO usuario=(UserVO)session.get("USUARIO");
-			cdsisrol=usuario.getRolActivo().getObjeto().getValue();
+			cdsisrol=usuario.getRolActivo().getClave();
 			if(StringUtils.isBlank(cdsisrol))
 			{
 				throw new ApplicationException("El usuario no tiene rol");

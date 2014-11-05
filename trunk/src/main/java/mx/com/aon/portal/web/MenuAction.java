@@ -64,7 +64,6 @@ public class MenuAction extends PrincipalCoreAction {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public String llenadoMenuPrincipal() throws Exception {
 
 		UserVO user = (UserVO) session.get("USUARIO");
@@ -72,7 +71,7 @@ public class MenuAction extends PrincipalCoreAction {
 		if (user.getListaMenu() == null || user.getListaMenu().size() == 0) {
 
 			claveCliente = user.getEmpresa().getElementoId();
-			claveRol = user.getRolActivo().getObjeto().getValue();
+			claveRol = user.getRolActivo().getClave();
 			usuario = user.getUser();
 			logger.debug("!!!Entrando al metodo llenadoMenuPrincipal()");
 			logger.debug(". claveCliente=" + claveCliente);
@@ -185,7 +184,7 @@ public class MenuAction extends PrincipalCoreAction {
 		if (user.getListaMenuVertical() == null || user.getListaMenuVertical().size() == 0) {
 			
 			claveCliente = user.getEmpresa().getElementoId();
-			claveRol = user.getRolActivo().getObjeto().getValue();
+			claveRol = user.getRolActivo().getClave();
 			usuario = user.getUser();
 			listaMenuVertical = menuPrincipalManagerJdbcTemplate.getListaMenuVertical(claveCliente,claveRol, usuario);
 			

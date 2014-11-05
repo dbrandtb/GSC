@@ -93,11 +93,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	 * 
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unchecked")
 	public void prepare() throws Exception {
 		limpiaContenido();
 		UserVO user = (UserVO) session.get("USUARIO");
-		rolCliente = user.getRolActivo().getObjeto().getValue();
+		rolCliente = user.getRolActivo().getClave();
 		nombreCliente = user.getEmpresa().getElementoId();
 			logger.debug("((((((((((Estoy en prepare()");
 			logger.debug("((((((((((Esto es CONFIGURACIONES_EXISTENTES " + session.get("CONFIGURACIONES_EXISTENTES"));

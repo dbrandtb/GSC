@@ -41,7 +41,7 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario     = (UserVO)session.get("USUARIO");
-			String cdsisrol    = usuario.getRolActivo().getObjeto().getValue();
+			String cdsisrol    = usuario.getRolActivo().getClave();
 			String pantalla    = "MARCO_REEXPEDICION_DOCUMENTOS";
 			String seccion     = "FORMULARIO";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());

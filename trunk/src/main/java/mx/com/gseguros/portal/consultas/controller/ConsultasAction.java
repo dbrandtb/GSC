@@ -20,6 +20,8 @@ import org.apache.struts2.ServletActionContext;
 
 public class ConsultasAction extends PrincipalCoreAction
 {
+	private static final long serialVersionUID = 1698361661612656146L;
+	
 	private String                       mensaje;
 	private String                       error;
 	private Map<String,String>           mapaStringEntrada;
@@ -79,7 +81,7 @@ public class ConsultasAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario     = (UserVO)session.get("USUARIO");
-			String cdsisrol    = usuario.getRolActivo().getObjeto().getValue();
+			String cdsisrol    = usuario.getRolActivo().getClave();
 			String pantalla    = "CONSULTA_PROVEEDORES";
 			String seccion     = null;
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -145,7 +147,7 @@ public class ConsultasAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario     = (UserVO)session.get("USUARIO");
-			String cdsisrol    = usuario.getRolActivo().getObjeto().getValue();
+			String cdsisrol    = usuario.getRolActivo().getClave();
 			String pantalla    = "CONSULTA_FACTURAS";
 			String seccion     = null;
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());

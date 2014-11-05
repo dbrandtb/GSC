@@ -128,7 +128,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session.get("USUARIO"),"No hay usuario en la sesión");
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			cdusuari = usuario.getUser();
-			cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+			cdsisrol = usuario.getRolActivo().getClave();
 			smap1.put("cdusuari" , cdusuari);
 			smap1.put("cdsisrol" , cdsisrol);
 			

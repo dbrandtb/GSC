@@ -13,7 +13,6 @@ import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -60,21 +59,21 @@ public class UsuarioAction extends PrincipalCoreAction{
 			
 			gc.generaParcial(pantallasManager.obtenerComponentes(
 					null, null, null,
-					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					null, null, usuario.getRolActivo().getClave(),
 					"PANTALLA_USUARIOS", "BUSQUEDA", null));
 			
 			items   = gc.getItems();
 			
 			gc.generaParcial(pantallasManager.obtenerComponentes(
 					null, null, null,
-					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					null, null, usuario.getRolActivo().getClave(),
 					"PANTALLA_USUARIOS", "MODEL", null));
 			
 			fields  = gc.getFields();
 			
 			gc.generaParcial(pantallasManager.obtenerComponentes(
 					null, null, null,
-					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					null, null, usuario.getRolActivo().getClave(),
 					"PANTALLA_USUARIOS", "COLUMNMODEL", null));
 			
 			columns = gc.getColumns();
@@ -181,7 +180,7 @@ public class UsuarioAction extends PrincipalCoreAction{
     	
     	try{
     		UserVO usuario=(UserVO)session.get("USUARIO");
-    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getObjeto().getValue());
+    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getClave());
     		
     		usuarios = usuarioManager.obtieneUsuarios(params);
     		success=true;
@@ -200,7 +199,7 @@ public class UsuarioAction extends PrincipalCoreAction{
     		UserVO usuario=(UserVO)session.get("USUARIO");
     		
     		params = new HashMap<String, String>();
-    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getObjeto().getValue());
+    		params.put("pv_cdsisrol_i", usuario.getRolActivo().getClave());
     		
     		lista = usuarioManager.obtienerRolesPorPrivilegio(params);
     		success=true;

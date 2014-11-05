@@ -2994,7 +2994,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdusuari = usuario.getUser();
 			Date   fechaHoy = new Date();
 			String ntramite = smap2.get("NTRAMITE");
-			String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+			String cdsisrol = usuario.getRolActivo().getClave();
 			
 			String fechaEndoso    = smap3.get("fecha_endoso");
 			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
@@ -3769,7 +3769,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			gc.generaParcial(pantallasManager.obtenerComponentes(
 					null, null, null,
-					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					null, null, usuario.getRolActivo().getClave(),
 					"TESTPANTALLA", "TEST", null));
 			
 			item1=gc.getFields();
@@ -4854,7 +4854,7 @@ public class EndososAction extends PrincipalCoreAction
 				String estado   = smap1.get("ESTADO");
 				String nmpoliza = smap1.get("NMPOLIZA");
 				String nmsuplem = smap1.get("NMSUPLEM");
-				String rol      = usuario.getRolActivo().getObjeto().getValue();
+				String rol      = usuario.getRolActivo().getClave();
 				String rolAsegu = smap1.get("cdrol");
 				
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -5277,7 +5277,7 @@ public class EndososAction extends PrincipalCoreAction
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
 		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		String rol        = usuario.getRolActivo().getClave();
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -5593,7 +5593,7 @@ public class EndososAction extends PrincipalCoreAction
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
 		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		String rol        = usuario.getRolActivo().getClave();
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -5978,7 +5978,7 @@ public class EndososAction extends PrincipalCoreAction
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
 		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		String rol        = usuario.getRolActivo().getClave();
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -6268,7 +6268,7 @@ public class EndososAction extends PrincipalCoreAction
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
 		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		String rol        = usuario.getRolActivo().getClave();
 		
 		// Valida si hay un endoso anterior pendiente:
 		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -6590,7 +6590,7 @@ public class EndososAction extends PrincipalCoreAction
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
 		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		String rol        = usuario.getRolActivo().getClave();
 		
 		String nombreItemOriginal = "FORMA DE PAGO ORIGINAL";
 		String nombreItemNuevo    = "NUEVA FORMA DE PAGO";
@@ -6811,7 +6811,7 @@ public class EndososAction extends PrincipalCoreAction
 		String estado             = smap1.get("ESTADO");
 		String nmpoliza           = smap1.get("NMPOLIZA");
 		String nmsuplem           = smap1.get("NMSUPLEM");
-		String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getObjeto().getValue();
+		String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 		String orden              = null;
 		String pantalla           = "ENDOSO_AGENTE";
 		String seccionLectura     = "PANEL_LECTURA";

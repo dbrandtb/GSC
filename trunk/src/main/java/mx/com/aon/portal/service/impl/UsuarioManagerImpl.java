@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
@@ -141,10 +140,8 @@ public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implem
                 usuarioRolEmpresaVO  =  (UsuarioRolEmpresaVO)resultado.get(i);
                 if (usuarioRolEmpresaVO.getCdElemento().equals(userVO.getEmpresa().getElementoId())) {
                     rolVO = new RolVO();
-                    BaseObjectVO baseObjectVO = new BaseObjectVO();
-                    baseObjectVO.setValue(usuarioRolEmpresaVO.getCdSisRol());
-                    baseObjectVO.setLabel(usuarioRolEmpresaVO.getDsSisRol());
-                    rolVO.setObjeto(baseObjectVO);
+                    rolVO.setClave(usuarioRolEmpresaVO.getCdSisRol());
+                    rolVO.setDescripcion(usuarioRolEmpresaVO.getDsSisRol());
                     userVO.getRoles().add(rolVO);
                 } else {
 
@@ -161,10 +158,8 @@ public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implem
                     userVO.setRoles(listaRoles);
 
                     rolVO = new RolVO();
-                    BaseObjectVO baseObjectVO = new BaseObjectVO();
-                    baseObjectVO.setValue(usuarioRolEmpresaVO.getCdSisRol());
-                    baseObjectVO.setLabel(usuarioRolEmpresaVO.getDsSisRol());
-                    rolVO.setObjeto(baseObjectVO);
+                    rolVO.setClave(usuarioRolEmpresaVO.getCdSisRol());
+                    rolVO.setDescripcion(usuarioRolEmpresaVO.getDsSisRol());
                     userVO.getRoles().add(rolVO);
 
                     listaUsuarios.add(userVO);
