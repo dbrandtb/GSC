@@ -1031,7 +1031,7 @@ function _0_cargar()
                             	            }
                             	        }
                             	    }
-                            	    if(_0_smap1.cdtipsit='GMI')
+                            	    if(_0_smap1.cdtipsit=='GMI')
                             	    {
                             	        _0_gmiPostalSelect(1,2,3,true);
                             	        _0_gmiCirchospSelect(1,2,3,true);
