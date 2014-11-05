@@ -191,7 +191,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usu=(UserVO) session.get("USUARIO");
 			String cdsisrol = usu.getRolActivo().getClave();
 			String cdusuari = usu.getUser();
-			smap1.put("pv_dsrol_i",cdsisrol);
+			smap1.put("pv_cdrol_i",cdsisrol);
 			smap1.put("pv_cdusuari_i",cdusuari);
 			if(cdsisrol.equalsIgnoreCase("operadorsini")||cdsisrol.equalsIgnoreCase("medajustador"))
 			{
