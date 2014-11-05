@@ -130,7 +130,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 		// Obtenemos el rol de sistema del usuario en sesion:
 		UserVO usuario = (UserVO) session.get("USUARIO");
-		String cdRolSistema = usuario.getRolActivo().getObjeto().getValue();
+		String cdRolSistema = usuario.getRolActivo().getClave();
 		// Si es consulta de información, no tendra permiso de ver todo:
 		if (cdRolSistema.equals(RolSistema.CONSULTA_INFORMACION.getCdsisrol())) {
 			usuarioCallCenter = true;

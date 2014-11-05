@@ -38,6 +38,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				.append(" ActionName=").append(actionInvocation.getProxy().getActionName()).append("]"));
 		
 		//Obtenemos la sesion por medio del ActionInvocation
+		@SuppressWarnings("rawtypes")
 		Map session = actionInvocation.getInvocationContext().getSession();
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
@@ -63,10 +64,10 @@ public class AuthenticationInterceptor implements Interceptor {
 			} else {
 				boolean rolAsignado = false;
 				if(user.getRolActivo()!=null) {
-					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
+					if(user.getRolActivo()!=null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 						rolAsignado = true;
-						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
-								.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
+						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
+								.append(" - ").append(user.getRolActivo().getDescripcion()));
 					}
 				}
 				if(!rolAsignado) {
@@ -89,12 +90,11 @@ public class AuthenticationInterceptor implements Interceptor {
 			    return Action.LOGIN;
 			} else {
 				//boolean rolAsignado = false;
-				if (user.getRolActivo() != null && user.getRolActivo().getObjeto() != null
-						&& StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
+				if (user.getRolActivo() != null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 					//rolAsignado = true;
 					logger.info("-->Ya Contiene un Rol Asignado<--");
-					logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
-							.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
+					logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
+							.append(" - ").append(user.getRolActivo().getDescripcion()));
 				}
 				logger.info("return tree invoke (jsp)");
 				if(!esMovil) {
@@ -112,10 +112,10 @@ public class AuthenticationInterceptor implements Interceptor {
 			} else {
 				boolean rolAsignado = false;
 				if(user.getRolActivo()!=null) {
-					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue())) {
+					if(user.getRolActivo()!=null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 						rolAsignado = true;
-						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getObjeto().getValue())
-								.append(" - ").append(user.getRolActivo().getObjeto().getLabel()));
+						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
+								.append(" - ").append(user.getRolActivo().getDescripcion()));
 					}
 				}
 				if(!rolAsignado) {

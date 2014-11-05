@@ -52,7 +52,6 @@ import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONException;
@@ -173,7 +172,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	try {
 		//Obtenemos el Rol a ocupar
 		UserVO usuario  = (UserVO)session.get("USUARIO");
-    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+    	String cdrol    = usuario.getRolActivo().getClave();
     	
     	String pantalla            = "AUTORIZACION_SERVICIOS";
 		String seccion             = "PANELBUTTONS";
@@ -359,7 +358,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								//generarAutoriServicio();
 								
 							}else{
-								if(usuario.getRolActivo().getObjeto().getValue().trim().equalsIgnoreCase("COORDMEDMULTI"))
+								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase("COORDMEDMULTI"))
 								{
 									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA_CMM.getCodigo());// valor 12
 								}else{
@@ -417,7 +416,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    			String cdmotivo = null;
 				    			UserVO usu=(UserVO)session.get("USUARIO");
 				    			String cdusuariSesion = usu.getUser();
-				    			String cdsisrolSesion = usu.getRolActivo().getObjeto().getValue();
+				    			String cdsisrolSesion = usu.getRolActivo().getClave();
 				    			String rolDestino     = null;
 				    			String usuarioDestino = null;
 				    			String cdclausu       = null;
@@ -1100,7 +1099,7 @@ public String generarSiniestroSinAutorizacion()
 		   logger.debug("generaCartaRechazo Siniestros");
 		   
 		   UserVO usuario=(UserVO)session.get("USUARIO");
-		   String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		   String cdrol    = usuario.getRolActivo().getClave();
 		   String tipoPago = (String) paramsO.get("tipopago");
 		   
 		   String nombreRdf = "";
@@ -1578,7 +1577,7 @@ public String generarSiniestroSinAutorizacion()
     	try
     	{
 	    	UserVO usuario  = (UserVO)session.get("USUARIO");
-	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String cdrol    = usuario.getRolActivo().getClave();
 	    	String pantalla = "SELECCION_COBERTURA";
 	    	String seccion  = "FORMULARIO";
 	    	imap = new HashMap<String,Item>();
@@ -1865,7 +1864,7 @@ public String generarSiniestroSinAutorizacion()
     		params.put("DESCNUME",factura.get("DESCNUME"));
     		
     		UserVO usuario  = (UserVO)session.get("USUARIO");
-	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String cdrol    = usuario.getRolActivo().getClave();
 	    	String pantalla = "AFILIADOS_AGRUPADOS";
 	    	String seccion  = "FORMULARIO";
 	    	
@@ -2148,7 +2147,7 @@ public String generarSiniestroSinAutorizacion()
     		String  ntramite    = params.get("ntramite");
     		
     		UserVO usuario = (UserVO)session.get("USUARIO");
-    		String cdrol   = usuario.getRolActivo().getObjeto().getValue();
+    		String cdrol   = usuario.getRolActivo().getClave();
     		
     		Map<String,String>tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
 			String tipoPago = tramiteCompleto.get("OTVALOR02");
@@ -2459,7 +2458,7 @@ public String generarSiniestroSinAutorizacion()
     	    String             ntramite    = params.get("ntramite");
     		List<ComponenteVO> componentes = null;
     		UserVO             usuario     = (UserVO)session.get("USUARIO");
-    		String             cdrol       = usuario.getRolActivo().getObjeto().getValue();
+    		String             cdrol       = usuario.getRolActivo().getClave();
     		
     		Map<String,String>       tramite    = siniestrosManager.obtenerTramiteCompleto(ntramite);
     		List<Map<String,String>> facturas   = siniestrosManager.obtenerFacturasTramite(ntramite);
@@ -3587,7 +3586,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     
     //calcularPorcentajeTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
     private String calcularTotalPenalizacion(double penalizacionCambioZona, double penalizacionCirculoHosp, String causaSiniestro, String copagoOriginal, String tipoCopago) {
-    	// TODO Auto-generated method stub
     	double copagoPenaPorcentaje = 0d;
     	double copagoPenaPesos = 0d;
     	String copagoFinal= null;
@@ -3738,7 +3736,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	    String             ntramite    = params.get("ntramite");
     		List<ComponenteVO> componentes = null;
     		UserVO             usuario     = (UserVO)session.get("USUARIO");
-    		String             cdrol       = usuario.getRolActivo().getObjeto().getValue();
+    		String             cdrol       = usuario.getRolActivo().getClave();
     		
     		Map<String,String>       tramite    = siniestrosManager.obtenerTramiteCompleto(ntramite);
     		List<Map<String,String>> facturas   = siniestrosManager.obtenerFacturasTramite(ntramite);
@@ -5073,7 +5071,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		String  cdmotivo    = params.get("cdmotivo");
     		String  rechazoCome = params.get("commenrechazo");
     		UserVO  usuario     = (UserVO)session.get("USUARIO");
-    		String  cdrol       = usuario.getRolActivo().getObjeto().getValue();
+    		String  cdrol       = usuario.getRolActivo().getClave();
     		
     		if(StringUtils.isNotBlank(autmedic))
     		{
@@ -5249,7 +5247,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		try {
         			siniestrosManager.getEliminacionTworksin(msgResult);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					logger.error("error al eliminar en Tworksin ",e);
 				}
         		

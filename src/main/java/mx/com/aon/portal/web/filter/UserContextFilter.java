@@ -28,7 +28,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class UserContextFilter implements Filter {
 
-    @SuppressWarnings("unused")
     private Logger logger = Logger.getLogger(UserContextFilter.class);
     private LoginManager loginManager;
 
@@ -158,10 +157,10 @@ public class UserContextFilter implements Filter {
 
     public void doAudit(UserVO userVO, ServletRequest request) throws IOException, ServletException {
         try {
-            HttpSession session = ((HttpServletRequest)request).getSession();
+            //HttpSession session = ((HttpServletRequest)request).getSession();
             logger.debug("Obteniendo consultaActividadUsuarioManager en el servletContext");
-            ServletContext servletContext  = session.getServletContext();
-            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            //ServletContext servletContext  = session.getServletContext();
+            //WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
             //ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
 
             String requestUri = ((HttpServletRequest)request).getRequestURI();
@@ -177,7 +176,7 @@ public class UserContextFilter implements Filter {
                 logger.debug("url invocado "+ requestUri);
                 logger.debug("method "+ method);
 
-                String rolActivo = (userVO.getRolActivo() != null)?userVO.getRolActivo().getObjeto().getValue():null;
+                //String rolActivo = (userVO.getRolActivo() != null)?userVO.getRolActivo().getClave():null;
                 //consultaActividadUsuarioManager.insertarActividadesUsuario(reqid,requestUri,method,userVO.getUser(), rolActivo);
             }
 

@@ -562,7 +562,7 @@ public class PersonasAction extends PrincipalCoreAction
 	private String obtenerCdsisrolSesion()
 	{
 		UserVO usuario=(UserVO)session.get("USUARIO");
-		return usuario.getRolActivo().getObjeto().getValue();
+		return usuario.getRolActivo().getClave();
 	}
 	
 	/*

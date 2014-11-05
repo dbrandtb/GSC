@@ -201,7 +201,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
         else if((listaRolCliente.size() == 1) && (listaRolCliente.get(0).getChildren().length == 1))
         // solo tiene un cliente y un rol para ese cliente, se redirecciona la pagina
         {
-            codigoRol = userList.get(0).getRoles().get(0).getObjeto().getValue();
+            codigoRol = userList.get(0).getRoles().get(0).getClave();
             codigoCliente = userList.get(0).getEmpresa().getElementoId();
             _codigoCliente = userList.get(0).getEmpresa().getElementoId();
             boolean configuracionCompleta=false;
@@ -276,14 +276,12 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
                 List<UserVO> listaUsuario = (List<UserVO>) session.get("CARGA_USUARIO_COMPLETO");
                 
                 EmpresaVO empresa = null;
-                BaseObjectVO baseObjectVO = null;
                 RolVO rolActivo = new RolVO();
                 boolean rolActivado = false;
                 for (UserVO userVO : listaUsuario) {
                     empresa = userVO.getEmpresa();
                     for (RolVO rols : userVO.getRoles()) {
-                        baseObjectVO = rols.getObjeto();
-                        if (empresa.getElementoId().trim().equals(codigoCliente.trim()) && baseObjectVO.getValue().trim().equals(codigoRol.trim())) {
+                        if (empresa.getElementoId().trim().equals(codigoCliente.trim()) && rols.getClave().trim().equals(codigoRol.trim())) {
                             rolActivo = rols;
                             rolActivado = true;
                             _codigoCliente = userVO.getEmpresa().getElementoId();
@@ -291,7 +289,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
                         }
                     }
                     if (rolActivado) {
-                        if (rolActivo.getObjeto().getValue().equals("EJECUTIVOCUENTA")) {
+                        if (rolActivo.getClave().equals("EJECUTIVOCUENTA")) {
                             userVO.setCodigoPersona("0");
                         }
                         userVO.setRolActivo(rolActivo);

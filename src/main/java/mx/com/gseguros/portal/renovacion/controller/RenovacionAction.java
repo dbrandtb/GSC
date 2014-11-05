@@ -57,7 +57,7 @@ public class RenovacionAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException("No hay usuario en sesion");
 			}
-			cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+			cdsisrol = usuario.getRolActivo().getClave();
 			if(StringUtils.isBlank(cdsisrol))
 			{
 				throw new ApplicationException("No hay rol en la sesion");
