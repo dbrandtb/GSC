@@ -1518,6 +1518,60 @@ Ext.onReady(function() {
 					});
 				}
 			}
+		},
+		{
+			text:'Generar Contra-Recibo',
+			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/page_white_edit.png',
+			handler:function()
+			{
+				Ext.Ajax.request({
+					url: _UrlGenerarContrarecibo,
+					params: {
+						'paramsO.pv_cdunieco_i' : panelInicialPral.down('combo[name=cmbOficReceptora]').getValue(),
+						'paramsO.pv_cdramo_i'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'paramsO.pv_estado_i'   : panelInicialPral.down('[name="estado"]').getValue(),
+						'paramsO.pv_nmpoliza_i' : panelInicialPral.down('[name="polizaAfectada"]').getValue(),
+						'paramsO.pv_nmsuplem_i' : panelInicialPral.down('[name="idNmsuplem"]').getValue(),
+						'paramsO.pv_ntramite_i' : panelInicialPral.down('[name="idNumTramite"]').getValue(),
+						'paramsO.pv_nmsolici_i' : panelInicialPral.down('[name="idNmsolici"]').getValue(),
+						'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+						'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+						'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					},
+					success: function(response, opt) {
+						var jsonRes=Ext.decode(response.responseText);
+						if(jsonRes.success == true){
+							//loadMcdinStore();
+							var numRand=Math.floor((Math.random()*100000)+1);
+							debug('numRand a: ',numRand);
+							var windowVerDocu=Ext.create('Ext.window.Window',
+							{
+								title          : 'Contrarecibo de Documentos del Siniestro'
+								,width         : 700
+								,height        : 500
+								,collapsible   : true
+								,titleCollapse : true
+								,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+													+'src="'+panDocUrlViewDoc+'?idPoliza=' + panelInicialPral.down('[name="idNumTramite"]').getValue() + '&filename=' + '<s:text name="siniestro.contrarecibo.nombre"/>' +'">'
+													+'</iframe>'
+								,listeners     :
+								{
+									resize : function(win,width,height,opt){
+										debug(width,height);
+										$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+									}
+								}
+							}).show();
+							windowVerDocu.center();
+						}else {
+								mensajeError(jsonRes.msgResult);
+						}
+					},
+					failure: function(){
+						mensajeError('No se pudo generar contrarecibo.');
+					}
+				});
+			}
 		}]
 	});
 

@@ -35,8 +35,11 @@
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
             var _URL_GUARDA_FACTURA_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardaFacturaAltaTramite"/>';
             var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"       action="obtenerFacturasTramite" />';
-            var _URL_ASEGURADO_FACTURA				=  '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
+            var _URL_ASEGURADO_FACTURA				= '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
             var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
+            
+            var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
+            var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
