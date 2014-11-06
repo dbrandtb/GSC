@@ -255,16 +255,21 @@ Ext.onReady(function() {
     	store: storeTipoPago,
     	listeners : {
     		'select':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
 	    		if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				//PAGO DIRECTO
 	    			limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+					panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
 					
     				
     			}else{
     				//PAGO POR REEMBOLSO
     				limpiarRegistrosTipoPago(e.getValue());
     				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+    				/*ADEMAS*/
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue("8");
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
     			}
     		}
     	}
