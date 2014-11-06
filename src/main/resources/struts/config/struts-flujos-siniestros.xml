@@ -250,7 +250,19 @@
 	        <result name="success" type="json"/>
 		</action>
 		
-		<action name="includes/altaTramite" class="siniestrosAction"  method="altaTramite">
+		<action name="guardaFacturaAltaTramite" class="siniestrosAction" method="guardaFacturaAltaTramite">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
+		
+		<action name="includes/altaTramitePrevio" class="siniestrosAction"  method="altaTramite">
+    		<result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
+		</action>
+		
+		<action name="complementoAltaTramite" class="siniestrosAction"  method="altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
 		
@@ -718,6 +730,10 @@
             <result type="json"></result>
         </action>
         
+        <action name="obtenerAseguradosTramite" class="siniestrosAction" method="obtenerAseguradosTramite">
+            <result type="json"></result>
+        </action>
+        
         <action name="obtenerSiniestrosTramite" class="siniestrosAction" method="obtenerSiniestrosTramite">
             <result type="json"></result>
         </action>
@@ -779,8 +795,12 @@
         </action>
         
         <action name="guardaTworksin" class="siniestrosAction" method="guardaTworksin">
-            <result type="json"></result>
-        </action>
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
         
         <action name="eliminarAsegurado" class="siniestrosAction" method="eliminarAsegurado">
             <result type="json"></result>

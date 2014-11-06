@@ -1076,6 +1076,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public void getEliminacionTworksin(String ntramite,String factura) throws Exception {
+		try {
+			siniestrosDAO.eliminacionTworksin(ntramite,factura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 
 	@Override
 	public void getEliminacionTFacMesaControl(String ntramite) throws Exception {
@@ -1304,5 +1313,32 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception {
 		return siniestrosDAO.obtieneTramiteFacturaPagada(nfactura, cdpresta);
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerAseguradosTramite(String ntramite,String nfactura) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_nfactura_i" , nfactura);
+		log.debug("obtenerFacturasTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.obtenerAseguradosTramite(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("lista: "+lista);
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
+
+	@Override
+	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.actualizaValorMC(modMesaControl);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
 	}
 }

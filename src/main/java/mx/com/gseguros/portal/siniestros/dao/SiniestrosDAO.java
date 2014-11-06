@@ -309,6 +309,8 @@ public interface SiniestrosDAO {
 	public List<MesaControlVO> consultaListaMesaControl(String ntramite) throws Exception;
 	
 	public void eliminacionTworksin(String ntramite) throws Exception;
+	
+	public void eliminacionTworksin(String ntramite,String factura) throws Exception;
 
 	public void eliminacionTFacMesaControl(String ntramite) throws Exception;
 	
@@ -383,4 +385,9 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneDatosAdicionalesCobertura(Map<String, Object> params) throws Exception;
 
 	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
+	
+	public List<Map<String,String>> obtenerAseguradosTramite(Map<String, String> params) throws Exception;
+
+	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
+	
 }
