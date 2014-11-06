@@ -264,21 +264,24 @@ Ext.onReady(function() {
     });
     
     var tipoPago= Ext.create('Ext.form.ComboBox',
-    		{
+    {
     	name:'cmbTipoPago',					fieldLabel: 'Tipo pago',			queryMode:'local',
     	displayField: 'value',				valueField: 'key',					allowBlank:false,
     	editable:false,						width		 : 350,					emptyText:'Seleccione...',
     	store: storeTipoPago,
     	listeners : {
     		'select':function(e){
+	    		panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
 	    		if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-					
+					panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
     				
     			}else{
     				limpiarRegistrosTipoPago(e.getValue());
     				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue("8");
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
     			}
     		}
     	}
@@ -1548,7 +1551,14 @@ Ext.onReady(function() {
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue(json.cdsucadmmc);
 					panelInicialPral.down('[name=dtFechaRecepcion]').setValue(json.ferecepcmc);
 					panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(json.otvalor07mc);
+					
 					panelInicialPral.down('combo[name=cmbTipoPago]').setValue(json.otvalor02mc);
+					
+					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
+						panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
+					}else{
+						panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
+					}
 					storeRamos.load({
 						params:{
 							'params.idPadre':panelInicialPral.down('combo[name=cmbOficEmisora]').getValue()
