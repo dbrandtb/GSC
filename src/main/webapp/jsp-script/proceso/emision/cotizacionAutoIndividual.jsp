@@ -229,6 +229,32 @@ Ext.onReady(function()
             combcl.setValue('S');
         });
 	    //cliente nuevo
+	    
+	    //version
+	    var submarca = _fieldByName('parametros.pv_otvalor08');
+	    var modelo   = _fieldByName('parametros.pv_otvalor09');
+	    var version  = _fieldByName('parametros.pv_otvalor10');
+	    
+	    submarca.on(
+	    {
+	        select : function(){ version.reset(); }
+	    });
+	    
+	    modelo.on(
+	    {
+	        select : function()
+	        {
+	            version.getStore().load(
+	            {
+	                params :
+	                {
+	                    'params.submarca' : submarca.getValue()
+	                    ,'params.modelo'  : modelo.getValue()
+	                }
+	            });
+	        }
+	    });
+	    //version
 	}
 	//ramo 5
 	
@@ -287,7 +313,8 @@ function _p28_cotizar()
                     
                     var gridTarifas=Ext.create('Ext.grid.Panel',
                     {
-                        title             : 'Resultados'
+                        itemId            : '_p28_gridTarifas'
+                        ,title            : 'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
                         {
                             model : '_p28_modeloTarifa'
@@ -300,6 +327,18 @@ function _p28_cotizar()
                         ,buttonAlign      : 'center'
                         ,buttons          :
                         [
+                            {
+                                itemId   : '_p28_botonEditar'
+                                ,text    : 'Editar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                ,handler : _p28_editar
+                            }
+                            ,{
+                                itemId   : '_p28_botonNueva'
+                                ,text    : 'Nueva'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                ,handler : _p28_nueva
+                            }
                             /*
                             new _0_BotComprar()
                             ,new _0_BotDetalles()
@@ -613,6 +652,7 @@ function _p28_limpiar()
 
 function _p28_calculaVigencia(comp,val)
 {
+    debug('>_p28_calculaVigencia');
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
     
@@ -623,6 +663,28 @@ function _p28_calculaVigencia(comp,val)
         debug('milisDif:',milisDif,'diasDif:',diasDif);
         _fieldByLabel('VIGENCIA').setValue(diasDif);
     }
+    debug('<_p28_calculaVigencia');
+}
+
+function _p28_editar()
+{
+    debug('>_p28_editar');
+    var panelPri    = _fieldById('_p28_panelpri');
+    var gridTarifas = _fieldById('_p28_gridTarifas');
+    
+    panelPri.remove(gridTarifas);
+    panelPri.doLayout();
+    
+    _p28_bloquear(false);
+    debug('<_p28_editar');
+}
+
+function _p28_nueva()
+{
+    debug('>_p28_nueva');
+    _p28_editar();
+    _p28_limpiar();
+    debug('<_p28_nueva');
 }
 ////// funciones //////
 </script>
