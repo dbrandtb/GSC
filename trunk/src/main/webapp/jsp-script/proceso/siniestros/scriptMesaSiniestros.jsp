@@ -26,7 +26,9 @@ var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.genera
 /* *************************************************** */
 
 // URLs:
-var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"      />';
+var _Url_AltaTramite_Previo      = '<s:url namespace="/siniestros" action="includes/altaTramitePrevio"      />'; 
+var _Url_ComplementoAltaTramite  = '<s:url namespace="/siniestros" action="complementoAltaTramite"      />';
+var _4_urlPantallaAutServ = '<s:url namespace="/siniestros" action="autorizacionServicios" />';
 var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
 var _UrlValidaDocumentosCargados= '<s:url namespace="/siniestros" action="validaDocumentosCargados"        />';
 var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
@@ -64,11 +66,12 @@ var msgWindow;
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
 	        buttonAlign : 'center',
-	        width       : 800,
-	        height      : 730,
+	        width       : 830,
+	        height      : 660,
+	        title: 'Alta de Tr&aacute;mite Previo',
 	        autoScroll  : true,
 	        loader      : {
-	            url     : _UrlAltaDeTramite,
+	            url     : _Url_AltaTramite_Previo,
 	            scripts  : true,
 	            loadMask : true,
 	            autoLoad : true,
@@ -89,27 +92,12 @@ var msgWindow;
 		}
 		else{
 			var record = grid.getStore().getAt(rowIndex);
-			windowLoader = Ext.create('Ext.window.Window',{
-		        modal       : true,
-		        buttonAlign : 'center',
-		        width       : 800,
-		        height      : 730,
-		        autoScroll  : true,
-		        loader      : {
-		            url     : _UrlAltaDeTramite,
-		            params   :
-			        {
-			        	'params.ntramite' : record.get('ntramite')
-			        },
-			        scripts  : true,
-		            loadMask : true,
-		            autoLoad : true,
-		            ajaxOptions: {
-		            	method: 'POST'
-		            }
-		        }
-		    }).show();
-		    centrarVentana(windowLoader);
+			Ext.create("Ext.form.Panel").submit(
+					{
+						url     : _Url_ComplementoAltaTramite,
+						params :{ 'params.ntramite' : record.get('ntramite')},
+						standardSubmit:true
+					});
 		}
 	}
 	

@@ -31,22 +31,18 @@
             var _URL_CONSULTA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
             var _URL_CONSULTA_GRID_ALTA_TRAMITE     = '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
-            var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
-            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
-            var _URL_GUARDA_FACTURA_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardaFacturaAltaTramite"/>';
-            var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"       action="obtenerFacturasTramite" />';
-            var _URL_ASEGURADO_FACTURA				=  '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
-            var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
+            var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
+            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
-        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramite.js?${now}"></script>
+        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramitePrevio.js?${now}"></script>
         
     </head>
     <body>
-    <div style="height:1000px;">
+    <div style="height:200px;">
             <div id="div_clau"></div>
             <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div>

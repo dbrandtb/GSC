@@ -213,7 +213,9 @@ public interface SiniestrosManager {
 		DESCNUME
 	 */
 	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception;
-
+	
+	public List<Map<String,String>> obtenerAseguradosTramite(String ntramite,String nfactura) throws Exception;
+	
 	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(String ntramite, String siniestro) throws Exception;
 
 	/**
@@ -400,6 +402,8 @@ public interface SiniestrosManager {
 	public List<MesaControlVO> getConsultaListaMesaControl(String ntramite) throws Exception;
 
 	public void getEliminacionTworksin(String ntramite) throws Exception;
+	
+	public void getEliminacionTworksin(String ntramite,String factura) throws Exception;
 
 	public void getEliminacionTFacMesaControl(String ntramite) throws Exception;
 	
@@ -472,4 +476,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> obtenerDatosAdicionalesCobertura(String ntramite) throws Exception;
 	
     public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
+
+	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 }
