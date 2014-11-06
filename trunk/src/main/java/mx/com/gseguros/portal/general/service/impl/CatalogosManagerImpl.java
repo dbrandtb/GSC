@@ -464,4 +464,65 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarModelosPorSubmarcaRamo5 @@@@@@")
+				.append("\n@@@@@@ submarca=").append(submarca)
+				.toString()
+				);
+		List<GenericVO>lista=null;
+		try
+		{
+			lista = catalogosDAO.cargarModelosPorSubmarcaRamo5(submarca);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al obtener modelos por submarca ramo 5",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarModelosPorSubmarcaRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarVersionesPorModeloSubmarcaRamo5 @@@@@@")
+				.append("\n@@@@@@ submarca=").append(submarca)
+				.append("\n@@@@@@ modelo=")  .append(modelo)
+				.toString()
+				);
+		List<GenericVO>lista=null;
+		try
+		{
+			lista = catalogosDAO.cargarVersionesPorModeloSubmarcaRamo5(submarca,modelo);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al obtener versiones por modelo y submarca ramo 5",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarVersionesPorModeloSubmarcaRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }

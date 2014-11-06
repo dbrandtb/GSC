@@ -722,7 +722,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				);
 		if(listaAux==null)
 		{
-			lista.add(new GenericVO("0","TRADICIONAL"));
+			//lista.add(new GenericVO("0","TRADICIONAL"));
 		}
 		else
 		{
@@ -743,6 +743,113 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("cdatribu"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"codigo"
+					,"descripcion"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("submarca" , submarca);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** PKG_LISTAS.P_RECUPERA_MODELOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarModelosPorSubmarcaRamo5(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		List<GenericVO>listaGeneric=new ArrayList<GenericVO>();
+		for(Map<String,String>modelo:lista)
+		{
+			listaGeneric.add(new GenericVO(modelo.get("anno"),modelo.get("anno")));
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** registro=").append(listaGeneric)
+				.append("\n****** PKG_LISTAS.P_RECUPERA_MODELOS ******")
+				.append("\n*******************************************")
+				.toString()
+				);
+		return listaGeneric;
+	}
+	
+	protected class CargarModelosPorSubmarcaRamo5 extends StoredProcedure
+	{
+		protected CargarModelosPorSubmarcaRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_RECUPERA_MODELOS");
+			declareParameter(new SqlParameter("submarca" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"anno"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("submarca" , submarca);
+		params.put("modelo"   , modelo);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_LISTAS.P_RECUPERA_DESCRIPCIONES ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarVersionesPorModeloSubmarcaRamo5(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		List<GenericVO>listaGeneric=new ArrayList<GenericVO>();
+		for(Map<String,String>descripcion:lista)
+		{
+			listaGeneric.add(new GenericVO(descripcion.get("codigo"),descripcion.get("descripcion")));
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** registro=").append(listaGeneric)
+				.append("\n****** PKG_LISTAS.P_RECUPERA_DESCRIPCIONES ******")
+				.append("\n*************************************************")
+				.toString()
+				);
+		return listaGeneric;
+	}
+	
+	protected class CargarVersionesPorModeloSubmarcaRamo5 extends StoredProcedure
+	{
+		protected CargarVersionesPorModeloSubmarcaRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_RECUPERA_DESCRIPCIONES");
+			declareParameter(new SqlParameter("submarca" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 					"codigo"

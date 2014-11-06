@@ -88,4 +88,8 @@ public interface CatalogosManager {
     		,String cdatribu
     		,String tipoUnidad
     		,String cdagente);
+    
+    public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca);
+    
+    public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo);
 }

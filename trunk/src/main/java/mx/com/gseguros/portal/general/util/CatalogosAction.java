@@ -420,6 +420,25 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("cdagente")
 							);
 					break;
+				case RAMO_5_MODELOS_X_SUBMARCA:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarModelosPorSubmarcaRamo5(
+							params.get("idPadre")
+							);
+					break;
+				case RAMO_5_VERSIONES_X_MODELO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarVersionesPorModeloSubmarcaRamo5(
+							params.get("submarca")
+							,params.get("modelo")
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
