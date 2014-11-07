@@ -3270,6 +3270,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null        //conducto
 							,null        //ptcumupr
 							,null        //residencia
+							,null        //pv_nongrata_i
+							,null        //pv_cdideext_i
 							,Constantes.INSERT_MODE
 							);
 				}
