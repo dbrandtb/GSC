@@ -1486,6 +1486,27 @@ function _0_gmiCirchospSelect(a,b,c,sinReset)
         }
     });
 }
+
+/**
+ * Verifica que el Codigo Postal pertenezca a algun estado
+ * @type String
+ */
+function agregaValidacionCPvsEstado() {
+    // Si existen los campos de codigo postal y estado, y este ultimo esta anidado, agregar validacion:
+    var tmpPostal = _fieldLikeLabel('POSTAL', null, true);
+    var tmpEstado = _fieldLikeLabel('ESTADO', null, true);
+    if( tmpPostal && tmpEstado && !Ext.isEmpty(tmpEstado.anidado) && tmpEstado.anidado == true) {
+    	// Se agrega listener al store de Estado para verificar si tiene elementos:
+    	debug("***** Se agrega validacion de CP VS Estado *****");
+        tmpEstado.getStore().on({
+            load : function(store, records, successful, eOpts) {
+                if(store.count() == 0) {
+                    mensajeWarning('El C&oacute;digo Postal no existe, introduzca uno v&aacute;lido');
+                }
+            }
+        });
+    }
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3092,6 +3113,9 @@ Ext.onReady(function()
         });
     }
     
+    // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
+    agregaValidacionCPvsEstado();
+
 });
 </script>
 </head>
