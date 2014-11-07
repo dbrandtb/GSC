@@ -3343,6 +3343,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_festatus_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor01_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor02_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor03_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor04_i", OracleTypes.VARCHAR));

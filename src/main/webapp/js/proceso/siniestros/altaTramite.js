@@ -1543,7 +1543,7 @@ Ext.onReady(function() {
 					success: function(response, opt) {
 						var jsonRes=Ext.decode(response.responseText);
 						if(jsonRes.success == true){
-							loadMcdinStore();
+							//loadMcdinStore();
 							var numRand=Math.floor((Math.random()*100000)+1);
 							debug('numRand a: ',numRand);
 							var windowVerDocu=Ext.create('Ext.window.Window',

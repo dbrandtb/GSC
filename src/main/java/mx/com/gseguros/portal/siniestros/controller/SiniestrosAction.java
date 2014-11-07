@@ -525,15 +525,18 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			        }
 				}else{
 					/*Existe el trámite y solo lo vamos a actualizar*/
-					
+					HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
 					/*1.- Verificamos si cambio el tipo de atención*/
 					List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
 					String valorTipoAtencion = lista.get(0).getOtvalor07mc();
 					if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
 						siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
+						modMesaControl.put("pv_otvalor01_i",null);
+					}else{
+						modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
 					}
 					/*Actualizar los valores de ntramite*/
-					HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
+					
 					modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
 					modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
 					modMesaControl.put("pv_cdramo_i",params.get("cmbRamos"));
