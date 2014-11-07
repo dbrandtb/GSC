@@ -151,6 +151,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_SUCURSALES_DOCUMENTO:
 					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):null);
 					break;
+				case MC_SUCURSALES_SALUD:
+					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):"1000");
+					break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
@@ -175,6 +178,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					for(Map<String,String> ramo:ramos) {
 						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
 					}
+					break;
+				case RAMOSALUD:
+					lista =siniestrosManager.getConsultaListaRamoSalud();
 					break;
 				case TIPSIT:
 					List<Map<String,String>>tipsits=kernelManager.obtenerTipsit(params!=null?params.get("idPadre"):null);

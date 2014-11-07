@@ -217,14 +217,13 @@ Ext.onReady(function() {
     storeRamos = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:true,
-		proxy:
-		{
+		proxy: {
 			type: 'ajax',
-			url:_UR_LISTA_RAMO_SALUD,
-			reader:
-			{
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CAT_RAMO_SALUD},
+			reader: {
 				type: 'json',
-				root: 'listadoRamosSalud'
+				root: 'lista'
 			}
 		}
 	});
@@ -533,15 +532,6 @@ Ext.onReady(function() {
 							});
 							return false;
 						}else{
-							/*if(obtener.length == 1){
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
-								panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
-								panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
-							}else{
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
-								panelInicialPral.down('[name=fechaIndFactura]').setValue('');
-								panelInicialPral.down('[name=numIndFactura]').setValue('');
-							}*/
 							var submitValues={};
 							var formulario=panelInicialPral.form.getValues();
 							submitValues['params']=formulario;
@@ -1375,6 +1365,7 @@ Ext.onReady(function() {
 				var form = this.up('form').getForm();
 				if (form.isValid()){
 					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){ //PARA PAGO DIRECTO
+						panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
 						var obtener = [];
 						storeFacturaDirecto.each(function(record) {
 							obtener.push(record.data);
@@ -1448,9 +1439,15 @@ Ext.onReady(function() {
 									}
 								});
 							}else{
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
+								//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
 								panelInicialPral.down('[name=fechaIndFactura]').setValue('');
 								panelInicialPral.down('[name=numIndFactura]').setValue('');
+								var sumaTotal= 0;
+								for(i=0;i < obtener.length;i++){
+									sumaTotal =sumaTotal + (+ obtener[i].importe);
+									panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+								}
+								
 								var submitValues={};
 								var formulario=panelInicialPral.form.getValues();
 								submitValues['params']=formulario;
@@ -1481,9 +1478,14 @@ Ext.onReady(function() {
 							
 							}else{
 								panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
+								//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
 								panelInicialPral.down('[name=fechaIndFactura]').setValue('');
 								panelInicialPral.down('[name=numIndFactura]').setValue('');
+								var sumaTotal= 0;
+								for(i=0;i < obtener.length;i++){
+									sumaTotal =sumaTotal + (+ obtener[i].importe);
+									panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+								}
 							}
 						}
 						var submitValues={};
@@ -1541,7 +1543,7 @@ Ext.onReady(function() {
 					success: function(response, opt) {
 						var jsonRes=Ext.decode(response.responseText);
 						if(jsonRes.success == true){
-							//loadMcdinStore();
+							loadMcdinStore();
 							var numRand=Math.floor((Math.random()*100000)+1);
 							debug('numRand a: ',numRand);
 							var windowVerDocu=Ext.create('Ext.window.Window',

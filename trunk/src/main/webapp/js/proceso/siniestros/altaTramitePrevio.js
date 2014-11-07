@@ -206,14 +206,13 @@ Ext.onReady(function() {
     storeRamos = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:true,
-		proxy:
-		{
+		proxy: {
 			type: 'ajax',
-			url:_UR_LISTA_RAMO_SALUD,
-			reader:
-			{
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CAT_RAMO_SALUD},
+			reader: {
 				type: 'json',
-				root: 'listadoRamosSalud'
+				root: 'lista'
 			}
 		}
 	});
@@ -1003,6 +1002,7 @@ Ext.onReady(function() {
 							if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO) // Pago Directo
         					{
             					//PAGO DIRECTO
+        						panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
             					var obtener = [];
                 				storeFacturaDirecto.each(function(record) {
     								obtener.push(record.data);
@@ -1025,6 +1025,12 @@ Ext.onReady(function() {
 	                					panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
 										panelInicialPral.down('[name=fechaIndFactura]').setValue('');
 										panelInicialPral.down('[name=numIndFactura]').setValue('');
+										
+										var sumaTotal= 0;
+		                				for(i=0;i < obtener.length;i++){
+												sumaTotal =sumaTotal + (+ obtener[i].importe);
+												panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+										}
 	                				}
                 				}
 
@@ -1046,16 +1052,21 @@ Ext.onReady(function() {
                 				}else{
 	                				if(obtener.length == 1){
 	                					panelInicialPral.down('combo[name=cmbProveedor]').setValue(obtener[0].proveedorName);
-	                					panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
+	                					//panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
 										panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
 										panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
 										
 	                				}else{
 	                					panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
-	                					panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
+	                					//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
 										panelInicialPral.down('[name=fechaIndFactura]').setValue('');
 										panelInicialPral.down('[name=numIndFactura]').setValue('');
 	                				}
+	                				var sumaTotal= 0;
+	                				for(i=0;i < obtener.length;i++){
+											sumaTotal =sumaTotal + (+ obtener[i].importe);
+											panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+									}
                 				}
         					}
         					var submitValues={};
