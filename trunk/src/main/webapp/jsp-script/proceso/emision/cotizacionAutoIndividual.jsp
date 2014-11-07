@@ -20,14 +20,15 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// urls //////
-var _p28_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision" action="cargarCduniecoAgenteAuto"       />';
-var _p28_urlCotizar                        = '<s:url namespace="/emision" action="cotizar"                        />';
-var _p28_urlRecuperarCliente               = '<s:url namespace="/"        action="buscarPersonasRepetidas"        />';
-var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision" action="cargarRetroactividadSuplemento" />';
-var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5"       />';
-var _p28_urlCargar                         = '<s:url namespace="/emision" action="cargarCotizacion"               />';
-var _p28_urlDatosComplementarios           = '<s:url namespace="/"        action="datosComplementarios"           />';
-var _p28_urlCargarParametros               = '<s:url namespace="/emision" action="obtenerParametrosCotizacion"    />';
+var _p28_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"       />';
+var _p28_urlCotizar                        = '<s:url namespace="/emision"         action="cotizar"                        />';
+var _p28_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"        />';
+var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
+var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"       />';
+var _p28_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacion"               />';
+var _p28_urlDatosComplementarios           = '<s:url namespace="/"                action="datosComplementarios"           />';
+var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
+var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
 ////// urls //////
 
 ////// variables //////
@@ -38,10 +39,14 @@ var _p28_formFields   = [ <s:property value="imap.formFields"   /> ];
 var _p28_panel2Items  = [ <s:property value="imap.panel2Items"  /> ];
 var _p28_panel3Items  = [ <s:property value="imap.panel3Items"  /> ];
 var _p28_panel4Items  = [ <s:property value="imap.panel4Items"  /> ];
-var _p28_panel5Items  = [ <s:property value="imap.panel5Items"  /> ];
-var _p28_panel6Items  = [ <s:property value="imap.panel6Items"  /> ];
 
 var _p28_recordClienteRecuperado = null;
+var _p28_storeCoberturas         = null;
+var _p28_windowCoberturas        = null;
+var _p28_selectedCdperpag        = null;
+var _p28_selectedCdplan          = null;
+var _p28_selectedDsplan          = null;
+var _p28_selectedNmsituac        = null;
 ////// variables //////
 
 Ext.onReady(function()
@@ -65,12 +70,104 @@ Ext.onReady(function()
 	////// modelos //////
 	
 	////// stores //////
+	_p28_storeCoberturas=Ext.create('Ext.data.Store',
+    {
+        autoLoad : false
+        ,model   : 'RowCobertura'
+        ,sorters    :
+        [
+            {
+                sorterFn : function(o1,o2)
+                {
+                    debug('sorting:',o1,o2);
+                    if (o1.get('orden') === o2.get('orden'))
+                    {
+                        return 0;
+                    }
+                    return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
+                }
+            }
+        ]
+        ,proxy   :
+        {
+            type    : 'ajax'
+            ,url    : _p28_urlCoberturas
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'listaCoberturas'
+            }
+        }
+    });
 	////// stores //////
 	
 	////// componentes //////
+	_p28_windowCoberturas = new Ext.Window(
+    {
+        plain        : true
+        ,width       : 500
+        ,height      : 400
+        ,modal       : true
+        ,autoScroll  : true
+        ,title       : 'Coberturas'
+        ,layout      : 'fit'
+        ,bodyStyle   : 'padding:5px;'
+        ,buttonAlign : 'center'
+        ,closeAction : 'hide'
+        ,closable    : true
+        ,items       :
+        [
+            Ext.create('Ext.grid.Panel',
+            {
+                itemId       : '_p28_gridCoberturas'
+                ,title       : 'Sin plan'
+                ,store       : _p28_storeCoberturas
+                ,height      : 300
+                ,selType     : 'cellmodel'
+                ,buttonAlign : 'center'
+                ,columns     :
+                [
+                    {
+                        dataIndex : 'dsGarant'
+                        ,text : 'Cobertura'
+                        ,flex : 3
+                    }
+                    ,{
+                        dataIndex : 'sumaAsegurada'
+                        ,text : 'Suma asegurada'
+                        ,flex : 1
+                    }
+                    ,{
+                        dataIndex : 'deducible'
+                        ,text : 'Deducible'
+                        ,flex : 1
+                    }
+                ]
+            })
+        ] 
+        ,buttons     :
+        [
+            {
+                text     : 'Regresar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_left.png'
+                ,handler : function()
+                {
+                    this.up().up().hide();
+                }
+            }
+        ]
+    });
 	////// componentes //////
 	
 	////// contenido //////
+	var _p28_formOcultoItems = [];
+	<s:if test='%{getImap().get("panel5Items")!=null}'>
+	    _p28_formOcultoItems.push(<s:property value="imap.panel5Items" />);
+	</s:if>
+	<s:if test='%{getImap().get("panel6Items")!=null}'>
+        _p28_formOcultoItems.push(<s:property value="imap.panel6Items" />);
+    </s:if>
+	
 	Ext.create('Ext.panel.Panel',
 	{
 	    itemId    : '_p28_panelpri'
@@ -80,10 +177,11 @@ Ext.onReady(function()
 	    [
 	        Ext.create('Ext.form.Panel',
 	        {
-	            itemId    : '_p28_form'
-	            ,border   : 0
-	            ,defaults : { style : 'margin : 5px;' }
-	            ,layout   :
+	            itemId      : '_p28_form'
+	            ,border     : 0
+	            ,defaults   : { style : 'margin : 5px;' }
+	            ,formOculto : Ext.create('Ext.form.Panel',{ items : _p28_formOcultoItems })
+	            ,layout     :
 	            {
 	                type     : 'table'
 	                ,columns : 2
@@ -190,23 +288,25 @@ Ext.onReady(function()
 	        fefin.isValid();
 	    }
 	});
-	
-	_fieldByName('feini').on(
-    {
-        change : _p28_calculaVigencia
-    });
-    
-    _fieldByName('fefin').on(
-    {
-        change : _p28_calculaVigencia
-    });
-    
-    _p28_calculaVigencia();
     //fechas
 	
 	//ramo 5
 	if(_p28_smap1.cdramo+'x'=='5x')
 	{
+	    //fechas
+	    _fieldByName('feini').on(
+        {
+            change : _p28_calculaVigencia
+        });
+    
+        _fieldByName('fefin').on(
+        {
+            change : _p28_calculaVigencia
+        });
+    
+        _p28_calculaVigencia();
+	    //fechas
+	
 	    var agente    = _fieldByLabel('AGENTE');
 	    var clave     = _fieldByName('parametros.pv_otvalor06');
 	    var marca     = _fieldByName('parametros.pv_otvalor07');
@@ -348,6 +448,16 @@ function _p28_cotizar()
     
     if(valido)
     {
+        //copiar paneles a oculto
+        var arr = Ext.ComponentQuery.query('#_p28_gridTarifas');
+        if(arr.length>0)
+        {
+            var formDescuentoActual = _fieldById('_p28_formDescuento');
+            var recordPaneles       = new _p28_formModel(formDescuentoActual.getValues());
+            form.formOculto.loadRecord(recordPaneles);
+            debug('form.formOculto.getValues():',form.formOculto.getValues());
+        }
+    
         var json=
         {
             slist1 :
@@ -356,6 +466,13 @@ function _p28_cotizar()
             ]
             ,smap1 : _p28_smap1 
         };
+        var valuesFormOculto = form.formOculto.getValues();
+        for(var att in valuesFormOculto)
+        {
+            json.slist1[0][att]=valuesFormOculto[att];
+            debug('Agregado a cotizacion:',att,':',valuesFormOculto[att]);
+        }
+        debug('json a enviar para cotizar:',json);
         panelpri.setLoading(true);
         Ext.Ajax.request(
         {
@@ -382,6 +499,90 @@ function _p28_cotizar()
                         ,fields : Ext.decode(json.smap1.fields)
                     });
                     
+                    var itemsDescuento =
+                    [
+                        {
+                            xtype  : 'displayfield'
+                            ,value : '¿Desea usar su descuento de agente?'
+                        }
+                        ,{
+                            xtype  : 'displayfield'
+                            ,value : 'Si desea aplicar un DESCUENTO seleccione el porcentaje mayor a 0%'
+                        }
+                        ,{
+                            xtype  : 'displayfield'
+                            ,value : 'Si desea aplicar un RECARGO seleccione el porcentaje menor a 0%'
+                        }
+                    ];
+                    
+                    <s:if test='%{getImap().get("panel5Items")!=null}'>
+                        itemsDescuento.push(<s:property value="imap.panel5Items" />);
+                        for(var i=3;i<itemsDescuento.length;i++)
+                        {
+                            itemsDescuento[i].setMinValue(-100);
+                            itemsDescuento[i].setMaxValue(100);
+                        }
+                    </s:if>
+                    
+                    var itemsComision =
+                    [
+                        {
+                            xtype  : 'displayfield'
+                            ,value : 'Indique el porcentaje de comisi&oacute;n que desea ceder'
+                        }
+                    ];
+                    
+                    <s:if test='%{getImap().get("panel6Items")!=null}'>
+                        itemsComision.push(<s:property value="imap.panel6Items" />);
+                        for(var i=1;i<itemsComision.length;i++)
+                        {
+                            itemsComision[i].setMaxValue(100);
+                        }
+                    </s:if>
+                    
+                    var arr = Ext.ComponentQuery.query('#_p28_gridTarifas');
+                    if(arr.length>0)
+                    {
+                        panelpri.remove(arr[arr.length-1]);
+                    }
+                    
+                    var _p28_formDescuento = Ext.create('Ext.form.Panel',
+                    {
+                        itemId       : '_p28_formDescuento'
+                        ,defaults    : { style : 'margin:5px;' }
+                        ,layout      :
+                        {
+                            type     : 'table'
+                            ,columns : 2
+                            ,tdAttrs : { valign : 'top' }
+                        }
+                        ,items       :
+                        [
+                            {
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
+                                ,items : itemsDescuento
+                            }
+                            ,{
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">CESI&Oacute;N DE COMISI&Oacute;N</span>'
+                                ,items : itemsComision
+                            }
+                        ]
+                        ,buttonAlign : 'right'
+                        ,buttons     :
+                        [
+                            {
+                                itemId   : '_p28_botonAplicarDescuento'
+                                ,text    : 'Aplicar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                ,handler : _p28_cotizar
+                            }
+                        ]
+                    });
+                    
+                    _p28_formDescuento.loadRecord(new _p28_formModel(form.formOculto.getValues()));
+                    
                     var gridTarifas=Ext.create('Ext.grid.Panel',
                     {
                         itemId            : '_p28_gridTarifas'
@@ -395,14 +596,32 @@ function _p28_cotizar()
                         ,selType          : 'cellmodel'
                         ,minHeight        : 100
                         ,enableColumnMove : false
+                        ,bbar             :
+                        [
+                            '->'
+                            ,_p28_formDescuento
+                        ]
                         ,buttonAlign      : 'center'
                         ,buttons          :
                         [
                             {
+                                itemId    : '_p28_botonCoberturas'
+                                ,text     : 'Coberturas'
+                                ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
+                                ,disabled : true
+                                ,handler  : _p28_coberturas
+                            }
+                            ,{
                                 itemId   : '_p28_botonEditar'
                                 ,text    : 'Editar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
                                 ,handler : _p28_editar
+                            }
+                            ,{
+                                itemId   : '_p28_botonClonar'
+                                ,text    : 'Clonar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                                ,handler : _p28_clonar
                             }
                             ,{
                                 itemId   : '_p28_botonNueva'
@@ -412,28 +631,17 @@ function _p28_cotizar()
                             }
                             /*
                             new _0_BotComprar()
-                            ,new _0_BotDetalles()
-                            ,new _0_BotCoberturas()
-                            ,new _0_BotEditar()
-                            ,new _0_BotClonar()
-                            ,new _0_BotNueva()
-                            ,new _0_BotMail()
-                            ,new _0_BotImprimir()
+                            --,new _0_BotCoberturas()
+                            --,new _0_BotEditar()
+                            --,new _0_BotClonar()
+                            --,new _0_BotNueva()
                             */
                         ]
                         ,listeners        :
                         {
-                            //select : _0_tarifaSelect
+                            select : _p28_tarifaSelect
                         }
                     });
-                    
-                    /*
-                    if(_0_smap1.cdramo+'x'=='6x')
-                    {
-                        Ext.getCmp('_0_botDetallesId').setDisabled(true);
-                        Ext.getCmp('_0_botCoberturasId').setDisabled(true);
-                    }
-                    */
                     
                     var panelPri = _fieldById('_p28_panelpri');
                     
@@ -478,13 +686,6 @@ function _p28_bloquear(b)
     
     if(b)
     {
-        /*
-        try {
-           _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
-        } catch(e) {
-            debug(e);
-        }
-        */
     }
     else
     {
@@ -493,6 +694,14 @@ function _p28_bloquear(b)
         } catch(e) {
             debug(e);
         }
+    }
+    
+    if(_p28_smap1.cdramo+'x'=='5x'&&_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
+    {
+        var agente = _fieldByLabel('AGENTE');
+        agente.setValue(_p28_smap1.cdagente);
+        agente.setReadOnly(true);
+        _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
     }
     debug('<_p28_bloquear');
 }
@@ -716,10 +925,21 @@ function _p28_limpiar()
     _fieldByName('nmpoliza').semaforo=true;
     _fieldById('_p28_form').getForm().reset();
     _fieldByName('nmpoliza').semaforo=false;
-    _fieldByName('nmpoliza').focus();
     
-    _p28_calculaVigencia();
-    _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
+    
+    if(_p28_smap1.cdramo+'x'=='5x')
+    {
+        _p28_calculaVigencia();
+        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');    
+        
+        if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            var agente = _fieldByLabel('AGENTE');
+            agente.setValue(_p28_smap1.cdagente);
+            agente.setReadOnly(true);
+            _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
+        }
+    }
     
     debug('<_p28_limpiar');
 }
@@ -730,12 +950,15 @@ function _p28_calculaVigencia(comp,val)
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
     
+    var itemVigencia=_fieldByLabel('VIGENCIA');
+    itemVigencia.hide();
+    
     if(feini.isValid()&&fefin.isValid())
     {
         var milisDif = Ext.Date.getElapsed(feini.getValue(),fefin.getValue());
         var diasDif  = (milisDif/1000/60/60/24).toFixed(0);
         debug('milisDif:',milisDif,'diasDif:',diasDif);
-        _fieldByLabel('VIGENCIA').setValue(diasDif);
+        itemVigencia.setValue(diasDif);
     }
     debug('<_p28_calculaVigencia');
 }
@@ -949,6 +1172,8 @@ function _p28_cargar(boton)
                         {
                             debug('renderiza',i);
                             form.loadRecord(primerInciso);
+                            form.formOculto.loadRecord(primerInciso);
+                            debug('form oculto values:',form.formOculto.getValues());
                             if(i<numBlurs)
                             {
                                 i=i+1;
@@ -1150,8 +1375,72 @@ function _p28_nmpolizaChange(me)
         me.sucio = false;
     }
 }
+
+function _p28_clonar()
+{
+    debug('>_p28_clonar');
+    _p28_editar();
+    _fieldByName('nmpoliza').setValue('');
+    debug('<_p28_clonar');
+}
+
+function _p28_coberturas()
+{
+    _p28_storeCoberturas.load(
+    {
+        params :
+        {
+            jsonCober_unieco   : _p28_smap1.cdunieco
+            ,jsonCober_cdramo  : _p28_smap1.cdramo
+            ,jsonCober_estado  : 'W'
+            ,jsonCober_nmpoiza : _fieldByName('nmpoliza').getValue()
+            ,jsonCober_cdplan  : _p28_selectedCdplan
+            ,jsonCober_cdcia   : '20'
+            ,jsonCober_situa   : _p28_selectedNmsituac
+        }
+    });
+    _fieldById('_p28_gridCoberturas').setTitle('Plan ' + _p28_selectedDsplan);
+    _p28_windowCoberturas.show();
+    centrarVentanaInterna(_p28_windowCoberturas);
+}
+
+function _p28_tarifaSelect(selModel, record, row, column, eOpts)
+{
+    var gridTarifas = _fieldById('_p28_gridTarifas');
+    debug('column:',column);
+    if(column>0)
+    {
+        column = (column * 2) -1;
+    }
+    debug('( column * 2 )-1:',column);
+    var columnName=gridTarifas.columns[column].dataIndex;
+    debug('record',record);
+    debug('columnName',columnName);
+    if(columnName=='DSPERPAG')
+    {
+        debug('DSPERPAG');
+        _fieldById('_p28_botonCoberturas').setDisabled(true);
+        /*Ext.getCmp('_0_botComprarId').setDisabled(true);*/
+    }
+    else
+    {
+        // M N P R I M A X
+        //0 1 2 3 4 5 6 7
+        _p28_selectedCdperpag = record.get("CDPERPAG");
+        _p28_selectedCdplan   = columnName.substr(7);
+        _p28_selectedDsplan   = record.get("DSPLAN"+_p28_selectedCdplan);
+        _p28_selectedNmsituac = record.get("NMSITUAC");
+        debug('_p28_selectedCdperpag' , _p28_selectedCdperpag);
+        debug('_p28_selectedCdplan'   , _p28_selectedCdplan);
+        debug('_p28_selectedDsplan'   , _p28_selectedDsplan);
+        debug('_p28_selectedNmsituac' , _p28_selectedNmsituac);
+        
+        _fieldById('_p28_botonCoberturas').setDisabled(false);
+        /*Ext.getCmp('_0_botComprarId').setDisabled(false);*/
+    }
+}
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p28_divpri" style="height:1000px;"></div></body>
+<body><div id="_p28_divpri" style="height:1500px;"></div></body>
 </html>
