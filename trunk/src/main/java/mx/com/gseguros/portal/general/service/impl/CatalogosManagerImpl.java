@@ -525,4 +525,34 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarAutosPorCadenaRamo5 @@@@@@")
+				.append("\n@@@@@@ cadena=").append(cadena)
+				.toString()
+				);
+		List<GenericVO>lista=null;
+		try
+		{
+			lista = catalogosDAO.cargarAutosPorCadenaRamo5(cadena);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al obtener autos de ramo 5 por cadena",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarAutosPorCadenaRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }

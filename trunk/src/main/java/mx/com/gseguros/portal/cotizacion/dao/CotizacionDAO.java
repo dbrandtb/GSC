@@ -303,4 +303,9 @@ public interface CotizacionDAO
 			,String cdtipsup
 			,String cdusuari
 			,String cdtipsit)throws ApplicationException,Exception;
+	public Map<String,String>cargarSumaAseguradaRamo5(
+			String cdtipsit
+			,String clave
+			,String modelo
+			,String cdsisrol)throws Exception;
 }

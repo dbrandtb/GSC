@@ -262,29 +262,26 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
 			
-			gc.generaComponentes(panel1, true, true, true, false, false, false);
-			resp.getImap().put("panel1Fields" , gc.getFields());
+			gc.generaComponentes(panel1, true, false, true, false, false, false);
 			resp.getImap().put("panel1Items"  , gc.getItems());
 			
-			gc.generaComponentes(panel2, true, true, true, false, false, false);
-			resp.getImap().put("panel2Fields" , gc.getFields());
+			gc.generaComponentes(panel2, true, false, true, false, false, false);
 			resp.getImap().put("panel2Items"  , gc.getItems());
 			
-			gc.generaComponentes(panel3, true, true, true, false, false, false);
-			resp.getImap().put("panel3Fields" , gc.getFields());
+			gc.generaComponentes(panel3, true, false, true, false, false, false);
 			resp.getImap().put("panel3Items"  , gc.getItems());
 			
-			gc.generaComponentes(panel4, true, true, true, false, false, false);
-			resp.getImap().put("panel4Fields" , gc.getFields());
+			gc.generaComponentes(panel4, true, false, true, false, false, false);
 			resp.getImap().put("panel4Items"  , gc.getItems());
 			
-			gc.generaComponentes(panel5, true, true, true, false, false, false);
-			resp.getImap().put("panel5Fields" , gc.getFields());
+			gc.generaComponentes(panel5, true, false, true, false, false, false);
 			resp.getImap().put("panel5Items"  , gc.getItems());
 			
-			gc.generaComponentes(panel6, true, true, true, false, false, false);
-			resp.getImap().put("panel6Fields" , gc.getFields());
+			gc.generaComponentes(panel6, true, false, true, false, false, false);
 			resp.getImap().put("panel6Items"  , gc.getItems());
+			
+			gc.generaComponentes(tatrisit, true, true, false, false, false, false);
+			resp.getImap().put("formFields" , gc.getFields());
 			
 			setCheckpoint("0");
 		}
@@ -342,6 +339,48 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ cargarRetroactividadSuplemento @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarSumaAseguradaRamo5(
+			String cdtipsit
+			,String clave
+			,String modelo
+			,String cdsisrol)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarSumaAseguradaRamo5 @@@@@@")
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ clave=")   .append(clave)
+				.append("\n@@@@@@ modelo=")  .append(modelo)
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando suma asegurada");
+			resp.setSmap(cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit,clave,modelo,cdsisrol));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarSumaAseguradaRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

@@ -861,4 +861,72 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cadena" , cadena);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5 ******")
+				.append("\n****** params=").append(params)
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarAutosPorCadenaRamo5(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		List<GenericVO>listaGeneric=new ArrayList<GenericVO>();
+		for(Map<String,String>descripcion:lista)
+		{
+			listaGeneric.add(
+					new GenericVO(
+							descripcion.get("clave")
+							,new StringBuilder(descripcion.get("clave"))
+							.append(" - ")
+							.append(descripcion.get("marca"))
+							.append(" - ")
+							.append(descripcion.get("submarca"))
+							.append(" - ")
+							.append(descripcion.get("modelo"))
+							.append(" - ")
+							.append(descripcion.get("descripcion"))
+							.toString()
+					));
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** registro=").append(listaGeneric)
+				.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5 ******")
+				.append("\n*************************************************")
+				.toString()
+				);
+		return listaGeneric;
+	}
+	
+	protected class CargarAutosPorCadenaRamo5 extends StoredProcedure
+	{
+		protected CargarAutosPorCadenaRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5");
+			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"clave"
+					,"marca"
+					,"submarca"
+					,"descripcion"
+					,"modelo"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

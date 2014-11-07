@@ -466,6 +466,8 @@ public class GeneradorCampos
                 }
                 String compAnteriorId = this.idPrefix+auxCompAnteIdEditor+(idx-1);
                 
+                item.add("anidado" , true);
+                
                 //it.add(Item.crear("forceSelection",false));??
                 item.add(Item.crear(""
                 		+ "heredar",
