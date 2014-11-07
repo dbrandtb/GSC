@@ -36,6 +36,8 @@ public interface PersonasDAO
 			,String conducto
 			,String ptcumupr
 			,String residencia
+			,String nongrata
+			,String cdideext
 			,String accion) throws Exception;
 	/**
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
