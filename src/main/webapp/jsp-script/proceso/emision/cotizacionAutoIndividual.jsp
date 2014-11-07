@@ -162,10 +162,18 @@ Ext.onReady(function()
 	////// contenido //////
 	var _p28_formOcultoItems = [];
 	<s:if test='%{getImap().get("panel5Items")!=null}'>
-	    _p28_formOcultoItems.push(<s:property value="imap.panel5Items" />);
+	    var items = [<s:property value="imap.panel5Items" />];
+	    for(var i=0;i<items.length;i++)
+	    {
+	        _p28_formOcultoItems.push(items[i]);
+	    }
 	</s:if>
 	<s:if test='%{getImap().get("panel6Items")!=null}'>
-        _p28_formOcultoItems.push(<s:property value="imap.panel6Items" />);
+        var items = [<s:property value="imap.panel6Items" />];
+        for(var i=0;i<items.length;i++)
+        {
+            _p28_formOcultoItems.push(items[i]);
+        }
     </s:if>
 	
 	Ext.create('Ext.panel.Panel',
@@ -516,11 +524,13 @@ function _p28_cotizar()
                     ];
                     
                     <s:if test='%{getImap().get("panel5Items")!=null}'>
-                        itemsDescuento.push(<s:property value="imap.panel5Items" />);
-                        for(var i=3;i<itemsDescuento.length;i++)
+                        var itemsaux = [<s:property value="imap.panel5Items" />];
+                        for(var ii=0;ii<itemsaux.length;ii++)
                         {
-                            itemsDescuento[i].setMinValue(-100);
-                            itemsDescuento[i].setMaxValue(100);
+                            debug('itemsaux[ii]:',itemsaux[ii]);
+                            itemsaux[ii].minValue=-100;
+                            itemsaux[ii].maxValue=100;
+                            itemsDescuento.push(itemsaux[ii]);
                         }
                     </s:if>
                     
@@ -533,10 +543,11 @@ function _p28_cotizar()
                     ];
                     
                     <s:if test='%{getImap().get("panel6Items")!=null}'>
-                        itemsComision.push(<s:property value="imap.panel6Items" />);
-                        for(var i=1;i<itemsComision.length;i++)
+                        var itemsaux = [<s:property value="imap.panel6Items" />];
+                        for(var ii=0;ii<itemsaux.length;ii++)
                         {
-                            itemsComision[i].setMaxValue(100);
+                            itemsaux[ii].maxValue=100;
+                            itemsComision.push(itemsaux[ii]);
                         }
                     </s:if>
                     
