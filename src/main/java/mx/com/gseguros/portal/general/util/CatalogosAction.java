@@ -439,6 +439,15 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("modelo")
 							);
 					break;
+				case RAMO_5_AUTOS:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarAutosPorCadenaRamo5(
+							params.get("cadena")
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

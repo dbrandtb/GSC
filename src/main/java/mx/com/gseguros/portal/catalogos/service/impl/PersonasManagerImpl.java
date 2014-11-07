@@ -333,7 +333,7 @@ public class PersonasManagerImpl implements PersonasManager
 						dsemail, dsnombre1, dsapellido,
 						dsapellido1, feingreso, cdnacion,
 						canaling, conducto, ptcumupr,
-						residencia, Constantes.INSERT_MODE);
+						residencia, null,null,Constantes.INSERT_MODE);
 			}
 			catch(Exception ex)
 			{

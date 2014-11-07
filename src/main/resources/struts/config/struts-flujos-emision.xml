@@ -250,6 +250,10 @@
         <action name="cargarRetroactividadSuplemento" class="cotizacionAutoAction" method="cargarRetroactividadSuplemento">
             <result name="success" type="json" />
         </action>
+        
+        <action name="cargarSumaAseguradaRamo5" class="cotizacionAutoAction" method="cargarSumaAseguradaRamo5">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

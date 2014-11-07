@@ -230,6 +230,54 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarSumaAseguradaRamo5()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarSumaAseguradaRamo5 ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		setCheckpoint("Validando datos de entrada");
+		try
+		{
+			checkNull(smap1, "No se recibieron datos");
+			
+			String cdtipsit = smap1.get("cdtipsit");
+			String clave    = smap1.get("clave");
+			String modelo   = smap1.get("modelo");
+			String cdsisrol = smap1.get("cdsisrol");
+			
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(clave    , "No se recibio la clave del auto");
+			checkBlank(modelo   , "No se recibio el modelo del auto");
+			checkBlank(cdsisrol , "No se recibio el rol del usuario");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarSumaAseguradaRamo5(cdtipsit,clave,modelo,cdsisrol);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarSumaAseguradaRamo5 ######")
+				.append("\n######################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

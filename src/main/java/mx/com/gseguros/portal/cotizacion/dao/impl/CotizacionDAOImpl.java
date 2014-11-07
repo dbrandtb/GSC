@@ -2830,4 +2830,68 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarSumaAseguradaRamo5(
+			String cdtipsit
+			,String clave
+			,String modelo
+			,String cdsisrol)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("clave"    , clave);
+		params.put("modelo"   , modelo);
+		params.put("cdsisrol" , cdsisrol);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_SUMA_ASEG_RAMO_5 ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new CargarSumaAseguradaRamo5(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay suma asegurada para el auto");
+		}
+		else if(lista.size()>1)
+		{
+			throw new ApplicationException("Suma asegurada duplicada para el auto");
+		}
+		Map<String,String>mapa=lista.get(0);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** registro=").append(mapa)
+				.append("\n****** PKG_CONSULTA.P_GET_SUMA_ASEG_RAMO_5 ******")
+				.append("\n*************************************************")
+				.toString()
+				);
+		return mapa;
+	}
+	
+	protected class CargarSumaAseguradaRamo5 extends StoredProcedure
+	{
+		protected CargarSumaAseguradaRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_SUMA_ASEG_RAMO_5");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					"sumaseg"
+					,"facreduc"
+					,"facincrem"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

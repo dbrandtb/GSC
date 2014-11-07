@@ -70,4 +70,6 @@ public interface CatalogosDAO {
 	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca)throws Exception;
 	
 	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo)throws Exception;
+	
+	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena)throws Exception;
 }

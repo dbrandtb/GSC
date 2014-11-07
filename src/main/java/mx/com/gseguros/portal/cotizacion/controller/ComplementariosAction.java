@@ -1102,6 +1102,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_conducto_i"    , null);
 				parametros.put("pv_ptcumupr_i"    , null);
 				parametros.put("pv_residencia_i"  , null);
+				parametros.put("pv_nongrata_i"    , null);
+				parametros.put("pv_cdideext_i"    , null);
 				parametros.put("pv_accion_i"      , "I");
 				logger.debug("#iteracion mov mpersonas "+i);
 				kernelManager.movMpersona(parametros);

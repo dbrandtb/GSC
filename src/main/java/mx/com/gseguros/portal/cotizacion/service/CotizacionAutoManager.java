@@ -22,4 +22,9 @@ public interface CotizacionAutoManager
 			,String cdtipsup
 			,String cdusuari
 			,String cdtipsit);
+	public ManagerRespuestaSmapVO cargarSumaAseguradaRamo5(
+			String cdtipsit
+			,String clave
+			,String modelo
+			,String cdsisrol);
 }
