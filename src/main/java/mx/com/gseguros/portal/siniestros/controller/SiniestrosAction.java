@@ -376,7 +376,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								//generarAutoriServicio();
 								
 							}else{
-								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase("COORDMEDMULTI"))
+								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol()))
 								{
 									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA_CMM.getCodigo());// valor 12
 								}else{
