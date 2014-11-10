@@ -137,7 +137,7 @@ function validarRFC(rfc,tper)
 			[
 			    {
 			    	xtype : 'label'
-			    	,text : 'El RFC "'+rfc+'" no es v&aacute;lido para persona '+(tper=='F'?'F&iacute;sica':(tper=='M'?'Moral':'tipo r&eacute;gimen simplificado'))
+			    	,text : 'El RFC "'+rfc+'" no es v\u00E1lido para persona '+(tper=='F'?'F\u00EDsica':(tper=='M'?'Moral':'tipo r\u00E9gimen simplificado'))
 			    }
 			]
 		    ,buttonAlign : 'center'
