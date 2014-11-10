@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.catalogos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,13 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonasAction extends PrincipalCoreAction
 {
@@ -35,6 +40,10 @@ public class PersonasAction extends PrincipalCoreAction
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
 	private Map<String,String>       smap3;
+	
+	@Autowired
+	private transient Ice2sigsService ice2sigsService;
+	private boolean personaWS;
 	
 	/**
 	 * Carga los elementos de la pantalla de asegurados
@@ -87,6 +96,8 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		try
 		{
+			personaWS = false;
+			
 			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(
 					smap1.get("rfc"),
 					smap1.get("nombre"),
@@ -98,6 +109,120 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta       = (String)managerResult.get("respuesta");
 			respuestaOculta = (String)managerResult.get("respuestaOculta");
 			slist1          = (List<Map<String,String>>)managerResult.get("listaPersonas");
+			
+			logger.debug("Exito de busqueda de BD: " + exito);
+			
+			if(slist1 == null || slist1.isEmpty()){
+				logger.debug("...Busqueda de Persona en WS...");
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+		    	clienteGeneral.setRfcCli(smap1.get("rfc"));
+		    	clienteGeneral.setRamoCli(213);
+		    	clienteGeneral.setNombreCli(smap1.get("snombre"));
+		    	
+		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+		    	
+		    	if(clientesRes == null){
+		    		
+		    		exito           = true;
+					respuesta       = "No se encontró ninguna persona.";
+					respuestaOculta = "No se encontró ninguna persona.";
+					slist1          = null;
+					
+		    		return SUCCESS;
+		    	}
+		    	
+		    	ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
+		    	if(listaClientesGS != null && listaClientesGS.length > 0 ){
+		    		logger.debug("Agregando Personas de GS a Lista, " + listaClientesGS.length);
+		    		personaWS = true;
+		    		
+		    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		    		Calendar calendar =  Calendar.getInstance();
+			    	HashMap<String, String> agregar = null;
+			    	
+			    	for(ClienteGeneral cli: listaClientesGS){
+			    		agregar = new HashMap<String,String>();
+			    		
+			    		agregar.put("CDPERSON", "1");
+				    	agregar.put("CDIDEPER",     cli.getNumeroExterno());
+				    	
+				    	agregar.put("CDRFC",    cli.getRfcCli());
+				    	agregar.put("NOMBRE_COMPLETO", (cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc() );
+				    	agregar.put("DSNOMBRE",    (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+				    	agregar.put("DSNOMBRE1",   "");
+				    	
+				    	String apellidoPat = "";
+				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+				    		apellidoPat = cli.getApellidopCli();
+				    	}
+				    	agregar.put("DSAPELLIDO",     apellidoPat);
+				    	
+				    	String apellidoMat = "";
+				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+				    		apellidoMat = cli.getApellidomCli();
+				    	}
+				    	agregar.put("DSAPELLIDO1",     apellidoMat);
+				    	
+				    	if(cli.getFecnacCli()!= null){
+				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+							agregar.put("FENACIMI", sdf.format(calendar.getTime()));
+				    	}else {
+				    		agregar.put("FENACIMI", "");
+				    	}
+				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
+				    	
+				    	agregar.put("CODPOSTAL", cli.getCodposCli());
+				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
+		    			if(edoAdosPos.length() ==  1){
+		    				edoAdosPos = "0"+edoAdosPos;
+		    			}
+				    	agregar.put("CDEDO", edoAdosPos);
+				    	agregar.put("CDMUNICI", "");
+				    	agregar.put("DSDOMICIL", cli.getCalleCli());
+				    	agregar.put("NMNUMERO", cli.getNumeroCli());
+				    	agregar.put("NMNUMINT", "");
+				    	
+				    	String sexo = "H"; //Hombre
+				    	if(cli.getSexoCli() > 0){
+				    		if(cli.getSexoCli() == 2) sexo = "M";
+				    	}
+				    	agregar.put("OTSEXO",     sexo);
+				    	
+				    	String tipoPersona = "F"; //Fisica
+				    	if(cli.getFismorCli() > 0){
+				    		if(cli.getFismorCli() == 2){
+				    			tipoPersona = "M";
+				    		}else if(cli.getFismorCli() == 3){
+				    			tipoPersona = "S";
+				    		}
+				    	}
+				    	agregar.put("OTFISJUR",     tipoPersona);
+				    	
+				    	String nacionalidad = "001";// Nacional
+				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+				    		nacionalidad = "002";
+				    	}
+				    	agregar.put("CDNACION",     nacionalidad);
+
+				    	agregar.put("CANALING",  "");
+				    	agregar.put("CONDUCTO",  "");
+				    	agregar.put("FEINGRESO", "");
+				    	agregar.put("PTCUMUPR",  "");
+				    	agregar.put("STATUS",    "INCOMPLETO");
+				    	agregar.put("RESIDENTE", "");
+				    	
+				    	slist1.add(agregar);
+				    	
+			    	}
+			    	
+			    	exito           = true;
+					respuesta       = "Ok.";
+					respuestaOculta = "Ok.";
+		    	}else {
+		    		logger.debug("No se encontraron clientes en GS.");
+		    	}
+			}
+			
 		}
 		catch(Exception ex)
 		{
@@ -186,6 +311,8 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("CONDUCTO")
 					,smap1.get("PTCUMUPR")
 					,smap1.get("RESIDENTE")
+					,smap1.get("NONGRATA")
+					,null//cdideext 
 					,smap2.get("NMORDDOM")
 					,smap2.get("DSDOMICI")
 					,smap2.get("NMTELEFO")
@@ -670,6 +797,14 @@ public class PersonasAction extends PrincipalCoreAction
 
 	public void setUpdateList(List<Map<String, String>> updateList) {
 		this.updateList = updateList;
+	}
+
+	public boolean isPersonaWS() {
+		return personaWS;
+	}
+
+	public void setPersonaWS(boolean personaWS) {
+		this.personaWS = personaWS;
 	}
 	
 }

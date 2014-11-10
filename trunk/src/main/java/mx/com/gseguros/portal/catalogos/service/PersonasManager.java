@@ -42,6 +42,8 @@ public interface PersonasManager
 			,String conducto
 			,String ptcumupr
 			,String residencia
+			,String nongrata
+			,String cdideext
 			,String nmorddom
 			,String dsdomici
 			,String nmtelefo

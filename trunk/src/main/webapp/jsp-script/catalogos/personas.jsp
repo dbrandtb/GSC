@@ -1,8 +1,16 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Personas</title>
+<style>
+.status{
+	font-size:14px; 
+	font-weight: bold;
+}
+</style>
+
 <script>
 ////// overrides //////
 ////// overrides //////
@@ -32,7 +40,6 @@ var _UrlActualizaStatusPersona = '<s:url namespace="/catalogos" action="actualiz
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
 /* PARA EL LOADER */
 
-var _p22_storeGrid;
 var _p22_windowAgregarDocu;
 
 var windowAccionistas = undefined;
@@ -43,16 +50,17 @@ var _0_botAceptar;
 
 var _statusDataDocsPersona;
 
+var _RFCsel;
+var _RFCnomSel;
+
+var _DocASubir;
+
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p22_smap1:',_p22_smap1);
 var _p22_cdperson = false;
-if(_p22_smap1!=null && !Ext.isEmpty(_p22_smap1.cdperson))
-{
-    _p22_cdperson = _p22_smap1.cdperson;
-}
-debug('_p22_cdperson:',_p22_cdperson);
-/* PARA LOADER */
+var _p22_tipoPersona;
+var _p22_nacionalidad;
 
 ////// variables //////
 
@@ -72,24 +80,6 @@ Ext.onReady(function()
 	});
 	////// modelos //////
 	
-	////// stores //////
-	_p22_storeGrid=Ext.create('Ext.data.Store',
-	{
-		model     : '_p22_modeloGrid'
-		,autoLoad : false
-		,proxy    :
-		{
-			url     : _p22_urlObtenerPersonas
-			,type   : 'ajax'
-			,reader :
-			{
-				type  : 'json'
-				,root : 'slist1'
-			}
-		}
-	});
-	////// stores //////
-	
 	////// componentes //////
 	////// componentes //////
 	
@@ -99,153 +89,262 @@ Ext.onReady(function()
 		renderTo  : '_p22_divpri'
 		,defaults : { style : 'margin:5px;' }
 	    ,border   : 0
+	    ,itemId   : '_p22_PanelPrincipal'
 	    ,items    :
 	    [
 	        Ext.create('Ext.form.Panel',
 	        {
-	        	 title        : 'Buscar por RFC'
+	        	 title        : "Escriba el RFC de la Persona a buscar/crear y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se crear&aacute; una nueva."
 	        	 ,itemId      : '_p22_formBusqueda'
-	        	 ,hidden      : _p22_cdperson!=false
 	        	 ,layout      :
 	        	 {
 	        	     type     : 'table'
-	        	     ,columns : 2
+	        	     ,columns : 3
 	        	 }
 	        	 ,defaults    : { style : 'margin:5px;' }
-	        	 ,items       : [ <s:property value="imap.BUSQUEDA" /> ]
+	        	 ,items       : [ {
+	        	 				xtype: 'combobox',
+								fieldLabel:'RFC',
+								labelWidth: 40,
+								width:    450,
+								queryParam  : 'smap1.rfc',
+								queryMode   : 'remote',
+            					minChars    : 9,
+								minLength   : 2,
+//								queryDelay  : 500,
+								name          : 'smap1.rfc',
+					            valueField    : 'CDRFC',
+					            displayField  : 'NOMBRE_COMPLETO',
+					            //forceSelection: true,
+					            //typeAhead     : true,
+					            anyMatch      : true,
+					            hideTrigger   : true,
+					            tpl: Ext.create('Ext.XTemplate',
+					                    '<tpl for=".">',
+					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1}</div>',
+					                    '</tpl>'
+					            ),
+					            enableKeyEvents: true,
+					            listeners: {
+					            	select: function(comb, records){
+					            		_RFCsel = records[0].get('CDRFC');
+					            		_p22_cdperson = records[0].get('CDPERSON');
+					            		_p22_tipoPersona = records[0].get('OTFISJUR');
+					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		var form=_p22_formBusqueda();
+					            		form.down('[name=smap1.nombre]').reset();
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar');
+					            	}, 
+					            	keydown: function(){
+					            		_RFCsel = '';
+					            		var form=_p22_formBusqueda();
+					            		form.down('[name=smap1.nombre]').reset();
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Agregar');
+					            	}
+					            },
+					            store         : Ext.create('Ext.data.Store', {
+					                model     : '_p22_modeloGrid',
+					                proxy     : {
+				                            type        : 'ajax'
+				                            ,url        : _p22_urlObtenerPersonas
+				                            ,reader     :
+				                            {
+				                                type  : 'json'
+				                                ,root : 'slist1'
+				                            }
+				                        }
+				                        ,listeners: {
+				                        	beforeload: function(){
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
+				                        	},
+				                        	load      : function(){
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
+				                        	}
+				                        }
+					            })
+								},
+								{
+								xtype: 'combobox',
+								fieldLabel:'Nombre',
+								labelWidth: 50,
+								width:    450,
+								queryParam  : 'smap1.nombre',
+								queryMode   : 'remote',
+            					minChars    : 2,
+								minLength   : 2,
+								name          : 'smap1.nombre',
+					            valueField    : 'CDRFC',
+					            displayField  : 'NOMBRE_COMPLETO',
+					            //forceSelection: true,
+					            //                                                                      typeAhead     : true,
+					            anyMatch      : true,
+					            hideTrigger   : true,
+					            tpl: Ext.create('Ext.XTemplate',
+					                    '<tpl for=".">',
+					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1}</div>',
+					                    '</tpl>'
+					            ),
+					            enableKeyEvents: true,
+					            listeners: {
+					            	select: function(comb, records){
+					            		_RFCnomSel = records[0].get('CDRFC');
+					            		_p22_cdperson = records[0].get('CDPERSON');
+					            		_p22_tipoPersona = records[0].get('OTFISJUR');
+					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		var form=_p22_formBusqueda();
+					            		form.down('[name=smap1.rfc]').reset();
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar');
+					            	}, 
+					            	keydown: function(){
+					            		_RFCnomSel = '';
+					            		var form=_p22_formBusqueda();
+					            		form.down('[name=smap1.rfc]').reset();
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Agregar');
+					            	}
+					            },
+					            store         : Ext.create('Ext.data.Store', {
+					                model     : '_p22_modeloGrid',
+					                proxy     : {
+				                            type        : 'ajax'
+				                            ,url        : _p22_urlObtenerPersonas
+				                            ,reader     :
+				                            {
+				                                type  : 'json'
+				                                ,root : 'slist1'
+				                            }
+				                        }
+				                        ,listeners: {
+				                        	beforeload: function(){
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
+				                        	},
+				                        	load      : function(){
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
+				                        	}
+				                        }
+					            })
+								},{
+										xtype      : 'hidden',
+										name       : 'smap1.snombre',
+										value      : ' '  // 1 INSERT, 2 UPDATE
+									},
+									{
+										xtype      : 'hidden',
+										name       : 'smap1.apat',
+										value      : ' '  // 1 INSERT, 2 UPDATE
+									},{
+										xtype      : 'hidden',
+										name       : 'smap1.amat',
+										value      : ' '  // 1 INSERT, 2 UPDATE
+									}
+								]
 	        	 ,buttonAlign : 'center'
 	        	 ,buttons     :
 	        	 [
 	        	     {
-                         text     : 'Buscar'
+                         text     : 'Agregar'
                          ,xtype   : 'button'
-                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                         ,handler : _p22_buscarClic
+                         ,itemId  : 'btnContinuarId'
+                         ,disabled: true
+                         ,icon    : '${ctx}/resources/fam3icons/icons/building_go.png'
+                         ,handler : function (){
+										var form=_p22_formBusqueda();
+										
+										var valorRFC = form.down('[name=smap1.rfc]').getValue(); 
+										var valorNombre = form.down('[name=smap1.nombre]').getValue();
+										
+										if(Ext.isEmpty(valorRFC) && Ext.isEmpty(valorNombre)){
+											mensajeWarning('Debe de llenar uno de los dos campos para continuar.');
+										}
+										
+										debug('valorRFC:',valorRFC);
+										debug('valorNombre:',valorNombre);
+										debug('_RFCsel:',_RFCsel);
+										debug('_RFCnomSel:',_RFCnomSel);
+										
+										if( (!Ext.isEmpty(_RFCsel)&&(_RFCsel == valorRFC)) || ((!Ext.isEmpty(_RFCnomSel))&&(_RFCnomSel == valorNombre))){
+											_p22_formDatosGenerales().getForm().reset();
+											_p22_formDomicilio().getForm().reset();
+											_p22_formDatosGenerales().hide();
+								    		_p22_formDomicilio().hide();
+								    		_p22_principalDatosAdicionales().hide();
+											
+								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
+								    		if("1" == _p22_cdperson){
+								    			importaPersonaWS();
+								    		}
+								    		
+											irModoEdicion();
+											
+										}else if(!Ext.isEmpty(valorRFC)){
+											_p22_formDatosGenerales().getForm().reset();
+											_p22_formDomicilio().getForm().reset();
+											_p22_formDatosGenerales().hide();
+						    				_p22_formDomicilio().hide();
+										    _p22_principalDatosAdicionales().hide();
+											
+										    if(form.down('[name=smap1.rfc]').getStore().count() > 0){
+										    	mensajeWarning('El RFC ya existe. Favor de seleccionar uno de la lista.');
+										    	return;
+										    }
+											_p22_fieldRFC().setValue(valorRFC);
+											irModoAgregar();
+											
+										}else if(!Ext.isEmpty(valorNombre)){
+											mensajeWarning('Para crear una persona nueva llene el campo de RFC.');
+											return;
+										}
+									}
                      }
                  ]
 	        })
-	        ,Ext.create('Ext.grid.Panel',
-	        {
-	        	title      : 'Personas encontradas'
-                ,hidden    : _p22_cdperson!=false
-	        	,height    : 200
-	        	,border    : 0
-	        	,columns   : [ <s:property value="imap.gridColumns" /> ]
-	            ,store     : _p22_storeGrid
-	            ,listeners :
-	            {
-	                itemclick : _p22_itemclick
-	            }
-	        })
-	        ,Ext.create('Ext.tab.Panel',
-	        {
-	        	title        : 'Edici&oacute;n de persona'
-	        	,itemId      : '_p22_tabPanel'
-	        	,border      : 0
-	        	,tbar        :
-	        	[
+	        ,Ext.create('Ext.form.Panel',
 	        	    {
-	        	        text     : 'Datos adicionales'
-	        	        ,icon    : '${ctx}/resources/fam3icons/icons/application_form_add.png'
-	        	        ,handler : function(){
-	        	        		 windowAccionistas = undefined;
-	        	        		_p22_guardarClic(_p22_datosAdicionalesClic);
-	        	        }
-	        	    }
-	        	    ,{
-                        text     : 'Ver Documentos'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                        ,handler : function(){_p22_guardarClic(_p22_documentosClic);}
-                    }
-	        	]
-	        	,items       :
-	        	[
-	        	    Ext.create('Ext.form.Panel',
-	        	    {
-	        	    	title     : 'Datos generales'
+	        	    	title     : 'Datos generales de la Persona'
 	        	    	,itemId   : '_p22_formDatosGenerales'
                         ,border   : 0
 	        	    	,defaults : { style : 'margin:5px' }
 	        	        ,layout   :
 	        	        {
 	        	        	type     : 'table'
-	        	        	,columns : 2
+	        	        	,columns : 3
 	        	        }
-	        	    	,items    : [ <s:property value="imap.datosGeneralesItems" /> ]
+	        	    	,items    : [ <s:property value="imap.datosGeneralesItems" escapeHtml="false" /> ]
 	        	    })
 	        	    ,Ext.create('Ext.form.Panel',
                     {
-                        title     : 'Domicilio'
+                        title     : 'Domicilio de la Persona'
                         ,itemId   : '_p22_formDomicilio'
                         ,border   : 0
                         ,defaults : { style : 'margin:5px' }
                         ,layout   :
                         {
                             type     : 'table'
-                            ,columns : 2
+                            ,columns : 3
                         }
-                        ,items    : [ <s:property value="imap.itemsDomicilio" /> ]
+                        ,items    : [ <s:property value="imap.itemsDomicilio" escapeHtml="false" /> ]
                     })
-	        	]
-	        	,buttonAlign : 'center'
-	        	,buttons     :
-	        	[
-	        	    {
-	        	        text     : 'Nueva Persona'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-                        ,hidden  : _p22_cdperson!=false
-                        ,handler : _p22_nuevoClic
-	        	    }
-	        		,{
-	        			text     : 'Guardar'
-	        			,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-	        			,handler : function(){_p22_guardarClic(function(){
-	        				/** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
-	                        Ext.Ajax.request(
-	                    	        {
-	                    	            url       : _UrlActualizaStatusPersona
-	                    	            ,params: {
-	                	            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
-	                	            	}
-	                    	            ,success  : function(response)
-	                    	            {
-	                    	                //_p22_formDatosAdicionales().setLoading(false);
-	                    	                var json = Ext.decode(response.responseText);
-	                    	                debug('response text:',json);
-	                    	                if(json.exito)
-	                    	                {
-	                    	                    debug('Actualizando estatus de Persona: ');
-	                    	                    _fieldByName('STATUS').setValue(json.respuesta);
-	                    	                    
-	                    	                    _recargaBusqueda();
-	                    	                }
-	                    	                else
-	                    	                {
-	                    	                    mensajeError(json.respuesta);
-	                    	                }
-	                    	            }
-	                    	            ,failure  : function()
-	                    	            {
-	                    	                _p22_formDatosAdicionales().setLoading(false);
-	                    	                errorComunicacion();
-	                    	            }
-	                    	});
-	        			});}
-	        		}
-	        	]
-	        })
+                    ,Ext.create('Ext.form.Panel',
+                    {
+                        title   : 'Datos adicionales de la Persona'
+                    	,itemId : '_p22_principalDatosAdicionales'
+                        ,border   : 0
+                        //,defaults : { style : 'margin:5px' }
+                        ,buttonAlign: 'center'
+                        ,buttons    :
+	                    [{
+	                            text     : 'Guardar datos de Persona'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+	                            ,handler : function(){
+	                            			_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+	                            }
+	                    }]
+                    })
+                    
 	    ]
 	});
 	////// contenido //////
 	
 	////// loaders //////
-	
-	/* PARA EL LOADER */
-	if(_p22_cdperson!=false)
-	{
-	    _p22_loadRecordCdperson();
-	}
-	/* PARA EL LOADER */
 	
 	_p22_comboCodPostal().addListener('blur',_p22_heredarColonia);
 	_p22_fieldTipoPersona().addListener('change',_p22_tipoPersonaChange);
@@ -257,45 +356,360 @@ Ext.onReady(function()
     _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
 	////// loaders //////
+    
+    
+    _p22_fieldCumuloPrima().addListener('select', function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+    _p22_fieldResidente().addListener('select', function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+    
+    _p22_formDatosGenerales().hide();
+    _p22_formDomicilio().hide();
+    _p22_principalDatosAdicionales().hide();
+    
+    function irModoAgregar(){
+    	var windowTipo;
+    	var panelTipoPer = Ext.create('Ext.form.Panel', {
+		    defaults : { style : 'margin:5px;' },
+		    items: [{	xtype: 'combobox',
+						fieldLabel:'Tipo de persona',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TIPOS_PERSONA'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldTipoPersona().setValue(records[0]);
+							}
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'C&uacute;mulo de prima',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TCUMULOS'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldCumuloPrima().setValue(records[0]);
+							}
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'Nacionalidad',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'NACIONALIDAD'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fielCdNacion().setValue(records[0]);
+							},
+							change:  _p22_nacionalidadChange2
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'Residente',
+						name: 'RESIDENTE2',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TIPO_RESIDENCIA'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldResidente().setValue(records[0]);
+							}
+						}
+					}],
+		    buttons: [{
+		        text: 'Cancelar',
+		        handler: function() {
+		            this.up('form').getForm().reset();
+		            windowTipo.close();
+		        }
+		    }, {
+		        text: 'Aceptar',
+		        formBind: true, //only enabled once the form is valid
+		        disabled: true,
+		        handler: function() {
+		            var form = this.up('form').getForm();
+		            if (form.isValid()) {
+		            	
+		            	if(!validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue())){
+		            		return;
+		            	}
+		            	
+		                _p22_formDatosGenerales().show();
+		                _p22_formDomicilio().show();
+		                _p22_principalDatosAdicionales().show();
+		                windowTipo.close();
+		                
+		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
+		            }
+		        }
+		    }]
+		});
+		
+		
+		windowTipo = Ext.create('Ext.window.Window', {
+			title: 'Elija el tipo de persona',
+		    height: 200,
+		    width: 300,
+		    closable: false,
+		    items: [panelTipoPer]
+		}).show();
+		centrarVentanaInterna(windowTipo);
+    	
+    }
+    
+    function irModoEdicion(){
+    	
+		if(_p22_cdperson!=false){
+			_p22_formDatosGenerales().show();
+			_p22_formDomicilio().show();
+		    _p22_principalDatosAdicionales().show();
+
+		    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+		    
+		}else{
+			mensajeWarning('Error al cargar datos.');
+		}
+    }
+    
+    function importaPersonaWS(){
+    	
+    	alert(_p22_tipoPersona);
+    	var windowTipo;
+    	var panelTipoPer = Ext.create('Ext.form.Panel', {
+		    defaults : { style : 'margin:5px;' },
+		    items: [{	xtype: 'combobox',
+						fieldLabel:'Tipo de persona',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						readOnly: true,
+						value: _p22_tipoPersona,
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TIPOS_PERSONA'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldTipoPersona().setValue(records[0]);
+							}
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'C&uacute;mulo de prima',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						readOnly: true,
+						value: _p22_nacionalidad,
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TCUMULOS'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldCumuloPrima().setValue(records[0]);
+							}
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'Nacionalidad',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'NACIONALIDAD'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fielCdNacion().setValue(records[0]);
+							},
+							change:  _p22_nacionalidadChange2
+						}
+					},{
+						xtype:'combobox',
+						fieldLabel:'Residente',
+						name: 'RESIDENTE2',
+						allowBlank:false,
+						typeAhead:true,
+						anyMatch:true,
+						displayField:'value',
+						valueField:'key',
+						forceSelection:true,
+						editable:false,
+						queryMode:'local',
+						store:Ext.create('Ext.data.Store',{
+						model:'Generic',
+						autoLoad:true,
+						proxy:{type:'ajax',
+						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						reader:{type:'json',
+						root:'lista',
+						rootProperty:'lista'
+						},
+						extraParams:{catalogo:'TIPO_RESIDENCIA'}
+						}
+						}),
+						listeners: {
+							select: function(combo,records){
+								_p22_fieldResidente().setValue(records[0]);
+							}
+						}
+					}],
+		    buttons: [{
+		        text: 'Cancelar',
+		        handler: function() {
+		            this.up('form').getForm().reset();
+		            windowTipo.close();
+		        }
+		    }, {
+		        text: 'Aceptar',
+		        formBind: true, //only enabled once the form is valid
+		        disabled: true,
+		        handler: function() {
+		            var form = this.up('form').getForm();
+		            if (form.isValid()) {
+		            	
+		            	if(!validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue())){
+		            		return;
+		            	}
+		            	
+		                _p22_formDatosGenerales().show();
+		                _p22_formDomicilio().show();
+		                _p22_principalDatosAdicionales().show();
+		                windowTipo.close();
+		                
+		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
+		            }
+		        }
+		    }]
+		});
+		
+		
+		windowTipo = Ext.create('Ext.window.Window', {
+			title: 'Elija el tipo de persona',
+		    height: 200,
+		    width: 300,
+		    closable: false,
+		    items: [panelTipoPer]
+		}).show();
+		centrarVentanaInterna(windowTipo);
+    	
+    }
 });
 
 ////// funciones //////
-function _p22_buscarClic()
-{
-    debug('>_p22_buscarClic');
-    _p22_nuevoClic();
-	var form=_p22_formBusqueda();
-	var exito = true;
-	if(exito)
-	{
-		exito=form.isValid();
-		if(!exito)
-		{
-			mensajeWarning('Favor de revisar los campos requeridos');
-		}
-	}
-	
-	if(exito)
-	{
-		_p22_storeGrid.load(
-		{
-			params :
-			{
-				'smap1.rfc'     : _p22_formBusqueda().down('[name=rfc]').getValue()
-				,'smap1.nombre' : _p22_formBusqueda().down('[name=nombre]').getValue()
-				,'smap1.snombre' : _p22_formBusqueda().down('[name=snombre]').getValue()
-                ,'smap1.apat'   : _p22_formBusqueda().down('[name=apat]').getValue()
-                ,'smap1.amat'   : _p22_formBusqueda().down('[name=amat]').getValue()
-			}
-		});
-	}
-	debug('<_p22_buscarClic');
-}
 
 function _p22_formBusqueda()
 {
     debug('>_p22_formBusqueda<');
-	return Ext.ComponentQuery.query('#_p22_formBusqueda')[Ext.ComponentQuery.query('#_p22_formBusqueda').length-1];
+	return Ext.ComponentQuery.query('#_p22_formBusqueda')[0];
 }
 
 function _p22_heredarColonia()
@@ -349,6 +763,22 @@ function _p22_nacionalidadChange(combo,value)
     debug('<_p22_nacionalidadChange');
 }
 
+function _p22_nacionalidadChange2(combo,value)
+{
+    if(value!='001')//extranjero
+    {
+        _fieldByName('RESIDENTE2').show();
+        _fieldByName('RESIDENTE2').allowBlank = false;
+        _fieldByName('RESIDENTE2').validate();
+    }
+    else//nacional
+    {
+        _fieldByName('RESIDENTE2').hide();
+        _fieldByName('RESIDENTE2').allowBlank = true;
+        _fieldByName('RESIDENTE2').validate();
+    }
+}
+
 function _p22_tipoPersonaChange(combo,value)
 {
     debug('>_p22_tipoPersonaChange',value);
@@ -390,56 +820,68 @@ function _p22_tipoPersonaChange(combo,value)
 function _p22_comboColonias()
 {
     debug('>_p22_comboColonias<');
-    return Ext.ComponentQuery.query('[name=CDCOLONI]')[Ext.ComponentQuery.query('[name=CDCOLONI]').length-1];
+    return Ext.ComponentQuery.query('[name=CDCOLONI]')[0];
 }
 
 function _p22_comboCodPostal()
 {
     debug('>_p22_comboCodPostal<');
-    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];
+    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[0];
 }
 
 function _p22_fieldSegundoNombre()
 {
     debug('>_p22_fieldSegundoNombre<');
-    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[Ext.ComponentQuery.query('[name=DSNOMBRE1]').length-1];
+    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[0];
 }
 
 function _p22_fieldApat()
 {
     debug('>_p22_fieldApat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[Ext.ComponentQuery.query('[name=DSAPELLIDO]').length-1];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[0];
 }
 
 function _p22_fieldAmat()
 {
     debug('>_p22_fieldAmat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[Ext.ComponentQuery.query('[name=DSAPELLIDO1]').length-1];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[0];
 }
 
 function _p22_fieldSexo()
 {
     debug('>_p22_fieldSexo<');
-    return Ext.ComponentQuery.query('[name=OTSEXO]')[Ext.ComponentQuery.query('[name=OTSEXO]').length-1];
+    return Ext.ComponentQuery.query('[name=OTSEXO]')[0];
 }
 
 function _p22_fieldTipoPersona()
 {
     debug('>_p22_fieldTipoPersona<');
-    return Ext.ComponentQuery.query('[name=OTFISJUR]')[Ext.ComponentQuery.query('[name=OTFISJUR]').length-1];
+    return Ext.ComponentQuery.query('[name=OTFISJUR]')[0];
+}
+
+function _p22_fieldCumuloPrima(){
+    return Ext.ComponentQuery.query('[name=PTCUMUPR]')[0];
+}
+
+function _p22_fielCdNacion(){
+    return Ext.ComponentQuery.query('[name=CDNACION]')[0];
+}
+
+function _p22_fieldResidente(){
+    return Ext.ComponentQuery.query('[name=RESIDENTE]')[0];
 }
 
 function _p22_formDatosGenerales()
 {
     debug('>_p22_formDatosGenerales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[Ext.ComponentQuery.query('#_p22_formDatosGenerales').length-1];
+    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[0];
 }
 
 /* PARA EL LOADER */
-function _p22_loadRecordCdperson()
+function _p22_loadRecordCdperson(callbackload)
 {
     debug('>_p22_loadRecordCdperson');
-    _p22_tabPanel().setLoading(true);
+    _p22_PanelPrincipal().setLoading(true);
     Ext.Ajax.request(
     {
         url     : _p22_urlCargarPersonaCdperson
@@ -449,11 +891,43 @@ function _p22_loadRecordCdperson()
         }
         ,success : function(response)
         {
-            _p22_tabPanel().setLoading(false);
+            _p22_PanelPrincipal().setLoading(false);
             var json=Ext.decode(response.responseText);
             if(json.exito)
             {
-                _p22_itemclick(null,new _p22_modeloGrid(json.smap2));
+            	var record = new _p22_modeloGrid(json.smap2);
+            	_p22_PanelPrincipal().setLoading(true);
+			    _p22_formDatosGenerales().loadRecord(record);
+			    Ext.Ajax.request(
+			    {
+			        url      : _p22_urlObtenerDomicilio
+			        ,params  :
+			        {
+			            'smap1.cdperson' : record.get('CDPERSON')
+			        }
+			        ,success : function(response)
+			        {
+			            _p22_PanelPrincipal().setLoading(false);
+			            var json=Ext.decode(response.responseText);
+			            debug('json response:',json);
+			            if(json.exito)
+			            {
+			                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
+			                heredarPanel(_p22_formDomicilio());
+			                
+			                callbackload();
+			            }
+			            else
+			            {
+			                mensajeError(json.respuesta);
+			            }
+			        }
+			        ,failure : function()
+			        {
+			            _p22_PanelPrincipal().setLoading(false);
+			            errorComunicacion();
+			        }
+			    });
             }
             else
             {
@@ -462,7 +936,7 @@ function _p22_loadRecordCdperson()
         }
         ,failure : function()
         {
-            _p22_tabPanel().setLoading(false);
+            _p22_PanelPrincipal().setLoading(false);
             errorComunicacion();
         }
     });
@@ -470,61 +944,24 @@ function _p22_loadRecordCdperson()
 }
 /* PARA EL LOADER */
 
-function _p22_itemclick(grid,record)
+
+function _p22_PanelPrincipal()
 {
-    debug('>_p22_itemclick:',record.data);
-    _p22_nuevoClic();
-    _p22_tabPanel().setLoading(true);
-    _p22_formDatosGenerales().loadRecord(record);
-    Ext.Ajax.request(
-    {
-        url      : _p22_urlObtenerDomicilio
-        ,params  :
-        {
-            'smap1.cdperson' : record.get('CDPERSON')
-        }
-        ,success : function(response)
-        {
-            _p22_tabPanel().setLoading(false);
-            var json=Ext.decode(response.responseText);
-            debug('json response:',json);
-            if(json.exito)
-            {
-                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
-                heredarPanel(_p22_formDomicilio());
-            }
-            else
-            {
-                mensajeError(json.respuesta);
-            }
-        }
-        ,failure : function()
-        {
-            _p22_tabPanel().setLoading(false);
-            errorComunicacion();
-        }
-    });
-    debug('<_p22_itemclick');
+    debug('>_p22_PanelPrincipal<');
+    return Ext.ComponentQuery.query('#_p22_PanelPrincipal')[0];
 }
 
-function _p22_tabPanel()
-{
-    debug('>_p22_tabPanel<');
-    return Ext.ComponentQuery.query('#_p22_tabPanel')[Ext.ComponentQuery.query('#_p22_tabPanel').length-1];
-}
-
-function _p22_guardarClic(callback)
+function _p22_guardarClic(callback, autosave)
 {
     debug('>_p22_guardarClic');
     var valido = true;
     
     if(valido)
     {
-        valido = _p22_formDatosGenerales().isValid();
+        valido = autosave || _p22_formDatosGenerales().isValid();
         if(!valido)
         {
             mensajeWarning('Favor de verificar los datos generales');
-            _p22_ponerActivo(1);
         }
     }
     
@@ -533,15 +970,14 @@ function _p22_guardarClic(callback)
         valido = validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue());
         if(!valido)
         {
-            _p22_ponerActivo(1);
         }
     }
     
     if(valido&&_p22_fieldTipoPersona().getValue()=='F')
     {
-        valido = !Ext.isEmpty(_p22_fieldApat().getValue())
+        valido = autosave || (!Ext.isEmpty(_p22_fieldApat().getValue())
                  &&!Ext.isEmpty(_p22_fieldAmat().getValue())
-                 &&!Ext.isEmpty(_p22_fieldSexo().getValue());
+                 &&!Ext.isEmpty(_p22_fieldSexo().getValue()));
         if(!valido)
         {
             mensajeWarning('Favor de introducir apellidos y sexo para persona f&iacute;sica');
@@ -556,17 +992,16 @@ function _p22_guardarClic(callback)
     
     if(valido)
     {
-        valido = _p22_formDomicilio().isValid();
+        valido = autosave || _p22_formDomicilio().isValid();
         if(!valido)
         {
             mensajeWarning('Favor de verificar los datos del domicilio');
-            _p22_ponerActivo(2);
         }
     }
     
     if(valido)
     {
-        _p22_tabPanel().setLoading(true);
+        _p22_PanelPrincipal().setLoading(true);
         Ext.Ajax.request(
         {
             url       : _p22_urlGuardar
@@ -577,7 +1012,7 @@ function _p22_guardarClic(callback)
             }
             ,success : function(response)
             {
-                _p22_tabPanel().setLoading(false);
+                _p22_PanelPrincipal().setLoading(false);
                 var json = Ext.decode(response.responseText);
                 debug('json response:',json);
                 if(json.exito)
@@ -591,10 +1026,14 @@ function _p22_guardarClic(callback)
                     {
                         mensajeCorrecto('Datos guardados',json.respuesta);
                     }
-                    if(_p22_cdperson!=false&&_p22_parentCallback)
-                    {
-                        _p22_parentCallback(json);
+                    try{
+                    	if(_p22_cdperson!=false&&_p22_parentCallback){
+                        	_p22_parentCallback(json);
+                    	}
+                    }catch(e){
+                    	debug('Error',e)
                     }
+                    
                 }
                 else
                 {
@@ -603,7 +1042,7 @@ function _p22_guardarClic(callback)
             }
             ,failure : function()
             {
-                _p22_tabPanel().setLoading(false);
+                _p22_PanelPrincipal().setLoading(false);
                 errorComunicacion();
             }
         });
@@ -612,61 +1051,41 @@ function _p22_guardarClic(callback)
     debug('<_p22_guardarClic');
 }
 
-function _p22_ponerActivo(indice)
-{
-    var tab=0;
-    if(indice==1)
-    {
-        tab = _p22_formDatosGenerales();
-    }
-    else if(indice==2)
-    {
-        tab = _p22_formDomicilio();
-    }
-    _p22_tabPanel().setActiveTab(tab);
-}
-
 function _p22_formDomicilio()
 {
     debug('>_p22_formDomicilio<');
-    return Ext.ComponentQuery.query('#_p22_formDomicilio')[Ext.ComponentQuery.query('#_p22_formDomicilio').length-1];
+    return Ext.ComponentQuery.query('#_p22_formDomicilio')[0];
+}
+
+function _p22_principalDatosAdicionales()
+{
+    debug('>_p22_principalDatosAdicionales<');
+    return Ext.ComponentQuery.query('#_p22_principalDatosAdicionales')[0];
 }
 
 function _p22_fieldRFC()
 {
     debug('>_p22_fieldRFC<');
-    return Ext.ComponentQuery.query('[name=CDRFC]')[Ext.ComponentQuery.query('[name=CDRFC]').length-1];
+    return Ext.ComponentQuery.query('[name=CDRFC]')[0];
 }
 
 function _p22_fieldCdperson()
 {
     debug('>_p22_fieldCdperson<');
-    return Ext.ComponentQuery.query('[name=CDPERSON]')[Ext.ComponentQuery.query('[name=CDPERSON]').length-1];
+    return Ext.ComponentQuery.query('[name=CDPERSON]')[0];
 }
 
 function _p22_fieldConsecutivo()
 {
     debug('>_p22_fieldConsecutivo<');
-    return Ext.ComponentQuery.query('[name=NMORDDOM]')[Ext.ComponentQuery.query('[name=NMORDDOM]').length-1];
-}
-
-function _p22_nuevoClic()
-{
-    debug('>_p22_nuevoClic');
-    _p22_ponerActivo(1);
-    _p22_formDatosGenerales().getForm().reset();
-    _p22_formDomicilio().getForm().reset();
-    debug('<_p22_nuevoClic');
-}
-
-function _recargaBusqueda(){
-	debug('Recargando Busqueda');
-	_p22_storeGrid.reload();
+    return Ext.ComponentQuery.query('[name=NMORDDOM]')[0];
 }
 
 function _p22_datosAdicionalesClic()
 {
     debug('>_p22_datosAdicionalesClic');
+    
+    windowAccionistas = undefined;
     
     /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
     Ext.Ajax.request(
@@ -685,7 +1104,6 @@ function _p22_datosAdicionalesClic()
 	                    debug('Actualizando estatus de Persona: ');
 	                    _fieldByName('STATUS').setValue(json.respuesta);
 	                    
-	                    _recargaBusqueda();
 	                }
 	                else
 	                {
@@ -699,14 +1117,17 @@ function _p22_datosAdicionalesClic()
 	            }
 	});
     
-    _p22_tabPanel().setLoading(true);
+    _p22_PanelPrincipal().setLoading(true);
+    
+    _p22_principalDatosAdicionales().removeAll();
+    
     Ext.Ajax.request(
     {
         url      : _p22_urlTatriperTvaloper
         ,params  : { 'smap1.cdperson' : _p22_fieldCdperson().getValue() }
         ,success : function(response)
         {
-            _p22_tabPanel().setLoading(false);
+            _p22_PanelPrincipal().setLoading(false);
             var json = Ext.decode(response.responseText);
             debug('json response:',json);
             if(json.exito)
@@ -717,10 +1138,33 @@ function _p22_datosAdicionalesClic()
                     ,fields : Ext.decode(json.smap1.fieldsTatriper.substring("fields:".length))
                 });
                 
-                Ext.create('Ext.window.Window',
+                
+                _p22_principalDatosAdicionales().add({
+            	    	layout: 'column',
+            	    	border: false,
+            	    	html:'<span style="font-size:14px; font-weight: bold;">Para que el estatus de la persona sea completo se requiere que los campos con el s&iacute;mbolo: <img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt="">, sean capturados.</span><br/><br/>'
+            	});
+                _p22_principalDatosAdicionales().add(
+                Ext.create('Ext.form.Panel',
+                        {
+                            border    : 0
+                            ,itemId   : '_p22_formDatosAdicionales'
+//                            ,width    : 570
+                            ,defaults : { style : 'margin:5px;' }
+                            ,layout   :
+                            {
+                                type     : 'table'
+                                ,columns : 3
+                            }
+                            ,items    : Ext.decode(json.smap1.itemsTatriper.substring("items:".length))
+                        })
+                );
+                
+                
+               /* Ext.create('Ext.form.Panel',
                 {
                     title   : 'Datos adicionales'
-                    ,itemId : '_p22_ventanaDatosAdicionales'
+                    ,itemId : '_p22_principalDatosAdicionales'
                     ,width  : 650
                     ,height : 600
                     ,autoScroll : true
@@ -740,7 +1184,7 @@ function _p22_datosAdicionalesClic()
                             ,layout   :
                             {
                                 type     : 'table'
-                                ,columns : 2
+                                ,columns : 3
                             }
                             ,items    : Ext.decode(json.smap1.itemsTatriper.substring("items:".length))
                         })
@@ -757,12 +1201,12 @@ function _p22_datosAdicionalesClic()
                         	text: 'Cerrar'
                         	,icon: '${ctx}/resources/fam3icons/icons/cancel.png'
                         	,handler: function(){
-                        		Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].close();
+                        		_p22_principalDatosAdicionales().close();
                         	}
                         }
                         ,'->'
                     ]
-                }).show(); 
+                }).show(); */
                 
                 fieldMail=_fieldByLabel('Correo electrónico', null, true);
                 if(fieldMail)
@@ -914,12 +1358,14 @@ function _p22_datosAdicionalesClic()
 	        		                            }
 	        		                            ,{
 	        		                                xtype     : 'button'
+	        		                                ,itemId   : itemDocumento.name
 	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
 	        		                                ,tooltip  : 'Subir nuevo'
 	        		                                ,codidocu : itemDocumento.codidocu
 	        		                                ,descrip  : itemDocumento.inicialField
 	        		                                ,handler  : function(button)
 	        		                                {
+	        		                                	_DocASubir = button.itemId;
 	        		                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
 	        		                                }
 	        		                            },{
@@ -934,7 +1380,10 @@ function _p22_datosAdicionalesClic()
 	        		                                }
 	        		                            }
 	        		                        ]
-	        		                    }]
+	        		                    },{
+											xtype: 'tbspacer',        	    	
+											height: 15                	
+						        	    }]
 	        					}
 	                    	);
 	                }/*else{
@@ -950,7 +1399,15 @@ function _p22_datosAdicionalesClic()
                 
                 _p22_formDatosAdicionales().add({
 					xtype: 'tbspacer',        	    	
-					height: 100                	
+					height: 50                	
+        	     });
+                _p22_formDatosAdicionales().add({
+					xtype: 'tbspacer',        	    	
+					height: 50                	
+        	     });
+                _p22_formDatosAdicionales().add({
+					xtype: 'tbspacer',        	    	
+					height: 50                	
         	     });
                 
             }
@@ -961,7 +1418,7 @@ function _p22_datosAdicionalesClic()
         }
         ,failure : function()
         {
-            _p22_tabPanel().setLoading(false);
+            _p22_PanelPrincipal().setLoading(false);
             errorComunicacion();
         }
     });
@@ -1046,7 +1503,6 @@ function _p22_guardarDatosAdicionalesClic()
             	                    debug('Actualizando estatus de Persona: ');
             	                    _fieldByName('STATUS').setValue(json.respuesta);
             	                    
-            	                    _recargaBusqueda();
             	                }
             	                else
             	                {
@@ -1115,7 +1571,7 @@ function _p22_guardarDatosAdicionalesClic()
 function _p22_formDatosAdicionales()
 {
     debug('>_p22_formDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[Ext.ComponentQuery.query('#_p22_formDatosAdicionales').length-1];
+    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[0];
 }
 
 function _p22_documentosClic()
@@ -1280,7 +1736,7 @@ function _p22_subirArchivo(cdperson,codidocu,descrip)
 function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
 {
     debug('>_p22_cargarArchivo',cdperson,codidocu,dsdocume);
-    Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(true);
+    _p22_principalDatosAdicionales().setLoading(true);
     Ext.Ajax.request(
     {
         url      : _p22_urlCargarNombreArchivo
@@ -1291,7 +1747,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
         }
         ,success : function(response)
         {
-            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(false);
+            _p22_principalDatosAdicionales().setLoading(false);
             var json=Ext.decode(response.responseText);
             debug('json response:',json);
             if(json.exito)
@@ -1325,7 +1781,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
         }
         ,failure : function()
         {
-            Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales')[Ext.ComponentQuery.query('#_p22_ventanaDatosAdicionales').length-1].setLoading(false);
+            _p22_principalDatosAdicionales().setLoading(false);
             errorComunicacion();
         }
     });
@@ -1336,6 +1792,11 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
 function panDocSubido()
 {
     _p22_windowAgregarDocu.destroy();
+    
+    var elemento = _fieldByName(_DocASubir,null,true);
+    if(!Ext.isEmpty(elemento.store)){
+    	elemento.setValue('S');
+    }
 }
 
 
@@ -1467,6 +1928,8 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 		                xtype             : 'numberfield'
 		                ,allowBlank       : false
 		                ,allowDecimals    : true
+		                ,minValue         : 0
+		                ,negativeText     : 'No se puede introducir valores negativos.'
 		                ,decimalSeparator : '.'
 		            }
 		        }
@@ -1523,6 +1986,6 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 </script>
 </head>
 <body>
-<div id="_p22_divpri" style="height : 700px;"></div>
+<div id="_p22_divpri" style="height : 1400px;"></div>
 </body>
 </html>
