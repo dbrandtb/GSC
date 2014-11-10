@@ -60,9 +60,9 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA");
             declareParameter(new SqlParameter("pv_cdrfc_i",OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre_i",OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_dsnombre1_i",OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_dsapellido_i",OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_dsapellido1_i",OracleTypes.VARCHAR));
+//            declareParameter(new SqlParameter("pv_dsnombre1_i",OracleTypes.VARCHAR));
+//            declareParameter(new SqlParameter("pv_dsapellido_i",OracleTypes.VARCHAR));
+//            declareParameter(new SqlParameter("pv_dsapellido1_i",OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
