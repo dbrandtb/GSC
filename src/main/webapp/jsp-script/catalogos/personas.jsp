@@ -100,7 +100,7 @@ Ext.onReady(function()
 	    [
 	        Ext.create('Ext.form.Panel',
 	        {
-	        	 title        : "Escriba el RFC de la Persona a buscar/crear y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se crear&aacute; una nueva."
+	        	 title        : "Escriba el RFC de la Persona a buscar/agregar y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se agregar&aacute; una nueva."
 	        	 ,itemId      : '_p22_formBusqueda'
 	        	 ,hidden     : !Ext.isEmpty(_cargaCdPerson)
 	        	 ,layout      :
@@ -318,7 +318,7 @@ Ext.onReady(function()
 											irModoAgregar();
 											
 										}else if(!Ext.isEmpty(valorNombre)){
-											mensajeWarning('Para crear una persona nueva llene el campo de RFC.');
+											mensajeWarning('Para agregar una persona nueva llene el campo de RFC.');
 											return;
 										}
 									}
