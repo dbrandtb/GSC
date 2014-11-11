@@ -6,15 +6,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p29_urlPantallaCliente                = '<s:url namespace="/catalogos" action="includes/personasLoader"              />';
-var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"   action="cotizacionAutoIndividual"             />';
-var _p29_urlCargarDatosComplementarios     = '<s:url namespace="/emision"   action="cargarDatosComplementariosAutoInd"    />';
-var _p29_urlCargarTvalosit                 = '<s:url namespace="/emision"   action="cargarValoresSituacion"               />';
-var _p29_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"   action="cargarRetroactividadSuplemento"       />';
-var _p29_urlMovimientoMpoliper             = '<s:url namespace="/emision"   action="movimientoMpoliper"                   />';
-var _p29_urlGuardar                        = '<s:url namespace="/emision"   action="guardarComplementariosAutoIndividual" />';
-var _p29_urlRecotizar                      = '<s:url namespace="/"          action="recotizar"                            />';
-var _p29_urlEmitir                         = '<s:url namespace="/"          action="emitir"                               />';
+var _p29_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';
+var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
+var _p29_urlCargarDatosComplementarios     = '<s:url namespace="/emision"    action="cargarDatosComplementariosAutoInd"    />';
+var _p29_urlCargarTvalosit                 = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
+var _p29_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    action="cargarRetroactividadSuplemento"       />';
+var _p29_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                   />';
+var _p29_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoIndividual" />';
+var _p29_urlRecotizar                      = '<s:url namespace="/"           action="recotizar"                            />';
+var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
+var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 ////// urls //////
 
 ////// variables //////
@@ -646,7 +647,6 @@ function _p29_mostrarVistaPrevia()
                                     ,itemId     : '_p29_numerofinalpoliza'
                                     ,fieldLabel : 'N&uacute;mero de poliza'
                                     ,readOnly   : true
-                                    ,colspan    : 4
                                 }
                                 ,{
                                     itemId   : '_p29_botonEmitirPolizaFinal'
@@ -654,6 +654,42 @@ function _p29_mostrarVistaPrevia()
                                     ,text    : 'Emitir'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
                                     ,handler : _p29_emitirFinal
+                                }
+                                ,{
+                                    xtype     : 'button'
+                                    ,itemId   : '_p29_botonDocumentosPolizaEmitida'
+                                    ,text     : 'Imprimir'
+                                    ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+                                    ,disabled : true
+                                    ,handler  : function()
+                                    {
+                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                        {
+                                            title        : 'Documentos del tr&aacute;mite'
+                                            ,modal       : true
+                                            ,buttonAlign : 'center'
+                                            ,width       : 600
+                                            ,height      : 400
+                                            ,autoScroll  : true
+                                            ,loader      :
+                                            {
+                                                url       : _p29_urlDocumentosPoliza
+                                                ,params   :
+                                                {
+                                                    'smap1.nmpoliza'  : _p29_smap1.nmpolizaEmitida
+                                                    ,'smap1.cdunieco' : _p29_smap1.cdunieco
+                                                    ,'smap1.cdramo'   : _p29_smap1.cdramo
+                                                    ,'smap1.estado'   : 'M'
+                                                    ,'smap1.nmsuplem' : '0'
+                                                    ,'smap1.ntramite' : ''
+                                                    ,'smap1.nmsolici' : inputNmpoliza
+                                                    ,'smap1.tipomov'  : '0'
+                                                }
+                                                ,scripts  : true
+                                                ,autoLoad : true
+                                            }
+                                        }).show());
+                                    }
                                 }
                                 ,{
                                     xtype    : 'button'
@@ -666,9 +702,6 @@ function _p29_mostrarVistaPrevia()
                                         me.up().up().destroy();
                                     }
                                 }
-                                ,{ xtype : 'label' }
-                                ,{ xtype : 'label' }
-                                ,{ xtype : 'label' }
                             ]
                         })
                     ]
@@ -710,30 +743,36 @@ function _p29_emitirFinal(me)
             debug('### emitir:',json);
             if(json.success==true)
             {
-                //datComPolizaMaestra=json.panel2.nmpoliza;
-                //debug("datComPolizaMaestra",datComPolizaMaestra);
+                _p29_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
+                debug("_p29_smap1.nmpolizaEmitida:",_p29_smap1.nmpolizaEmitida);
+                
                 _fieldById('_p29_numerofinalpoliza').setValue(json.panel2.nmpoliex);
                 _fieldById('_p29_botonEmitirPolizaFinal').setDisabled(true);
-                //Ext.getCmp('_p29_botonEmitirPolizaFinalPreview').hide();
-                //Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
-                //Ext.getCmp('botonReenvioWS').hide();
+                _fieldById('_p29_botonDocumentosPolizaEmitida').setDisabled(false);
+                
+                /*
+                Ext.getCmp('_p29_botonEmitirPolizaFinalPreview').hide();
+                Ext.getCmp('botonReenvioWS').hide();
+                
                 if(_p29_smap1.SITUACION == 'AUTO')
                 {
-                    //_mensajeEmail = json.mensajeEmail;
-                    //Ext.getCmp('botonEnvioEmail').enable();
+                    _mensajeEmail = json.mensajeEmail;
+                    Ext.getCmp('botonEnvioEmail').enable();
                 }
                 else
                 {
-                    //Ext.getCmp('botonEnvioEmail').hide();
+                    Ext.getCmp('botonEnvioEmail').hide();
                 }
                 if(_p29_smap1.SITUACION=='AUTO')
                 {
-                    //Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+                    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
                 }
                 else
                 {
-                    //Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+                    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
                 }
+                */
+                
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
                 {
