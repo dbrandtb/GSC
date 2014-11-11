@@ -796,6 +796,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				cotizacionDAO.actualizaValoresSituacion(cdunieco,cdramo,estado,nmpoliza,"0","1",tvalositAux);
 			}
 			
+			resp.setRespuesta("Datos guardados");
+			resp.setRespuestaOculta("Datos guardados");
+			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
