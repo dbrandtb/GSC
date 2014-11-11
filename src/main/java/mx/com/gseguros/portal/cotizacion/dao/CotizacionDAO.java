@@ -308,4 +308,21 @@ public interface CotizacionDAO
 			,String clave
 			,String modelo
 			,String cdsisrol)throws Exception;
+	public Map<String,String>cargarDatosComplementariosAutoInd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws ApplicationException,Exception;
+	public Map<String,String>cargarTvalopol(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws ApplicationException,Exception;
+	public Map<String,String>cargarTvalosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws ApplicationException,Exception;
 }
