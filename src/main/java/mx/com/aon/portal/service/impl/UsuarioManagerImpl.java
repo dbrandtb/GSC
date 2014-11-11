@@ -126,6 +126,7 @@ public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implem
             userVO.setUser(usuarioRolEmpresaVO.getCdUsuario());
             userVO.setCodigoPersona(usuarioRolEmpresaVO.getCdPerson());
             userVO.setName(usuarioRolEmpresaVO.getDsUsuario());
+            userVO.setCdUnieco(usuarioRolEmpresaVO.getCdUnieco());
 
             empresaVO = new EmpresaVO();
             empresaVO.setElementoId(usuarioRolEmpresaVO.getCdElemento());
@@ -149,6 +150,7 @@ public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implem
                     userVO.setUser(usuarioRolEmpresaVO.getCdUsuario());
                     userVO.setCodigoPersona(usuarioRolEmpresaVO.getCdPerson());
                     userVO.setName(usuarioRolEmpresaVO.getDsUsuario());
+                    userVO.setCdUnieco(usuarioRolEmpresaVO.getCdUnieco());
 
                     empresaVO = new EmpresaVO();
                     empresaVO.setElementoId(usuarioRolEmpresaVO.getCdElemento());

@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.SessionAware;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -33,6 +34,8 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	private String dateFormat;
 	private LoginManager loginManager;
 	private NavigationManager navigationManager;
+	@Autowired
+	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
 	private List<RamaVO> listaRolCliente;
 	private boolean success;
 	private String errorMessage;
@@ -139,7 +142,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		userVO = loginManager.obtenerDatosUsuario(usuario);
 
 		userVO.setDecimalSeparator(decimalSeparator);
-		IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
+		IsoVO isoVO = navigationManagerNuevo.getVariablesIso(userVO.getUser());
 
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
 		userVO.setFormatDate(dateFormat);
@@ -148,7 +151,10 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
 
+		//TODO: cambiar a nuevo manager *****
 		listaRolCliente = navigationManager.getClientesRoles(userVO.getUser());
+		
+		logger.debug("listaRolCliente =====" + listaRolCliente);
 
 		if (listaRolCliente == null || listaRolCliente.isEmpty()) {
 			session.clear();
@@ -262,5 +268,13 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
+
+
+	public void setNavigationManagerNuevo(
+			mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo) {
+		this.navigationManagerNuevo = navigationManagerNuevo;
+	}
+	
+	
 
 }

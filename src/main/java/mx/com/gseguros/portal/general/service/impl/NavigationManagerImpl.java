@@ -40,7 +40,8 @@ public class NavigationManagerImpl implements NavigationManager {
 
 	//TODO: Implementar el uso de este metodo, ya que actualmente se utiliza la forma anterior
 	@Override
-	public List<RamaVO> getClientesRoles(String user) throws ApplicationException {
+	public List<RamaVO> getClientesRoles(String user) throws Exception {
+		//return usuarioDAO.obtieneRolesCliente(user);
 		//TODO: Completar codigo
 		/*
 		List<RamaVO> listaRolesClientes = null;
@@ -62,16 +63,10 @@ public class NavigationManagerImpl implements NavigationManager {
 		return null;
 	}
 	
-	//TODO: Implementar el uso de este metodo, ya que actualmente se utiliza la forma anterior
+	
 	@Override
-	public IsoVO getVariablesIso(String user) throws ApplicationException {
-		IsoVO isoVO = null;
-		try {
-			isoVO = usuarioDAO.obtieneVariablesIso(user);
-		} catch (Exception e) {
-			new ApplicationException(e.getMessage(), e);
-		}
-		return isoVO;
+	public IsoVO getVariablesIso(String user) throws Exception {
+		return usuarioDAO.obtieneVariablesIso(user);
 	}
 
 

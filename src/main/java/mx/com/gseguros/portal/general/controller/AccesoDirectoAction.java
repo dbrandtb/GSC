@@ -16,6 +16,7 @@ import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +77,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			setCodigoCliente(codigoCliente);
 			setCodigoRol(codigoRol);
 			//setCodigoCliente("6442");
-			//setCodigoRol("EJECUTIVOCUENTA");
+			//setCodigoRol(RolSistema.AGENTE.getCdsisrol());
 			
 			obtenCodigoTree();
 			
@@ -289,7 +290,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
                         }
                     }
                     if (rolActivado) {
-                        if (rolActivo.getClave().equals("EJECUTIVOCUENTA")) {
+                        if (rolActivo.getClave().equals(RolSistema.AGENTE.getCdsisrol())) {
                             userVO.setCodigoPersona("0");
                         }
                         userVO.setRolActivo(rolActivo);
