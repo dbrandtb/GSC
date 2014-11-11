@@ -168,7 +168,10 @@ Ext.onReady(function()
 //				                        			debug(typeof jsonResponse.exito);
 //				                        			debug(jsonResponse.exito);
 				                        			if(!jsonResponse.exito){
-				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');
+				                        				var form=_p22_formBusqueda();
+					            						form.down('[name=smap1.rfc]').reset();
+				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		}
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
@@ -238,6 +241,9 @@ Ext.onReady(function()
 //				                        			debug(jsonResponse.exito);
 				                        			if(!jsonResponse.exito){
 				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+				                        				var form=_p22_formBusqueda();
+					            						form.down('[name=smap1.rfc]').reset();
+				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		}
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
