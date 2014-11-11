@@ -271,6 +271,14 @@
         <action name="movimientoMpoliper" class="cotizacionAutoAction" method="movimientoMpoliper">
             <result name="success" type="json" />
         </action>
+        
+        <action name="guardarComplementariosAutoIndividual" class="cotizacionAutoAction" method="guardarComplementariosAutoIndividual">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
        
     </package>
     

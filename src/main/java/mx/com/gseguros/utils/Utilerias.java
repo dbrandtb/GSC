@@ -190,6 +190,7 @@ public class Utilerias {
 				}
 			}
 		}
+		logger.debug(new StringBuilder("ponFechas ").append(params).append("=INTO=").append(omap).toString());
 		return omap;
 	}
 	
