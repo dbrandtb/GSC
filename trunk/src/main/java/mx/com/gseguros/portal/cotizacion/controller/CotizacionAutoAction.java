@@ -25,6 +25,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private CotizacionAutoManager cotizacionAutoManager;
 	
 	private Map<String,String> smap1           = null;
+	private Map<String,String> smap2           = null;
 	private String             respuesta       = null;
 	private String             respuestaOculta = null;
 	private boolean            exito           = false;
@@ -312,14 +313,14 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session,"No hay sesion");
 			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			smap1.put("cdusuari" , cdusuari);
 			
-			ManagerRespuestaImapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
+			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
+				smap1.putAll(resp.getSmap());
 				imap = resp.getImap();
 			}
 		}
@@ -515,6 +516,75 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarComplementariosAutoIndividual()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################################")
+				.append("\n###### guardarComplementariosAutoIndividual ######")
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### smap2=").append(smap2)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos de poliza");
+			checkNull(smap2, "No se recibieron datos adicionales de poliza");
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String agenteSec   = smap1.get("agente_sec");
+			String porpartiSec = smap1.get("porparti");
+			String feini       = smap1.get("feini");
+			String fefin       = smap1.get("fefin");
+			String ntramite    = smap1.get("ntramite");
+			String cdagente    = smap1.get("cdagente");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(feini    , "No se recibio la fecha de inicio");
+			checkBlank(fefin    , "No se recibio la fecha de fin");
+			checkBlank(ntramite , "No se recibio el numero de tramite");
+			checkBlank(cdagente , "No se recibio el agente");
+			
+			ManagerRespuestaVoidVO resp = cotizacionAutoManager.guardarComplementariosAutoIndividual(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,agenteSec
+					,porpartiSec
+					,feini
+					,fefin
+					,smap1
+					,smap2
+					,ntramite
+					,cdagente
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### guardarComplementariosAutoIndividual ######")
+				.append("\n##################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -566,5 +636,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setImap(Map<String, Item> imap) {
 		this.imap = imap;
+	}
+
+	public Map<String, String> getSmap2() {
+		return smap2;
+	}
+
+	public void setSmap2(Map<String, String> smap2) {
+		this.smap2 = smap2;
 	}
 }

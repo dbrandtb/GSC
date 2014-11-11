@@ -972,11 +972,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(listaAux==null||listaAux.size()==0)
 		{
-			throw new Exception("No hay datos del agente");
+			throw new ApplicationException("No hay datos del agente para este producto");
 		}
 		else if(listaAux.size()>1)
 		{
-			throw new Exception("Datos repetidos");
+			throw new ApplicationException("Datos repetidos del agente para este producto");
 		}
 		return listaAux.get(0);
 	}
@@ -2960,6 +2960,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					    ,"swexiper"
 					    ,"agente_sec"
 					    ,"porparti"
+					    ,"prima_total"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3121,6 +3122,212 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaMpolizas(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String swestado,
+			String nmsolici,
+			Date   feautori,
+			String cdmotanu,
+			Date   feanulac,
+			String swautori,
+			String cdmoneda,
+			Date   feinisus,
+			Date   fefinsus,
+			String ottempot,
+			Date   feefecto,
+			String hhefecto,
+			Date   feproren,
+			Date   fevencim,
+			String nmrenova,
+			Date   ferecibo,
+			Date   feultsin,
+			String nmnumsin,
+			String cdtipcoa,
+			String swtarifi,
+			String swabrido,
+			Date   feemisio,
+			String cdperpag,
+			String nmpoliex,
+			String nmcuadro,
+			String porredau,
+			String swconsol,
+			String nmpolant,
+			String nmpolnva,
+			Date   fesolici,
+			String cdramant,
+			String cdmejred,
+			String nmpoldoc,
+			String nmpoliza2,
+			String nmrenove,
+			String nmsuplee,
+			String ttipcamc,
+			String ttipcamv,
+			String swpatent,
+			String nmpolmst,
+			String pcpgocte)throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("cdunieco"  , cdunieco );
+		params.put("cdramo"    , cdramo );
+		params.put("estado"    , estado );
+		params.put("nmpoliza"  , nmpoliza );
+		params.put("nmsuplem"  , nmsuplem );
+		params.put("swestado"  , swestado );
+		params.put("nmsolici"  , nmsolici );
+		params.put("feautori"  , feautori );
+		params.put("cdmotanu"  , cdmotanu );
+		params.put("feanulac"  , feanulac );
+		params.put("swautori"  , swautori );
+		params.put("cdmoneda"  , cdmoneda );
+		params.put("feinisus"  , feinisus );
+		params.put("fefinsus"  , fefinsus );
+		params.put("ottempot"  , ottempot );
+		params.put("feefecto"  , feefecto );
+		params.put("hhefecto"  , hhefecto );
+		params.put("feproren"  , feproren );
+		params.put("fevencim"  , fevencim );
+		params.put("nmrenova"  , nmrenova );
+		params.put("ferecibo"  , ferecibo );
+		params.put("feultsin"  , feultsin );
+		params.put("nmnumsin"  , nmnumsin );
+		params.put("cdtipcoa"  , cdtipcoa );
+		params.put("swtarifi"  , swtarifi );
+		params.put("swabrido"  , swabrido );
+		params.put("feemisio"  , feemisio );
+		params.put("cdperpag"  , cdperpag );
+		params.put("nmpoliex"  , nmpoliex );
+		params.put("nmcuadro"  , nmcuadro );
+		params.put("porredau"  , porredau );
+		params.put("swconsol"  , swconsol );
+		params.put("nmpolant"  , nmpolant );
+		params.put("nmpolnva"  , nmpolnva );
+		params.put("fesolici"  , fesolici );
+		params.put("cdramant"  , cdramant );
+		params.put("cdmejred"  , cdmejred );
+		params.put("nmpoldoc"  , nmpoldoc );
+		params.put("nmpoliza2" , nmpoliza2 );
+		params.put("nmrenove"  , nmrenove );
+		params.put("nmsuplee"  , nmsuplee );
+		params.put("ttipcamc"  , ttipcamc );
+		params.put("ttipcamv"  , ttipcamv );
+		params.put("swpatent"  , swpatent );
+		params.put("nmpolmst"  , nmpolmst );
+		params.put("pcpgocte"  , pcpgocte );
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES2.P_UPDATE_MPOLIZAS ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
+		ejecutaSP(new ActualizaMpolizas(getDataSource()),params);
+	}
+	
+	protected class ActualizaMpolizas extends StoredProcedure
+	{
+		protected ActualizaMpolizas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_UPDATE_MPOLIZAS");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swestado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feautori"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdmotanu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feanulac"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("swautori"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmoneda"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinisus"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fefinsus"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("ottempot"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("hhefecto"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feproren"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fevencim"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("nmrenova"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ferecibo"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feultsin"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("nmnumsin"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipcoa"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swtarifi"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swabrido"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feemisio"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdperpag"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliex"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmcuadro"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("porredau"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swconsol"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpolant"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpolnva"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fesolici"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdramant"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmejred"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoldoc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmrenove"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplee"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ttipcamc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ttipcamv"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swpatent"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpolmst"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pcpgocte"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borrarAgentesSecundarios(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco"  , cdunieco );
+		params.put("cdramo"    , cdramo );
+		params.put("estado"    , estado );
+		params.put("nmpoliza"  , nmpoliza );
+		params.put("nmsuplem"  , nmsuplem );
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_SATELITES2.P_BORRA_AGENTES_SECUNDARIOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
+		ejecutaSP(new BorrarAgentesSecundarios(getDataSource()),params);
+	}
+	
+	protected class BorrarAgentesSecundarios extends StoredProcedure
+	{
+		protected BorrarAgentesSecundarios(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_BORRA_AGENTES_SECUNDARIOS");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

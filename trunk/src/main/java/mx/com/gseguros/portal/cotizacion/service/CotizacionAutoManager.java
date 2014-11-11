@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.cotizacion.service;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 
@@ -29,7 +28,7 @@ public interface CotizacionAutoManager
 			,String clave
 			,String modelo
 			,String cdsisrol);
-	public ManagerRespuestaImapVO emisionAutoIndividual(
+	public ManagerRespuestaImapSmapVO emisionAutoIndividual(
 			String cdunieco
 			,String cdramo
 			,String cdtipsit
@@ -65,4 +64,18 @@ public interface CotizacionAutoManager
 			,String swreclam
 			,String accion
 			,String swexiper);
+	public ManagerRespuestaVoidVO guardarComplementariosAutoIndividual(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String agenteSec
+			,String porpartiSec
+			,String feini
+			,String fefin
+			,Map<String,String>tvalopol
+			,Map<String,String>tvalosit
+			,String ntramite
+			,String cdagente
+			);
 }

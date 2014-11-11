@@ -1,9 +1,12 @@
 package mx.com.gseguros.portal.cotizacion.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -11,7 +14,6 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
@@ -20,6 +22,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,7 +30,8 @@ import org.apache.struts2.ServletActionContext;
 
 public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 {
-	private static final Logger logger = Logger.getLogger(CotizacionAutoManagerImpl.class);
+	private static final Logger logger           = Logger.getLogger(CotizacionAutoManagerImpl.class);
+	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionDAO cotizacionDAO;
 	private PantallasDAO  pantallasDAO;
@@ -389,7 +393,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaImapVO emisionAutoIndividual(
+	public ManagerRespuestaImapSmapVO emisionAutoIndividual(
 			String cdunieco
 			,String cdramo
 			,String cdtipsit
@@ -413,11 +417,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.toString()
 				);
 		
-		ManagerRespuestaImapVO resp=new ManagerRespuestaImapVO(true);
+		ManagerRespuestaImapSmapVO resp=new ManagerRespuestaImapSmapVO(true);
 		resp.setImap(new HashMap<String,Item>());
+		resp.setSmap(new HashMap<String,String>());
 		
 		try
 		{
+			setCheckpoint("Procesando datos de entrada");
+			resp.getSmap().put("cdusuari" , cdusuari);
+			
+			setCheckpoint("Recuperando tipo de situacion");
+			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
+			
 			setCheckpoint("Recuperando atributos variables de poliza");
 			List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
 			
@@ -615,6 +626,188 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ movimientoMpoliper @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO guardarComplementariosAutoIndividual(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String agenteSec
+			,String porpartiSec
+			,String feini
+			,String fefin
+			,Map<String,String>tvalopol
+			,Map<String,String>tvalosit
+			,String ntramite
+			,String cdagente
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@")
+				.append("\n@@@@@@ cdunieco=")   .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")     .append(cdramo)
+				.append("\n@@@@@@ estado=")     .append(estado)
+				.append("\n@@@@@@ nmpoliza=")   .append(nmpoliza)
+				.append("\n@@@@@@ agenteSec=")  .append(agenteSec)
+				.append("\n@@@@@@ porpartiSec=").append(porpartiSec)
+				.append("\n@@@@@@ feini=")      .append(feini)
+				.append("\n@@@@@@ fefin=")      .append(fefin)
+				.append("\n@@@@@@ tvalopol=")   .append(tvalopol)
+				.append("\n@@@@@@ tvalosit=")   .append(tvalosit)
+				.append("\n@@@@@@ ntramite=")   .append(ntramite)
+				.append("\n@@@@@@ cdagente=")   .append(cdagente)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Actualizando poliza");
+			cotizacionDAO.actualizaMpolizas(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"  //nmsuplem
+					,null //swestado
+					,null //nmsolici
+					,null //feautori
+					,null //cdmotanu
+					,null //feanulac
+					,null //swautori
+					,null //cdmoneda
+					,null //feinisus
+					,null //fefinsus
+					,null //ottempot
+					,renderFechas.parse(feini)
+					,null //hhefecto
+					,renderFechas.parse(fefin)
+					,null //fevencim
+					,null //nmrenova
+					,null //ferecibo
+					,null //feultsin
+					,null //nmnumsin
+					,null //cdtipcoa
+					,null //swtarifi
+					,null //swabrido
+					,null //feemisio
+					,null //cdperpag
+					,null //nmpoliex
+					,null //nmcuadro
+					,null //porredau
+					,null //swconsol
+					,null //nmpolant
+					,null //nmpolnva
+					,null //fesolici
+					,null //cdramant
+					,null //cdmejred
+					,null //nmpoldoc
+					,null //nmpoliza2
+					,null //nmrenove
+					,null //nmsuplee
+					,null //ttipcamc
+					,null //ttipcamv
+					,null //swpatent
+					,null //nmpolmst
+					,null //pcpgocte
+					);
+			
+			if(!isBlank(agenteSec))
+			{
+				setCheckpoint("Desligando agentes anteriores");
+				cotizacionDAO.borrarAgentesSecundarios(cdunieco, cdramo, estado, nmpoliza, "0");
+				
+				setCheckpoint("Recuperando cuadros de agentes");
+				String nmcuadro    = cotizacionDAO.obtenerDatosAgente(cdagente  , cdramo).get("NMCUADRO");
+    			String nmcuadroSec = cotizacionDAO.obtenerDatosAgente(agenteSec , cdramo).get("NMCUADRO");
+				
+				setCheckpoint("Guardando agente nuevo");
+				cotizacionDAO.movimientoMpoliage(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdagente
+						,"0"
+						,"V"
+						,"1"
+						,"0"
+						,nmcuadro
+						,null
+						,Constantes.INSERT_MODE
+						,ntramite
+						,String.format("%.2f",100d-Double.valueOf(porpartiSec))
+						);
+				
+				if(Double.valueOf(porpartiSec)>0d)
+				{
+					cotizacionDAO.movimientoMpoliage(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,agenteSec
+							,"0"
+							,"V"
+							,"2"
+							,"0"
+							,nmcuadroSec
+							,null
+							,Constantes.INSERT_MODE
+							,null//ntramite
+							,porpartiSec
+							);
+				}
+				
+				setCheckpoint("Guardando datos adicionales de poliza");
+				Map<String,String>tvalopolAux=new HashMap<String,String>();
+				for(Entry<String,String>en:tvalopol.entrySet())
+				{
+					String key = en.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_otvalor".length()
+							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+					{
+						tvalopolAux.put(key.substring("parametros.pv_".length()),en.getValue());
+					}
+				}
+				cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
+				
+				setCheckpoint("Guardando datos adicionales de situacion");
+				Map<String,String>tvalositAux=new HashMap<String,String>();
+				for(Entry<String,String>en:tvalosit.entrySet())
+				{
+					String key = en.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_otvalor".length()
+							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+					{
+						tvalositAux.put(key.substring("parametros.pv_".length()),en.getValue());
+					}
+				}
+				cotizacionDAO.actualizaValoresSituacion(cdunieco,cdramo,estado,nmpoliza,"0","1",tvalositAux);
+			}
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
