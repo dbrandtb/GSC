@@ -1408,29 +1408,43 @@ public class EndososManagerImpl implements EndososManager
 			}
 		}
 		
-		//////////////////////////
-		////// tarificacion //////
-		if(resp.isExito()&&fechaValida)
-		{
+		if(resp.isExito()) {
 			try {
-		        Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
-				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-				mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-				mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+				//////////////////////////////
+				////// inserta tworksup //////
+				Map<String,String> mapaTworksupEnd = new LinkedHashMap<String,String>(0);
+				mapaTworksupEnd.put("pv_cdunieco_i", cdunieco);
+				mapaTworksupEnd.put("pv_cdramo_i"  , cdramo);
+				mapaTworksupEnd.put("pv_estado_i"  , estado);
+				mapaTworksupEnd.put("pv_nmpoliza_i", nmpoliza);
+				mapaTworksupEnd.put("pv_cdtipsup_i", cdtipsup);
+				mapaTworksupEnd.put("pv_nmsuplem_i", nmsuplem);
+				mapaTworksupEnd.put("pv_nmsituac_i", "0");
+				endososDAO.insertarTworksupEnd(mapaTworksupEnd);
+				////// inserta tworksup //////
+				//////////////////////////////
 				
+				//////////////////////////
+				////// tarificacion //////
+		        Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+				mapaSigsvalipolEnd.put("pv_cdusuari_i", cdusuari);
+				mapaSigsvalipolEnd.put("pv_cdelemen_i", cdelemen);
+				mapaSigsvalipolEnd.put("pv_cdunieco_i", cdunieco);
+				mapaSigsvalipolEnd.put("pv_cdramo_i"  , cdramo);
+				mapaSigsvalipolEnd.put("pv_estado_i"  , estado);
+				mapaSigsvalipolEnd.put("pv_nmpoliza_i", nmpoliza);
+				mapaSigsvalipolEnd.put("pv_nmsituac_i", "0");
+				mapaSigsvalipolEnd.put("pv_nmsuplem_i", nmsuplem);
+				mapaSigsvalipolEnd.put("pv_cdtipsit_i", cdtipsit);
+				mapaSigsvalipolEnd.put("pv_cdtipsup_i", cdtipsup);
 				endososDAO.sigsvalipolEnd(mapaSigsvalipolEnd);
+				////// tarificacion //////
+			    //////////////////////////
 				
 			} catch(Exception ex) {
 				long timestamp = System.currentTimeMillis();
 				resp.setExito(false);
-				resp.setRespuesta(new StringBuilder("Error en sigsvalipolEnd #").append(timestamp).toString());
+				resp.setRespuesta(new StringBuilder("Error #").append(timestamp).toString());
 				resp.setRespuestaOculta(ex.getMessage());
 				logger.error(resp.getRespuesta(),ex);
 			}
