@@ -62,6 +62,12 @@ var _p22_cdperson = false;
 var _p22_tipoPersona;
 var _p22_nacionalidad;
 
+var _cargaCdPerson;
+
+if(!Ext.isEmpty(_p22_smap1)){
+_cargaCdPerson = _p22_smap1.cdperson;	
+}
+
 ////// variables //////
 
 Ext.onReady(function()
@@ -96,6 +102,7 @@ Ext.onReady(function()
 	        {
 	        	 title        : "Escriba el RFC de la Persona a buscar/crear y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se crear&aacute; una nueva."
 	        	 ,itemId      : '_p22_formBusqueda'
+	        	 ,hidden     : !Ext.isEmpty(_cargaCdPerson)
 	        	 ,layout      :
 	        	 {
 	        	     type     : 'table'
@@ -273,6 +280,7 @@ Ext.onReady(function()
 								    			importaPersonaWS();
 								    		}
 								    		
+								    		form.down('[name=smap1.rfc]').reset();
 											irModoEdicion();
 											
 										}else if(!Ext.isEmpty(valorRFC)){
@@ -286,7 +294,9 @@ Ext.onReady(function()
 										    	mensajeWarning('El RFC ya existe. Favor de seleccionar uno de la lista.');
 										    	return;
 										    }
+										    
 											_p22_fieldRFC().setValue(valorRFC);
+											form.down('[name=smap1.rfc]').reset();
 											irModoAgregar();
 											
 										}else if(!Ext.isEmpty(valorNombre)){
@@ -700,6 +710,16 @@ Ext.onReady(function()
 		    items: [panelTipoPer]
 		}).show();
 		centrarVentanaInterna(windowTipo);
+    	
+    }
+    
+    
+    if(!Ext.isEmpty(_cargaCdPerson)){
+    	
+    	setTimeout(function(){
+			_p22_cdperson = _cargaCdPerson;
+    		irModoEdicion();
+		},1000)
     	
     }
 });
