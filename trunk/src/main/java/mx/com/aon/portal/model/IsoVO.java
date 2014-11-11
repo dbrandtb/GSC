@@ -1,6 +1,9 @@
 package mx.com.aon.portal.model;
 
 import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * 
  * @author sergio.ramirez
@@ -93,6 +96,11 @@ public class IsoVO implements Serializable{
 	}
 	public void setClientDateFormat(String clientDateFormat) {
 		this.clientDateFormat = clientDateFormat;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
 	}
 	
 }

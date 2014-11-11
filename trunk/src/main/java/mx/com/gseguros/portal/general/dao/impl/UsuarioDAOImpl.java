@@ -15,8 +15,6 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
-import mx.com.gseguros.portal.general.dao.impl.CatalogosDAOImpl.ObtieneRolesSistema;
-import mx.com.gseguros.portal.general.dao.impl.CatalogosDAOImpl.ObtieneRolesSistemaMapper;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -158,8 +156,8 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 		}
 	}
 
-    protected class UsuarioRolEmpresaMapper implements RowMapper {
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    protected class UsuarioRolEmpresaMapper implements RowMapper<UsuarioRolEmpresaVO> {
+		public UsuarioRolEmpresaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			UsuarioRolEmpresaVO usuarioRolEmpresaVO = new UsuarioRolEmpresaVO();
 			usuarioRolEmpresaVO.setCdUsuario(rs.getString("CDUSUARIO"));
 			usuarioRolEmpresaVO.setCdPerson(rs.getString("CDPERSON"));
@@ -172,7 +170,29 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
         }
     }
     
-    //TODO: Implementar el uso de este metodo, ya que actualmente se utiliza la forma anterior
+    /*
+    protected class UsuarioRolEmpresaMapper2 implements RowMapper<RamaVO> {
+		public RamaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			RamaVO rama = new RamaVO();
+			
+			rama.setText(rs.getString("DSELEMEN"));
+			rama.setCodigoObjeto(rs.getString("CDELEMENTO"));
+			rama.setCdElemento(rs.getString("CDELEMENTO"));
+			rama.setNick(rs.getString("CDUSUARIO"));
+			rama.setName(rs.getString("DSUSUARI"));
+			rama.setDsRol(rs.getString("DSSISROL"));
+			rama.setClaveRol(rs.getString("CDSISROL"));
+			//rama.setAllowDelete(allowDelete);
+			//rama.setChildren(children);
+			//rama.setExpanded(expanded);
+			//rama.setId(id);
+			//rama.setLeaf(leaf);
+			return rama;
+        }
+    }
+    */
+    
+    
     @Override
     public IsoVO obtieneVariablesIso(String user) throws Exception {
     	

@@ -9,9 +9,6 @@
 */
 package mx.com.aon.portal.model;
 
-import org.apache.commons.beanutils.Converter;
-import org.apache.log4j.Logger;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,17 +17,11 @@ import mx.com.aon.portal.util.UserStringConverter;
 import mx.com.aon.portal.util.UserTimestampConverter;
 import mx.com.gseguros.portal.general.model.RolVO;
 
+import org.apache.commons.beanutils.Converter;
+import org.apache.log4j.Logger;
+
 /**
- * UserVO
- * <p/>
- * <pre>
- *  VO para el manejo de la informacion del usuario ingresado
- * &lt;Pre&gt;
- * <p/>
- * &#064;author &lt;a href=&quot;mailto:freddy.juarez@biosnetmx.com&quot;&gt;Freddy Ju&amp;aacuterez&lt;/a&gt;
- * &#064;version  1.0
- * <p/>
- * &#064;since  1.0
+ * Contiene la informaci&oacute;n del usuario ingresado
  */
 public class UserVO implements Serializable {
 

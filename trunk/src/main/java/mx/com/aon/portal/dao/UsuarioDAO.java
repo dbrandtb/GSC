@@ -25,8 +25,6 @@ public class UsuarioDAO extends AbstractDAO {
 
     protected void initDao() throws Exception {
         addStoredProcedure("CARGA_ROLES_CLIENTES",new CargaRolesClientes(getDataSource()));
-        addStoredProcedure("CARGA_ROLES_CLIENTES_USER",new CargaRolesClientes(getDataSource()));
-        addStoredProcedure("OBTIENE_VARIABLES_ISO",new ObtieneVariablesIso(getDataSource()));
     }
 
 
@@ -62,47 +60,9 @@ public class UsuarioDAO extends AbstractDAO {
             usuarioRolEmpresaVO.setDsElemen(rs.getString("DSELEMEN"));
             usuarioRolEmpresaVO.setCdSisRol(rs.getString("CDSISROL"));
             usuarioRolEmpresaVO.setDsSisRol(rs.getString("DSSISROL"));
+            usuarioRolEmpresaVO.setCdUnieco(rs.getString("CDUNIECO"));
             return usuarioRolEmpresaVO;
         }
     }
-
-    protected class ObtieneVariablesIso extends CustomStoredProcedure {
-
-        protected ObtieneVariablesIso(DataSource dataSource) {
-            super(dataSource, "PKG_VAR_GLOBAL.P_VARIABLES_OBTIENE_ISO");
-            declareParameter(new SqlParameter("P_USUARIO", OracleTypes.VARCHAR));
-            
-            declareParameter(new SqlOutParameter("P_PAIS", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("P_LANGUAGUE_ISO", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("LANGCODE", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("REGIONID", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("P_DSFORMATONUMERICO", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("P_DSFORMATOFECHA", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("P_DSFORMATOFECHAC", OracleTypes.VARCHAR));
-            compile();
-          }
-
-        public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            WrapperResultados wrapperResultados = mapper.build(map);
-            
-    		IsoVO isoVO = new IsoVO();
-    		isoVO.setCdIdioma((String)map.get("LANGCODE"));
-    		isoVO.setCdRegion((String)map.get("REGIONID"));
-    		isoVO.setClientDateFormat((String)map.get("P_DSFORMATOFECHAC"));
-    		isoVO.setFormatoFecha((String)map.get("P_DSFORMATOFECHA"));
-    		isoVO.setFormatoNumerico((String)map.get("P_DSFORMATONUMERICO"));
-    		isoVO.setLanguague((String)map.get("P_LANGUAGUE_ISO"));
-    		isoVO.setPais((String)map.get("P_PAIS"));
-    		
-    		HashMap<String, Object> itemMap = new HashMap<String, Object>();
-    		itemMap.put("isovo", isoVO);
-    		
-    		wrapperResultados.setItemMap(itemMap);
-    		
-            return wrapperResultados;
-        }
-      }
-
 
 }

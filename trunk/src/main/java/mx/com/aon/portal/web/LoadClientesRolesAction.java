@@ -13,8 +13,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
@@ -85,7 +85,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                         }
                     }
                     if (rolActivado) {
-                        if (rolActivo.getClave().equals("EJECUTIVOCUENTA")) {
+                        if (rolActivo.getClave().equals(RolSistema.AGENTE.getCdsisrol())) {
                             userVO.setCodigoPersona("0");
                         }
                         userVO.setRolActivo(rolActivo);
@@ -146,9 +146,10 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
      * String directorioIdioma = "/biosnet/"+((mx.com.aon.portal.model.UserVO)session.getAttribute("USUARIO")).getIdioma().getLabel();
      * @param usuario 
      */
-    private void complementaUsuario(UserVO usuario) throws ApplicationException
+    private void complementaUsuario(UserVO usuario) throws Exception
     {
-        IsoVO isoLocal = navigationManager.getVariablesIso(usuario.getUser());
+        IsoVO isoLocal = navigationManagerNuevo.getVariablesIso(usuario.getUser());
+        logger.debug("isoLocal=====" + isoLocal);
         BaseObjectVO languague = new BaseObjectVO();
         languague.setValue(isoLocal.getCdIdioma());
         languague.setLabel(isoLocal.getLanguague());
@@ -189,7 +190,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
         session.put("MessageConf", null);
         registrosEncontrados = 0;
         listaRolCliente = usuarioManager.getClientesRoles(usuario.getUser());
-        iso = navigationManager.getVariablesIso(usuario.getUser());
+        iso = navigationManagerNuevo.getVariablesIso(usuario.getUser());
         numReg = navigationManager.getNumRegistro(usuario.getUser());
         userList = usuarioManager.getAttributesUser(usuario.getUser());
         logger.debug("Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento (ERROR)");

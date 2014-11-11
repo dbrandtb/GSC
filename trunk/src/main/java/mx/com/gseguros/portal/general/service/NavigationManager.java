@@ -19,11 +19,11 @@ public interface NavigationManager {
 	 */
 	public List<ItemVO> getMenuNavegacion(String perfil) throws ApplicationException;
 
-	public List<RamaVO> getClientesRoles(String user)throws ApplicationException;
+	public List<RamaVO> getClientesRoles(String user) throws Exception;
 
 	public int getNumRegistro(String user) throws ApplicationException;
 
-	public IsoVO getVariablesIso(String user)throws ApplicationException;
+	public IsoVO getVariablesIso(String user) throws Exception;
 
 	public List<UserVO> getAttributesUser(String user) throws ApplicationException;
 	

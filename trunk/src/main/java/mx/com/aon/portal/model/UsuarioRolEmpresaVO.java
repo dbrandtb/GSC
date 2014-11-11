@@ -19,6 +19,11 @@ public class UsuarioRolEmpresaVO {
     private String dsElemen;
     private String cdSisRol;
     private String dsSisRol;
+    /**
+     * Unidad economica 
+     * TODO: Eliminar propiedad, analizar en donde debe ir
+     */
+    private String cdUnieco;
 
 
     public String getCdUsuario() {
@@ -76,7 +81,16 @@ public class UsuarioRolEmpresaVO {
     public void setDsSisRol(String dsSisRol) {
         this.dsSisRol = dsSisRol;
     }
-    /**
+    
+    public String getCdUnieco() {
+		return cdUnieco;
+	}
+
+	public void setCdUnieco(String cdUnieco) {
+		this.cdUnieco = cdUnieco;
+	}
+
+	/**
      * @return String
      */
     public String toString() {
