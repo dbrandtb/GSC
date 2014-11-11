@@ -161,7 +161,16 @@ Ext.onReady(function()
 				                            }
 				                        }
 				                        ,listeners: {
-				                        	beforeload: function(){
+				                        	beforeload: function( store, operation, eOpts){
+				                        		operation.callback = function(records, op, succ){
+				                        			
+				                        			var jsonResponse = Ext.decode(op.response.responseText);
+//				                        			debug(typeof jsonResponse.exito);
+//				                        			debug(jsonResponse.exito);
+				                        			if(!jsonResponse.exito){
+				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+				                        			}
+				                        		}
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
 				                        	},
 				                        	load      : function(){
@@ -221,7 +230,16 @@ Ext.onReady(function()
 				                            }
 				                        }
 				                        ,listeners: {
-				                        	beforeload: function(){
+				                        	beforeload: function( store, operation, eOpts){
+				                        		operation.callback = function(records, op, succ){
+				                        			
+				                        			var jsonResponse = Ext.decode(op.response.responseText);
+//				                        			debug(typeof jsonResponse.exito);
+//				                        			debug(jsonResponse.exito);
+				                        			if(!jsonResponse.exito){
+				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+				                        			}
+				                        		}
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
 				                        	},
 				                        	load      : function(){

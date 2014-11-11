@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -121,14 +122,17 @@ public class PersonasAction extends PrincipalCoreAction
 		    	
 		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 		    	
-		    	if(clientesRes == null){
+		    	if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
 		    		
-		    		exito           = true;
+		    		logger.debug("Error en WS, exito false");
+		    		exito           = false;
 					respuesta       = "No se encontró ninguna persona.";
 					respuestaOculta = "No se encontró ninguna persona.";
 					slist1          = null;
 					
 		    		return SUCCESS;
+		    	}else{
+		    		exito = true;
 		    	}
 		    	
 		    	ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
