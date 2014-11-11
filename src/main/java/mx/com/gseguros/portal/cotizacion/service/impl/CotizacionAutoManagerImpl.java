@@ -147,7 +147,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					DatosUsuario datUsu = cotizacionDAO.cargarInformacionUsuario(cdusuari,cdtipsit);
 					cdunieco            = datUsu.getCdunieco();
 					resp.getSmap().put("cdunieco" , cdunieco);
-					resp.getSmap().put("ntramite" , null);
+					resp.getSmap().put("ntramite" , "");
 					
 					if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
 					{
