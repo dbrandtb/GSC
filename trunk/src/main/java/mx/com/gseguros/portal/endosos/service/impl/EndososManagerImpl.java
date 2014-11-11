@@ -1408,6 +1408,34 @@ public class EndososManagerImpl implements EndososManager
 			}
 		}
 		
+		//////////////////////////
+		////// tarificacion //////
+		if(resp.isExito()&&fechaValida)
+		{
+			try {
+		        Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
+				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+				mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+				mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+				
+				endososDAO.sigsvalipolEnd(mapaSigsvalipolEnd);
+				
+			} catch(Exception ex) {
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error en sigsvalipolEnd #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
 		//confirmar endoso
 		if(resp.isExito()&&fechaValida)
 		{
