@@ -766,35 +766,35 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,porpartiSec
 							);
 				}
-				
-				setCheckpoint("Guardando datos adicionales de poliza");
-				Map<String,String>tvalopolAux=new HashMap<String,String>();
-				for(Entry<String,String>en:tvalopol.entrySet())
-				{
-					String key = en.getKey();
-					if(!isBlank(key)
-							&&key.length()>"parametros.pv_otvalor".length()
-							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
-					{
-						tvalopolAux.put(key.substring("parametros.pv_".length()),en.getValue());
-					}
-				}
-				cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
-				
-				setCheckpoint("Guardando datos adicionales de situacion");
-				Map<String,String>tvalositAux=new HashMap<String,String>();
-				for(Entry<String,String>en:tvalosit.entrySet())
-				{
-					String key = en.getKey();
-					if(!isBlank(key)
-							&&key.length()>"parametros.pv_otvalor".length()
-							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
-					{
-						tvalositAux.put(key.substring("parametros.pv_".length()),en.getValue());
-					}
-				}
-				cotizacionDAO.actualizaValoresSituacion(cdunieco,cdramo,estado,nmpoliza,"0","1",tvalositAux);
 			}
+				
+			setCheckpoint("Guardando datos adicionales de poliza");
+			Map<String,String>tvalopolAux=new HashMap<String,String>();
+			for(Entry<String,String>en:tvalopol.entrySet())
+			{
+				String key = en.getKey();
+				if(!isBlank(key)
+						&&key.length()>"parametros.pv_otvalor".length()
+						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+				{
+					tvalopolAux.put(key.substring("parametros.pv_".length()),en.getValue());
+				}
+			}
+			cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
+			
+			setCheckpoint("Guardando datos adicionales de situacion");
+			Map<String,String>tvalositAux=new HashMap<String,String>();
+			for(Entry<String,String>en:tvalosit.entrySet())
+			{
+				String key = en.getKey();
+				if(!isBlank(key)
+						&&key.length()>"parametros.pv_otvalor".length()
+						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+				{
+					tvalositAux.put(key.substring("parametros.pv_".length()),en.getValue());
+				}
+			}
+			cotizacionDAO.actualizaValoresSituacion(cdunieco,cdramo,estado,nmpoliza,"0","1",tvalositAux);
 			
 			resp.setRespuesta("Datos guardados");
 			resp.setRespuestaOculta("Datos guardados");
