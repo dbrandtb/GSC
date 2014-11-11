@@ -30,11 +30,19 @@ var _p28_urlDatosComplementarios           = '<s:url namespace="/emision"       
 var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
 var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
 var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
+var _p28_urlViewDoc                        = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
+var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                    />';
+
+var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
 
 ////// variables //////
 var _p28_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p28_smap1:',_p28_smap1);
+
+var _p28_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+debug('_p28_reporteCotizacion:',_p28_reporteCotizacion);
 
 var _p28_formFields   = [ <s:property value="imap.formFields"   /> ];
 var _p28_panel2Items  = [ <s:property value="imap.panel2Items"  /> ];
@@ -647,6 +655,20 @@ function _p28_cotizar()
                                 ,text    : 'Nueva'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,handler : _p28_nueva
+                            }
+                            ,{
+                                itemId   : '_p28_botonEnviar'
+                                ,text    : 'Enviar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/email.png'
+                                ,disabled : true
+                                ,handler : _p28_enviar
+                            }
+                            ,{
+                                itemId   : '_p28_botonImprimir'
+                                ,text    : 'Imprimir'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                                ,disabled : true
+                                ,handler : _p28_imprimir
                             }
                         ]
                         ,listeners        :
@@ -1433,6 +1455,8 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         debug('DSPERPAG');
         _fieldById('_p28_botonCoberturas').setDisabled(true);
         _fieldById('_p28_botonComprar').setDisabled(true);
+        _fieldById('_p28_botonImprimir').setDisabled(true);
+        _fieldById('_p28_botonEnviar').setDisabled(true);
     }
     else
     {
@@ -1449,6 +1473,8 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         
         _fieldById('_p28_botonCoberturas').setDisabled(false);
         _fieldById('_p28_botonComprar').setDisabled(false);
+        _fieldById('_p28_botonImprimir').setDisabled(false);
+        _fieldById('_p28_botonEnviar').setDisabled(false);
     }
 }
 
@@ -1522,6 +1548,174 @@ function _p28_comprar()
             errorComunicacion();
         }
     });
+}
+
+function _p28_imprimir()
+{
+    debug('>_p28_imprimir');
+    var me = this;
+    var urlRequestImpCotiza = _p28_urlImprimirCotiza
+            + '?p_unieco='      + _p28_smap1.cdunieco
+            + '&p_ramo='        + _p28_smap1.cdramo
+            + '&p_subramo='     + _p28_smap1.cdtipsit
+            + '&p_estado=W'
+            + '&p_poliza='      + _fieldByName('nmpoliza').getValue()
+            + '&p_suplem=0'
+            + '&p_cdplan='      + _p28_selectedCdplan
+            + '&p_plan='        + _p28_selectedCdplan
+            + '&p_perpag='      + _p28_selectedCdperpag
+            + '&p_ntramite='    + _p28_smap1.ntramite
+            + '&p_cdusuari='    + _p28_smap1.cdusuari
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p28_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p28_reporteCotizacion
+            + "&paramform=no";
+    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p28_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p28_imprimir');
+}
+
+function _p28_enviar()
+{
+    debug('>_p28_enviar');
+    Ext.create('Ext.window.Window',
+    {
+        title        : 'Enviar cotizaci&oacute;n'
+        ,width       : 550
+        ,modal       : true
+        ,height      : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items       :
+        [
+            {
+                xtype       : 'textfield'
+                ,itemId     : '_p28_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text     : 'Enviar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (_fieldById('_p28_idInputCorreos').getValue().length > 0
+                            &&_fieldById('_p28_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        me.up().up().setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url : _p28_urlEnviarCorreo
+                            ,params :
+                            {
+                                to          : _fieldById('_p28_idInputCorreos').getValue()
+                                ,urlArchivo : _p28_urlImprimirCotiza
+                                             + '?p_unieco='      + _p28_smap1.cdunieco
+                                             + '&p_ramo='        + _p28_smap1.cdramo
+                                             + '&p_subramo='     + _p28_smap1.cdtipsit
+                                             + '&p_estado=W'
+                                             + '&p_poliza='      + _fieldByName('nmpoliza').getValue()
+                                             + '&p_suplem=0'
+                                             + '&p_cdplan='      + _p28_selectedCdplan
+                                             + '&p_plan='        + _p28_selectedCdplan
+                                             + '&p_perpag='      + _p28_selectedCdperpag
+                                             + '&p_ntramite='    + _p28_smap1.ntramite
+                                             + '&p_cdusuari='    + _p28_smap1.cdusuari
+                                             + '&destype=cache'
+                                             + "&desformat=PDF"
+                                             + "&userid="        + _p28_reportsServerUser
+                                             + "&ACCESSIBLE=YES"
+                                             + "&report="        + _p28_reporteCotizacion
+                                             + "&paramform=no",
+                                nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
+                            },
+                            callback : function(options,success,response)
+                            {
+                                me.up().up().setLoading(false);
+                                if (success)
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    if (json.success == true)
+                                    {
+                                        me.up().up().destroy();
+                                        centrarVentanaInterna(Ext.Msg.show(
+                                        {
+                                            title : 'Correo enviado'
+                                            ,msg : 'El correo ha sido enviado'
+                                            ,buttons : Ext.Msg.OK
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        mensajeError('Error al enviar');
+                                    }
+                                }
+                                else
+                                {
+                                    errorComunicacion();
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                    }
+                }
+            }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show();
+    _fieldById('_p28_idInputCorreos').focus();
+    debug('<_p28_enviar');
 }
 ////// funciones //////
 </script>
