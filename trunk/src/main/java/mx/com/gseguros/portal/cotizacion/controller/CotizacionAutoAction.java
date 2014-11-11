@@ -7,7 +7,9 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 
 import org.apache.commons.lang3.StringUtils;
@@ -273,6 +275,241 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### cargarSumaAseguradaRamo5 ######")
 				.append("\n######################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String emisionAutoIndividual()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###################################")
+				.append("\n###### emisionAutoIndividual ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		setCheckpoint("Validando datos de entrada");
+		try
+		{
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String ntramite = smap1.get("ntramite");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el ramo");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(ntramite , "No se recibio el numero de tramite");
+			
+			checkNull(session,"No hay sesion");
+			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			smap1.put("cdusuari" , cdusuari);
+			
+			ManagerRespuestaImapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				imap = resp.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### emisionAutoIndividual ######")
+				.append("\n###################################")
+				.toString()
+				);
+		return result;
+	}
+	
+	public String cargarDatosComplementariosAutoInd()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###############################################")
+				.append("\n###### cargarDatosComplementariosAutoInd ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(nmpoliza , "No se recibio la poliza");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarDatosComplementariosAutoInd(cdunieco,cdramo,estado,nmpoliza);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarDatosComplementariosAutoInd ######")
+				.append("\n###############################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarValoresSituacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n####################################")
+				.append("\n###### cargarValoresSituacion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsituac = smap1.get("nmsituac");
+			checkBlank(cdunieco, "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(nmpoliza , "No se recibio la poliza");
+			checkBlank(nmsituac , "No se recibio el numero de situacion");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarValoresSituacion(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			
+			if(exito)
+			{
+				smap1=resp.getSmap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarValoresSituacion ######")
+				.append("\n####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String movimientoMpoliper()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################")
+				.append("\n###### movimientoMpoliper ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos de entrada");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsituac = smap1.get("nmsituac");
+			String cdrol    = smap1.get("cdrol");
+			String cdperson = smap1.get("cdperson");
+			String nmsuplem = smap1.get("nmsuplem");
+			String status   = smap1.get("status");
+			String nmorddom = smap1.get("nmorddom");
+			String swreclam = smap1.get("swreclam");
+			String accion   = smap1.get("accion");
+			String swexiper = smap1.get("swexiper");
+			
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(nmsituac , "No se recibio el numero de situacion");
+			checkBlank(cdrol    , "No se recibio el rol");
+			checkBlank(cdperson , "No se recibio la clave de persona");
+			checkBlank(nmsuplem , "No se recibio el suplemento");
+			checkBlank(status   , "No se recibio el status");
+			checkBlank(nmorddom , "No se recibio el numero ordinal");
+			checkBlank(accion   , "No se recibio la accion");
+			checkBlank(swexiper , "No se recibio el estado de persona existente");
+			
+			ManagerRespuestaVoidVO resp = cotizacionAutoManager.movimientoMpoliper(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsituac
+					,cdrol
+					,cdperson
+					,nmsuplem
+					,status
+					,nmorddom
+					,swreclam
+					,accion
+					,swexiper);
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### movimientoMpoliper ######")
+				.append("\n################################")
 				.toString()
 				);
 		return SUCCESS;

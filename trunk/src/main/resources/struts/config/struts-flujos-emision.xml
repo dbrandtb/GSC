@@ -254,6 +254,23 @@
         <action name="cargarSumaAseguradaRamo5" class="cotizacionAutoAction" method="cargarSumaAseguradaRamo5">
             <result name="success" type="json" />
         </action>
+        
+        <action name="emisionAutoIndividual" class="cotizacionAutoAction" method="emisionAutoIndividual">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/emisionAutoIndividual.jsp</result>
+        </action>
+        
+        <action name="cargarDatosComplementariosAutoInd" class="cotizacionAutoAction" method="cargarDatosComplementariosAutoInd">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="cargarValoresSituacion" class="cotizacionAutoAction" method="cargarValoresSituacion">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="movimientoMpoliper" class="cotizacionAutoAction" method="movimientoMpoliper">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

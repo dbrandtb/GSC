@@ -2894,4 +2894,234 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarDatosComplementariosAutoInd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_DATOS_COMP_AUTO_IND ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarDatosComplementariosAutoInd(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay datos de poliza");
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Datos de poliza repetidos");
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(lista.get(0))
+				.append("\n****** PKG_CONSULTA.P_GET_DATOS_COMP_AUTO_IND ******")
+				.append("\n****************************************************")
+				.toString()
+				);
+		return lista.get(0);
+	}
+	
+	protected class CargarDatosComplementariosAutoInd extends StoredProcedure
+	{
+		protected CargarDatosComplementariosAutoInd(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_COMP_AUTO_IND");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					    "cdunieco"
+					    ,"cdramo"
+					    ,"estado"
+					    ,"nmpoliza"
+					    ,"cdperpag"
+					    ,"cdplan"
+					    ,"feini"
+					    ,"fefin"
+					    ,"cdperson"
+					    ,"swexiper"
+					    ,"agente_sec"
+					    ,"porparti"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String>cargarTvalopol(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************")
+				.append("\n****** PKG_COTIZA.P_GET_TVALOPOL ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarTvalopol(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Map<String,String>datos       = new LinkedHashMap<String,String>();
+		if(lista!=null&&lista.size()>0)
+		{
+			datos=lista.get(0);
+		}
+		Map<String,String>aux=new LinkedHashMap<String,String>();
+		for(Entry<String,String>en:datos.entrySet())
+		{
+			aux.put(new StringBuilder("parametros.pv_").append(en.getKey()).toString(),en.getValue());
+		}
+		datos=aux;
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(datos)
+				.append("\n****** PKG_COTIZA.P_GET_TVALOPOL ******")
+				.append("\n***************************************")
+				.toString()
+				);
+		return datos;
+	}
+	
+	protected class CargarTvalopol extends StoredProcedure
+	{
+		protected CargarTvalopol(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_GET_TVALOPOL");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					    "cdunieco"
+					    ,"cdramo"
+					    ,"estado"
+					    ,"nmpoliza"
+					    ,"nmsuplem"
+					    ,"status"
+					                ,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09"
+					    ,"otvalor10","otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19"
+					    ,"otvalor20","otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29"
+					    ,"otvalor30","otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39"
+					    ,"otvalor40","otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49"
+					    ,"otvalor50"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String>cargarTvalosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmsituac" , nmsituac);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** PKG_COTIZA.P_OBTIENE_TVALOSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarTvalosit(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay valores de situacion"); 
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Valores de situacion duplicados");
+		}
+		Map<String,String>datos = lista.get(0);
+		Map<String,String>aux   = new LinkedHashMap<String,String>();
+		for(Entry<String,String>en:datos.entrySet())
+		{
+			aux.put(new StringBuilder("parametros.pv_").append(en.getKey()).toString(),en.getValue());
+		}
+		datos=aux;
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(datos)
+				.append("\n****** PKG_COTIZA.P_OBTIENE_TVALOSIT ******")
+				.append("\n*******************************************")
+				.toString()
+				);
+		return datos;
+	}
+	
+	protected class CargarTvalosit extends StoredProcedure
+	{
+		protected CargarTvalosit(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_OBTIENE_TVALOSIT");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					    "cdtipsit"
+					    ,"nmsuplem"
+					    ,"status"
+					                ,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09"
+					    ,"otvalor10","otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19"
+					    ,"otvalor20","otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29"
+					    ,"otvalor30","otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39"
+					    ,"otvalor40","otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49"
+					    ,"otvalor50"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

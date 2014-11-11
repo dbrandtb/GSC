@@ -26,9 +26,10 @@ var _p28_urlRecuperarCliente               = '<s:url namespace="/"              
 var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
 var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"       />';
 var _p28_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacion"               />';
-var _p28_urlDatosComplementarios           = '<s:url namespace="/"                action="datosComplementarios"           />';
+var _p28_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoIndividual"          />';
 var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
 var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
+var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 ////// urls //////
 
 ////// variables //////
@@ -616,6 +617,13 @@ function _p28_cotizar()
                         ,buttons          :
                         [
                             {
+                                itemId    : '_p28_botonComprar'
+                                ,text     : 'Generar tr&aacute;mite'
+                                ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                ,disabled : true
+                                ,handler  : _p28_comprar
+                            }
+                            ,{
                                 itemId    : '_p28_botonCoberturas'
                                 ,text     : 'Coberturas'
                                 ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
@@ -640,13 +648,6 @@ function _p28_cotizar()
                                 ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,handler : _p28_nueva
                             }
-                            /*
-                            new _0_BotComprar()
-                            --,new _0_BotCoberturas()
-                            --,new _0_BotEditar()
-                            --,new _0_BotClonar()
-                            --,new _0_BotNueva()
-                            */
                         ]
                         ,listeners        :
                         {
@@ -1243,12 +1244,12 @@ function _p28_cargar(boton)
                             ,standardSubmit : true
                             ,params         :
                             {
-                                cdunieco         : json.smap1.CDUNIECO
-                                ,cdramo          : json.smap1.cdramo
-                                ,estado          : 'W'
-                                ,nmpoliza        : json.smap1.nmpoliza
-                                ,'map1.ntramite' : json.smap1.NTRAMITE
-                                ,cdtipsit        : json.smap1.cdtipsit
+                                'smap1.cdunieco'  : json.smap1.CDUNIECO
+                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                ,'smap1.cdtipsit' : json.smap1.cdtipsit
+                                ,'smap1.estado'   : 'W'
+                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                ,'smap1.ntramite' : json.smap1.NTRAMITE
                             }
                         });
                     }
@@ -1431,7 +1432,7 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
     {
         debug('DSPERPAG');
         _fieldById('_p28_botonCoberturas').setDisabled(true);
-        /*Ext.getCmp('_0_botComprarId').setDisabled(true);*/
+        _fieldById('_p28_botonComprar').setDisabled(true);
     }
     else
     {
@@ -1447,8 +1448,80 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         debug('_p28_selectedNmsituac' , _p28_selectedNmsituac);
         
         _fieldById('_p28_botonCoberturas').setDisabled(false);
-        /*Ext.getCmp('_0_botComprarId').setDisabled(false);*/
+        _fieldById('_p28_botonComprar').setDisabled(false);
     }
+}
+
+function _p28_comprar()
+{
+    debug('comprar');
+    var panelPri = _fieldById('_p28_panelpri');
+    panelPri.setLoading(true);
+    var nombreTitular = '';
+    
+    Ext.Ajax.request(
+    {
+        url      : _p28_urlComprar
+        ,params  :
+        {
+            comprarNmpoliza        : _fieldByName('nmpoliza').getValue()
+            ,comprarCdplan         : _p28_selectedCdplan
+            ,comprarCdperpag       : _p28_selectedCdperpag
+            ,comprarCdramo         : _p28_smap1.cdramo
+            ,comprarCdciaaguradora : '20'
+            ,comprarCdunieco       : _p28_smap1.cdunieco
+            ,cdtipsit              : _p28_smap1.cdtipsit
+            ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+            ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+            ,'smap1.ntramite'      : _p28_smap1.ntramite
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI
+            ,'smap1.cdideperCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER
+            ,'smap1.cdagenteExt'   : _p28_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
+        }
+        ,success : function(response,opts)
+        {
+            panelPri.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### Comprar:',json);
+            if (json.exito)
+            {
+                centrarVentanaInterna(Ext.Msg.show(
+               {
+                   title    : 'Tr&aacute;mite generado'
+                   ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                              + json.smap1.ntramite
+                              + '<br/>y no podr&aacute; ser modificada posteriormente'
+                   ,buttons : Ext.Msg.OK
+                   ,fn      : function()
+                   {
+                       Ext.create('Ext.form.Panel').submit(
+                       {
+                           url             : _p28_urlDatosComplementarios
+                           ,standardSubmit : true
+                           ,params         :
+                           {
+                               'smap1.cdunieco'  : _p28_smap1.cdunieco
+                               ,'smap1.cdramo'   : _p28_smap1.cdramo
+                               ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                               ,'smap1.estado'   : 'W'
+                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
+                               ,'smap1.ntramite' : json.smap1.ntramite
+                           }
+                       });
+                   }
+                }));                
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            panelPri.setLoading(false);
+            errorComunicacion();
+        }
+    });
 }
 ////// funciones //////
 </script>
