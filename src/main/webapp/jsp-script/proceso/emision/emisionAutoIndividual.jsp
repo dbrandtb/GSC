@@ -682,7 +682,7 @@ function _p29_mostrarVistaPrevia()
                                                     ,'smap1.estado'   : 'M'
                                                     ,'smap1.nmsuplem' : '0'
                                                     ,'smap1.ntramite' : ''
-                                                    ,'smap1.nmsolici' : inputNmpoliza
+                                                    ,'smap1.nmsolici' : _p29_smap1.nmpoliza
                                                     ,'smap1.tipomov'  : '0'
                                                 }
                                                 ,scripts  : true
