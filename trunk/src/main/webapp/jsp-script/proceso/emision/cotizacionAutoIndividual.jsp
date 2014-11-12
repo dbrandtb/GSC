@@ -184,10 +184,71 @@ Ext.onReady(function()
             _p28_formOcultoItems.push(items[i]);
         }
     </s:if>
+    var _p28_panel1Items =
+    [
+        {
+            xtype       : 'numberfield'
+            ,itemId     : '_p28_nmpolizaItem'
+            ,fieldLabel : 'FOLIO'
+            ,name       : 'nmpoliza'
+            ,style      : 'margin : 15px;'
+            ,listeners  :
+            {
+                change : _p28_nmpolizaChange
+            }
+        }
+        ,{
+            xtype    : 'button'
+            ,itemId  : '_p28_botonCargar'
+            ,text    : 'BUSCAR'
+            ,style   : 'margin-left:345px;'
+            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+            ,handler : _p28_cargar
+        }
+    ];
+    <s:if test='%{getImap().get("panel1Items")!=null}'>
+        var aux = [<s:property value='imap.panel1Items' />];
+        for(var i=0;i<aux.length;i++)
+        {
+            aux[i].style='margin-left:15px;';
+            _p28_panel1Items.push(aux[i]);
+        }
+    </s:if>
+    _p28_panel1Items.push(
+    {
+        xtype  : 'fieldset'
+        ,width : 435
+        ,title : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
+        ,items : _p28_panel2Items
+    }
+    ,{
+        xtype  : 'fieldset'
+        ,width : 435
+        ,title : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
+        ,items : _p28_panel3Items
+    }
+    ,{
+        xtype       : 'datefield'
+        ,itemId     : '_p28_feiniItem'
+        ,name       : 'feini'
+        ,fieldLabel : 'INICIO DE VIGENCIA'
+        ,value      : new Date()
+        ,style      : 'margin-left:15px;'
+    }
+    ,{
+        xtype       : 'datefield'
+        ,itemId     : '_p28_fefinItem'
+        ,name       : 'fefin'
+        ,fieldLabel : 'FIN DE VIGENCIA'
+        ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+        ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
+        ,style      : 'margin-left:15px;'
+    });
 	
 	Ext.create('Ext.panel.Panel',
 	{
 	    itemId    : '_p28_panelpri'
+	    ,border   : 0
 	    ,renderTo : '_p28_divpri'
 	    ,defaults : { style : 'margin : 5px;' }
 	    ,items    :
@@ -209,56 +270,7 @@ Ext.onReady(function()
 	                {
 	                    xtype  : 'fieldset'
 	                    ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
-	                    ,items :
-	                    [
-	                        {
-                                xtype       : 'numberfield'
-                                ,itemId     : '_p28_nmpolizaItem'
-                                ,fieldLabel : 'FOLIO'
-                                ,name       : 'nmpoliza'
-                                ,style      : 'margin : 5px;'
-                                ,listeners  :
-                                {
-                                    change : _p28_nmpolizaChange
-                                }
-                            }
-                            ,{
-                                xtype    : 'button'
-                                ,itemId  : '_p28_botonCargar'
-                                ,text    : 'BUSCAR'
-                                ,style   : 'margin-left:335px;'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                                ,handler : _p28_cargar
-                            }
-                            <s:property value='","+imap.panel1Items' />
-                            ,{
-                                xtype  : 'fieldset'
-                                ,width : 435
-                                ,title : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
-                                ,items : _p28_panel2Items
-                            }
-                            ,{
-                                xtype  : 'fieldset'
-                                ,width : 435
-                                ,title : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
-                                ,items : _p28_panel3Items
-                            }
-                            ,{
-                                xtype       : 'datefield'
-                                ,itemId     : '_p28_feiniItem'
-                                ,name       : 'feini'
-                                ,fieldLabel : 'INICIO DE VIGENCIA'
-                                ,value      : new Date()
-                            }
-                            ,{
-                                xtype       : 'datefield'
-                                ,itemId     : '_p28_fefinItem'
-                                ,name       : 'fefin'
-                                ,fieldLabel : 'FIN DE VIGENCIA'
-                                ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
-                                ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
-                            }
-	                    ]
+	                    ,items : _p28_panel1Items
 	                }
 	                ,{
 	                    xtype  : 'fieldset'
@@ -569,6 +581,7 @@ function _p28_cotizar()
                     var _p28_formDescuento = Ext.create('Ext.form.Panel',
                     {
                         itemId       : '_p28_formDescuento'
+                        ,border      : 0
                         ,defaults    : { style : 'margin:5px;' }
                         ,layout      :
                         {
@@ -603,78 +616,93 @@ function _p28_cotizar()
                     
                     _p28_formDescuento.loadRecord(new _p28_formModel(form.formOculto.getValues()));
                     
-                    var gridTarifas=Ext.create('Ext.grid.Panel',
+                    var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
-                        itemId            : '_p28_gridTarifas'
-                        ,title            : 'Resultados'
-                        ,store            : Ext.create('Ext.data.Store',
-                        {
-                            model : '_p28_modeloTarifa'
-                            ,data : json.slist2
-                        })
-                        ,columns          : Ext.decode(json.smap1.columnas)
-                        ,selType          : 'cellmodel'
-                        ,minHeight        : 100
-                        ,enableColumnMove : false
-                        ,bbar             :
+                        itemId : '_p28_gridTarifas'
+                        ,items :
                         [
-                            '->'
-                            ,_p28_formDescuento
-                        ]
-                        ,buttonAlign      : 'center'
-                        ,buttons          :
-                        [
+                            Ext.create('Ext.grid.Panel',
                             {
-                                itemId    : '_p28_botonComprar'
-                                ,text     : 'Generar tr&aacute;mite'
-                                ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                ,disabled : true
-                                ,handler  : _p28_comprar
-                            }
-                            ,{
-                                itemId    : '_p28_botonCoberturas'
-                                ,text     : 'Coberturas'
-                                ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
-                                ,disabled : true
-                                ,handler  : _p28_coberturas
-                            }
-                            ,{
-                                itemId   : '_p28_botonEditar'
-                                ,text    : 'Editar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-                                ,handler : _p28_editar
-                            }
-                            ,{
-                                itemId   : '_p28_botonClonar'
-                                ,text    : 'Clonar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
-                                ,handler : _p28_clonar
-                            }
-                            ,{
-                                itemId   : '_p28_botonNueva'
-                                ,text    : 'Nueva'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                ,handler : _p28_nueva
-                            }
-                            ,{
-                                itemId   : '_p28_botonEnviar'
-                                ,text    : 'Enviar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/email.png'
-                                ,disabled : true
-                                ,handler : _p28_enviar
-                            }
-                            ,{
-                                itemId   : '_p28_botonImprimir'
-                                ,text    : 'Imprimir'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                                ,disabled : true
-                                ,handler : _p28_imprimir
-                            }
+                                title             : 'Resultados'
+                                ,border           : 0
+                                ,store            : Ext.create('Ext.data.Store',
+                                {
+                                    model : '_p28_modeloTarifa'
+                                    ,data : json.slist2
+                                })
+                                ,columns          : Ext.decode(json.smap1.columnas)
+                                ,selType          : 'cellmodel'
+                                ,minHeight        : 100
+                                ,enableColumnMove : false
+                                ,listeners        :
+                                {
+                                    select : _p28_tarifaSelect
+                                }
+                            })
+                            ,_p28_formDescuento
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                defaults : { style : 'margin:5px;' }
+                                ,border  : 0
+                                ,tbar    :
+                                [
+                                    '->'
+                                    ,{
+                                        itemId    : '_p28_botonCoberturas'
+                                        ,text     : 'Coberturas'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_coberturas
+                                    }
+                                    ,{
+                                        itemId   : '_p28_botonEditar'
+                                        ,text    : 'Editar'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                        ,handler : _p28_editar
+                                    }
+                                    ,{
+                                        itemId   : '_p28_botonClonar'
+                                        ,text    : 'Duplicar'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                                        ,handler : _p28_clonar
+                                    }
+                                    ,{
+                                        itemId   : '_p28_botonNueva'
+                                        ,text    : 'Nueva'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                        ,handler : _p28_nueva
+                                    }
+                                ]
+                                ,bbar    :
+                                [
+                                    '->'
+                                    ,{
+                                        itemId    : '_p28_botonComprar'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Emitir'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_comprar
+                                    }
+                                    ,{
+                                        itemId    : '_p28_botonEnviar'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Enviar'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_enviar
+                                    }
+                                    ,{
+                                        itemId    : '_p28_botonImprimir'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Imprimir'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_imprimir
+                                    }
+                                ]
+                            })
                         ]
-                        ,listeners        :
-                        {
-                            select : _p28_tarifaSelect
-                        }
                     });
                     
                     var panelPri = _fieldById('_p28_panelpri');
@@ -1440,7 +1468,7 @@ function _p28_coberturas()
 
 function _p28_tarifaSelect(selModel, record, row, column, eOpts)
 {
-    var gridTarifas = _fieldById('_p28_gridTarifas');
+    var gridTarifas = _fieldById('_p28_gridTarifas').down('grid');
     debug('column:',column);
     if(column>0)
     {
