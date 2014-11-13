@@ -816,6 +816,91 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSmapVO cargarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarConfiguracionCotizacion @@@@@@")
+				.append("\n@@@@@@ cdramo=")     .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=")   .append(cdtipsit)
+				.append("\n@@@@@@ cdusuari=")   .append(cdusuari)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando configuracio de cotizacion");
+			resp.setSmap(cotizacionDAO.cargarConfiguracionCotizacion(cdramo, cdtipsit, cdusuari));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarConfiguracionCotizacion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO guardarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,Map<String,String>valores)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ guardarConfiguracionCotizacion @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ cdusuari=").append(cdusuari)
+				.append("\n@@@@@@ valores=") .append(valores)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Guardando configuracion");
+			cotizacionDAO.guardarConfiguracionCotizacion(cdramo, cdtipsit, cdusuari, valores);
+			
+			resp.setRespuesta("Se han guardado las configuraciones");
+			resp.setRespuestaOculta("Todo OK");
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ guardarConfiguracionCotizacion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

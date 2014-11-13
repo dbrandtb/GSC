@@ -32,6 +32,9 @@ var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion
 var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _p28_urlViewDoc                        = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
 var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                    />';
+var _p28_urlDetalleCotizacion              = '<s:url namespace="/"                action="detalleCotizacion"              />';
+var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"         action="guardarConfigCotizacion"        />';
+var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"         />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -75,6 +78,25 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : _p28_formFields
+    });
+    
+    Ext.define('ModeloDetalleCotizacion',
+    {
+        extend : 'Ext.data.Model'
+        ,fields :
+        [
+            'Codigo_Garantia'
+            ,{
+                name : 'Importe'
+                ,type : 'float'
+            }
+            ,'Nombre_garantia'
+            ,'cdtipcon'
+            ,'nmsituac'
+            ,'orden'
+            ,'parentesco'
+            ,'orden_parentesco'
+        ]
     });
 	////// modelos //////
 	
@@ -165,6 +187,15 @@ Ext.onReady(function()
                 }
             }
         ]
+    });
+    
+    _p28_panel4Items.push(
+    {
+        xtype    : 'button'
+        ,text    : 'Guardar configuraci&oacute;n'
+        ,style   : 'margin:5px;margin-left:265px;'
+        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+        ,handler : _p28_guardarConfig
     });
 	////// componentes //////
 	
@@ -273,9 +304,10 @@ Ext.onReady(function()
 	                    ,items : _p28_panel1Items
 	                }
 	                ,{
-	                    xtype  : 'fieldset'
-	                    ,title : '<span style="font:bold 14px Calibri;">COBERTURAS</span>'
-	                    ,items : _p28_panel4Items
+	                    xtype   : 'fieldset'
+	                    ,itemId : '_p28_panel4Fieldset'
+	                    ,title  : '<span style="font:bold 14px Calibri;">COBERTURAS</span>'
+	                    ,items  : _p28_panel4Items
 	                }
 	            ]
 	        })
@@ -447,6 +479,36 @@ Ext.onReady(function()
 	////// custom //////
 	
 	////// loaders //////
+	Ext.Ajax.request(
+	{
+	    url     : _p28_urlCargarConfig
+	    ,params :
+	    {
+	        'smap1.cdramo'    : _p28_smap1.cdramo
+	        ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+	        ,'smap1.cdusuari' : _p28_smap1.cdusuari
+	    }
+	    ,success : function(response)
+	    {
+	        var json = Ext.decode(response.responseText);
+	        debug('### config:',json);
+	        if(json.exito)
+	        {
+	            for(var prop in json.smap1)
+	            {
+	                _fieldByName(prop).setValue(json.smap1[prop]);
+	            }
+	        }
+	        else
+	        {
+	            mensajeError(json.respuesta);
+	        }
+	    }
+	    ,failure : function()
+	    {
+	        errorComunicacion();
+	    }
+	});
 	////// loaders //////
 });
 
@@ -486,6 +548,10 @@ function _p28_cotizar()
             form.formOculto.loadRecord(recordPaneles);
             debug('form.formOculto.getValues():',form.formOculto.getValues());
         }
+        
+        var smap = _p28_smap1;
+        _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
+        _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
     
         var json=
         {
@@ -493,7 +559,7 @@ function _p28_cotizar()
             [
                 form.getValues()
             ]
-            ,smap1 : _p28_smap1 
+            ,smap1 : smap
         };
         var valuesFormOculto = form.formOculto.getValues();
         for(var att in valuesFormOculto)
@@ -647,6 +713,13 @@ function _p28_cotizar()
                                 ,tbar    :
                                 [
                                     '->'
+                                    ,{
+                                        itemId    : '_p28_botonDetalles'
+                                        ,text     : 'Detalles'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_detalles
+                                    }
                                     ,{
                                         itemId    : '_p28_botonCoberturas'
                                         ,text     : 'Coberturas'
@@ -851,7 +924,7 @@ function _p28_ramo5ClienteChange(combcl)
         _p28_recordClienteRecuperado=null;
     }
     //recuperar cliente
-    else if(combcl.getValue()=='N')
+    else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ) )
     {
         nombre.reset();
         tipoper.reset();
@@ -1085,7 +1158,7 @@ function _p28_herenciaDescendiente(clave,marca,submarca,modelo,version)
     debug('<_p28_herenciaDescendiente');
 }
 
-function _p28_herenciaAscendente(clave,marca,submarca,modelo,version)
+function _p28_herenciaAscendente(clave,marca,submarca,modelo,version,callback)
 {
     debug('>_p28_herenciaAscendente');
     var versionval = version.getValue();
@@ -1112,7 +1185,7 @@ function _p28_herenciaAscendente(clave,marca,submarca,modelo,version)
                             +version.findRecord('key',versionval).get('value');
                 debug('>valor:',valor);
                 clave.setValue(clave.findRecord('value',valor));
-                _p28_cargarSumaAseguradaRamo5(clave,modelo);
+                _p28_cargarSumaAseguradaRamo5(clave,modelo,callback);
             }
         });
     }
@@ -1120,7 +1193,7 @@ function _p28_herenciaAscendente(clave,marca,submarca,modelo,version)
     debug('<_p28_herenciaAscendente');
 }
 
-function _p28_cargarSumaAseguradaRamo5(clave,modelo)
+function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
 {
     debug('>_p28_cargarSumaAseguradaRamo5');
     var form=_fieldById('_p28_form');
@@ -1145,7 +1218,7 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo)
                 var sumaseg = _fieldByName('parametros.pv_otvalor13');
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;
-                _p28_cargarRangoValorRamo5();
+                _p28_cargarRangoValorRamo5(callback);
             }
             else
             {
@@ -1263,7 +1336,21 @@ function _p28_cargar(boton)
                                     var modelo   = _fieldByName('parametros.pv_otvalor09');
                                     var version  = _fieldByName('parametros.pv_otvalor10');
                                     
-                                    _p28_herenciaAscendente(clave,marca,submarca,modelo,version);
+                                    _p28_herenciaAscendente(clave,marca,submarca,modelo,version,function()
+                                    {
+                                        form.loadRecord(primerInciso);
+                                        if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                                        {
+                                            _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
+                                            debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
+                                            
+                                            var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
+                                            combcl.semaforo = true;
+                                            combcl.setValue('N');
+                                            combcl.semaforo = false;
+                                        }
+                                        _p28_cotizar();
+                                    });
                                     
                                     if(_p28_smap1.cdsisrol=='SUSCRIAUTO')
                                     {
@@ -1318,7 +1405,7 @@ function _p28_cargar(boton)
     }
 }
 
-function _p28_cargarRangoValorRamo5()
+function _p28_cargarRangoValorRamo5(callback)
 {
     debug('>_p28_cargarRangoValorRamo5');
     var tipovalor = _fieldByLabel('TIPO VALOR');
@@ -1360,6 +1447,11 @@ function _p28_cargarRangoValorRamo5()
                     debug('valor:',valorCargado);
                     debug('valormin:',valormin);
                     debug('valormax:',valormax);
+                    
+                    if(callback)
+                    {
+                        callback();
+                    }
                 }
                 else
                 {
@@ -1485,6 +1577,7 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p28_botonComprar').setDisabled(true);
         _fieldById('_p28_botonImprimir').setDisabled(true);
         _fieldById('_p28_botonEnviar').setDisabled(true);
+        _fieldById('_p28_botonDetalles').setDisabled(true);
     }
     else
     {
@@ -1503,6 +1596,7 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p28_botonComprar').setDisabled(false);
         _fieldById('_p28_botonImprimir').setDisabled(false);
         _fieldById('_p28_botonEnviar').setDisabled(false);
+        _fieldById('_p28_botonDetalles').setDisabled(false);
     }
 }
 
@@ -1744,6 +1838,204 @@ function _p28_enviar()
     }).show();
     _fieldById('_p28_idInputCorreos').focus();
     debug('<_p28_enviar');
+}
+
+function _p28_detalles()
+{
+    debug('>_p28_detalles');
+    Ext.Ajax.request(
+    {
+        url      : _p28_urlDetalleCotizacion
+        ,params  :
+        {
+            'panel1.pv_cdunieco_i'  : _p28_smap1.cdunieco
+            ,'panel1.pv_cdramo_i'   : _p28_smap1.cdramo
+            ,'panel1.pv_estado_i'   : 'W'
+            ,'panel1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+            ,'panel1.pv_cdperpag_i' : _p28_selectedCdperpag
+            ,'panel1.pv_cdplan_i'   : _p28_selectedCdplan
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### detalles:',json);
+            if (json.success)
+            {
+                var orden = 0;
+                var parentescoAnterior = 'qwerty';
+                for ( var i = 0; i < json.slist1.length; i++)
+                {
+                    if (json.slist1[i].parentesco != parentescoAnterior)
+                    {
+                        orden++;
+                        parentescoAnterior = json.slist1[i].parentesco;
+                    }
+                    json.slist1[i].orden_parentesco = orden+ '_'+ json.slist1[i].parentesco;
+                }
+                debug(json);
+                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                {
+                    title       : 'Detalles de cotizaci&oacute;n'
+                    ,width      : 600
+                    ,autoScroll : true
+                    ,modal      : true
+                    ,items      :
+                    [
+                        Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model       : 'ModeloDetalleCotizacion'
+                                ,groupField : 'orden_parentesco'
+                                ,sorters    :
+                                [
+                                    {
+                                        sorterFn : function(o1,o2)
+                                        {
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('orden') === o2.get('orden'))
+                                            {
+                                                return 0;
+                                            }
+                                            return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
+                                        }
+                                    }
+                                ]
+                                ,proxy      :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                }
+                                ,data : json.slist1
+                            })
+                            ,columns :
+                            [
+                                {
+                                    header           : 'Nombre de la cobertura'
+                                    ,dataIndex       : 'Nombre_garantia'
+                                    ,flex            : 3
+                                    ,summaryType     : 'count'
+                                    ,summaryRenderer : function(value)
+                                    {
+                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+                                    }
+                                }
+                                ,{
+                                    header       : 'Importe por cobertura'
+                                    ,dataIndex   : 'Importe'
+                                    ,flex        : 1
+                                    ,renderer    : Ext.util.Format.usMoney
+                                    ,align       : 'right'
+                                    ,summaryType : 'sum'
+                                } 
+                            ]
+                            ,features :
+                            [
+                                {
+                                    groupHeaderTpl :
+                                    [
+                                        '{name:this.formatName}'
+                                        ,{
+                                            formatName : function(name)
+                                            {
+                                                return name.split("_")[1];
+                                            }
+                                        }
+                                    ]
+                                ,ftype          : 'groupingsummary'
+                                ,startCollapsed : false
+                                }
+                            ]
+                        })
+                        ,Ext.create('Ext.toolbar.Toolbar',
+                        {
+                            buttonAlign : 'right'
+                            ,items      :
+                            [
+                                '->'
+                                ,Ext.create('Ext.form.Label',
+                                {
+                                    style          : 'color:white;'
+                                    ,initComponent : function()
+                                    {
+                                        var sum = 0;
+                                        for ( var i = 0; i < json.slist1.length; i++)
+                                        {
+                                            sum += parseFloat(json.slist1[i].Importe);
+                                        }
+                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+                                        this.callParent();
+                                    }
+                                })
+                            ]
+                        })
+                    ]
+                }).show());
+            }
+            else
+            {
+                mensajeError('Error al obtener detalle');
+            }
+        }
+        ,failure : errorComunicacion
+    });
+    debug('<_p28_detalles');
+}
+
+function _p28_guardarConfig()
+{
+    debug('>_p28_guardarConfig');
+    var params =
+    {
+        'smap1.cdramo'    : _p28_smap1.cdramo
+        ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+        ,'smap1.cdusuari' : _p28_smap1.cdusuari
+    };
+    var items  = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_panel4Fieldset'));
+    var valido = true;
+    for(var i=0;i<items.length;i++)
+    {
+        valido = valido && items[i].isValid();
+        params['smap1.valor'+(items[i].name.slice(-2))]=items[i].getValue();
+    }
+    debug('params:',params);
+    
+    if(!valido)
+    {
+        datosIncompletos();
+    }
+    
+    if(valido)
+    {
+        var panelpri = _fieldById('_p28_panelpri');
+        panelpri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p28_urlGuardarConfig
+            ,params  : params
+            ,success : function(response)
+            {
+                panelpri.setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('### guardar config:',json);
+                if(json.exito)
+                {
+                    mensajeCorrecto('Configuraci&oacute;n guardada',json.respuesta);
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                panelpri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p28_guardarConfig');
 }
 ////// funciones //////
 </script>
