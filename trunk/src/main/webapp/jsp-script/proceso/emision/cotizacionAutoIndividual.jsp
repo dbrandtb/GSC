@@ -1264,12 +1264,21 @@ function _p28_cargar(boton)
                 debug('### cargar cotizacion:',json);
                 if(json.success)
                 {
-                    if(!json.smap1.CDUNIECO)
+                    if(Ext.isEmpty(json.smap1.NTRAMITE))
                     {
+                        var maestra = json.slist1[0].ESTADO=='M';
                         _p28_limpiar();
-                        _fieldByName('nmpoliza').semaforo=true;
-                        _fieldByName('nmpoliza').setValue(nmpoliza);
-                        _fieldByName('nmpoliza').semaforo=false;
+                        if(maestra)
+                        {
+                            _fieldByName('nmpoliza').setValue('');
+                            mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
+                        }
+                        else
+                        {
+                            _fieldByName('nmpoliza').semaforo=true;
+                            _fieldByName('nmpoliza').setValue(nmpoliza);
+                            _fieldByName('nmpoliza').semaforo=false;
+                        }
                         var primerInciso = new _p28_formModel(json.slist1[0]);
                         if(_p28_smap1.cdramo=='5')
                         {
@@ -1341,13 +1350,20 @@ function _p28_cargar(boton)
                                         form.loadRecord(primerInciso);
                                         if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
                                         {
-                                            _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
-                                            debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
+                                            if(maestra)
+                                            {
+                                                _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
+                                            }
+                                            else
+                                            {
+                                                _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
+                                                debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
                                             
-                                            var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
-                                            combcl.semaforo = true;
-                                            combcl.setValue('N');
-                                            combcl.semaforo = false;
+                                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
+                                                combcl.semaforo = true;
+                                                combcl.setValue('N');
+                                                combcl.semaforo = false;
+                                            }
                                         }
                                         _p28_cotizar();
                                     });
