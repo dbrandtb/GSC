@@ -1274,6 +1274,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			String feini    = slist1.get(0).get("feini");
 			String fefin    = slist1.get(0).get("fefin");
 			
+			String cdpersonCli = smap1.get("cdpersonCli");
+			String cdideperCli = smap1.get("cdideperCli");
+			
 			Date fechaHoy = new Date();
 			
 			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
@@ -1329,7 +1332,7 @@ public class CotizacionAction extends PrincipalCoreAction
             mapaMpolizas.put("pv_swabrido"  , null);
             mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
             mapaMpolizas.put("pv_cdperpag"  , "12");
-            mapaMpolizas.put("pv_nmpoliex"  , null);
+            mapaMpolizas.put("pv_nmpoliex"  , cdideperCli);
             mapaMpolizas.put("pv_nmcuadro"  , "P1");
             mapaMpolizas.put("pv_porredau"  , "100");
             mapaMpolizas.put("pv_swconsol"  , "S");
@@ -1569,6 +1572,27 @@ public class CotizacionAction extends PrincipalCoreAction
             }
             ////// clonar personas //////
             /////////////////////////////
+
+            ////// mpoliper contratante recuperado //////
+            if(StringUtils.isNotBlank(cdpersonCli))
+            {
+            	LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
+    			paramsMpoliper.put("pv_cdunieco_i" , cdunieco);
+    			paramsMpoliper.put("pv_cdramo_i"   , cdramo);
+    			paramsMpoliper.put("pv_estado_i"   , "W");
+    			paramsMpoliper.put("pv_nmpoliza_i" , nmpoliza);
+    			paramsMpoliper.put("pv_nmsituac_i" , "0");
+				paramsMpoliper.put("pv_cdrol_i"    , "1");
+				paramsMpoliper.put("pv_cdperson_i" , cdpersonCli);
+				paramsMpoliper.put("pv_nmsuplem_i" , "0");
+				paramsMpoliper.put("pv_status_i"   , "V");
+				paramsMpoliper.put("pv_nmorddom_i" , "1");
+				paramsMpoliper.put("pv_swreclam_i" , null);
+				paramsMpoliper.put("pv_accion_i"   , "I");
+				paramsMpoliper.put("pv_swexiper_i" , "S");
+				kernelManager.movMpoliper(paramsMpoliper);
+            }
+            ////// mpoliper contratante recuperado //////
             
             ////////////////////////
             ////// coberturas //////

@@ -585,6 +585,94 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarConfigCotizacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### guardarConfigCotizacion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String cdusuari = smap1.get("cdusuari");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(cdusuari , "No se recibio el nombre de usuario");
+			
+			ManagerRespuestaVoidVO resp = cotizacionAutoManager.guardarConfiguracionCotizacion(cdramo,cdtipsit,cdusuari,smap1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### guardarConfigCotizacion ######")
+				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarConfigCotizacion()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n####################################")
+				.append("\n###### cargarConfigCotizacion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos de entrada");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String cdusuari = smap1.get("cdusuari");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(cdusuari , "No se recibio el nombre de usuario");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarConfiguracionCotizacion(cdramo,cdtipsit,cdusuari);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1 = resp.getSmap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarConfigCotizacion ######")
+				.append("\n####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

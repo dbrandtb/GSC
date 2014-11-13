@@ -380,4 +380,13 @@ public interface CotizacionDAO
 			String nmpoliza,
 			String nmsuplem
 			)throws Exception;
+	public Map<String,String>cargarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari)throws ApplicationException,Exception;
+	public void guardarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,Map<String,String>valores)throws Exception;
 }

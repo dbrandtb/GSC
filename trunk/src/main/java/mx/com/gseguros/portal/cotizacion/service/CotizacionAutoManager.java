@@ -78,4 +78,13 @@ public interface CotizacionAutoManager
 			,String ntramite
 			,String cdagente
 			);
+	public ManagerRespuestaSmapVO cargarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari);
+	public ManagerRespuestaVoidVO guardarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,Map<String,String>valores);
 }

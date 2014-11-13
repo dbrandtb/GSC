@@ -280,6 +280,14 @@
            <result type="json" />
        </action>
        
+       <action name="guardarConfigCotizacion" class="cotizacionAutoAction" method="guardarConfigCotizacion">
+            <result name="success" type="json" />
+        </action>
+       
+       <action name="cargarConfigCotizacion" class="cotizacionAutoAction" method="cargarConfigCotizacion">
+            <result name="success" type="json" />
+        </action>
+       
     </package>
     
 </struts>

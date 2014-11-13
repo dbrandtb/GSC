@@ -3331,4 +3331,118 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdusuari" , cdusuari);
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_SATELITES2.P_GET_CONFIG_COTIZACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionCotizacion(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay configuracion de cotizacion"); 
+		}
+		Map<String,String>datos = new LinkedHashMap<String,String>();
+		for(Map<String,String>valor:lista)
+		{
+			datos.put(
+					new StringBuilder("parametros.pv_otvalor")
+					.append(StringUtils.leftPad(valor.get("cdatribu"),2,"0"))
+					.toString()
+					,valor.get("valor")
+					);
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** params=").append(params)
+				.append("\n****** registro=").append(datos)
+				.append("\n****** PKG_SATELITES2.P_GET_CONFIG_COTIZACION ******")
+				.append("\n****************************************************")
+				.toString()
+				);
+		return datos;
+	}
+	
+	protected class CargarConfiguracionCotizacion extends StoredProcedure
+	{
+		protected CargarConfiguracionCotizacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_GET_CONFIG_COTIZACION");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+					    "cdatribu"
+					    ,"valor"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarConfiguracionCotizacion(
+			String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,Map<String,String>valores)throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdusuari" , cdusuari);
+		for(int i=1;i<=50;i++)
+		{
+			params.put(new StringBuilder("valor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		}
+		params.putAll(valores);
+
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_SATELITES2.P_MOV_CONFIG_COTIZACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		ejecutaSP(new GuardarConfiguracionCotizacion(getDataSource()),params);
+	}
+	
+	protected class GuardarConfiguracionCotizacion extends StoredProcedure
+	{
+		protected GuardarConfiguracionCotizacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_CONFIG_COTIZACION");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			for(int i=1;i<=50;i++)
+			{
+				declareParameter(new SqlParameter(
+						new StringBuilder("valor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString()
+						, OracleTypes.VARCHAR));
+			}
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
