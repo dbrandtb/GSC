@@ -1858,10 +1858,6 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 					
 					String sucursal = (String)omap1.get("pv_cdunieco_i");
-					if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-						sucursal = "1000";
-					}
-					
 					String nmsolici = listaDocu.get(0).get("nmsolici");
 					String nmtramite = listaDocu.get(0).get("ntramite");
 					
@@ -3702,7 +3698,6 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
 				//String nmtramite = listaDocu.get(0).get("ntramite");
@@ -4106,10 +4101,6 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-					sucursal = "1000";
-				}
-				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
@@ -4468,10 +4459,6 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-					sucursal = "1000";
-				}
-				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
@@ -4720,7 +4707,6 @@ public class EndososAction extends PrincipalCoreAction
 		    ///////////////////////////////////////
 			
 			String sucursal = cdunieco;
-			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
 			//Creamos un enum en base al tipo de endoso enviado: 
 			TipoEndoso enumTipoEndoso = null;
@@ -5195,8 +5181,6 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = ntramite;
 				
@@ -5516,9 +5500,6 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-					sucursal = "1000";
-				}
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -5811,7 +5792,6 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -6177,9 +6157,6 @@ public class EndososAction extends PrincipalCoreAction
 						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-					sucursal = "1000";
-				}
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -6509,9 +6486,6 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) {
-					sucursal = "1000";
-				}
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -6741,7 +6715,6 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 				
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -7057,7 +7030,6 @@ public class EndososAction extends PrincipalCoreAction
 	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 	   			
 				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
 	   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -7471,9 +7443,8 @@ public class EndososAction extends PrincipalCoreAction
 		String nmpoliza = null;
 		String nmsuplem = null;
 		String cdtipsup = null;
+		String ntramite = null;
 		String feefecto = null;
-		String cdusuari = null;
-		String cdelemen = null;
 		
 		//datos completos
 		try
@@ -7497,55 +7468,41 @@ public class EndososAction extends PrincipalCoreAction
 			nmpoliza = smap1.get("NMPOLIZA");
 			nmsuplem = smap1.get("NMSUPLEM");
 			cdtipsup = smap1.get("cdtipsup");
+			ntramite = smap1.get("NTRAMITE");
 			
-			if(StringUtils.isBlank(cdunieco))
-			{
+			if(StringUtils.isBlank(cdunieco)) {
 				throw new ApplicationException("No se recibio la sucursal");
 			}
-			if(StringUtils.isBlank(cdramo))
-			{
+			if(StringUtils.isBlank(cdramo)) {
 				throw new ApplicationException("No se recibio el producto");
 			}
-			if(StringUtils.isBlank(cdtipsit))
-			{
+			if(StringUtils.isBlank(cdtipsit)) {
 				throw new ApplicationException("No se recibio la modalidad");
 			}
-			if(StringUtils.isBlank(estado))
-			{
+			if(StringUtils.isBlank(estado)) {
 				throw new ApplicationException("No se recibio el estado");
 			}
-			if(StringUtils.isBlank(nmpoliza))
-			{
+			if(StringUtils.isBlank(nmpoliza)) {
 				throw new ApplicationException("No se recibio el numero de poliza");
 			}
-			if(StringUtils.isBlank(nmsuplem))
-			{
+			if(StringUtils.isBlank(nmsuplem)) {
 				throw new ApplicationException("No se recibio el suplemento");
 			}
-			if(StringUtils.isBlank(cdtipsup))
-			{
+			if(StringUtils.isBlank(cdtipsup)) {
 				throw new ApplicationException("No se recibio el tipo de endoso");
 			}
 			
 			feefecto = smap3.get("feefecto");
-			
-			if(StringUtils.isBlank(feefecto))
-			{
+			if(StringUtils.isBlank(feefecto)) {
 				throw new ApplicationException("No se recibio la fecha de efecto del endoso");
 			}
 			
-			if(session==null)
-			{
+			if(session==null) {
 				throw new ApplicationException("No hay sesion");
 			}
-			if(session.get("USUARIO")==null)
-			{
+			if(session.get("USUARIO")==null) {
 				throw new ApplicationException("No hay usuario en la sesion");
 			}
-			
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdelemen = usuario.getEmpresa().getElementoId();
-			cdusuari = usuario.getUser();
 		}
 		catch(ApplicationException ax)
 		{
@@ -7559,22 +7516,11 @@ public class EndososAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaVoidVO resp=endososManager.guardarEndosoAtributosSituacionGeneral(
-					cdunieco
-					,cdramo
-					,cdtipsit
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,cdtipsup
-					,feefecto
-					,smap2
-					,cdelemen
-					,cdusuari
-					,getText("ruta.documentos.poliza")
-					,getText("ruta.servidor.reports")
-					,getText("pass.servidor.reports")
-					);
+			ManagerRespuestaVoidVO resp = endososManager.guardarEndosoAtributosSituacionGeneral(
+					cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+					cdtipsit, cdtipsup, ntramite, feefecto, smap2, (UserVO) session.get("USUARIO"),
+					getText("ruta.documentos.poliza"), getText("ruta.servidor.reports"), getText("pass.servidor.reports"));
+			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
