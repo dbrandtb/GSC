@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -313,15 +314,15 @@ public interface EndososManager
 	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
 			String cdunieco
 			,String cdramo
-			,String cdtipsit
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String cdtipsit
 			,String cdtipsup
+			,String ntramite
 			,String feefecto
 			,Map<String,String>tvalosit
-			,String cdelemen
-			,String cdusuari
+			,UserVO usuario
 			,String rutaDocsPoliza
 			,String rutaServReports
 			,String passServReports

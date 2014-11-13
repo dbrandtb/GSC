@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -26,19 +27,23 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EndososManagerImpl implements EndososManager
 {
     private static final Logger logger = Logger.getLogger(EndososManagerImpl.class);
     
-	private EndososDAO     endososDAO;
-	private CotizacionDAO  cotizacionDAO;
-	private PantallasDAO   pantallasDAO;
-	private MesaControlDAO mesaControlDAO;
+	private EndososDAO      endososDAO;
+	private CotizacionDAO   cotizacionDAO;
+	private PantallasDAO    pantallasDAO;
+	private MesaControlDAO  mesaControlDAO;
+	@Autowired
+	private Ice2sigsService ice2sigsService;
 	
 	private static final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -1172,24 +1177,17 @@ public class EndososManagerImpl implements EndososManager
 		return resp;
 	}
 	
+	
 	@Override
 	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
-			String cdunieco
-			,String cdramo
-			,String cdtipsit
-			,String estado
-			,String nmpoliza
-			,String nmsuplem
-			,String cdtipsup
-			,String feefecto
-			,Map<String,String>tvalosit
-			,String cdelemen
-			,String cdusuari
-			,String rutaDocsPoliza
-			,String rutaServReports
-			,String passServReports
-			)
+			String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String cdtipsit, String cdtipsup, String ntramite, String feefecto, Map<String,String>tvalosit, UserVO usuario,
+			String rutaDocsPoliza, String rutaServReports, String passServReports)
 	{
+		String cdelemen = usuario.getEmpresa().getElementoId();
+		String cdusuari = usuario.getUser();
+		String nmsolici = null;
+		
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -1412,15 +1410,15 @@ public class EndososManagerImpl implements EndososManager
 			try {
 				//////////////////////////////
 				////// inserta tworksup //////
+				// Se insertan en tworksup TODAS LAS SITUACIONES:
 				Map<String,String> mapaTworksupEnd = new LinkedHashMap<String,String>(0);
 				mapaTworksupEnd.put("pv_cdunieco_i", cdunieco);
 				mapaTworksupEnd.put("pv_cdramo_i"  , cdramo);
 				mapaTworksupEnd.put("pv_estado_i"  , estado);
 				mapaTworksupEnd.put("pv_nmpoliza_i", nmpoliza);
 				mapaTworksupEnd.put("pv_cdtipsup_i", cdtipsup);
-				mapaTworksupEnd.put("pv_nmsuplem_i", nmsuplem);
-				mapaTworksupEnd.put("pv_nmsituac_i", "0");
-				endososDAO.insertarTworksupEnd(mapaTworksupEnd);
+				mapaTworksupEnd.put("pv_nmsuplem_i", nmsuplemEndoso);
+				endososDAO.insertarTworksupSitTodas(mapaTworksupEnd);
 				////// inserta tworksup //////
 				//////////////////////////////
 				
@@ -1434,12 +1432,29 @@ public class EndososManagerImpl implements EndososManager
 				mapaSigsvalipolEnd.put("pv_estado_i"  , estado);
 				mapaSigsvalipolEnd.put("pv_nmpoliza_i", nmpoliza);
 				mapaSigsvalipolEnd.put("pv_nmsituac_i", "0");
-				mapaSigsvalipolEnd.put("pv_nmsuplem_i", nmsuplem);
+				mapaSigsvalipolEnd.put("pv_nmsuplem_i", nmsuplemEndoso);
 				mapaSigsvalipolEnd.put("pv_cdtipsit_i", cdtipsit);
 				mapaSigsvalipolEnd.put("pv_cdtipsup_i", cdtipsup);
 				endososDAO.sigsvalipolEnd(mapaSigsvalipolEnd);
 				////// tarificacion //////
 			    //////////////////////////
+				
+				//////////////////////////
+				////// valor endoso //////
+				//Calcula el valor del endoso:
+				Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+				mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+				mapaValorEndoso.put("pv_estado_i"   , estado);
+				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+				mapaValorEndoso.put("pv_nmsituac_i" , "0");
+				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplemEndoso);
+				mapaValorEndoso.put("pv_feinival_i" , renderFechas.parse(feefecto));
+				mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+				logger.debug("mapaValorEndoso=" + mapaValorEndoso);
+				endososDAO.calcularValorEndoso(mapaValorEndoso);
+				////// valor endoso //////
+				//////////////////////////
 				
 			} catch(Exception ex) {
 				long timestamp = System.currentTimeMillis();
@@ -1486,7 +1501,7 @@ public class EndososManagerImpl implements EndososManager
 			}
 			
 			String rutaCarpeta=new StringBuilder(rutaDocsPoliza).append("/").append(ntramiteEmision).toString();
-		    
+			
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 			for(Map<String,String> docu:listaDocu)
 			{
@@ -1494,6 +1509,7 @@ public class EndososManagerImpl implements EndososManager
 				
 				String descripc  = docu.get("descripc");
 				String descripl  = docu.get("descripl");
+				nmsolici = docu.get("nmsolici");
 				StringBuilder sb = new StringBuilder();
 				
 				sb.append(rutaServReports)
@@ -1538,14 +1554,17 @@ public class EndososManagerImpl implements EndososManager
 			}
 		}
 		
-		if(resp.isExito())
-		{
-			if(fechaValida)
-			{
+		if(resp.isExito()) {
+			// Ejecutamos el Web Service de Recibos:
+			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza,
+					nmsuplemEndoso, null, cdunieco, nmsolici, ntramite, true, cdtipsup, usuario);
+		}
+		
+		if(resp.isExito()) {
+			if(fechaValida) {
 				resp.setRespuesta(new StringBuilder("Se ha guardado el endoso ").append(nsuplogi).toString());
 			}
-			else
-			{
+			else {
 				resp.setRespuesta(
 						new StringBuilder("El endoso ").append(nsuplogi)
 						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
