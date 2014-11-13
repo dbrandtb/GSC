@@ -1923,6 +1923,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		String cdunieco = smap1.get("cdunieco");
 		String cdramo   = smap1.get("cdramo");
+		String estado   = "W";
 		String cdtipsit = smap1.get("cdtipsit");
 		String nmpoliza = smap1.get("nmpoliza");
 		logger.info("cdramo: "+cdramo);
@@ -1949,7 +1950,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				 * cuando se encuentra cdunieco y ntramite para esa cotizacion y no es auto:
 				 */
 				if(tipoSituacion.get("SITUACION").equals("PERSONA")
-						&&datosParaComplementar.containsKey("CDUNIECO"))
+						&&datosParaComplementar.containsKey("NTRAMITE"))
 				{
 					throw new Exception("La cotizaci&oacute;n ya se encuentra en tr&aacute;mite de emisi&oacute;n");
 				}
@@ -1958,6 +1959,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				 */
 				else
 				{
+					if(datosParaComplementar.containsKey("ESTADO")
+							&&datosParaComplementar.containsKey("NMPOLIZA")
+							)
+					{
+						estado   = datosParaComplementar.get("ESTADO");
+						nmpoliza = datosParaComplementar.get("NMPOLIZA");
+					}
 					smap1.putAll(datosParaComplementar);
 				}
 			}
@@ -1978,9 +1986,10 @@ public class CotizacionAction extends PrincipalCoreAction
 				LinkedHashMap<String,Object>paramsObtenerTvalosit=new LinkedHashMap<String,Object>();
 				paramsObtenerTvalosit.put("param1" , cdunieco);
 				paramsObtenerTvalosit.put("param2" , cdramo);
-				paramsObtenerTvalosit.put("param3" , cdtipsit);
-				paramsObtenerTvalosit.put("param4" , nmpoliza);
-				paramsObtenerTvalosit.put("param5" , cdusuari);
+				paramsObtenerTvalosit.put("param3" , estado);
+				paramsObtenerTvalosit.put("param4" , cdtipsit);
+				paramsObtenerTvalosit.put("param5" , nmpoliza);
+				paramsObtenerTvalosit.put("param6" , cdusuari);
 				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 				if(slist1==null||slist1.size()==0)
 				{
