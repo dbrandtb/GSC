@@ -10,10 +10,13 @@ Ext.override(Ext.form.TextField,
 {
     initComponent:function()
     {
-        Ext.apply(this,
+        if(Ext.isEmpty(this.sinOverride)||this.sinOverride==false)
         {
-            labelWidth : 250
-        });
+            Ext.apply(this,
+            {
+                labelWidth : 250
+            });
+        }
         return this.callParent();
     }
 });
@@ -218,23 +221,36 @@ Ext.onReady(function()
     var _p28_panel1Items =
     [
         {
-            xtype       : 'numberfield'
-            ,itemId     : '_p28_nmpolizaItem'
-            ,fieldLabel : 'FOLIO'
-            ,name       : 'nmpoliza'
-            ,style      : 'margin : 15px;'
-            ,listeners  :
+            layout  :
             {
-                change : _p28_nmpolizaChange
+                type     : 'table'
+                ,columns : 2
             }
-        }
-        ,{
-            xtype    : 'button'
-            ,itemId  : '_p28_botonCargar'
-            ,text    : 'BUSCAR'
-            ,style   : 'margin-left:345px;'
-            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-            ,handler : _p28_cargar
+            ,border : 0
+            ,items  :
+            [
+                {
+                    xtype        : 'numberfield'
+                    ,itemId      : '_p28_nmpolizaItem'
+                    ,fieldLabel  : 'FOLIO'
+                    ,name        : 'nmpoliza'
+                    ,style       : 'margin : 15px;'
+                    ,sinOverride : true
+                    ,labelWidth  : 170
+                    ,style       : 'margin:5px;margin-left:15px;'
+                    ,listeners   :
+                    {
+                        change : _p28_nmpolizaChange
+                    }
+                }
+                ,{
+                    xtype    : 'button'
+                    ,itemId  : '_p28_botonCargar'
+                    ,text    : 'BUSCAR'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                    ,handler : _p28_cargar
+                }
+            ]
         }
     ];
     <s:if test='%{getImap().get("panel1Items")!=null}'>
@@ -544,7 +560,13 @@ function _p28_cotizar()
         if(arr.length>0)
         {
             var formDescuentoActual = _fieldById('_p28_formDescuento');
+            var formCesion          = _fieldById('_p28_formCesion');
             var recordPaneles       = new _p28_formModel(formDescuentoActual.getValues());
+            var itemsCesion         = Ext.ComponentQuery.query('[fieldLabel]',formCesion);
+            for(var i=0;i<itemsCesion.length;i++)
+            {
+                recordPaneles.set(itemsCesion[i].getName(),itemsCesion[i].getValue());
+            }
             form.formOculto.loadRecord(recordPaneles);
             debug('form.formOculto.getValues():',form.formOculto.getValues());
         }
@@ -615,8 +637,6 @@ function _p28_cotizar()
                         for(var ii=0;ii<itemsaux.length;ii++)
                         {
                             debug('itemsaux[ii]:',itemsaux[ii]);
-                            itemsaux[ii].minValue=-100;
-                            itemsaux[ii].maxValue=100;
                             itemsDescuento.push(itemsaux[ii]);
                         }
                     </s:if>
@@ -633,39 +653,58 @@ function _p28_cotizar()
                         var itemsaux = [<s:property value="imap.panel6Items" />];
                         for(var ii=0;ii<itemsaux.length;ii++)
                         {
-                            itemsaux[ii].maxValue=100;
                             itemsComision.push(itemsaux[ii]);
                         }
                     </s:if>
+                    debug('itemsComision:',itemsComision);
                     
                     var arr = Ext.ComponentQuery.query('#_p28_gridTarifas');
                     if(arr.length>0)
                     {
-                        panelpri.remove(arr[arr.length-1]);
+                        _fieldById('_p28_formCesion').destroy();
+                        panelpri.remove(arr[arr.length-1],true);
                     }
                     
                     var _p28_formDescuento = Ext.create('Ext.form.Panel',
                     {
-                        itemId       : '_p28_formDescuento'
-                        ,border      : 0
-                        ,defaults    : { style : 'margin:5px;' }
-                        ,layout      :
+                        itemId        : '_p28_formDescuento'
+                        ,border       : 0
+                        ,defaults     : { style : 'margin:5px;' }
+                        ,style        : 'margin-left:535px;'
+                        ,width        : 450
+                        ,windowCesion : Ext.create('Ext.window.Window',
                         {
-                            type     : 'table'
-                            ,columns : 2
-                            ,tdAttrs : { valign : 'top' }
-                        }
+                            title        : 'CESI&Oacute;N DE COTIZACIO&Oacute;N'
+                            ,autoScroll  : true
+                            ,closeAction : 'hide'
+                            ,modal       : true
+                            ,items       :
+                            [
+                                Ext.create('Ext.form.Panel',
+                                {
+                                    itemId       : '_p28_formCesion'
+                                    ,border      : 0
+                                    ,defaults    : { style : 'margin:5px;' }
+                                    ,items       : itemsComision
+                                    ,buttonAlign : 'center'
+                                    ,buttons     :
+                                    [
+                                        {
+                                            itemId   : '_p28_botonAplicarCesion'
+                                            ,text    : 'Aplicar'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                            ,handler : function(me) { me.up('window').hide(); _p28_cotizar(); }
+                                        }
+                                    ]
+                                })
+                            ]
+                        })
                         ,items       :
                         [
                             {
                                 xtype  : 'fieldset'
                                 ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
                                 ,items : itemsDescuento
-                            }
-                            ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">CESI&Oacute;N DE COMISI&Oacute;N</span>'
-                                ,items : itemsComision
                             }
                         ]
                         ,buttonAlign : 'right'
@@ -681,6 +720,7 @@ function _p28_cotizar()
                     });
                     
                     _p28_formDescuento.loadRecord(new _p28_formModel(form.formOculto.getValues()));
+                    _fieldById('_p28_formCesion').loadRecord(new _p28_formModel(form.formOculto.getValues()));
                     
                     var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
@@ -750,14 +790,6 @@ function _p28_cotizar()
                                 [
                                     '->'
                                     ,{
-                                        itemId    : '_p28_botonComprar'
-                                        ,xtype    : 'button'
-                                        ,text     : 'Emitir'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                        ,disabled : true
-                                        ,handler  : _p28_comprar
-                                    }
-                                    ,{
                                         itemId    : '_p28_botonEnviar'
                                         ,xtype    : 'button'
                                         ,text     : 'Enviar'
@@ -772,6 +804,21 @@ function _p28_cotizar()
                                         ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                         ,disabled : true
                                         ,handler  : _p28_imprimir
+                                    }
+                                    ,{
+                                        itemId   : '_p28_botonCesion'
+                                        ,xtype   : 'button'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
+                                        ,text    : 'Cesi&oacute;n de comisi&oacute;n'
+                                        ,handler : _p28_cesionClic
+                                    }
+                                    ,{
+                                        itemId    : '_p28_botonComprar'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Emitir'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                        ,disabled : true
+                                        ,handler  : _p28_comprar
                                     }
                                 ]
                             })
@@ -2052,6 +2099,14 @@ function _p28_guardarConfig()
     }
     
     debug('<_p28_guardarConfig');
+}
+
+function _p28_cesionClic()
+{
+    debug('>_p28_cesionClic');
+    _fieldById('_p28_formDescuento').windowCesion.show();
+    centrarVentanaInterna(_fieldById('_p28_formDescuento').windowCesion);
+    debug('<_p28_cesionClic');
 }
 ////// funciones //////
 </script>
