@@ -6,6 +6,16 @@ Ext.onReady(function() {
 	});
 
 	//MODELOS
+	Ext.define('modeloRechazos',{
+		extend: 'Ext.data.Model',
+		fields: [{type:'string',    name:'key'},	{type:'string',    name:'value'}]
+	});
+	
+	Ext.define('modeloIncisosRechazos',{
+		extend: 'Ext.data.Model',
+		fields: [{type:'string',    name:'key'},	{type:'string',    name:'value'}]
+	});
+	
 	Ext.define('modelFacturaSiniestro', {
 		extend:'Ext.data.Model',
 		fields:[
@@ -47,6 +57,31 @@ Ext.onReady(function() {
 	});
 	
 	//STORES:
+	var storeIncisosRechazos = Ext.create('Ext.data.JsonStore', {
+		model:'modeloIncisosRechazos',
+		proxy: {
+			type: 'ajax',
+			url: _URL_ListaIncisosRechazos,
+			reader: {
+				type: 'json',
+				root: 'loadList'
+			}
+		}
+	});
+	
+	var storeRechazos = Ext.create('Ext.data.JsonStore', {
+		model:'modeloRechazos',
+		proxy: {
+			type: 'ajax',
+			url: _URL_ListaRechazos,
+			reader: {
+				type: 'json',
+				root: 'loadList'
+			}
+		}
+	});
+	storeRechazos.load();
+	
 	oficinaReceptora = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:true,
@@ -84,6 +119,45 @@ Ext.onReady(function() {
 	{
 		id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',  
 		displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
+	});
+
+	motivoRechazo= Ext.create('Ext.form.ComboBox',
+	{
+		id:'motivoRechazo',			name:'smap1.cdmotivo',		fieldLabel: 'Motivo',		store: storeRechazos,
+		queryMode:'local',			displayField: 'value',		valueField: 'key',			allowBlank:false,
+		blankText:'El motivo es un dato requerido',				editable:false,				labelWidth : 150,
+		width: 600,					emptyText:'Seleccione ...',
+		listeners: {
+			select: function(combo, records, eOpts){
+				panelRechazarReclamaciones.down('[name=smap1.incisosRechazo]').setValue('');
+				panelRechazarReclamaciones.down('[name=smap1.comments]').setValue('');
+				storeIncisosRechazos.removeAll();
+				storeIncisosRechazos.load({
+					params: {
+						'params.pv_cdmotivo_i' : records[0].get('key')
+					}
+				});
+			}
+		}
+	});
+	
+	textoRechazo = Ext.create('Ext.form.field.TextArea', {
+		fieldLabel: 'Descripci&oacute;n modificado',			labelWidth: 150,			width: 600
+		,name:'smap1.comments',									height: 250,				allowBlank: false
+		,blankText:'La descripci&oacute;n es un dato requerido'
+	});
+
+	incisosRechazo= Ext.create('Ext.form.ComboBox',
+	{
+		id:'incisosRechazo',							name:'smap1.incisosRechazo',						fieldLabel: 'Incisos Rechazo',
+		store: storeIncisosRechazos,					queryMode:'local',									displayField: 'value',
+		valueField: 'key',								blankText:'El motivo es un dato requerido',			editable:false,
+		labelWidth : 150,								width: 600,											emptyText:'Seleccione ...',
+		listeners: {
+			select: function(combo, records, eOpts){
+				textoRechazo.setValue(records[0].get('value'));
+			}
+		}
 	});
 
 	oficinaEmisora = Ext.create('Ext.data.Store', {
@@ -590,7 +664,7 @@ Ext.onReady(function() {
 				},
 				{
 					/*MOSTRAMOS LA INFORMACIÓN INICIAL DEL STORE DE LAS FACTURAS*/
-					text		:'Cancelar'
+					text		:'Restaurar Facturas'
 					,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png'
 					,handler	:function() {
 						Ext.Ajax.request(
@@ -1565,6 +1639,36 @@ Ext.onReady(function() {
 			}
 		},
 		{
+			text:'Checklist',
+			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
+			handler:function()
+			{
+				windowLoader = Ext.create('Ext.window.Window',{
+					modal       : true,
+					buttonAlign : 'center',
+					width       : 600,
+					height      : 400,
+					autoScroll  : true,
+					loader      : {
+						url     : _UrlRevisionDocsSiniestro,
+						params  : {
+							'params.nmTramite'  : panelInicialPral.down('[name=idNumTramite]').getValue(),
+							'params.cdTipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+							'params.cdTipoAtencion'  : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+							'params.tieneCR'  : !Ext.isEmpty(null)
+						},
+						scripts  : true,
+						loadMask : true,
+						autoLoad : true,
+						ajaxOptions: {
+							method: 'POST'
+						}
+					}
+				}).show();
+				centrarVentana(windowLoader);
+			}
+		},
+		{
 			text:'Generar Contra-Recibo',
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/page_white_edit.png',
 			handler:function()
@@ -1653,35 +1757,153 @@ Ext.onReady(function() {
 						}
 					}
 				}).show();
-				centrarVentana(windowLoader);	
+				centrarVentana(windowLoader);
 			}
 		},
 		{
-			text:'Checklist',
-			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
+			text:'Turnar ',
+			icon:_CONTEXT+'/resources/fam3icons/icons/group_go.png',
 			handler:function()
 			{
-				windowLoader = Ext.create('Ext.window.Window',{
-					modal       : true,
-					buttonAlign : 'center',
-					width       : 600,
-					height      : 400,
-					autoScroll  : true,
-					loader      : {
-						url     : _UrlRevisionDocsSiniestro,
-						params  : {
-							'params.nmTramite'  : panelInicialPral.down('[name=idNumTramite]').getValue(),
-							'params.cdTipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-							'params.cdTipoAtencion'  : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-							'params.tieneCR'  : !Ext.isEmpty(null)
-						},
-						scripts  : true,
-						loadMask : true,
-						autoLoad : true,
-						ajaxOptions: {
-							method: 'POST'
+				turnarAreclamaciones();
+			}
+		},
+		{
+			text:'Rechazar Tr&aacute;mite',
+			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+			handler:function()
+			{
+				
+				panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
+					id: 'panelRechazarReclamaciones',
+					width: 650,
+					url: _URL_ActualizaStatusTramite,
+					bodyPadding: 5,
+					items: [
+						motivoRechazo,incisosRechazo,textoRechazo
+					],
+					buttonAlign:'center',
+					buttons: [{
+						text: 'Rechazar'
+						,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+						,buttonAlign : 'center',
+						handler: function() {
+							if (panelRechazarReclamaciones.form.isValid()) {
+								panelRechazarReclamaciones.form.submit({
+									waitMsg:'Procesando...',
+									params: {
+										'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
+										'smap1.status'   : 4
+									},
+									failure: function(form, action) {
+										Ext.Msg.show({
+											title: 'ERROR',
+											msg: 'Error al Rechazar.',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+									},
+									success: function(form, action) {
+										var respuesta = Ext.decode(action.response.responseText);
+										if(respuesta.success==true){
+											windowLoader.close();
+											/*Se cierra y se tiene que mandar a la  MC*/
+											Ext.Ajax.request({
+												url: _UrlGeneraCartaRechazo,
+												params: {
+													'paramsO.pv_cdunieco_i' : null,
+													'paramsO.pv_cdramo_i'   : null,
+													'paramsO.pv_estado_i'   : null,
+													'paramsO.pv_nmpoliza_i' : null,
+													'paramsO.pv_nmsuplem_i' : null,
+													'paramsO.pv_nmsolici_i' : null,
+													'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+													'paramsO.pv_ntramite_i' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+													'paramsO.tipopago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+												},
+												success: function(response, opt) {
+													var jsonRes=Ext.decode(response.responseText);
+													if(jsonRes.success == true){	
+														var numRand=Math.floor((Math.random()*100000)+1);
+														debug('numRand a: ',numRand);
+														var windowVerDocu=Ext.create('Ext.window.Window',
+														{
+															title          : 'Carta de Rechazo del Siniestro'
+															,width         : 700
+															,height        : 500
+															,collapsible   : true
+															,titleCollapse : true
+															,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+																				+'src="'+panDocUrlViewDoc+'?idPoliza=' + panelInicialPral.down('[name=idNumTramite]').getValue() + '&filename=' + nombreReporteRechazo +'">'
+																				+'</iframe>'
+															,listeners     :
+															{
+																resize : function(win,width,height,opt){
+																	debug(width,height);
+																	$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+																}
+															}
+														});
+													}else {
+														mensajeError('Error al generar la carta de rechazo.');
+													}
+												},
+												failure: function(){
+													mensajeError('Error al generar la carta de rechazo.');
+												}
+											});
+											mensajeCorrecto('&Eacute;XITO','Se ha rechazado correctamente.',function(){
+												windowLoader.close();
+												Ext.create('Ext.form.Panel').submit(
+												{
+													url		: _p12_urlMesaControl
+													,standardSubmit : true
+													,params         :
+													{
+														'smap1.gridTitle'      : 'Siniestros en espera'
+														,'smap2.pv_cdtiptra_i' : 16
+													}
+												});
+											});
+											
+										}else {
+											Ext.Msg.show({
+												title: 'ERROR',
+												msg: 'Error al Rechazar.',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											});
+										}
+									}
+								});
+							} else {
+								Ext.Msg.show({
+									title: 'Aviso',
+									msg: 'Complete la informaci&oacute;n requerida',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.WARNING
+								});
+							}
+						}
+					},{
+						text: 'Cancelar',
+						icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+						buttonAlign : 'center',
+						handler: function() {
+							windowLoader.close();
 						}
 					}
+					]
+				});
+				windowLoader = Ext.create('Ext.window.Window',
+				{
+					title			: 'Rechazar Tr&aacute;mite'
+					,modal			: true
+					,buttonAlign	: 'center'
+					,items			:
+					[
+						panelRechazarReclamaciones
+					]
 				}).show();
 				centrarVentana(windowLoader);
 			}
@@ -2015,6 +2237,162 @@ Ext.onReady(function() {
 					icon: Ext.Msg.ERROR
 				}));
 			}
+		});
+	}
+	
+	function turnarAreclamaciones(){
+		Ext.Ajax.request({
+		url: _UrlValidaDocumentosCargados,
+		params: {
+			'params.PV_NTRAMITE_I' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+			'params.PV_CDRAMO_I'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+			'params.PV_cdtippag_I' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+			'params.PV_CDTIPATE_I' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue()
+		},
+		success: function(response, opt) {
+			var jsonRes=Ext.decode(response.responseText);
+			if(jsonRes.success == true){
+				var comentariosText = Ext.create('Ext.form.field.TextArea', {
+					fieldLabel: 'Observaciones'
+					,labelWidth: 150
+					,width: 600
+					,name:'smap1.comments'
+					,height: 250
+				});
+				
+				windowLoader = Ext.create('Ext.window.Window',{
+					modal	: true,
+					buttonAlign	: 'center',
+					width		: 663,
+					height		: 400,
+					autoScroll	: true,
+					items		: [
+						Ext.create('Ext.form.Panel', {
+							title: 'Turnar a Coordinador de Reclamaciones',
+							width: 650,
+							url: _URL_ActualizaStatusTramite,
+							bodyPadding: 5,
+							items: [comentariosText],
+							buttonAlign:'center',
+							buttons: [{
+								text: 'Turnar'
+								,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+								,buttonAlign : 'center',
+								handler: function() {
+									var formPanel = this.up().up();
+									if (formPanel.form.isValid()) {
+										if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _REEMBOLSO){
+											Ext.Ajax.request({
+												url: _UrlGeneraSiniestroTramite,
+												params: {
+													'params.pv_ntramite_i' : panelInicialPral.down('[name=idNumTramite]').getValue()
+												},
+												success: function(response, opt) {
+													var jsonRes=Ext.decode(response.responseText);
+													if(jsonRes.success == true){
+														formPanel.form.submit({
+															waitMsg:'Procesando...',
+															params: {
+																'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+																'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+															},
+															failure: function(form, action)
+															{
+																switch (action.failureType){
+																	case Ext.form.action.Action.CONNECT_FAILURE:
+																		errorComunicacion();
+																		break;
+																	case Ext.form.action.Action.SERVER_INVALID:
+																		mensajeError(action.result.mensaje);
+																		break;
+																}
+															},
+															success: function(form, action) {
+																mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
+																	windowLoader.close();
+																	Ext.create('Ext.form.Panel').submit(
+																	{
+																		url		: _p12_urlMesaControl
+																		,standardSubmit : true
+																		,params         :
+																		{
+																			'smap1.gridTitle'      : 'Siniestros en espera'
+																			,'smap2.pv_cdtiptra_i' : 16
+																		}
+																	});
+																});
+															}
+														});
+													}else{
+														mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+													}
+												},
+												failure: function(){
+													mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+												}
+											});
+										}else{
+											formPanel.form.submit({
+												waitMsg:'Procesando...',
+												params: {
+													'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+													'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+												},
+												failure: function(form, action) {
+													switch (action.failureType){
+														case Ext.form.action.Action.CONNECT_FAILURE:
+															errorComunicacion();
+															break;
+														case Ext.form.action.Action.SERVER_INVALID:
+															mensajeError(action.result.mensaje);
+															break;
+													}
+												},
+												success: function(form, action) {
+													mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
+														windowLoader.close();
+														Ext.create('Ext.form.Panel').submit(
+														{
+															url		: _p12_urlMesaControl
+															,standardSubmit : true
+															,params         :
+															{
+																'smap1.gridTitle'      : 'Siniestros en espera'
+																,'smap2.pv_cdtiptra_i' : 16
+															}
+														});
+													});
+												}
+											});
+										}
+									}else {
+										Ext.Msg.show({
+											title: 'Aviso',
+											msg: 'Complete la informaci&oacute;n requerida',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.WARNING
+										});
+									}
+								}
+							},{
+								text: 'Cancelar',
+								icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+								buttonAlign : 'center',
+								handler: function() {
+									windowLoader.close();
+								}
+							}]
+						})
+					]
+				}).show();
+				centrarVentana(windowLoader);
+			}else {
+				mensajeError(jsonRes.msgResult);
+			}
+		},
+		failure: function(){
+			mensajeError('Error al turnar.');
+		}
 		});
 	}
 });
