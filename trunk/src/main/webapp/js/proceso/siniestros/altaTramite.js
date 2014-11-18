@@ -129,19 +129,20 @@ Ext.onReady(function() {
 		}
 	});
 	
-	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
+	var storeTipoAtencion = Ext.create('Ext.data.Store', {
 		model:'Generic',
-		proxy: {
+		autoLoad:true,
+		proxy:
+		{
 			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CATALOGO_TipoAtencion},
-			reader: {
+			url:_UR_TIPO_ATENCION,
+			reader:
+			{
 				type: 'json',
-				root: 'lista'
+				root: 'listaTipoAtencion'
 			}
 		}
 	});
-	storeTipoAtencion.load();
 
 	var storeAsegurados = Ext.create('Ext.data.Store', {
 		model:'Generic',
@@ -240,50 +241,53 @@ Ext.onReady(function() {
    
     var cmbOficinaEmisora = Ext.create('Ext.form.field.ComboBox',
 	{
-	    fieldLabel : 'Oficina emisora',		name      : 'cmbOficEmisora',
-	    allowBlank : false,					editable   : true,					displayField : 'value',
-	    width		 : 350,					emptyText:'Seleccione...',			valueField   : 'key',
-	    forceSelection : true,				queryMode      :'local',			store : oficinaEmisora
+		fieldLabel : 'Oficina emisora',		name      : 'cmbOficEmisora',
+		allowBlank : false,					editable   : true,					displayField : 'value',
+		width		 : 350,					emptyText:'Seleccione...',			valueField   : 'key',
+		forceSelection : true,				queryMode      :'local',			store : oficinaEmisora
 	});
 	
-    cmbRamos = Ext.create('Ext.form.field.ComboBox',
+	cmbRamos = Ext.create('Ext.form.field.ComboBox',
 	{
 		fieldLabel   : 'Producto',			allowBlank     : false,				editable: false,
-	    displayField : 'value',				valueField: 'key',					forceSelection : false,
-	    width		 : 350,					queryMode :'local',					name           :'cmbRamos'
-	    ,store : storeRamos
+		displayField : 'value',				valueField: 'key',					forceSelection : false,
+		width		 : 350,					queryMode :'local',					name           :'cmbRamos'
+		,store : storeRamos
 	});
 	
 	var comboTipoAte= Ext.create('Ext.form.ComboBox',
-    {
-        name:'cmbTipoAtencion',				fieldLabel: 'Tipo atenci&oacute;n',	queryMode:'local',
-        displayField: 'value',				valueField: 'key',					editable:false,
-        allowBlank : false,					width		 : 350,					emptyText:'Seleccione...',
-        store: storeTipoAtencion
-    });
-    
-    var tipoPago= Ext.create('Ext.form.ComboBox',
-    {
-    	name:'cmbTipoPago',					fieldLabel: 'Tipo pago',			queryMode:'local',
-    	displayField: 'value',				valueField: 'key',					allowBlank:false,
-    	editable:false,						width		 : 350,					emptyText:'Seleccione...',
-    	store: storeTipoPago,
-    	listeners : {
-    		'select':function(e){
-	    		panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
-	    		if(e.getValue() == _TIPO_PAGO_DIRECTO){
-    				limpiarRegistrosTipoPago(e.getValue());
+	{
+		name:'cmbTipoAtencion',				fieldLabel: 'Tipo atenci&oacute;n',	queryMode:'local',
+		displayField: 'value',				valueField: 'key',					editable:false,
+		allowBlank : false,					width		 : 350,					emptyText:'Seleccione...',
+		store: storeTipoAtencion
+	});
+
+	var tipoPago= Ext.create('Ext.form.ComboBox',
+	{
+		name:'cmbTipoPago',					fieldLabel: 'Tipo pago',			queryMode:'local',
+		displayField: 'value',				valueField: 'key',					allowBlank:false,
+		editable:false,						width		 : 350,					emptyText:'Seleccione...',
+		store: storeTipoPago,
+		listeners : {
+			'select':function(e){
+				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+				storeTipoAtencion.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					}
+				});
+			if(e.getValue() == _TIPO_PAGO_DIRECTO){
+					limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-					panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
-    				
-    			}else{
-    				limpiarRegistrosTipoPago(e.getValue());
-    				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
-    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue("8");
-    				panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
-    			}
-    		}
-    	}
+					
+				}else{
+					limpiarRegistrosTipoPago(e.getValue());
+					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+				}
+			}
+		}
 	});
 	
 	aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
@@ -438,6 +442,18 @@ Ext.onReady(function() {
 			columns: 
 			[
 				{
+				 	xtype: 'actioncolumn',
+					width: 40,
+					sortable: false,
+					menuDisabled: true,
+					items: [{
+						icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+						tooltip: '1',
+					 	scope: this,
+					 	handler: this.onRemoveClick
+				 	}]
+				 },
+				 {
 					header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2
 					,editor: {
 						xtype: 'textfield',
@@ -494,19 +510,7 @@ Ext.onReady(function() {
 							xtype: 'textfield',
 							allowBlank: false
 						}
-				},
-				{
-				 	xtype: 'actioncolumn',
-					width: 30,
-					sortable: false,
-					menuDisabled: true,
-					items: [{
-						icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-						tooltip: 'Quitar inciso',
-					 	scope: this,
-					 	handler: this.onRemoveClick
-				 	}]
-				 }
+				}
 			],
 			tbar:[
 				{
@@ -723,7 +727,19 @@ Ext.onReady(function() {
 				store: storeFacturaReembolso,
  				columns: 
 	 			[
-					{	
+					{
+						xtype: 'actioncolumn',
+						width: 40,
+						sortable: false,
+						menuDisabled: true,
+						items: [{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							tooltip: '2',
+							scope: this,
+							handler: this.onRemoveClick
+				 		}]
+				 	},
+				 	{	
 						header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2
 						,editor: {
 							xtype: 'textfield',
@@ -807,19 +823,7 @@ Ext.onReady(function() {
 							xtype: 'textfield',
 							allowBlank: false
 						}
-					},
-					{
-						xtype: 'actioncolumn',
-						width: 30,
-						sortable: false,
-						menuDisabled: true,
-						items: [{
-							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-							tooltip: 'Quitar inciso',
-							scope: this,
-							handler: this.onRemoveClick
-				 		}]
-				 	}
+					}
 				],
 				tbar: [
 					{
@@ -853,6 +857,24 @@ Ext.onReady(function() {
 				columns: 
 				[
 					{
+						xtype: 'actioncolumn',
+						width: 50,
+						sortable: false,
+						menuDisabled: true,
+						items: [{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							tooltip: '3',
+							scope: this,
+							handler: this.onRemoveClick
+						},
+						{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+							tooltip: 'Historial Siniestro',
+							scope: this,
+							handler: this.onHistorialClick
+						}]
+					},
+					{
 						header: 'Fecha Ocurrencia',	dataIndex: 'modFechaOcurrencia',			width:150
 					},
 					{
@@ -860,18 +882,6 @@ Ext.onReady(function() {
 					},
 					{
 						header: 'N&uacute;mero P&oacute;liza',	dataIndex: 'modnumPoliza',			width:200//,		hidden:true
-					},
-					{
-						xtype: 'actioncolumn',
-						width: 30,
-						sortable: false,
-						menuDisabled: true,
-						items: [{
-							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-							tooltip: 'Quitar inciso',
-							scope: this,
-							handler: this.onRemoveClick
-						}]
 					}
 				],
 				tbar: [
@@ -967,7 +977,40 @@ Ext.onReady(function() {
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
+		},
+		onHistorialClick: function(grid, rowIndex){
+			var record=this.getStore().getAt(rowIndex);
+			debug(record);
+			debug(record.get('modCdperson'));
+			//this.getStore().removeAt(rowIndex);
+			var windowHistSinies = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 800,
+	        height      : 300,
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+	            params  : {
+	                'params.cdperson'  : record.get('modCdperson')
+	            },
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true,
+	            ajaxOptions: {
+	            	method: 'POST'
+	            }
+	        },
+	        buttons: [{
+	        	 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+			     text: 'Cerrar',
+			     handler: function() {windowHistSinies.close();}
+	        }]
+	    }).show();
+	    centrarVentana(windowHistSinies);
+			
 		}
+		
 	});
 	gridAsegPagDirecto=new EditorAsegPagDirecto();
 
@@ -1359,8 +1402,8 @@ Ext.onReady(function() {
 		buttonAlign:'center',
 		buttons: [{
 			id:'botonCotizar',
-			icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
-			text: 'Generar Tr&aacute;mite',
+			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+			text: 'Guardar cambios',
 			handler: function() {
 				var form = this.up('form').getForm();
 				if (form.isValid()){
@@ -1574,6 +1617,74 @@ Ext.onReady(function() {
 					}
 				});
 			}
+		},
+		{
+			text:'Subir Documentos',
+			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/folder_go.png',
+			handler:function()
+			{
+				windowLoader = Ext.create('Ext.window.Window',{
+					modal       : true,
+					buttonAlign : 'center',
+					title       : 'Documentos del siniestro',
+					width       : 600,
+					height      : 400,
+					autoScroll  : true,
+					loader      : {
+						url     : _UrlDocumentosPoliza,
+						params  : {
+							'smap1.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
+							,'smap1.cdtippag' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+							,'smap1.cdtipate' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue()
+							,'smap1.cdtiptra' : '16'
+							,'smap1.cdunieco' : null
+							,'smap1.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue()
+							,'smap1.estado'   : null
+							,'smap1.nmpoliza' : null
+							,'smap1.nmsuplem' : '0'
+							,'smap1.nmsolici' : ''
+							,'smap1.tipomov'  : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+						},
+						scripts  : true,
+						loadMask : true,
+						autoLoad : true,
+						ajaxOptions: {
+							method: 'POST'
+						}
+					}
+				}).show();
+				centrarVentana(windowLoader);	
+			}
+		},
+		{
+			text:'Checklist',
+			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
+			handler:function()
+			{
+				windowLoader = Ext.create('Ext.window.Window',{
+					modal       : true,
+					buttonAlign : 'center',
+					width       : 600,
+					height      : 400,
+					autoScroll  : true,
+					loader      : {
+						url     : _UrlRevisionDocsSiniestro,
+						params  : {
+							'params.nmTramite'  : panelInicialPral.down('[name=idNumTramite]').getValue(),
+							'params.cdTipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+							'params.cdTipoAtencion'  : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+							'params.tieneCR'  : !Ext.isEmpty(null)
+						},
+						scripts  : true,
+						loadMask : true,
+						autoLoad : true,
+						ajaxOptions: {
+							method: 'POST'
+						}
+					}
+				}).show();
+				centrarVentana(windowLoader);
+			}
 		}]
 	});
 
@@ -1606,15 +1717,9 @@ Ext.onReady(function() {
 					oficinaEmisora.load();
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue(json.cdsucadmmc);
 					panelInicialPral.down('[name=dtFechaRecepcion]').setValue(json.ferecepcmc);
-					panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(json.otvalor07mc);
 					
 					panelInicialPral.down('combo[name=cmbTipoPago]').setValue(json.otvalor02mc);
 					
-					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-						panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
-					}else{
-						panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
-					}
 					storeRamos.load({
 						params:{
 							'params.idPadre':panelInicialPral.down('combo[name=cmbOficEmisora]').getValue()
@@ -1626,6 +1731,15 @@ Ext.onReady(function() {
 					}else{
 						panelInicialPral.down('combo[name=cmbRamos]').setValue(json.otvalor20mc);
 					}
+					storeTipoAtencion.load({
+						params:{
+							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+							'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+						}
+					});
+					
+					panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(json.otvalor07mc);
+					
 					//VALORES DE PAGO DIRECTO
 					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
 						panelInicialPral.down('combo[name=cmbProveedor]').setValue(json.otvalor11mc);

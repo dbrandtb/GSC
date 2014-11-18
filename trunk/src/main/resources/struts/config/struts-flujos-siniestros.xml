@@ -493,6 +493,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaListaTipoAtencion" class="siniestrosAction"
+			method="consultaListaTipoAtencion">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaTipoAtencion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="cambiarEstatusMAUTSERV" class="siniestrosAction"
 			method="cambiarEstatusMAUTSERV">
 			<result type="json">

@@ -82,7 +82,7 @@ public interface SiniestrosDAO {
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception;
 	
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception;
+			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception;
 	
 	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
@@ -124,6 +124,8 @@ public interface SiniestrosDAO {
 	 * aaapertu
 	 */
 	public List<Map<String,String>> listaSiniestrosTramite(Map<String, String> params) throws Exception;
+	
+	public List<Map<String,String>> listaSiniestrosTramite2(Map<String, String> params) throws Exception;
 	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
@@ -389,5 +391,6 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>> obtenerAseguradosTramite(Map<String, String> params) throws Exception;
 
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
-	
+
+	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;	
 }

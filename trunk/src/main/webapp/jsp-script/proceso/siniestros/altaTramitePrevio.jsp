@@ -9,6 +9,8 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             
+            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
+            
             var _CATALOGO_OFICINA_RECEP= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_RAMO_SALUD		   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOSALUD"/>';
             var _CATALOGO_TipoAtencion = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
