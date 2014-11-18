@@ -389,4 +389,8 @@ public interface CotizacionDAO
 			,String cdtipsit
 			,String cdusuari
 			,Map<String,String>valores)throws Exception;
+	public Map<String,String>cargarRangoDescuentoRamo5(
+			String cdtipsit
+			,String cdagente
+			,String negocio)throws ApplicationException,Exception;
 }

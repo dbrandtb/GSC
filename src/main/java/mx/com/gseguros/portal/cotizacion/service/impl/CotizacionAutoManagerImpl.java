@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,6 +33,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 {
 	private static final Logger logger           = Logger.getLogger(CotizacionAutoManagerImpl.class);
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private static final String RECUPERAR_DESCUENTO_RECARGO_RAMO_5 = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5";
 	
 	private CotizacionDAO cotizacionDAO;
 	private PantallasDAO  pantallasDAO;
@@ -896,6 +899,59 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ guardarConfiguracionCotizacion @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public Map<String,String>obtenerMapaProcedimientosSimples()
+	{
+		Map<String,String>procedimientos=new LinkedHashMap<String,String>();
+		procedimientos.put(RECUPERAR_DESCUENTO_RECARGO_RAMO_5,null);
+		return procedimientos;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO recuperacionSimple(
+			String procedimiento
+			,Map<String,String>parametros
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperacionSimple @@@@@@")
+				.append("\n@@@@@@ procedimiento=").append(procedimiento)
+				.append("\n@@@@@@ parametros=")   .append(parametros)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			if(procedimiento.equals(RECUPERAR_DESCUENTO_RECARGO_RAMO_5))
+			{
+				setCheckpoint("Recuperando rango de descuento/recargo");
+				String cdtipsit = parametros.get("cdtipsit");
+				String cdagente = parametros.get("cdagente");
+				String negocio  = parametros.get("negocio");
+				resp.setSmap(cotizacionDAO.cargarRangoDescuentoRamo5(cdtipsit,cdagente,negocio));
+			}
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ recuperacionSimple @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

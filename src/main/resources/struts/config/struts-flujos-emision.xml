@@ -287,6 +287,10 @@
        <action name="cargarConfigCotizacion" class="cotizacionAutoAction" method="cargarConfigCotizacion">
             <result name="success" type="json" />
         </action>
+        
+        <action name="recuperacionSimple" class="cotizacionAutoAction" method="recuperacionSimple">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

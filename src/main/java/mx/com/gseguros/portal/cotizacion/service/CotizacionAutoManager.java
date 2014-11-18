@@ -87,4 +87,8 @@ public interface CotizacionAutoManager
 			,String cdtipsit
 			,String cdusuari
 			,Map<String,String>valores);
+	public Map<String,String>obtenerMapaProcedimientosSimples();
+	public ManagerRespuestaSmapVO recuperacionSimple(
+			String procedimiento
+			,Map<String,String>params);
 }
