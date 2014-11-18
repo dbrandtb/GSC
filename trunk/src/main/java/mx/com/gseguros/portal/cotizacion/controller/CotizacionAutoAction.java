@@ -7,7 +7,6 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
@@ -100,6 +99,17 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private void checkNull(Object objeto,String mensaje)throws ApplicationException
 	{
 		if(objeto==null)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	/**
+	 * Revisa boolean y arroja ApplicationException
+	 */
+	private void checkBool(boolean bool,String mensaje)throws ApplicationException
+	{
+		if(bool==false)
 		{
 			throw new ApplicationException(mensaje);
 		}
@@ -668,6 +678,47 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### cargarConfigCotizacion ######")
 				.append("\n####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String recuperacionSimple()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n################################")
+				.append("\n###### recuperacionSimple ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String procedimiento = smap1.get("procedimiento");
+			checkNull(procedimiento, "No se recibio el procedimiento");
+			checkBool(cotizacionAutoManager.obtenerMapaProcedimientosSimples().containsKey(procedimiento),"El procedimiento no existe");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.recuperacionSimple(procedimiento,smap1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### recuperacionSimple ######")
+				.append("\n################################")
 				.toString()
 				);
 		return SUCCESS;

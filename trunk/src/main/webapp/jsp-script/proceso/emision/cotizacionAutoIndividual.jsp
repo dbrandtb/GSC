@@ -38,6 +38,7 @@ var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"       
 var _p28_urlDetalleCotizacion              = '<s:url namespace="/"                action="detalleCotizacion"              />';
 var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"         action="guardarConfigCotizacion"        />';
 var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"         />';
+var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -653,6 +654,8 @@ function _p28_cotizar()
                         var itemsaux = [<s:property value="imap.panel6Items" />];
                         for(var ii=0;ii<itemsaux.length;ii++)
                         {
+                            itemsaux[ii].minValue=0;
+                            itemsaux[ii].maxValue=100;
                             itemsComision.push(itemsaux[ii]);
                         }
                     </s:if>
@@ -721,6 +724,26 @@ function _p28_cotizar()
                     
                     _p28_formDescuento.loadRecord(new _p28_formModel(form.formOculto.getValues()));
                     _fieldById('_p28_formCesion').loadRecord(new _p28_formModel(form.formOculto.getValues()));
+                    
+                    //bloquear descuento
+                    var arrDesc = Ext.ComponentQuery.query('[fieldLabel]',_p28_formDescuento);
+                    for(var i=0;i<arrDesc.length;i++)
+                    {
+                        if(arrDesc[i].getValue()-0!=0)
+                        {
+                            arrDesc[i].setReadOnly(true);
+                        }
+                    }
+                    
+                    //bloquear comision
+                    var arrComi = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formCesion'));
+                    for(var i=0;i<arrComi.length;i++)
+                    {
+                        if(arrComi[i].getValue()-0!=0)
+                        {
+                            arrComi[i].setReadOnly(true);
+                        }
+                    }
                     
                     var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
@@ -829,6 +852,48 @@ function _p28_cotizar()
                     
                     panelPri.add(gridTarifas);
                     panelPri.doLayout();
+                    
+                    if(_p28_smap1.cdramo+'x'=='5x'&&arrDesc.length>0)
+                    {
+                        _p28_formDescuento.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : _p28_urlRecuperacionSimple
+                            ,params :
+                            {
+                                'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+                                ,'smap1.cdtipsit'     : _p28_smap1.cdtipsit
+                                ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
+                                ,'smap1.negocio'      : _fieldByLabel('NEGOCIO').getValue()
+                            }
+                            ,success : function(response)
+                            {
+                                _p28_formDescuento.setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### cargar rango descuento ramo 5:',json);
+                                if(json.exito)
+                                {
+                                    for(var i=0;i<arrDesc.length;i++)
+                                    {
+                                        arrDesc[i].minValue=100*(json.smap1.min-0);
+                                        arrDesc[i].maxValue=100*(json.smap1.max-0);
+                                        arrDesc[i].isValid();
+                                        debug('min:',arrDesc[i].minValue);
+                                        debug('max:',arrDesc[i].maxValue);
+                                    }
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _p28_formDescuento.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
                     
                     try {
                        gridTarifas.down('button[disabled=false]').focus(false, 1000);

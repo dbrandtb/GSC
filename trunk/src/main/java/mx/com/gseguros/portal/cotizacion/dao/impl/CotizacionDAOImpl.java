@@ -3445,4 +3445,60 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarRangoDescuentoRamo5(
+			String cdtipsit
+			,String cdagente
+			,String negocio)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdagente" , cdagente);
+		params.put("negocio"  , negocio);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_SATELITES2.P_GET_DESC_RECA_RAMO_5 ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarRangoDescuentoRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay descuento/recargo para el agente");
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Descuento/recargo para el agente duplicado");
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** registro=").append(lista.get(0))
+				.append("\n****** params=")  .append(params)
+				.append("\n****** PKG_SATELITES2.P_GET_DESC_RECA_RAMO_5 ******")
+				.append("\n***************************************************")
+				.toString()
+				);
+		return lista.get(0);
+	}
+	
+	protected class CargarRangoDescuentoRamo5 extends StoredProcedure
+	{
+		protected CargarRangoDescuentoRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_GET_DESC_RECA_RAMO_5");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "min" , "max" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
