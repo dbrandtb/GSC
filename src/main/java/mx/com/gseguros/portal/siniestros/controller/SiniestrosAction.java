@@ -112,6 +112,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
+    private List<GenericVO> listaTipoAtencion;
     private List<GenericVO> listadoRamosSalud;
     private List<ListaFacturasVO> listaFacturas;
     
@@ -161,8 +162,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	    	String cdunieco = null;
 	    	
 	    	UserVO usuario  = (UserVO)session.get("USUARIO");
-			String cdunueco="1007";
-			usuario.setCdUnieco(cdunueco);
+			//String cdunueco="1007";
+	    	String cdUnieco = usuario.getCdUnieco();
 			cdunieco = usuario.getCdUnieco().toString();
 	    	
 	    	if(params != null)
@@ -932,7 +933,7 @@ public String generarSiniestroSinAutorizacion()
 	{
 		//CREA UN MSINIEST A PARTIR DE TWORKSIN
 		siniestrosManager.getAltaSiniestroSinAutorizacion(params.get("ntramite"),params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
-														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"), params.get("dateOcurrencia"));
+														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"), params.get("dateOcurrencia"), params.get("nfactura"));
 		mensaje = "Se ha generado el siniestro";
 		success=true;
 	}
@@ -1468,10 +1469,11 @@ public String generarSiniestroSinAutorizacion()
     * @param void sin parametros de entrada
     * @return Lista GenericVO con la informaci�n de los asegurados
     */    
-   public String consultaListaPlazas(){
-   	logger.debug(" **** Entrando al m�todo de Lista de Plazas ****");
+   public String consultaListaTipoAtencion(){
+   	logger.debug(" **** consultaListaTipoAtencion ****");
 	   	try {
-	   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
+	   		listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
+	   		logger.debug(listaTipoAtencion);
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de los asegurados ",e);
 	   		return SUCCESS;
@@ -1479,6 +1481,29 @@ public String generarSiniestroSinAutorizacion()
 	   	success = true;
 	   	return SUCCESS;
    }
+   
+   
+   public List<GenericVO> getListaTipoAtencion() {
+	return listaTipoAtencion;
+}
+
+
+public void setListaTipoAtencion(List<GenericVO> listaTipoAtencion) {
+	this.listaTipoAtencion = listaTipoAtencion;
+}
+
+
+public String consultaListaPlazas(){
+	   	logger.debug(" **** Entrando al m�todo de Lista de Plazas ****");
+		   	try {
+		   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
+		   	}catch( Exception e){
+		   		logger.error("Error al consultar la Lista de los asegurados ",e);
+		   		return SUCCESS;
+		   	}
+		   	success = true;
+		   	return SUCCESS;
+	   }
    
    public String consultaNumeroDias(){
 	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
@@ -1925,7 +1950,7 @@ public String generarSiniestroSinAutorizacion()
 	    		valorComplementario = "1";
 	    	}
 	    	
-	    	slist1 = siniestrosManager.listaSiniestrosTramite(ntramite,valorComplementario);
+	    	slist2=siniestrosManager.obtenerFacturasTramite(ntramite);
 	    	seccion = "COLUMNAS";
 	    	
 	    	componentes = pantallasManager.obtenerComponentes(
@@ -2084,15 +2109,17 @@ public String generarSiniestroSinAutorizacion()
     		String cdperson = params.get("cdperson");
     		String nmpoliza = params.get("nmpoliza");
     		String ntramite = params.get("ntramite");
+    		String nfactura = params.get("nfactura");
+    		String feocurrencia = params.get("feocurrencia");
 
     		//CUANDO SE PIDE EL NUMERO DE AUTORIZACION DE SERVICIO EN PANTALLA
     		//SE EJECUTAN LOS SIGUIENTES PL:
     		
     		//INSERTA EL NUMERO DE AUTORIZACION EN TWORKSIN
-    		siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser);
+    		siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser,nfactura,feocurrencia);
     		
     		//CREA UN MSINIEST A PARTIR DE TWORKSIN
-    		siniestrosManager.getAltaSiniestroAutServicio(nmautser);
+    		//siniestrosManager.getAltaSiniestroAutServicio(nmautser);
     		
     		mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
     		success=true;
@@ -4960,7 +4987,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	logger.debug("smap: "+smap);
     	try
     	{
-    		slist1 = siniestrosManager.listaSiniestrosTramite(smap.get("ntramite"),null);
+    		//slist1 = siniestrosManager.listaSiniestrosTramite(smap.get("ntramite"),null);
+    		slist1 = siniestrosManager.listaSiniestrosTramite2(smap.get("ntramite"),smap.get("nfactura"),null);
     		success=true;
     		mensaje="Siniestros obtenidos";
     	}

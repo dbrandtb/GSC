@@ -118,7 +118,21 @@ Ext.onReady(function() {
 	    autoDestroy: true,						model: 'modelListAsegPagDirecto'
 	});
 	
-	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
+	var storeTipoAtencion = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:true,
+		proxy:
+		{
+			type: 'ajax',
+			url:_UR_TIPO_ATENCION,
+			reader:
+			{
+				type: 'json',
+				root: 'listaTipoAtencion'
+			}
+		}
+	});
+	/*var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
@@ -130,7 +144,7 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	storeTipoAtencion.load();
+	storeTipoAtencion.load();*/
 	
 	var storeAsegurados = Ext.create('Ext.data.Store', {
         model:'Generic',
@@ -237,7 +251,18 @@ Ext.onReady(function() {
 	{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		name:'cmbRamos',						store : storeRamos
+		name:'cmbRamos',						store : storeRamos,
+		listeners : {
+    		'select':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+    			storeTipoAtencion.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					}
+				});
+    		}
+    	}
 	});
 	
 	var comboTipoAte= Ext.create('Ext.form.ComboBox',
@@ -248,27 +273,27 @@ Ext.onReady(function() {
     });
     
     var tipoPago= Ext.create('Ext.form.ComboBox',
-    		{
+    {
     	name:'cmbTipoPago',						fieldLabel: 'Tipo pago',			allowBlank:false,			editable:false,
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
     	store: storeTipoPago,
     	listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+				storeTipoAtencion.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					}
+				});
 	    		if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				//PAGO DIRECTO
 	    			limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-					panelInicialPral.down('combo[name=cmbTipoAtencion]').show();
-					
-    				
     			}else{
     				//PAGO POR REEMBOLSO
     				limpiarRegistrosTipoPago(e.getValue());
     				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
-    				/*ADEMAS*/
-    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue("8");
-    				panelInicialPral.down('combo[name=cmbTipoAtencion]').hide();
     			}
     		}
     	}

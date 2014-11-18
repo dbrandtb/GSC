@@ -149,7 +149,7 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception;
 
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception;
+			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception;
 	
 	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
@@ -192,6 +192,8 @@ public interface SiniestrosManager {
 	 */
 	public List<Map<String,String>> listaSiniestrosTramite(String ntramite,String procesoInterno) throws Exception;
 	
+	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura,String procesoInterno) throws Exception;
+	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
@@ -221,8 +223,9 @@ public interface SiniestrosManager {
 	/**
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
 	 */
-	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception;
-
+	
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,String feocurrencia) throws Exception;
+	
 	public void actualizaMsinies(
 			String cdunieco,
 			String cdramo,
@@ -478,4 +481,6 @@ public interface SiniestrosManager {
     public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
 
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
+
+	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
 }

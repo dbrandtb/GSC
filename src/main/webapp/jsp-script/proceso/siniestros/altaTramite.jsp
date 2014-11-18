@@ -17,8 +17,10 @@
             var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
             var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
             var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+            var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
             debug("TIPO_PAGO");
             debug(_TIPO_PAGO_DIRECTO);
+            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
             var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
@@ -27,7 +29,7 @@
             var _URL_LISTADO_ALTATRAMITE          	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             
             var _URL_GUARDA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';
-            
+            var _UrlDocumentosPoliza				= '<s:url namespace="/documentos"		action="ventanaDocumentosPoliza"   />';
             var _URL_CONSULTA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
             var _URL_CONSULTA_GRID_ALTA_TRAMITE     = '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
@@ -37,7 +39,7 @@
             var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"       action="obtenerFacturasTramite" />';
             var _URL_ASEGURADO_FACTURA				= '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
             var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
-            
+            var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"      action="includes/historialReclamaciones" />';
             var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
             var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
             

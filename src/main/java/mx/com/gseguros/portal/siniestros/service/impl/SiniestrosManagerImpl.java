@@ -426,11 +426,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	@Override
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia) throws Exception {
+												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
-					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia);
+					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia, nfactura);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -549,6 +549,23 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return lista;
 	}
 	
+	@Override
+	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura,String procesoInterno) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_nfactura_i" , nfactura);
+		params.put("pv_autoServ_i" , procesoInterno);
+		log.debug("listaSiniestrosTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosTramite2(params);
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("listaSiniestrosTramite lista size: "+lista.size());
+		return lista;
+	}
+	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
@@ -612,7 +629,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return lista;
 	}
 	
-	@Override
+	/*@Override
 	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
@@ -620,6 +637,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_nmpoliza_i",nmpoliza);
 		params.put("pv_cdperson_i",cdperson);
 		params.put("pv_nmautser_i",nmautser);
+		log.debug("actualizarAutorizacionTworksin params: "+params);
+		siniestrosDAO.actualizarAutorizacionTworksin(params);
+		log.debug("actualizarAutorizacionTworksin end");
+	}*/
+	
+	@Override
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,String feocurrencia) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i",ntramite);
+		params.put("pv_nmpoliza_i",nmpoliza);
+		params.put("pv_cdperson_i",cdperson);
+		params.put("pv_nmautser_i",nmautser);
+		params.put("pv_nfactura_i",nmautser);
+		params.put("pv_feocurrencia_i",feocurrencia);
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
@@ -1340,5 +1372,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
+	}
+
+	@Override
+	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo, String tipoPago) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListaTipoAtencion(cdramo,tipoPago);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	
 	}
 }
