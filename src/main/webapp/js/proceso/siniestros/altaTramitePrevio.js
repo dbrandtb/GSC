@@ -237,21 +237,21 @@ Ext.onReady(function() {
 	{
 	    fieldLabel  	: 'Oficina receptora',	name		: 'cmbOficReceptora',	allowBlank	: false,		editable		: true,
 	    displayField	: 'value',				emptyText   :'Seleccione...',		valueField	: 'key',		forceSelection	: true,
-	    queryMode   	:'local',				store		: oficinaReceptora
+	    width		 	: 300,					queryMode	:'local',				store		: oficinaReceptora
 	});
    
     var cmbOficinaEmisora = Ext.create('Ext.form.field.ComboBox',
 	{
 	    fieldLabel : 'Oficina emisora',			name         : 'cmbOficEmisora',	allowBlank : false,			editable     : true,
 	    displayField : 'value',					emptyText:'Seleccione...',			valueField   : 'key',		forceSelection : true,
-        queryMode      :'local',				store        : oficinaEmisora
+        width		 : 300,						queryMode      :'local',				store        : oficinaEmisora
 	});
 	
     cmbRamos = Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		name:'cmbRamos',						store : storeRamos,
+		width		 : 300,						name:'cmbRamos',						store : storeRamos,
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -269,14 +269,14 @@ Ext.onReady(function() {
     {
         name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:false,
         displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
-        store: storeTipoAtencion
+        width		 : 300,						store: storeTipoAtencion
     });
     
     var tipoPago= Ext.create('Ext.form.ComboBox',
     {
     	name:'cmbTipoPago',						fieldLabel: 'Tipo pago',			allowBlank:false,			editable:false,
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
-    	store: storeTipoPago,
+    	width		 : 300,						store: storeTipoPago,
     	listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -304,7 +304,7 @@ Ext.onReady(function() {
     	fieldLabel : 'Asegurado afectado',      displayField : 'value',         name:'cmbAseguradoAfectado',	valueField   : 'key',
     	forceSelection : true,                 	matchFieldWidth: false,     	queryMode :'remote',            queryParam: 'params.cdperson',
     	minChars  : 2,                          store : storeAsegurados,    	triggerAction: 'all',			hideTrigger:true,	allowBlank:false,
-    	listeners : {
+    	width		 : 300,						listeners : {
             'select' : function(combo, record) {
                     obtieneCDPerson = this.getValue();
                     panelInicialPral.down('[name=idnombreAsegurado]').setValue(aseguradoAfectado.rawValue);
@@ -349,7 +349,7 @@ Ext.onReady(function() {
         name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode:'remote',			displayField: 'value',
         valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
         queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
-        hideTrigger:true,	allowBlank:false,
+        width		 : 300,				hideTrigger:true,	allowBlank:false,
     	listeners : {
 			'select' : function(combo, record) {
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(cmbBeneficiario.rawValue);
@@ -362,8 +362,8 @@ Ext.onReady(function() {
     {
     	fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
     	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
-    	minChars  : 2,					store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
-    	listeners : {
+    	minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
+    	width		: 300,				listeners : {
 			'select' : function(combo, record) {
 				if(this.getValue() =='0'){
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue('');
@@ -384,7 +384,8 @@ Ext.onReady(function() {
     {
     	displayField : 'nombre',		name:'cmbProveedorReembolso',	valueField   : 'cdpresta',
     	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
-    	minChars  : 2,					store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false
+    	width		 : 300,				minChars  : 2,					store : storeProveedor,		triggerAction: 'all',
+    	hideTrigger:true,	allowBlank:false
     });
 
     /*////////////////////////////////////////////////////////////////
@@ -942,8 +943,7 @@ Ext.onReady(function() {
 		                xtype: 'textfield',
 		                fieldLabel: 'Estado',
 		                readOnly   : true,
-		               //labelWidth: 250,
-		               //width		 : 500,
+		                width		 : 300,
 		               value:'PENDIENTE'
 		               
 		            },
@@ -960,8 +960,7 @@ Ext.onReady(function() {
 	            	{
 		            	xtype      : 'datefield'
 		            	,fieldLabel : 'Fecha recepci&oacute;n'
-		            	/*,labelWidth : 250
-		            	,width		 : 500*/
+		            	,width		 : 300
 		            	,name       : 'dtFechaRecepcion'
 	            		,value		: new Date()
 		            	,format		: 'd/m/Y'
@@ -976,8 +975,7 @@ Ext.onReady(function() {
                         xtype: 'datefield',
                         format: 'd/m/Y',
                         editable: true,
-                        /*labelWidth : 250,
-                        width		 : 500,*/
+                        width		 : 300,
                         maxValue   :  new Date(),
                         allowBlank : false
                     },
@@ -988,8 +986,8 @@ Ext.onReady(function() {
 	            	cmbProveedor
 	        	    ,
 	        	    {
-					    colspan:2,	xtype       : 'textfield',			fieldLabel : 'Nombre Proveedor'			,name       : 'idnombreBeneficiarioProv'
-					    /*,labelWidth : 250,width		: 500,	hidden:true*/,
+					    colspan	:2,		xtype       : 'textfield',			fieldLabel : 'Nombre Proveedor'			,name       : 'idnombreBeneficiarioProv',
+					    width	: 300,
 					    listeners:{
 							afterrender: function(){
 								this.hide();

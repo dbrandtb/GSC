@@ -22,6 +22,10 @@
             debug(_TIPO_PAGO_DIRECTO);
             var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
             var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+            var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
+            var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
+            var nombreReporteRechazo				= '<s:text name="pdf.siniestro.cartarechazo.nombre"/>';
+            var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
             
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
             
@@ -36,12 +40,18 @@
             var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
             var _URL_GUARDA_FACTURA_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardaFacturaAltaTramite"/>';
-            var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"       action="obtenerFacturasTramite" />';
+            var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"		action="obtenerFacturasTramite" />';
             var _URL_ASEGURADO_FACTURA				= '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
             var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
-            var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"      action="includes/historialReclamaciones" />';
+            var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"		action="includes/historialReclamaciones" />';
             var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
             var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
+            var _URL_ActualizaStatusTramite			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite" />';
+            var _UrlGeneraSiniestroTramite			= '<s:url namespace="/siniestros"		action="generaSiniestroTramite" />';
+            var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros"		action="validaDocumentosCargados" />';
+            var _URL_ListaRechazos					= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
+            var _URL_ListaIncisosRechazos			= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
+            var _UrlGeneraCartaRechazo				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
