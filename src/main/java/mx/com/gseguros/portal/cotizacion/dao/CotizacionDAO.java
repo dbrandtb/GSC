@@ -393,4 +393,13 @@ public interface CotizacionDAO
 			String cdtipsit
 			,String cdagente
 			,String negocio)throws ApplicationException,Exception;
+	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturas(
+			String cdtipsit
+			,String cdsisrol
+			,String negocio
+			,String tipoServicio
+			,String modelo
+			,String tipoPersona
+			,String submarca
+			,String clavegs)throws Exception;
 }

@@ -4,6 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+.green
+{
+    border-left  : 2px solid green;
+    border-right : 2px solid green;
+}
+.red
+{
+    border-left  : 2px solid red;
+    border-right : 2px solid red;
+}
+</style>
 <script>
 ////// overrides //////
 Ext.override(Ext.form.TextField,
@@ -17,28 +29,57 @@ Ext.override(Ext.form.TextField,
                 labelWidth : 250
             });
         }
+        if(true&&!Ext.isEmpty(this.cdatribu))
+        {
+            this.on(
+            {
+                afterrender : function(me)
+                {
+                    me.el.on(
+                    {
+                        mouseover : function()
+                        {
+                            me.ventana=Ext.create('Ext.panel.Panel',
+                            {
+                                floating : true
+                                ,frame   : true
+                                ,html    : me.cdatribu
+                            });
+                            me.ventana.show();
+                            me.ventana.setY(me.getY());
+                            me.ventana.setX(me.getX());
+                        }
+                        ,mouseout : function()
+                        {
+                            me.ventana.destroy();
+                        }
+                    });
+                }
+            });
+        }
         return this.callParent();
     }
 });
 ////// overrides //////
 
 ////// urls //////
-var _p28_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"       />';
-var _p28_urlCotizar                        = '<s:url namespace="/emision"         action="cotizar"                        />';
-var _p28_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"        />';
-var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
-var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"       />';
-var _p28_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacion"               />';
-var _p28_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoIndividual"          />';
-var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
-var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
-var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
-var _p28_urlViewDoc                        = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
-var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                    />';
-var _p28_urlDetalleCotizacion              = '<s:url namespace="/"                action="detalleCotizacion"              />';
-var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"         action="guardarConfigCotizacion"        />';
-var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"         />';
-var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
+var _p28_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"                    />';
+var _p28_urlCotizar                        = '<s:url namespace="/emision"         action="cotizar"                                     />';
+var _p28_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"                     />';
+var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"              />';
+var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"                    />';
+var _p28_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacion"                            />';
+var _p28_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoIndividual"                       />';
+var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"                 />';
+var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                          />';
+var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                          />';
+var _p28_urlViewDoc                        = '<s:url namespace ="/documentos"     action="descargaDocInline"                           />';
+var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                                 />';
+var _p28_urlDetalleCotizacion              = '<s:url namespace="/"                action="detalleCotizacion"                           />';
+var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"         action="guardarConfigCotizacion"                     />';
+var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"                      />';
+var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                          />';
+var _p28_urlCargarParamerizacionCoberturas = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas" />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -490,6 +531,21 @@ Ext.onReady(function()
 	        change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
 	    });
 	    //sumaAsegurada
+	    
+	    //parametrizacion coberturas
+        _fieldByLabel('NEGOCIO').on(
+        {
+            change : function(){ _p28_cargarParametrizacionCoberturas(); }
+        });
+        _fieldByLabel('TIPO PERSONA').on(
+        {
+            change : function(){ _p28_cargarParametrizacionCoberturas(); }
+        });
+        _fieldByLabel('TIPO SERVICIO').on(
+        {
+            change : function(){ _p28_cargarParametrizacionCoberturas(); }
+        });
+	    //parametrizacion coberturas
 	}
 	//ramo 5
 	
@@ -1576,10 +1632,7 @@ function _p28_cargarRangoValorRamo5(callback)
                     debug('valormin:',valormin);
                     debug('valormax:',valormax);
                     
-                    if(callback)
-                    {
-                        callback();
-                    }
+                    _p28_cargarParametrizacionCoberturas(callback);
                 }
                 else
                 {
@@ -2172,6 +2225,137 @@ function _p28_cesionClic()
     _fieldById('_p28_formDescuento').windowCesion.show();
     centrarVentanaInterna(_fieldById('_p28_formDescuento').windowCesion);
     debug('<_p28_cesionClic');
+}
+
+function _p28_cargarParametrizacionCoberturas(callback)
+{
+    debug('>_p28_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
+    
+    var _f1_negocio      = _fieldByLabel('NEGOCIO').getValue();
+    var _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();
+    var _f1_modelo       = _fieldByLabel('MODELO').getValue();
+    var _f1_tipoPersona  = _fieldByLabel('TIPO PERSONA').getValue();
+    var _f1_submarca     = _fieldByLabel('SUBMARCA').getValue();
+    var _f1_clavegs      = _fieldLikeLabel('AUTO').getValue();
+    
+    var valido = !Ext.isEmpty(_f1_negocio)
+                 &&!Ext.isEmpty(_f1_tipoServicio)
+                 &&!Ext.isEmpty(_f1_modelo)
+                 &&!Ext.isEmpty(_f1_tipoPersona)
+                 &&!Ext.isEmpty(_f1_submarca)
+                 &&!Ext.isEmpty(_f1_clavegs);
+                 
+    if(valido)
+    {
+        var _f1_panelpri = _fieldById('_p28_panelpri');
+        _f1_panelpri.setLoading(true);
+        var params =
+        {
+            'smap1.cdtipsit'      : _p28_smap1.cdtipsit
+            ,'smap1.cdsisrol'     : _p28_smap1.cdsisrol
+            ,'smap1.negocio'      : _f1_negocio
+            ,'smap1.tipoServicio' : _f1_tipoServicio
+            ,'smap1.modelo'       : _f1_modelo
+            ,'smap1.tipoPersona'  : _f1_tipoPersona
+            ,'smap1.submarca'     : _f1_submarca
+            ,'smap1.clavegs'      : _f1_clavegs
+        };
+        Ext.Ajax.request(
+        {
+            url      : _p28_urlCargarParamerizacionCoberturas
+            ,params  : params
+            ,success : function(response)
+            {
+                _f1_panelpri.setLoading(false);
+                var _f1_json=Ext.decode(response.responseText);
+                debug('### parametrizacion:',_f1_json);
+                if(_f1_json.exito)
+                {
+                    for(var i=0;i<_f1_json.slist1.length;i++)
+                    {
+                        var item = _fieldByName('parametros.pv_otvalor'+(('00'+_f1_json.slist1[i].cdatribu).slice(-2)));
+                        if(_f1_json.slist1[i].aplica+'x'=='1x')
+                        {
+                            item.setReadOnly(false);
+                            item.addCls('green');
+                            item.removeCls('red');
+                            var minimo = _f1_json.slist1[i].minimo;
+                            if(!Ext.isEmpty(minimo))
+                            {
+                                item.minValue = minimo;
+                            }
+                            var maximo = _f1_json.slist1[i].maximo;
+                            if(!Ext.isEmpty(maximo))
+                            {
+                                item.maxValue = maximo;
+                            }
+                            item.isValid();
+                        }
+                        else
+                        {
+                            item.setReadOnly(true);
+                            item.addCls('red');
+                            item.removeCls('green');
+                            item.setValue(_f1_json.slist1[i].valor);
+                        }
+                    }
+                    if(true)
+                    {
+                        var aux1 = '';
+                        for(var i in params)
+                        {
+                            aux1 = aux1+i+':'+params[i]+'\n';
+                        }
+                        var aux2 = '';
+                        for(var i=0;i<_f1_json.slist1.length;i++)
+                        {
+                            aux2 = aux2
+                                   +_f1_json.slist1[i].cdatribu+' - '
+                                   +'aplica ('+_f1_json.slist1[i].aplica
+                                   +') valor ('+_f1_json.slist1[i].valor
+                                   +') minimo ('+_f1_json.slist1[i].minimo
+                                   +') maximo ('+_f1_json.slist1[i].maximo
+                                   +')\n';
+                        }
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                        {
+                            title   : 'DEBUG'
+                            ,items  :
+                            [
+                                {
+                                    xtype   : 'textarea'
+                                    ,width  : 400
+                                    ,height : 150
+                                    ,value  : aux1
+                                }
+                                ,{
+                                    xtype   : 'textarea'
+                                    ,width  : 400
+                                    ,height : 450
+                                    ,value  : aux2
+                                }
+                            ]
+                        }).show());
+                    }
+                    if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
+                }
+                else
+                {
+                    mensajeError(_f1_json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                _f1_panelpri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p28_cargarParametrizacionCoberturas');
 }
 ////// funciones //////
 </script>

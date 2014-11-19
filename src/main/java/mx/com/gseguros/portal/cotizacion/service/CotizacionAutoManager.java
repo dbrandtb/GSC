@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.cotizacion.service;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 
@@ -91,4 +92,14 @@ public interface CotizacionAutoManager
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			String procedimiento
 			,Map<String,String>params);
+	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturas(
+			String cdtipsit
+			,String cdsisrol
+			,String negocio
+			,String tipoServicio
+			,String modelo
+			,String tipoPersona
+			,String submarca
+			,String clavegs
+			);
 }

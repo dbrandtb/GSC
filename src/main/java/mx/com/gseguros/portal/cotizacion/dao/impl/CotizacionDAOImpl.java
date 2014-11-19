@@ -3501,4 +3501,114 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturas(
+			String cdtipsit
+			,String cdsisrol
+			,String negocio
+			,String tipoServicio
+			,String modelo
+			,String tipoPersona
+			,String submarca
+			,String clavegs)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit"     , cdtipsit);
+		params.put("cdsisrol"     , cdsisrol);
+		params.put("negocio"      , negocio);
+		params.put("tipoServicio" , tipoServicio);
+		params.put("modelo"       , modelo);
+		params.put("tipoPersona"  , tipoPersona);
+		params.put("submarca"     , submarca);
+		params.put("clavegs"      , clavegs);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_PARAMETROS_CONFIG_AUTO ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult    = ejecutaSP(new CargarParamerizacionConfiguracionCoberturas(getDataSource()),params);
+		List<Map<String,String>>tatrist = (List<Map<String,String>>)procResult.get("pv_cur_tatrisit_o");
+		if(tatrist==null)
+		{
+			tatrist=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrixrol = (List<Map<String,String>>)procResult.get("pv_cur_atrixrol_o");
+		if(atrixrol==null)
+		{
+			atrixrol=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrixant = (List<Map<String,String>>)procResult.get("pv_cur_atrixant_o");
+		if(atrixant==null)
+		{
+			atrixant=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrixper = (List<Map<String,String>>)procResult.get("pv_cur_atrixper_o");
+		if(atrixper==null)
+		{
+			atrixper=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrixcam = (List<Map<String,String>>)procResult.get("pv_cur_atrixcam_o");
+		if(atrixcam==null)
+		{
+			atrixcam=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrirang = (List<Map<String,String>>)procResult.get("pv_cur_atrirang_o");
+		if(atrirang==null)
+		{
+			atrirang=new ArrayList<Map<String,String>>();
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** params=")  .append(params)
+				.append("\n****** tatrist=") .append(tatrist)
+				.append("\n****** atrixrol=").append(atrixrol)
+				.append("\n****** atrixant=").append(atrixant)
+				.append("\n****** atrixper=").append(atrixper)
+				.append("\n****** atrixcam=").append(atrixcam)
+				.append("\n****** atrirang=").append(atrirang)
+				.append("\n****** PKG_CONSULTA.P_GET_PARAMETROS_CONFIG_AUTO ******")
+				.append("\n*******************************************************")
+				.toString()
+				);
+		List<List<Map<String,String>>>lista=new ArrayList<List<Map<String,String>>>();
+		lista.add(tatrist);
+		lista.add(atrixrol);
+		lista.add(atrixant);
+		lista.add(atrixper);
+		lista.add(atrixcam);
+		lista.add(atrirang);
+		return lista;
+	}
+	
+	protected class CargarParamerizacionConfiguracionCoberturas extends StoredProcedure
+	{
+		protected CargarParamerizacionConfiguracionCoberturas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PARAMETROS_CONFIG_AUTO");
+			declareParameter(new SqlParameter("cdtipsit"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("negocio"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoServicio" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoPersona"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("submarca"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clavegs"      , OracleTypes.VARCHAR));
+			String[] cols  = new String[]{ "cdatribu" , "aplica" , "valor" };
+			String[] cols2 = new String[]{ "cdatribu" , "minimo" , "maximo" };
+			declareParameter(new SqlOutParameter("pv_cur_tatrisit_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrixrol_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrixant_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrixper_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrixcam_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrirang_o" , OracleTypes.CURSOR, new GenericMapper(cols2)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"       , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"        , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
