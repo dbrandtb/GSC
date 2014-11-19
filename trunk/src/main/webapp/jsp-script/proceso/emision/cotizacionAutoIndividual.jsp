@@ -463,7 +463,7 @@ Ext.onReady(function()
 	    //clave
 	    clave.on(
 	    {
-	        select : function(){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version); }
+	        select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
 	    });
 	    
 	    modelo.on(
@@ -1231,10 +1231,10 @@ function _p28_nueva()
     debug('<_p28_nueva');
 }
 
-function _p28_herenciaDescendiente(clave,marca,submarca,modelo,version)
+function _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,record)
 {
     debug('>_p28_herenciaDescendiente');
-    var record = clave.findRecord('key',clave.getValue());
+    //var record = clave.findRecord('key',clave.getValue());
     debug('record:',record);
     var splitted=record.get('value').split(' - ');
     debug('splitted:',splitted);
