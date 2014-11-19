@@ -291,6 +291,10 @@
         <action name="recuperacionSimple" class="cotizacionAutoAction" method="recuperacionSimple">
             <result name="success" type="json" />
         </action>
+        
+        <action name="cargarParamerizacionConfiguracionCoberturas" class="cotizacionAutoAction" method="cargarParamerizacionConfiguracionCoberturas">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

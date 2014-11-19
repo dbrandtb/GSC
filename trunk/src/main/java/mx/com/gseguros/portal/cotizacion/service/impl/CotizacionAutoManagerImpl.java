@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
@@ -952,6 +953,170 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ recuperacionSimple @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturas(
+			String cdtipsit
+			,String cdsisrol
+			,String negocio
+			,String tipoServicio
+			,String modelo
+			,String tipoPersona
+			,String submarca
+			,String clavegs
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarParamerizacionConfiguracionCoberturas @@@@@@")
+				.append("\n@@@@@@ cdtipsit=")    .append(cdtipsit)
+				.append("\n@@@@@@ cdsisrol=")    .append(cdsisrol)
+				.append("\n@@@@@@ negocio=")     .append(negocio)
+				.append("\n@@@@@@ tipoServicio=").append(tipoServicio)
+				.append("\n@@@@@@ modelo=")      .append(modelo)
+				.append("\n@@@@@@ tipoPersona=") .append(tipoPersona)
+				.append("\n@@@@@@ submarca=")    .append(submarca)
+				.append("\n@@@@@@ clavegs=")     .append(clavegs)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando parametrizacion");
+			List<List<Map<String,String>>>listas = cotizacionDAO.cargarParamerizacionConfiguracionCoberturas(
+					cdtipsit , cdsisrol    , negocio  , tipoServicio
+					,modelo  , tipoPersona , submarca , clavegs);
+			
+			List<Map<String,String>>ltatrisit = listas.get(0);
+			List<Map<String,String>>latrixrol = listas.get(1);
+			List<Map<String,String>>latrixant = listas.get(2);
+			List<Map<String,String>>latrixper = listas.get(3);
+			List<Map<String,String>>latrixcam = listas.get(4);
+			List<Map<String,String>>latrirang = listas.get(5);
+			
+			setCheckpoint("Inicializando atributos a procesar");
+			Map<String,Map<String,String>>atributos = new LinkedHashMap<String,Map<String,String>>();
+			for(Map<String,String>tatrisit:ltatrisit)
+			{
+				Map<String,String>mapa=new LinkedHashMap<String,String>();
+				mapa.put("aplica" , "1");
+				atributos.put(tatrisit.get("cdatribu"),mapa);
+			}
+			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			
+			setCheckpoint("Asignando rangos");
+			for(Map<String,String>rango:latrirang)
+			{
+				String cdatribu = rango.get("cdatribu");
+				if(atributos.containsKey(cdatribu))
+				{
+					atributos.get(cdatribu).put("minimo",rango.get("minimo"));
+					atributos.get(cdatribu).put("maximo",rango.get("maximo"));
+				}
+			}
+			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			
+			setCheckpoint("Procesando parametrizacion por rol");
+			for(Map<String,String>atrixrol:latrixrol)
+			{
+				String cdatribu = atrixrol.get("cdatribu");
+				String aplica   = atrixrol.get("aplica");
+				String valor    = atrixrol.get("valor");
+				if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+				{
+					atributos.get(cdatribu).put("aplica" , aplica);
+					atributos.get(cdatribu).put("valor"  , valor);
+				}
+			}
+			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			
+			boolean esCamion = latrixcam.size()>0;
+			
+			if(esCamion)
+			{
+				setCheckpoint("Procesando parametrizacion para tractocamion");
+				for(Map<String,String>atrixcam:latrixcam)
+				{
+					String cdatribu = atrixcam.get("cdatribu");
+					String aplica   = atrixcam.get("aplica");
+					String valor    = atrixcam.get("valor");
+					if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+					{
+						atributos.get(cdatribu).put("aplica" , aplica);
+						atributos.get(cdatribu).put("valor"  , valor);
+					}
+				}
+				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			}
+			else
+			{
+				setCheckpoint("Procesando parametrizacion por modelo");
+				for(Map<String,String>atrixant:latrixant)
+				{
+					String cdatribu = atrixant.get("cdatribu");
+					String aplica   = atrixant.get("aplica");
+					String valor    = atrixant.get("valor");
+					if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+					{
+						atributos.get(cdatribu).put("aplica" , aplica);
+						atributos.get(cdatribu).put("valor"  , valor);
+					}
+				}
+				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+				
+				setCheckpoint("Procesando parametrizacion por tipo de persona");
+				for(Map<String,String>atrixper:latrixper)
+				{
+					String cdatribu = atrixper.get("cdatribu");
+					String aplica   = atrixper.get("aplica");
+					String valor    = atrixper.get("valor");
+					if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+					{
+						atributos.get(cdatribu).put("aplica" , aplica);
+						atributos.get(cdatribu).put("valor"  , valor);
+					}
+				}
+				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			}
+			
+			setCheckpoint("Transformando parametrizacion");
+			List<Map<String,String>>lista = new ArrayList<Map<String,String>>();
+			resp.setSlist(lista);
+			
+			for(Entry<String,Map<String,String>>atributo:atributos.entrySet())
+			{
+				Map<String,String>nuevo = new LinkedHashMap<String,String>();
+				lista.add(nuevo);
+				
+				String cdatribu = atributo.getKey();
+				nuevo.put("cdatribu" , cdatribu);
+				
+				Map<String,String>props = atributo.getValue();
+				nuevo.put("aplica" , props.get("aplica"));
+				nuevo.put("valor"  , props.get("valor"));
+				nuevo.put("minimo" , props.get("minimo"));
+				nuevo.put("maximo" , props.get("maximo"));
+			}
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarParamerizacionConfiguracionCoberturas @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

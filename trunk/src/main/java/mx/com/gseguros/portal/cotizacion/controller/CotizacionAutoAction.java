@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -7,6 +8,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
@@ -23,12 +25,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	private CotizacionAutoManager cotizacionAutoManager;
 	
-	private Map<String,String> smap1           = null;
-	private Map<String,String> smap2           = null;
-	private String             respuesta       = null;
-	private String             respuestaOculta = null;
-	private boolean            exito           = false;
-	private Map<String,Item>   imap            = null;
+	private Map<String,String>       smap1           = null;
+	private Map<String,String>       smap2           = null;
+	private String                   respuesta       = null;
+	private String                   respuestaOculta = null;
+	private boolean                  exito           = false;
+	private Map<String,Item>         imap            = null;
+	private List<Map<String,String>> slist1          = null;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -724,6 +727,62 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarParamerizacionConfiguracionCoberturas()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#########################################################")
+				.append("\n###### cargarParamerizacionConfiguracionCoberturas ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdtipsit     = smap1.get("cdtipsit");
+			String cdsisrol     = smap1.get("cdsisrol");
+			String negocio      = smap1.get("negocio");
+			String tipoServicio = smap1.get("tipoServicio");
+			String modelo       = smap1.get("modelo");
+			String tipoPersona  = smap1.get("tipoPersona");
+			String submarca     = smap1.get("submarca");
+			String clavegs      = smap1.get("clavegs");
+			
+			checkBlank(cdtipsit     , "No se recibio la modalidad");
+			checkBlank(cdsisrol     , "No se recibio el rol");
+			checkBlank(negocio      , "No se recibio el negocio");
+			checkBlank(tipoServicio , "No se recibio el tipo de servicio");
+			checkBlank(modelo       , "No se recibio el modelo");
+			checkBlank(tipoPersona  , "No se recibio el tipo de persona");
+			checkBlank(submarca     , "No se recibio la submarca");
+			checkBlank(clavegs      , "No se recibio la clave gs");
+			
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.cargarParamerizacionConfiguracionCoberturas(
+					cdtipsit,cdsisrol,negocio,tipoServicio,modelo,tipoPersona,submarca,clavegs);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarParamerizacionConfiguracionCoberturas ######")
+				.append("\n#########################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -783,5 +842,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setSmap2(Map<String, String> smap2) {
 		this.smap2 = smap2;
+	}
+
+	public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
 	}
 }
