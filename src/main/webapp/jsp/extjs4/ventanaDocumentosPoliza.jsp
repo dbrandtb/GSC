@@ -502,6 +502,7 @@ Ext.onReady(function()
                                         	,'smap1.nmpoliza' : panDocInputNmpoliza
                                         	,'smap1.nmsolici' : panDocInputNmsolici
                                         	,'smap1.tipomov'  : panDocInputTipoMov
+                                        	,'smap1.cdtiptra' : panDocSmap1.cdtiptra
                                        	}
                                     });
                                 }
