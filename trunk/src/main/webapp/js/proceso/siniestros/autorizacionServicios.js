@@ -1150,7 +1150,7 @@ Ext.onReady(function() {
 							Ext.getCmp('idCopagoFin').setValue("0");
 					   	}else{
 							if(Ext.getCmp('idValSesiones').getValue() =="1"){
-								var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
+								var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
 								Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
 								Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
 							}
