@@ -35,6 +35,8 @@ mcdinInput['cdtipsit'] = '<s:property value="smap2.pv_cdtipsit_i" />';
 mcdinInput['fedesde']  = '<s:property value="smap2.pv_fedesde_i"  />';
 mcdinInput['fehasta']  = '<s:property value="smap2.pv_fehasta_i"  />';
 mcdinInput['tiptra']   = '<s:property value="smap2.pv_cdtiptra_i" />';
+mcdinInput['contrarecibo']   = '<s:property value="smap2.pv_contrarecibo_i" />';
+mcdinInput['tipoPago']   = '<s:property value="smap2.pv_tipoPago_i" />';
 debug('mcdinInput: ',mcdinInput);
 
 mcdinSesion['username'] = '<s:property value="username" />';
@@ -362,6 +364,8 @@ Ext.onReady(function()
 		    	                    ,'smap1.pv_fedesde_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
 		    	                    ,'smap1.pv_fehasta_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
 		    	                    ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+		    	    				,'smap1.pv_contrarecibo_i'	: Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
+		    	    				,'smap1.pv_tipoPago_i'	: Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
 		    	    			};
 		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
 		    	    	            if(success){
@@ -533,6 +537,8 @@ Ext.onReady(function()
 		        ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
 		        ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
 		        ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+    			,'smap1.pv_contrarecibo_i': mcdinInput['contrarecibo']
+    			,'smap1.pv_tipoPago_i'	:mcdinInput['tipoPago']
 		   };
     	
     	cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){

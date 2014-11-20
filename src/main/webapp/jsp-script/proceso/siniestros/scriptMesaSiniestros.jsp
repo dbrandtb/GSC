@@ -52,6 +52,7 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
+var _selCobUrlAvanza              = '<s:url namespace="/siniestros" action="afiliadosAfectados"/>';
 
 
 var windowLoader;
@@ -67,7 +68,7 @@ var msgWindow;
 	        modal       : true,
 	        buttonAlign : 'center',
 	        width       : 830,
-	        height      : 660,
+	        height      : 570,
 	        title: 'Alta de Tr&aacute;mite Previo',
 	        autoScroll  : true,
 	        loader      : {
@@ -460,7 +461,7 @@ var msgWindow;
 				}
 				else
 				{
-					urlDestino = _UrlDetalleSiniestro;
+					urlDestino = _selCobUrlAvanza;
 					debug('urlDestino_2 :',urlDestino);
 					debug('params_2:',params);
 					Ext.create('Ext.form.Panel').submit(
@@ -473,65 +474,20 @@ var msgWindow;
 			}
 			else
 			{
-				//Colocar Validación del numero de asegurados cuando sea pago directo
-				if(esPagoDirecto)
+				//PASAMOS LOS VALORES PARA SELECCIONAR LA COBERTURA Y SUBCOBERTURA
+				urlDestino = _urlSeleccionCobertura;
+				params['params.cdunieco']  = record.get('cdsucdoc');
+				params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
+				params['params.cdramo']    = record.get('cdramo');
+				params['params.cdtipsit']  = 'SL';//record.get('cdtipsit');
+				debug('urlDestino_4 :',urlDestino);
+				debug('params_4 :',params);
+				Ext.create('Ext.form.Panel').submit(
 				{
-					Ext.Ajax.request(
-					{
-					    url     : _URL_CONSULTA_GRID_ALTA_TRAMITE,
-					    params:{
-							'params.ntramite': record.get('ntramite')
-			               }
-					    ,success : function (response)
-					    {
-			                   if(Ext.decode(response.responseText).listaAltaTramite != null)
-				    		{
-					    		var json=Ext.decode(response.responseText).listaAltaTramite;
-					    		params['params.cdramo']    = json[0].cdramo;
-								params['params.cdtipsit']  = json[0].cdtipsit;
-								params['params.cdunieco']    = json[0].cdunieco;
-								params['params.estado']    = json[0].estado;
-								params['params.nmpoliza']    = json[0].nmpoliza;
-								params['params.nmsituac']    = json[0].nmsituac;
-								
-								urlDestino = _urlSeleccionCobertura;
-								//params['params.cdunieco']  = record.get('cdsucdoc');
-								params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
-								debug('urlDestino_3 :',urlDestino);
-								debug('params_3 :',params);
-								Ext.create('Ext.form.Panel').submit(
-								{
-									url             : urlDestino
-									,params         : params
-								    ,standardSubmit : true
-								});
-				    		}
-					    },
-					    failure : function ()
-					    {
-					        Ext.Msg.show({
-					            title:'Error',
-					            msg: 'Error de comunicaci&oacute;n',
-					            buttons: Ext.Msg.OK,
-					            icon: Ext.Msg.ERROR
-					        });
-					    }
-					});
-				}else{
-					urlDestino = _urlSeleccionCobertura;
-					params['params.cdunieco']  = record.get('cdsucdoc');
-					params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
-					params['params.cdramo']    = record.get('cdramo');
-					params['params.cdtipsit']  = record.get('cdtipsit');
-					debug('urlDestino_4 :',urlDestino);
-					debug('params_4 :',params);
-					Ext.create('Ext.form.Panel').submit(
-					{
-						url             : urlDestino
-						,params         : params
-					    ,standardSubmit : true
-					});
-				}
+					url             : urlDestino
+					,params         : params
+				    ,standardSubmit : true
+				});
 			}
 		}
 	}
