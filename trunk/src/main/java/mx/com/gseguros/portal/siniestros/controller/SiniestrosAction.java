@@ -1225,7 +1225,7 @@ public String generarSiniestroSinAutorizacion()
 	   		for(HashMap<String, String> doc: loadList){
 	   			
 	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
-	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios.";
+	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios (checklist).";
 	   				success = false;
 	   				return SUCCESS;
 	   			}
