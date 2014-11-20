@@ -102,4 +102,12 @@ public interface CotizacionAutoManager
 			,String submarca
 			,String clavegs
 			);
+	public ManagerRespuestaImapSmapVO cotizacionAutoFlotilla(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String ntramite
+			);
 }

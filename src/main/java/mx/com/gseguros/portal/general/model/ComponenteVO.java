@@ -63,6 +63,7 @@ public class ComponenteVO
 	private String swGrupoFact  = null;
 	private String swGrupoExtr  = null;
 	private String nmpanelcoti  = null;
+	private String nmpanelflot  = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -494,5 +495,13 @@ public class ComponenteVO
 
 	public void setNmpanelcoti(String nmpanelcoti) {
 		this.nmpanelcoti = nmpanelcoti;
+	}
+
+	public String getNmpanelflot() {
+		return nmpanelflot;
+	}
+
+	public void setNmpanelflot(String nmpanelflot) {
+		this.nmpanelflot = nmpanelflot;
 	}
 }

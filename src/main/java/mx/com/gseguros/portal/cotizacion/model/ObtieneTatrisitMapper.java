@@ -126,6 +126,13 @@ public class ObtieneTatrisitMapper implements RowMapper
 			nmpanelcoti = "1";
 		}
 		result.setNmpanelcoti(nmpanelcoti);
+		
+		String nmpanelflot = rs.getString("NMPANELFLOT");
+		if(StringUtils.isBlank(nmpanelflot))
+		{
+			nmpanelflot = "1";
+		}
+		result.setNmpanelflot(nmpanelflot);
 
 		return result;
 	}

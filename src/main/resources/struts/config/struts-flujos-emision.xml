@@ -295,6 +295,11 @@
         <action name="cargarParamerizacionConfiguracionCoberturas" class="cotizacionAutoAction" method="cargarParamerizacionConfiguracionCoberturas">
             <result name="success" type="json" />
         </action>
+        
+        <action name="cotizacionAutoFlotilla" class="cotizacionAutoAction" method="cotizacionAutoFlotilla">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
+        </action>
        
     </package>
     
