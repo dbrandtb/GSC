@@ -61,8 +61,9 @@
                 ////// contenido //////
                 _selCobForm = Ext.create('Ext.form.Panel',
                 {
-                    title        : 'Detalle de cobertura'
-                    ,buttonAlign : 'center'
+                    //title        : 'DETALLE DE COBERTURA'
+                    //,
+                    buttonAlign : 'center'
                     ,items       : [ <s:property value="imap.item" /> ]
                     ,listeners   : { afterrender : heredarPanel }
                     ,buttons     :
@@ -71,7 +72,7 @@
                                 icon     : '${ctx}/resources/fam3icons/icons/disk.png'
                                 ,text    : 'Guardar'
                                 ,handler : _selCobGuardar
-                                ,hidden	 : _selCobParams.tipopago == "1" ? false: true
+                                ,hidden	 : true
                             }
                         ]
                 });
@@ -132,7 +133,7 @@
                             clicksToEdit: 1
                         });
                         Ext.apply(this, {
-                            height: 250,
+                            height: 450,
                             plugins: [this.cellEditing],
                             store: storeFacturasTramite,
                             columns:[
@@ -264,7 +265,7 @@
                                         _selCobForm.setLoading(false);
                                         json = Ext.decode(response.responseText);
                                         debug('respuesta:',json);
-                                        centrarVentanaInterna(mensajeCorrecto(json.mensaje,json.mensaje,_selCobAvanza));
+                                        _selCobAvanza();
                                     }
                                     ,failure  : function(response)
                                     {
@@ -275,7 +276,7 @@
                                     }
                                 });
                             }else{
-                                centrarVentanaInterna(mensajeError("Verifica la cobertura y subcobertura de las facturas"));
+                                centrarVentanaInterna(mensajeError("Verificar la Cobertura - Subcobertura de las factura"));
                             }
                         }
                     }]
@@ -284,6 +285,7 @@
                 
                 ventanaDetalleCobertura = Ext.create('Ext.window.Window', {
                     closeAction: 'hide',
+                    title        : 'DETALLE DE COBERTURA',
                     modal: true, 
                     resizable: false,
                     items:[_selCobForm],
@@ -322,7 +324,7 @@
                                             storeFacturasTramite.reload();
                                             _selCobForm.getForm().reset();
                                             ventanaDetalleCobertura.close();
-                                            centrarVentanaInterna(mensajeCorrecto("Aviso","Se ha guardado la cobertura y subcobertura"));	
+                                            //centrarVentanaInterna(mensajeCorrecto("Aviso","Se ha guardado la cobertura y subcobertura"));	
                                         }
                                     });
 
@@ -347,7 +349,8 @@
                     ]
                 });
                 
-                if(_selCobParams.tipopago == TipoPago.Reembolso){
+                /*Cargamos la información de las facturas*/
+                if(true){
                     var params = {
                         'smap.ntramite' : _selCobParams.ntramite
                     };
@@ -380,15 +383,6 @@
                         ,bodyStyle:'padding:5px;'
                         ,items      : [
                             gridFacturasTramite
-                        ]
-                    });
-                }else{
-                    panelPrincipal = Ext.create('Ext.form.Panel',{
-                        renderTo: 'selcobdivpri',
-                        border     : false
-                        ,bodyStyle:'padding:5px;'
-                        ,items      : [
-                            _selCobForm
                         ]
                     });
                 }
@@ -447,7 +441,7 @@
                 
                 Ext.create('Ext.form.Panel').submit(
                 {
-                    url             : _selCobParams.otvalor02==TipoPago.Directo ? _selCobUrlAvanza : _selCobUrlAvanzaReembolso
+                    url             : _selCobUrlAvanza//_selCobParams.otvalor02==TipoPago.Directo ? _selCobUrlAvanza : _selCobUrlAvanzaReembolso
                     ,standardSubmit : true
                     ,params         : params
                 });

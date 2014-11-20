@@ -7,11 +7,6 @@ Ext.onReady(function() {
 		label  : 'cdunieco'
 		,value : _selCobParams.cdunieco
 	});
-	
-	ramo = Ext.create('Ext.form.ComboBox',
-	{
-		
-	});
 
     cobertura= Ext.create('Ext.form.ComboBox',
     	    {
