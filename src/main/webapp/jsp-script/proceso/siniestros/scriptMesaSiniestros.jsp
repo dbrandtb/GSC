@@ -46,6 +46,7 @@ var _mesasin_url_lista_reasignacion = '<s:url namespace="/siniestros" action="ob
 
 var _UrlGeneraSiniestroTramite =      '<s:url namespace="/siniestros" action="generaSiniestroTramite" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+var _URL_ActualizaStatusTramite2 =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite2" />';
 
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 
@@ -338,10 +339,30 @@ var msgWindow;
 							        	            		        		//mensajeError('No se pudo turnar.');
 							        	            					},
 							        	            					success: function(form, action) {
-							        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-							        	            						loadMcdinStore();
-							        	            						windowLoader.close();
-							        	            						
+							        	            						Ext.Ajax.request(
+					        	            								{
+					        	            									url: _URL_ActualizaStatusTramite2,
+					        	            									params: {
+					        	            											'smap1.ntramite' : record.get('ntramite'), 
+					        	            											'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+					        	            											,'smap1.rol_destino'     : 'operadorsini'
+					        	            											,'smap1.usuario_destino' : ''
+					        	            									},
+					        	            									success:function(response,opts){
+					        	            										mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+									        	            						loadMcdinStore();
+									        	            						windowLoader.close();
+					        	            									},
+					        	            									failure:function(response,opts)
+					        	            									{
+					        	            										Ext.Msg.show({
+					        	            											title:'Error',
+					        	            											msg: 'Error de comunicaci&oacute;n',
+					        	            											buttons: Ext.Msg.OK,
+					        	            											icon: Ext.Msg.ERROR
+					        	            										});
+					        	            									}
+					        	            								});
 							        	            					}
 						        	            					});
 			        	            							}else{
@@ -371,13 +392,32 @@ var msgWindow;
                                                                     	mensajeError(action.result.mensaje);
                                                                     	break;
                                                                 }
-				        	            		        		//mensajeError('No se pudo turnar.');
 				        	            					},
 				        	            					success: function(form, action) {
-				        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-				        	            						loadMcdinStore();
-				        	            						windowLoader.close();
-				        	            						
+				        	            						Ext.Ajax.request(
+		        	            								{
+		        	            									url: _URL_ActualizaStatusTramite2,
+		        	            									params: {
+		        	            											'smap1.ntramite' : record.get('ntramite'), 
+		        	            											'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+		        	            											,'smap1.rol_destino'     : 'operadorsini'
+		        	            											,'smap1.usuario_destino' : ''
+		        	            									},
+		        	            									success:function(response,opts){
+		        	            										mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+						        	            						loadMcdinStore();
+						        	            						windowLoader.close();
+		        	            									},
+		        	            									failure:function(response,opts)
+		        	            									{
+		        	            										Ext.Msg.show({
+		        	            											title:'Error',
+		        	            											msg: 'Error de comunicaci&oacute;n',
+		        	            											buttons: Ext.Msg.OK,
+		        	            											icon: Ext.Msg.ERROR
+		        	            										});
+		        	            									}
+		        	            								});
 				        	            					}
 			        	            					});
 			        	            	    		}

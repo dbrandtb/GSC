@@ -2308,18 +2308,39 @@ Ext.onReady(function() {
 																}
 															},
 															success: function(form, action) {
-																mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
-																	windowLoader.close();
-																	Ext.create('Ext.form.Panel').submit(
+																Ext.Ajax.request(
+																{
+																	url: _URL_ActualizaStatusTramite2,
+																	params: {
+																			'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+																			'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																			,'smap1.rol_destino'     : 'operadorsini'
+																			,'smap1.usuario_destino' : ''
+																	},
+																	success:function(response,opts){
+																		mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
+																			windowLoader.close();
+																			Ext.create('Ext.form.Panel').submit(
+																			{
+																				url		: _p12_urlMesaControl
+																				,standardSubmit : true
+																				,params         :
+																				{
+																					'smap1.gridTitle'      : 'Siniestros en espera'
+																					,'smap2.pv_cdtiptra_i' : 16
+																				}
+																			});
+																		});
+																	},
+																	failure:function(response,opts)
 																	{
-																		url		: _p12_urlMesaControl
-																		,standardSubmit : true
-																		,params         :
-																		{
-																			'smap1.gridTitle'      : 'Siniestros en espera'
-																			,'smap2.pv_cdtiptra_i' : 16
-																		}
-																	});
+																		Ext.Msg.show({
+																			title:'Error',
+																			msg: 'Error de comunicaci&oacute;n',
+																			buttons: Ext.Msg.OK,
+																			icon: Ext.Msg.ERROR
+																		});
+																	}
 																});
 															}
 														});
@@ -2331,7 +2352,7 @@ Ext.onReady(function() {
 													mensajeError('Error al generar Siniestro para Area de Reclamaciones');
 												}
 											});
-										}else{
+										}else{ // ---> PAGO DIRECTO
 											formPanel.form.submit({
 												waitMsg:'Procesando...',
 												params: {
@@ -2349,18 +2370,39 @@ Ext.onReady(function() {
 													}
 												},
 												success: function(form, action) {
-													mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
-														windowLoader.close();
-														Ext.create('Ext.form.Panel').submit(
+													Ext.Ajax.request(
+													{
+														url: _URL_ActualizaStatusTramite2,
+														params: {
+																'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+																'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																,'smap1.rol_destino'     : 'operadorsini'
+																,'smap1.usuario_destino' : ''
+														},
+														success:function(response,opts){
+															mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
+																windowLoader.close();
+																Ext.create('Ext.form.Panel').submit(
+																{
+																	url		: _p12_urlMesaControl
+																	,standardSubmit : true
+																	,params         :
+																	{
+																		'smap1.gridTitle'      : 'Siniestros en espera'
+																		,'smap2.pv_cdtiptra_i' : 16
+																	}
+																});
+															});
+														},
+														failure:function(response,opts)
 														{
-															url		: _p12_urlMesaControl
-															,standardSubmit : true
-															,params         :
-															{
-																'smap1.gridTitle'      : 'Siniestros en espera'
-																,'smap2.pv_cdtiptra_i' : 16
-															}
-														});
+															Ext.Msg.show({
+																title:'Error',
+																msg: 'Error de comunicaci&oacute;n',
+																buttons: Ext.Msg.OK,
+																icon: Ext.Msg.ERROR
+															});
+														}
 													});
 												}
 											});
