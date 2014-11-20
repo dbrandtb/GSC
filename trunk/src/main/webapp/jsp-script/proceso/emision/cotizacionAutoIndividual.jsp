@@ -29,7 +29,7 @@ Ext.override(Ext.form.TextField,
                 labelWidth : 250
             });
         }
-        if(true&&!Ext.isEmpty(this.cdatribu))
+        if(<s:property value='%{getSmap1().containsKey("debug")}' />&&!Ext.isEmpty(this.cdatribu))
         {
             this.on(
             {
@@ -2276,9 +2276,16 @@ function _p28_cargarParametrizacionCoberturas(callback)
                         var item = _fieldByName('parametros.pv_otvalor'+(('00'+_f1_json.slist1[i].cdatribu).slice(-2)));
                         if(_f1_json.slist1[i].aplica+'x'=='1x')
                         {
-                            item.setReadOnly(false);
-                            item.addCls('green');
-                            item.removeCls('red');
+                            if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                            {
+                                item.setReadOnly(false);
+                                item.addCls('green');
+                                item.removeCls('red');
+                            }
+                            else
+                            {
+                                item.show();
+                            }
                             var minimo = _f1_json.slist1[i].minimo;
                             if(!Ext.isEmpty(minimo))
                             {
@@ -2293,13 +2300,20 @@ function _p28_cargarParametrizacionCoberturas(callback)
                         }
                         else
                         {
-                            item.setReadOnly(true);
-                            item.addCls('red');
-                            item.removeCls('green');
+                            if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                            {
+                                item.setReadOnly(true);
+                                item.addCls('red');
+                                item.removeCls('green');
+                            }
+                            else
+                            {
+                                item.hide();
+                            }
                             item.setValue(_f1_json.slist1[i].valor);
                         }
                     }
-                    if(true)
+                    if(<s:property value='%{getSmap1().containsKey("debug")}' />)
                     {
                         var aux1 = '';
                         for(var i in params)
