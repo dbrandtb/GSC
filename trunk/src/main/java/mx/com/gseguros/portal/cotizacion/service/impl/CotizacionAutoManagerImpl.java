@@ -135,8 +135,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				);
 		
 		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
-		resp.setSmap(new HashMap<String,String>());
-		resp.setImap(new HashMap<String,Item>());
+		resp.setSmap(new LinkedHashMap<String,String>());
+		resp.setImap(new LinkedHashMap<String,Item>());
 		
 		try
 		{
@@ -1057,19 +1057,33 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			else
 			{
-				setCheckpoint("Procesando parametrizacion por modelo");
+				setCheckpoint("Buscando comodin por modelo");
+				boolean comodin = false;
 				for(Map<String,String>atrixant:latrixant)
 				{
-					String cdatribu = atrixant.get("cdatribu");
-					String aplica   = atrixant.get("aplica");
-					String valor    = atrixant.get("valor");
-					if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+					if(atrixant.get("cdatribu").equals("-1")&&atrixant.get("aplica").equals("1"))
 					{
-						atributos.get(cdatribu).put("aplica" , aplica);
-						atributos.get(cdatribu).put("valor"  , valor);
+						comodin = true;
 					}
 				}
-				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+				logger.debug(new StringBuilder("comodin=").append(comodin).toString());
+				
+				if(!comodin)
+				{
+					setCheckpoint("Procesando parametrizacion por modelo");
+					for(Map<String,String>atrixant:latrixant)
+					{
+						String cdatribu = atrixant.get("cdatribu");
+						String aplica   = atrixant.get("aplica");
+						String valor    = atrixant.get("valor");
+						if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+						{
+							atributos.get(cdatribu).put("aplica" , aplica);
+							atributos.get(cdatribu).put("valor"  , valor);
+						}
+					}
+					logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+				}
 				
 				setCheckpoint("Procesando parametrizacion por tipo de persona");
 				for(Map<String,String>atrixper:latrixper)
@@ -1117,6 +1131,112 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ cargarParamerizacionConfiguracionCoberturas @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaImapSmapVO cotizacionAutoFlotilla(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String ntramite
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cotizacionAutoFlotilla @@@@@@")
+				.append("\n@@@@@@ cdusuari=").append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ ntramite=").append(ntramite)
+				.toString()
+				);
+		
+		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
+		resp.setSmap(new LinkedHashMap<String,String>());
+		resp.setImap(new LinkedHashMap<String,Item>());
+		
+		try
+		{
+			String cdagente = null;
+			
+			setCheckpoint("Obteniendo trámite y sucursal");//////
+			//cuando no hay tramite es porque cotiza un agente desde afuera
+			if(isBlank(ntramite))
+			{
+				try
+				{
+					DatosUsuario datUsu = cotizacionDAO.cargarInformacionUsuario(cdusuari,cdtipsit);
+					cdunieco            = datUsu.getCdunieco();
+					resp.getSmap().put("cdunieco" , cdunieco);
+					resp.getSmap().put("ntramite" , "");
+					
+					if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+					{
+						cdagente = datUsu.getCdagente();
+						resp.getSmap().put("cdagente" , cdagente);
+					}
+				}
+				catch(Exception ex)
+				{
+					throwExc("Usted no puede cotizar este producto");
+				}
+			}
+			
+			setCheckpoint("Recuperando tipo de situación");//////
+			Map<String,String>tipoSituacion=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
+			if(tipoSituacion!=null)
+			{
+				resp.getSmap().putAll(tipoSituacion);
+				resp.getSmap().put("AGRUPACION" , "GRUPO");
+			}
+			else
+			{
+				throwExc("No se ha parametrizado la situación en TTIPRAM");
+			}
+			
+			setCheckpoint("Recuperando atributos variables");//////
+			List<ComponenteVO>panel1=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel2=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel3=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel4=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel5=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel6=new ArrayList<ComponenteVO>();
+			
+			List<ComponenteVO>tatrisit = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
+			
+			//obtener los que se muestran
+			for(ComponenteVO tatri:tatrisit)
+			{
+				if(tatri.getSwpresen().equals("S"))
+				{
+					tatri.setComboVacio(true);
+					aux.add(tatri);
+				}
+			}
+			
+			tatrisit = aux;
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cotizacionAutoFlotilla @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

@@ -783,6 +783,66 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cotizacionAutoFlotilla()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n####################################")
+				.append("\n###### cotizacionAutoFlotilla ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando sesion");
+			checkNull(session, "No hay sesion");
+			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String ntramite = smap1.get("ntramite");
+			
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			
+			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionAutoFlotilla(cdusuari,cdsisrol,cdunieco,cdramo,cdtipsit,ntramite);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				imap=resp.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### cotizacionAutoFlotilla ######")
+				.append("\n####################################")
+				.toString()
+				);
+		return result;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
