@@ -49,6 +49,7 @@
             var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
             var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
             var _URL_ActualizaStatusTramite			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite" />';
+            var _URL_ActualizaStatusTramite2			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite2" />';
             var _UrlGeneraSiniestroTramite			= '<s:url namespace="/siniestros"		action="generaSiniestroTramite" />';
             var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros"		action="validaDocumentosCargados" />';
             var _URL_ListaRechazos					= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';

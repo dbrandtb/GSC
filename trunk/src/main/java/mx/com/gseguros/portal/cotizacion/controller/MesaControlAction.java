@@ -405,6 +405,48 @@ public class MesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	////////////////////////////////////////////////
+	////// actualizar status de tramite de mc //////
+	/*////////////////////////////////////////////*/
+	public String actualizarStatusTramite2()
+	{
+		log.debug(""
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n######                         ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			//Se obtienen los datos del usuario:
+			String statusNuevo=smap1.get("status");
+			String ntramite=smap1.get("ntramite");
+			String comments=smap1.get("comments");
+			String cdmotivo=smap1.get("cdmotivo");
+			
+			String rolDestino     = smap1.get("rol_destino");
+			String usuarioDestino = smap1.get("usuario_destino");
+			
+			String cdusuariSesion = "rherdez";
+			String cdsisrolSesion = "COORDINASINI";
+			String cdclausu       = null;
+			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+			success=true;
+			
+		} catch(Exception ex) {
+			success=false;
+			log.error("error al actualizar status de tramite de mesa de control",ex);
+			mensaje=ex.getMessage();
+		}
+		log.debug(""
+				+ "\n######                         ######"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				);
+		return SUCCESS;
+	}
 	public String actualizaComentariosTramite()
 	{
 		log.debug(""
