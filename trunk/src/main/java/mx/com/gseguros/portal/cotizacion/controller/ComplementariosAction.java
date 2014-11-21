@@ -1940,7 +1940,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							)
 					{
-						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null, Ice2sigsService.Operacion.INSERTA, null, us, true);
 					}
 					else if(
 							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
@@ -1951,7 +1951,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
 							
-							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null, Ice2sigsService.Operacion.INSERTA, null, us, false);
 							
 							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
 								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
@@ -2442,7 +2442,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							)
 					{
-						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, true);
+						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null,Ice2sigsService.Operacion.INSERTA, null, us, true);
 					}
 					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
@@ -2452,7 +2452,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
 							
-							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null,Ice2sigsService.Operacion.INSERTA, null, us, false);
 							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
 								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
 								if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
@@ -2827,7 +2827,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		if(StringUtils.isBlank(cdIdeperRes)){
 			
-			ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, null, us, false);
+			ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null, Ice2sigsService.Operacion.INSERTA, null, us, false);
 			if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
 				cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
 				if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
@@ -3125,7 +3125,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 		// Ejecutamos el Web Service de Cliente Salud:
 		//ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
-		ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, null, (UserVO) session.get("USUARIO"), true);
+		ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, null,operation, null, (UserVO) session.get("USUARIO"), true);
 		
 		success = true;
 		return SUCCESS;
@@ -3216,7 +3216,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	clienteGeneral.setRfcCli(map1.get("pv_rfc_i"));
 		    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
 		    	
-		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 		    	
 		    	if(clientesRes == null){
 		    		success = false;

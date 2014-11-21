@@ -323,7 +323,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	}
 
 	public ClienteGeneralRespuesta ejecutaWSclienteGeneral(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdperson,
 			Ice2sigsService.Operacion op, ClienteGeneral cliente, UserVO userVO, boolean async) {
 		
 		logger.debug("********************* Entrando a Ejecuta WSclienteGeneral ******************************");
@@ -341,13 +341,28 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_cdperson_i", cdperson);
 		
 		
 		if(Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
 			try {
-				result = kernelManager.obtenDatosClienteGeneralWS(params);
+				
+				if(StringUtils.isNotBlank(cdperson)){
+					result = kernelManager.obtenDatosClienteGeneralWSporCdperson(params);
+				}else{
+					result = kernelManager.obtenDatosClienteGeneralWS(params);
+				}
+				
 				if(result.getItemList() != null && result.getItemList().size() > 0){
-					cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
+					if(StringUtils.isNotBlank(cdperson) && cliente != null){
+						String claveCia = cliente.getClaveCia();
+						String numExt   = cliente.getNumeroExterno();
+						cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
+						cliente.setClaveCia(claveCia);
+						cliente.setNumeroExterno(numExt);
+					}else{
+						cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
+					}
 				}
 			} catch (Exception e1) {
 				logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteGeneral",e1);
@@ -363,6 +378,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				usuario = userVO.getUser();
 			}
 			
+			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Compania: " + cliente.getClaveCia());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Externa: " + cliente.getNumeroExterno());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
 			try{

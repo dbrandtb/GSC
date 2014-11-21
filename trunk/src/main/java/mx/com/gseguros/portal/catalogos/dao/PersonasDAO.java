@@ -47,6 +47,9 @@ public interface PersonasDAO
 	 * Obtener nuevo cdperson de PKG_SATELITES.P_GEN_CDPERSON
 	 */
 	public String obtenerNuevoCdperson() throws Exception;
+
+	public String validaExisteRFC(String cdrfc) throws Exception;
+	
 	/**
 	 * movimientos de domicilio por cdperson de PKG_SATELITES.P_MOV_MDOMICIL
 	 */
@@ -98,4 +101,8 @@ public interface PersonasDAO
 	public String actualizaStatusPersona(Map<String,String>params)throws Exception;
 	
 	public List<Map<String,String>> obtieneAccionistas(Map<String, String> params)throws Exception;
+	
+	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception;
+
+	public void actualizaCodigoExterno(Map<String, String> params) throws Exception;
 }

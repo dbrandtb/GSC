@@ -1165,6 +1165,12 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.OBTIENE_DATOS_CLIENTE_GENERAL);
 		return result;
 	}
+	public WrapperResultados obtenDatosClienteGeneralWSporCdperson(HashMap<String,Object> params) throws ApplicationException
+	{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON);
+		return result;
+	}
 	
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException
 	{

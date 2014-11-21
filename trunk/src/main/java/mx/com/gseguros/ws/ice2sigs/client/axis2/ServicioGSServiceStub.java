@@ -64335,6 +64335,50 @@
                             
 
                         /**
+                        * field for ClaveCia
+                        */
+
+                        
+                                    protected java.lang.String localClaveCia ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localClaveCiaTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getClaveCia(){
+                               return localClaveCia;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param ClaveCia
+                               */
+                               public void setClaveCia(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localClaveCiaTracker = true;
+                                       } else {
+                                          localClaveCiaTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localClaveCia=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for ClaveCli
                         */
 
@@ -66940,6 +66984,40 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localClaveCiaTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"claveCia", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"claveCia");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("claveCia");
+                                    }
+                                
+
+                                          if (localClaveCia==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("claveCia cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localClaveCia);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localClaveCliTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -68733,7 +68811,16 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCheqdevCli));
-                            } if (localClaveCliTracker){
+                            } if (localClaveCiaTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "claveCia"));
+                                 
+                                        if (localClaveCia != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localClaveCia));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("claveCia cannot be null!!");
+                                        }
+                                    } if (localClaveCliTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "claveCli"));
                                  
@@ -69425,6 +69512,24 @@
                                         
                                                object.setCheqdevCli(java.lang.Integer.MIN_VALUE);
                                            
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","claveCia").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setClaveCia(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
                                     }
                                 
                                     

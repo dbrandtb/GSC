@@ -2291,7 +2291,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
 							    	clienteGeneral.setNumeroExterno(cdIdeperAseg);
 							    	
-							    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+							    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 							    	
 							    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
 							    		ClienteGeneral cliDom = null;
