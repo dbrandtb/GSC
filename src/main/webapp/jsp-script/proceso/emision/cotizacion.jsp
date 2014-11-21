@@ -2954,26 +2954,34 @@ Ext.onReady(function()
         debug('<parche para ramo 6');
     }
     
-    //[parche] para SL
-    if(_0_smap1.cdtipsit=='SL')
-    {
-        Ext.create('Ext.window.Window',
-        {
-            closable   : false
-            ,width     : 153
-            ,header    : false
-            ,border    : false
-            ,height    : 340
-            ,resizable : false
-            ,items     :
-            [
-                {
-                    xtype : 'image'
-                    ,src  : '${ctx}/images/proceso/emision/imagencotizador.PNG'
-                }
-            ]
-        }).showAt(800, 50);
-    }
+    // Se busca la imagen para mostrar en el cotizador segun el producto:
+    Ext.Ajax.request({
+        url    : _0_urlObtenerParametros,
+        params :{
+            'smap1.parametro' : 'IMAGEN_COTIZACION',
+            'smap1.cdramo'   : _0_smap1.cdramo,
+            'smap1.cdtipsit' : _0_smap1.cdtipsit
+        },
+        success : function(response) {
+            var json=Ext.decode(response.responseText);
+            debug('########## Respuesta:',json);
+            if(json.exito) {
+                Ext.create('Ext.window.Window', {
+                    focusOnToFront : false, //evitamos que obtenga el focus en automatico
+                    closable : false,
+                    header: false,
+                    border: false,
+                    resizable: false,
+                    width: Number(json.smap1.P2VALOR),
+                    height: Number(json.smap1.P3VALOR),
+                    items: [{
+                        xtype : 'image',
+                        src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
+                    }]
+                }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
+           }
+        }
+    });
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
