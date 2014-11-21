@@ -142,6 +142,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_RESIDENCIA:
 				case TRATAMIENTOS:
 				case TCUMULOS:
+				case TCANALIN:
 				case TESTADOS:
 				case TZONAS:
 				case TFORMATOS:
