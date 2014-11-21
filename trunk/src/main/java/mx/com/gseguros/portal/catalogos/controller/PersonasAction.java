@@ -390,8 +390,8 @@ public class PersonasAction extends PrincipalCoreAction
 				params.put("cdperson", cdpersonNuevo);
 				params.put("codigoExterno", cliImport.getNumeroExterno());
 
-				params.put("coloniaImp",    StringUtils.isNotBlank(cliImport.getColoniaCli())   ? cliImport.getColoniaCli()  : "");
-				params.put("municipioImp" , StringUtils.isNotBlank(cliImport.getMunicipioCli()) ? cliImport.getMunicipioCli(): "");
+				params.put("coloniaImp",    StringUtils.isBlank(munycol.get("CDCOLONI")) && StringUtils.isNotBlank(cliImport.getColoniaCli())   ? cliImport.getColoniaCli()  : "");
+				params.put("municipioImp" , StringUtils.isBlank(munycol.get("CDMUNICI")) && StringUtils.isNotBlank(cliImport.getMunicipioCli()) ? cliImport.getMunicipioCli(): "");
 				
 				if(exito){
 					managerResult=personasManager.guardarDatosTvaloper(

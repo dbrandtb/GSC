@@ -75,6 +75,7 @@ public enum Catalogos {
 	ZONAS_POR_PRODUCTO(""),
 	TZONAS("TZONAS"),
 	TFORMATOS("TFORMATOS"),
+	TCANALIN("TCANALIN"),
 	RAMOSALUD(""),;
 
 	private String cdTabla;
