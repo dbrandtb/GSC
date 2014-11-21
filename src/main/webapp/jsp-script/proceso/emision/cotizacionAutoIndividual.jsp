@@ -380,7 +380,7 @@ Ext.onReady(function()
 	                    itemId   : '_p28_cotizarButton'
 	                    ,text    : 'Cotizar'
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-	                    ,handler : _p28_cotizar
+	                    ,handler : function(){_p28_cotizar();}
 	                }
 	                ,{
                         itemId   : '_p28_limpiarButton'
@@ -586,7 +586,7 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-function _p28_cotizar()
+function _p28_cotizar(sinTarificar)
 {
     debug('>_p28_cotizar');
     
@@ -631,6 +631,7 @@ function _p28_cotizar()
         var smap = _p28_smap1;
         _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
         _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
+        _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';
     
         var json=
         {
@@ -657,6 +658,7 @@ function _p28_cotizar()
                 _p28_bloquear(true);
                 panelpri.setLoading(false);
                 json=Ext.decode(response.responseText);
+                debug('### cotizar:',json);
                 if(json.success==true)
                 {
                     debug(Ext.decode(json.smap1.fields));
@@ -773,7 +775,7 @@ function _p28_cotizar()
                                 itemId   : '_p28_botonAplicarDescuento'
                                 ,text    : 'Aplicar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                ,handler : _p28_cotizar
+                                ,handler : function(){_p28_cotizar();}
                             }
                         ]
                     });
@@ -1533,7 +1535,7 @@ function _p28_cargar(boton)
                                                 combcl.semaforo = false;
                                             }
                                         }
-                                        _p28_cotizar();
+                                        _p28_cotizar(true);
                                     });
                                     
                                     if(_p28_smap1.cdsisrol=='SUSCRIAUTO')

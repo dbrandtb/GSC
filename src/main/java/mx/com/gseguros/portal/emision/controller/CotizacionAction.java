@@ -1277,357 +1277,361 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdpersonCli = smap1.get("cdpersonCli");
 			String cdideperCli = smap1.get("cdideperCli");
 			
+			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			Date fechaHoy = new Date();
 			
 			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			
-			////////////////////////////////
-			////// si no hay nmpoliza //////
-			if(nmpoliza==null||nmpoliza.length()==0)
+			if(noTarificar==false)
 			{
-				try
+				////////////////////////////////
+				////// si no hay nmpoliza //////
+				if(nmpoliza==null||nmpoliza.length()==0)
 				{
-					WrapperResultados wrapperNumeroPoliza = kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W");
-					nmpoliza = (String)wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+					try
+					{
+						WrapperResultados wrapperNumeroPoliza = kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W");
+						nmpoliza = (String)wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+					}
+					catch(Exception ex)
+					{
+						throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
+					}
 				}
-				catch(Exception ex)
-				{
-					throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
-				}
-			}
-			////// si no hay nmpoliza //////
-			////////////////////////////////
-			
-			smap1.put("nmpoliza",nmpoliza);//salida
-			
-			//////////////////////
-            ////// mpolizas //////
-            Map<String,String>mapaMpolizas=new HashMap<String,String>(0);
-            mapaMpolizas.put("pv_cdunieco"  , cdunieco);
-            mapaMpolizas.put("pv_cdramo"    , cdramo);
-            mapaMpolizas.put("pv_estado"    , "W");
-            mapaMpolizas.put("pv_nmpoliza"  , nmpoliza);
-            mapaMpolizas.put("pv_nmsuplem"  , "0");
-            mapaMpolizas.put("pv_status"    , "V");
-            mapaMpolizas.put("pv_swestado"  , "0");
-            mapaMpolizas.put("pv_nmsolici"  , null);
-            mapaMpolizas.put("pv_feautori"  , null);
-            mapaMpolizas.put("pv_cdmotanu"  , null);
-            mapaMpolizas.put("pv_feanulac"  , null);
-            mapaMpolizas.put("pv_swautori"  , "N");
-            mapaMpolizas.put("pv_cdmoneda"  , "001");
-            mapaMpolizas.put("pv_feinisus"  , null);
-            mapaMpolizas.put("pv_fefinsus"  , null);
-            mapaMpolizas.put("pv_ottempot"  , "R");
-            mapaMpolizas.put("pv_feefecto"  , feini);
-            mapaMpolizas.put("pv_hhefecto"  , "12:00");
-            mapaMpolizas.put("pv_feproren"  , fefin);
-            mapaMpolizas.put("pv_fevencim"  , null);
-            mapaMpolizas.put("pv_nmrenova"  , "0");
-            mapaMpolizas.put("pv_ferecibo"  , null);
-            mapaMpolizas.put("pv_feultsin"  , null);
-            mapaMpolizas.put("pv_nmnumsin"  , "0");
-            mapaMpolizas.put("pv_cdtipcoa"  , "N");
-            mapaMpolizas.put("pv_swtarifi"  , "A");
-            mapaMpolizas.put("pv_swabrido"  , null);
-            mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
-            mapaMpolizas.put("pv_cdperpag"  , "12");
-            mapaMpolizas.put("pv_nmpoliex"  , cdideperCli);
-            mapaMpolizas.put("pv_nmcuadro"  , "P1");
-            mapaMpolizas.put("pv_porredau"  , "100");
-            mapaMpolizas.put("pv_swconsol"  , "S");
-            mapaMpolizas.put("pv_nmpolant"  , null);
-            mapaMpolizas.put("pv_nmpolnva"  , null);
-            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
-            mapaMpolizas.put("pv_cdramant"  , user);
-            mapaMpolizas.put("pv_cdmejred"  , null);
-            mapaMpolizas.put("pv_nmpoldoc"  , null);
-            mapaMpolizas.put("pv_nmpoliza2" , null);
-            mapaMpolizas.put("pv_nmrenove"  , null);
-            mapaMpolizas.put("pv_nmsuplee"  , null);
-            mapaMpolizas.put("pv_ttipcamc"  , null);
-            mapaMpolizas.put("pv_ttipcamv"  , null);
-            mapaMpolizas.put("pv_swpatent"  , null);
-            mapaMpolizas.put("pv_pcpgocte"  , "100");
-            mapaMpolizas.put("pv_accion"    , "U");
-            kernelManager.insertaMaestroPolizas(mapaMpolizas);
-            ////// mpolizas //////
-            //////////////////////
-			
-            String llaveRol="";
-            String llaveSexo="";
-            String llaveFenacimi="DATE";
-            String llaveCodPostal="";
-            
-            if(conIncisos)
-            {
-	            ////////////////////////////////
-	            ////// ordenar al titular //////
+				////// si no hay nmpoliza //////
+				////////////////////////////////
+				
+				smap1.put("nmpoliza",nmpoliza);//salida
+				
+				//////////////////////
+	            ////// mpolizas //////
+	            Map<String,String>mapaMpolizas=new HashMap<String,String>(0);
+	            mapaMpolizas.put("pv_cdunieco"  , cdunieco);
+	            mapaMpolizas.put("pv_cdramo"    , cdramo);
+	            mapaMpolizas.put("pv_estado"    , "W");
+	            mapaMpolizas.put("pv_nmpoliza"  , nmpoliza);
+	            mapaMpolizas.put("pv_nmsuplem"  , "0");
+	            mapaMpolizas.put("pv_status"    , "V");
+	            mapaMpolizas.put("pv_swestado"  , "0");
+	            mapaMpolizas.put("pv_nmsolici"  , null);
+	            mapaMpolizas.put("pv_feautori"  , null);
+	            mapaMpolizas.put("pv_cdmotanu"  , null);
+	            mapaMpolizas.put("pv_feanulac"  , null);
+	            mapaMpolizas.put("pv_swautori"  , "N");
+	            mapaMpolizas.put("pv_cdmoneda"  , "001");
+	            mapaMpolizas.put("pv_feinisus"  , null);
+	            mapaMpolizas.put("pv_fefinsus"  , null);
+	            mapaMpolizas.put("pv_ottempot"  , "R");
+	            mapaMpolizas.put("pv_feefecto"  , feini);
+	            mapaMpolizas.put("pv_hhefecto"  , "12:00");
+	            mapaMpolizas.put("pv_feproren"  , fefin);
+	            mapaMpolizas.put("pv_fevencim"  , null);
+	            mapaMpolizas.put("pv_nmrenova"  , "0");
+	            mapaMpolizas.put("pv_ferecibo"  , null);
+	            mapaMpolizas.put("pv_feultsin"  , null);
+	            mapaMpolizas.put("pv_nmnumsin"  , "0");
+	            mapaMpolizas.put("pv_cdtipcoa"  , "N");
+	            mapaMpolizas.put("pv_swtarifi"  , "A");
+	            mapaMpolizas.put("pv_swabrido"  , null);
+	            mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdperpag"  , "12");
+	            mapaMpolizas.put("pv_nmpoliex"  , cdideperCli);
+	            mapaMpolizas.put("pv_nmcuadro"  , "P1");
+	            mapaMpolizas.put("pv_porredau"  , "100");
+	            mapaMpolizas.put("pv_swconsol"  , "S");
+	            mapaMpolizas.put("pv_nmpolant"  , null);
+	            mapaMpolizas.put("pv_nmpolnva"  , null);
+	            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdramant"  , user);
+	            mapaMpolizas.put("pv_cdmejred"  , null);
+	            mapaMpolizas.put("pv_nmpoldoc"  , null);
+	            mapaMpolizas.put("pv_nmpoliza2" , null);
+	            mapaMpolizas.put("pv_nmrenove"  , null);
+	            mapaMpolizas.put("pv_nmsuplee"  , null);
+	            mapaMpolizas.put("pv_ttipcamc"  , null);
+	            mapaMpolizas.put("pv_ttipcamv"  , null);
+	            mapaMpolizas.put("pv_swpatent"  , null);
+	            mapaMpolizas.put("pv_pcpgocte"  , "100");
+	            mapaMpolizas.put("pv_accion"    , "U");
+	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
+	            ////// mpolizas //////
+	            //////////////////////
+				
+	            String llaveRol="";
+	            String llaveSexo="";
+	            String llaveFenacimi="DATE";
+	            String llaveCodPostal="";
 	            
-	            ////// 1. indicar para la situacion el indice //////
-	            try {
-	            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
-	            	p.put("cdtipsit",cdtipsit);
-	            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
-	            	if(atributos.get("PARENTESCO") != null) {
-	            		llaveRol=atributos.get("PARENTESCO");
-	                	if(llaveRol.length()==1) {
-	                		llaveRol="0"+llaveRol;
-	                	}
-	                	llaveRol="parametros.pv_otvalor"+llaveRol;
-	            	}
-	            	if(atributos.get("SEXO") != null) {
-	            		llaveSexo=atributos.get("SEXO");
-	            		if(llaveSexo.length()==1) {
-	                		llaveSexo="0"+llaveSexo;
-	                	}
-	                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
-	            	}
-	            	if(atributos.get("FENACIMI") != null) {
-	            		llaveFenacimi=atributos.get("FENACIMI");
-	                	if(llaveFenacimi.length()==1) {
-	                		llaveFenacimi="0"+llaveFenacimi;
-	                	}
-	                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
-	            	}
-	            	if(atributos.get("CODPOSTAL") != null) {
-	            		llaveCodPostal=atributos.get("CODPOSTAL");
-	                	if(llaveCodPostal.length()==1) {
-	                		llaveCodPostal="0"+llaveCodPostal;
-	                	}
-	                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
-	            	}
-	            } catch(Exception ex){
-	            	logger.error("error al obtener atributos", ex);
-	            }
-	            ////// 1. indicar para la situacion el indice //////
-	            
-	            ////// parche. Validar codigo postal //////
-	            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(slist1.get(0).get(llaveCodPostal)))
+	            if(conIncisos)
 	            {
-	            	LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
-	            	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
-	            	paramsValues.put("param2",cdtipsit);
-	            	storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CODPOSTAL_TARIFA.getNombre(), paramsValues, null);
+		            ////////////////////////////////
+		            ////// ordenar al titular //////
+		            
+		            ////// 1. indicar para la situacion el indice //////
+		            try {
+		            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+		            	p.put("cdtipsit",cdtipsit);
+		            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
+		            	if(atributos.get("PARENTESCO") != null) {
+		            		llaveRol=atributos.get("PARENTESCO");
+		                	if(llaveRol.length()==1) {
+		                		llaveRol="0"+llaveRol;
+		                	}
+		                	llaveRol="parametros.pv_otvalor"+llaveRol;
+		            	}
+		            	if(atributos.get("SEXO") != null) {
+		            		llaveSexo=atributos.get("SEXO");
+		            		if(llaveSexo.length()==1) {
+		                		llaveSexo="0"+llaveSexo;
+		                	}
+		                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
+		            	}
+		            	if(atributos.get("FENACIMI") != null) {
+		            		llaveFenacimi=atributos.get("FENACIMI");
+		                	if(llaveFenacimi.length()==1) {
+		                		llaveFenacimi="0"+llaveFenacimi;
+		                	}
+		                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+		            	}
+		            	if(atributos.get("CODPOSTAL") != null) {
+		            		llaveCodPostal=atributos.get("CODPOSTAL");
+		                	if(llaveCodPostal.length()==1) {
+		                		llaveCodPostal="0"+llaveCodPostal;
+		                	}
+		                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
+		            	}
+		            } catch(Exception ex){
+		            	logger.error("error al obtener atributos", ex);
+		            }
+		            ////// 1. indicar para la situacion el indice //////
+		            
+		            ////// parche. Validar codigo postal //////
+		            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(slist1.get(0).get(llaveCodPostal)))
+		            {
+		            	LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
+		            	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
+		            	paramsValues.put("param2",cdtipsit);
+		            	storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CODPOSTAL_TARIFA.getNombre(), paramsValues, null);
+		            }
+		            //// parche. Validar codigo postal //////
+		            
+		            ////// 2. ordenar //////
+		            int indiceTitular=-1;
+		            for(int i=0;i<slist1.size();i++)
+		            {
+		            	if(slist1.get(i).get(llaveRol).equalsIgnoreCase("T"))
+		            	{
+		            		indiceTitular=i;
+		            	}
+		            }
+		            List<Map<String,String>> temp    = new ArrayList<Map<String,String>>(0);
+		            Map<String,String>       titular = slist1.get(indiceTitular);
+		            temp.add(titular);
+		            slist1.remove(indiceTitular);
+		            temp.addAll(slist1);
+		            slist1=temp;
+		            ////// 2. ordenar //////
+		            
+		            ////// ordenar al titular //////
+		            ////////////////////////////////
 	            }
-	            //// parche. Validar codigo postal //////
 	            
-	            ////// 2. ordenar //////
-	            int indiceTitular=-1;
-	            for(int i=0;i<slist1.size();i++)
+	            //////////////////////////////////////////
+	            ////// mpolisit y tvalosit iterados //////
+	            int contador=1;
+	            for(Map<String,String>inciso:slist1)
 	            {
-	            	if(slist1.get(i).get(llaveRol).equalsIgnoreCase("T"))
-	            	{
-	            		indiceTitular=i;
-	            	}
+	            	//////////////////////////////
+	            	////// mpolisit iterado //////
+	            	Map<String,Object>mapaPolisitIterado=new HashMap<String,Object>(0);
+	                mapaPolisitIterado.put("pv_cdunieco_i"   , cdunieco);
+	                mapaPolisitIterado.put("pv_cdramo_i"     , cdramo);
+	                mapaPolisitIterado.put("pv_estado_i"     , "W");
+	                mapaPolisitIterado.put("pv_nmpoliza_i"   , nmpoliza);
+	                mapaPolisitIterado.put("pv_nmsituac_i"   , contador+"");
+	                mapaPolisitIterado.put("pv_nmsuplem_i"   , "0");
+	                mapaPolisitIterado.put("pv_status_i"     , "V");
+	                mapaPolisitIterado.put("pv_cdtipsit_i"   , cdtipsit);
+	                mapaPolisitIterado.put("pv_swreduci_i"   , null);
+	                mapaPolisitIterado.put("pv_cdagrupa_i"   , "1");
+	                mapaPolisitIterado.put("pv_cdestado_i"   , "0");
+	                mapaPolisitIterado.put("pv_fefecsit_i"   , renderFechas.parse(feini));
+	                mapaPolisitIterado.put("pv_fecharef_i"   , renderFechas.parse(feini));
+	                mapaPolisitIterado.put("pv_cdgrupo_i"    , null);
+	                mapaPolisitIterado.put("pv_nmsituaext_i" , null);
+	                mapaPolisitIterado.put("pv_nmsitaux_i"   , null);
+	                mapaPolisitIterado.put("pv_nmsbsitext_i" , null);
+	                mapaPolisitIterado.put("pv_cdplan_i"     , "1");
+	                mapaPolisitIterado.put("pv_cdasegur_i"   , "30");
+	                mapaPolisitIterado.put("pv_accion_i"     , "I");
+	                kernelManager.insertaPolisit(mapaPolisitIterado);
+	            	////// mpolisit iterado //////
+	            	//////////////////////////////
+	                
+	                //////////////////////////////
+	                ////// tvalosit iterado //////
+	                
+	                ////// 1. tvalosit base //////
+	                Map<String,String>mapaValositIterado=new HashMap<String,String>(0);
+	                mapaValositIterado.put("pv_cdunieco" , cdunieco);
+	                mapaValositIterado.put("pv_cdramo"   , cdramo);
+	                mapaValositIterado.put("pv_estado"   , "W");
+	                mapaValositIterado.put("pv_nmpoliza" , nmpoliza);
+	                mapaValositIterado.put("pv_nmsituac" , contador+"");
+	                mapaValositIterado.put("pv_nmsuplem" , "0");
+	                mapaValositIterado.put("pv_status"   , "V");
+	                mapaValositIterado.put("pv_cdtipsit" , cdtipsit);
+	                mapaValositIterado.put("pv_accion_i" , "I");
+	                ////// 1. tvalosit base //////
+	                
+	                ////// 2. tvalosit desde form //////
+	                for(Entry<String,String>en:inciso.entrySet())
+	                {
+	                	// p a r a m e t r o s . p v _ o t v a l o r 
+	                	//0 1 2 3 4 5 6 7 8 9 0 1
+	                	String key=en.getKey();
+	                	String value=en.getValue();
+	                	if(key.length()>11&&key.substring(0,11).equalsIgnoreCase("parametros."))
+	                	{
+	                		mapaValositIterado.put(key.substring(11),value);
+	                	}
+	                }
+	                ////// 2. tvalosit desde form //////
+	                
+	                ////// 3. completar faltantes //////
+	                for(int i=1;i<=50;i++)
+	                {
+	                	String key="pv_otvalor"+i;
+	                	if(i<10)
+	                	{
+	                		key="pv_otvalor0"+i;
+	                	}
+	                	if(!mapaValositIterado.containsKey(key))
+	                	{
+	                		mapaValositIterado.put(key,null);
+	                	}
+	                }
+	                ////// 3. completar faltantes //////
+	                
+	                ////// 4. custom //////
+	                if(cdtipsit.equals("SL"))
+	                {
+	                	mapaValositIterado.put("pv_otvalor11","S");
+	                	mapaValositIterado.put("pv_otvalor12","0");
+	                	mapaValositIterado.put("pv_otvalor13","21000");
+	                }
+	                else if(cdtipsit.equals("SN"))
+	                {
+	                	mapaValositIterado.put("pv_otvalor09","N");
+	                	mapaValositIterado.put("pv_otvalor10","N");
+	                	mapaValositIterado.put("pv_otvalor11","S");
+	                	mapaValositIterado.put("pv_otvalor12","0");
+	                	mapaValositIterado.put("pv_otvalor13","21000");
+	                	mapaValositIterado.put("pv_otvalor15","N");
+	                }
+	                else if(cdtipsit.equals("GB"))
+	                {
+	                	mapaValositIterado.put("pv_otvalor16",mapaValositIterado.get("pv_otvalor01"));
+	                }
+	                ////// 4. custom //////
+	                
+	                kernelManager.insertaValoresSituaciones(mapaValositIterado);
+	                ////// tvalosit iterado //////
+	                //////////////////////////////
+	                
+	                contador++;
 	            }
-	            List<Map<String,String>> temp    = new ArrayList<Map<String,String>>(0);
-	            Map<String,String>       titular = slist1.get(indiceTitular);
-	            temp.add(titular);
-	            slist1.remove(indiceTitular);
-	            temp.addAll(slist1);
-	            slist1=temp;
-	            ////// 2. ordenar //////
+	            ////// mpolisit y tvalosit iterados //////
+	            //////////////////////////////////////////
+		        
+	            /////////////////////////////
+	            ////// clonar personas //////
+	            contador=1;
+	            for(Map<String,String> inciso : slist1)
+	            {
+	                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
+	                mapaClonPersonaIterado.put("pv_cdelemen_i"  , cdelemento);
+	                mapaClonPersonaIterado.put("pv_cdunieco_i"  , cdunieco);
+	                mapaClonPersonaIterado.put("pv_cdramo_i"    , cdramo);
+	                mapaClonPersonaIterado.put("pv_estado_i"    , "W");
+	                mapaClonPersonaIterado.put("pv_nmpoliza_i"  , nmpoliza);
+	                mapaClonPersonaIterado.put("pv_nmsituac_i"  , contador+"");
+	                mapaClonPersonaIterado.put("pv_cdtipsit_i"  , cdtipsit);
+	                mapaClonPersonaIterado.put("pv_fecha_i"     , fechaHoy);
+	                mapaClonPersonaIterado.put("pv_cdusuario_i" , user);
+	                mapaClonPersonaIterado.put("pv_p_nombre"    , inciso.get("nombre"));
+	                mapaClonPersonaIterado.put("pv_s_nombre"    , inciso.get("nombre2"));
+	                mapaClonPersonaIterado.put("pv_apellidop"   , inciso.get("apat"));
+	                mapaClonPersonaIterado.put("pv_apellidom"   , inciso.get("amat"));
+	                mapaClonPersonaIterado.put("pv_sexo"        , inciso.containsKey(llaveSexo)?inciso.get(llaveSexo):llaveSexo);
+	                mapaClonPersonaIterado.put("pv_fenacimi"    , inciso.containsKey(llaveFenacimi)?
+	                		renderFechas.parse(inciso.get(llaveFenacimi)):(
+	                				llaveFenacimi.equalsIgnoreCase("DATE")?
+	                						fechaHoy :
+	                							renderFechas.parse(llaveFenacimi)));
+	                mapaClonPersonaIterado.put("pv_parentesco"  , inciso.containsKey(llaveRol)?inciso.get(llaveRol):llaveRol);
+	                kernelManager.clonaPersonas(mapaClonPersonaIterado);
+	                contador++;
+	            }
+	            ////// clonar personas //////
+	            /////////////////////////////
+	
+	            ////// mpoliper contratante recuperado //////
+	            if(StringUtils.isNotBlank(cdpersonCli))
+	            {
+	            	LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
+	    			paramsMpoliper.put("pv_cdunieco_i" , cdunieco);
+	    			paramsMpoliper.put("pv_cdramo_i"   , cdramo);
+	    			paramsMpoliper.put("pv_estado_i"   , "W");
+	    			paramsMpoliper.put("pv_nmpoliza_i" , nmpoliza);
+	    			paramsMpoliper.put("pv_nmsituac_i" , "0");
+					paramsMpoliper.put("pv_cdrol_i"    , "1");
+					paramsMpoliper.put("pv_cdperson_i" , cdpersonCli);
+					paramsMpoliper.put("pv_nmsuplem_i" , "0");
+					paramsMpoliper.put("pv_status_i"   , "V");
+					paramsMpoliper.put("pv_nmorddom_i" , "1");
+					paramsMpoliper.put("pv_swreclam_i" , null);
+					paramsMpoliper.put("pv_accion_i"   , "I");
+					paramsMpoliper.put("pv_swexiper_i" , "S");
+					kernelManager.movMpoliper(paramsMpoliper);
+	            }
+	            ////// mpoliper contratante recuperado //////
 	            
-	            ////// ordenar al titular //////
-	            ////////////////////////////////
-            }
-            
-            //////////////////////////////////////////
-            ////// mpolisit y tvalosit iterados //////
-            int contador=1;
-            for(Map<String,String>inciso:slist1)
-            {
-            	//////////////////////////////
-            	////// mpolisit iterado //////
-            	Map<String,Object>mapaPolisitIterado=new HashMap<String,Object>(0);
-                mapaPolisitIterado.put("pv_cdunieco_i"   , cdunieco);
-                mapaPolisitIterado.put("pv_cdramo_i"     , cdramo);
-                mapaPolisitIterado.put("pv_estado_i"     , "W");
-                mapaPolisitIterado.put("pv_nmpoliza_i"   , nmpoliza);
-                mapaPolisitIterado.put("pv_nmsituac_i"   , contador+"");
-                mapaPolisitIterado.put("pv_nmsuplem_i"   , "0");
-                mapaPolisitIterado.put("pv_status_i"     , "V");
-                mapaPolisitIterado.put("pv_cdtipsit_i"   , cdtipsit);
-                mapaPolisitIterado.put("pv_swreduci_i"   , null);
-                mapaPolisitIterado.put("pv_cdagrupa_i"   , "1");
-                mapaPolisitIterado.put("pv_cdestado_i"   , "0");
-                mapaPolisitIterado.put("pv_fefecsit_i"   , renderFechas.parse(feini));
-                mapaPolisitIterado.put("pv_fecharef_i"   , renderFechas.parse(feini));
-                mapaPolisitIterado.put("pv_cdgrupo_i"    , null);
-                mapaPolisitIterado.put("pv_nmsituaext_i" , null);
-                mapaPolisitIterado.put("pv_nmsitaux_i"   , null);
-                mapaPolisitIterado.put("pv_nmsbsitext_i" , null);
-                mapaPolisitIterado.put("pv_cdplan_i"     , "1");
-                mapaPolisitIterado.put("pv_cdasegur_i"   , "30");
-                mapaPolisitIterado.put("pv_accion_i"     , "I");
-                kernelManager.insertaPolisit(mapaPolisitIterado);
-            	////// mpolisit iterado //////
-            	//////////////////////////////
-                
-                //////////////////////////////
-                ////// tvalosit iterado //////
-                
-                ////// 1. tvalosit base //////
-                Map<String,String>mapaValositIterado=new HashMap<String,String>(0);
-                mapaValositIterado.put("pv_cdunieco" , cdunieco);
-                mapaValositIterado.put("pv_cdramo"   , cdramo);
-                mapaValositIterado.put("pv_estado"   , "W");
-                mapaValositIterado.put("pv_nmpoliza" , nmpoliza);
-                mapaValositIterado.put("pv_nmsituac" , contador+"");
-                mapaValositIterado.put("pv_nmsuplem" , "0");
-                mapaValositIterado.put("pv_status"   , "V");
-                mapaValositIterado.put("pv_cdtipsit" , cdtipsit);
-                mapaValositIterado.put("pv_accion_i" , "I");
-                ////// 1. tvalosit base //////
-                
-                ////// 2. tvalosit desde form //////
-                for(Entry<String,String>en:inciso.entrySet())
-                {
-                	// p a r a m e t r o s . p v _ o t v a l o r 
-                	//0 1 2 3 4 5 6 7 8 9 0 1
-                	String key=en.getKey();
-                	String value=en.getValue();
-                	if(key.length()>11&&key.substring(0,11).equalsIgnoreCase("parametros."))
-                	{
-                		mapaValositIterado.put(key.substring(11),value);
-                	}
-                }
-                ////// 2. tvalosit desde form //////
-                
-                ////// 3. completar faltantes //////
-                for(int i=1;i<=50;i++)
-                {
-                	String key="pv_otvalor"+i;
-                	if(i<10)
-                	{
-                		key="pv_otvalor0"+i;
-                	}
-                	if(!mapaValositIterado.containsKey(key))
-                	{
-                		mapaValositIterado.put(key,null);
-                	}
-                }
-                ////// 3. completar faltantes //////
-                
-                ////// 4. custom //////
-                if(cdtipsit.equals("SL"))
-                {
-                	mapaValositIterado.put("pv_otvalor11","S");
-                	mapaValositIterado.put("pv_otvalor12","0");
-                	mapaValositIterado.put("pv_otvalor13","21000");
-                }
-                else if(cdtipsit.equals("SN"))
-                {
-                	mapaValositIterado.put("pv_otvalor09","N");
-                	mapaValositIterado.put("pv_otvalor10","N");
-                	mapaValositIterado.put("pv_otvalor11","S");
-                	mapaValositIterado.put("pv_otvalor12","0");
-                	mapaValositIterado.put("pv_otvalor13","21000");
-                	mapaValositIterado.put("pv_otvalor15","N");
-                }
-                else if(cdtipsit.equals("GB"))
-                {
-                	mapaValositIterado.put("pv_otvalor16",mapaValositIterado.get("pv_otvalor01"));
-                }
-                ////// 4. custom //////
-                
-                kernelManager.insertaValoresSituaciones(mapaValositIterado);
-                ////// tvalosit iterado //////
-                //////////////////////////////
-                
-                contador++;
-            }
-            ////// mpolisit y tvalosit iterados //////
-            //////////////////////////////////////////
-	        
-            /////////////////////////////
-            ////// clonar personas //////
-            contador=1;
-            for(Map<String,String> inciso : slist1)
-            {
-                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
-                mapaClonPersonaIterado.put("pv_cdelemen_i"  , cdelemento);
-                mapaClonPersonaIterado.put("pv_cdunieco_i"  , cdunieco);
-                mapaClonPersonaIterado.put("pv_cdramo_i"    , cdramo);
-                mapaClonPersonaIterado.put("pv_estado_i"    , "W");
-                mapaClonPersonaIterado.put("pv_nmpoliza_i"  , nmpoliza);
-                mapaClonPersonaIterado.put("pv_nmsituac_i"  , contador+"");
-                mapaClonPersonaIterado.put("pv_cdtipsit_i"  , cdtipsit);
-                mapaClonPersonaIterado.put("pv_fecha_i"     , fechaHoy);
-                mapaClonPersonaIterado.put("pv_cdusuario_i" , user);
-                mapaClonPersonaIterado.put("pv_p_nombre"    , inciso.get("nombre"));
-                mapaClonPersonaIterado.put("pv_s_nombre"    , inciso.get("nombre2"));
-                mapaClonPersonaIterado.put("pv_apellidop"   , inciso.get("apat"));
-                mapaClonPersonaIterado.put("pv_apellidom"   , inciso.get("amat"));
-                mapaClonPersonaIterado.put("pv_sexo"        , inciso.containsKey(llaveSexo)?inciso.get(llaveSexo):llaveSexo);
-                mapaClonPersonaIterado.put("pv_fenacimi"    , inciso.containsKey(llaveFenacimi)?
-                		renderFechas.parse(inciso.get(llaveFenacimi)):(
-                				llaveFenacimi.equalsIgnoreCase("DATE")?
-                						fechaHoy :
-                							renderFechas.parse(llaveFenacimi)));
-                mapaClonPersonaIterado.put("pv_parentesco"  , inciso.containsKey(llaveRol)?inciso.get(llaveRol):llaveRol);
-                kernelManager.clonaPersonas(mapaClonPersonaIterado);
-                contador++;
-            }
-            ////// clonar personas //////
-            /////////////////////////////
-
-            ////// mpoliper contratante recuperado //////
-            if(StringUtils.isNotBlank(cdpersonCli))
-            {
-            	LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
-    			paramsMpoliper.put("pv_cdunieco_i" , cdunieco);
-    			paramsMpoliper.put("pv_cdramo_i"   , cdramo);
-    			paramsMpoliper.put("pv_estado_i"   , "W");
-    			paramsMpoliper.put("pv_nmpoliza_i" , nmpoliza);
-    			paramsMpoliper.put("pv_nmsituac_i" , "0");
-				paramsMpoliper.put("pv_cdrol_i"    , "1");
-				paramsMpoliper.put("pv_cdperson_i" , cdpersonCli);
-				paramsMpoliper.put("pv_nmsuplem_i" , "0");
-				paramsMpoliper.put("pv_status_i"   , "V");
-				paramsMpoliper.put("pv_nmorddom_i" , "1");
-				paramsMpoliper.put("pv_swreclam_i" , null);
-				paramsMpoliper.put("pv_accion_i"   , "I");
-				paramsMpoliper.put("pv_swexiper_i" , "S");
-				kernelManager.movMpoliper(paramsMpoliper);
-            }
-            ////// mpoliper contratante recuperado //////
-            
-            ////////////////////////
-            ////// coberturas //////
-            /*////////////////////*/
-            Map<String,String> mapCoberturas=new HashMap<String,String>(0);
-            mapCoberturas.put("pv_cdunieco_i" , cdunieco);
-            mapCoberturas.put("pv_cdramo_i"   , cdramo);
-            mapCoberturas.put("pv_estado_i"   , "W");
-            mapCoberturas.put("pv_nmpoliza_i" , nmpoliza);
-            mapCoberturas.put("pv_nmsituac_i" , "0");
-            mapCoberturas.put("pv_nmsuplem_i" , "0");
-            mapCoberturas.put("pv_cdgarant_i" , "TODO");
-            mapCoberturas.put("pv_cdtipsup_i" , "1");
-            kernelManager.coberturas(mapCoberturas);
-            /*////////////////////*/
-            ////// coberturas //////
-            ////////////////////////
-            
-            //////////////////////////
-            ////// TARIFICACION //////
-            /*//////////////////////*/
-            Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
-            mapaTarificacion.put("pv_cdusuari_i" , user);
-            mapaTarificacion.put("pv_cdelemen_i" , cdelemento);
-            mapaTarificacion.put("pv_cdunieco_i" , cdunieco);
-            mapaTarificacion.put("pv_cdramo_i"   , cdramo);
-            mapaTarificacion.put("pv_estado_i"   , "W");
-            mapaTarificacion.put("pv_nmpoliza_i" , nmpoliza);
-            mapaTarificacion.put("pv_nmsituac_i" , "0");
-            mapaTarificacion.put("pv_nmsuplem_i" , "0");
-            mapaTarificacion.put("pv_cdtipsit_i" , cdtipsit);
-            kernelManager.ejecutaASIGSVALIPOL(mapaTarificacion);
-            /*//////////////////////*/
-            ////// TARIFICACION //////
-            //////////////////////////
+	            ////////////////////////
+	            ////// coberturas //////
+	            /*////////////////////*/
+	            Map<String,String> mapCoberturas=new HashMap<String,String>(0);
+	            mapCoberturas.put("pv_cdunieco_i" , cdunieco);
+	            mapCoberturas.put("pv_cdramo_i"   , cdramo);
+	            mapCoberturas.put("pv_estado_i"   , "W");
+	            mapCoberturas.put("pv_nmpoliza_i" , nmpoliza);
+	            mapCoberturas.put("pv_nmsituac_i" , "0");
+	            mapCoberturas.put("pv_nmsuplem_i" , "0");
+	            mapCoberturas.put("pv_cdgarant_i" , "TODO");
+	            mapCoberturas.put("pv_cdtipsup_i" , "1");
+	            kernelManager.coberturas(mapCoberturas);
+	            /*////////////////////*/
+	            ////// coberturas //////
+	            ////////////////////////
+	            
+	            //////////////////////////
+	            ////// TARIFICACION //////
+	            /*//////////////////////*/
+	            Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+	            mapaTarificacion.put("pv_cdusuari_i" , user);
+	            mapaTarificacion.put("pv_cdelemen_i" , cdelemento);
+	            mapaTarificacion.put("pv_cdunieco_i" , cdunieco);
+	            mapaTarificacion.put("pv_cdramo_i"   , cdramo);
+	            mapaTarificacion.put("pv_estado_i"   , "W");
+	            mapaTarificacion.put("pv_nmpoliza_i" , nmpoliza);
+	            mapaTarificacion.put("pv_nmsituac_i" , "0");
+	            mapaTarificacion.put("pv_nmsuplem_i" , "0");
+	            mapaTarificacion.put("pv_cdtipsit_i" , cdtipsit);
+	            kernelManager.ejecutaASIGSVALIPOL(mapaTarificacion);
+	            /*//////////////////////*/
+	            ////// TARIFICACION //////
+	            //////////////////////////
+		    }
             
             ///////////////////////////////////
             ////// Generacion cotizacion //////

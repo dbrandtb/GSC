@@ -64,6 +64,7 @@ public class ComponenteVO
 	private String swGrupoExtr  = null;
 	private String nmpanelcoti  = null;
 	private String nmpanelflot  = null;
+	private String cotflotrol   = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -503,5 +504,13 @@ public class ComponenteVO
 
 	public void setNmpanelflot(String nmpanelflot) {
 		this.nmpanelflot = nmpanelflot;
+	}
+
+	public String getCotflotrol() {
+		return cotflotrol;
+	}
+
+	public void setCotflotrol(String cotflotrol) {
+		this.cotflotrol = cotflotrol;
 	}
 }
