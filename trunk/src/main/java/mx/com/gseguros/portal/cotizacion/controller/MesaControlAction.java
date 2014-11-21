@@ -419,6 +419,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			UserVO usu=(UserVO)session.get("USUARIO");
 			//Se obtienen los datos del usuario:
 			String statusNuevo=smap1.get("status");
 			String ntramite=smap1.get("ntramite");
@@ -428,7 +429,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
 			
-			String cdusuariSesion = "rherdez";
+			String cdusuariSesion = usu.getUser();
 			String cdsisrolSesion = "COORDINASINI";
 			String cdclausu       = null;
 			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);

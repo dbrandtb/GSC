@@ -59,7 +59,10 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 			text: 'Agregar Factura',
 			scope: this,
-			handler: this.onAddClick
+			//handler: this.onAddClick
+			handler: function() {
+		        centrarVentanaInterna(modAgregarFacturas.show());
+		    }
 		}]
 	});
 	

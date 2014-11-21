@@ -14,7 +14,14 @@
 			var _11_urlIniciarSiniestroSinAutServ = '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
 			var _11_urlIniciarSiniestroTworksin   = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
 			var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
-			var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+			var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
+            var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
+            var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
+            var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+            
+            var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+            debug("VALOR DE _11_params --->");
+            debug(_11_params);
 			var _11_itemsForm	=
 			[
 				<s:property value="imap.itemsForm" />
@@ -33,6 +40,33 @@
 			var panelInicialPral;
 			var storeAseguradoFactura;
 			var modPolizasAltaTramite;
+			var storeFacturaDirectoNva;
+			
+			var storeCobertura = Ext.create('Ext.data.Store', {
+				model:'modelListadoCobertura',
+				autoLoad:false,
+				proxy: {
+					type: 'ajax',
+					url : _URL_LISTA_COBERTURA,
+					reader: {
+						type: 'json',
+						root: 'listaCoberturaPoliza'
+					}
+				}
+			});
+
+			var storeSubcobertura= Ext.create('Ext.data.Store', {
+				model:'Generic',
+				autoLoad:false,
+				proxy: {
+					type: 'ajax',
+					url : _URL_LISTA_SUBCOBERTURA,
+					reader: {
+						type: 'json',
+						root: 'listaSubcobertura'
+					}
+				}
+			});
 		/*FIN DECLARACION VARIABLES*/
 			<s:set name="contadorFactura" value="0" />
 			<s:iterator value="slist2">
@@ -145,7 +179,13 @@
 				panelInicialPral.down('[name=itemFactura]').setValue(_11_recordActivo.get('factura'));
 				panelInicialPral.down('[name=itemFechaFac]').setValue(_11_recordActivo.get('fechaFactura'));
 				panelInicialPral.down('[name=itemCobertura]').setValue(_11_recordActivo.get('cdgarant'));
-				panelInicialPral.down('[name=itemSubcobertura]').setValue(_11_recordActivo.get('cdconval'));
+				
+				storeSubcobertura.load({
+	                params:{
+	                	'params.cdgarant' :_11_recordActivo.get('cdgarant')
+	                }
+	            });
+				panelInicialPral.down('combo[name=itemSubcobertura]').setValue(_11_recordActivo.get('cdconval'));
 				panelInicialPral.down('combo[name=cmbTipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));
 				
 				panelInicialPral.down('[name=itemImporteMxn]').setValue(_11_recordActivo.get('ptimport'));
@@ -281,6 +321,15 @@
 				centrarVentanaInterna(_11_windowPedirAut);
 			}
 			
+			function _p21_agregarGrupoClic()
+			{
+				if(_11_params.OTVALOR02 == _TIPO_PAGO_DIRECTO){
+					storeFacturaDirectoNva.add(new modelFacturaSiniestroNva({tasaCambioNva:'0.00',importeFacturaNva:'0.00',tipoMonedaNameNva:'001'}));
+				}else{
+					//storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+				}
+			}
+			
 			function _11_asociarAutorizacion()
 			{
 				var valido = _11_formPedirAuto.isValid();
@@ -356,14 +405,74 @@
 					}
 				});
 				storeTipoMoneda.load();
+				var storeTipoMonedaNueva = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_TipoMoneda},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					}
+				});
+				storeTipoMonedaNueva.load();
 				
 				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
 				{
-					name:'cmbTipoMoneda',			fieldLabel	: 'Moneda',	store: storeTipoMoneda,		/*value:'001',*/		queryMode:'local',  
-					displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
+					name:'cmbTipoMoneda',		fieldLabel	: 'Moneda',		store: storeTipoMoneda,			queryMode:'local',  
+					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false
 				});
 				
+				var cmbTipoMonedaNueva = Ext.create('Ext.form.ComboBox',
+			    {
+			        id:'cmbTipoMonedaNueva',	store: storeTipoMonedaNueva,value:'001',		queryMode:'local',
+			        displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
+			    });
+				
+				/*var coberturaAfectada = Ext.create('Ext.form.field.ComboBox',
+			    {
+					name:'itemCobertura',		fieldLabel :'Cobertura afectada',	allowBlank: false,				displayField : 'dsgarant',
+			    	valueField   : 'cdgarant',			forceSelection : true,			matchFieldWidth: false,
+			    	queryMode :'remote',		store : storeCobertura,				triggerAction: 'all',			editable:false,
+			        listeners : {
+			        	'select' : function(combo, record) {
+				    		storeSubcobertura.removeAll();
+				        	storeSubcobertura.load({
+				                params:{
+				                	'params.cdgarant' :this.getValue()
+				                }
+				            });
+				        }
+			        }
+			    });*/
+			    
+			    var subCobertura = Ext.create('Ext.form.field.ComboBox',
+			    {
+			    	name:'itemSubcobertura',		fieldLabel : 'Subcobertura',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',
+			    	valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
+			    	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
+			    });
 				//MODELOS
+				Ext.define('modelListadoCobertura',{
+					extend: 'Ext.data.Model',
+					fields: [	{type:'string',    name:'cdgarant'},			{type:'string',    name:'dsgarant'},              	{type:'string',    name:'ptcapita'}		]
+				});
+				
+				Ext.define('modelFacturaSiniestroNva', {
+				    extend:'Ext.data.Model',
+				    fields:['noFacturaNva','fechaFacturaNva','tipoServicioNva','tipoServicioNameNva','proveedorNva',
+							'proveedorNameNva','importeNva','tipoMonedaNva','tipoMonedaNameNva','tasaCambioNva','importeFacturaNva'
+					]
+				});
+				
+				storeFacturaDirectoNva =new Ext.data.Store(
+				{
+				    autoDestroy: true,
+				    model: 'modelFacturaSiniestroNva'
+				});
+				
 				Ext.define('modelAseguradosFactura',{
 				extend: 'Ext.data.Model',
 				fields: [	{type:'string',	name:'AAAPERTU'},		{type:'string',	name:'AUTMEDIC'},
@@ -401,6 +510,114 @@
 				    }
 				});
 				
+				Ext.define('EditorFacturaNuevaPDirecto', {
+			 		extend: 'Ext.grid.Panel',
+					name:'editorFacturaNuevaPDirecto',
+			 		frame: true,
+					selType  : 'rowmodel',
+				 	initComponent: function(){
+				 			Ext.apply(this, {
+				 			//width: 750,
+				 			height: 250,
+				 			plugins  :
+					        [
+					            Ext.create('Ext.grid.plugin.CellEditing',
+					            {
+					                clicksToEdit: 1
+					            })
+					        ],
+				 			store: storeFacturaDirectoNva,
+				 			columns: 
+				 			[
+							 	{	
+							 		header: 'No. de Factura',			dataIndex: 'noFacturaNva',			flex:2,  allowBlank: false
+							 		,editor: {
+							                xtype: 'textfield'
+						            }
+							 	},
+							 	{
+							 		header: 'Fecha de Factura',			dataIndex: 'fechaFacturaNva',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y'),  allowBlank: false
+							 		,editor : {
+										xtype : 'datefield',
+										format : 'd/m/Y',
+										editable : true
+									}
+							 	},
+							 	{
+									header: 'Moneda', 				dataIndex: 'tipoMonedaNameNva',	flex:2,  allowBlank: false
+									,editor : cmbTipoMonedaNueva
+									,renderer : function(v) {
+									var leyenda = '';
+										if (typeof v == 'string')// tengo solo el indice
+										{
+											storeTipoMonedaNueva.each(function(rec) {
+												if (rec.data.key == v) {
+													leyenda = rec.data.value;
+												}
+											});
+										}else // tengo objeto que puede venir como Generic u otro mas complejo
+										{
+											if (v.key && v.value)
+											{
+												leyenda = v.value;
+											} else {
+												leyenda = v.data.value;
+											}
+										}
+										return leyenda;
+									}
+								}
+							 	,
+							 	{
+								 	header: 'Tasa cambio', 				dataIndex: 'tasaCambioNva',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
+								 	,editor: {
+							                xtype: 'textfield'
+						            }
+							 	},
+							 	{
+								 	header: 'Importe Factura', 				dataIndex: 'importeFacturaNva',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
+								 	,editor: {
+							                xtype: 'textfield'
+						            }
+							 	},
+							 	{
+								 	header: 'Importe MXN', 					dataIndex: 'importeNva',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
+								 	,editor: {
+							                xtype: 'textfield'
+						            }
+							 	},
+							 	{
+								 	xtype: 'actioncolumn',
+								 	width: 30,
+								 	sortable: false,
+								 	menuDisabled: true,
+								 	items: [{
+								 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+								 		tooltip: 'Quitar inciso',
+								 		scope: this,
+								 		handler: this.onRemoveClick
+							 		}]
+							 	}
+					 		],
+					 		selModel: {
+						 		selType: 'cellmodel'
+						 	},
+					 		tbar: [{
+			                    //text     : 'Agregar Factura'
+			                    //,
+								icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png'
+			                    ,handler : _p21_agregarGrupoClic
+			                }]
+					 	});
+			 			this.callParent();
+				 	},
+				 	onRemoveClick: function(grid, rowIndex){
+				 		var record=this.getStore().getAt(rowIndex);
+				 		this.getStore().removeAt(rowIndex);
+				 	}
+			 	});
+			    gridFacturaNuevaPDirecto = new EditorFacturaNuevaPDirecto();
+			    
 				Ext.define('EditorFacturaDirecto', {
 					extend: 'Ext.grid.Panel',
 					name:'editorFacturaDirecto',
@@ -607,12 +824,15 @@
 						{
 			            	xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'itemFechaFac',	format	: 'd/m/Y'
 			            },
-			            {
+			            //coberturaAfectada,
+					 	//subCobertura,
+					 	{
 							xtype		: 'textfield',			fieldLabel	: 'Cobertura',				name	: 'itemCobertura'
 						},
-						{
+						subCobertura,
+						/*{
 							xtype		: 'textfield',			fieldLabel	: 'SubCobertura',			name	: 'itemSubcobertura'
-						},
+						},*/
 						cmbTipoMoneda
 						,
 						{
@@ -659,7 +879,7 @@
 				    ,width		 : 900
 				    //,minHeight 	 : 100 
 				    //,maxheight   : 400
-				    ,items       :
+				    ,items       : 
 			        [
 						panelInicialPral
 						,gridFacturaDirecto
@@ -686,7 +906,42 @@
 					]
 				});
 			
-			
+				modAgregarFacturas = Ext.create('Ext.window.Window',
+				{
+				    title        : 'Facturas nuevas'
+				    ,modal       : true
+				    ,resizable   : false
+				    ,buttonAlign : 'center'
+				    ,closable    : true
+				    ,closeAction: 'hide'
+				    ,width		 : 700
+				    ,items       :
+			        [
+						gridFacturaNuevaPDirecto
+			        ]
+					,buttonAlign:'center',
+					buttons: [
+						{
+							text:'Guardar',
+							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
+							handler:function()
+							{
+								storeFacturaDirectoNva.removeAll();
+								modAgregarFacturas.close();
+							}
+						},
+						{
+							text:'Cancelar',
+							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+							handler:function()
+							{
+								storeFacturaDirectoNva.removeAll();
+								modAgregarFacturas.close();
+							}
+						}
+					]
+				});
+					
 			
 			
 				Ext.define('_11_WindowPedirAut',
