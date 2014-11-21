@@ -119,7 +119,7 @@ Ext.onReady(function()
 	        	 					boxLabel: '&iquest;Compa&ntilde;ia de Salud?',
 	        	 					name: 'smap1.esSalud',
 	        	 					itemId: 'companiaId',
-	        	 					checked: true,
+	        	 					checked: false,
 	        	 					listeners: {
 	        	 						change: function(){
 	        	 								var form=_p22_formBusqueda();
@@ -459,7 +459,7 @@ Ext.onReady(function()
 						model:'Generic',
 						autoLoad:true,
 						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						url:_URL_CARGA_CATALOGO,
 						reader:{type:'json',
 						root:'lista',
 						rootProperty:'lista'
@@ -487,7 +487,7 @@ Ext.onReady(function()
 						model:'Generic',
 						autoLoad:true,
 						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						url:_URL_CARGA_CATALOGO,
 						reader:{type:'json',
 						root:'lista',
 						rootProperty:'lista'
@@ -515,7 +515,7 @@ Ext.onReady(function()
 						model:'Generic',
 						autoLoad:true,
 						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						url:_URL_CARGA_CATALOGO,
 						reader:{type:'json',
 						root:'lista',
 						rootProperty:'lista'
@@ -545,7 +545,7 @@ Ext.onReady(function()
 						model:'Generic',
 						autoLoad:true,
 						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
+						url:_URL_CARGA_CATALOGO,
 						reader:{type:'json',
 						root:'lista',
 						rootProperty:'lista'
