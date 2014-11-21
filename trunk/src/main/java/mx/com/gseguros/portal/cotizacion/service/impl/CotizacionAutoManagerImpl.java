@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -1206,14 +1207,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>panel1=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel2=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel3=new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel4=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel5=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel6=new ArrayList<ComponenteVO>();
 			
 			List<ComponenteVO>tatrisit = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
 			
-			//obtener los que se muestran
+			setCheckpoint("Filtrando atributos");
+			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatrisit)
 			{
 				if(tatri.getSwpresen().equals("S"))
@@ -1222,8 +1222,107 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					aux.add(tatri);
 				}
 			}
-			
 			tatrisit = aux;
+			
+			setCheckpoint("Organizando atributos");
+			for(ComponenteVO tatri:tatrisit)
+			{
+				if(tatri.getNmpanelflot().equals("1"))
+				{
+					panel1.add(tatri);
+				}
+				else if(tatri.getNmpanelflot().equals("2"))
+				{
+					panel2.add(tatri);
+				}
+				else if(tatri.getNmpanelflot().equals("3"))
+				{
+					panel3.add(tatri);
+				}
+				else if(tatri.getNmpanelflot().equals("5"))
+				{
+					panel5.add(tatri);
+				}
+				else if(tatri.getNmpanelflot().equals("6"))
+				{
+					panel6.add(tatri);
+				}
+			}
+			
+			setCheckpoint("Construyendo componentes");
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			
+			gc.generaComponentes(panel1, true, false, true, false, false, false);
+			resp.getImap().put("panel1Items"  , gc.getItems());
+			
+			gc.generaComponentes(panel2, true, false, true, false, false, false);
+			resp.getImap().put("panel2Items"  , gc.getItems());
+			
+			gc.generaComponentes(panel3, true, false, true, false, false, false);
+			resp.getImap().put("panel3Items"  , gc.getItems());
+			
+			gc.generaComponentes(panel5, true, false, true, false, false, false);
+			resp.getImap().put("panel5Items"  , gc.getItems());
+			
+			gc.generaComponentes(panel6, true, false, true, false, false, false);
+			resp.getImap().put("panel6Items"  , gc.getItems());
+			
+			setCheckpoint("Recuperando agrupacion de situaciones");
+			Map<String,String>agrupAux = cotizacionDAO.obtenerParametrosCotizacion(
+					ParametroCotizacion.FLOTILLA_AGRUPACION_SITUACION, cdramo, cdtipsit, null, null);
+			
+			Map<String,String>botones    = new LinkedHashMap<String,String>();
+			Map<String,String>agrupacion = new LinkedHashMap<String,String>();
+			List<String>situacionesPanel = new ArrayList<String>();
+			
+			for(int i=1;i<=13;i++)
+			{
+				String claveKey = new StringBuilder("P").append(i).append("CLAVE").toString();
+				String valorKey = new StringBuilder("P").append(i).append("VALOR").toString();
+				String clave    = agrupAux.get(claveKey);
+				if(!isBlank(clave))
+				{
+					String cdtipsitOrigen = clave.split("_")[0];
+					String textoBoton     = clave.split("_")[1];
+					String cdtipsitDestin = agrupAux.get(valorKey);
+					if(!botones.containsKey(textoBoton))
+					{
+						botones.put(textoBoton,cdtipsitOrigen);
+						situacionesPanel.add(cdtipsitOrigen);
+						resp.getSmap().put(new StringBuilder("boton_").append(textoBoton).toString(),cdtipsitOrigen);
+					}
+					agrupacion.put(cdtipsitDestin,cdtipsitOrigen);
+				}
+			}
+			logger.debug(new StringBuilder("\nbotones=").append(botones)
+					.append("\nagrupacion=").append(agrupacion)
+					.append("\nsituacionesPanel=").append(situacionesPanel)
+					.toString());
+			
+			for(String situacionPanel:situacionesPanel)
+			{
+				setCheckpoint(new StringBuilder("Recuperando atributos de panel dinamico ").append(situacionPanel).toString());
+				List<ComponenteVO>tatrisitPanel    = cotizacionDAO.cargarTatrisit(situacionPanel, cdusuari);
+				List<ComponenteVO>tatrisitPanelAux = new ArrayList<ComponenteVO>();
+				for(ComponenteVO tatri:tatrisitPanel)
+				{
+					if(tatri.getSwpresen().equals("S")&&tatri.getNmpanelflot().equals("4"))
+					{
+						tatrisitPanelAux.add(tatri);
+					}
+				}
+				tatrisitPanel=tatrisitPanelAux;
+				
+				setCheckpoint(new StringBuilder("Construyendo panel dinamico ").append(situacionPanel).toString());
+				GeneradorCampos gcPanel = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcPanel.setCdramo(cdramo);
+				gcPanel.setCdtipsit(situacionPanel);
+				gcPanel.generaComponentes(tatrisitPanel, true, false, true, false, false, false);
+				logger.debug(new StringBuilder("\nelementos del panel=").append(gcPanel.getItems()).toString());
+				resp.getImap().put(new StringBuilder("paneldin_").append(situacionPanel).toString(),gcPanel.getItems());
+			}
 			
 			setCheckpoint("0");
 		}
