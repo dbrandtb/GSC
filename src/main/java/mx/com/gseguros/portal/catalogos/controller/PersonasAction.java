@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
@@ -99,6 +100,11 @@ public class PersonasAction extends PrincipalCoreAction
 		{
 			personaWS = false;
 			
+			if("dummyForAllQuery".equals(smap1.get("rfc")) || "dummyForAllQuery".equals(smap1.get("nombre"))){
+				exito = true;
+				return SUCCESS;
+			}
+			
 			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(
 					smap1.get("rfc"),
 					smap1.get("nombre"),
@@ -115,12 +121,15 @@ public class PersonasAction extends PrincipalCoreAction
 			
 			if(slist1 == null || slist1.isEmpty()){
 				logger.debug("...Busqueda de Persona en WS...");
+				String saludDanios = smap1.get("esSalud");
+				
 				ClienteGeneral clienteGeneral = new ClienteGeneral();
 		    	clienteGeneral.setRfcCli(smap1.get("rfc"));
-		    	clienteGeneral.setRamoCli(213);
+		    	//clienteGeneral.setRamoCli(213);
+		    	clienteGeneral.setClaveCia(saludDanios);
 		    	clienteGeneral.setNombreCli(smap1.get("snombre"));
 		    	
-		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 		    	
 		    	if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
 		    		
@@ -148,7 +157,14 @@ public class PersonasAction extends PrincipalCoreAction
 			    		agregar = new HashMap<String,String>();
 			    		
 			    		agregar.put("CDPERSON", "1");
-				    	agregar.put("CDIDEPER",     cli.getNumeroExterno());
+			    		
+			    		if("S".equalsIgnoreCase(saludDanios)){
+			    			agregar.put("CDIDEEXT", cli.getNumeroExterno());//Para Salud
+			    			agregar.put("CDIDEPER", "");
+			    		}else{
+			    			agregar.put("CDIDEPER", cli.getNumeroExterno());//Para Danios
+			    			agregar.put("CDIDEEXT", "");
+			    		}
 				    	
 				    	agregar.put("CDRFC",    cli.getRfcCli());
 				    	agregar.put("NOMBRE_COMPLETO", (cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc() );
@@ -241,6 +257,184 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	/**
+	 * Importa Persona/Cliente Externo de Salud o Danios 
+	 * @return SUCCESS
+	 */
+	public String importaPersonaExtWS()
+	{
+		logger.info(
+				"\n###################################"
+				+ "\n###### importaPersonaExtWS ######"
+				+ "\n params: "+params
+				);
+		try
+		{
+			logger.debug("...Busqueda de Persona en WS...");
+			String saludDanios = params.get("esSalud");
+			
+			ClienteGeneral clienteGeneral = new ClienteGeneral();
+			clienteGeneral.setClaveCia(saludDanios);
+			clienteGeneral.setNumeroExterno(params.get("codigoCliExt"));;
+			
+			ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+			
+			if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+				
+				logger.debug("Error en WS, exito false");
+				exito           = false;
+				respuesta       = "No se encontró ninguna persona.";
+				respuestaOculta = "No se encontró ninguna persona.";
+				slist1          = null;
+				
+				return SUCCESS;
+			}else{
+				exito = true;
+			}
+			
+			ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
+			if(listaClientesGS != null && listaClientesGS.length == 1 ){
+				logger.debug("Importando Persona de GS ");
+				
+				ClienteGeneral cliImport = listaClientesGS[0];
+				
+				String apellidoPat = "";
+		    	if(StringUtils.isNotBlank(cliImport.getApellidopCli()) && !cliImport.getApellidopCli().trim().equalsIgnoreCase("null")){
+		    		apellidoPat = cliImport.getApellidopCli();
+		    	}
+		    	
+		    	String apellidoMat = "";
+		    	if(StringUtils.isNotBlank(cliImport.getApellidomCli()) && !cliImport.getApellidomCli().trim().equalsIgnoreCase("null")){
+		    		apellidoMat = cliImport.getApellidomCli();
+		    	}
+		    	
+	    		Calendar calendar =  Calendar.getInstance();
+	    		
+	    		String sexo = "H"; //Hombre
+		    	if(cliImport.getSexoCli() > 0){
+		    		if(cliImport.getSexoCli() == 2) sexo = "M";
+		    	}
+		    	
+		    	String tipoPersona = "F"; //Fisica
+		    	if(cliImport.getFismorCli() > 0){
+		    		if(cliImport.getFismorCli() == 2){
+		    			tipoPersona = "M";
+		    		}else if(cliImport.getFismorCli() == 3){
+		    			tipoPersona = "S";
+		    		}
+		    	}
+		    	
+		    	String nacionalidad = "001";// Nacional
+		    	if(StringUtils.isNotBlank(cliImport.getNacCli()) && !cliImport.getNacCli().equalsIgnoreCase("1")){
+		    		nacionalidad = "002";
+		    	}
+		    	
+		    	
+		    	if(cliImport.getFecnacCli()!= null){
+		    		calendar.set(cliImport.getFecnacCli().get(Calendar.YEAR), cliImport.getFecnacCli().get(Calendar.MONTH), cliImport.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+		    	}
+		    	
+		    	Calendar calendarIngreso =  Calendar.getInstance();
+		    	if(cliImport.getFecaltaCli() != null){
+		    		calendarIngreso.set(cliImport.getFecaltaCli().get(Calendar.YEAR), cliImport.getFecaltaCli().get(Calendar.MONTH), cliImport.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+		    	}
+				
+		    	String edoAdosPos2 = Integer.toString(cliImport.getEstadoCli());
+    			if(edoAdosPos2.length() ==  1){
+    				edoAdosPos2 = "0"+edoAdosPos2;
+    			}
+    			
+    			long timestamp=System.currentTimeMillis();
+    			
+    			logger.debug("Canal de Ingreso:" + cliImport.getCanconCli());
+    			
+    			params.put("pv_cdpostal_i", cliImport.getCodposCli());
+    			params.put("pv_cdedo_i",    edoAdosPos2);
+    			params.put("pv_dsmunici_i", cliImport.getMunicipioCli());
+    			params.put("pv_dscoloni_i", cliImport.getColoniaCli());
+    			
+    			Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(params);
+    			
+    			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
+						"1",//cdidepe
+						"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
+						(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
+						"1",//cdtipper
+						tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
+						,null //segundo nombre
+						,apellidoPat
+						,apellidoMat
+						,calendarIngreso.getTime()
+						,nacionalidad
+						,cliImport.getCanconCli() <= 0 ? "0" : (Integer.toString(cliImport.getCanconCli()))// canaling
+						,null// conducto
+						,null// ptcumupr
+						,null// residencia
+						,null// nongrata
+						,"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
+						,"1"//nmorddom
+						,cliImport.getCalleCli() +" "+ cliImport.getNumeroCli()
+						,cliImport.getTelefonoCli()
+						,cliImport.getCodposCli()
+						,cliImport.getCodposCli()+edoAdosPos2
+						,munycol.get("CDMUNICI")//minicipio
+						,munycol.get("CDCOLONI")//colonia
+						,cliImport.getNumeroCli()
+						,null//numero int
+						,timestamp);
+				
+				
+				exito                = (Boolean)managerResult.get("exito");
+				String cdpersonNuevo = (String)managerResult.get("cdpersonNuevo");
+				params.put("cdperson", cdpersonNuevo);
+				params.put("codigoExterno", cliImport.getNumeroExterno());
+
+				params.put("coloniaImp",    StringUtils.isNotBlank(cliImport.getColoniaCli())   ? cliImport.getColoniaCli()  : "");
+				params.put("municipioImp" , StringUtils.isNotBlank(cliImport.getMunicipioCli()) ? cliImport.getMunicipioCli(): "");
+				
+				if(exito){
+					managerResult=personasManager.guardarDatosTvaloper(
+							cdpersonNuevo,cliImport.getCveEle(),cliImport.getPasaporteCli(),null,null,null,null,null
+							,cliImport.getOrirecCli(),null,null,cliImport.getNacCli(),null,null,null,null,null,null
+							,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
+							,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
+							,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
+							,null,null,timestamp);
+					
+					exito                = (Boolean)managerResult.get("exito");
+					respuesta            = (String)managerResult.get("respuesta");
+					respuestaOculta      = (String)managerResult.get("respuestaOculta");
+					
+				}
+				
+			}else {
+				logger.debug("No se encontro coincidencia con el WS o hay mas de una.");
+				if(listaClientesGS == null){
+					logger.debug("Lista de Clientes es nula");	
+				}else{
+					logger.debug("Tamanio de la Lista de Clientes: " + listaClientesGS.length);
+				}
+				exito           = false;
+				respuesta       = "Error al importar persona externa en la edicion.";
+				respuestaOculta = "Error al importar persona externa en la edicion.";
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error inesperado al importar persona por WS",ex);
+			exito           = false;
+			respuesta       = "Error inesperado";
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(
+				"\n###### importaPersonaExtWS ######"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	
+	
 	public String obtenerPersonaPorCdperson()
 	{
 		long timestamp=System.currentTimeMillis();
@@ -316,7 +510,7 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("PTCUMUPR")
 					,smap1.get("RESIDENTE")
 					,smap1.get("NONGRATA")
-					,null//cdideext 
+					,smap1.get("CDIDEEXT") 
 					,smap2.get("NMORDDOM")
 					,smap2.get("DSDOMICI")
 					,smap2.get("NMTELEFO")
@@ -502,6 +696,63 @@ public class PersonasAction extends PrincipalCoreAction
 			exito                = (Boolean)managerResult.get("exito");
 			respuesta            = (String)managerResult.get("respuesta");
 			respuestaOculta      = (String)managerResult.get("respuestaOculta");
+		
+		
+			if(exito){
+				logger.debug("...Guarda datos de Persona en WS...");
+				String saludDanios = smap1.get("esSalud");
+				
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+		    	clienteGeneral.setClaveCia(saludDanios);
+		    	clienteGeneral.setNumeroExterno(smap1.get("codigoExterno"));
+		    	
+		    	ClienteGeneralRespuesta clientesRes = null;
+		    	if(StringUtils.isBlank(smap1.get("codigoExterno"))){
+		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
+		    		 
+		    		 if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo()) && StringUtils.isNotBlank(smap1.get("codigoExterno2"))){
+		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
+		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
+		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
+		    			 ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false); 
+		    		 }
+		    		 
+		    	}else {
+		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, null, false);
+		    		 
+		    		 if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo()) && StringUtils.isNotBlank(smap1.get("codigoExterno2"))){
+		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
+		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
+		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
+		    			 ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false); 
+		    		 }
+		    	}
+		    	
+		    	if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+		    		
+		    		logger.debug("Error en WS, exito false");
+		    		exito           = false;
+					respuesta       = "No se encontró ninguna persona.";
+					respuestaOculta = "No se encontró ninguna persona.";
+					slist1          = null;
+					
+		    		return SUCCESS;
+		    	}else{
+		    		exito = true;
+		    		if(StringUtils.isBlank(smap1.get("codigoExterno"))){
+		    			smap1.put("codigoExterno", clientesRes.getClientesGeneral()[0].getNumeroExterno());
+		    			logger.debug("Codigo externo obtenido: " + clientesRes.getClientesGeneral()[0].getNumeroExterno());
+		    			
+		    			 params = new HashMap<String, String>();
+			    		 params.put("pv_cdperson_i", smap1.get("cdperson"));
+			    		 params.put("pv_swsalud_i"  , saludDanios);
+			    		 params.put("pv_cdideper_i"  , clientesRes.getClientesGeneral()[0].getNumeroExterno());
+			    		 
+			    		 personasManager.actualizaCodigoExterno(params);
+		    		}
+		    	}
+			}
+		
 		}
 		catch(Exception ex)
 		{

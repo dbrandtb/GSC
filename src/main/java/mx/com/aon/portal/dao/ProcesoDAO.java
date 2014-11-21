@@ -133,6 +133,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
     public static final String OBTIENE_DATOS_CLIENTE_GENERAL="OBTIENE_DATOS_CLIENTE_GENERAL";
+    public static final String OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON="OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON";
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
     public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
@@ -241,6 +242,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL, new ObtenDatosClienteGeneral(getDataSource()));
+        addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON, new ObtenDatosClienteGeneralXcdperson(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
@@ -3853,6 +3855,27 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	}
     }
 
+    protected class ObtenDatosClienteGeneralXcdperson extends CustomStoredProcedure {
+    	
+    	protected ObtenDatosClienteGeneralXcdperson(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_WS_CLIENTES_ART140");
+    		
+    		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClienteGeneralMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
     protected class ObtenDatosClienteGeneral extends CustomStoredProcedure {
     	
     	protected ObtenDatosClienteGeneral(DataSource dataSource) {

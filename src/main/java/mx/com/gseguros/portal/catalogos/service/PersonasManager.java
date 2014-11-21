@@ -11,6 +11,11 @@ public interface PersonasManager
 	 * @return exito,respuesta,respuestaOculta,itemMap
 	 */
 	public Map<String,Object> pantallaPersonas(String cdsisrol,long timestamp) throws Exception;
+
+	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception;
+
+	public void actualizaCodigoExterno(Map<String, String> params) throws Exception;
+	
 	/**
 	 * Buscar personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 * @return exito,respuesta,respuestaOculta,listaPersonas

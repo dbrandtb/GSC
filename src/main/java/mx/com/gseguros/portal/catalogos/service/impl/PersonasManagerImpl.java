@@ -124,6 +124,16 @@ public class PersonasManagerImpl implements PersonasManager
 		return result;
 	}
 	
+	@Override
+	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception{
+		return personasDAO.obtieneMunicipioYcolonia(params);
+	}
+
+	@Override
+	public void actualizaCodigoExterno(Map<String, String> params) throws Exception{
+		personasDAO.actualizaCodigoExterno(params);
+	}
+	
 	/**
 	 * Buscar personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
@@ -307,6 +317,22 @@ public class PersonasManagerImpl implements PersonasManager
 		String  respuesta       = null;
 		String  respuestaOculta = null;
 		String  cdpersonNuevo   = null;
+		
+		
+		if(exito&&StringUtils.isBlank(cdperson))
+		{
+			try
+			{
+				personasDAO.validaExisteRFC(cdrfc);
+			}
+			catch(Exception ex)
+			{
+				logger.error(timestamp+" Error al verificar persona existente",ex);
+				exito           = false;
+				respuesta       = ex.getMessage()+" #"+timestamp;
+				respuestaOculta = "sin respuesta oculta";
+			}
+		}
 		
 		if(exito&&StringUtils.isBlank(cdperson))
 		{

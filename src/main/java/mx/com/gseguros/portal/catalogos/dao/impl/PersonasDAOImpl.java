@@ -271,6 +271,27 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+
+	
+	@Override
+	public String validaExisteRFC(String cdrfc) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdrfc_i", cdrfc);
+		Map<String, Object> resultado = ejecutaSP(new ValidaExisteRFC(getDataSource()), params);
+		String res = (String)resultado.get("pv_title_o");
+		return res;
+	}
+	protected class ValidaExisteRFC extends StoredProcedure
+	{
+		protected ValidaExisteRFC(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES2.P_VALIDA_EXISTE_RFC");
+			declareParameter(new SqlOutParameter("pv_cdrfc_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	/**
 	 * movimientos de domicilio por cdperson de PKG_SATELITES.P_MOV_MDOMICIL
@@ -762,6 +783,48 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dsstatus_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception{
+		Map<String,Object>resultado=ejecutaSP(new ObtieneMunicipioYcolonia(getDataSource()), params);
+		logger.debug("resultado de municipio y colonia: " + resultado.get("pv_registro_o"));
+		return ((List<Map<String,String>>)resultado.get("pv_registro_o")).get(0);
+	}
+	
+	protected class ObtieneMunicipioYcolonia extends StoredProcedure
+	{
+		protected ObtieneMunicipioYcolonia(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_RECUPERA_MUNICIPIO_COLONIA");
+			declareParameter(new SqlParameter("pv_cdpostal_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdedo_i"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsmunici_i"    	, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dscoloni_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public void actualizaCodigoExterno(Map<String, String> params) throws Exception{
+		ejecutaSP(new ActualizaCodigoExterno(getDataSource()), params);
+	}
+	
+	protected class ActualizaCodigoExterno extends StoredProcedure
+	{
+		protected ActualizaCodigoExterno(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_CDIDEPER_ART140");
+			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideper_i"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swsalud_i"    	, OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

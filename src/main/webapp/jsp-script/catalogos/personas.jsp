@@ -35,6 +35,7 @@ var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionis
 var _UrlEliminaAccionistas = '<s:url namespace="/catalogos" action="eliminaAccionistas" />';
 
 var _UrlActualizaStatusPersona = '<s:url namespace="/catalogos" action="actualizaStatusPersona" />';
+var _UrlImportaPersonaWS = '<s:url namespace="/catalogos" action="importaPersonaExtWS" />';
 
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
@@ -61,6 +62,9 @@ debug('_p22_smap1:',_p22_smap1);
 var _p22_cdperson = false;
 var _p22_tipoPersona;
 var _p22_nacionalidad;
+var _CDIDEPERsel = '';
+var _CDIDEEXTsel = '';
+var _esSaludDanios;
 
 var _cargaCdPerson;
 
@@ -109,13 +113,31 @@ Ext.onReady(function()
 	        	     ,columns : 3
 	        	 }
 	        	 ,defaults    : { style : 'margin:5px;' }
-	        	 ,items       : [ {
+	        	 ,items       : [{
+	        	 					xtype: 'checkbox',
+	        	 					boxLabelAlign: 'before',
+	        	 					boxLabel: '&iquest;Compa&ntilde;ia de Salud?',
+	        	 					name: 'smap1.esSalud',
+	        	 					itemId: 'companiaId',
+	        	 					checked: true,
+	        	 					listeners: {
+	        	 						change: function(){
+	        	 								var form=_p22_formBusqueda();
+	        	 								form.down('[name=smap1.rfc]').reset();
+				                        		form.down('[name=smap1.nombre]').reset();
+	        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
+				                        		form.down('[name=smap1.nombre]').getStore().removeAll();
+	        	 						}
+	        	 					}
+	        	 				},{
 	        	 				xtype: 'combobox',
 								fieldLabel:'RFC',
 								labelWidth: 40,
-								width:    450,
+								width:    440,
 								queryParam  : 'smap1.rfc',
 								queryMode   : 'remote',
+								queryCaching: false,
+								allQuery    : 'dummyForAllQuery',
             					minChars    : 9,
 								minLength   : 2,
 //								queryDelay  : 500,
@@ -138,11 +160,16 @@ Ext.onReady(function()
 					            		_p22_cdperson = records[0].get('CDPERSON');
 					            		_p22_tipoPersona = records[0].get('OTFISJUR');
 					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		
+					            		_CDIDEPERsel = records[0].get('CDIDEPER');
+					            		_CDIDEEXTsel = records[0].get('CDIDEEXT');
+					            		_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; 
+					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar');
 					            	}, 
-					            	keydown: function(){
+					            	keydown: function( com, e, eOpts ){
 					            		_RFCsel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
@@ -173,11 +200,14 @@ Ext.onReady(function()
 					            						form.down('[name=smap1.rfc]').reset();
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
-				                        		}
+				                        		};
+				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
+				                        		Ext.ComponentQuery.query('#companiaId')[0].disable();
 				                        	},
 				                        	load      : function(){
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
+				                        		Ext.ComponentQuery.query('#companiaId')[0].enable();
 				                        	}
 				                        }
 					            })
@@ -186,9 +216,11 @@ Ext.onReady(function()
 								xtype: 'combobox',
 								fieldLabel:'Nombre',
 								labelWidth: 50,
-								width:    450,
+								width:    440,
 								queryParam  : 'smap1.nombre',
 								queryMode   : 'remote',
+								queryCaching: false,
+								allQuery    : 'dummyForAllQuery',
             					minChars    : 2,
 								minLength   : 2,
 								name          : 'smap1.nombre',
@@ -210,6 +242,11 @@ Ext.onReady(function()
 					            		_p22_cdperson = records[0].get('CDPERSON');
 					            		_p22_tipoPersona = records[0].get('OTFISJUR');
 					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		
+					            		_CDIDEPERsel = records[0].get('CDIDEPER');
+					            		_CDIDEEXTsel = records[0].get('CDIDEEXT');
+					            		_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; 
+					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar');
@@ -235,10 +272,8 @@ Ext.onReady(function()
 				                        ,listeners: {
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
-				                        			
+				                        			debug('op:',op);
 				                        			var jsonResponse = Ext.decode(op.response.responseText);
-//				                        			debug(typeof jsonResponse.exito);
-//				                        			debug(jsonResponse.exito);
 				                        			if(!jsonResponse.exito){
 				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
 				                        				var form=_p22_formBusqueda();
@@ -246,6 +281,7 @@ Ext.onReady(function()
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		}
+				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
 				                        	},
 				                        	load      : function(){
@@ -298,13 +334,17 @@ Ext.onReady(function()
 											_p22_formDatosGenerales().hide();
 								    		_p22_formDomicilio().hide();
 								    		_p22_principalDatosAdicionales().hide();
+								    		_fieldByName('CDMUNICI').setFieldLabel("MUNICIPIO");
+											_fieldByName('CDCOLONI').setFieldLabel("COLONIA");
 											
 								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
 								    		if("1" == _p22_cdperson){
-								    			importaPersonaWS();
+								    			importaPersonaWS( _esSaludDanios , (_esSaludDanios == 'S') ? _CDIDEEXTsel : _CDIDEPERsel );
+								    			return;
 								    		}
 								    		
 								    		form.down('[name=smap1.rfc]').reset();
+								    		form.down('[name=smap1.nombre]').reset();
 											irModoEdicion();
 											
 										}else if(!Ext.isEmpty(valorRFC)){
@@ -321,6 +361,8 @@ Ext.onReady(function()
 										    
 											_p22_fieldRFC().setValue(valorRFC);
 											form.down('[name=smap1.rfc]').reset();
+											form.down('[name=smap1.nombre]').reset();
+											_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D';
 											irModoAgregar();
 											
 										}else if(!Ext.isEmpty(valorNombre)){
@@ -572,171 +614,67 @@ Ext.onReady(function()
 		}
     }
     
-    function importaPersonaWS(){
+function importaPersonaWS(esSaludD, codigoCliExt){
     	
-    	alert(_p22_tipoPersona);
-    	var windowTipo;
-    	var panelTipoPer = Ext.create('Ext.form.Panel', {
-		    defaults : { style : 'margin:5px;' },
-		    items: [{	xtype: 'combobox',
-						fieldLabel:'Tipo de persona',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						readOnly: true,
-						value: _p22_tipoPersona,
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'TIPOS_PERSONA'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldTipoPersona().setValue(records[0]);
-							}
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'C&uacute;mulo de prima',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						readOnly: true,
-						value: _p22_nacionalidad,
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'TCUMULOS'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldCumuloPrima().setValue(records[0]);
-							}
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'Nacionalidad',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'NACIONALIDAD'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fielCdNacion().setValue(records[0]);
-							},
-							change:  _p22_nacionalidadChange2
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'Residente',
-						name: 'RESIDENTE2',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:'/gseguros/catalogos/obtieneCatalogo.action',
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'TIPO_RESIDENCIA'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldResidente().setValue(records[0]);
-							}
-						}
-					}],
-		    buttons: [{
-		        text: 'Cancelar',
-		        handler: function() {
-		            this.up('form').getForm().reset();
-		            windowTipo.close();
-		        }
-		    }, {
-		        text: 'Aceptar',
-		        formBind: true, //only enabled once the form is valid
-		        disabled: true,
-		        handler: function() {
-		            var form = this.up('form').getForm();
-		            if (form.isValid()) {
-		            	
-		            	if(!validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue())){
-		            		return;
-		            	}
-		            	
-		                _p22_formDatosGenerales().show();
-		                _p22_formDomicilio().show();
-		                _p22_principalDatosAdicionales().show();
-		                windowTipo.close();
+    Ext.Ajax.request(
+	        {
+	            url       : _UrlImportaPersonaWS
+	            ,params: {
+            		'params.esSalud':  esSaludD,
+            		'params.codigoCliExt':  codigoCliExt
+            	}
+	            ,success  : function(response)
+	            {
+	                //_p22_formDatosAdicionales().setLoading(false);
+	                var json = Ext.decode(response.responseText);
+	                debug('response text:',json);
+	                if(json.exito)
+	                {
+	                	if(esSaludD == 'S'){
+	                		_CDIDEEXTsel = json.params.codigoExterno;
+	                	}else{
+	                		_CDIDEPERsel = json.params.codigoExterno;
+	                	}
+	                	
+		                _p22_cdperson = json.params.cdperson;
 		                
-		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
-		            }
-		        }
-		    }]
-		});
-		
-		
-		windowTipo = Ext.create('Ext.window.Window', {
-			title: 'Elija el tipo de persona',
-		    height: 200,
-		    width: 300,
-		    closable: false,
-		    items: [panelTipoPer]
-		}).show();
-		centrarVentanaInterna(windowTipo);
-    	
+						var form=_p22_formBusqueda();
+						form.down('[name=smap1.rfc]').reset();
+						form.down('[name=smap1.nombre]').reset();
+						
+						_fieldByName('CDMUNICI').setFieldLabel(_fieldByName('CDMUNICI').getFieldLabel()+" "+json.params.municipioImp);
+						_fieldByName('CDCOLONI').setFieldLabel(_fieldByName('CDCOLONI').getFieldLabel()+" "+json.params.coloniaImp);
+						
+						irModoEdicion();
+	                }
+	                else
+	                {
+	                    mensajeError("Error al Editar Cliente, vuelva a intentarlo.");
+	                }
+	            }
+	            ,failure  : function()
+	            {
+	                errorComunicacion();
+	            }
+	});
+    
     }
     
+    //_fieldByName('CDMUNICI').forceSelection = false;
+	_fieldByName('CDCOLONI').forceSelection = false;
+	_fieldByName('CDCOLONI').on({
+			change: function(me, val){
+    				try{
+	    				if('string' == typeof val){
+	    					debug('mayus de '+val);
+	    					me.setValue(val.toUpperCase());
+	    				}
+    				}
+    				catch(e){
+    					debug(e);
+    				}
+			}
+	});
     
     if(!Ext.isEmpty(_cargaCdPerson)){
     	
@@ -756,7 +694,7 @@ function _p22_formBusqueda()
 	return Ext.ComponentQuery.query('#_p22_formBusqueda')[0];
 }
 
-function _p22_heredarColonia()
+function _p22_heredarColonia(callbackload)
 {
     debug('>_p22_heredarColonia');
     var comboColonias  = _p22_comboColonias();
@@ -784,6 +722,10 @@ function _p22_heredarColonia()
             {
                 comboColonias.setValue('');
             }
+            if(!Ext.isEmpty(callbackload)){
+            	callbackload();	
+            }
+            
         }
     });
     debug('<_p22_heredarColonia');
@@ -959,7 +901,15 @@ function _p22_loadRecordCdperson(callbackload)
 			                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
 			                heredarPanel(_p22_formDomicilio());
 			                
-			                callbackload();
+			                var valor = _fieldByName('CDCOLONI').getValue();
+                    		_p22_heredarColonia(function(){
+                    				_fieldByName('CDCOLONI').setValue(valor);
+                    			}
+                    		);
+			                
+			                if(!Ext.isEmpty(callbackload)){
+			                	callbackload();
+			                }
 			            }
 			            else
 			            {
@@ -1053,6 +1003,10 @@ function _p22_guardarClic(callback, autosave)
             {
                 smap1  : _p22_formDatosGenerales().getValues()
                 ,smap2 : _p22_formDomicilio().getValues()
+                /*,params: {
+                	esSalud: _esSaludDanios,
+                	
+                }*/
             }
             ,success : function(response)
             {
@@ -1062,7 +1016,9 @@ function _p22_guardarClic(callback, autosave)
                 if(json.exito)
                 {
                     _p22_fieldCdperson().setValue(json.smap1.CDPERSON);
-                    if(callback)
+                    _p22_cdperson = json.smap1.CDPERSON;
+                    
+                    if(!Ext.isEmpty(callback))
                     {
                         callback();
                     }
@@ -1509,12 +1465,18 @@ function _p22_guardarDatosAdicionalesClic()
         _p22_formDatosAdicionales().setLoading(true);
         var jsonData = _p22_formDatosAdicionales().getValues();
         jsonData['cdperson'] = _p22_fieldCdperson().getValue();
+        jsonData['esSalud'] = _esSaludDanios;
+        jsonData['codigoExterno'] = (_esSaludDanios=='S')?_CDIDEEXTsel:_CDIDEPERsel;
+        jsonData['codigoExterno2'] = (_esSaludDanios=='S')?_CDIDEPERsel:_CDIDEEXTsel;
+        
         Ext.Ajax.request(
         {
             url       : _p22_urlGuadarTvaloper
             ,jsonData :
             {
-                smap1 : jsonData
+                smap1 : jsonData,
+                smap2  : _p22_formDatosGenerales().getValues(),
+                params : _p22_formDomicilio().getValues()
             }
             ,success  : function(response)
             {
@@ -1523,7 +1485,23 @@ function _p22_guardarDatosAdicionalesClic()
                 debug('response text:',json);
                 if(json.exito)
                 {
-                    mensajeCorrecto('Datos guardados',json.respuesta);                
+                    mensajeCorrecto('Datos guardados',json.respuesta);
+                    
+                    
+                    	if(_esSaludDanios == 'S'){
+                    		_CDIDEEXTsel = json.smap1.codigoExterno;
+	                	}else{
+							_CDIDEPERsel = json.smap1.codigoExterno;
+	                	}
+                    
+	                	_p22_loadRecordCdperson(function(){
+								var valor = _fieldByName('CDCOLONI').getValue();
+			                    _p22_heredarColonia(function(){
+			                    			_fieldByName('CDCOLONI').setValue(valor);
+			                    		}
+			                    );	                		
+	                		}
+	                	);
                 }
                 else
                 {

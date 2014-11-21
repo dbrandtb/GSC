@@ -102,7 +102,7 @@ public interface Ice2sigsService {
 	 * @return
 	 */
 	public ClienteGeneralRespuesta ejecutaWSclienteGeneral(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdperson,
 			Ice2sigsService.Operacion op, ClienteGeneral cliente, UserVO userVO, boolean async);
 	
 	
