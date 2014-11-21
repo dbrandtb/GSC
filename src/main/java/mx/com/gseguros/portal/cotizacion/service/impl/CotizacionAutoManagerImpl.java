@@ -1058,34 +1058,37 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			else
 			{
+				/*comodin 1/2
 				setCheckpoint("Buscando comodin por modelo");
 				boolean comodin = false;
 				for(Map<String,String>atrixant:latrixant)
 				{
-					if(atrixant.get("cdatribu").equals("-1")&&atrixant.get("aplica").equals("1"))
+					if(atrixant.get("cdatribu").equals("-1"))
 					{
 						comodin = true;
 					}
 				}
 				logger.debug(new StringBuilder("comodin=").append(comodin).toString());
 				
-				if(!comodin)
+				if(!comodin||true)
 				{
-					setCheckpoint("Procesando parametrizacion por modelo");
-					for(Map<String,String>atrixant:latrixant)
+				*/
+				setCheckpoint("Procesando parametrizacion por modelo");
+				for(Map<String,String>atrixant:latrixant)
+				{
+					String cdatribu = atrixant.get("cdatribu");
+					String aplica   = atrixant.get("aplica");
+					String valor    = atrixant.get("valor");
+					if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
 					{
-						String cdatribu = atrixant.get("cdatribu");
-						String aplica   = atrixant.get("aplica");
-						String valor    = atrixant.get("valor");
-						if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
-						{
-							atributos.get(cdatribu).put("aplica" , aplica);
-							atributos.get(cdatribu).put("valor"  , valor);
-						}
+						atributos.get(cdatribu).put("aplica" , aplica);
+						atributos.get(cdatribu).put("valor"  , valor);
 					}
-					logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 				}
-				
+				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+				/*comodin 2/2
+				}
+				*/
 				setCheckpoint("Procesando parametrizacion por tipo de persona");
 				for(Map<String,String>atrixper:latrixper)
 				{
@@ -1204,11 +1207,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			
 			setCheckpoint("Recuperando atributos variables");//////
-			List<ComponenteVO>panel1=new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel2=new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel3=new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel5=new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel6=new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel1   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel2   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel3   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel5   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>panel6   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>gridCols = new ArrayList<ComponenteVO>();
 			
 			List<ComponenteVO>tatrisit = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
 			
@@ -1227,6 +1231,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			setCheckpoint("Organizando atributos");
 			for(ComponenteVO tatri:tatrisit)
 			{
+				if(tatri.getColumna().equals("S")
+						&&tatri.getSwpresen().equals("S")
+						)
+				{
+					if(tatri.getCotflotrol().equals("*"))
+					{
+						gridCols.add(tatri);
+					}
+					else if(tatri.getCotflotrol().lastIndexOf(new StringBuilder("|").append(cdsisrol).append("|").toString())!=-1)
+					{
+						gridCols.add(tatri);
+					}
+				}
+				
 				if(tatri.getNmpanelflot().equals("1"))
 				{
 					panel1.add(tatri);
@@ -1253,6 +1271,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
+			
+			gc.generaComponentes(gridCols, true, false, true, true, true, false);
+			resp.getImap().put("gridCols" , gc.getColumns());
 			
 			gc.generaComponentes(panel1, true, false, true, false, false, false);
 			resp.getImap().put("panel1Items"  , gc.getItems());

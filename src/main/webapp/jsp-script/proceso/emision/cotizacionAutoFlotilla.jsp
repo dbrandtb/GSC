@@ -16,9 +16,43 @@ var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false
 debug('_p30_smap1:',_p30_smap1);
 
 var _p30_windowAuto = null;
+var _p30_store      = null;
 ////// variables //////
 
 ////// dinamicos //////
+var _p30_gridColsConf =
+[
+    <s:if test='%{getImap().get("gridCols")!=null}'>
+        <s:property value="imap.gridCols" />
+    </s:if>
+];
+var _p30_gridCols =
+[
+    { xtype : 'rownumberer' }
+];
+for(var i=0;i<_p30_gridColsConf.length;i++)
+{
+    _p30_gridCols.push(_p30_gridColsConf[i]);
+}
+_p30_gridCols.push(
+{
+    xtype  : 'actioncolumn'
+    ,items :
+    [
+        {
+            tooltip  : 'Configurar plan'
+            ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
+            ,handler : _p30_gridBotonConfigClic
+        }
+        ,{
+            tooltip  : 'Eliminar'
+            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler : _p30_gridBotonEliminarClic
+        }
+    ]
+}
+);
+
 var _p30_panel1ItemsConf =
 [
     <s:if test='%{getImap().get("panel1Items")!=null}'>
@@ -101,8 +135,9 @@ var _p30_paneles  = [];
 var _p30_gridTbarItems =
 [
     {
-        text  : 'Agregar'
-        ,icon : '${ctx}/resources/fam3icons/icons/add.png'
+        text     : 'Agregar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+        ,handler : function(){_p30_agregarAuto();}
     }
     ,'->'
 ];
@@ -151,7 +186,8 @@ Ext.onReady(function()
 	////// modelos //////
 	Ext.define('_p30_modelo',
 	{
-	    fields :
+	    extend  : 'Ext.data.Model'
+	    ,fields :
 	    [
 	         'parametros.pv_otvalor01','parametros.pv_otvalor02','parametros.pv_otvalor03','parametros.pv_otvalor04','parametros.pv_otvalor05'
             ,'parametros.pv_otvalor06','parametros.pv_otvalor07','parametros.pv_otvalor08','parametros.pv_otvalor09','parametros.pv_otvalor10'
@@ -163,11 +199,16 @@ Ext.onReady(function()
             ,'parametros.pv_otvalor36','parametros.pv_otvalor37','parametros.pv_otvalor38','parametros.pv_otvalor39','parametros.pv_otvalor40'
             ,'parametros.pv_otvalor41','parametros.pv_otvalor42','parametros.pv_otvalor43','parametros.pv_otvalor44','parametros.pv_otvalor45'
             ,'parametros.pv_otvalor46','parametros.pv_otvalor47','parametros.pv_otvalor48','parametros.pv_otvalor49','parametros.pv_otvalor50'
+            ,'cdplan','cdtipsit'
         ]
 	});
 	////// modelos //////
 	
 	////// stores //////
+	_p30_store = Ext.create('Ext.data.Store',
+	{
+	    model : '_p30_modelo'
+	});
 	////// stores //////
 	
 	////// componentes //////
@@ -260,11 +301,18 @@ Ext.onReady(function()
 	        })
 	        ,Ext.create('Ext.grid.Panel',
 	        {
-	            itemId   : '_p30_grid'
-	            ,title   : 'INCISOS'
-	            ,tbar    : _p30_gridTbarItems
-	            ,columns : []
-	            ,height  : 350
+	            itemId      : '_p30_grid'
+	            ,title      : 'INCISOS'
+	            ,tbar       : _p30_gridTbarItems
+	            ,columns    : _p30_gridCols
+	            ,height     : 350
+	            ,viewConfig : viewConfigAutoSize
+	            ,store      : _p30_store
+	            ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
+	            {
+	                clicksToEdit  : 1
+	                ,errorSummary : false
+                })
 	        })
 	    ]
 	});
@@ -367,6 +415,25 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
     _p30_paneles[cdtipsit].title=titulo;
     centrarVentanaInterna(_p30_paneles[cdtipsit].show());
     debug('<_p30_configuracionPanelDinClic');
+}
+
+function _p30_agregarAuto()
+{
+    debug('>_p30_agregarAuto');
+    _p30_store.add(new _p30_modelo());
+    debug('<_p30_agregarAuto');
+}
+
+function _p30_gridBotonConfigClic(view,row,col,item,e,record)
+{
+    debug('>_p30_gridBotonConfigClic:',record);
+    debug('<_p30_gridBotonConfigClic');
+}
+
+function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
+{
+    debug('>_p30_gridBotonEliminarClic:',record);
+    debug('<_p30_gridBotonEliminarClic');
 }
 ////// funciones //////
 </script>
