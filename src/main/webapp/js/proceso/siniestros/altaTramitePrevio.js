@@ -427,7 +427,7 @@ Ext.onReady(function() {
 				 	},
 				 	{
 						header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2,  allowBlank: false
-						,editor : cmbTipoMoneda
+						//,editor : cmbTipoMoneda
 						,renderer : function(v) {
 						var leyenda = '';
 							if (typeof v == 'string')// tengo solo el indice
@@ -452,15 +452,9 @@ Ext.onReady(function() {
 				 	,
 				 	{
 					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
-					 	,editor: {
-				                xtype: 'textfield'
-			            }
 				 	},
 				 	{
 					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
-					 	,editor: {
-				                xtype: 'textfield'
-			            }
 				 	},
 				 	{
 					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
@@ -545,17 +539,12 @@ Ext.onReady(function() {
 							if (typeof v == 'string')// tengo solo el indice
 							{
 								storeProveedor.each(function(rec) {
-									debug("VALOR DE REC");
-									debug(rec);
-									debug(v);
 									if (rec.data.cdpresta == v) {
 										leyenda = rec.data.nombre;
 									}
 								});
 							}else // tengo objeto que puede venir como Generic u otro mas complejo
 							{
-								debug("VALOR DE V");
-								debug(v);
 								if (v.key && v.value)
 								{
 									leyenda = v.value;
@@ -631,7 +620,7 @@ Ext.onReady(function() {
 		 		tbar: [
 			 		{
 	                    text     : 'Agregar Factura'
-	                    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
 	                    //,hidden  : _p21_ntramite ? true : false
 	                }

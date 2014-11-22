@@ -4946,6 +4946,67 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
+    public String validarFacturaAsegurado()
+    {
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### valida Factura-Asegurado ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug("smap:"+smap);
+    	try
+    	{
+    		String tipoPagoTramite = smap.get("tipoPago");
+    		String faltaAsegurados="";
+    		String validacionAseg=null;
+    		boolean faltaFacturas=true;
+    		
+    		
+    		boolean esReembolso = tipoPagoTramite.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
+			if(esReembolso)
+			{
+				validacionAseg= "0";
+			}else{
+				List<Map<String,String>> facturas=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
+	    		for(Map<String,String>factura:facturas)
+	    		{
+	    			List<Map<String,String>> asegurados =siniestrosManager.obtenerAseguradosTramite(factura.get("NTRAMITE"), factura.get("NFACTURA"));
+	    			if(asegurados.size() <= 0){
+	    				faltaFacturas= false;
+	    				faltaAsegurados = faltaAsegurados +" "+factura.get("NFACTURA");
+	    			}
+	    		}
+	    		if(faltaFacturas){
+	    			validacionAseg= "0";
+	    		}else{
+	    			validacionAseg="1";
+	    		}
+			}
+			
+			loadList = new ArrayList<HashMap<String,String>>();
+	   		HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("faltaAsegurados"   ,validacionAseg );
+	   			map.put("facturasFaltantes" , faltaAsegurados);
+	   		loadList.add(map);
+			success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al obtener facturas de tramite",ex);
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### valida Factura-Asegurado ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    
     public String obtenerAseguradosTramite()
     {
     	logger.debug(""

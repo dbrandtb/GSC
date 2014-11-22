@@ -43,13 +43,14 @@
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
             var _URL_GUARDA_FACTURA_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardaFacturaAltaTramite"/>';
             var _URL_CONSULTA_FACTURAS       		= '<s:url namespace="/siniestros"		action="obtenerFacturasTramite" />';
+            var _URL_VALIDA_FACTURAASEGURADO  		= '<s:url namespace="/siniestros"		action="validarFacturaAsegurado" />';
             var _URL_ASEGURADO_FACTURA				= '<s:url namespace="/siniestros" 		action="obtenerAseguradosTramite" />';
             var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaTworksin" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"		action="includes/historialReclamaciones" />';
             var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
             var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
             var _URL_ActualizaStatusTramite			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite" />';
-            var _URL_ActualizaStatusTramite2			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite2" />';
+            var _URL_TurnarAOperadorReclamacion		= '<s:url namespace="/mesacontrol"	action="turnarAOperadorReclamacion" />';
             var _UrlGeneraSiniestroTramite			= '<s:url namespace="/siniestros"		action="generaSiniestroTramite" />';
             var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros"		action="validaDocumentosCargados" />';
             var _URL_ListaRechazos					= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';

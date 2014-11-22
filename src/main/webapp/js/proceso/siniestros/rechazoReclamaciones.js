@@ -6,7 +6,7 @@ Ext.onReady(function() {
 	Ext.define('modeloRechazos',{
         extend: 'Ext.data.Model',
         fields: [{type:'string',    name:'key'},
-                 {type:'string',    name:'value'},
+                 {type:'string',    name:'value'}
 				]
     });
 	
@@ -26,7 +26,7 @@ Ext.onReady(function() {
 	 Ext.define('modeloIncisosRechazos',{
 		 extend: 'Ext.data.Model',
 		 fields: [{type:'string',    name:'key'},
-		          {type:'string',    name:'value'},
+		          {type:'string',    name:'value'}
 		          ]
 	 });
 	 
@@ -130,7 +130,7 @@ Ext.onReady(function() {
     		        	waitMsg:'Procesando...',			
     		        	params: {
     		        		'smap1.ntramite' : _nmTramite, 
-    		        		'smap1.status'   : 4,
+    		        		'smap1.status'   : 4
     		        	},
     		        	failure: function(form, action) {
     		        		Ext.Msg.show({
