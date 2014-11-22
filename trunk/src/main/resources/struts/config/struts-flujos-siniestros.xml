@@ -741,6 +741,10 @@
             <result type="json"></result>
         </action>
         
+        <action name="validarFacturaAsegurado" class="siniestrosAction" method="validarFacturaAsegurado">
+            <result type="json"></result>
+        </action>
+        
         <action name="obtenerAseguradosTramite" class="siniestrosAction" method="obtenerAseguradosTramite">
             <result type="json"></result>
         </action>

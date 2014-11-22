@@ -408,13 +408,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	////////////////////////////////////////////////
 	////// actualizar status de tramite de mc //////
 	/*////////////////////////////////////////////*/
-	public String actualizarStatusTramite2()
+	public String turnarAOperadorReclamacion()
 	{
 		log.debug(""
-				+ "\n#####################################"
-				+ "\n#####################################"
-				+ "\n###### actualizarStatusTramite ######"
-				+ "\n######                         ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### turnar a Operador de Reclamaciones ######"
+				+ "\n######                         		   ######"
 				);
 		log.debug("smap1: "+smap1);
 		try
@@ -441,10 +441,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			mensaje=ex.getMessage();
 		}
 		log.debug(""
-				+ "\n######                         ######"
-				+ "\n###### actualizarStatusTramite ######"
-				+ "\n#####################################"
-				+ "\n#####################################"
+				+ "\n######                         		   ######"
+				+ "\n###### Turnar a operador de Reclamaciones ######"
+				+ "\n################################################"
+				+ "\n################################################"
 				);
 		return SUCCESS;
 	}
