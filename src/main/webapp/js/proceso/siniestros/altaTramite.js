@@ -331,10 +331,9 @@ Ext.onReady(function() {
 	
 	var comboTipoAte= Ext.create('Ext.form.ComboBox',
 	{
-		name:'cmbTipoAtencion',				fieldLabel: 'Tipo atenci&oacute;n',	queryMode:'local',
-		displayField: 'value',				valueField: 'key',					editable:false,
-		allowBlank : false,					width		 : 350,					emptyText:'Seleccione...',
-		store: storeTipoAtencion
+		name:'cmbTipoAtencion',			fieldLabel: 'Tipo atenci&oacute;n',		allowBlank : false,		editable:true,
+		displayField: 'value',			emptyText:'Seleccione...',				valueField: 'key',		forceSelection : true,
+		width		 : 350,				queryMode:'local',				store: storeTipoAtencion
 	});
 
 	var tipoPago= Ext.create('Ext.form.ComboBox',
