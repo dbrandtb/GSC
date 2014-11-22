@@ -247,6 +247,13 @@ Ext.onReady(function() {
         width		 : 300,						queryMode      :'local',				store        : oficinaEmisora
 	});
 	
+	var comboTipoAte= Ext.create('Ext.form.ComboBox',
+    {
+        name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:true,
+        displayField: 'value',					emptyText:'Seleccione...',			valueField: 'key',			forceSelection : true,
+        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion
+    });
+    
     cmbRamos = Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
@@ -265,14 +272,7 @@ Ext.onReady(function() {
     	}
 	});
 	
-	var comboTipoAte= Ext.create('Ext.form.ComboBox',
-    {
-        name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:false,
-        displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
-        width		 : 300,						store: storeTipoAtencion
-    });
-    
-    var tipoPago= Ext.create('Ext.form.ComboBox',
+	var tipoPago= Ext.create('Ext.form.ComboBox',
     {
     	name:'cmbTipoPago',						fieldLabel: 'Tipo pago',			allowBlank:false,			editable:false,
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
