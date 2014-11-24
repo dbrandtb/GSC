@@ -588,7 +588,7 @@ Ext.onReady(function()
 ////// funciones //////
 function _p28_cotizar(sinTarificar)
 {
-    debug('>_p28_cotizar');
+    debug('>_p28_cotizar sintarifa:',sinTarificar,'DUMMY');
     
     var panelpri = _fieldById('_p28_panelpri');
     var form     = _fieldById('_p28_form');
@@ -1535,7 +1535,7 @@ function _p28_cargar(boton)
                                                 combcl.semaforo = false;
                                             }
                                         }
-                                        _p28_cotizar(true);
+                                        _p28_cotizar(!maestra);
                                     });
                                     
                                     if(_p28_smap1.cdsisrol=='SUSCRIAUTO')

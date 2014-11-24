@@ -498,10 +498,11 @@ function _p29_mostrarVistaPrevia()
         url     : _p29_urlRecotizar
         ,params :
         {
-            cdunieco           : _p29_smap1.cdunieco
-            ,cdramo            : _p29_smap1.cdramo
-            ,cdtipsit          : _p29_smap1.cdtipsit
-            ,'panel1.nmpoliza' : _p29_smap1.nmpoliza
+            cdunieco             : _p29_smap1.cdunieco
+            ,cdramo              : _p29_smap1.cdramo
+            ,cdtipsit            : _p29_smap1.cdtipsit
+            ,'panel1.nmpoliza'   : _p29_smap1.nmpoliza
+            ,'panel1.notarifica' : 'si'
         }
         ,success : function(response)
         {
