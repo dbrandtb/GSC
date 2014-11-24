@@ -193,7 +193,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdusuari = usu.getUser();
 			smap1.put("pv_cdrol_i",cdsisrol);
 			smap1.put("pv_cdusuari_i",cdusuari);
-			if(cdsisrol.equalsIgnoreCase("operadorsini")||cdsisrol.equalsIgnoreCase("medajustador"))
+			if(cdsisrol.equalsIgnoreCase("operadorsini")||cdsisrol.equalsIgnoreCase("medajustador")||cdsisrol.equalsIgnoreCase("mcsiniestros"))
 			{
 				slist1=kernelManager.loadMesaControlUsuario(smap1);
 			}
