@@ -65,6 +65,7 @@ public class ComponenteVO
 	private String nmpanelcoti  = null;
 	private String nmpanelflot  = null;
 	private String cotflotrol   = null;
+	private String swpresenflot = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -512,5 +513,13 @@ public class ComponenteVO
 
 	public void setCotflotrol(String cotflotrol) {
 		this.cotflotrol = cotflotrol;
+	}
+
+	public String getSwpresenflot() {
+		return swpresenflot;
+	}
+
+	public void setSwpresenflot(String swpresenflot) {
+		this.swpresenflot = swpresenflot;
 	}
 }

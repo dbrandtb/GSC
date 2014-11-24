@@ -3611,4 +3611,63 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>cargarDatosVehiculoRamo5(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws ApplicationException, Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_DATOS_AUTO_RAMO_5 ******")
+				.append("\n****** params=")  .append(params)
+				.append("\n**************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new CargarDatosVehiculoRamo5(getDataSource()),params);
+		List<Map<String,String>>aux  = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(aux==null||aux.size()==0)
+		{
+			throw new ApplicationException("No se encontraron datos del auto");
+		}
+		else if(aux.size()>1)
+		{
+			throw new ApplicationException("Datos del auto duplicados");
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** params=")  .append(params)
+				.append("\n****** registro=").append(aux.get(0))
+				.append("\n****** PKG_CONSULTA.P_GET_DATOS_AUTO_RAMO_5 ******")
+				.append("\n**************************************************")
+				.toString()
+				);
+		return aux.get(0);
+	}
+	
+	protected class CargarDatosVehiculoRamo5 extends StoredProcedure
+	{
+		protected CargarDatosVehiculoRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_AUTO_RAMO_5");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{"datos"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

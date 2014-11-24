@@ -148,6 +148,8 @@ public class ObtieneTatrisitMapper implements RowMapper
 		}
 		result.setCotflotrol(colflotrol);
 
+		result.setSwpresenflot(rs.getString("SWPRESENFLOT"));
+
 		return result;
 	}
 }

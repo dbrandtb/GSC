@@ -9,6 +9,7 @@
 ////// overrides //////
 
 ////// urls //////
+var _p30_urlCargarSumaAseguradaRamo5 = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5" />';
 ////// urls //////
 
 ////// variables //////
@@ -34,12 +35,24 @@ for(var i=0;i<_p30_gridColsConf.length;i++)
 {
     _p30_gridCols.push(_p30_gridColsConf[i]);
 }
+for(var i=0;i<_p30_gridCols.length;i++)
+{
+    if(!Ext.isEmpty(_p30_gridCols[i].editor)&&_p30_gridCols[i].editor.readOnly)
+    {
+        _p30_gridCols[i].editor='';
+    }
+}
 _p30_gridCols.push(
 {
     xtype  : 'actioncolumn'
     ,items :
     [
         {
+            tooltip  : 'Seleccionar auto'
+            ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
+            ,handler : _p30_gridBotonAutoClic
+        }
+        ,{
             tooltip  : 'Configurar plan'
             ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
             ,handler : _p30_gridBotonConfigClic
@@ -334,8 +347,9 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Aceptar'
-                        ,icon : '${ctx}/resources/fam3icons/icons/accept.png'
+                        text     : 'Aceptar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                        ,handler : _p30_windowAutoAceptarClic
                     }
                     ,{
                         text     : 'Cancelar'
@@ -346,8 +360,6 @@ Ext.onReady(function()
 	        })
 	    ]
 	});
-	
-	centrarVentanaInterna(_p30_windowAuto.show());
 	////// contenido //////
 	
 	////// custom //////
@@ -380,6 +392,13 @@ Ext.onReady(function()
         });
         
         _p30_calculaVigencia();
+        
+        //clave gs
+        _fieldByName('parametros.pv_otvalor06',_p30_windowAuto).on(
+        {
+            select : function(combo,records){ _p30_herenciaDescendiente(records[0]); }
+        });
+        //clave gs
     }
     //ramo 5
 	
@@ -433,7 +452,146 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
 function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
 {
     debug('>_p30_gridBotonEliminarClic:',record);
+    _p30_store.remove(record);
     debug('<_p30_gridBotonEliminarClic');
+}
+
+function _p30_gridBotonAutoClic(grid,row,col,item,e,record)
+{
+    debug('>_p30_gridBotonAutoClic:',record);
+    var cdtipsit = record.get('cdtipsit');
+    
+    var valido = !Ext.isEmpty(cdtipsit);
+    if(!valido)
+    {
+        mensajeWarning('Debe seleccionar el tipo de veh&iacute;culo');
+    }
+    
+    if(valido)
+    {
+        _p30_selectAuto(record.data,function(datos)
+        {
+            grid.editingPlugin.cancelEdit();
+            debug('datos:',datos);
+            for(var i in datos)
+            {
+                record.set(i,datos[i]);
+            }
+            debug('record:',record);
+        });
+    }
+    
+    debug('<_p30_gridBotonAutoClic');
+}
+
+function _p30_selectAuto(datos,callback)
+{
+    debug('>_p30_selectAuto:',datos);
+    _p30_windowAuto.miCallback=callback;
+    centrarVentanaInterna(_p30_windowAuto.show());
+    debug('<_p30_selectAuto');
+}
+
+function _p30_herenciaDescendiente(record)
+{
+    var marca    = _fieldByLabel('MARCA'    , _p30_windowAuto);
+    var submarca = _fieldByLabel('SUBMARCA' , _p30_windowAuto);
+    var modelo   = _fieldByLabel('MODELO'   , _p30_windowAuto);
+    var version  = _fieldLikeLabel('VERSI'  , _p30_windowAuto);
+    debug('>_p30_herenciaDescendiente');
+    //var record = clave.findRecord('key',clave.getValue());
+    debug('record:',record);
+    var splitted=record.get('value').split(' - ');
+    debug('splitted:',splitted);
+    var clavev    = splitted[0];
+    var marcav    = splitted[1];
+    var submarcav = splitted[2];
+    var modelov   = splitted[3];
+    var versionv  = splitted[4];
+    
+    marca.setValue(marca.findRecord('value',marcav));
+    submarca.heredar(true,function()
+    {
+        submarca.setValue(submarca.findRecord('value',submarcav));
+        modelo.heredar(true,function()
+        {
+            modelo.setValue(modelo.findRecord('value',modelov));
+            version.getStore().load(
+            {
+                params :
+                {
+                    'params.submarca' : submarca.getValue()
+                    ,'params.modelo'  : modelo.getValue()
+                }
+                ,callback : function()
+                {
+                    version.setValue(version.findRecord('value',versionv));
+                    _p30_cargarSumaAseguradaRamo5();
+                }
+            });
+        });
+    });
+    
+    debug('<_p30_herenciaDescendiente');
+}
+
+function _p30_cargarSumaAseguradaRamo5(callback)
+{
+    debug('>_p30_cargarSumaAseguradaRamo5');
+    _p30_windowAuto.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p30_urlCargarSumaAseguradaRamo5
+        ,params  :
+        {
+            'smap1.cdtipsit'  : _p30_smap1.cdtipsit
+            ,'smap1.clave'    : _fieldLikeLabel('VERSI',_p30_windowAuto).getValue()
+            ,'smap1.modelo'   : _fieldByLabel('MODELO',_p30_windowAuto).getValue()
+            ,'smap1.cdsisrol' : _p30_smap1.cdsisrol
+        }
+        ,success : function(response)
+        {
+            _p30_windowAuto.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### cargar suma asegurada:',json);
+            if(json.exito)
+            {
+                var sumaseg = _fieldByName('parametros.pv_otvalor13',_p30_windowAuto);
+                sumaseg.setValue(json.smap1.sumaseg);
+                sumaseg.valorCargado=json.smap1.sumaseg;
+                /*_p28_cargarRangoValorRamo5(callback);*/
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }           
+        }
+        ,failure : function()
+        {
+            _p30_windowAuto.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p30_cargarSumaAseguradaRamo5');
+}
+
+function _p30_windowAutoAceptarClic(me)
+{
+    debug('>_p30_windowAutoAceptarClic');
+    var form   = _fieldById('_p30_formAuto');
+    var valido = form.isValid();
+    if(!valido)
+    {
+        datosIncompletos();
+    }
+    
+    if(valido)
+    {
+        _p30_windowAuto.hide();
+        _p30_windowAuto.miCallback(form.getValues());
+    }
+    
+    debug('<_p30_windowAutoAceptarClic');
 }
 ////// funciones //////
 </script>

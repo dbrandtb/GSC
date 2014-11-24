@@ -809,6 +809,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
 			
+			smap1.put("cdsisrol" , cdsisrol);
+			
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
 			
