@@ -1410,15 +1410,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String retarificar()
 	{
-		logger.debug(""
-				+ "\n#########################"
-				+ "\n#########################"
-				+ "\n######             ######"
-				+ "\n###### retarificar ######"
-				+ "\n######             ######"
+		logger.debug(
+				new StringBuilder()
+				.append("\n#########################")
+				.append("\n###### retarificar ######")
+				.append("\n###### cdunieco=").append(cdunieco)
+				.append("\n###### cdramo=")  .append(cdramo)
+				.append("\n###### cdtipsit=").append(cdtipsit)
+				.append("\n###### panel1=")  .append(panel1)
+				.toString()
 				);
 		try
 		{
+			boolean notarifica = panel1!=null
+					&&StringUtils.isNotBlank(panel1.get("notarifica"))
+					&&panel1.get("notarifica").equals("si");
 			
 			try
 			{
@@ -1553,45 +1559,48 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			
-			//////////////////////////
-			////// sigsvdef end //////
-			/*//////////////////////*/
-			Map<String,String> mapCoberturas=new HashMap<String,String>(0);
-            //mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
-            //mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
-            mapCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
-            mapCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
-            mapCoberturas.put("pv_estado_i",     "W");
-            mapCoberturas.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
-            mapCoberturas.put("pv_nmsituac_i",   "0");
-            mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            mapCoberturas.put("pv_cdtipsup_i",   "1");
-            kernelManager.coberturasEnd(mapCoberturas);
-			/*//////////////////////*/
-			////// sigsvdef end //////
-			//////////////////////////
-			
-			////////////////////////////////
-			////// retarifica         //////
-			/*////////////////////////////*/
-			Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
-	        mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
-	        mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-	        //mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
-	        //mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
-	        mapaTarificacion.put("pv_cdunieco_i",   cdunieco);
-	        mapaTarificacion.put("pv_cdramo_i",     cdramo);
-	        mapaTarificacion.put("pv_estado_i",     "W");
-	        mapaTarificacion.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
-	        mapaTarificacion.put("pv_nmsituac_i",   "0");
-	        mapaTarificacion.put("pv_nmsuplem_i",   "0");
-	        //mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
-	        mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
-	        mx.com.aon.portal.util.WrapperResultados wr4=kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
-	        /*////////////////////////////*/
-	        ////// retarifica         //////
-	        ////////////////////////////////
+			if(!notarifica)
+			{
+				//////////////////////////
+				////// sigsvdef end //////
+				/*//////////////////////*/
+				Map<String,String> mapCoberturas=new HashMap<String,String>(0);
+	            //mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+	            //mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
+	            mapCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
+	            mapCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
+	            mapCoberturas.put("pv_estado_i",     "W");
+	            mapCoberturas.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
+	            mapCoberturas.put("pv_nmsituac_i",   "0");
+	            mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	            mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	            mapCoberturas.put("pv_cdtipsup_i",   "1");
+	            kernelManager.coberturasEnd(mapCoberturas);
+				/*//////////////////////*/
+				////// sigsvdef end //////
+				//////////////////////////
+				
+				////////////////////////////////
+				////// retarifica         //////
+				/*////////////////////////////*/
+				Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+		        mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
+		        mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
+		        //mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+		        //mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
+		        mapaTarificacion.put("pv_cdunieco_i",   cdunieco);
+		        mapaTarificacion.put("pv_cdramo_i",     cdramo);
+		        mapaTarificacion.put("pv_estado_i",     "W");
+		        mapaTarificacion.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
+		        mapaTarificacion.put("pv_nmsituac_i",   "0");
+		        mapaTarificacion.put("pv_nmsuplem_i",   "0");
+		        //mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+		        mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
+		        mx.com.aon.portal.util.WrapperResultados wr4=kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
+		        /*////////////////////////////*/
+		        ////// retarifica         //////
+		        ////////////////////////////////
+			}
 	        
 			///////////////////////////////////
 			////// Generacion cotizacion //////
@@ -1677,24 +1686,25 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug("error al retarificar",ex);
 			success=false;
 		}
-		logger.debug(""
-				+ "\n######             ######"
-				+ "\n###### retarificar ######"
-				+ "\n######             ######"
-				+ "\n#########################"
-				+ "\n#########################"
+		logger.debug(
+				new StringBuilder()
+				.append("\n###### retarificar ######")
+				.append("\n#########################")
+				.toString()
 				);
 		return SUCCESS;
 	}
 	
 	public String emitir()
 	{
-		logger.debug(""
-				+ "\n########################"
-				+ "\n######   emitir   ######"
-				+ "");
-		logger.debug("panel1"+panel1);
-		logger.debug("panel2"+panel2);
+		logger.debug(
+				new StringBuilder()
+				.append("\n####################")
+				.append("\n###### emitir ######")
+				.append("\n###### panel1=").append(panel1)
+				.append("\n###### panel2=").append(panel2)
+				.toString()
+				);
 		
 		////// variables 
 		success                = true;
@@ -2271,10 +2281,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.debug(""
-				+ "\n######   emitir   ######"
-				+ "\n########################"
-				+ "");
+		logger.debug(
+				new StringBuilder()
+				.append("\n###### emitir ######")
+				.append("\n####################")
+				.toString()
+				);
 		return SUCCESS;
 	}
 	

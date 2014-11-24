@@ -1282,6 +1282,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			
+			smap1.put("nmpoliza",nmpoliza);//salida
+			
 			if(noTarificar==false)
 			{
 				////////////////////////////////
