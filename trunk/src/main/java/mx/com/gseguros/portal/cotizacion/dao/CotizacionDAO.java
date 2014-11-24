@@ -402,4 +402,9 @@ public interface CotizacionDAO
 			,String tipoPersona
 			,String submarca
 			,String clavegs)throws Exception;
+	public Map<String,String>cargarDatosVehiculoRamo5(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws ApplicationException, Exception;
 }

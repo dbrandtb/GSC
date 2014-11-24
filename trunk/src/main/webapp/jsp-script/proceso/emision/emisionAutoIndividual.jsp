@@ -16,6 +16,7 @@ var _p29_urlGuardar                        = '<s:url namespace="/emision"    act
 var _p29_urlRecotizar                      = '<s:url namespace="/"           action="recotizar"                            />';
 var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
+var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 ////// urls //////
 
 ////// variables //////
@@ -283,6 +284,13 @@ Ext.onReady(function()
 	                if(item)
 	                {
 	                    item.setValue(json.smap1[i]);
+	                    if(_p29_smap1.cdramo+'x'=='5x')
+	                    {
+	                        if(item.fieldLabel=='CONDUCTOR'&&Ext.isEmpty(json.smap1[i]))
+	                        {
+	                            item.setValue(json.smap1['parametros.pv_otvalor15']);
+	                        }
+	                    }
 	                }
 	            }
 
@@ -369,6 +377,55 @@ function _p29_loadCallback()
         }
         ,failure : errorComunicacion
     });
+    
+    if(_p29_smap1.cdramo+'x'=='5x')
+    {
+        Ext.Ajax.request(
+        {
+            url     : _p29_urlRecuperacionSimple
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_DATOS_VEHICULO_RAMO_5'
+                ,'smap1.cdunieco'     : _p29_smap1.cdunieco
+                ,'smap1.cdramo'       : _p29_smap1.cdramo
+                ,'smap1.estado'       : _p29_smap1.estado
+                ,'smap1.nmpoliza'     : _p29_smap1.nmpoliza 
+            }
+            ,success : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### recuperar datos vehiculo ramo 5:',json);
+                if(json.exito)
+                {
+                    var _f1_aux=
+                    [
+                        {
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'VEH&Iacute;CULO'
+                            ,value      : json.smap1.datos
+                        }
+                    ];
+                    var form=_fieldById('_p29_adicionalesForm');
+                    var anteriores=form.removeAll(false);
+                    form.add(
+                    {
+                        xtype       : 'displayfield'
+                        ,fieldLabel : 'VEH&Iacute;CULO'
+                        ,value      : json.smap1.datos
+                    });
+                    for(var i=0;i<anteriores.length;i++)
+                    {
+                        form.add(anteriores[i]);
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function(){ errorComunicacion(); }
+        });
+    }
 }
 
 function _p29_personaSaved()
