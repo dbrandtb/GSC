@@ -359,7 +359,7 @@ function consultaDinamica(accion,inParams,form,callback)
 
 function _fieldById(id)
 {
-    debug('_fieldById:',id);
+    //debug('_fieldById:',id);
     var comp;
     var arr = Ext.ComponentQuery.query('#'+id);
     if(arr.length==0)
@@ -370,14 +370,14 @@ function _fieldById(id)
     {
         comp = arr[arr.length-1];
     }
-    debug('_fieldById comp:',comp);
+    //debug('_fieldById comp:',comp);
     return comp;
 }
 
 function _fieldByName(name,parent,ocultarErrores)
 {
-    debug('_fieldByName:',name,parent,'DUMMY');
-    debug('ocultarErrores:',ocultarErrores,'DUMMY');
+    //debug('_fieldByName:',name,parent,'DUMMY');
+    //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
     if(parent)
@@ -396,14 +396,14 @@ function _fieldByName(name,parent,ocultarErrores)
     {
         comp = arr[arr.length-1];
     }
-    debug('_fieldByName comp:',comp);
+    //debug('_fieldByName comp:',comp);
     return comp;
 }
 
 function _fieldByLabel(label,parent,ocultarErrores)
 {
-    debug('_fieldByLabel:',label);
-    debug('ocultarErrores:',ocultarErrores,'DUMMY');
+    //debug('_fieldByLabel:',label);
+    //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     
     var comp;
     var arr = [];
@@ -423,14 +423,14 @@ function _fieldByLabel(label,parent,ocultarErrores)
     {
         comp = arr[arr.length-1];
     }
-    debug('_fieldByLabel comp:',comp);
+    //debug('_fieldByLabel comp:',comp);
     return comp;
 }
 
 function _fieldLikeLabel(label,parent,ocultarErrores)
 {
-    debug('_fieldLikeLabel:',label);
-    debug('ocultarErrores:',ocultarErrores,'DUMMY');
+    //debug('_fieldLikeLabel:',label);
+    //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
     if(parent)
@@ -449,7 +449,7 @@ function _fieldLikeLabel(label,parent,ocultarErrores)
     {
         comp = arr[arr.length-1];
     }
-    debug('_fieldLikeLabel comp:',comp);
+    //debug('_fieldLikeLabel comp:',comp);
     return comp;
 }
 ////////////////////////////
