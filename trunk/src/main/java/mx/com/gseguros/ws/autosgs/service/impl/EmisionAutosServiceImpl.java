@@ -101,6 +101,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
 				lista = storedProceduresManager.procedureListCall(
 						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+			}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
+					){
+				lista = storedProceduresManager.procedureListCall(
+						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 			}
 			
 			if(lista!=null && lista.size()>0)
@@ -110,11 +117,14 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("NUMFOLIO")));
 				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("VIGENCIA")));
+				datosCotizacionAuto.setIdNegocio(Integer.valueOf(m.get("setIdNegocio")));
 				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
 				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
 				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
+
+				datosCotizacionAuto.setPolizaTracto(m.get("polizaTracto"));
 				
 				//idagente y sucursal
 				Agente agente=new Agente();
@@ -173,6 +183,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 				//descuentoagente
 				datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
+				datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("descuentoCliente")));
+				datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("descuentoFacultamiento")));
+				datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("porcentajeCesionComision")));
 				
 				//idagentecompartido
 				int aux=0;
@@ -353,6 +366,17 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					//primanetainc
 					incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
+					
+					incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("idTipoCarga")));
+					incisoIterado.setAdaptaciones(row.get("adaptaciones"));
+					incisoIterado.setEquipoEspecial(row.get("equipoEspecial"));
+					incisoIterado.setSituacionRiesgo(row.get("situacionRiesgo"));
+					
+					/**
+					 * TODO: Poner validacion de WS para setNumSerieValido
+					 */
+					incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("numSerieValido")));
+					
 					
 					//version
 					Version version=new Version();

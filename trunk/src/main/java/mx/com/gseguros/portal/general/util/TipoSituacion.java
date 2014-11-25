@@ -4,6 +4,10 @@ public enum TipoSituacion {
 	
 	AUTOS_FRONTERIZOS         ("AF"),
 	AUTOS_PICK_UP             ("PU"),
+	AUTOS_RESIDENTES          ("AR"),
+	CAMIONES_CARGA            ("CR"),
+	PICK_UP_CARGA             ("PC"),
+	PICK_UP_PARTICULAR        ("PP"),
 	MULTISALUD                ("MS"),
 	MULTISALUD_COLECTIVO      ("MSC"),
 	SALUD_NOMINA              ("SN"),

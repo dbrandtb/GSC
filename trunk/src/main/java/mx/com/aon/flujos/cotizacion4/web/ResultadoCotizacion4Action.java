@@ -1334,7 +1334,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				try
         		{
 			    	if(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(cdtipsit)){
+				    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(cdtipsit)
+				    		|| TipoSituacion.AUTOS_RESIDENTES.getCdtipsit().equalsIgnoreCase(cdtipsit)
+				    		|| TipoSituacion.CAMIONES_CARGA.getCdtipsit().equalsIgnoreCase(cdtipsit)
+				    		|| TipoSituacion.PICK_UP_CARGA.getCdtipsit().equalsIgnoreCase(cdtipsit)
+				    		|| TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit().equalsIgnoreCase(cdtipsit)
+			    			){
 			    		
 			    		
 			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
@@ -1404,6 +1409,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
 						    	}
 						    	
+						    	
+						    	Calendar calendarIngreso =  Calendar.getInstance();
+						    	if(cli.getFecaltaCli() != null){
+						    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+						    	}
+						    	
+						    	String nacionalidad = "001";// Nacional
+						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+						    		nacionalidad = "002";
+						    	}
+						    	
 					    		//GUARDAR MPERSONA
 					    		
 					    		Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
@@ -1416,13 +1432,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_otsexo_i"      , sexo);
 								parametros.put("pv_fenacimi_i"    , calendar.getTime());
 								parametros.put("pv_cdrfc_i"       , cli.getRfcCli());
-								parametros.put("pv_dsemail_i"     , "");
-								parametros.put("pv_dsnombre1_i"   , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+								parametros.put("pv_dsemail_i"     , cli.getMailCli());
+								parametros.put("pv_dsnombre1_i"   , null);
 								parametros.put("pv_dsapellido_i"  , apellidoPat);
 								parametros.put("pv_dsapellido1_i" , apellidoMat);
-								parametros.put("pv_feingreso_i"   , calendarHoy.getTime());
-								parametros.put("pv_cdnacion_i"    , "001");
-								parametros.put("pv_canaling_i"    , null);
+								parametros.put("pv_feingreso_i"   , calendarIngreso.getTime());
+								parametros.put("pv_cdnacion_i"    , nacionalidad);
+								parametros.put("pv_canaling_i"    , cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())));
 								parametros.put("pv_conducto_i"    , null);
 								parametros.put("pv_ptcumupr_i"    , null);
 								parametros.put("pv_residencia_i"  , null);
