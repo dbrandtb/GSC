@@ -552,36 +552,7 @@ Ext.onReady(function()
 	////// custom //////
 	
 	////// loaders //////
-	Ext.Ajax.request(
-	{
-	    url     : _p28_urlCargarConfig
-	    ,params :
-	    {
-	        'smap1.cdramo'    : _p28_smap1.cdramo
-	        ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
-	        ,'smap1.cdusuari' : _p28_smap1.cdusuari
-	    }
-	    ,success : function(response)
-	    {
-	        var json = Ext.decode(response.responseText);
-	        debug('### config:',json);
-	        if(json.exito)
-	        {
-	            for(var prop in json.smap1)
-	            {
-	                _fieldByName(prop).setValue(json.smap1[prop]);
-	            }
-	        }
-	        else
-	        {
-	            mensajeError(json.respuesta);
-	        }
-	    }
-	    ,failure : function()
-	    {
-	        errorComunicacion();
-	    }
-	});
+	_p28_cargarConfig();
 	////// loaders //////
 });
 
@@ -785,23 +756,29 @@ function _p28_cotizar(sinTarificar)
                     
                     //bloquear descuento
                     var arrDesc = Ext.ComponentQuery.query('[fieldLabel]',_p28_formDescuento);
+                    var disabledDesc = false;
                     for(var i=0;i<arrDesc.length;i++)
                     {
                         if(arrDesc[i].getValue()-0!=0)
                         {
                             arrDesc[i].setReadOnly(true);
+                            disabledDesc = true;
                         }
                     }
+                    _fieldById('_p28_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     //bloquear comision
-                    var arrComi = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formCesion'));
+                    var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formCesion'));
+                    var disabledComi = false;
                     for(var i=0;i<arrComi.length;i++)
                     {
                         if(arrComi[i].getValue()-0!=0)
                         {
                             arrComi[i].setReadOnly(true);
+                            disabledComi = true;
                         }
                     }
+                    _fieldById('_p28_botonAplicarCesion').setDisabled(disabledComi);
                     
                     var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
@@ -1231,6 +1208,7 @@ function _p28_limpiar()
     _fieldById('_p28_form').getForm().reset();
     _fieldByName('nmpoliza').semaforo=false;
     
+    _p28_cargarConfig();
     
     if(_p28_smap1.cdramo+'x'=='5x')
     {
@@ -1244,6 +1222,9 @@ function _p28_limpiar()
             agente.setReadOnly(true);
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
+        
+        _fieldLikeLabel('VALOR VEH').minValue=0;
+        _fieldLikeLabel('VALOR VEH').maxValue=9999999;
     }
     
     debug('<_p28_limpiar');
@@ -1274,7 +1255,8 @@ function _p28_editar()
     var panelPri    = _fieldById('_p28_panelpri');
     var gridTarifas = _fieldById('_p28_gridTarifas');
     
-    panelPri.remove(gridTarifas);
+    _fieldById('_p28_formCesion').destroy();
+    panelPri.remove(gridTarifas,true);
     panelPri.doLayout();
     
     _p28_bloquear(false);
@@ -2289,14 +2271,28 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                 item.show();
                             }
                             var minimo = _f1_json.slist1[i].minimo;
-                            if(!Ext.isEmpty(minimo))
+                            var maximo = _f1_json.slist1[i].maximo;
+                            if(!Ext.isEmpty(minimo)&&!Ext.isEmpty(maximo))
                             {
                                 item.minValue = minimo;
-                            }
-                            var maximo = _f1_json.slist1[i].maximo;
-                            if(!Ext.isEmpty(maximo))
-                            {
                                 item.maxValue = maximo;
+                                if(item.xtype=='combobox')
+                                {
+                                    item.validator=function(value)
+                                    {
+                                        var value=this.getStore().findRecord('value',value).get('key');
+                                        var valido=true;
+                                        if(Number(value)<Number(this.minValue))
+                                        {
+                                            valido = 'El valor m&iacute;nimo es '+this.minValue;
+                                        }
+                                        else if(Number(value)>Number(this.maxValue))
+                                        {
+                                            valido = 'El valor m&aacute;ximo es '+this.maxValue;
+                                        }
+                                        return valido;
+                                    }
+                                }
                             }
                             item.isValid();
                         }
@@ -2372,6 +2368,42 @@ function _p28_cargarParametrizacionCoberturas(callback)
     }
     
     debug('<_p28_cargarParametrizacionCoberturas');
+}
+
+function _p28_cargarConfig()
+{
+    debug('>_p28_cargarConfig');
+    Ext.Ajax.request(
+    {
+        url     : _p28_urlCargarConfig
+        ,params :
+        {
+            'smap1.cdramo'    : _p28_smap1.cdramo
+            ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+            ,'smap1.cdusuari' : _p28_smap1.cdusuari
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### config:',json);
+            if(json.exito)
+            {
+                for(var prop in json.smap1)
+                {
+                    _fieldByName(prop).setValue(json.smap1[prop]);
+                }
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+    debug('<_p28_cargarConfig');
 }
 ////// funciones //////
 </script>
