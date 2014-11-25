@@ -2280,15 +2280,18 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                 {
                                     item.validator=function(value)
                                     {
-                                        var value=this.getStore().findRecord('value',value).get('key');
                                         var valido=true;
-                                        if(Number(value)<Number(this.minValue))
+                                        if(value+'x'!='x')
                                         {
-                                            valido = 'El valor m&iacute;nimo es '+this.minValue;
-                                        }
-                                        else if(Number(value)>Number(this.maxValue))
-                                        {
-                                            valido = 'El valor m&aacute;ximo es '+this.maxValue;
+                                            var value=this.getStore().findRecord('value',value).get('key');
+                                            if(Number(value)<Number(this.minValue))
+                                            {
+                                                valido = 'El valor m&iacute;nimo es '+this.minValue;
+                                            }
+                                            else if(Number(value)>Number(this.maxValue))
+                                            {
+                                                valido = 'El valor m&aacute;ximo es '+this.maxValue;
+                                            }
                                         }
                                         return valido;
                                     }
