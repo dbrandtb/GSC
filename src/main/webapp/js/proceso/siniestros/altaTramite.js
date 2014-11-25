@@ -1,5 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
+	var valorIndex= null;
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
 		allowDeselect: true
@@ -257,6 +258,36 @@ Ext.onReady(function() {
 		}
 	});
 	storeTipoPago.load();
+	
+	var storeProveedorRender = Ext.create('Ext.data.Store',
+	{
+		model:'modelListadoProvMedico',
+		autoLoad:true,
+		cargado:false,
+		proxy: {
+			type: 'ajax',
+			url : _URL_CATALOGOS,
+			extraParams:{
+				catalogo         : _CATALOGO_PROVEEDORES,
+				catalogoGenerico : true
+			},
+			reader: {
+				type: 'json',
+				root: 'listaGenerica'
+			}
+		}
+		,listeners:
+		{
+			load : function()
+			{
+				this.cargado=true;
+				if(!Ext.isEmpty(gridFacturaReembolso))
+				{
+					gridFacturaReembolso.getView().refresh();
+				}
+			}
+		}
+	});
 
 	var storeProveedor = Ext.create('Ext.data.Store', {
 		model:'modelListadoProvMedico',
@@ -785,7 +816,7 @@ Ext.onReady(function() {
 		name:'editorFacturaReembolso',
 		title: 'Alta de facturas Pago Reembolso',
 		frame: true,
-		selType  : 'rowmodel',
+		selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 		initComponent: function(){
  			Ext.apply(this, {
  				width: 750,
@@ -834,12 +865,20 @@ Ext.onReady(function() {
 							var leyenda = '';
 							if (typeof v == 'string')// tengo solo el indice
 							{
-								storeProveedor.load();
-								storeProveedor.each(function(rec) {
-									if (rec.data.cdpresta == v) {
-										leyenda = rec.data.nombre;
-									}
-								});
+								if(storeProveedorRender.cargado)
+								{
+									storeProveedorRender.each(function(rec)
+								    {
+										if (rec.data.cdpresta == v)
+									    {
+											leyenda = rec.data.nombre;
+										}
+									});
+								}
+								else
+								{
+								    leyenda='Cargando...';
+								}
 							}else // tengo objeto que puede venir como Generic u otro mas complejo
 							{
 								if (v.key && v.value)
@@ -848,6 +887,7 @@ Ext.onReady(function() {
 								} else {
 									leyenda = v.data.value;
 								}
+								leyenda='2';
 							}
 							return leyenda;
 						}
@@ -895,6 +935,23 @@ Ext.onReady(function() {
 						,editor: {
 							xtype: 'textfield',
 							allowBlank: false
+						},renderer : function(v) {
+			            	
+			            	if(storeProveedorRender.cargado)
+							{
+								var leyenda = '';
+				            	var tipoMoneda = storeFacturaReembolso.data.items[valorIndex].get('tipoMonedaName');
+				            	if(tipoMoneda =='001'){
+				            		leyenda = storeFacturaReembolso.data.items[valorIndex].get('importe');
+				            	}else{
+				            		var importeCambio = storeFacturaReembolso.data.items[valorIndex].get('importeFactura');
+									var tasaCambio = storeFacturaReembolso.data.items[valorIndex].get('tasaCambio');
+									var totalImporteMxN= +tasaCambio * +importeCambio;
+									leyenda = totalImporteMxN;
+									storeFacturaReembolso.data.items[valorIndex].set('importe',leyenda);
+				            	}
+				            	return Ext.util.Format.usMoney(leyenda);
+							}
 						}
 					}
 				],
@@ -904,7 +961,12 @@ Ext.onReady(function() {
 						,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png'
 						,handler	: _p21_agregarFactura
 					}
-				]
+				],
+		 		listeners: {
+					itemclick: function(dv, record, item, index, e) {
+						valorIndex = index;
+					}
+				}
 			});
 			this.callParent();
 		},
@@ -1005,8 +1067,6 @@ Ext.onReady(function() {
 									});
 								});
 								submitValues['datosTablas']=datosTablas;
-								debug("VALOR A ENVIAR");
-								debug(submitValues);
 								panelInicialPral.setLoading(true);
 								Ext.Ajax.request(
 								{
@@ -2035,6 +2095,7 @@ Ext.onReady(function() {
 									storeProveedor.load();
 									panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
 									for(var i = 0; i < json.length; i++){
+										valorIndex = i;
 										var fechaFacturaM = json[i].ffactura.match(/\d+/g); 
 										var dateFac = new Date(fechaFacturaM[2], fechaFacturaM[1]-1,fechaFacturaM[0]);
 										var rec = new modelFacturaSiniestro({
@@ -2052,6 +2113,7 @@ Ext.onReady(function() {
 										});
 										storeFacturaReembolso.add(rec);
 									}
+									valorIndex= null;
 								}
 							}
 						},

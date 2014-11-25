@@ -1370,7 +1370,7 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
 		autoScroll  : true,
 		items       : [
 			Ext.create('Ext.form.Panel', {
-				title: 'Devolver Trámite',
+				title: 'Devolver Tr&aacute;mite',
 				width: 650,
 				url: _URL_ActualizaStatusTramite,
 				bodyPadding: 5,

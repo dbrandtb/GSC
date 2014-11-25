@@ -1,6 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
-	
+	var valorIndex= 0;
 	Ext.selection.CheckboxModel.override( {
 	    mode: 'SINGLE',
 	    allowDeselect: true
@@ -499,10 +499,8 @@ Ext.onReady(function() {
 		name:'editorFacturaReembolso',
  		title: 'Alta de facturas Pago Reembolso',
  		frame: true,
-		selType  : 'rowmodel',
+		selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 	 	initComponent: function(){
-	 		
-
 	 			Ext.apply(this, {
 	 			width: 750,
 	 			height: 250
@@ -516,6 +514,18 @@ Ext.onReady(function() {
 	 			store: storeFacturaReembolso,
 	 			columns: 
 	 			[
+				 	{
+					 	xtype: 'actioncolumn',
+					 	width: 40,
+					 	sortable: false,
+					 	menuDisabled: true,
+					 	items: [{
+					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+					 		tooltip: 'Quitar inciso',
+					 		scope: this,
+					 		handler: this.onRemoveClick
+				 		}]
+				 	},
 				 	{	
 				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2
 				 		,editor: {
@@ -599,24 +609,28 @@ Ext.onReady(function() {
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false
-			            }
-				 	},
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 30,
-					 	sortable: false,
-					 	menuDisabled: true,
-					 	items: [{
-					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-					 		tooltip: 'Quitar inciso',
-					 		scope: this,
-					 		handler: this.onRemoveClick
-				 		}]
+			            },renderer : function(v) {
+			            	var leyenda = '';
+			            	debug('VALOR DEL STORE DEL INDEX');
+			            	debug(storeFacturaReembolso.data.items[valorIndex]);
+			            	
+			            	var tipoMoneda = storeFacturaReembolso.data.items[valorIndex].get('tipoMonedaName');
+			            	if(tipoMoneda =='001'){
+			            		leyenda = storeFacturaReembolso.data.items[valorIndex].get('importe');
+			            	}else{
+			            		var importeCambio = storeFacturaReembolso.data.items[valorIndex].get('importeFactura');
+								var tasaCambio = storeFacturaReembolso.data.items[valorIndex].get('tasaCambio');
+								var totalImporteMxN= +tasaCambio * +importeCambio;
+								leyenda = totalImporteMxN;
+								storeFacturaReembolso.data.items[valorIndex].set('importe',leyenda);
+			            	}
+			            	return leyenda;
+						}
 				 	}
 		 		],
-		 		selModel: {
+		 		/*selModel: {
 			 		selType: 'cellmodel'
-			 	},
+			 	},*/
 		 		tbar: [
 			 		{
 	                    text     : 'Agregar Factura'
@@ -624,7 +638,12 @@ Ext.onReady(function() {
 	                    ,handler : _p21_agregarGrupoClic
 	                    //,hidden  : _p21_ntramite ? true : false
 	                }
-		 		]
+		 		],
+		 		listeners: {
+					itemclick: function(dv, record, item, index, e) {
+						valorIndex = index;
+					}
+				}
 		 	});
  			this.callParent();
 	 	},
