@@ -1957,6 +1957,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 							)
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
@@ -2001,6 +2005,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 									|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 									|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 								)
 							)
 					{
@@ -2165,12 +2173,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 				){
 					
 					String parametros = null;
 					
 					String urlCaratula = null;
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
+					){
 						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
 						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
@@ -2458,8 +2475,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 					}
 					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-						||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 						)
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
@@ -2503,6 +2524,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 							)
 						)
 					{
@@ -2672,12 +2697,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 				){
 					
 					String parametros = null;
 					
 					String urlCaratula = null;
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())		
+					){
 						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
 						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
@@ -2877,6 +2911,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+						||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 					)
 				)
 		{
@@ -2999,12 +3037,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 									|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 									||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 									||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+									||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
 					){
 						
 						String parametros = null;
 						
 						String urlCaratula = null;
-						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())		
+						){
 							urlCaratula = this.getText("caratula.impresion.autos.url");
 						}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
 							urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
@@ -3206,6 +3253,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    		|| TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
 		    		|| TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
 		    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.AUTOS_RESIDENTES.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.CAMIONES_CARGA.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.PICK_UP_CARGA.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		|| TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    		
 		    	) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
@@ -3220,7 +3272,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			    	){
 		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 		    	}else if(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
-			    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))){
+			    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    		|| TipoSituacion.AUTOS_RESIDENTES.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    		|| TipoSituacion.CAMIONES_CARGA.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    		|| TipoSituacion.PICK_UP_CARGA.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+			    		|| TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit"))
+		    			){
 		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
 		    	}
 		    	
@@ -3270,7 +3327,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				    	}else {
 				    		agregar.put("FENACIMICLI", "");
 				    	}
-				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
+				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli()+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():""));
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());

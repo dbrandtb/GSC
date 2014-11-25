@@ -51,20 +51,34 @@ var _0_botAceptar;
 
 var _statusDataDocsPersona;
 
-var _RFCsel;
-var _RFCnomSel;
+
 
 var _DocASubir;
 
 /* PARA LOADER */
 var _p22_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p22_smap1:',_p22_smap1);
+
+
+var _RFCsel;
+var _RFCnomSel;
+
 var _p22_cdperson = false;
 var _p22_tipoPersona;
 var _p22_nacionalidad;
 var _CDIDEPERsel = '';
 var _CDIDEEXTsel = '';
 var _esSaludDanios;
+
+
+var _p22_cdpersonTMP;
+var _p22_tipoPersonaTMP;
+var _p22_nacionalidadTMP;
+var _CDIDEPERselTMP;
+var _CDIDEEXTselTMP;
+var _esSaludDaniosTMP;
+
+
 
 var _cargaCdPerson;
 
@@ -107,33 +121,46 @@ Ext.onReady(function()
 	        	 title        : "Escriba el RFC de la Persona a buscar/agregar y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se agregar&aacute; una nueva."
 	        	 ,itemId      : '_p22_formBusqueda'
 	        	 ,hidden     : !Ext.isEmpty(_cargaCdPerson)
-	        	 ,layout      :
-	        	 {
-	        	     type     : 'table'
-	        	     ,columns : 3
-	        	 }
+//	        	 ,layout      :
+//	        	 {
+//	        	     type     : 'table'
+//	        	     ,columns : 3
+//	        	 }
 	        	 ,defaults    : { style : 'margin:5px;' }
 	        	 ,items       : [{
-	        	 					xtype: 'checkbox',
-	        	 					boxLabelAlign: 'before',
-	        	 					boxLabel: '&iquest;Compa&ntilde;ia de Salud?',
-	        	 					name: 'smap1.esSalud',
-	        	 					itemId: 'companiaId',
-	        	 					checked: false,
-	        	 					listeners: {
-	        	 						change: function(){
-	        	 								var form=_p22_formBusqueda();
-	        	 								form.down('[name=smap1.rfc]').reset();
-				                        		form.down('[name=smap1.nombre]').reset();
-	        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
-				                        		form.down('[name=smap1.nombre]').getStore().removeAll();
-	        	 						}
-	        	 					}
-	        	 				},{
+	        	 					xtype      : 'fieldcontainer',
+						            fieldLabel : 'Tipo de Compa&ntilde;ia',
+						            defaultType: 'radiofield',
+						            id        : 'companiaGroupId',
+						            border: true,	
+									defaults : { style : 'margin:5px;' },
+						            layout: 'hbox',
+						            items: [
+						                {
+						                    boxLabel  : 'General de Seguros',
+						                    name      : 'smap1.esSalud',
+						                    inputValue: false,
+						                    checked   : true,
+						                    id        : 'companiaId',
+						                    listeners: {
+			        	 						change: function(){
+			        	 								var form=_p22_formBusqueda();
+			        	 								form.down('[name=smap1.rfc]').reset();
+						                        		form.down('[name=smap1.nombre]').reset();
+			        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
+						                        		form.down('[name=smap1.nombre]').getStore().removeAll();
+			        	 						}
+			        	 					}
+						                }, {
+						                    boxLabel  : 'General de Salud',
+						                    name      : 'smap1.esSalud',
+						                    inputValue: true
+						                }
+						            ]},{
 	        	 				xtype: 'combobox',
-								fieldLabel:'RFC',
-								labelWidth: 40,
-								width:    440,
+								fieldLabel:'B&uacute;squeda por RFC',
+								labelWidth: 100,
+								width:    800,
 								queryParam  : 'smap1.rfc',
 								queryMode   : 'remote',
 								queryCaching: false,
@@ -150,20 +177,20 @@ Ext.onReady(function()
 					            hideTrigger   : true,
 					            tpl: Ext.create('Ext.XTemplate',
 					                    '<tpl for=".">',
-					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1}</div>',
+					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
 					                    '</tpl>'
 					            ),
 					            enableKeyEvents: true,
 					            listeners: {
 					            	select: function(comb, records){
 					            		_RFCsel = records[0].get('CDRFC');
-					            		_p22_cdperson = records[0].get('CDPERSON');
-					            		_p22_tipoPersona = records[0].get('OTFISJUR');
-					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		_p22_cdpersonTMP = records[0].get('CDPERSON');
+					            		_p22_tipoPersonaTMP = records[0].get('OTFISJUR');
+					            		_p22_nacionalidadTMP = records[0].get('CDNACION');
 					            		
-					            		_CDIDEPERsel = records[0].get('CDIDEPER');
-					            		_CDIDEEXTsel = records[0].get('CDIDEEXT');
-					            		_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; 
+					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
+					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
+					            		_esSaludDaniosTMP = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D'; 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
@@ -201,22 +228,22 @@ Ext.onReady(function()
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		};
-				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; //SALUD o DAÑOS
+				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D'; //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
-				                        		Ext.ComponentQuery.query('#companiaId')[0].disable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].disable();
 				                        	},
 				                        	load      : function(){
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
-				                        		Ext.ComponentQuery.query('#companiaId')[0].enable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].enable();
 				                        	}
 				                        }
 					            })
 								},
 								{
 								xtype: 'combobox',
-								fieldLabel:'Nombre',
-								labelWidth: 50,
-								width:    440,
+								fieldLabel:'B&uacute;squeda por Nombre',
+								labelWidth: 100,
+								width:    800,
 								queryParam  : 'smap1.nombre',
 								queryMode   : 'remote',
 								queryCaching: false,
@@ -232,20 +259,20 @@ Ext.onReady(function()
 					            hideTrigger   : true,
 					            tpl: Ext.create('Ext.XTemplate',
 					                    '<tpl for=".">',
-					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1}</div>',
+					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
 					                    '</tpl>'
 					            ),
 					            enableKeyEvents: true,
 					            listeners: {
 					            	select: function(comb, records){
 					            		_RFCnomSel = records[0].get('CDRFC');
-					            		_p22_cdperson = records[0].get('CDPERSON');
-					            		_p22_tipoPersona = records[0].get('OTFISJUR');
-					            		_p22_nacionalidad = records[0].get('CDNACION');
+					            		_p22_cdpersonTMP = records[0].get('CDPERSON');
+					            		_p22_tipoPersonaTMP = records[0].get('OTFISJUR');
+					            		_p22_nacionalidadTMP = records[0].get('CDNACION');
 					            		
-					            		_CDIDEPERsel = records[0].get('CDIDEPER');
-					            		_CDIDEEXTsel = records[0].get('CDIDEEXT');
-					            		_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; 
+					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
+					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
+					            		_esSaludDaniosTMP = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D'; 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
@@ -281,7 +308,7 @@ Ext.onReady(function()
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		}
-				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D'; //SALUD o DAÑOS
+				                        		operation.params['smap1.esSalud'] = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D'; //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
 				                        	},
 				                        	load      : function(){
@@ -314,7 +341,7 @@ Ext.onReady(function()
                          ,disabled: true
                          ,icon    : '${ctx}/resources/fam3icons/icons/building_go.png'
                          ,handler : function (){
-										var form=_p22_formBusqueda();
+										var form = _p22_formBusqueda();
 										
 										var valorRFC = form.down('[name=smap1.rfc]').getValue(); 
 										var valorNombre = form.down('[name=smap1.nombre]').getValue();
@@ -337,14 +364,21 @@ Ext.onReady(function()
 								    		_fieldByName('CDMUNICI').setFieldLabel("MUNICIPIO");
 											_fieldByName('CDCOLONI').setFieldLabel("COLONIA");
 											
+											_p22_cdperson = _p22_cdpersonTMP;
+											_p22_tipoPersona = _p22_tipoPersonaTMP;
+											_p22_nacionalidad = _p22_nacionalidadTMP;
+											_CDIDEPERsel = _CDIDEPERselTMP;
+											_CDIDEEXTsel = _CDIDEEXTselTMP;
+											_esSaludDanios = _esSaludDaniosTMP;
+											
 								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
 								    		if("1" == _p22_cdperson){
 								    			importaPersonaWS( _esSaludDanios , (_esSaludDanios == 'S') ? _CDIDEEXTsel : _CDIDEPERsel );
 								    			return;
 								    		}
 								    		
-								    		form.down('[name=smap1.rfc]').reset();
-								    		form.down('[name=smap1.nombre]').reset();
+//								    		form.down('[name=smap1.rfc]').reset();
+//								    		form.down('[name=smap1.nombre]').reset();
 											irModoEdicion();
 											
 										}else if(!Ext.isEmpty(valorRFC)){
@@ -360,9 +394,15 @@ Ext.onReady(function()
 										    }
 										    
 											_p22_fieldRFC().setValue(valorRFC);
-											form.down('[name=smap1.rfc]').reset();
-											form.down('[name=smap1.nombre]').reset();
-											_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getValue())?'S':'D';
+											_p22_cdperson = '';
+											_p22_tipoPersona = '';
+											_p22_nacionalidad = '';
+											_CDIDEPERsel = '';
+											_CDIDEEXTsel = '';
+//											form.down('[name=smap1.rfc]').reset();
+//											form.down('[name=smap1.nombre]').reset();
+											_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D';
+											
 											irModoAgregar();
 											
 										}else if(!Ext.isEmpty(valorNombre)){
@@ -959,13 +999,13 @@ function _p22_guardarClic(callback, autosave)
         }
     }
     
-    if(valido)
-    {
-        valido = validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue());
-        if(!valido)
-        {
-        }
-    }
+//    if(valido)
+//    {
+//        valido = validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue());
+//        if(!valido)
+//        {
+//        }
+//    }
     
     if(valido&&_p22_fieldTipoPersona().getValue()=='F')
     {
