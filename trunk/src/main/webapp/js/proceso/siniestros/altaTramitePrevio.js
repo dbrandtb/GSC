@@ -624,7 +624,7 @@ Ext.onReady(function() {
 								leyenda = totalImporteMxN;
 								storeFacturaReembolso.data.items[valorIndex].set('importe',leyenda);
 			            	}
-			            	return leyenda;
+			            	return Ext.util.Format.usMoney(leyenda);
 						}
 				 	}
 		 		],
