@@ -9,15 +9,19 @@
 ////// overrides //////
 
 ////// urls //////
-var _p30_urlCargarSumaAseguradaRamo5 = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5" />';
+var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5"       />';
+var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision" action="cargarCduniecoAgenteAuto"       />';
+var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision" action="cargarRetroactividadSuplemento" />';
+var _p30_urlCargarParametros               = '<s:url namespace="/emision" action="obtenerParametrosCotizacion"    />';
 ////// urls //////
 
 ////// variables //////
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
 
-var _p30_windowAuto = null;
-var _p30_store      = null;
+var _p30_windowAuto     = null;
+var _p30_store          = null;
+var _p30_selectedRecord = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -399,6 +403,88 @@ Ext.onReady(function()
             select : function(combo,records){ _p30_herenciaDescendiente(records[0]); }
         });
         //clave gs
+        
+        //version
+        _fieldLikeLabel('VERSI',_p30_windowAuto).anidado = true;
+        _fieldLikeLabel('VERSI',_p30_windowAuto).heredar = function()
+        {
+            _fieldLikeLabel('VERSI',_p30_windowAuto).getStore().load(
+            {
+                params :
+                {
+                    'params.submarca' : _fieldByLabel('SUBMARCA' , _p30_windowAuto).getValue()
+                    ,'params.modelo'  : _fieldByLabel('MODELO'   , _p30_windowAuto).getValue()
+                }
+            });
+        };
+        _fieldLikeLabel('VERSI',_p30_windowAuto).on(
+        {
+            select : function(){_p30_herenciaAscendente();}
+        });
+        //version
+        
+        //modelo
+        _fieldByLabel('MODELO',_p30_windowAuto).on(
+        {
+            select : function()
+            {
+                _fieldLikeLabel('VERSI',_p30_windowAuto).heredar();
+            }
+        });
+        _fieldByLabel('MODELO',_p30_windowAuto).on(
+        {
+            select : function(){_p30_herenciaAscendente();}
+        });
+        //modelo
+        
+        //agente
+        if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            _fieldByLabel('AGENTE').setValue(_p30_smap1.cdagente);
+            _fieldByLabel('AGENTE').setReadOnly(true);
+            _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE'),_p30_smap1.cdagente);
+        }
+        else if(_p30_smap1.cdsisrol=='PROMOTORAUTO'
+            ||_p30_smap1.cdsisrol=='SUSCRIAUTO')
+        {
+            _fieldByLabel('AGENTE').on(
+            {
+                'select' : _p30_ramo5AgenteSelect
+            });
+        }
+        //agente
+        
+        //tipo valor
+        var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
+        for(var i=0;i<_p30_gridCols.length;i++)
+        {
+            debug('buscando editor tipo valor');
+            if(!Ext.isEmpty(_p30_gridCols[i].editor)
+                &&_p30_gridCols[i].editor.name==tipovalorName)
+            {
+                debug('tipo valor es:',_p30_gridCols[i].editor);
+                _p30_gridCols[i].editor.on(
+                {
+                    change : function()
+                    {
+                        var record = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
+                        debug('record sel:',record);
+                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
+                        if(record.get(valorName)+'x'!='x')
+                        {
+                            mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
+                            record.set(valorName,'');
+                            debug('cambiado:',valorName,record);
+                        }
+                    }
+                });
+            }
+            else
+            {
+                debug('tipo valor no es:',_p30_gridCols[i].editor);
+            }
+        }
+        //tipo valor
     }
     //ramo 5
 	
@@ -461,6 +547,9 @@ function _p30_gridBotonAutoClic(grid,row,col,item,e,record)
     debug('>_p30_gridBotonAutoClic:',record);
     var cdtipsit = record.get('cdtipsit');
     
+    _p30_selectedRecord = record;
+    debug('_p30_selectedRecord:',_p30_selectedRecord);
+    
     var valido = !Ext.isEmpty(cdtipsit);
     if(!valido)
     {
@@ -489,6 +578,79 @@ function _p30_selectAuto(datos,callback)
     debug('>_p30_selectAuto:',datos);
     _p30_windowAuto.miCallback=callback;
     centrarVentanaInterna(_p30_windowAuto.show());
+    var nameModelo = _fieldByLabel('MODELO',_p30_windowAuto).name;
+    if(datos[nameModelo]+'x'=='x')
+    {
+        _fieldById('_p30_formAuto').getForm().reset();
+    }
+    else
+    {
+        var formItems = Ext.ComponentQuery.query('[fieldLabel]',_p30_windowAuto.down('form'));
+        var numBlurs  = 0;
+        for(var i=0;i<formItems.length;i++)
+        {
+            var item=formItems[i];
+            if(item.anidado == true)
+            {
+                var numBlursSeguidos = 1;
+                debug('contando blur:',item);
+                for(var j=i+1;j<formItems.length;j++)
+                {
+                    if(formItems[j].anidado == true)
+                    {
+                        numBlursSeguidos=numBlursSeguidos+1;
+                    }
+                }
+                if(numBlursSeguidos>numBlurs)
+                {
+                    numBlurs=numBlursSeguidos;
+                }
+            }
+        }
+        debug('numBlurs:',numBlurs);
+        var i      = 0;
+        var form   = _fieldById('_p30_formAuto');
+        var record = new _p30_modelo(datos);
+    
+        var renderiza=function()
+        {
+            debug('renderiza',i);
+            form.loadRecord(record);
+            if(i<numBlurs)
+            {
+                i=i+1;
+                for(var j=0;j<formItems.length;j++)
+                {
+                    var iItem  = formItems[j];
+                    var iItem2 = formItems[j+1];
+                    debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                    if(iItem2&&iItem2.anidado==true)
+                    {
+                        debug('tiene blur y lo hacemos heredar',formItems[j]);
+                        iItem2.heredar(true);
+                    }
+                }
+                setTimeout(renderiza,1000);
+            }
+            else
+            {
+                _p30_windowAuto.setLoading(false);
+                if(_p30_smap1.cdramo=='5')
+                {
+                    _p30_herenciaAscendente(function()
+                    {
+                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
+                        if(record.get(valorName)+'x'!='x')
+                        {
+                            form.loadRecord(record);
+                        }
+                    });
+                }
+            }
+        }
+        _p30_windowAuto.setLoading(true);
+        renderiza();
+    }
     debug('<_p30_selectAuto');
 }
 
@@ -559,7 +721,7 @@ function _p30_cargarSumaAseguradaRamo5(callback)
                 var sumaseg = _fieldByName('parametros.pv_otvalor13',_p30_windowAuto);
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;
-                /*_p28_cargarRangoValorRamo5(callback);*/
+                _p30_cargarRangoValorRamo5(callback);
             }
             else
             {
@@ -592,6 +754,171 @@ function _p30_windowAutoAceptarClic(me)
     }
     
     debug('<_p30_windowAutoAceptarClic');
+}
+
+function _p30_herenciaAscendente(callback)
+{
+    debug('>_p30_herenciaAscendente');
+    var clave      = _fieldLikeLabel('CLAVE'  , _p30_windowAuto);
+    var marca      = _fieldByLabel('MARCA'    , _p30_windowAuto);
+    var submarca   = _fieldByLabel('SUBMARCA' , _p30_windowAuto);
+    var modelo     = _fieldByLabel('MODELO'   , _p30_windowAuto);
+    var version    = _fieldLikeLabel('VERSI'  , _p30_windowAuto);
+    
+    var versionval = version.getValue();
+    
+    if(!Ext.isEmpty(versionval))
+    {
+        var versiondes = version.findRecord('key',versionval).get('value');
+        clave.getStore().load(
+        {
+            params :
+            {
+                'params.cadena' : versiondes
+            }
+            ,callback : function()
+            {
+                var valor = versionval
+                            +' - '
+                            +marca.findRecord('key',marca.getValue()).get('value')
+                            +' - '
+                            +submarca.findRecord('key',submarca.getValue()).get('value')
+                            +' - '
+                            +modelo.findRecord('key',modelo.getValue()).get('value')
+                            +' - '
+                            +version.findRecord('key',versionval).get('value');
+                debug('>valor:',valor);
+                clave.setValue(clave.findRecord('value',valor));
+                _p30_cargarSumaAseguradaRamo5(callback);
+            }
+        });
+    }
+    
+    debug('<_p30_herenciaAscendente');
+}
+
+function _p30_ramo5AgenteSelect(comp,records)
+{
+    var cdagente = typeof records == 'string' ? records : records[0].get('key');
+    debug('>_p30_ramo5AgenteSelect cdagente:',cdagente);
+    Ext.Ajax.request(
+    {
+        url     : _p30_urlCargarCduniecoAgenteAuto
+        ,params :
+        {
+            'smap1.cdagente' : cdagente
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('#### obtener cdunieco agente response:',json);
+            if(json.exito)
+            {
+                _p30_smap1.cdunieco=json.smap1.cdunieco;
+                debug('_p30_smap1:',_p30_smap1);
+                Ext.Ajax.request(
+                {
+                    url     : _p30_urlCargarRetroactividadSuplemento
+                    ,params :
+                    {
+                        'smap1.cdunieco'  : _p30_smap1.cdunieco
+                        ,'smap1.cdramo'   : _p30_smap1.cdramo
+                        ,'smap1.cdtipsup' : 1
+                        ,'smap1.cdusuari' : _p30_smap1.cdusuari
+                        ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### obtener retroactividad:',json);
+                        if(json.exito)
+                        {
+                            var feini = _fieldByName('feini');
+                            var fefin = _fieldByName('fefin');
+                            
+                            feini.setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,(json.smap1.retroac-0)*-1));
+                            feini.setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi-0));
+                            feini.isValid();
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                });
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : errorComunicacion
+    });
+    debug('<_p30_ramo5AgenteSelect');
+}
+
+function _p30_cargarRangoValorRamo5(callback)
+{
+    debug('>_p30_cargarRangoValorRamo5');
+    var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
+    debug('tipovalorName:',tipovalorName);
+    var valor         = _fieldLikeLabel('VALOR VEH',_p30_windowAuto);
+    debug('_p30_selectedRecord:',_p30_selectedRecord);
+    var tipovalorval = _p30_selectedRecord.get(tipovalorName);
+    var valorval     = valor.getValue();
+    var valorCargado = valor.valorCargado;
+    
+    var valido = !Ext.isEmpty(tipovalorval)&&!Ext.isEmpty(valorval)&&!Ext.isEmpty(valorCargado);
+    
+    if(valido)
+    {
+        _p30_windowAuto.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p30_urlCargarParametros
+            ,params  :
+            {
+                'smap1.parametro' : 'RANGO_VALOR'
+                ,'smap1.cdramo'   : _p30_smap1.cdramo
+                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                ,'smap1.clave4'   : tipovalorval
+                ,'smap1.clave5'   : _p30_smap1.cdsisrol
+            }
+            ,success : function(response)
+            {
+                _p30_windowAuto.setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('### obtener rango valor:',json);
+                if(json.exito)
+                {
+                    valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
+                    valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
+                    valor.setMinValue(valormin);
+                    valor.setMaxValue(valormax);
+                    valor.isValid();
+                    debug('valor:',valorCargado);
+                    debug('valormin:',valormin);
+                    debug('valormax:',valormax);
+                    
+                    if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            } 
+            ,failure : function()
+            {
+                _p30_windowAuto.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    debug('<_p30_cargarRangoValorRamo5');
 }
 ////// funciones //////
 </script>

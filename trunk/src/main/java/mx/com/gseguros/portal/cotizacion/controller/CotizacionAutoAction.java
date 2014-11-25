@@ -810,6 +810,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String ntramite = smap1.get("ntramite");
 			
 			smap1.put("cdsisrol" , cdsisrol);
+			smap1.put("cdusuari" , cdusuari);
 			
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
