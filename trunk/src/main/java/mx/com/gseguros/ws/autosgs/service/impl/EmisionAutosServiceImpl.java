@@ -117,14 +117,14 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("NUMFOLIO")));
 				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("VIGENCIA")));
-				datosCotizacionAuto.setIdNegocio(Integer.valueOf(m.get("setIdNegocio")));
+				datosCotizacionAuto.setIdNegocio(Integer.valueOf(m.get("IDNEGOCIO")));
 				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
 				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
 				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 
-				datosCotizacionAuto.setPolizaTracto(m.get("polizaTracto"));
+				datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
 				
 				//idagente y sucursal
 				Agente agente=new Agente();
@@ -183,9 +183,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 				//descuentoagente
 				datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
-				datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("descuentoCliente")));
-				datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("descuentoFacultamiento")));
-				datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("porcentajeCesionComision")));
+				datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("DESCUENTOCLIENTE")));
+				datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("DESCUENTOFACULTAMIENTO")));
+				datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("PORCENTAJECESIONCOMISION")));
 				
 				//idagentecompartido
 				int aux=0;
@@ -367,15 +367,15 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					//primanetainc
 					incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
 					
-					incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("idTipoCarga")));
-					incisoIterado.setAdaptaciones(row.get("adaptaciones"));
-					incisoIterado.setEquipoEspecial(row.get("equipoEspecial"));
-					incisoIterado.setSituacionRiesgo(row.get("situacionRiesgo"));
+					incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("IDTIPOCARGA")));
+					incisoIterado.setAdaptaciones(row.get("ADAPTACIONES"));
+					incisoIterado.setEquipoEspecial(row.get("EQUIPOESPECIAL"));
+					incisoIterado.setSituacionRiesgo(row.get("SITUACIONRIESGO"));
 					
 					/**
 					 * TODO: Poner validacion de WS para setNumSerieValido
 					 */
-					incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("numSerieValido")));
+					incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("NUMSERIEVALIDO")));
 					
 					
 					//version

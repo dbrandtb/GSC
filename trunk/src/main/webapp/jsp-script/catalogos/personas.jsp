@@ -720,6 +720,9 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     	
     	setTimeout(function(){
 			_p22_cdperson = _cargaCdPerson;
+			_CDIDEPERsel = _p22_smap1.cdideper;
+			_CDIDEEXTsel = _p22_smap1.cdideext;
+			_esSaludDanios = _p22_smap1.esSaludDanios;
     		irModoEdicion();
 		},1000)
     	
