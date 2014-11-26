@@ -17,6 +17,11 @@ var _p29_urlRecotizar                      = '<s:url namespace="/"           act
 var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
+
+var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
+var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
+
+
 ////// urls //////
 
 ////// variables //////
@@ -26,6 +31,12 @@ debug('_p29_smap1:',_p29_smap1);
 var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
+
+var _SWexiper = _p29_smap1.swexiper;
+
+var _paramsRetryWS;
+var _mensajeEmail;
+            
 ////// variables //////
 
 Ext.onReady(function()
@@ -246,7 +257,10 @@ Ext.onReady(function()
 	            {
 	                params:
 	                {
-	                    'smap1.cdperson' : json.smap1.cdperson
+	                    'smap1.cdperson' : json.smap1.cdperson,
+	                    'smap1.cdideper' : json.smap1.cdideper,
+	                    'smap1.cdideext' : json.smap1.cdideext,
+	                    'smap1.esSaludDanios' : 'D'
 	                }
 	            });
 	            
@@ -447,7 +461,7 @@ function _p29_personaSaved()
             ,'smap1.status'   : 'V'
             ,'smap1.nmorddom' : '1'
             ,'smap1.accion'   : 'I'
-            ,'smap1.swexiper' : 'S'
+            ,'smap1.swexiper' : _SWexiper
         }
         ,success : function(response)
         {
@@ -712,6 +726,76 @@ function _p29_mostrarVistaPrevia()
                                     ,text    : 'Emitir'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
                                     ,handler : _p29_emitirFinal
+                                },{
+                                	itemId : 'botonEnvioEmail'
+                                    ,xtype : 'button'
+                                    ,text  : 'Enviar Email'
+                                    ,icon  : '${ctx}//resources/fam3icons/icons/email.png'
+                                    ,disabled: true
+                                    ,handler:function()
+                                    {
+                                    	Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+                                    	function(buttonId, text){
+                                    		if(buttonId == "ok" && !Ext.isEmpty(text)){
+                                    			
+                                    			if(Ext.isEmpty(_mensajeEmail)){
+                                    				mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+                                    				return;
+                                    			}
+                                    			
+                                    			Ext.Ajax.request(
+                                		    			{
+                                		    				url : _urlEnviarCorreo,
+                                		    				params :
+                                		    				{
+                                		    					to     : text,
+                                		    					asunto : 'Documentación de póliza de Autos',
+                                		    					mensaje: _mensajeEmail,
+                                		    					html   : true
+                                		    			    },
+                                		    			    callback : function(options,success,response)
+                                		    			    {
+                                		    			    	if (success)
+                                		    			    	{
+                                		    			    		var json = Ext.decode(response.responseText);
+                                		    			    		if (json.success == true)
+                                		    			    		{
+                                		    			    			Ext.Msg.show(
+                                		    			    			{
+                                		    			    				title : 'Correo enviado'
+                                		    			    				,msg : 'El correo ha sido enviado'
+                                		    			    				,buttons : Ext.Msg.OK
+                                		    			    			});
+                                		    			    		}
+                                		    			    		else
+                                		    			    		{
+                                		    			    			mensajeError('Error al enviar el correo');
+                                		    			    		}
+                                		    			    	}
+                                		    			    	else
+                                		    			    	{
+                                		    			    		errorComunicacion();
+                                		    			    	}
+                                		    			    }
+                                		    			});
+                                    		
+                                    		}else {
+                                    			mensajeWarning('Introduzca al menos una direcci&oacute;n de email');	
+                                    		}
+                                    	})
+                                    }
+                                }
+                                ,{
+                                	itemId : 'botonReenvioWS'
+                                    ,xtype : 'button'
+                                    ,text  : 'Reintentar Emisi&oacute;n'
+                                    ,icon  : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+                                    ,disabled: true
+                                    ,handler:function()
+                                    {
+                                    	var me=this;
+                                    	reintentarWSAuto(me.up().up(), _paramsRetryWS);
+                                    }
                                 }
                                 ,{
                                     xtype     : 'button'
@@ -808,26 +892,29 @@ function _p29_emitirFinal(me)
                 _fieldById('_p29_botonEmitirPolizaFinal').setDisabled(true);
                 _fieldById('_p29_botonDocumentosPolizaEmitida').setDisabled(false);
                 
+                
+                _fieldById('botonReenvioWS').hide();
+                _mensajeEmail = json.mensajeEmail;
+                _fieldById('botonEnvioEmail').enable();
+                
                 /*
-                Ext.getCmp('_p29_botonEmitirPolizaFinalPreview').hide();
-                Ext.getCmp('botonReenvioWS').hide();
+                _fieldById('_p29_botonEmitirPolizaFinalPreview').hide();
                 
                 if(_p29_smap1.SITUACION == 'AUTO')
                 {
-                    _mensajeEmail = json.mensajeEmail;
-                    Ext.getCmp('botonEnvioEmail').enable();
+                    
                 }
                 else
                 {
-                    Ext.getCmp('botonEnvioEmail').hide();
+                    _fieldById('botonEnvioEmail').hide();
                 }
                 if(_p29_smap1.SITUACION=='AUTO')
                 {
-                    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+                    _fieldById('venDocVenEmiBotIrCotiza').show();
                 }
                 else
                 {
-                    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+                    _fieldById('venDocVenEmiBotNueCotiza').show();
                 }
                 */
                 
@@ -860,48 +947,45 @@ function _p29_emitirFinal(me)
             }
             else
             {
-                /*if(json.retryWS)
-                {
-                    datComPolizaMaestra=json.panel2.nmpoliza;
-                    debug("datComPolizaMaestra",datComPolizaMaestra);
-                    Ext.getCmp('_p29_botonEmitirPolizaFinal').hide();
-                    Ext.getCmp('_p29_botonEmitirPolizaFinalPreview').hide();
-                    if(_p29_smap1.SITUACION=='AUTO')
-                    {
-                        Ext.getCmp('venDocVenEmiBotIrCotiza').show();
-                    }
-                    else
-                    {
-                        Ext.getCmp('venDocVenEmiBotNueCotiza').show();
-                    }
-                    Ext.getCmp('_p29_botonCancelarEmision').setDisabled(true);
-                }*/
+                if(json.retryWS){
+                    _fieldById('_p29_botonEmitirPolizaFinal').hide();
+//                    _fieldById('_p29_botonEmitirPolizaFinalPreview').hide();
+//                    if(_p29_smap1.SITUACION=='AUTO')
+//                    {
+//                        _fieldById('venDocVenEmiBotIrCotiza').show();
+//                    }
+//                    else
+//                    {
+//                        _fieldById('venDocVenEmiBotNueCotiza').show();
+//                    }
+                    _fieldById('_p29_botonCancelarEmision').setDisabled(true);
+                }
                 Ext.Msg.show(
                 {
                     title    :'Aviso'
                     ,msg     : json.mensajeRespuesta
                     ,buttons : Ext.Msg.OK
                     ,icon    : Ext.Msg.WARNING
-                    /*,fn      : function()
+                    ,fn      : function()
                     {
                         if(json.retryWS)
                         {
                             var paramsWS =
                             {
-                                'panel1.pv_nmpoliza'  : inputNmpoliza
-                                ,'panel1.pv_ntramite' : inputNtramite
-                                ,'panel2.pv_cdramo'   : inputCdramo
-                                ,'panel2.pv_cdunieco' : inputCdunieco
-                                ,'panel2.pv_estado'   : inputEstado
-                                ,'panel2.pv_nmpoliza' : inputNmpoliza
-                                ,'panel2.pv_cdtipsit' : inputCdtipsit
+                                'panel1.pv_nmpoliza'  : _p29_smap1.nmpoliza
+                                ,'panel1.pv_ntramite' : _p29_smap1.ntramite
+                                ,'panel2.pv_cdramo'   : _p29_smap1.cdramo
+                                ,'panel2.pv_cdunieco' : _p29_smap1.cdunieco
+                                ,'panel2.pv_estado'   : _p29_smap1.estado
+                                ,'panel2.pv_nmpoliza' : _p29_smap1.nmpoliza
+                                ,'panel2.pv_cdtipsit' : _p29_smap1.cdtipsit
                                 ,'nmpoliza'           : json.nmpoliza
                                 ,'nmsuplem'           : json.nmsuplem                                                                       
                                 ,'cdIdeper'           : json.cdIdeper
                             };
                             reintentarWSAuto(me.up().up(), paramsWS);
                         }
-                    }*/
+                    }
                 });
             }
         }
@@ -913,6 +997,79 @@ function _p29_emitirFinal(me)
     });
     debug('<_p29_emitirFinal');
 }
+
+//funcion para reintentar WS auto
+                
+function reintentarWSAuto(loading, params){
+
+	Ext.Msg.show({
+       title    :'Confirmaci&oacute;n'
+       ,msg     : '&iquest;Desea Reenviar los Web Services de Autos?'
+       ,buttons : Ext.Msg.YESNO
+       ,icon    : Ext.Msg.QUESTION
+       ,fn      : function(boton, text, opt){
+       	if(boton == 'yes'){
+       		
+       		loading.setLoading(true);
+        	
+        	Ext.Ajax.request(
+                	{
+                		url     : urlReintentarWS
+                		,timeout: 240000
+                		,params :params
+                	    ,success:function(response)
+                	    {
+                	    	loading.setLoading(false);
+                	    	var json=Ext.decode(response.responseText);
+                	    	debug(json);
+                	    	if(json.success==true)
+                	    	{
+                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
+                	    		_fieldById('_p29_numerofinalpoliza').setValue(json.nmpolAlt);
+                	    		_fieldById('_p29_botonDocumentosPolizaEmitida').setDisabled(false);
+                	    		_fieldById('botonReenvioWS').setDisabled(true);
+                	    		_fieldById('botonReenvioWS').hide();
+                	    		
+                	    		_mensajeEmail = json.mensajeEmail;
+								_fieldById('botonEnvioEmail').enable();
+                	    	}
+                	    	else
+                	    	{
+                	    		Ext.Msg.show({
+                                    title    :'Aviso'
+                                    ,msg     : json.mensajeRespuesta
+                                    ,buttons : Ext.Msg.OK
+                                    ,icon    : Ext.Msg.WARNING
+                                    ,fn      : function(){
+                                    	reintentarWSAuto(loading, params);
+                                    }
+                                });
+                	    	}
+                	    }
+                	    ,failure:function()
+                	    {
+                	    	loading.setLoading(false);
+                	    	Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                                ,fn      : function(){
+                                	reintentarWSAuto(loading, params);
+                                }
+                            });
+                	    }
+                	});
+       	}else{
+       		_paramsRetryWS = params;
+       		debug("Habilitando Boton Reenvio WS");
+       		_fieldById('botonReenvioWS').setDisabled(false);
+       	}
+       }
+	});
+	                	
+}
+
 ////// funciones //////
 </script>
 </head>

@@ -2957,6 +2957,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					    ,"feini"
 					    ,"fefin"
 					    ,"cdperson"
+					    ,"cdideper"
+					    ,"cdideext"
 					    ,"swexiper"
 					    ,"agente_sec"
 					    ,"porparti"

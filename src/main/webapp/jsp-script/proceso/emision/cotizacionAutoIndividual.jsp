@@ -1807,6 +1807,7 @@ function _p28_comprar()
                    ,buttons : Ext.Msg.OK
                    ,fn      : function()
                    {
+                   	   var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
                        Ext.create('Ext.form.Panel').submit(
                        {
                            url             : _p28_urlDatosComplementarios
@@ -1819,6 +1820,7 @@ function _p28_comprar()
                                ,'smap1.estado'   : 'W'
                                ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
                                ,'smap1.ntramite' : json.smap1.ntramite
+                               ,'smap1.swexiper' : swExiper
                            }
                        });
                    }
