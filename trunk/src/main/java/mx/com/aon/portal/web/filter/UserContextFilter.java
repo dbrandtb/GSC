@@ -18,11 +18,11 @@ import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
 import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -31,7 +31,8 @@ public class UserContextFilter implements Filter {
     private Logger logger = Logger.getLogger(UserContextFilter.class);
     private LoginManager loginManager;
 
-    private NavigationManager navigationManager;
+	@Autowired
+	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
 
     public void init(FilterConfig config) throws ServletException {
     }
@@ -107,11 +108,11 @@ public class UserContextFilter implements Filter {
 	            ServletContext servletContext  = session.getServletContext();
 	            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 	            loginManager = (LoginManager) context.getBean("loginManager");
-	            navigationManager = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
+	            //navigationManager = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
 	            try {
 	                logger.debug("Obteniendo los datos adicionales del usuario");
 	                userVO = loginManager.obtenerDatosUsuario(user);
-	                IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
+	                IsoVO isoVO = navigationManagerNuevo.getVariablesIso(userVO.getUser());
 		            BaseObjectVO languague = new BaseObjectVO();
 					languague.setValue(isoVO.getLanguague()); 
 					
