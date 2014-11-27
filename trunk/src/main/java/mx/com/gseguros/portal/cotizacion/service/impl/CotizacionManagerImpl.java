@@ -3272,6 +3272,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null        //residencia
 							,null		 //nongrata
 							,null		 //cdideext
+							,null		 //cdestcivil
 							,Constantes.INSERT_MODE
 							);
 				}

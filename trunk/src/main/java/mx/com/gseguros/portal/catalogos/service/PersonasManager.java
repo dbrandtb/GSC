@@ -49,6 +49,7 @@ public interface PersonasManager
 			,String residencia
 			,String nongrata
 			,String cdideext
+			,String cdestcivil
 			,String nmorddom
 			,String dsdomici
 			,String nmtelefo

@@ -127,6 +127,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String residencia
 			,String nongrata
 			,String cdideext
+			,String cdestcivil
 			,String accion) throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -151,6 +152,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("residencia"  , residencia);
 		params.put("nongrata"    , nongrata);
 		params.put("cdideext"    , cdideext);
+		params.put("cdestcivil"  , cdestcivil);
 		params.put("accion"      , accion);
 		logger.debug(
 				new StringBuilder()
@@ -188,6 +190,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("residencia"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nongrata"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdideext"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestcivil"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

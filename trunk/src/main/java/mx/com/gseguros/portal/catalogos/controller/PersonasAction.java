@@ -373,6 +373,7 @@ public class PersonasAction extends PrincipalCoreAction
 						,null// residencia
 						,null// nongrata
 						,"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
+						,Integer.toString(cliImport.getEdocivilCli())
 						,"1"//nmorddom
 						,cliImport.getCalleCli() +" "+ cliImport.getNumeroCli()
 						,cliImport.getTelefonoCli()
@@ -511,6 +512,7 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("RESIDENTE")
 					,smap1.get("NONGRATA")
 					,smap1.get("CDIDEEXT") 
+					,smap1.get("EDOCIVIL") 
 					,smap2.get("NMORDDOM")
 					,smap2.get("DSDOMICI")
 					,smap2.get("NMTELEFO")

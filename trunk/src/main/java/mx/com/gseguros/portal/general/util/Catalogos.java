@@ -76,6 +76,7 @@ public enum Catalogos {
 	TZONAS("TZONAS"),
 	TFORMATOS("TFORMATOS"),
 	TCANALIN("TCANALIN"),
+	TEDOCIVIL("TEDOCIVIL"),
 	RAMOSALUD(""),;
 
 	private String cdTabla;
