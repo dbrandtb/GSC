@@ -624,7 +624,7 @@ Ext.onReady(function() {
 				},
 				{
 					/*1.- MANDAMOS A GUARDAR LA INFORMACIÓN DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
-					text	: 'Guardar Factura'
+					text	: 'Guardar Cambios Factura'
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 					,handler : function() {
 						var obtener = [];
@@ -1026,7 +1026,7 @@ Ext.onReady(function() {
 						,handler	:	_p21_agregarAseguradoClic
 					},
 					{
-						text     : 'Guardar Asegurados'
+						text     : 'Guardar cambios Asegurado'
 						,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 						,handler : function() {
 							var obtener = [];
@@ -2113,7 +2113,7 @@ Ext.onReady(function() {
 										});
 										storeFacturaReembolso.add(rec);
 									}
-									valorIndex= null;
+									//valorIndex= null;
 								}
 							}
 						},
