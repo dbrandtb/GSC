@@ -11,17 +11,7 @@ import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 @Deprecated
-public class NavigationManagerJdbcTemplateImpl extends
-AbstractManagerJdbcTemplateInvoke  implements NavigationManager {
-	
-	public List<ItemVO> getMenuNavegacion(String perfil)
-			throws ApplicationException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-
+public class NavigationManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements NavigationManager {
 	
 	public List<RamaVO> getClientesRoles(String user) throws ApplicationException {
 		List<RamaVO> listaRolesClientes = null;
@@ -36,6 +26,11 @@ AbstractManagerJdbcTemplateInvoke  implements NavigationManager {
 		}
 		return(List<RamaVO>) listaRolesClientes;
 	}
+	
+	public List<ItemVO> getMenuNavegacion(String perfil) throws ApplicationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	public int getNumRegistro(String user) throws ApplicationException {
 		// TODO Auto-generated method stub
@@ -43,22 +38,11 @@ AbstractManagerJdbcTemplateInvoke  implements NavigationManager {
 	}
 
 	public IsoVO getVariablesIso(String user) throws ApplicationException {
-		IsoVO isoVO = null;
-		try {
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			params.put("P_USUARIO", user);
-			
-			WrapperResultados respuesta = returnResult(params, "OBTIENE_VARIABLES_ISO");
-			isoVO = (IsoVO) respuesta.getItemMap().get("isovo");
-
-		} catch (Exception e) {
-			new ApplicationException(e.getMessage(), e);
-		}
-		return isoVO;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public List<UserVO> getAttributesUser(String user)
-			throws ApplicationException {
+	public List<UserVO> getAttributesUser(String user) throws ApplicationException {
 		// TODO Auto-generated method stub
 		return null;
 	}

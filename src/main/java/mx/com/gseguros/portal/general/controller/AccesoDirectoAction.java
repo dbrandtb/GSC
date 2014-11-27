@@ -14,13 +14,13 @@ import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -43,6 +43,8 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     
     private LoginManager loginManager;
 	private NavigationManager navigationManager;
+	@Autowired
+	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
     private UsuarioManager usuarioManager;
     private transient PrincipalManager principalManagerJdbcTemplate;
     
@@ -138,7 +140,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		logger.debug(">>>> DATOS USUARIO *****: " + userVO);
 
 		//userVO.setDecimalSeparator(decimalSeparator);
-		IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
+		IsoVO isoVO = navigationManagerNuevo.getVariablesIso(userVO.getUser());
 
 		logger.debug(">>>> DATOS USUARIO222 *****: " + userVO);
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
@@ -336,9 +338,8 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
      * String directorioIdioma = "/biosnet/"+((mx.com.aon.portal.model.UserVO)session.getAttribute("USUARIO")).getIdioma().getLabel();
      * @param usuario 
      */
-    private void complementaUsuario(UserVO usuario) throws ApplicationException
-    {
-        IsoVO isoLocal = navigationManager.getVariablesIso(usuario.getUser());
+    private void complementaUsuario(UserVO usuario) throws Exception {
+        IsoVO isoLocal = navigationManagerNuevo.getVariablesIso(usuario.getUser());
         BaseObjectVO languague = new BaseObjectVO();
         languague.setValue(isoLocal.getCdIdioma());
         languague.setLabel(isoLocal.getLanguague());

@@ -15,11 +15,11 @@ import javax.servlet.http.HttpSession;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
 import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -28,20 +28,21 @@ public class DummyUserContextFilter implements Filter {
     private Logger logger = Logger.getLogger(DummyUserContextFilter.class);
     private LoginManager loginManager;
 
-    private NavigationManager navigationManager;
+	@Autowired
+	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
     public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
     public static String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
     public static String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
     private String dateFormat;
     private String decimalSeparator;
-    private ServletContext servletContext;
-    private FilterConfig filterConfig;
+    //private ServletContext servletContext;
+    //private FilterConfig filterConfig;
 
     public void init(FilterConfig config) throws ServletException {
         dateFormat = config.getServletContext().getInitParameter(DEFAULT_DATE_FORMAT_PARAM);
         decimalSeparator = config.getServletContext().getInitParameter(DEFAULT_DECIMAL_SEPARATOR_PARAM);
-        this.servletContext = config.getServletContext();
-        filterConfig = config;
+        //this.servletContext = config.getServletContext();
+        //filterConfig = config;
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -60,12 +61,12 @@ public class DummyUserContextFilter implements Filter {
     		            ServletContext servletContext  = session.getServletContext();
     		            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
     		            loginManager = (LoginManager) context.getBean("loginManager");
-    		            navigationManager = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
+    		            //navigationManagerNuevo = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
     		            try {
     		                userVO = loginManager.obtenerDatosUsuario(user);
     		                userVO.setDecimalSeparator(decimalSeparator);
     		                
-    		                IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
+    		                IsoVO isoVO = navigationManagerNuevo.getVariablesIso(userVO.getUser());
 
     		                userVO.setClientFormatDate(isoVO.getClientDateFormat());
     		                userVO.setFormatDate(dateFormat);
@@ -86,7 +87,7 @@ public class DummyUserContextFilter implements Filter {
     		        logger.debug("seteando el userVO en el ThreadLocal");
     		        ThreadLocal<UserVO> tl = ConnectionCallInterceptor.getLocalUser();
     		        tl.set(userVO);
-    		        /**TODO: PARA quitar la auditoria de quien puede ejecutar servicios BD*/
+    		        // auditoria de quien puede ejecutar servicios BD
     		        //doAudit(userVO,request);
     		        chain.doFilter(request, response);
     	        	} catch (Exception e) {
@@ -99,11 +100,11 @@ public class DummyUserContextFilter implements Filter {
 
     public void doAudit(UserVO userVO, ServletRequest request) throws IOException, ServletException {
         try {
-            HttpSession session = ((HttpServletRequest)request).getSession();
+            //HttpSession session = ((HttpServletRequest)request).getSession();
 
                 logger.debug("Obteniendo consultaActividadUsuarioManager en el servletContext");
-                ServletContext servletContext  = session.getServletContext();
-                WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+                //ServletContext servletContext  = session.getServletContext();
+                //WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
                 //ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
 
                 String requestUri = ((HttpServletRequest)request).getRequestURI();
