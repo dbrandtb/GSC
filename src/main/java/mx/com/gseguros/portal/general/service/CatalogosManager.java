@@ -94,4 +94,5 @@ public interface CatalogosManager {
     public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo);
     
     public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena);
+    public List<GenericVO>cargarTtapvat1(String cdtabla);
 }

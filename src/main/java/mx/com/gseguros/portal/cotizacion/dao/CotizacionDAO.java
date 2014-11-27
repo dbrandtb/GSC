@@ -407,4 +407,5 @@ public interface CotizacionDAO
 			String cdramo,
 			String estado,
 			String nmpoliza)throws ApplicationException, Exception;
+	public void borrarMpoliperTodos(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
 }

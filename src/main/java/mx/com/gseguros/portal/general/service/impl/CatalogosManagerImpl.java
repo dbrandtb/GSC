@@ -555,4 +555,37 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarTtapvat1(String cdtabla)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarTtapvat1 @@@@@@")
+				.append("\n@@@@@@ cdtabla=").append(cdtabla)
+				.toString()
+				);
+		
+		List<GenericVO>lista=null;
+		
+		try
+		{
+			lista = catalogosDAO.cargarTtapvat1(cdtabla);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al cargar ttapvat1",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarTtapvat1 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }

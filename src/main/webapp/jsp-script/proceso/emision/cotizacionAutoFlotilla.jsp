@@ -9,19 +9,25 @@
 ////// overrides //////
 
 ////// urls //////
-var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5"       />';
-var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision" action="cargarCduniecoAgenteAuto"       />';
-var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision" action="cargarRetroactividadSuplemento" />';
-var _p30_urlCargarParametros               = '<s:url namespace="/emision" action="obtenerParametrosCotizacion"    />';
+var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"   action="cargarSumaAseguradaRamo5"       />';
+var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"   action="cargarCduniecoAgenteAuto"       />';
+var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"   action="cargarRetroactividadSuplemento" />';
+var _p30_urlCargarParametros               = '<s:url namespace="/emision"   action="obtenerParametrosCotizacion"    />';
+var _p30_urlRecuperarCliente               = '<s:url namespace="/"          action="buscarPersonasRepetidas"        />';
+var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos" action="obtieneCatalogo"                />';
 ////// urls //////
 
 ////// variables //////
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
 
-var _p30_windowAuto     = null;
-var _p30_store          = null;
-var _p30_selectedRecord = null;
+var _p30_windowAuto              = null;
+var _p30_store                   = null;
+var _p30_selectedRecord          = null;
+var _p30_recordClienteRecuperado = null;
+
+var _p30_storeSubmarcasRamo5 = null;
+var _p30_storeVersionesRamo5  = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -133,8 +139,9 @@ var _p30_paneles  = [];
                     ,buttons     :
                     [
                         {
-                            text  : 'Aceptar'
-                            ,icon : '${ctx}/resources/fam3icons/icons/accept.png'
+                            text     : 'Aceptar'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                            ,handler : _p30_dinFormPanelAceptarClic
                         }
                         ,{
                             text     : 'Cancelar'
@@ -219,6 +226,16 @@ Ext.onReady(function()
             ,'cdplan','cdtipsit'
         ]
 	});
+	
+	Ext.define('_p30_modeloRecuperado',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'NOMBRECLI'
+            ,'DIRECCIONCLI'
+        ]
+    });
 	////// modelos //////
 	
 	////// stores //////
@@ -226,6 +243,64 @@ Ext.onReady(function()
 	{
 	    model : '_p30_modelo'
 	});
+	
+	_p30_storeSubmarcasRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,cargado  : false
+        ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo' : 'RAMO_5_SUBMARCAS'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+            }
+        }
+    });
+    
+    _p30_storeVersionesRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,cargado  : false
+        ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo' : 'RAMO_5_VERSIONES'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+            }
+        }
+    });
 	////// stores //////
 	
 	////// componentes //////
@@ -330,6 +405,27 @@ Ext.onReady(function()
 	                clicksToEdit  : 1
 	                ,errorSummary : false
                 })
+	        })
+	        ,Ext.create('Ext.panel.Panel',
+	        {
+	            itemId       : '_p30_botonera'
+	            ,buttonAlign : 'center'
+                ,border      : 0
+                ,buttons     :
+                [
+                    {
+                        itemId   : '_p30_cotizarButton'
+                        ,text    : 'Cotizar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
+                        ,handler : function(){_p30_cotizar();}
+                    }
+                    ,{
+                        itemId   : '_p30_limpiarButton'
+                        ,text    : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                        ,handler : function(){_p30_limpiar();}
+                    }
+                ]
 	        })
 	    ]
 	});
@@ -485,6 +581,46 @@ Ext.onReady(function()
             }
         }
         //tipo valor
+        
+        //cliente nuevo
+        _fieldLikeLabel('CLIENTE NUEVO').on(
+        {
+            change : _p30_ramo5ClienteChange
+        });
+        
+        _fieldLikeLabel('CLIENTE NUEVO').getStore().on('load',function()
+        {
+            debug('combo cliente nuevo store load');
+            _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
+        });
+        //cliente nuevo
+        
+        //renderers
+        _fieldById('_p30_grid').down('[text=SUBMARCA]').renderer=function(v)
+        {
+            if(_p30_storeSubmarcasRamo5.cargado&&v+'x'!='x')
+            {
+                v=_p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('key',v)).get('value');
+            }
+            else
+            {
+                v='';
+            }
+            return v;
+        };
+        _fieldById('_p30_grid').down('[text*=VERSI]').renderer=function(v)
+        {
+            if(_p30_storeVersionesRamo5.cargado&&v+'x'!='x')
+            {
+                v=_p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('key',v)).get('value');
+            }
+            else
+            {
+                v='';
+            }
+            return v;
+        };
+        //renderers
     }
     //ramo 5
 	
@@ -919,6 +1055,184 @@ function _p30_cargarRangoValorRamo5(callback)
         });
     }
     debug('<_p30_cargarRangoValorRamo5');
+}
+
+function _p30_ramo5ClienteChange()
+{
+    var combcl  = _fieldLikeLabel('CLIENTE NUEVO');
+    
+    debug('>_p30_ramo5ClienteChange value:',combcl.getValue());
+    
+    var nombre  = _fieldLikeLabel('NOMBRE CLIENTE');
+    var tipoper = _fieldByLabel('TIPO PERSONA');
+    var codpos  = _fieldLikeLabel('CP CIRCULACI');
+    
+    //cliente nuevo
+    if(combcl.getValue()=='S')
+    {
+        nombre.reset();
+        tipoper.reset();
+        codpos.reset();
+        
+        nombre.setReadOnly(false);
+        tipoper.setReadOnly(false);
+        codpos.setReadOnly(false);
+        
+        _p30_recordClienteRecuperado=null;
+    }
+    //recuperar cliente
+    else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ) )
+    {
+        nombre.reset();
+        tipoper.reset();
+        codpos.reset();
+        
+        nombre.setReadOnly(true);
+        tipoper.setReadOnly(true);
+        codpos.setReadOnly(true);
+        
+        var ventana=Ext.create('Ext.window.Window',
+        {
+            title      : 'Recuperar cliente'
+            ,modal     : true
+            ,width     : 600
+            ,height    : 400
+            ,items     :
+            [
+                {
+                    layout    : 'hbox'
+                    ,defaults : { style : 'margin : 5px;' }
+                    ,items    :
+                    [
+                        {
+                            xtype       : 'textfield'
+                            ,name       : '_p30_recuperaRfc'
+                            ,fieldLabel : 'RFC'
+                            ,minLength  : 9
+                            ,maxLength  : 13
+                        }
+                        ,{
+                            xtype    : 'button'
+                            ,text    : 'Buscar'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                            ,handler : function(button)
+                            {
+                                debug('recuperar cliente buscar');
+                                var rfc=_fieldByName('_p30_recuperaRfc').getValue();
+                                var valido=true;
+                                if(valido)
+                                {
+                                    valido = !Ext.isEmpty(rfc)
+                                             &&rfc.length>8
+                                             &&rfc.length<14;
+                                    if(!valido)
+                                    {
+                                        mensajeWarning('Introduza un RFC v&aacute;lido');
+                                    }
+                                }
+                                
+                                if(valido)
+                                {
+                                    button.up('window').down('grid').getStore().load(
+                                    {
+                                        params :
+                                        {
+                                            'map1.pv_rfc_i'       : rfc
+                                            ,'map1.cdtipsit'      : _p30_smap1.cdtipsit
+                                            ,'map1.pv_cdtipsit_i' : _p30_smap1.cdtipsit
+                                            ,'map1.pv_cdunieco_i' : _p30_smap1.cdunieco
+                                            ,'map1.pv_cdramo_i'   : _p30_smap1.cdramo
+                                            ,'map1.pv_estado_i'   : 'W'
+                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    ]
+                }
+                ,Ext.create('Ext.grid.Panel',
+                {
+                    title    : 'Resultados'
+                    ,columns :
+                    [
+                        {
+                            xtype    : 'actioncolumn'
+                            ,width   : 30
+                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                            ,handler : function(view,row,col,item,e,record)
+                            {
+                                debug('recuperar cliente handler record:',record);
+                                _p30_recordClienteRecuperado=record;
+                                nombre.setValue(record.raw.NOMBRECLI);
+                                tipoper.setValue(record.raw.TIPOPERSONA);
+                                codpos.setValue(record.raw.CODPOSTAL);
+                                ventana.destroy();
+                            }
+                        }
+                        ,{
+                            text       : 'Nombre'
+                            ,dataIndex : 'NOMBRECLI'
+                            ,width     : 200
+                        }
+                        ,{
+                            text       : 'Direcci&oacute;n'
+                            ,dataIndex : 'DIRECCIONCLI'
+                            ,flex      : 1
+                        }
+                    ]
+                    ,store : Ext.create('Ext.data.Store',
+                    {
+                        model     : '_p30_modeloRecuperado'
+                        ,autoLoad : false
+                        ,proxy    :
+                        {
+                            type    : 'ajax'
+                            ,url    : _p30_urlRecuperarCliente
+                            ,reader :
+                            {
+                                type  : 'json'
+                                ,root : 'slist1'
+                            }
+                        }
+                    })
+                })
+            ]
+            ,listeners :
+            {
+                close : function()
+                {
+                    combcl.setValue('S');
+                }
+            }
+        }).show();
+        centrarVentanaInterna(ventana);
+    }
+    debug('<_p30_ramo5ClienteChange');
+}
+
+function _p30_dinFormPanelAceptarClic(boton)
+{
+    debug('>_p30_dinFormPanelAceptarClic');
+    
+    var form = boton.up('form');
+    valido = form.isValid();
+    if(!valido)
+    {
+        datosIncompletos();
+    }
+    
+    if(valido)
+    {
+        boton.up('window').hide();
+    }
+    
+    debug('<_p30_dinFormPanelAceptarClic');
+}
+
+function _p30_cotizar(sinTarificar)
+{
+    
 }
 ////// funciones //////
 </script>

@@ -2214,14 +2214,15 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param19"                  , null);
 						parametros.put("param20"                  , null);
 						parametros.put("param21"                  , null);
-						parametros.put("param22_pv_accion_i"      , "I");
+						parametros.put("param22"                  , null);
+						parametros.put("param23_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","DATE",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR"
+								"VARCHAR","VARCHAR","VARCHAR"
 						};
 						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 					}
@@ -5440,14 +5441,15 @@ public class CotizacionAction extends PrincipalCoreAction
 					parametros.put("param19"                  , null);
 					parametros.put("param20"                  , null);
 					parametros.put("param21"                  , null);
-					parametros.put("param22_pv_accion_i"      , "I");
+					parametros.put("param22"                  , null);
+					parametros.put("param23_pv_accion_i"      , "I");
 					String[] tipos=new String[]{
 							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 							"VARCHAR","VARCHAR","VARCHAR","DATE",
 							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 							"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
 							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-							"VARCHAR","VARCHAR"
+							"VARCHAR","VARCHAR","VARCHAR"
 					};
 					storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 				}
