@@ -640,6 +640,19 @@ Ext.onReady(function() {
 							});
 							return false;
 						}else{
+							
+							for(i=0;i < obtener.length;i++){
+            					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
+            						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""){
+            						centrarVentanaInterna(Ext.Msg.show({
+						                title:'Facturas',
+						                msg: 'Favor de introducir los campos requeridos en la factura',
+						                buttons: Ext.Msg.OK,
+						                icon: Ext.Msg.WARNING
+						            }));
+            						return false;
+            					}
+							}
 							var submitValues={};
 							var formulario=panelInicialPral.form.getValues();
 							submitValues['params']=formulario;
@@ -668,12 +681,12 @@ Ext.onReady(function() {
 									if(jsonResp.success==true){
 										panelInicialPral.setLoading(false);
 									}else{
-										Ext.Msg.show({
+										centrarVentanaInterna(Ext.Msg.show({
 											title:'Error',
-											msg: 'Error en el guardado de la factura',
+											msg: 'Favor de introducir los campos requeridos en la factura',
 											buttons: Ext.Msg.OK,
 											icon: Ext.Msg.ERROR
-										});
+										}));
 										respuesta= false;
 									}
 								},
@@ -1646,6 +1659,22 @@ Ext.onReady(function() {
 							});
 							return false;
 						}else{
+							
+							for(i=0;i < obtener.length;i++){
+            					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
+            						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
+            						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""||
+            						obtener[i].importeFactura == "" ||obtener[i].proveedorName == "" ||obtener[i].tasaCambio == ""){
+            						centrarVentanaInterna(Ext.Msg.show({
+						                title:'Facturas',
+						                msg: 'Favor de introducir los campos requeridos en la factura',
+						                buttons: Ext.Msg.OK,
+						                icon: Ext.Msg.WARNING
+						            }));
+            						return false;
+            					}
+							}
+							
 							if(obtener.length == 1){
 								panelInicialPral.down('combo[name=cmbProveedor]').setValue(obtener[0].proveedorName);
 								panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
