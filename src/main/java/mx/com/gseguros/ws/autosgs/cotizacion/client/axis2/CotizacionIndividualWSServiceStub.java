@@ -44019,6 +44019,50 @@
                             
 
                         /**
+                        * field for TipoNegocio
+                        */
+
+                        
+                                    protected org.apache.axis2.databinding.types.UnsignedShort localTipoNegocio ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localTipoNegocioTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return org.apache.axis2.databinding.types.UnsignedShort
+                           */
+                           public  org.apache.axis2.databinding.types.UnsignedShort getTipoNegocio(){
+                               return localTipoNegocio;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param TipoNegocio
+                               */
+                               public void setTipoNegocio(org.apache.axis2.databinding.types.UnsignedShort param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localTipoNegocioTracker = true;
+                                       } else {
+                                          localTipoNegocioTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localTipoNegocio=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for TipoProducto
                         */
 
@@ -45095,7 +45139,41 @@
                                             }
                                            localSdtPoliza.serialize(new javax.xml.namespace.QName("","sdtPoliza"),
                                                factory,xmlWriter);
-                                        } if (localTipoProductoTracker){
+                                        } if (localTipoNegocioTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"tipoNegocio", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"tipoNegocio");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("tipoNegocio");
+                                    }
+                                
+
+                                          if (localTipoNegocio==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("tipoNegocio cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoNegocio));
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localTipoProductoTracker){
                                             if (localTipoProducto==null){
                                                  throw new org.apache.axis2.databinding.ADBException("tipoProducto cannot be null!!");
                                             }
@@ -45579,7 +45657,16 @@
                                          throw new org.apache.axis2.databinding.ADBException("sdtPoliza cannot be null!!");
                                     }
                                     elementList.add(localSdtPoliza);
-                                } if (localTipoProductoTracker){
+                                } if (localTipoNegocioTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "tipoNegocio"));
+                                 
+                                        if (localTipoNegocio != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoNegocio));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("tipoNegocio cannot be null!!");
+                                        }
+                                    } if (localTipoProductoTracker){
                             elementList.add(new javax.xml.namespace.QName("",
                                                                       "tipoProducto"));
                             
@@ -46271,6 +46358,24 @@
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","sdtPoliza").equals(reader.getName())){
                                 
                                                 object.setSdtPoliza(SDTPoliza.Factory.parse(reader));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","tipoNegocio").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setTipoNegocio(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToUnsignedShort(content));
                                               
                                         reader.next();
                                     

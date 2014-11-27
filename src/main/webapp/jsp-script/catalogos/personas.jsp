@@ -682,8 +682,8 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 						form.down('[name=smap1.rfc]').reset();
 						form.down('[name=smap1.nombre]').reset();
 						
-						_fieldByName('CDMUNICI').setFieldLabel(_fieldByName('CDMUNICI').getFieldLabel()+" "+json.params.municipioImp);
-						_fieldByName('CDCOLONI').setFieldLabel(_fieldByName('CDCOLONI').getFieldLabel()+" "+json.params.coloniaImp);
+						_fieldByName('CDMUNICI').setValue(json.params.municipioImp);
+						_fieldByName('CDCOLONI').setValue(json.params.coloniaImp);
 						
 						irModoEdicion();
 	                }
