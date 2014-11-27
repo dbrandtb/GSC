@@ -414,7 +414,9 @@ Ext.onReady(function() {
 				 	{	
 				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2,  allowBlank: false
 				 		,editor: {
-				                xtype: 'textfield'
+				                xtype: 'textfield',
+				                editable : true,
+				                allowBlank: false
 			            }
 				 	},
 				 	{
@@ -422,7 +424,8 @@ Ext.onReady(function() {
 				 		,editor : {
 							xtype : 'datefield',
 							format : 'd/m/Y',
-							editable : true
+							editable : true,
+							allowBlank: false
 						}
 				 	},
 				 	{
@@ -459,7 +462,10 @@ Ext.onReady(function() {
 				 	{
 					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
 					 	,editor: {
-				                xtype: 'textfield'
+				                xtype: 'textfield',
+				                allowBlank: false,
+				                editable : true,
+				                minValue: 1
 			            }
 				 	},
 				 	{
@@ -1063,6 +1069,20 @@ Ext.onReady(function() {
 												panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
 										}
 	                				}
+	                				//Se tiene que validar el record de las facturas
+	                				for(i=0;i < obtener.length;i++){
+	                					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
+	                						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""){
+	                						Ext.Msg.show({
+	    						                title:'Facturas',
+	    						                msg: 'Favor de introducir los campos requeridos en la factura',
+	    						                buttons: Ext.Msg.OK,
+	    						                icon: Ext.Msg.WARNING
+	    						            });
+	                						return false;
+	                					}
+									}
+	                				
                 				}
 
         					}else{
@@ -1083,20 +1103,33 @@ Ext.onReady(function() {
                 				}else{
 	                				if(obtener.length == 1){
 	                					panelInicialPral.down('combo[name=cmbProveedor]').setValue(obtener[0].proveedorName);
-	                					//panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
-										panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
+	                					panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
 										panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
 										
 	                				}else{
 	                					panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
-	                					//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
-										panelInicialPral.down('[name=fechaIndFactura]').setValue('');
+	                					panelInicialPral.down('[name=fechaIndFactura]').setValue('');
 										panelInicialPral.down('[name=numIndFactura]').setValue('');
 	                				}
 	                				var sumaTotal= 0;
 	                				for(i=0;i < obtener.length;i++){
 											sumaTotal =sumaTotal + (+ obtener[i].importe);
 											panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+									}
+									
+									for(i=0;i < obtener.length;i++){
+	                					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
+	                						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
+	                						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""||
+	                						obtener[i].importeFactura == "" ||obtener[i].proveedorName == "" ||obtener[i].tasaCambio == ""){
+	                						Ext.Msg.show({
+	    						                title:'Facturas',
+	    						                msg: 'Favor de introducir los campos requeridos en la factura',
+	    						                buttons: Ext.Msg.OK,
+	    						                icon: Ext.Msg.WARNING
+	    						            });
+	                						return false;
+	                					}
 									}
                 				}
         					}
@@ -1108,7 +1141,7 @@ Ext.onReady(function() {
         					
         					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO) //PAGO DIRECTO
 							{
-								/*Pago directo*/
+								//Pago directo
 								storeFacturaDirecto.each(function(record,index){
 									datosTablas.push({
 										nfactura:record.get('noFactura'),
@@ -1122,7 +1155,7 @@ Ext.onReady(function() {
 									});
                 				});
 							}else{
-								/*Pago por Reembolso*/
+								//Pago por Reembolso
 								storeFacturaReembolso.each(function(record,index){
 									datosTablas.push({
 										nfactura:record.get('noFactura'),
