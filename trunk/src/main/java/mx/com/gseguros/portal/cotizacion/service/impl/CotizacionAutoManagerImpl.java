@@ -620,6 +620,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		try
 		{
+			cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, estado, nmpoliza);
 			cotizacionDAO.movimientoMpoliper(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdrol, cdperson, nmsuplem, status, nmorddom, swreclam, accion, swexiper);
 		}
 		catch(Exception ex)
@@ -1406,7 +1407,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				List<ComponenteVO>tatrisitPanelAux = new ArrayList<ComponenteVO>();
 				for(ComponenteVO tatri:tatrisitPanel)
 				{
-					if(tatri.getSwpresenflot().equals("S")&&tatri.getNmpanelflot().equals("4"))
+					if(tatri.getSwpresenflot().equals("S")
+							&&tatri.getNmpanelflot().equals("4")
+							&&tatri.getSwtarifi().equals("S"))
 					{
 						tatrisitPanelAux.add(tatri);
 					}

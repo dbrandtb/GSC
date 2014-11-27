@@ -456,6 +456,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 							params.get("cadena")
 							);
 					break;
+				case RAMO_5_SUBMARCAS:
+				case RAMO_5_VERSIONES:
+					lista = catalogosManager.cargarTtapvat1(cat.getCdTabla());
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

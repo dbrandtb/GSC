@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -923,6 +924,47 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 					,"descripcion"
 					,"modelo"
 					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarTtapvat1(String cdtabla)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtabla" , cdtabla);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_TTAPVAT1 ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarTtapvat1(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay datos en la tabla de apoyo");
+		}
+		List<GenericVO>listaGen = new ArrayList<GenericVO>();
+		for(Map<String,String>item:lista)
+		{
+			listaGen.add(new GenericVO(item.get("otclave"),item.get("otvalor")));
+		}
+		return listaGen;
+	}
+	
+	protected class CargarTtapvat1 extends StoredProcedure
+	{
+		protected CargarTtapvat1(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TTAPVAT1");
+			declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "otclave" , "otvalor" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

@@ -454,7 +454,7 @@ function _p29_personaSaved()
             ,'smap1.cdramo'   : _p29_smap1.cdramo
             ,'smap1.estado'   : _p29_smap1.estado
             ,'smap1.nmpoliza' : _p29_smap1.nmpoliza
-            ,'smap1.nmsituac' : '0'
+            ,'smap1.nmsituac' : '1'
             ,'smap1.cdrol'    : '1'
             ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
             ,'smap1.nmsuplem' : '0'

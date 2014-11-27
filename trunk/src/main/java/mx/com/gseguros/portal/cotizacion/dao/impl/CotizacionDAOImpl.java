@@ -835,6 +835,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	public void borrarMpoliperTodos(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** PKG_SATELITES.P_BORRA_MPOLIPER ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************")
+				.toString()
+				);
+		ejecutaSP(new BorrarMpoliperTodos(getDataSource()),params);
+	}
+	
+	protected class BorrarMpoliperTodos extends StoredProcedure
+	{
+		protected BorrarMpoliperTodos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void borrarMpoliperGrupo(Map<String,String>params)throws Exception
 	{
 		ejecutaSP(new BorrarMpoliperGrupo(getDataSource()),params);
