@@ -21,6 +21,7 @@ var _3_storeClaTipos;
 var loadExcluTimeoutVar;
 var _3_panelCla;
 var _3_storeClaUsa;
+var _TITULAR = 'T';
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var panendabaseguInputSmap1   = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -75,54 +76,41 @@ function panendabaseguFunAgregar()
     }
 }
 
-function panendabaseguFunQuitar()
-{
+function panendabaseguFunQuitar() {
 	debug('panendabaseguFunQuitar');
 	var aseguSelec=0;
 	var aseguActivo;
-    panendabaseguStoreAsegu.each(function(record)
-    {
-        if(record.get('activo')==true)
-        {
+    panendabaseguStoreAsegu.each(function(record) {
+        if(record.get('activo')==true) {
             aseguSelec=aseguSelec+1;
             aseguActivo=record;   
         }
     });
-    if(aseguSelec==1)
-    {
-        if(aseguActivo.get('cdrol')==2)
-        {
-        	if(panEndAltBajAseStoreAltas.getCount()+panEndAltBajAseStoreBajas.getCount()==0)
-        	{
+    
+    if(aseguSelec==1) {
+    	// Si no es cliente ni titular, permitimos la baja:
+        if(aseguActivo.get('cdrol')==2 && aseguActivo.get('Parentesco') != _TITULAR) {
+        	if(panEndAltBajAseStoreAltas.getCount()+panEndAltBajAseStoreBajas.getCount()==0) {
         		panEndAltBajAseStoreBajas.add(aseguActivo);
         		panendabaseguStoreAsegu.remove(aseguActivo);
-        	}
-        	else
-        	{
-        		Ext.Msg.show(
-   	            {
+        	} else {
+        		Ext.Msg.show({
    	                title    : 'Error'
    	                ,icon    : Ext.Msg.WARNING
    	                ,msg     : 'No se pueden quitar/agregar m&aacute;s asegurados'
    	                ,buttons : Ext.Msg.OK
    	            });
         	}
-        }
-        else
-        {
-        	Ext.Msg.show(
-   	        {
+        } else {
+        	Ext.Msg.show({
    	            title    : 'Error'
    	            ,icon    : Ext.Msg.WARNING
-   	            ,msg     : 'No se puede quitar el cliente'
+   	            ,msg     : 'No se puede quitar el cliente ni el titular'
    	            ,buttons : Ext.Msg.OK
    	        });
         }
-    }
-    else
-    {
-        Ext.Msg.show(
-        {
+    } else {
+        Ext.Msg.show({
             title    : 'Error'
             ,icon    : Ext.Msg.WARNING
             ,msg     : 'Seleccione un asegurado'
