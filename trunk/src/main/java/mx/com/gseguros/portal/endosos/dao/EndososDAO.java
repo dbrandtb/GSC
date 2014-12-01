@@ -80,9 +80,7 @@ public interface EndososDAO
 	public void                     actualizaDeducibleValosit(Map<String, String> params)      throws Exception;
 	public void                     actualizaCopagoValosit(Map<String, String> params)         throws Exception;
 	public Map<String, String>      pClonarPolizaReexped(Map<String, String> params)           throws Exception;
-	@Deprecated
-	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params)      throws Exception;
-	public List<Map<String,String>> obtenerValositPorNmsuplem(
+	public List<Map<String,String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -189,4 +187,12 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem
 			,Map<String,String>tvalosit)throws Exception;
+	
+	/**
+	 * 
+	 * @param params
+	 * @throws Exception
+	 */
+	public void insertarMpolicap(Map<String, String> params) throws Exception;
+	
 }

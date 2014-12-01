@@ -1141,7 +1141,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
-	public List<Map<String,String>> obtenerValositPorNmsuplem(
+	public List<Map<String,String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -1158,43 +1158,26 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************************")
-				.append("\n****** PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM ******")
+				.append("\n****** PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************************")
 				.toString()
 				);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerValositPorNmsuplem(this.getDataSource()), params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerValositUltimaImagen(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
 	}
-	
-	//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
-	@Override
-	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params) throws Exception
-	{
-		logger.debug(
-				new StringBuilder()
-				.append("\n*****************************************************")
-				.append("\n****** PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM ******")
-				.append("\n****** params=").append(params)
-				.append("\n*****************************************************")
-				.toString()
-				);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerValositPorNmsuplem(this.getDataSource()), params);
-		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
-	}
-	
-	protected class ObtenerValositPorNmsuplem extends StoredProcedure
+		
+	protected class ObtenerValositUltimaImagen extends StoredProcedure
 	{
 
-		protected ObtenerValositPorNmsuplem(DataSource dataSource)
+		protected ObtenerValositUltimaImagen(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM");
+			super(dataSource, "PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN");
 
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
 
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
 			/*
@@ -1211,12 +1194,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -2100,6 +2077,36 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 						StringUtils.leftPad(String.valueOf(i),2,"0")
 						).toString() , OracleTypes.VARCHAR));
 			}
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	
+	@Override
+	public void insertarMpolicap(Map<String, String> params) throws Exception {
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_ENDOSOS.P_INSERTA_MPOLICAP ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new InsertaMPolicapSP(this.getDataSource()), params);
+	}
+	
+	protected class InsertaMPolicapSP extends StoredProcedure {
+		protected InsertaMPolicapSP(DataSource dataSource) {
+			super(dataSource,"PKG_ENDOSOS.P_INSERTA_MPOLICAP");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptcapita_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

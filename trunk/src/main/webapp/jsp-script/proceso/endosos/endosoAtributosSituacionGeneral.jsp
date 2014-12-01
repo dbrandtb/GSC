@@ -204,27 +204,27 @@ function _p27_confirmar(me)
                 {
                     var valorActual = _fieldByName(name,_fieldById('_p27_actualForm')).getValue();
                     var valorNuevo  = _fieldByName(name,_fieldById('_p27_nuevoForm')).getValue();
-                    if(valorNuevo<valorActual)
+                    if(Number(valorNuevo) <= Number(valorActual))
                     {
                         valido = false;
-                        errores = errores + 'El valor de '+label+' no puede ser menor<br/>';
+                        errores = errores + 'El valor de '+label+' debe ser mayor<br/>';
                     }
                 }
                 else if(validacion+'x'=='-x')
                 {
                     var valorActual = _fieldByName(name,_fieldById('_p27_actualForm')).getValue();
                     var valorNuevo  = _fieldByName(name,_fieldById('_p27_nuevoForm')).getValue();
-                    if(valorNuevo>valorActual)
+                    if(Number(valorNuevo) >= Number(valorActual))
                     {
                         valido = false;
-                        errores = errores + 'El valor de '+label+' no puede ser mayor<br/>';
+                        errores = errores + 'El valor de '+label+' debe ser menor<br/>';
                     }
                 }
                 else
                 {
                     var valorActual = _fieldByName(name,_fieldById('_p27_actualForm')).getValue();
                     var valorNuevo  = _fieldByName(name,_fieldById('_p27_nuevoForm')).getValue();
-                    if(valorNuevo!=valorActual)
+                    if(Number(valorNuevo) != Number(valorActual))
                     {                    
                         valido = false;
                         errores = errores + 'El valor de '+label+' no puede ser modificado<br/>';
@@ -277,7 +277,6 @@ function _p27_confirmar(me)
             }
         });
     }
-    
     debug('<_p27_confirmar');
 }
 ////// funciones //////
