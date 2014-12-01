@@ -104,7 +104,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				}
 			}
 		} else { //quiere acceder a otra url
-			logger.info("INVOKE");
+			//logger.info("INVOKE");
 			if (user == null) {
 				//no hay usuario en sesion, se redirige a login (no al loginform)
 				logger.info("return invoke login");
@@ -124,7 +124,7 @@ public class AuthenticationInterceptor implements Interceptor {
 					return "tree"+sufijoMovil;
 				} else {
 					//tiene usuario y rol correctos
-					logger.info("return invoke invoke");
+					//logger.info("return invoke invoke");
 					return actionInvocation.invoke();
 				}
 			}
