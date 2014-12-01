@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +22,9 @@ import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAutoAction extends PrincipalCoreAction
 {
-	private static final long serialVersionUID = -5890606583100529056L;
-	private static final Logger logger         = Logger.getLogger(CotizacionAutoAction.class);
+	private static final long             serialVersionUID = -5890606583100529056L;
+	private static final Logger           logger           = Logger.getLogger(CotizacionAutoAction.class);
+	private static final SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionAutoManager cotizacionAutoManager;
 	
@@ -32,6 +35,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private boolean                  exito           = false;
 	private Map<String,Item>         imap            = null;
 	private List<Map<String,String>> slist1          = null;
+	private List<Map<String,String>> slist2          = null;
+	private List<Map<String,String>> slist3          = null;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -113,6 +118,18 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private void checkBool(boolean bool,String mensaje)throws ApplicationException
 	{
 		if(bool==false)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	/**
+	 * Revisa null y lista vacia
+	 */
+	private void checkList(List<?> lista,String mensaje)throws ApplicationException
+	{
+		checkNull(lista,mensaje);
+		if(lista.size()==0)
 		{
 			throw new ApplicationException(mensaje);
 		}
@@ -846,6 +863,89 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	public String cotizarAutosFlotilla()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n##################################")
+				.append("\n###### cotizarAutosFlotilla ######")
+				.append("\n###### smap1=") .append(smap1)
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### slist2=").append(slist2)
+				.append("\n###### slist3=").append(slist3)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			
+			checkNull(session, "No hay sesion");
+			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			checkNull(smap1, "No se recibieron datos de poliza");
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String cdtipsit    = smap1.get("cdtipsit");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String feini       = smap1.get("feini");
+			String fefin       = smap1.get("fefin");
+			String cdagente    = smap1.get("cdagente");
+			String cdpersonCli = smap1.get("cdpersonCli");
+			String cdideperCli = smap1.get("cdideperCli");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(feini    , "No se recibio el inicio de vigencia");
+			checkBlank(fefin    , "No se recibio el fin de vigencia");
+			checkBlank(cdagente , "No se recibio el agente");
+			Date fechaInicio = renderFechas.parse(feini);
+			Date fechaFin    = renderFechas.parse(fefin);
+			
+			checkList(slist1, "No se recibieron las situaciones mixtas");
+			checkList(slist2, "No se recibieron las situaciones base");
+			checkList(slist3, "No se recibieron las configuraciones de plan");
+			
+			ManagerRespuestaVoidVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
+					cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,fechaInicio
+					,fechaFin
+					,cdagente
+					,cdpersonCli
+					,cdideperCli
+					,slist1
+					,slist2
+					,slist3);
+			
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cotizarAutosFlotilla ######")
+				.append("\n##################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -913,5 +1013,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public List<Map<String, String>> getSlist2() {
+		return slist2;
+	}
+
+	public void setSlist2(List<Map<String, String>> slist2) {
+		this.slist2 = slist2;
+	}
+
+	public List<Map<String, String>> getSlist3() {
+		return slist3;
+	}
+
+	public void setSlist3(List<Map<String, String>> slist3) {
+		this.slist3 = slist3;
 	}
 }
