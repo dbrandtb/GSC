@@ -555,6 +555,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_residencia_i"  , persona.get("RESIDENCIA"));
 				paramPersona.put("pv_nongrata_i"    , null);
 				paramPersona.put("pv_cdideext_i"    , null);
+				paramPersona.put("pv_cdestciv_i"    , null);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -735,6 +736,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_residencia_i"  , persona.get("RESIDENCIA"));
 				paramPersona.put("pv_nongrata_i"    , null);
 				paramPersona.put("pv_cdideext_i"    , null);
+				paramPersona.put("pv_cdestciv_i"    , null);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -3187,6 +3189,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpersona.put("pv_residencia_i"  , null);
 				mapaMpersona.put("pv_nongrata_i"    , null);
 				mapaMpersona.put("pv_cdideext_i"    , null);
+				mapaMpersona.put("pv_cdestciv_i"    , null);
 				mapaMpersona.put("pv_accion_i"      , "I");
 				kernelManager.movMpersona(mapaMpersona);
                 ////// mpersona //////

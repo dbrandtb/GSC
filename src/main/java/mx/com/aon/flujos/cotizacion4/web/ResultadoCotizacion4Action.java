@@ -1451,6 +1451,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_residencia_i"  , null);
 								parametros.put("pv_nongrata_i"    , null);
 								parametros.put("pv_cdideext_i"    , null);
+								parametros.put("pv_cdestciv_i"    , null);
 								parametros.put("pv_accion_i"      , "I");
 								kernelManagerSustituto.movMpersona(parametros);
 					    		
