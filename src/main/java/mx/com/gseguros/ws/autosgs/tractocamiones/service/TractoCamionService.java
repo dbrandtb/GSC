@@ -1,7 +1,5 @@
 package mx.com.gseguros.ws.autosgs.tractocamiones.service;
 
-import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.EmAdmfolId;
-
 public interface TractoCamionService {
 
 	/**

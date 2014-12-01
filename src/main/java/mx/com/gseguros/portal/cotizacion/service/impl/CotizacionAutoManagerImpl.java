@@ -26,10 +26,12 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 {
@@ -41,6 +43,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	private CotizacionDAO cotizacionDAO;
 	private PantallasDAO  pantallasDAO;
+	
+	@Autowired
+	private transient TractoCamionService tractoCamionService;
 	
 	private Map<String,Object> session;
 	
