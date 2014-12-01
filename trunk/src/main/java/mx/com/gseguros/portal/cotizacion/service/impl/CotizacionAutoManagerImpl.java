@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.cotizacion.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1442,6 +1443,58 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ cotizacionAutoFlotilla @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO cotizarAutosFlotilla(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,Date fechaInicio
+			,Date fechaFin
+			,String cdagente
+			,String cdpersonCli
+			,String cdideperCli
+			,List<Map<String,String>> tvalosit
+			,List<Map<String,String>> baseTvalosit
+			,List<Map<String,String>> configPlanes)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cotizarAutosFlotilla @@@@@@")
+				.append("\n@@@@@@ cdusuari=")    .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")    .append(cdsisrol)
+				.append("\n@@@@@@ cdunieco=")    .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")      .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=")    .append(cdtipsit)
+				.append("\n@@@@@@ estado=")      .append(estado)
+				.append("\n@@@@@@ nmpoliza=")    .append(nmpoliza)
+				.append("\n@@@@@@ fechaInicio=") .append(fechaInicio)
+				.append("\n@@@@@@ fechaFin=")    .append(fechaFin)
+				.append("\n@@@@@@ cdagente=")    .append(cdagente)
+				.append("\n@@@@@@ cdpersonCli=") .append(cdpersonCli)
+				.append("\n@@@@@@ cdideperCli=") .append(cdideperCli)
+				.append("\n@@@@@@ tvalosit=")    .append(tvalosit)
+				.append("\n@@@@@@ baseTvalosit=").append(baseTvalosit)
+				.append("\n@@@@@@ configPlanes=").append(configPlanes)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cotizarAutosFlotilla @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;

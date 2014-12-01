@@ -15,6 +15,7 @@ var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"   acti
 var _p30_urlCargarParametros               = '<s:url namespace="/emision"   action="obtenerParametrosCotizacion"    />';
 var _p30_urlRecuperarCliente               = '<s:url namespace="/"          action="buscarPersonasRepetidas"        />';
 var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos" action="obtieneCatalogo"                />';
+var _p30_urlCotizar                        = '<s:url namespace="/emision"   action="cotizarAutosFlotilla"           />';
 ////// urls //////
 
 ////// variables //////
@@ -27,7 +28,7 @@ var _p30_selectedRecord          = null;
 var _p30_recordClienteRecuperado = null;
 
 var _p30_storeSubmarcasRamo5 = null;
-var _p30_storeVersionesRamo5  = null;
+var _p30_storeVersionesRamo5 = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -40,6 +41,20 @@ var _p30_gridColsConf =
 var _p30_gridCols =
 [
     { xtype : 'rownumberer' }
+    ,{
+        sortable      : false
+        ,menuDisabled : true
+        ,dataIndex    : 'personalizado'
+        ,renderer     : function(v)
+        {
+            var r='';
+            if(v+'x'=='six')
+            {
+                r='<img src="${ctx}/resources/fam3icons/icons/tag_blue_edit.png" />';
+            }
+            return r;
+        }
+    }
 ];
 for(var i=0;i<_p30_gridColsConf.length;i++)
 {
@@ -122,6 +137,8 @@ var _p30_paneles  = [];
             ,maxHeight   : 600
             ,width       : 850
             ,autoScroll  : true
+            ,callback    : false
+            ,valores     : false
             ,items       :
             [
                 Ext.create('Ext.form.Panel',
@@ -141,7 +158,7 @@ var _p30_paneles  = [];
                         {
                             text     : 'Aceptar'
                             ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                            ,handler : _p30_dinFormPanelAceptarClic
+                            ,handler : function(me){ me.up('window').callback(); }
                         }
                         ,{
                             text     : 'Cancelar'
@@ -223,7 +240,7 @@ Ext.onReady(function()
             ,'parametros.pv_otvalor36','parametros.pv_otvalor37','parametros.pv_otvalor38','parametros.pv_otvalor39','parametros.pv_otvalor40'
             ,'parametros.pv_otvalor41','parametros.pv_otvalor42','parametros.pv_otvalor43','parametros.pv_otvalor44','parametros.pv_otvalor45'
             ,'parametros.pv_otvalor46','parametros.pv_otvalor47','parametros.pv_otvalor48','parametros.pv_otvalor49','parametros.pv_otvalor50'
-            ,'cdplan','cdtipsit'
+            ,'cdplan','cdtipsit','personalizado'
         ]
 	});
 	
@@ -327,7 +344,7 @@ Ext.onReady(function()
                             ,style       : 'margin:5px;'
                             ,listeners   :
                             {
-                                /*change : _p28_nmpolizaChange*/
+                                change : _p30_nmpolizaChange
                             }
                         }
                         ,{
@@ -374,6 +391,7 @@ Ext.onReady(function()
 	Ext.create('Ext.panel.Panel',
 	{
 	    renderTo  : '_p30_divpri'
+	    ,itemId   : '_p30_panelpri'
 	    ,border   : 0
 	    ,defaults : { style : 'margin:5px;' }
 	    ,items    :
@@ -582,6 +600,55 @@ Ext.onReady(function()
         }
         //tipo valor
         
+        //tipo vehiculo
+        var tipoVehiName = _fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex;
+        for(var i=0;i<_p30_gridCols.length;i++)
+        {
+            debug('buscando editor tipo vehiculo');
+            if(!Ext.isEmpty(_p30_gridCols[i].editor)
+                &&_p30_gridCols[i].editor.name==tipoVehiName)
+            {
+                debug('tipo vehiculo es:',_p30_gridCols[i].editor);
+                _p30_gridCols[i].editor.on(
+                {
+                    change : function()
+                    {
+                        var record    = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
+                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
+                        var personalizado = false;
+                        var conValor      = false;
+                        if(record.get('personalizado')+'x'=='six')
+                        {
+                            personalizado = true;
+                        }
+                        if(record.get(valorName)+'x'!='x')
+                        {
+                            conValor = true;
+                        }
+                        record.set('personalizado' , '');
+                        record.set(valorName       , '');
+                        if(personalizado&&conValor)
+                        {
+                            mensajeWarning('Debe actualizar la configuraci&oacute;n del plan y el valor del veh&iacute;culo');
+                        }
+                        else if(conValor)
+                        {
+                            mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
+                        }
+                        else if(personalizado)
+                        {
+                            mensajeWarning('Debe actualizar la configuraci&oacute;n del plan');
+                        }
+                    }
+                });
+            }
+            else
+            {
+                debug('tipo vehiculo no es:',_p30_gridCols[i].editor);
+            }
+        }
+        //tipo vehiculo
+        
         //cliente nuevo
         _fieldLikeLabel('CLIENTE NUEVO').on(
         {
@@ -652,9 +719,34 @@ function _p30_calculaVigencia()
 
 function _p30_configuracionPanelDinClic(cdtipsit,titulo)
 {
-    debug('>_p30_configuracionPanelDinClic:',cdtipsit);
-    _p30_paneles[cdtipsit].title=titulo;
-    centrarVentanaInterna(_p30_paneles[cdtipsit].show());
+    debug('>_p30_configuracionPanelDinClic:',cdtipsit,titulo);
+    var panel = _p30_paneles[cdtipsit];
+    panel.setTitle(titulo);
+    if(panel.valores!=false)
+    {
+        panel.down('form').loadRecord(new _p30_modelo(panel.valores));
+    }
+    else
+    {
+        panel.down('form').getForm().reset();
+    }
+    panel.callback=function()
+    {
+        var form = panel.down('form');
+        var valido = form.isValid();
+        if(!valido)
+        {
+            datosIncompletos();
+        }
+        
+        if(valido)
+        {
+            panel.valores=form.getValues();
+            panel.hide();
+            debug('panel:',panel);
+        }
+    }
+    centrarVentanaInterna(panel.show());
     debug('<_p30_configuracionPanelDinClic');
 }
 
@@ -668,6 +760,47 @@ function _p30_agregarAuto()
 function _p30_gridBotonConfigClic(view,row,col,item,e,record)
 {
     debug('>_p30_gridBotonConfigClic:',record);
+    var cdtipsit = record.get('cdtipsit');
+    
+    var valido = !Ext.isEmpty(cdtipsit);
+    if(!valido)
+    {
+        mensajeWarning('Debe seleccionar el tipo de veh&iacute;culo');
+    }
+    
+    if(valido)
+    {
+        var cdtipsitPanel = _p30_smap1['destino_'+cdtipsit];
+        debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
+        var panel = _p30_paneles[cdtipsitPanel];
+        panel.setTitle('CONFIGURACI&Oacute;N DE PLAN');
+        var form  = panel.down('form');
+        if(record.get('personalizado')=='si')
+        {
+            form.loadRecord(record);
+        }
+        else if(panel.valores!=false)
+        {
+            form.loadRecord(new _p30_modelo(panel.valores));
+        }
+        else
+        {
+            form.getForm().reset();
+        }
+        panel.callback=function()
+        {
+            var values = form.getValues();
+            for(var prop in values)
+            {
+                record.set(prop,values[prop]);
+            }
+            record.set('personalizado','si');
+            debug('record:',record);
+            panel.hide();
+            _fieldById('_p30_grid').editingPlugin.cancelEdit();
+        }
+        centrarVentanaInterna(panel.show());
+    }
     debug('<_p30_gridBotonConfigClic');
 }
 
@@ -1017,7 +1150,7 @@ function _p30_cargarRangoValorRamo5(callback)
             {
                 'smap1.parametro' : 'RANGO_VALOR'
                 ,'smap1.cdramo'   : _p30_smap1.cdramo
-                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                ,'smap1.cdtipsit' : _p30_selectedRecord.get('cdtipsit')
                 ,'smap1.clave4'   : tipovalorval
                 ,'smap1.clave5'   : _p30_smap1.cdsisrol
             }
@@ -1211,12 +1344,11 @@ function _p30_ramo5ClienteChange()
     debug('<_p30_ramo5ClienteChange');
 }
 
-function _p30_dinFormPanelAceptarClic(boton)
+function _p30_cotizar(sinTarificar)
 {
-    debug('>_p30_dinFormPanelAceptarClic');
+    debug('>_p30_cotizar sinTarificar:',sinTarificar,'DUMMY');
     
-    var form = boton.up('form');
-    valido = form.isValid();
+    var valido = _fieldById('_p30_form').isValid();
     if(!valido)
     {
         datosIncompletos();
@@ -1224,15 +1356,196 @@ function _p30_dinFormPanelAceptarClic(boton)
     
     if(valido)
     {
-        boton.up('window').hide();
+        var error  = '';
+        for(var i=0;i<_f1_botones.length;i++)
+        {
+            var boton    = _f1_botones[i];
+            var cdtipsit = boton.cdtipsit;
+            var panel    = _p30_paneles[cdtipsit];
+            debug('buscando en panel:',panel);
+            if(panel.valores==false)
+            {
+                valido = false;
+                error  = error+'FALTA DEFINIR: '+boton.text+'<br/>';
+            }
+        }
+        if(!valido)
+        {
+            mensajeWarning(error);
+        }
     }
     
-    debug('<_p30_dinFormPanelAceptarClic');
+    if(valido)
+    {
+        valido = _p30_store.getCount()>0;
+        if(!valido)
+        {
+            mensajeWarning('No se han capturado incisos. Debe capturar al menos uno');
+        }
+    }
+    
+    if(valido)
+    {
+        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
+        var error     = '';
+        _p30_store.each(function(record)
+        {
+            if(record.get(valorName)+'x'=='x')
+            {
+                error  = error + 'Debe actualizar el valor del veh&iacute;culo '+(_p30_store.indexOf(record)+1)+'</br>';
+                valido = false;
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning(error);
+        }
+    }
+    
+    if(valido)
+    {
+        valido = _fieldByName('nmpoliza').sucio==false;
+        if(!valido)
+        {
+            _fieldByName('nmpoliza').semaforo = true;
+            _fieldByName('nmpoliza').setValue('');
+            _fieldByName('nmpoliza').semaforo = false;
+            valido = true;
+        }
+    }
+    
+    debug('_p30_paneles:',_p30_paneles,'valido:',valido);
+    if(valido)
+    {
+        debug('length:',_p30_paneles.length,'type:',typeof _p30_paneles);
+        var recordsCdtipsit = [];
+        for(var cdtipsitPanel in _p30_paneles)
+        {
+            var panel      = _p30_paneles[cdtipsitPanel];
+            var recordBase = new _p30_modelo(panel.valores);
+            recordBase.set('cdtipsit',cdtipsitPanel);
+            debug('cdtipsitPanel:',cdtipsitPanel,'recordBase:',recordBase);
+            recordsCdtipsit[cdtipsitPanel] = recordBase;
+        }
+        debug('recordsCdtipsit:',recordsCdtipsit);
+        var storeTvalosit = Ext.create('Ext.data.Store',
+        {
+            model : '_p30_modelo'
+        });
+        var formValuesAux = _fieldById('_p30_form').getValues();
+        var formValues    = {};
+        for(var prop in formValuesAux)
+        {
+            if(prop+'x'!='x'
+                &&prop.slice(0,5)=='param')
+            {
+                formValues[prop]=formValuesAux[prop];
+            }
+        }
+        debug('formValues:',formValues);
+        _p30_store.each(function(record)
+        {
+            var cdtipsit       = record.get('cdtipsit');
+            var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
+            var recordBase     = recordsCdtipsit[cdtipsitPanel];
+            var recordTvalosit = new _p30_modelo(record.data);
+            for(var prop in recordTvalosit.data)
+            {
+                var valor = recordTvalosit.get(prop);
+                var base  = recordBase.get(prop);
+                if(valor+'x'=='x'&&base+'x'!='x')
+                {
+                    recordTvalosit.set(prop,base);
+                }
+            }
+            for(var prop in formValues)
+            {
+                recordTvalosit.set(prop,formValues[prop]);
+            }
+            storeTvalosit.add(recordTvalosit);
+            debug('record:',record.data,'tvalosit:',recordTvalosit.data);
+        });
+        debug('_p30_store:',_p30_store);
+        debug('storeTvalosit:',storeTvalosit);
+        
+        var json =
+        {
+            smap1 :
+            {
+                cdunieco     : _p30_smap1.cdunieco
+                ,cdramo      : _p30_smap1.cdramo
+                ,estado      : 'W'
+                ,nmpoliza    : _fieldByName('nmpoliza').getValue()
+                ,cdtipsit    : _p30_smap1.cdtipsit
+                ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+                ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+                ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+                ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+                ,cdagente    : _fieldByLabel('AGENTE').getValue()
+            }
+            ,slist1 : []
+            ,slist2 : []
+            ,slist3 : []
+        };
+        
+        for(var cdtipsitPanel in recordsCdtipsit)
+        {
+            json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
+        }
+        
+        _p30_store.each(function(record)
+        {
+            json.slist2.push(record.data);
+        });
+        
+        storeTvalosit.each(function(record)
+        {
+            json.slist1.push(record.data);
+        });
+        
+        debug('>>> json a enviar:',json);
+        
+        var panelpri = _fieldById('_p30_panelpri');
+        panelpri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p30_urlCotizar
+            ,jsonData : json
+            ,success  : function(response)
+            {
+                panelpri.setLoading(false);
+                json = Ext.decode(response.responseText);
+                debug('### cotizar:',json);
+                if(json.exito)
+                {
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                panelpri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p30_cotizar');
 }
 
-function _p30_cotizar(sinTarificar)
+function _p30_nmpolizaChange(me)
 {
-    
+    var sem = me.semaforo;
+    if(Ext.isEmpty(sem)||sem==false)
+    {
+        me.sucio = true;
+    }
+    else
+    {
+        me.sucio = false;
+    }
 }
 ////// funciones //////
 </script>
