@@ -4994,8 +4994,8 @@ public class EndososAction extends PrincipalCoreAction
 				keyMunicipio = "pv_otvalor17";
 
 			}
-			//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
-			List<Map<String,String>>valositsPoliza=endososManager.obtenerValositPorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
+			List<Map<String,String>>valositsPoliza=endososManager.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			/*
 			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
 			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11

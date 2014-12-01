@@ -153,7 +153,7 @@ public interface EndososManager
 			,String nmpoliza
 			,String fecha
 			,String cdplan) throws Exception;
-	public List<Map<String, String>> obtenerValositPorNmsuplem(
+	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
 			,String estado

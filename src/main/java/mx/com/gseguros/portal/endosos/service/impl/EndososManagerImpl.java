@@ -24,6 +24,9 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.HttpUtil;
@@ -466,7 +469,7 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
-	//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
+	//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
 	/*
 	CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
 	,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
@@ -477,7 +480,7 @@ public class EndososManagerImpl implements EndososManager
 	,OTVALOR48,OTVALOR49,OTVALOR50
 	*/
 	@Override
-	public List<Map<String, String>> obtenerValositPorNmsuplem(
+	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -487,7 +490,7 @@ public class EndososManagerImpl implements EndososManager
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ obtenerValositPorNmsuplem @@@@@@")
+				.append("\n@@@@@@ obtenerValositUltimaImagen @@@@@@")
 				.append("\n@@@@@@ cdunieco=").append(cdunieco)
 				.append("\n@@@@@@ cdramo=")  .append(cdramo)
 				.append("\n@@@@@@ estado=")  .append(estado)
@@ -496,14 +499,14 @@ public class EndososManagerImpl implements EndososManager
 				.toString()
 				);
 		Map<String,String>params=new HashMap<String,String>();
-		logger.debug("EndososManager obtenerValositPorNmsuplem params: "+params);
-		List<Map<String,String>> lista=endososDAO.obtenerValositPorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		logger.debug("EndososManager obtenerValositUltimaImagen params: "+params);
+		List<Map<String,String>> lista=endososDAO.obtenerValositUltimaImagen(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		logger.debug("EndososManager obtenerValositPorNmsuplem lista size: "+lista.size());
+		logger.debug("EndososManager obtenerValositUltimaImagen lista size: "+lista.size());
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ lista=").append(lista)
-				.append("\n@@@@@@ obtenerValositPorNmsuplem @@@@@@")
+				.append("\n@@@@@@ obtenerValositUltimaImagen @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
@@ -1118,7 +1121,7 @@ public class EndososManagerImpl implements EndososManager
 		
 		try
 		{
-			List<Map<String,String>>tvalosits = this.obtenerValositPorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			List<Map<String,String>>tvalosits = this.obtenerValositUltimaImagen(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 			for(Map<String,String>tvalosit:tvalosits)
 			{
 				if(tvalosit.get("NMSITUAC").equals("1"))
@@ -1212,11 +1215,20 @@ public class EndososManagerImpl implements EndososManager
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		
 		Date fechaEfecto = null;
+		TipoEndoso enumTipoEndosoElegido = null;
 		
 		//procesar datos
 		try
 		{
 			fechaEfecto = renderFechas.parse(feefecto);
+			
+			//Creamos un enum en base al tipo de endoso elegido:
+			for (TipoEndoso te : TipoEndoso.values()) {
+			    if( cdtipsup.equals(te.getCdTipSup().toString()) ) {
+			    	enumTipoEndosoElegido = te;
+			    	break;
+			    }
+			}
 		}
 		catch(Exception ex)
 		{
@@ -1408,6 +1420,30 @@ public class EndososManagerImpl implements EndososManager
 		
 		if(resp.isExito()) {
 			try {
+				
+				// Acciones particulares por Tipo de Endoso:
+	        	switch(enumTipoEndosoElegido) {
+					case SUMA_ASEGURADA_INCREMENTO:
+					case SUMA_ASEGURADA_DECREMENTO:
+						//Si cdramo es gastos medicos mayores y cd tipsit es gastos medicos individual insertamos en mpolicap:
+						if(cdramo.equals(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) &&
+								cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())) {
+							Map<String,String>mapaMpolicap=new LinkedHashMap<String,String>(0);
+							mapaMpolicap.put("pv_cdunieco_i", cdunieco);
+							mapaMpolicap.put("pv_cdramo_i"  , cdramo);
+							mapaMpolicap.put("pv_estado_i"  , estado);
+							mapaMpolicap.put("pv_nmpoliza_i", nmpoliza);
+							mapaMpolicap.put("pv_nmsuplem_i", nmsuplemEndoso);
+							mapaMpolicap.put("pv_ptcapita_i", tvalosit.get("parametros.pv_otvalor06"));
+							endososDAO.insertarMpolicap(mapaMpolicap);
+						}
+						break;
+
+					default:
+						break;
+				}
+	        	
+				
 				//////////////////////////////
 				////// inserta tworksup //////
 				// Se insertan en tworksup TODAS LAS SITUACIONES:
@@ -1601,4 +1637,5 @@ public class EndososManagerImpl implements EndososManager
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
 	}
+	
 }
