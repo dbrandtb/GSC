@@ -12,18 +12,23 @@ import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementaci�n de los m�todos para invocar al WS recibossigs
  * @author Ricardo
  *
  */
+
+@Service
 public class TractoCamionServiceImpl implements TractoCamionService {
 
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TractoCamionServiceImpl.class);
 	
 	private static final long WS_TIMEOUT =  20000;
 	
+	@Value("${ws.valida.autos.tractocamion.url}")
 	private String endpoint;
 	
 	
