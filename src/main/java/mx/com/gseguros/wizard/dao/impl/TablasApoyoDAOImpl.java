@@ -5,17 +5,14 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
-
-import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
-import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
-import mx.com.gseguros.wizard.dao.impl.WizardDAOImpl.GuardaAtributosTablaApoyo;
-import mx.com.gseguros.wizard.dao.impl.WizardDAOImpl.ObtieneClavesTablaApoyo;
 
 public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoyoDAO {
 	
@@ -38,7 +35,43 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlParameter("PV_FEDESDE_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_FEHASTA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_LIMITE_I" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"NMTABLA"
+					,"OTCLAVE1"
+					,"OTCLAVE2"
+					,"OTCLAVE3"
+					,"OTCLAVE4"
+					,"OTCLAVE5"
+					,"FEDESDE"
+					,"FEHASTA"
+					,"OTVALOR01"
+					,"OTVALOR02"
+					,"OTVALOR03"
+					,"OTVALOR04"
+					,"OTVALOR05"
+					,"OTVALOR06"
+					,"OTVALOR07"
+					,"OTVALOR08"
+					,"OTVALOR09"
+					,"OTVALOR10"
+					,"OTVALOR11"
+					,"OTVALOR12"
+					,"OTVALOR13"
+					,"OTVALOR14"
+					,"OTVALOR15"
+					,"OTVALOR16"
+					,"OTVALOR17"
+					,"OTVALOR18"
+					,"OTVALOR19"
+					,"OTVALOR20"
+					,"OTVALOR21"
+					,"OTVALOR22"
+					,"OTVALOR23"
+					,"OTVALOR24"
+					,"OTVALOR25"
+					,"OTVALOR26"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();
@@ -57,7 +90,10 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTCLAVE1_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_LIMITE_I" ,   OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"NMTABLA" , "OTCLAVE1" , "OTVALOR01"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();

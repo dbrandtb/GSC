@@ -433,39 +433,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaValositIterado.put("pv_otvalor15",   coberturaEliminacionPenalizacionCambioZona);//cob elim pen cambio zona
 	                mapaValositIterado.put("pv_otvalor16",   i.getRol().getKey());//parentesco
 	                mapaValositIterado.put("pv_otvalor17",   municipio);
-	                mapaValositIterado.put("pv_otvalor18",   null);
-	                mapaValositIterado.put("pv_otvalor19",   null);
-	                mapaValositIterado.put("pv_otvalor20",   null);
-	                mapaValositIterado.put("pv_otvalor21",   null);
-	                mapaValositIterado.put("pv_otvalor22",   null);
-	                mapaValositIterado.put("pv_otvalor23",   null);
-	                mapaValositIterado.put("pv_otvalor24",   null);
-	                mapaValositIterado.put("pv_otvalor25",   null);
-	                mapaValositIterado.put("pv_otvalor26",   null);
-	                mapaValositIterado.put("pv_otvalor27",   null);
-	                mapaValositIterado.put("pv_otvalor28",   null);
-	                mapaValositIterado.put("pv_otvalor29",   null);
-	                mapaValositIterado.put("pv_otvalor30",   null);
-	                mapaValositIterado.put("pv_otvalor31",   null);
-	                mapaValositIterado.put("pv_otvalor32",   null);
-	                mapaValositIterado.put("pv_otvalor33",   null);
-	                mapaValositIterado.put("pv_otvalor34",   null);
-	                mapaValositIterado.put("pv_otvalor35",   null);
-	                mapaValositIterado.put("pv_otvalor36",   null);
-	                mapaValositIterado.put("pv_otvalor37",   null);
-	                mapaValositIterado.put("pv_otvalor38",   null);
-	                mapaValositIterado.put("pv_otvalor39",   null);
-	                mapaValositIterado.put("pv_otvalor40",   null);
-	                mapaValositIterado.put("pv_otvalor41",   null);
-	                mapaValositIterado.put("pv_otvalor42",   null);
-	                mapaValositIterado.put("pv_otvalor43",   null);
-	                mapaValositIterado.put("pv_otvalor44",   null);
-	                mapaValositIterado.put("pv_otvalor45",   null);
-	                mapaValositIterado.put("pv_otvalor46",   null);
-	                mapaValositIterado.put("pv_otvalor47",   null);
-	                mapaValositIterado.put("pv_otvalor48",   null);
-	                mapaValositIterado.put("pv_otvalor49",   null);
-	                mapaValositIterado.put("pv_otvalor50",   null);
+	                for(int j=18;j<=99;j++)
+	                {
+	                	mapaValositIterado.put(
+	                			new StringBuilder("pv_otvalor")
+            					.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+            					.toString()
+	                			,null
+	                			);
+	                }
 	                mapaValositIterado.put("pv_accion_i",   "I");
 	                t1=System.currentTimeMillis();
 	                logger.debug("######$ tiempo antes de insertar valosit iterado "+t1);
@@ -625,40 +601,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaValositIterado.put("pv_otvalor14",   null);//emergencia extranjero
 	                mapaValositIterado.put("pv_otvalor15",   null);//cob elim pen cambio zona
 	                mapaValositIterado.put("pv_otvalor16",   i.get("rol"));//parentesco
-	                mapaValositIterado.put("pv_otvalor17",   null);
-	                mapaValositIterado.put("pv_otvalor18",   null);
-	                mapaValositIterado.put("pv_otvalor19",   null);
-	                mapaValositIterado.put("pv_otvalor20",   null);
-	                mapaValositIterado.put("pv_otvalor21",   null);
-	                mapaValositIterado.put("pv_otvalor22",   null);
-	                mapaValositIterado.put("pv_otvalor23",   null);
-	                mapaValositIterado.put("pv_otvalor24",   null);
-	                mapaValositIterado.put("pv_otvalor25",   null);
-	                mapaValositIterado.put("pv_otvalor26",   null);
-	                mapaValositIterado.put("pv_otvalor27",   null);
-	                mapaValositIterado.put("pv_otvalor28",   null);
-	                mapaValositIterado.put("pv_otvalor29",   null);
-	                mapaValositIterado.put("pv_otvalor30",   null);
-	                mapaValositIterado.put("pv_otvalor31",   null);
-	                mapaValositIterado.put("pv_otvalor32",   null);
-	                mapaValositIterado.put("pv_otvalor33",   null);
-	                mapaValositIterado.put("pv_otvalor34",   null);
-	                mapaValositIterado.put("pv_otvalor35",   null);
-	                mapaValositIterado.put("pv_otvalor36",   null);
-	                mapaValositIterado.put("pv_otvalor37",   null);
-	                mapaValositIterado.put("pv_otvalor38",   null);
-	                mapaValositIterado.put("pv_otvalor39",   null);
-	                mapaValositIterado.put("pv_otvalor40",   null);
-	                mapaValositIterado.put("pv_otvalor41",   null);
-	                mapaValositIterado.put("pv_otvalor42",   null);
-	                mapaValositIterado.put("pv_otvalor43",   null);
-	                mapaValositIterado.put("pv_otvalor44",   null);
-	                mapaValositIterado.put("pv_otvalor45",   null);
-	                mapaValositIterado.put("pv_otvalor46",   null);
-	                mapaValositIterado.put("pv_otvalor47",   null);
-	                mapaValositIterado.put("pv_otvalor48",   null);
-	                mapaValositIterado.put("pv_otvalor49",   null);
-	                mapaValositIterado.put("pv_otvalor50",   null);
+	                for(int j=17;j<=99;j++)
+	                {
+	                	mapaValositIterado.put(
+	                			new StringBuilder("pv_otvalor")
+            					.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+            					.toString()
+	                			,null
+	                			);
+	                }
 	                mapaValositIterado.put("pv_accion_i",   "I");
 	                t1=System.currentTimeMillis();
 	                logger.debug("######$ tiempo antes de insertar valosit iterado "+t1);

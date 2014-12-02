@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.cancelacion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utilerias;
@@ -129,7 +127,12 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_dsramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i"    , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+			String[] cols=new String[]{
+					"ASEGURADO"  , "CDUNIAGE" , "DSUNIECO"    , "CDRAMO"   , "DSRAMO"
+					,"NMPOLIZA"  , "NMSITUAC" , "TIPO_CANCEL" , "FECANCEL" , "CDRAZON"
+					,"SWCANCELA" , "ESTADO"   , "FEEFECTO"    , "FEVENCIM"
+			};
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

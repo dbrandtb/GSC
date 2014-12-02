@@ -19,7 +19,6 @@ import mx.com.gseguros.portal.cotizacion.model.ObtieneTatripolMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import oracle.jdbc.driver.OracleTypes;
@@ -430,7 +429,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"otvalor20","otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29"
 					,"otvalor30","otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39"
 					,"otvalor40","otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49"
-					,"otvalor50"
+					,"otvalor50","otvalor51","otvalor52","otvalor53","otvalor54","otvalor55","otvalor56","otvalor57","otvalor58","otvalor59"
+					,"otvalor60","otvalor61","otvalor62","otvalor63","otvalor64","otvalor65","otvalor66","otvalor67","otvalor68","otvalor69"
+					,"otvalor70","otvalor71","otvalor72","otvalor73","otvalor74","otvalor75","otvalor76","otvalor77","otvalor78","otvalor79"
+					,"otvalor80","otvalor81","otvalor82","otvalor83","otvalor84","otvalor85","otvalor86","otvalor87","otvalor88","otvalor89"
+					,"otvalor90","otvalor91","otvalor92","otvalor93","otvalor94","otvalor95","otvalor96","otvalor97","otvalor98","otvalor99"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -500,7 +503,18 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]{
+					"CDUNIECO"
+					,"CDRAMO"
+					,"ESTADO"
+					,"NMPOLIZA"
+					,"CDGRUPO"
+					,"NMSITUAC"
+					,"DEDUCIBLE"
+					,"ASISINTE"
+					,"EMEREXTR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -576,7 +590,16 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"EDAD"
+					,"HOMBRES"
+					,"MUJERES"
+					,"TARIFA_UNICA_HOMBRES"
+					,"TARIFA_UNICA_MUJERES"
+					,"TARIFA_TOTAL_HOMBRES"
+					,"TARIFA_TOTAL_MUJERES"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -612,7 +635,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"DSGARANT" , "PRIMA_PROMEDIO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -769,7 +795,24 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]{
+					"NOMBRE"
+					,"NMSITUAC"
+					,"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06","OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
+					,"OTVALOR11","OTVALOR12","OTVALOR13","OTVALOR14","OTVALOR15","OTVALOR16","OTVALOR17","OTVALOR18","OTVALOR19","OTVALOR20"
+					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26","OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
+					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36","OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
+					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46","OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
+					,"OTVALOR51","OTVALOR52","OTVALOR53","OTVALOR54","OTVALOR55","OTVALOR56","OTVALOR57","OTVALOR58","OTVALOR59","OTVALOR60"
+					,"OTVALOR61","OTVALOR62","OTVALOR63","OTVALOR64","OTVALOR65","OTVALOR66","OTVALOR67","OTVALOR68","OTVALOR69","OTVALOR70"
+					,"OTVALOR71","OTVALOR72","OTVALOR73","OTVALOR74","OTVALOR75","OTVALOR76","OTVALOR77","OTVALOR78","OTVALOR79","OTVALOR80"
+					,"OTVALOR81","OTVALOR82","OTVALOR83","OTVALOR84","OTVALOR85","OTVALOR86","OTVALOR87","OTVALOR88","OTVALOR89","OTVALOR90"
+					,"OTVALOR91","OTVALOR92","OTVALOR93","OTVALOR94","OTVALOR95","OTVALOR96","OTVALOR97","OTVALOR98","OTVALOR99"
+					,"FAMILIA"
+					,"PARENTESCO"
+					,"TITULAR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -827,7 +870,26 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDGRUPO"
+					,"NMSITUAC"
+					,"CDPERSON"
+					,"PARENTESCO"
+					,"NOMBRE"
+					,"SEGUNDO_NOMBRE"
+					,"APELLIDO_PATERNO"
+					,"APELLIDO_MATERNO"
+					,"FECHA_NACIMIENTO"
+					,"SEXO"
+					,"NACIONALIDAD"
+					,"RFC"
+					,"CDROL"
+					,"SWEXIPER"
+					,"CDIDEPER"
+					,"FAMILIA"
+					,"TITULAR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -961,7 +1023,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_TIPO_SITUACION");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String cols [] = new String[]{
+					"SITUACION" , "AGRUPACION"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1041,7 +1106,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_NUM_PASAJEROS");
 			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipoUnidad" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"NUMPASAJEROS" , "PASAJMIN" , "PASAJMAX" , "CLAVEGS" , "SUMASEG"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1183,7 +1251,19 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"TIPUNI"
+					,"MARCA"
+					,"SUBMARCA"
+					,"CLAVEGS"
+					,"MODELO"
+					,"VERSION"
+					,"NUMPASAJEROS"
+					,"PASAJMIN"
+					,"PASAJMAX"
+					,"SUMASEG"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1214,7 +1294,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_VEHICULOS_X_MODELO");
 			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("modelo" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]{ "CLAVEGS" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1245,7 +1326,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("version"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"SUMASEG" , "FACREDUC" , "FACINCREM"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1302,7 +1386,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"ICD" , "DESCRIPCION"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1328,7 +1415,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_LISTAS.P_GET_CONF_GRUPO");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"NOMBRE","TIPO","BASE","CDATRISIT","TIPOGAR","CDGARANT","CDATRIGAR","ORDEN","ETIQUETA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -2208,7 +2298,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nombreGrupo" , nombreGrupo);
 		params.put("cdplan"      , cdplan);
 		
-		for(int i=1;i<=50;i++)
+		for(int i=1;i<=99;i++)
 		{
 			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
 		}
@@ -2217,10 +2307,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		
 		logger.debug(
 				new StringBuilder()
-				.append("\n*********************************************************")
-				.append("\n****** PKG_SATELITES.P_ACT_MPOLISIT_TVALOSIT_DINAM ******")
+				.append("\n**********************************************************")
+				.append("\n****** PKG_SATELITES2.P_ACT_MPOLISIT_TVALOSIT_DINAM ******")
 				.append("\n****** params=").append(params)
-				.append("\n*********************************************************")
+				.append("\n**********************************************************")
 				.toString()
 				);
 		ejecutaSP(new ActualizaMpolisitTvalositGrupo(getDataSource()),params);
@@ -2230,7 +2320,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected ActualizaMpolisitTvalositGrupo(DataSource dataSource)
 		{
-    		super(dataSource,"PKG_SATELITES.P_ACT_MPOLISIT_TVALOSIT_DINAM");	
+    		super(dataSource,"PKG_SATELITES2.P_ACT_MPOLISIT_TVALOSIT_DINAM");	
     		declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
@@ -2238,56 +2328,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		declareParameter(new SqlParameter("cdgrupo"     , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("nombreGrupo" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdplan"      , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor01"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor02"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor03"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor04"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor05"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor06"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor07"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor08"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor09"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor10"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor11"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor12"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor13"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor14"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor15"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor16"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor17"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor18"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor19"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor20"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor21"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor22"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor23"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor24"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor25"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor26"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor27"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor28"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor29"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor30"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor31"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor32"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor33"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor34"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor35"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor36"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor37"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor38"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor39"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor40"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor41"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor42"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor43"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor44"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor45"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor46"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor47"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor48"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor49"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("otvalor50"   , OracleTypes.VARCHAR));
+    		for(int i=1;i<=99;i++)
+    		{
+    			declareParameter(new SqlParameter(
+    					new StringBuilder("otvalor")
+    					.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+    					.toString()
+    					, OracleTypes.VARCHAR));
+    		}
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
     		compile();
@@ -2626,7 +2674,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"otvalor20","otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29"
 					,"otvalor30","otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39"
 					,"otvalor40","otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49"
-					,"otvalor50"
+					,"otvalor50","otvalor51","otvalor52","otvalor53","otvalor54","otvalor55","otvalor56","otvalor57","otvalor58","otvalor59"
+					,"otvalor60","otvalor61","otvalor62","otvalor63","otvalor64","otvalor65","otvalor66","otvalor67","otvalor68","otvalor69"
+					,"otvalor70","otvalor71","otvalor72","otvalor73","otvalor74","otvalor75","otvalor76","otvalor77","otvalor78","otvalor79"
+					,"otvalor80","otvalor81","otvalor82","otvalor83","otvalor84","otvalor85","otvalor86","otvalor87","otvalor88","otvalor89"
+					,"otvalor90","otvalor91","otvalor92","otvalor93","otvalor94","otvalor95","otvalor96","otvalor97","otvalor98","otvalor99"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2653,7 +2705,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsituac" , nmsituac);
 		
-		for(int i=1;i<=50;i++)
+		for(int i=1;i<=99;i++)
 		{
 			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
 		}
@@ -2682,7 +2734,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
-			for(int i=1;i<=50;i++)
+			for(int i=1;i<=99;i++)
 			{
 				declareParameter(
 						new SqlParameter(
@@ -3153,7 +3205,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					    ,"otvalor20","otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29"
 					    ,"otvalor30","otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39"
 					    ,"otvalor40","otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49"
-					    ,"otvalor50"
+					    ,"otvalor50","otvalor51","otvalor52","otvalor53","otvalor54","otvalor55","otvalor56","otvalor57","otvalor58","otvalor59"
+					    ,"otvalor60","otvalor61","otvalor62","otvalor63","otvalor64","otvalor65","otvalor66","otvalor67","otvalor68","otvalor69"
+					    ,"otvalor70","otvalor71","otvalor72","otvalor73","otvalor74","otvalor75","otvalor76","otvalor77","otvalor78","otvalor79"
+					    ,"otvalor80","otvalor81","otvalor82","otvalor83","otvalor84","otvalor85","otvalor86","otvalor87","otvalor88","otvalor89"
+					    ,"otvalor90","otvalor91","otvalor92","otvalor93","otvalor94","otvalor95","otvalor96","otvalor97","otvalor98","otvalor99"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3445,7 +3501,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdusuari" , cdusuari);
-		for(int i=1;i<=50;i++)
+		for(int i=1;i<=99;i++)
 		{
 			params.put(new StringBuilder("valor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
 		}
@@ -3470,7 +3526,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-			for(int i=1;i<=50;i++)
+			for(int i=1;i<=99;i++)
 			{
 				declareParameter(new SqlParameter(
 						new StringBuilder("valor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString()

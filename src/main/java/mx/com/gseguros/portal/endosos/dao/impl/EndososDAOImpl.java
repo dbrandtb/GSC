@@ -16,7 +16,6 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -793,9 +792,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ObtenerNombreEndosos(DataSource dataSource)
 		{
 			super(dataSource, "PKG_LISTAS.P_GET_TTIPSUPL");
-			
 			declareParameter(new SqlParameter("cdsisrol"         , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDTIPSUP" , "DSTIPSUP"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -886,8 +887,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac" , OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{ "CDPERSON" };
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			
@@ -956,8 +957,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));//ntramite
+			String[] cols = new String[]{ "NTRAMITE" };
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			
@@ -1178,17 +1179,30 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
-			/*
-			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
-			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
-			,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
-			,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
-			,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
-			,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
-			,OTVALOR48,OTVALOR49,OTVALOR50
-			 */
+			String[] cols = new String[]{
+				"CDUNIECO"   , "CDRAMO"    , "ESTADO"    , "NMPOLIZA"  , "NMSITUAC"  ,"NMSUPLEM" , "STATUS" , "CDTIPSIT"
+				,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05"
+				,"OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
+				,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15"
+				,"OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
+				,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25"
+				,"OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
+				,"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35"
+				,"OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
+				,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45"
+				,"OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
+				,"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55"
+				,"OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60"
+				,"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65"
+				,"OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR70"
+				,"OTVALOR71" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75"
+				,"OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR80"
+				,"OTVALOR81" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85"
+				,"OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR90"
+				,"OTVALOR91" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95"
+				,"OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			
@@ -1402,23 +1416,16 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
-			/*
-			a.cdunieco,
-			a.cdramo,
-			a.estado,
-			a.nmpoliza,
-			a.cdagente,
-			a.nmsuplem,
-			a.status,
-			a.cdtipoag,
-			porredau,
-			a.porparti,
-			nombre,
-			cdsucurs,
-			nmcuadro
-			*/
+			String[] cols = new String[]{
+					"CDUNIECO"  , "CDRAMO"
+					,"ESTADO"   , "NMPOLIZA"
+					,"CDAGENTE" , "NMSUPLEM"
+					,"STATUS"   , "CDTIPOAG"
+					,"PORREDAU" , "PORPARTI"
+					,"NOMBRE"   , "CDSUCURS"
+					,"NMCUADRO" , "DESCRIPL"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			
@@ -1758,7 +1765,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdramo"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDUNIECO"  , "CDRAMO"   , "ESTADO" , "NMPOLIZA"
+					,"NMSUPLEM" , "NMRECIBO" , "DSDOCUME"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -2043,7 +2054,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		
-		for(int i=1;i<=50;i++)
+		for(int i=1;i<=99;i++)
 		{
 			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
 		}
@@ -2071,7 +2082,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			for(int i=1;i<=50;i++)
+			for(int i=1;i<=99;i++)
 			{
 				declareParameter(new SqlParameter(new StringBuilder("otvalor").append(
 						StringUtils.leftPad(String.valueOf(i),2,"0")

@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.wizard.configuracion.producto.conceptosCobertura.model.ConceptosCoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.datosFijos.model.DatoFijoVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -1570,7 +1570,19 @@ protected class BorraVarTmp extends StoredProcedure {
 	        declareParameter(new SqlParameter("PV_CDTABLA_I" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_DSTABLA_I" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_OTTIPOTB_I" , OracleTypes.VARCHAR));
-	        declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+	        String[] cols = new String[]{
+	        		"NMTABLA"
+	        		,"CDTABLA"
+	        		,"DSTABLA"
+	        		,"OTTIPOTB"
+	        		,"OTTIPOTB_DESC"
+	        		,"OTTIPOAC"
+	        		,"CDTABLJ1"
+	        		,"CDTABLJ2"
+	        		,"CDTABLJ3"
+	        		,"CLNATURA"
+	        };
+	        declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 	        compile();
@@ -1672,7 +1684,15 @@ protected class BorraVarTmp extends StoredProcedure {
 		protected ObtieneClavesTablaApoyo(DataSource dataSource) {
 			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_CLAVES");
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"DSCLAVE1"
+					,"SWFORMA1"
+					,"DSFORMA1"
+					,"NMLMIN1"
+					,"NMLMAX1"
+					,"NUMCLAVE"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1689,7 +1709,15 @@ protected class BorraVarTmp extends StoredProcedure {
 		protected ObtieneAtributosTablaApoyo(DataSource dataSource) {
 			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDATRIBU"
+					,"DSATRIBU"
+					,"SWFORMAT"
+					,"DSFORMAT"
+					,"NMLMIN"
+					,"NMLMAX"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

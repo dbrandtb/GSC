@@ -2714,7 +2714,7 @@ function _p25_guardarExtraprimas(letra)
                 ,nmsuplem  : '0'
                 ,nmsituac  : record.get('nmsituac')
             };
-            for(var i=1;i<=50;i++)
+            for(var i=1;i<=99;i++)
             {
                 var valor = record.get('parametros.pv_otvalor'+(('00'+i).slice(-2)));
                 debug('valor:',valor,'typeof valor:',typeof valor);
