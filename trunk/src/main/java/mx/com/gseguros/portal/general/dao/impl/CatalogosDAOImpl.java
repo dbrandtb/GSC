@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.util.Rango;
@@ -545,7 +544,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     		
     		super(dataSource, "PKG_CONSULTA.P_GET_AGENTES_X_PROMOTOR");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDAGENTE" , "DSAGENTE"
+			};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
     		compile();
@@ -586,7 +588,15 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("substring" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+			String[] cols = new String[]{
+					"TIPUNI"
+					,"MARCA"
+					,"SUBMARCA"
+					,"MODELO"
+					,"VERSION"
+					,"CLAVEGS"
+			};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
     		compile();

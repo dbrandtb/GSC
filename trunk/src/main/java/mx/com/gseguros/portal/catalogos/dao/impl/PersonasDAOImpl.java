@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import oracle.jdbc.driver.OracleTypes;
@@ -63,7 +62,30 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 //            declareParameter(new SqlParameter("pv_dsnombre1_i",OracleTypes.VARCHAR));
 //            declareParameter(new SqlParameter("pv_dsapellido_i",OracleTypes.VARCHAR));
 //            declareParameter(new SqlParameter("pv_dsapellido1_i",OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            String[] cols=new String[]{
+            		"CDPERSON"
+            		,"CDIDEPER"
+            		,"DSNOMBRE"
+            		,"DSNOMBRE1"
+            		,"DSAPELLIDO"
+            		,"DSAPELLIDO1"
+            		,"FENACIMI"
+            		,"CDNACION"
+            		,"OTFISJUR"
+            		,"OTSEXO"
+            		,"CDRFC"
+            		,"CANALING"
+            		,"CONDUCTO"
+            		,"FEINGRESO"
+            		,"PTCUMUPR"
+            		,"STATUS"
+            		,"RESIDENTE"
+            		,"NOMBRE_COMPLETO"
+            		,"CDIDEEXT"
+            		,"DIRECCIONCLI"
+            		,"CDESTCIV"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
@@ -95,7 +117,28 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	protected ObtenerPersonaPorCdperson(DataSource dataSource) {
             super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON");
             declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            String[] cols = new String[]{
+            		"CDPERSON"
+            		,"CDIDEPER"
+            		,"DSNOMBRE"
+            		,"DSNOMBRE1"
+            		,"DSAPELLIDO"
+            		,"DSAPELLIDO1"
+            		,"FENACIMI"
+            		,"CDNACION"
+            		,"OTFISJUR"
+            		,"OTSEXO"
+            		,"CDRFC"
+            		,"CANALING"
+            		,"CONDUCTO"
+            		,"FEINGRESO"
+            		,"PTCUMUPR"
+            		,"STATUS"
+            		,"RESIDENTE"
+            		,"CDIDEEXT"
+            		,"CDESTCIV"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
@@ -234,7 +277,11 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	protected ObtenerDomicilioPorCdperson(DataSource dataSource) {
             super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL");
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols=new String[]{
+    				"CDPERSON" , "NMORDDOM" , "DSDOMICI"  , "NMTELEFO" , "CODPOSTAL" , "CDEDO"
+    				,"ESTADO"  , "CDMUNICI" , "MUNICIPIO" , "CDCOLONI" , "NMNUMERO"  , "NMNUMINT"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
@@ -428,7 +475,20 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             super(dataSource,"PKG_CONSULTA.P_GET_TVALOPER");
 			declareParameter(new SqlParameter("cdrol"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDROL"      , "CDPERSON"
+					,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05"
+					,"OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
+					,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15"
+					,"OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
+					,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25"
+					,"OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
+					,"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35"
+					,"OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
+					,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45"
+					,"OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
@@ -640,7 +700,10 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtpesco_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"NMORDINA" , "DSNOMBRE" , "CDNACION" , "PORPARTI"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -808,7 +871,10 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_cdedo_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsmunici_i"    	, OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dscoloni_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDMUNICI" , "CDCOLONI"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

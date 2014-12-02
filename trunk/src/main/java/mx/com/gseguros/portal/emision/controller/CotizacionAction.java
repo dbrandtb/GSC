@@ -1501,7 +1501,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                ////// 2. tvalosit desde form //////
 	                
 	                ////// 3. completar faltantes //////
-	                for(int i=1;i<=50;i++)
+	                for(int i=1;i<=99;i++)
 	                {
 	                	String key="pv_otvalor"+i;
 	                	if(i<10)

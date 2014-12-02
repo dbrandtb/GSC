@@ -13,7 +13,7 @@ import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import oracle.jdbc.driver.OracleTypes;
@@ -312,7 +312,10 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     	protected ObtieneRolesUsuario(DataSource dataSource) {
     		super(dataSource, "PKG_GENERA_USUARIO.P_GET_ROLES_SIST_USUARIO");
     		declareParameter(new SqlParameter("PV_CDUSUARIO_I", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDSISROL" , "DSSISROL" , "EXISTE_ROL"
+    		};
+    		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
     		compile();
@@ -353,7 +356,10 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 		protected ObtieneProductosAgente(DataSource dataSource) {
 			super(dataSource, "PKG_GENERA_USUARIO.P_GET_RAMOS_AGENTE");
 			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols = new String[]{
+					"CDRAMO" , "DSRAMO" , "TIENE_CDRAMO"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();

@@ -5024,7 +5024,7 @@ public class EndososAction extends PrincipalCoreAction
 				otvalorValositIte.put(keyEstado    , cdestado);
 				otvalorValositIte.put(keyMunicipio , cdmunici);
 				
-				//PKG_SATELITES.P_MOV_TVALOSIT
+				//PKG_SATELITES2.P_MOV_TVALOSIT
 				kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
 						,nmsituacIte, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValositIte);
 			}

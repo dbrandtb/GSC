@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.MenuDAO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -30,7 +30,14 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     	protected ObtieneOpcionesLiga(DataSource dataSource) {
     		super(dataSource, "PKG_MENU.P_OBTIENE_OPCIONES");
     		declareParameter(new SqlParameter("pv_dstitulo_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDTITULO"
+    				,"DSTITULO"
+    				,"DSURL"
+    				,"SWTIPDES"
+    				,"DSTIPDES"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
@@ -51,7 +58,11 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     		declareParameter(new SqlParameter("pv_cdmenu_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_dsmenu_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdrol_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDMENU" , "DSMENU"    , "CDELEMENTO" , "CDPERSON"
+    				,"CDROL" , "CDUSUARIO" , "CDESTADO"   , "CDTIPOMENU"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
@@ -70,7 +81,10 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     	protected ObtieneOpcionesMenu(DataSource dataSource) {
     		super(dataSource, "PKG_MENU.OPTIENE_MENU_PADRE");
     		declareParameter(new SqlParameter("PV_CDMENU_I", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDNIVEL" , "CDNIVEL_PADRE" , "DSMENU_EST" , "CDTITULO" , "DSTITULO"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
@@ -90,7 +104,10 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     		super(dataSource, "PKG_MENU.OBTIENE_MENU_HIJOS");
     		declareParameter(new SqlParameter("PV_CDMENU_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_CDNIVEL_PADRE_I", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDNIVEL" , "CDNIVEL_PADRE" , "DSMENU_EST" , "CDTITULO" , "DSTITULO"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));

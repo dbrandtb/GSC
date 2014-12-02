@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
@@ -28,7 +28,14 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+			String[] cols = new String[]{
+					"ASEGURADO" , "CDUNIECO" , "ASEGURADORA" , "CDRAMO" 
+					,"PRODUCTO" , "NMPOLIZA" , "NMSITUAC"    , "FECANCEL"
+					,"CDRAZON"  , "DSRAZON"  , "COMENTARIOS" , "ESTADO"
+					,"FEEFECTO" , "FEVENCIM" , "CDPERSON"    , "CDMONEDA"
+					,"NMCANCEL" , "NMSUPLEM" , "CDELEMENTO"  , "DSELEMEN"
+			};
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

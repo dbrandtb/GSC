@@ -1,6 +1,8 @@
 package mx.com.gseguros.externo.dao.impl;
 
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +12,11 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.externo.dao.StoredProceduresDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -364,6 +367,41 @@ public class StoredProceduresDAOImpl extends AbstractManagerDAO implements Store
 	        declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();
+		}
+	}
+	
+	private class DinamicMapper implements RowMapper
+	{
+		private Logger logger=Logger.getLogger(DinamicMapper.class);
+	
+		@Override
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols="";
+			Map<String,String> map=new LinkedHashMap<String,String>(0);
+			ResultSetMetaData metaData = rs.getMetaData();
+			int numCols=metaData.getColumnCount();
+			for (int i=1;i<=numCols;i++)
+			{
+				String col=metaData.getColumnName(i);
+				if(rowNum==0)
+				{
+					cols=cols+col+",";
+				}
+				if(col!=null&&(col.substring(0,2).equalsIgnoreCase("fe")||col.substring(0,2).equalsIgnoreCase("ff")))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}			
+			}
+			if(rowNum==0)
+			{
+				logger.info("Columnas: "+cols);
+			}
+			return map;
 		}
 	}
 }

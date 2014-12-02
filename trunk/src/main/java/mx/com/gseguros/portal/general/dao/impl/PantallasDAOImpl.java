@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
@@ -307,8 +307,17 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_CDTIPTRA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ORDEN_I"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SECCION_I"  , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			String[] cols=new String[]{
+					"PANTALLA"    , "SECCION"  , "CDTIPTRA" , "CDUNIECO"      , "CDRAMO"
+					,"CDTIPSIT"   , "ESTADO"   , "CDSISROL" , "ORDEN"         , "LABEL"
+					,"TIPOCAMPO"  , "CATALOGO" , "SWDEPEND" , "MINLENGTH"     , "MAXLENGTH"
+					,"SWOBLIGA"   , "SWCOLUMN" , "RENDERER" , "NAME_CDATRIBU" , "SWLECTURA"
+					,"QUERYPARAM" , "VALUE"    , "SWOCULTO" , "PARAM1"        , "VALUE1"
+					,"PARAM2"     , "VALUE2"   , "PARAM3"   , "VALUE3"        , "PARAM4"
+					,"VALUE4"     , "PARAM5"   , "VALUE5"   , "SWFINAL"       , "SWCVACIO"
+					,"HANDLER"    , "ICONO"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();
@@ -460,7 +469,10 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		protected ObtenerArbol(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONF_PANTALLAS.P_OBT_ARBOL_TCONFCMP");
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//PANTALLA,SECCION
+			String[] cols = new String[]{
+					"PANTALLA" , "SECCION"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();
@@ -494,7 +506,10 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_CDPANTALLA_I"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDTIPSIT_I"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//PANTALLA,SECCION
+			String[] cols = new String[]{
+					"DATOS" , "COMPONENTES"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));//PANTALLA,SECCION
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();

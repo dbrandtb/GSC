@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.confpantallas.dao.GeneradorPantallasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -32,7 +32,10 @@ public class GeneradorPantallasDAOImpl extends AbstractManagerDAO implements Gen
 			declareParameter(new SqlParameter("PV_CDPANTALLA_I"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDTIPSIT_I"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//PANTALLA,SECCION
+			String[] cols=new String[]{
+					"DATOS" , "COMPONENTES"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();

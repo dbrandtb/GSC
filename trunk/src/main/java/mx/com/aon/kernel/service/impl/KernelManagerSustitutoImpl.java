@@ -125,7 +125,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     	return this.insertaPolisit(params);
 	}
     
-    //PKG_SATELITES.P_MOV_TVALOSIT
+    //PKG_SATELITES2.P_MOV_TVALOSIT
     @Override
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException
     {
@@ -136,7 +136,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    //PKG_SATELITES.P_MOV_TVALOSIT
+    //PKG_SATELITES2.P_MOV_TVALOSIT
     @Override
     public WrapperResultados insertaValoresSituaciones(
     		String cdunieco

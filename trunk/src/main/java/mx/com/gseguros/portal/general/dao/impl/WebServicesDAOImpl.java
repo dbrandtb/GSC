@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.WebServicesDAO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -33,7 +33,12 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdcodigo_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDUNIECO"  , "CDRAMO"  , "NMPOLIZA" , "NMSUPLEM"
+    				,"DESCRIPL" , "MENSAJE" , "USUARIO"  , "FECHAHR"
+    				,"NTRAMITE" , "CDERRWS" , "SEQIDWS"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
@@ -51,7 +56,10 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     	protected ObtieneDetallePeticionWS(DataSource dataSource) {
     		super(dataSource, "PKG_CONSULTA.P_WS_GET_TBITACOBROS_X_SEQ");
     		declareParameter(new SqlParameter("pv_seqidws_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		String[] cols = new String[]{
+    				"CDUNIECO" , "CDRAMO" , "ESTADO" , "NMPOLIZA" , "NMSUPLEM" , "NTRAMITE" , "CDURLWS" , "METODOWS" , "XMLIN"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();

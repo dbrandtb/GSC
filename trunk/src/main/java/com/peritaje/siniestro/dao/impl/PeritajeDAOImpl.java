@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -34,7 +34,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		protected ObtenerListaOrdenesInspeccion(DataSource dataSource)
 		{
 			super(dataSource,"PKG_PERITAJE.GET_ORDENES_INSP");
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN","NMPLACA","MARCA","MODELO","COLOR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -52,7 +55,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		protected ObtenerListaOrdenesAjuste(DataSource dataSource)
 		{
 			super(dataSource,"PKG_PERITAJE.GET_ORDENES_AJUS");
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN","NMPLACA","MARCA","MODELO","COLOR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -82,8 +88,11 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_ORDENES_INSP");
 			declareParameter(new SqlParameter("pv_nmorden_i", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN" , "TIPOINSP" , "LUGARINSP" , "NMPLACA" , "MARCA"
+					,"MODELO" , "VERSION"  , "COLOR"     , "ANNO"    , "SERIALMOT" , "SERIALCARR" , "OBSERVACIONES"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -113,8 +122,11 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_ORDENES_AJUS");
 			declareParameter(new SqlParameter("pv_nmorden_i", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN" , "LUGARAJUS" , "NMPLACA"   , "MARCA"      , "MODELO"       , "VERSION"
+					,"COLOR"  , "ANNO"      , "SERIALMOT" , "SERIALCARR" , "DECLASINIEST" , "DESCRIPDANOS"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -144,8 +156,11 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_DATOS_VEHICULOS");
 			declareParameter(new SqlParameter("pv_nmorden_i", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN"      , "SERIALMOT" , "SERIALCARR"  , "KMACTUAL"  , "CAPPUESTOS"
+					,"TRANSMISION" , "TAPICERIA" , "POSEECABINA" , "DESTINADO" , "TONELADAS"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -224,8 +239,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_DATOS_SEGURIDAD");
 			declareParameter(new SqlParameter("pv_nmorden_i", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN","CORTACORR","ALARMA","BOVEDA","GRABAVIDRIO","TRANCAPEDAL","TRANCAPALAN","DISPSATELITAL"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -292,8 +309,11 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_DATOS_ACCESORIOS");
 			declareParameter(new SqlParameter("nmorden", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN"      , "RADIOFIJO" , "RADIOREPRO"   , "RADIOCD" , "LLANTAREPUES"
+					,"AIREACONDIC" , "BLINDAJE"  , "ESTACAOPLATA" , "CAVA"    , "RINES"        , "TAZAS"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -460,8 +480,11 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_DET_DATOS_AJUS");
 			declareParameter(new SqlParameter("nmorden", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"NMORDEN"  , "NMSINIES" , "NMPOLIZA" , "NMCERTI" , "NOMBRE" , "TELEOFICIN"
+					,"CELULAR" , "MARCA"    , "MODELO"   , "NMPLACA" , "ANNO"   , "TRANSMISION" , "KMACTUAl"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -479,7 +502,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		protected ObtenerListaRepuestos(DataSource dataSource)
 		{
 			super(dataSource,"PKG_PERITAJE.GET_LISTA_REPUESTOS");
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"CODIGO" , "DESCRIPCION" , "MONTO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -497,7 +523,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		protected ObtenerListaManoObra(DataSource dataSource)
 		{
 			super(dataSource,"PKG_PERITAJE.GET_LISTA_MANODOBRA");
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"CODIGO" , "DESCRIPCION" , "MONTO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
@@ -801,8 +830,10 @@ public class PeritajeDAOImpl extends AbstractManagerDAO implements PeritajeDAO
 		{
 			super(dataSource,"PKG_PERITAJE.GET_PRESUPUESTO");
 			declareParameter(new SqlParameter("NMORDEN", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			String[] cols=new String[]{
+					"ORDEN" , "TITULO" , "MONTO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
