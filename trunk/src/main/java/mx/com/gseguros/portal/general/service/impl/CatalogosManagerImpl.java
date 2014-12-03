@@ -466,19 +466,20 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca)
+	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca,String cdtipsit)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ cargarModelosPorSubmarcaRamo5 @@@@@@")
 				.append("\n@@@@@@ submarca=").append(submarca)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.toString()
 				);
 		List<GenericVO>lista=null;
 		try
 		{
-			lista = catalogosDAO.cargarModelosPorSubmarcaRamo5(submarca);
+			lista = catalogosDAO.cargarModelosPorSubmarcaRamo5(submarca,cdtipsit);
 		}
 		catch(Exception ex)
 		{
@@ -496,7 +497,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo)
+	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo,String cdtipsit)
 	{
 		logger.info(
 				new StringBuilder()
@@ -504,12 +505,13 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				.append("\n@@@@@@ cargarVersionesPorModeloSubmarcaRamo5 @@@@@@")
 				.append("\n@@@@@@ submarca=").append(submarca)
 				.append("\n@@@@@@ modelo=")  .append(modelo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.toString()
 				);
 		List<GenericVO>lista=null;
 		try
 		{
-			lista = catalogosDAO.cargarVersionesPorModeloSubmarcaRamo5(submarca,modelo);
+			lista = catalogosDAO.cargarVersionesPorModeloSubmarcaRamo5(submarca,modelo,cdtipsit);
 		}
 		catch(Exception ex)
 		{
@@ -527,19 +529,20 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena)
+	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ cargarAutosPorCadenaRamo5 @@@@@@")
-				.append("\n@@@@@@ cadena=").append(cadena)
+				.append("\n@@@@@@ cadena=")  .append(cadena)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.toString()
 				);
 		List<GenericVO>lista=null;
 		try
 		{
-			lista = catalogosDAO.cargarAutosPorCadenaRamo5(cadena);
+			lista = catalogosDAO.cargarAutosPorCadenaRamo5(cadena,cdtipsit);
 		}
 		catch(Exception ex)
 		{

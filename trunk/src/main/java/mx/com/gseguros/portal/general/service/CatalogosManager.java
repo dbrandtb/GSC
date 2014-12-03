@@ -89,10 +89,10 @@ public interface CatalogosManager {
     		,String tipoUnidad
     		,String cdagente);
     
-    public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca);
+    public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca,String cdtipsit);
     
-    public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo);
+    public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo,String cdtipsit);
     
-    public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena);
+    public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit);
     public List<GenericVO>cargarTtapvat1(String cdtabla);
 }

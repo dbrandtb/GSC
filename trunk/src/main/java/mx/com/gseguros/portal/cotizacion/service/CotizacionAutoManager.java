@@ -1,10 +1,10 @@
 package mx.com.gseguros.portal.cotizacion.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -112,20 +112,21 @@ public interface CotizacionAutoManager
 			,String cdtipsit
 			,String ntramite
 			);
-	public ManagerRespuestaVoidVO cotizarAutosFlotilla(
+	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari
 			,String cdsisrol
+			,String cdelemen
 			,String cdunieco
 			,String cdramo
 			,String cdtipsit
 			,String estado
 			,String nmpoliza
-			,Date fechaInicio
-			,Date fechaFin
+			,String feini
+			,String fefin
 			,String cdagente
 			,String cdpersonCli
 			,String cdideperCli
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
-			,List<Map<String,String>> configPlanes);
+			,List<Map<String,String>> confTvalosit);
 }
