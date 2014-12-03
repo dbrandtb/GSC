@@ -77,7 +77,7 @@ public interface SiniestrosDAO {
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
-	public String guardaAltaSiniestroAutServicio(String nmautser) throws Exception;
+	public String guardaAltaSiniestroAutServicio(String nmautser,String nfactura) throws Exception;
 
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception;
 	
@@ -392,5 +392,9 @@ public interface SiniestrosDAO {
 
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 
-	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;	
+	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
+
+	public List<Map<String, String>> obtieneListaAutirizacionServicio(Map<String, Object> params) throws Exception;
+
+	public List<Map<String, String>> obtieneListaDatosValidacionSiniestro(HashMap<String, Object> params) throws Exception;
 }

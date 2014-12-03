@@ -26,7 +26,7 @@ Ext.onReady(function() {
 		extend: 'Ext.data.Model',
 		fields: [
 				{type:'string',    name:'reclamacion'		},				{type:'string',    name:'ntramite'			},
-				{type:'string',    name:'factura'			},				{type:'date',      name:'fechaFactura',	dateFormat : 'd/m/Y'},
+				{type:'string',    name:'factura'			},				{type:'string',      name:'fechaFactura',	dateFormat : 'd/m/Y'},
 				{type:'string',    name:'cdtipser'			},				{type:'string',    name:'descServicio'		},
 				{type:'string',    name:'cdpresta'			},				{type:'string',    name:'nomProveedor'		},
 				{type:'string',    name:'ptimport'			},				{type:'string',    name:'cdgarant'			},
@@ -37,7 +37,7 @@ Ext.onReady(function() {
 				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			}
 		]
     });
-
+    
 	var storeDatosFacturaxTramite = Ext.create('Ext.data.Store', {
 	storeId: 'storeDatosFacturaxTramite',
 	model: 'DatosFacturaxTramite',
@@ -54,16 +54,15 @@ Ext.onReady(function() {
 		features:[{
 			ftype:'summary'
 		}],
-		columns: _11_columnas_Factura,
+		columns: _11_columnas_Factura/*,
 		tbar: [{
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 			text: 'Agregar Factura',
 			scope: this,
-			//handler: this.onAddClick
 			handler: function() {
 		        centrarVentanaInterna(modAgregarFacturas.show());
 		    }
-		}]
+		}]*/
 	});
 	
 	gridDatosFacturaxTramite.store.sort([{ 
@@ -110,7 +109,7 @@ Ext.onReady(function() {
 			{
 				id:'botonCotizar',
 				icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-				text: 'Guardar',
+				text: 'Guardar xx',
 				handler: function()
 				{
 					alert("GUARDADO TOTAL");

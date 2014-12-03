@@ -10,6 +10,7 @@
 			var _CONTEXT = '${ctx}';
 			var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 			var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+			var _CATALOGO_COB_X_VALORES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
 			var _11_url_RequiereAutServ			  = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
 			var _11_urlIniciarSiniestroSinAutServ = '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
 			var _11_urlIniciarSiniestroTworksin   = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
@@ -18,7 +19,9 @@
             var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
             var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
             var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
-            
+            var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
+            var _URL_LISTA_AUTSERVICIO          = '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"         />';
+            var _URL_DATOS_VALIDACION          = '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"         />';
             var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
             debug("VALOR DE _11_params --->");
             debug(_11_params);
@@ -41,19 +44,30 @@
 			var storeAseguradoFactura;
 			var modPolizasAltaTramite;
 			var storeFacturaDirectoNva;
+			var gridAutorizacion;
+			var storeListadoAutorizacion;
 			
 			var storeCobertura = Ext.create('Ext.data.Store', {
-				model:'modelListadoCobertura',
-				autoLoad:false,
-				proxy: {
-					type: 'ajax',
-					url : _URL_LISTA_COBERTURA,
-					reader: {
-						type: 'json',
-						root: 'listaCoberturaPoliza'
+		        model:'Generic',
+		        autoLoad:false,
+		        proxy:
+		        {
+		            type: 'ajax',
+		            url : _URL_CATALOGOS,
+		            extraParams : {catalogo:_CATALOGO_COB_X_VALORES},
+		            reader:
+		            {
+		                type: 'json',
+		                root: 'lista'
+		            }
+		        },listeners:
+				{
+					load : function()
+					{
+						
 					}
 				}
-			});
+		    });
 
 			var storeSubcobertura= Ext.create('Ext.data.Store', {
 				model:'Generic',
@@ -105,7 +119,7 @@
 					[
 						{
 							icon		: '${ctx}/resources/fam3icons/icons/pencil.png'
-							,tooltip	: 'Editar Factura'
+							,tooltip	: 'Factura'
 							,handler	: _11_editar
 						}/*
 						,{
@@ -124,7 +138,7 @@
 				},{
 					text	:'Factura',					dataIndex	:'factura'
 				},{
-					text	:'Fecha Factura',			dataIndex	:'fechaFactura',	format	:'d/m/y',			xtype	:'datecolumn'
+					text	:'Fecha Factura',			dataIndex	:'fechaFactura',	format	:'d/m/Y',			xtype	:'datecolumn'
 				},{
 					text	:'Cobertura',				dataIndex	:'descCdgarant',	width	: 300
 				},{
@@ -173,34 +187,137 @@
 			
 			function _11_llenaFormulario()
 			{
-				debug('_11_llenaFormulario');
-				
-				panelInicialPral.down('[name=itemTramite]').setValue(_11_recordActivo.get('ntramite'));
-				panelInicialPral.down('[name=itemFactura]').setValue(_11_recordActivo.get('factura'));
-				panelInicialPral.down('[name=itemFechaFac]').setValue(_11_recordActivo.get('fechaFactura'));
-				panelInicialPral.down('[name=itemCobertura]').setValue(_11_recordActivo.get('cdgarant'));
-				
-				storeSubcobertura.load({
-	                params:{
-	                	'params.cdgarant' :_11_recordActivo.get('cdgarant')
-	                }
-	            });
-				panelInicialPral.down('combo[name=itemSubcobertura]').setValue(_11_recordActivo.get('cdconval'));
-				panelInicialPral.down('combo[name=cmbTipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));
-				
-				panelInicialPral.down('[name=itemImporteMxn]').setValue(_11_recordActivo.get('ptimport'));
-				panelInicialPral.down('[name=itemTasaCambio]').setValue(_11_recordActivo.get('tasaCambio'));
-				panelInicialPral.down('[name=itemImporta]').setValue(_11_recordActivo.get('ptimporta'));
-				panelInicialPral.down('[name=itemDescPor]').setValue(_11_recordActivo.get('desctoPorc'));
-				panelInicialPral.down('[name=itemDescNum]').setValue(_11_recordActivo.get('desctoNum'));
-				storeAseguradoFactura.removeAll();
-				debug('!_11_llenaFormulario');
-				storeAseguradoFactura.load({
-			    	params: {
-			    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
-			    		'smap.nfactura'   : _11_recordActivo.get('factura')
-			    	}
-			    });
+				debug('_11_llenaFormulario --> ');
+				debug(_11_recordActivo);
+				/*OBTENEMOS LOS VALORES QUE TIENE PARA LAS VALIDACIONES DE IVA Y REQUI*/
+				Ext.Ajax.request({
+					url     : _URL_DATOS_VALIDACION
+					,params:{
+						'params.ntramite': _11_recordActivo.get('ntramite')
+						,'params.nfactura': _11_recordActivo.get('factura')
+					}
+					,success : function (response)
+					{
+						panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));
+						panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+						panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
+							
+						panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
+						debug("FECHA DE FACTURA");
+						debug(_11_recordActivo.get('fechaFactura'));
+						
+						var fechaFacturaM = _11_recordActivo.get('fechaFactura').match(/\d+/g); 
+						var dateFec = fechaFacturaM[2]+"/"+fechaFacturaM[1]+"/"+fechaFacturaM[0];
+						
+						panelInicialPral.down('[name=params.fefactura]').setValue(dateFec);
+						
+						storeCobertura.load({
+							params:{
+								'params.ntramite':_11_recordActivo.get('ntramite'),
+								'params.tipopago':"1"
+							}
+						});
+						
+						panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
+						
+						storeSubcobertura.load({
+			                params:{
+			                	'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
+			                }
+			            });
+						panelInicialPral.down('combo[name=params.cdconval]').setValue(_11_recordActivo.get('cdconval'));
+						
+						panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));
+						
+						panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+						panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
+						panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
+						panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
+						panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
+						storeAseguradoFactura.removeAll();
+						storeAseguradoFactura.load({
+					    	params: {
+					    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
+					    		'smap.nfactura'   : _11_recordActivo.get('factura')
+					    	}
+					    });
+						if(Ext.decode(response.responseText).datosValidacion != null){
+							var aplicaIVA = null;
+							var ivaRetenido = null;
+							var ivaAntesDespues = null;
+							var autAR = null;
+							var autAM = null;
+							var commAR = null;
+							var commAM = null;
+							var json=Ext.decode(response.responseText).datosValidacion;
+							debug("VALOR DE JSON");
+							debug(json);
+							if(json.length > 0){
+								aplicaIVA = json[0].OTVALOR01;
+								ivaAntesDespues = json[0].OTVALOR02;
+								ivaRetenido = json[0].OTVALOR03;
+								
+								for(var i = 0; i < json.length; i++){
+									if(json[i].AREAAUTO =="ME"){
+										autAM = json[i].SWAUTORI;
+										commAM = json[i].COMENTARIOS;
+									}
+									if(json[i].AREAAUTO =="RE"){
+										autAR = json[i].SWAUTORI;
+										commAR = json[i].COMENTARIOS;
+									}
+								}
+							}
+							/*REALIZAMOS LA ASIGNACIÃ“N DE LAS VARIABLES*/
+							if(aplicaIVA == null){
+								panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
+							}else{
+								panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue(aplicaIVA);
+							}
+							if(aplicaIVA == null){
+								panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue("D");
+							}else{
+								panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue(ivaAntesDespues);
+							}
+							if(aplicaIVA == null){
+								panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
+							}else{
+								panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
+							}
+							
+							if(autAR == null){
+								panelInicialPral.down('[name="params.autrecla"]').setValue(null);
+							}else{
+								panelInicialPral.down('[name="params.autrecla"]').setValue(autAR);
+							}
+							
+							if(commAR == null){
+								panelInicialPral.down('[name="params.commenar"]').setValue(null);
+							}else{
+								panelInicialPral.down('[name="params.commenar"]').setValue(commAR);
+							}
+							if(autAM == null){
+								panelInicialPral.down('[name="params.autmedic"]').setValue(null);
+							}else{
+								panelInicialPral.down('[name="params.autmedic"]').setValue(autAM);
+							}
+							if(commAM == null){
+								panelInicialPral.down('[name="params.commenme"]').setValue(null);
+							}else{
+								panelInicialPral.down('[name="params.commenme"]').setValue(commAM);
+							}
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
 			}
 			
 			function revisarDocumento(grid,rowIndex)
@@ -212,8 +329,8 @@
 				{
 					url    : _11_url_RequiereAutServ
 					,params:{
-						'params.cobertura': panelInicialPral.down('[name=itemCobertura]').getValue(),
-						'params.subcobertura': panelInicialPral.down('[name=itemSubcobertura]').getValue()
+						'params.cobertura': panelInicialPral.down('[name=params.cdgarant]').getValue(),
+						'params.subcobertura': panelInicialPral.down('[name=params.cdconval]').getValue()
 					}
 					,success : function (response)
 					{
@@ -228,7 +345,7 @@
 			                    _11_pedirAutorizacion(record);
 			                }
 						}else{
-							//NO REQUIERE AUTORIZACIÓN DE SERVICIO
+							//NO REQUIERE AUTORIZACIÃ“N DE SERVICIO
 							var idReclamacion = record.raw.NMSINIES;
 							debug(idReclamacion);
 							valido = idReclamacion && idReclamacion>0;
@@ -243,7 +360,7 @@
 										if(buttonId == 'no'){
 											var json =
 											{
-												'params.ntramite' : panelInicialPral.down('[name=itemTramite]').getValue(),
+												'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue(),
 												'params.cdunieco' : record.raw.CDUNIECO,
 												'params.cdramo'   : record.raw.CDRAMO,
 												'params.estado'   : record.raw.ESTADO,
@@ -252,7 +369,7 @@
 												'params.nmsituac' : record.raw.NMSITUAC,
 												'params.cdtipsit' : record.raw.CDTIPSIT,
 												'params.dateOcurrencia' : record.raw.FEOCURRE,
-												'params.nfactura' : panelInicialPral.down('[name=itemFactura]').getValue()
+												'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
 											};
 											Ext.Ajax.request(
 											{
@@ -268,7 +385,7 @@
 																standardSubmit :true
 																,params        :
 																{
-																	'params.ntramite' : panelInicialPral.down('[name=itemTramite]').getValue()
+																	'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
 																}
 															});
 														});
@@ -315,10 +432,36 @@
 				debug('_11_recordActivo:',_11_recordActivo.data);
 				
 				_11_textfieldAsegurado.setValue(_11_recordActivo.get('NOMBRE'));
-				_11_textfieldNmautserv.setValue('');
+				var params = {
+						'params.cdperson'	:	_11_recordActivo.get('CDPERSON')
+				};
+				cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
+					if(success){
+						var jsonResponse = Ext.decode(response.responseText);
+						if(jsonResponse.datosInformacionAdicional.length <= 0) {
+							centrarVentanaInterna(Ext.Msg.show({
+								title: 'Aviso',
+								msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING
+							}));
+							_11_WindowPedirAut.close();
+						}else{
+							_11_windowPedirAut.show();
+							_11_textfieldNmautserv.setValue('');
+							centrarVentanaInterna(_11_windowPedirAut);
+						}
+					}else{
+						_11_textfieldNmautserv.setValue('');
+						centrarVentanaInterna(_11_windowPedirAut);Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'Error al obtener los datos.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+							});
+					}
+				});
 				
-				_11_windowPedirAut.show();
-				centrarVentanaInterna(_11_windowPedirAut);
 			}
 			
 			function _p21_agregarGrupoClic()
@@ -347,8 +490,8 @@
 						'params.nmautser'  : _11_textfieldNmautserv.getValue()
 						,'params.nmpoliza' : _11_recordActivo.get('NMPOLIZA')
 						,'params.cdperson' : _11_recordActivo.get('CDPERSON')
-						,'params.ntramite' : panelInicialPral.down('[name=itemTramite]').getValue()
-						,'params.nfactura' : panelInicialPral.down('[name=itemFactura]').getValue()
+						,'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
+						,'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
 						,'params.feocurrencia' : _11_recordActivo.get('FEOCURRE')
 					};
 					debug(json);
@@ -365,14 +508,14 @@
 							{
 								mensajeCorrecto('Datos guardados',json.mensaje,function()
 								{
-									Ext.create('Ext.form.Panel').submit(
+									/*Ext.create('Ext.form.Panel').submit(
 									{
 										standardSubmit :true
 										,params        :
 										{
-											'params.ntramite' : _11_params.NTRAMITE
+											'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
 										}
-									});
+									});*/
 								});
 							}
 							else
@@ -421,7 +564,7 @@
 				
 				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
 				{
-					name:'cmbTipoMoneda',		fieldLabel	: 'Moneda',		store: storeTipoMoneda,			queryMode:'local',  
+					name:'params.tipoMoneda',		fieldLabel	: 'MONEDA',		store: storeTipoMoneda,			queryMode:'local',  
 					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false
 				});
 				
@@ -431,13 +574,21 @@
 			        displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
 			    });
 				
-				/*var coberturaAfectada = Ext.create('Ext.form.field.ComboBox',
+				
+				var subCobertura = Ext.create('Ext.form.field.ComboBox',
 			    {
-					name:'itemCobertura',		fieldLabel :'Cobertura afectada',	allowBlank: false,				displayField : 'dsgarant',
-			    	valueField   : 'cdgarant',			forceSelection : true,			matchFieldWidth: false,
-			    	queryMode :'remote',		store : storeCobertura,				triggerAction: 'all',			editable:false,
-			        listeners : {
-			        	'select' : function(combo, record) {
+			    	name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',
+			    	valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
+			    	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
+			    });
+				
+				var cobertura = Ext.create('Ext.form.field.ComboBox',
+			    {
+			    	name:'params.cdgarant',			fieldLabel : 'COBERTURA',	allowBlank: false,				displayField : 'value',
+			    	valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,
+			    	queryMode :'remote',			store : storeCobertura,		editable:false,
+			    	listeners : {
+			        	'change' : function(combo, record) {
 				    		storeSubcobertura.removeAll();
 				        	storeSubcobertura.load({
 				                params:{
@@ -446,19 +597,9 @@
 				            });
 				        }
 			        }
-			    });*/
-			    
-			    var subCobertura = Ext.create('Ext.form.field.ComboBox',
-			    {
-			    	name:'itemSubcobertura',		fieldLabel : 'Subcobertura',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',
-			    	valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
-			    	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 			    });
+				
 				//MODELOS
-				Ext.define('modelListadoCobertura',{
-					extend: 'Ext.data.Model',
-					fields: [	{type:'string',    name:'cdgarant'},			{type:'string',    name:'dsgarant'},              	{type:'string',    name:'ptcapita'}		]
-				});
 				
 				Ext.define('modelFacturaSiniestroNva', {
 				    extend:'Ext.data.Model',
@@ -510,7 +651,7 @@
 				    }
 				});
 				
-				Ext.define('EditorFacturaNuevaPDirecto', {
+				/*Ext.define('EditorFacturaNuevaPDirecto', {
 			 		extend: 'Ext.grid.Panel',
 					name:'editorFacturaNuevaPDirecto',
 			 		frame: true,
@@ -603,9 +744,7 @@
 						 		selType: 'cellmodel'
 						 	},
 					 		tbar: [{
-			                    //text     : 'Agregar Factura'
-			                    //,
-								icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png'
+			                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png'
 			                    ,handler : _p21_agregarGrupoClic
 			                }]
 					 	});
@@ -616,7 +755,7 @@
 				 		this.getStore().removeAt(rowIndex);
 				 	}
 			 	});
-			    gridFacturaNuevaPDirecto = new EditorFacturaNuevaPDirecto();
+			    gridFacturaNuevaPDirecto = new EditorFacturaNuevaPDirecto();*/
 			    
 				Ext.define('EditorFacturaDirecto', {
 					extend: 'Ext.grid.Panel',
@@ -642,23 +781,16 @@
 								,width        : 70
 								,items        :
 								[
-								    /*{
-								    	icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
-								    	,tooltip : 'Editar'
-								    	//,handler : _11_editar
-								    }
-								    ,*/
 								    {
 								    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
 								    	,tooltip : 'Capturar Detalle'
 								    	,handler : revisarDocumento
 								    }
-								    ,{
+								    /*,{
 								    	icon     : '${ctx}/resources/fam3icons/icons/cancel.png'
 								    	,tooltip : 'Eliminar'
-								    	//,handler : eliminarAsegurado
-								    }
-								]//,flex:1
+								    }*/
+								]
 							},
 							{
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES'
@@ -717,12 +849,12 @@
 						this.callParent();
 					},
 					onRemoveClick: function(grid, rowIndex){
-						/*Eliminamos el record del store*/
 						var record=this.getStore().getAt(rowIndex);
 						this.getStore().removeAt(rowIndex);
 					}
 				});
 				gridFacturaDirecto=new EditorFacturaDirecto();
+				
 				
 				Ext.define('modelConceptos',{
 					extend: 'Ext.data.Model',
@@ -746,7 +878,7 @@
 					    }
 					});
 					
-					Ext.define('EditorConceptos', {
+					/*Ext.define('EditorConceptos', {
 						extend: 'Ext.grid.Panel',
 						name:'editorConceptos',
 						title: 'Conceptos',
@@ -793,14 +925,91 @@
 							this.callParent();
 						},
 						onRemoveClick: function(grid, rowIndex){
-							/*Eliminamos el record del store*/
 							var record=this.getStore().getAt(rowIndex);
 							this.getStore().removeAt(rowIndex);
 						}
 					});
-					gridEditorConceptos = new EditorConceptos();
+					gridEditorConceptos = new EditorConceptos();*/
 				
 				
+					Ext.define('modelListadoAutorizacion',{
+				        extend: 'Ext.data.Model',
+				        fields: [  	{type:'string',    name:'NMAUTSER'},       		{type:'string',    name:'CDPROVEE'},
+									{type:'string',    name:'FESOLICI'},			{type:'string',    name:'NOMPROV'}]
+				    });
+					
+					storeListadoAutorizacion = new Ext.data.Store(
+				    {
+				    	pageSize : 5
+				        ,model      : 'modelListadoAutorizacion'
+				        ,autoLoad  : false
+				        ,proxy     :
+				        {
+				            enablePaging : true,
+				            reader       : 'json',
+				            type         : 'memory',
+				            data         : []
+				        }
+				    });
+					gridAutorizacion= Ext.create('Ext.grid.Panel',
+					{
+						id             : 'clausulasGridId'
+						,store         :  storeListadoAutorizacion
+						//,collapsible   : true
+						//,titleCollapse : true
+						,style         : 'margin:5px'
+						,selType: 'checkboxmodel'
+						,width   : 600
+						,height: 200
+						,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
+						,columns       :
+						[
+							 {
+								 header     : 'N&uacute;mero <br/> Autorizaci&oacute;n'
+								 ,dataIndex : 'NMAUTSER'
+								 ,width	 	: 100
+							 },
+							 {
+								 header     : 'Fecha Solicitud'
+								 ,dataIndex : 'FESOLICI'
+								 ,width     : 100
+							 }
+							 ,
+							 {
+								 header     : 'clave Proveedor'
+								 ,dataIndex : 'CDPROVEE'
+								 ,width     : 100
+							 }
+							 ,
+							 {
+								 header     : 'Nombre Proveedor'
+								 ,dataIndex : 'NOMPROV'
+								 ,width     : 300
+							 }
+						 ],
+						 bbar     :
+						 {
+							 displayInfo : true,
+							 store       : storeListadoAutorizacion,
+							 xtype       : 'pagingtoolbar'
+						 },
+						//aqui va el listener
+						listeners: {
+					        itemclick: function(dv, record, item, index, e) {
+					        	debug("VaLOR DEL RECORD");
+					        	
+					        	_11_textfieldNmautserv.setValue(record.get('NMAUTSER'));
+								debug(record);
+					        }
+					    }
+						
+							
+					});
+					gridAutorizacion.store.sort([
+				        {
+				        	property    : 'nmautser',			direction   : 'DESC'
+				        }
+				    ]);
 				panelInicialPral= Ext.create('Ext.form.Panel',
 				{
 					border    : 0
@@ -816,49 +1025,45 @@
 					,items    :
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. T&aacute;mite',		name	: 'itemTramite'
+							xtype		: 'textfield',			fieldLabel	: 'N0. TR&Aacute;MITE',		name	: 'params.ntramite'
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'itemFactura'
+							xtype		: 'textfield',			fieldLabel	: 'PROVEEDOR',		name	: 'params.cdpresta',		hidden:true
 						},
 						{
-			            	xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'itemFechaFac',	format	: 'd/m/Y'
+							xtype		: 'textfield',			fieldLabel	: 'TIP SERVICIO',		name	: 'params.cdtipser',		hidden:true
+						},
+						{
+							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura'
+						},
+						{
+			            	xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
 			            },
-			            //coberturaAfectada,
-					 	//subCobertura,
-					 	{
-							xtype		: 'textfield',			fieldLabel	: 'Cobertura',				name	: 'itemCobertura'
-						},
+			            cobertura,
 						subCobertura,
-						/*{
-							xtype		: 'textfield',			fieldLabel	: 'SubCobertura',			name	: 'itemSubcobertura'
-						},*/
-						cmbTipoMoneda
-						,
+						cmbTipoMoneda,
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Importe MXN',			name	: 'itemImporteMxn',
+							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE MXN',			name	: 'params.ptimport',
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'TASA CAMBIO',			name	: 'params.tasacamb',
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE FACTURA',		name	: 'params.ptimporta',
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO %',			name	: 'params.descporc',
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO $',			name	: 'params.descnume',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						}
-						,
-						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Tasa Cambio',			name	: 'itemTasaCambio',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						}
-						,
-						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Importe Factura',		name	: 'itemImporta',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						}
-						,
-						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Descuento %',			name	: 'itemDescPor',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						}
-						,
-						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Descuento $',			name	: 'itemDescNum',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						}
+						<s:property value='%{"," + imap.tatrisinItems}' />
+						<s:property value='%{"," + imap.itemsEdicion}' />
 					]
 				});
 				for(var i=0;i<panelInicialPral.items.items.length;i++)
@@ -877,13 +1082,11 @@
 				    ,closable    : true
 				    ,closeAction: 'hide'
 				    ,width		 : 900
-				    //,minHeight 	 : 100 
-				    //,maxheight   : 400
 				    ,items       : 
 			        [
 						panelInicialPral
 						,gridFacturaDirecto
-						,gridEditorConceptos
+						//,gridEditorConceptos
 			        ],
 					buttonAlign:'center',
 					buttons: [
@@ -892,7 +1095,29 @@
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
 							handler:function()
 							{
-								windowLoader.close();
+								//windowLoader.close();
+								debug("VALOR  ENVIAR ");
+								debug(panelInicialPral.form);
+								panelInicialPral.form.submit({
+	            		        	waitMsg:'Procesando...',	
+	            		        	url: _URL_GuardaFactura,
+	            		        	failure: function(form, action) {
+	            		        		centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
+	            					},
+	            					success: function(form, action) {
+	            						centrarVentanaInterna(mensajeCorrecto('Datos guardados',"Se ha guardado la Factura",function()
+           								{
+           									Ext.create('Ext.form.Panel').submit(
+           									{
+           										standardSubmit :true
+           										,params        :
+           										{
+           											'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
+           										}
+           									});
+           								}));
+	            					}
+	            				});
 							}
 						},
 						{
@@ -906,7 +1131,7 @@
 					]
 				});
 			
-				modAgregarFacturas = Ext.create('Ext.window.Window',
+				/*modAgregarFacturas = Ext.create('Ext.window.Window',
 				{
 				    title        : 'Facturas nuevas'
 				    ,modal       : true
@@ -940,7 +1165,7 @@
 							}
 						}
 					]
-				});
+				});*/
 					
 			
 			
@@ -954,8 +1179,8 @@
 						{
 							title        : 'Autorizaci&oacute;n de servicios'
 							,icon        : '${ctx}/resources/fam3icons/icons/tick.png'
-							,width       : 350
-							,height      : 200
+							//,width       : 350
+							//,height      : 200
 							,closeAction : 'hide'
 							,modal       : true
 							,defaults    : { style : 'margin : 5px; ' }
@@ -986,10 +1211,11 @@
 							[
 								{
 									xtype : 'label'
-									,text : 'Se requiere el número de autorización para continuar'
+									,text : 'Se requiere el nÃºmero de autorizaciÃ³n para continuar'
 								}
 								,_11_textfieldAsegurado
 								,_11_textfieldNmautserv
+								,gridAutorizacion
 							]
 						});
 						this.callParent();
