@@ -435,6 +435,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.cargarModelosPorSubmarcaRamo5(
 							params.get("idPadre")
+							,params.get("cdtipsit")
 							);
 					break;
 				case RAMO_5_VERSIONES_X_MODELO:
@@ -445,6 +446,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.cargarVersionesPorModeloSubmarcaRamo5(
 							params.get("submarca")
 							,params.get("modelo")
+							,params.get("cdtipsit")
 							);
 					break;
 				case RAMO_5_AUTOS:
@@ -454,6 +456,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.cargarAutosPorCadenaRamo5(
 							params.get("cadena")
+							,params.get("cdtipsit")
 							);
 					break;
 				case RAMO_5_SUBMARCAS:

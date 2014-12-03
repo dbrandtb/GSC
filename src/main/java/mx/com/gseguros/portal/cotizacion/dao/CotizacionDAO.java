@@ -408,4 +408,94 @@ public interface CotizacionDAO
 			String estado,
 			String nmpoliza)throws ApplicationException, Exception;
 	public void borrarMpoliperTodos(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
+	public void guardarTbasvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores)throws Exception;
+	public void guardarTconvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores)throws Exception;
+	public void borrarTbasvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	public void borrarTconvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	public void movimientoMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,String swreduci
+			,String cdagrupa
+			,String cdestado
+			,Date   fefecsit
+			,Date   fecharef
+			,String cdgrupo
+			,String nmsituaext
+			,String nmsitaux
+			,String nmsbsitext
+			,String cdplan
+			,String cdasegur
+			,String accion)throws Exception;
+	public void movimientoTvalosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores
+			,String accion
+			)throws Exception;
+	public void clonarPersonas(
+			String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdtipsit
+			,Date   fecha
+			,String cdusuari
+			,String nombre1
+			,String nombre2
+			,String apellido1
+			,String apellido2
+			,String sexo
+			,Date   fenacimi
+			,String parentesco
+			)throws Exception;
+	public List<Map<String,String>>cargarResultadosCotizacion(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdtipsit
+			)throws Exception;
 }

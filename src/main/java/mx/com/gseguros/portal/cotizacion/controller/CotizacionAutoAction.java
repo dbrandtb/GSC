@@ -1,7 +1,5 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +8,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -22,9 +21,8 @@ import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAutoAction extends PrincipalCoreAction
 {
-	private static final long             serialVersionUID = -5890606583100529056L;
-	private static final Logger           logger           = Logger.getLogger(CotizacionAutoAction.class);
-	private static final SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private static final long   serialVersionUID = -5890606583100529056L;
+	private static final Logger logger           = Logger.getLogger(CotizacionAutoAction.class);
 	
 	private CotizacionAutoManager cotizacionAutoManager;
 	
@@ -885,6 +883,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdusuari = usuario.getUser();
 			String cdsisrol = usuario.getRolActivo().getClave();
+			String cdelemen = usuario.getEmpresa().getElementoId();
 			
 			checkNull(smap1, "No se recibieron datos de poliza");
 			String cdunieco    = smap1.get("cdunieco");
@@ -904,23 +903,22 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkBlank(feini    , "No se recibio el inicio de vigencia");
 			checkBlank(fefin    , "No se recibio el fin de vigencia");
 			checkBlank(cdagente , "No se recibio el agente");
-			Date fechaInicio = renderFechas.parse(feini);
-			Date fechaFin    = renderFechas.parse(fefin);
 			
 			checkList(slist1, "No se recibieron las situaciones mixtas");
 			checkList(slist2, "No se recibieron las situaciones base");
 			checkList(slist3, "No se recibieron las configuraciones de plan");
 			
-			ManagerRespuestaVoidVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
+			ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
 					cdusuari
 					,cdsisrol
+					,cdelemen
 					,cdunieco
 					,cdramo
 					,cdtipsit
 					,estado
 					,nmpoliza
-					,fechaInicio
-					,fechaFin
+					,feini
+					,fefin
 					,cdagente
 					,cdpersonCli
 					,cdideperCli
@@ -931,6 +929,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				slist1 = resp.getSlist();
+			}
 		}
 		catch(Exception ex)
 		{

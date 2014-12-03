@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -3762,4 +3763,500 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarTbasvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("status"   , status);
+		params.put("cdtipsit" , cdtipsit);
+		for(int i=1;i<=99;i++)
+		{
+			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		}
+		params.putAll(valores);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TBASVALSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
+		ejecutaSP(new GuardarTbasvalsit(getDataSource()),params);
+	}
+	
+	protected class GuardarTbasvalsit extends StoredProcedure
+	{
+		protected GuardarTbasvalsit(DataSource dataSource)
+		{
+    		super(dataSource,"PKG_SATELITES2.P_INSERTA_TBASVALSIT");	
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+    		for(int i=1;i<=99;i++)
+    		{
+    			declareParameter(new SqlParameter(
+    					new StringBuilder("otvalor")
+    					.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+    					.toString()
+    					, OracleTypes.VARCHAR));
+    		}
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public void guardarTconvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("status"   , status);
+		params.put("cdtipsit" , cdtipsit);
+		for(int i=1;i<=99;i++)
+		{
+			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		}
+		params.putAll(valores);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TCONVALSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
+		ejecutaSP(new GuardarTconvalsit(getDataSource()),params);
+	}
+	
+	protected class GuardarTconvalsit extends StoredProcedure
+	{
+		protected GuardarTconvalsit(DataSource dataSource)
+		{
+    		super(dataSource,"PKG_SATELITES2.P_INSERTA_TCONVALSIT");	
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+    		for(int i=1;i<=99;i++)
+    		{
+    			declareParameter(new SqlParameter(
+    					new StringBuilder("otvalor")
+    					.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+    					.toString()
+    					, OracleTypes.VARCHAR));
+    		}
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public void borrarTbasvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_SATELITES2.P_BORRA_TBASVALSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
+		ejecutaSP(new BorrarTbasvalsit(getDataSource()),params);
+	}
+	
+	protected class BorrarTbasvalsit extends StoredProcedure
+	{
+		protected BorrarTbasvalsit(DataSource dataSource)
+		{
+    		super(dataSource,"PKG_SATELITES2.P_BORRA_TBASVALSIT");	
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public void borrarTconvalsit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_SATELITES2.P_BORRA_TCONVALSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
+		ejecutaSP(new BorrarTconvalsit(getDataSource()),params);
+	}
+	
+	protected class BorrarTconvalsit extends StoredProcedure
+	{
+		protected BorrarTconvalsit(DataSource dataSource)
+		{
+    		super(dataSource,"PKG_SATELITES2.P_BORRA_TCONVALSIT");	
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public void movimientoMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,String swreduci
+			,String cdagrupa
+			,String cdestado
+			,Date   fefecsit
+			,Date   fecharef
+			,String cdgrupo
+			,String nmsituaext
+			,String nmsitaux
+			,String nmsbsitext
+			,String cdplan
+			,String cdasegur
+			,String accion)throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("cdunieco"   , cdunieco);
+		params.put("cdramo"     , cdramo);
+		params.put("estado"     , estado);
+		params.put("nmpoliza"   , nmpoliza);
+		params.put("nmsituac"   , nmsituac);
+		params.put("nmsuplem"   , nmsuplem);
+		params.put("status"     , status);
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("swreduci"   , swreduci);
+		params.put("cdagrupa"   , cdagrupa);
+		params.put("cdestado"   , cdestado);
+		params.put("fefecsit"   , fefecsit);
+		params.put("fecharef"   , fecharef);
+		params.put("cdgrupo"    , cdgrupo);
+		params.put("nmsituaext" , nmsituaext);
+		params.put("nmsitaux"   , nmsitaux);
+		params.put("nmsbsitext" , nmsbsitext);
+		params.put("cdplan"     , cdplan);
+		params.put("cdasegur"   , cdasegur);
+		params.put("accion"     , accion);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_MPOLISIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		ejecutaSP(new MovimientoMpolisit(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpolisit extends StoredProcedure
+	{
+		protected MovimientoMpolisit(DataSource dataSource)
+		{
+	        super(dataSource,"PKG_SATELITES.P_MOV_MPOLISIT");
+		    declareParameter(new SqlParameter("cdunieco"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("cdramo"     , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsituac"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("swreduci"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdagrupa"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("cdestado"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("fefecsit"   , OracleTypes.DATE));
+		    declareParameter(new SqlParameter("fecharef"   , OracleTypes.DATE));
+		    declareParameter(new SqlParameter("cdgrupo"    , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmsituaext" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmsitaux"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsbsitext" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdplan"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdasegur"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+		    declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+		    compile();
+		}
+	}
+	
+	@Override
+	public void movimientoTvalosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,Map<String,String>valores
+			,String accion
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("status"   , status);
+		params.put("cdtipsit" , cdtipsit);
+		for(int i=1;i<=99;i++)
+		{
+			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		}
+		params.put("accion"   , accion);
+		params.putAll(valores);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** PKG_SATELITES2.P_MOV_TVALOSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************")
+				.toString()
+				);
+		ejecutaSP(new MovimientoTvalosit(getDataSource()),params);
+	}
+	
+	protected class MovimientoTvalosit extends StoredProcedure
+	{
+		protected MovimientoTvalosit(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_TVALOSIT");
+			
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			for(int i=1;i<=99;i++)
+			{
+				declareParameter(new SqlParameter(
+						new StringBuilder("otvalor")
+						.append(StringUtils.leftPad(String.valueOf(i),2,"0"))
+						.toString()
+						,OracleTypes.VARCHAR));
+			}
+			declareParameter(new SqlParameter("accion" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void clonarPersonas(
+			String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdtipsit
+			,Date   fecha
+			,String cdusuari
+			,String nombre1
+			,String nombre2
+			,String apellido1
+			,String apellido2
+			,String sexo
+			,Date   fenacimi
+			,String parentesco
+			)throws Exception
+	{
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
+		params.put("cdelemen"   , cdelemen);
+		params.put("cdunieco"   , cdunieco);
+		params.put("cdramo"     , cdramo);
+		params.put("estado"     , estado);
+		params.put("nmpoliza"   , nmpoliza);
+		params.put("nmsituac"   , nmsituac);
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("fecha"      , fecha);
+		params.put("cdusuari"   , cdusuari);
+		params.put("nombre1"    , nombre1);
+		params.put("nombre2"    , nombre2);
+		params.put("apellido1"  , apellido1);
+		params.put("apellido2"  , apellido2);
+		params.put("sexo"       , sexo);
+		params.put("fenacimi"   , fenacimi);
+		params.put("parentesco" , parentesco);
+	}
+    
+    protected class ClonarPersonas extends StoredProcedure
+    {
+    	protected ClonarPersonas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_CLONAR_PERSONAS");
+            declareParameter(new SqlParameter("cdelemen"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunieco"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("cdramo"     , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("nmsituac"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("fecha"      , OracleTypes.DATE));
+            declareParameter(new SqlParameter("cdusuario"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nombre1"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nombre2"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("apellido1"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("apellido2"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("sexo"       , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("fenacimi"   , OracleTypes.DATE));
+            declareParameter(new SqlParameter("parentesco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public List<Map<String,String>>cargarResultadosCotizacion(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdtipsit
+			)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdusuari" , cdusuari);
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("cdelemen" , cdelemen);
+    	params.put("cdtipsit" , cdtipsit);
+    	logger.debug(
+    			new StringBuilder()
+    			.append("\n*******************************************")
+    			.append("\n****** PKG_COTIZA.P_GEN_TARIFICACION ******")
+    			.append("\n****** params=").append(params)
+    			.append("\n*******************************************")
+    			.toString()
+    			);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarResultadosCotizacion(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_record_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No hay resultados de cotizacion");
+    	}
+    	logger.debug(
+    			new StringBuilder()
+    			.append("\n*******************************************")
+    			.append("\n****** params=")  .append(params)
+    			.append("\n****** registro=").append(lista)
+    			.append("\n****** PKG_COTIZA.P_GEN_TARIFICACION ******")
+    			.append("\n*******************************************")
+    			.toString()
+    			);
+    	return lista;
+	}
+    
+    protected class CargarResultadosCotizacion extends StoredProcedure
+    {
+    	protected CargarResultadosCotizacion(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"CDIDENTIFICA" , "CDUNIECO" , "CDRAMO"    , "ESTADO"
+            		,"NMPOLIZA"    , "NMSUPLEM" , "STATUS"    , "CDPLAN"
+            		,"DSPLAN"      , "MNPRIMA"  , "CDCIAASEG" , "DSUNIECO"
+            		,"CDPERPAG"    , "DSPERPAG" , "CDTIPSIT"  , "FEEMISIO"
+            		,"FEVENCIM"    , "NMSITUAC"
+            };
+            declareParameter(new SqlOutParameter("pv_record_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

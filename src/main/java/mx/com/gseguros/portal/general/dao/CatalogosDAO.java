@@ -68,11 +68,11 @@ public interface CatalogosDAO {
 			,String tipoUnidad
 			,String cdagente)throws Exception;
 	
-	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca)throws Exception;
+	public List<GenericVO>cargarModelosPorSubmarcaRamo5(String submarca,String cdtipsit)throws Exception;
 	
-	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo)throws Exception;
+	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo,String cdtipsit)throws Exception;
 	
-	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena)throws Exception;
+	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit)throws Exception;
 	
 	public List<GenericVO>cargarTtapvat1(String cdtabla)throws ApplicationException,Exception;
 }
