@@ -144,7 +144,7 @@ public interface SiniestrosManager {
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
-	public String getAltaSiniestroAutServicio(String nmautser) throws Exception;
+	public String getAltaSiniestroAutServicio(String nmautser,String nfactura) throws Exception;
 
 	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception;
 
@@ -483,4 +483,8 @@ public interface SiniestrosManager {
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 
 	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
+
+	public  List<Map<String, String>> getConsultaListaAutServicioSiniestro(String cdperson)throws Exception;
+
+	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite,String nfactura)throws Exception;
 }

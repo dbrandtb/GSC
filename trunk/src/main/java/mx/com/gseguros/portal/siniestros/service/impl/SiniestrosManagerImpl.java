@@ -405,10 +405,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public String getAltaSiniestroAutServicio(String nmautser) throws Exception {
+	public String getAltaSiniestroAutServicio(String nmautser,String nfactura) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			return siniestrosDAO.guardaAltaSiniestroAutServicio(nmautser);
+			return siniestrosDAO.guardaAltaSiniestroAutServicio(nmautser,nfactura);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -650,7 +650,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_nmpoliza_i",nmpoliza);
 		params.put("pv_cdperson_i",cdperson);
 		params.put("pv_nmautser_i",nmautser);
-		params.put("pv_nfactura_i",nmautser);
+		params.put("pv_nfactura_i",nfactura);
 		params.put("pv_feocurrencia_i",feocurrencia);
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
@@ -1382,5 +1382,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	
+	}
+
+	@Override
+	public List<Map<String, String>> getConsultaListaAutServicioSiniestro(String cdperson) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdperson_i", cdperson);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaAutirizacionServicio(params);
+	}
+
+	@Override
+	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite, String nfactura) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nfactura_i", nfactura);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaDatosValidacionSiniestro(params);
 	}
 }
