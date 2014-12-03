@@ -201,7 +201,18 @@ Ext.onReady(function()
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Agregar');
-					            	}
+					            	},
+					            	change: function(me, val){
+						    				try{
+							    				if('string' == typeof val){
+							    					debug('mayus de '+val);
+							    					me.setValue(val.toUpperCase());
+							    				}
+						    				}
+						    				catch(e){
+						    					debug(e);
+						    				}
+									}
 					            },
 					            store         : Ext.create('Ext.data.Store', {
 					                model     : '_p22_modeloGrid',
@@ -283,7 +294,18 @@ Ext.onReady(function()
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Agregar');
-					            	}
+					            	},
+					            	change: function(me, val){
+						    				try{
+							    				if('string' == typeof val){
+							    					debug('mayus de '+val);
+							    					me.setValue(val.toUpperCase());
+							    				}
+						    				}
+						    				catch(e){
+						    					debug(e);
+						    				}
+									}
 					            },
 					            store         : Ext.create('Ext.data.Store', {
 					                model     : '_p22_modeloGrid',
@@ -1452,6 +1474,8 @@ function _p22_datosAdicionalesClic()
 					xtype: 'tbspacer',        	    	
 					height: 50                	
         	     });
+        	     
+        	     _fieldByName('parametros.pv_otvalor37').setReadOnly(true);
                 
             }
             else
