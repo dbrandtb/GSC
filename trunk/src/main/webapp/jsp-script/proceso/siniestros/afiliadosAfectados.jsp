@@ -492,6 +492,7 @@
 					};
 					debug(json);
 					_11_formPedirAuto.setLoading(true);
+					_11_windowPedirAut.close();
 					Ext.Ajax.request(
 					{
 						url      : _11_urlIniciarSiniestroTworksin
@@ -503,7 +504,6 @@
 							json = Ext.decode(response.responseText);
 							if(json.success==true)
 							{
-								//_11_WindowPedirAut.close();
 								mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
 									storeAseguradoFactura.removeAll();
 									storeAseguradoFactura.load({
