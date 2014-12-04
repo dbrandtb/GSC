@@ -949,6 +949,42 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarValidacionTractocamionRamo5()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###############################################")
+				.append("\n###### cargarValidacionTractocamionRamo5 ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1,"No se recibieron datos para el web service");
+			String poliza = smap1.get("poliza");
+			String rfc    = smap1.get("rfc");
+			checkBlank(poliza,"No se recibio la poliza tractocamion para el webservice");
+			ManagerRespuestaVoidVO resp = cotizacionAutoManager.cargarValidacionTractocamionRamo5(poliza,rfc);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarValidacionTractocamionRamo5 ######")
+				.append("\n###############################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

@@ -114,11 +114,21 @@ Ext.onReady(function()
 	    }
 	    _p29_polizaAdicionalesItems = aux;
 	</s:if>
+	for(var i=0;i<_p29_polizaAdicionalesItems.length;i++)
+    {
+        _p29_polizaAdicionalesItems[i].labelWidth=295;
+    }
 	
 	_p29_adicionalesItems = [];
 	<s:if test='%{getImap().get("adicionalesItems")!=null}'>
 	    _p29_adicionalesItems = [<s:property value="imap.adicionalesItems" />];
 	</s:if>
+	
+	var _p29_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
+	for(var i=0;i<_p29_datosGeneralesItems.length;i++)
+	{
+	    _p29_datosGeneralesItems[i].labelWidth=295;
+	}
 	////// componentes //////
 	
 	////// contenido //////
@@ -146,7 +156,7 @@ Ext.onReady(function()
 	                {
 	                    xtype  : 'fieldset'
 	                    ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
-	                    ,items : [<s:property value="imap.polizaItems" />]
+	                    ,items : _p29_datosGeneralesItems
 	                }
 	                ,{
 	                    xtype  : 'fieldset'

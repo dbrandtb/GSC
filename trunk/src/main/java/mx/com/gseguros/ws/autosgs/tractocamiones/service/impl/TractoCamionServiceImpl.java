@@ -32,13 +32,13 @@ public class TractoCamionServiceImpl implements TractoCamionService {
 	private String endpoint;
 	
 	
-	public boolean validarPolizaTractoCamion(String numeroPoliza, String rfcCliente){
+	public Object validarPolizaTractoCamion(String numeroPoliza, String rfcCliente){
 		
 		logger.debug(">>>>> Entrando a metodo WS validarPolizaTractoCamion");
 		
-		boolean polizaValida = false;
+		Object polizaValida = null;
 		
-		if(StringUtils.isNotBlank(numeroPoliza) && StringUtils.isNotBlank(rfcCliente)){
+		if(StringUtils.isNotBlank(numeroPoliza)){
 			try{
 				WrapperResultadosWS resultWS = this.ejecutavalidarPolizaTractoCamion(numeroPoliza, rfcCliente);
 						
@@ -48,19 +48,23 @@ public class TractoCamionServiceImpl implements TractoCamionService {
 					logger.debug("Respuesta de WS ValidaTractoCamion Codigo(): " + resVal.getExito());
 					logger.debug("Respuesta de WS ValidaTractoCamion Mensaje(): " +resVal.getMensaje());
 					
-					polizaValida = true;
+					polizaValida = Boolean.TRUE;
 					
 				}else{
 					logger.error("WS validarPolizaTractoCamion, Poliza NO Valida");
+					polizaValida = new String("La poliza no es valida");
 				}
 				
 			} catch(WSException wse){
 				logger.error("Error en WS validarPolizaTractoCamion, xml enviado: " + wse.getPayload(), wse);
+				polizaValida = new String("Servicio web con error");
 			} catch (Exception e){
 				logger.error("Error en WS validarPolizaTractoCamion: " + e.getMessage(),e);
+				polizaValida = new String("Error al enviar servicio web");
 			}
 		}else{
 			logger.error("Error en WS validarPolizaTractoCamion datos nulos");
+			polizaValida = new String("No se recibio el numero de poliza");
 		}
 		
 		return polizaValida;

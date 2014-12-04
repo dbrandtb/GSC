@@ -1752,6 +1752,44 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarValidacionTractocamionRamo5 @@@@@@")
+				.append("\n@@@@@@ poliza=").append(poliza)
+				.append("\n@@@@@@ rfc=")   .append(rfc)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Invocando web service");
+			Object polizaValida = tractoCamionService.validarPolizaTractoCamion(poliza, rfc); 
+			resp.setExito(polizaValida.getClass().equals(Boolean.class)&&polizaValida.equals(Boolean.TRUE));
+			resp.setRespuesta(String.valueOf(polizaValida));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarValidacionTractocamionRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
