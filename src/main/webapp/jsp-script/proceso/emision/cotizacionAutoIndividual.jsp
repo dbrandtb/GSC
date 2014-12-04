@@ -606,6 +606,32 @@ Ext.onReady(function()
 	        });
 	    }
 	    //camion
+	    
+	    //tipo uso
+	    _fieldByLabel('NEGOCIO').on(
+	    {
+	        change : function(me,val)
+	        {
+	            if(me.findRecord('key',val)!=false)
+	            {
+	                _fieldByLabel('TIPO USO').getStore().load(
+	                {
+	                    params :
+	                    {
+	                        'params.cdnegocio' : val
+	                    }
+	                });
+	                marca.getStore().load(
+                    {
+                        params :
+                        {
+                            'params.cdnegocio' : val
+                        }
+                    });
+	            }
+	        }
+	    });
+	    //tipo uso
 	}
 	//ramo 5
 	

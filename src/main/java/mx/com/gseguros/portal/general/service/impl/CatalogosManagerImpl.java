@@ -591,4 +591,104 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarNegocioPorCdtipsitRamo5 @@@@@@")
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.toString()
+				);
+		
+		List<GenericVO>lista=null;
+		
+		try
+		{
+			lista = catalogosDAO.cargarNegocioPorCdtipsitRamo5(cdtipsit);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al cargar negocios por cdtipsit",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarNegocioPorCdtipsitRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarUsosPorNegocioRamo5 @@@@@@")
+				.append("\n@@@@@@ cdnegocio=").append(cdnegocio)
+				.toString()
+				);
+		
+		List<GenericVO>lista=null;
+		
+		try
+		{
+			lista = catalogosDAO.cargarUsosPorNegocioRamo5(cdnegocio);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al cargar usos por negocio",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarUsosPorNegocioRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarMarcasPorNegocioRamo5 @@@@@@")
+				.append("\n@@@@@@ cdnegocio=").append(cdnegocio)
+				.append("\n@@@@@@ cdtipsit=") .append(cdtipsit)
+				.toString()
+				);
+		
+		List<GenericVO>lista=null;
+		
+		try
+		{
+			lista = catalogosDAO.cargarMarcasPorNegocioRamo5(cdnegocio,cdtipsit);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al cargar marcas por negocio",ex);
+			lista = new ArrayList<GenericVO>();
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarMarcasPorNegocioRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }

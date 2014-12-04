@@ -987,4 +987,129 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit",cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_NEGOCIO_X_CDTIPSIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarNegocioPorCdtipsitRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay datos de negocio por situacion de riesgo");
+		}
+		List<GenericVO>listaGen = new ArrayList<GenericVO>();
+		for(Map<String,String>item:lista)
+		{
+			listaGen.add(new GenericVO(item.get("clave"),item.get("valor")));
+		}
+		return listaGen;
+	}
+	
+	protected class CargarNegocioPorCdtipsitRamo5 extends StoredProcedure
+	{
+		protected CargarNegocioPorCdtipsitRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_NEGOCIO_X_CDTIPSIT");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "clave" , "valor" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdnegocio",cdnegocio);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_USOS_X_NEGOCIO ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarUsosPorNegocioRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay datos de uso por negocio");
+		}
+		List<GenericVO>listaGen = new ArrayList<GenericVO>();
+		for(Map<String,String>item:lista)
+		{
+			listaGen.add(new GenericVO(item.get("clave"),item.get("valor")));
+		}
+		return listaGen;
+	}
+	
+	protected class CargarUsosPorNegocioRamo5 extends StoredProcedure
+	{
+		protected CargarUsosPorNegocioRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_USOS_X_NEGOCIO");
+			declareParameter(new SqlParameter("cdnegocio" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "clave" , "valor" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdnegocio" , cdnegocio);
+		params.put("cdtipsit"  , cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_MARCAS_X_NEGOCIO ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult  = ejecutaSP(new CargarMarcasPorNegocioRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay datos de uso por negocio");
+		}
+		List<GenericVO>listaGen = new ArrayList<GenericVO>();
+		for(Map<String,String>item:lista)
+		{
+			listaGen.add(new GenericVO(item.get("clave"),item.get("valor")));
+		}
+		return listaGen;
+	}
+	
+	protected class CargarMarcasPorNegocioRamo5 extends StoredProcedure
+	{
+		protected CargarMarcasPorNegocioRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_MARCAS_X_NEGOCIO");
+			declareParameter(new SqlParameter("cdnegocio" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "clave" , "valor" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
