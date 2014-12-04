@@ -22,6 +22,7 @@
             var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
             var _URL_LISTA_AUTSERVICIO          = '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"         />';
             var _URL_DATOS_VALIDACION          = '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"         />';
+            var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
             var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
             debug("VALOR DE _11_params --->");
             debug(_11_params);
@@ -60,13 +61,7 @@
 		                type: 'json',
 		                root: 'lista'
 		            }
-		        },listeners:
-				{
-					load : function()
-					{
-						
-					}
-				}
+		        }
 		    });
 
 			var storeSubcobertura= Ext.create('Ext.data.Store', {
@@ -840,7 +835,31 @@
 							{
 								header: 'Tipsit',					dataIndex: 'DSTIPSIT',			hidden	:	true
 							}
-						]
+						],
+						listeners: {
+							select: function (grid, record, index, opts){
+								var numSiniestro = record.get('NMSINIES');
+								if(numSiniestro.length == "0"){
+									revisarDocumento(grid,index)
+									
+								}else{
+									storeConceptos.load({
+										params: {
+											'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
+											'params.cdunieco'  : record.get('CDUNIECO'),
+											'params.cdramo'    : record.get('CDRAMO'),
+											'params.estado'    : record.get('ESTADO'),
+											'params.nmpoliza'  : record.get('NMPOLIZA'),
+											'params.nmsituac'  : record.get('NMSITUAC'),
+											'params.nmsuplem'  : record.get('NMSUPLEM'),
+											'params.status'    : record.get('STATUS'),
+											'params.aaapertu'  : record.get('AAAPERTU'),
+											'params.nmsinies'  : record.get('NMSINIES')
+										}
+									});
+								}
+							}
+						}
 					 });
 						this.callParent();
 					},
@@ -854,11 +873,24 @@
 				
 				Ext.define('modelConceptos',{
 					extend: 'Ext.data.Model',
-					fields: [	{type:'string',	name:'IDCONCEPTO'},		{type:'string',	name:'CONCEPTO'}
+					fields: [	
+					         	{type:'string',	name:'CDUNIECO'},		{type:'string',	name:'CDRAMO'},			{type:'string',	name:'ESTADO'},
+					         	{type:'string',	name:'NMPOLIZA'},		{type:'string',	name:'NMSUPLEM'},		{type:'string',	name:'NMSITUAC'},
+					         	{type:'string',	name:'AAAPERTU'},		{type:'string',	name:'NMSINIES'},		{type:'string',	name:'NFACTURA'},
+					         	{type:'string',	name:'STATUS'},			{type:'string',	name:'CDGARANT'},		{type:'string',	name:'DSGARANT'},
+					         	{type:'string',	name:'CDCONVAL'},		{type:'string',	name:'DSSUBGAR'},		{type:'string',	name:'CDCONCEP'},
+					         	{type:'string',	name:'DESCONCEP'},		{type:'string',	name:'IDCONCEP'},		{type:'string',	name:'DESIDCONCEP'},
+					         	{type:'string',	name:'DESIDCONCEP'},	{type:'string',	name:'CDCAPITA'},		{type:'string',	name:'NMORDINA'},
+					         	{type:'string',	name:'FEMOVIMI'},		{type:'string',	name:'CDMONEDA'},		{type:'string',	name:'PTPRECIO'},
+					         	{type:'string',	name:'CANTIDAD'},		{type:'string',	name:'DESTOPOR'},		{type:'string',	name:'DESTOIMP'},
+					         	{type:'string',	name:'PTIMPORT'},		{type:'string',	name:'PTRECOBR'},		{type:'string',	name:'NMANNO'},
+					         	{type:'string',	name:'NMAPUNTE'},		{type:'string',	name:'USERREGI'},		{type:'string',	name:'FEREGIST'},
+					         	{type:'string',	name:'PTPCIOEX'},		{type:'string',	name:'DCTOIMEX'},		{type:'string',	name:'PTIMPOEX'},
+					         	{type:'string',	name:'PTMTOARA'},		{type:'string',	name:'TOTAJUSMED'},		{type:'string',	name:'SUBTAJUSTADO'}
 							]
 					});
 					
-					storeConceptos = Ext.create('Ext.data.Store',
+					/*storeConceptos = Ext.create('Ext.data.Store',
 					{
 						autoLoad : false
 						,model   : 'modelConceptos'
@@ -872,23 +904,41 @@
 							,type  : 'ajax'
 							,url   : _p12_urlObtenerSiniestrosTramite
 					    }
+					});*/
+					
+					storeConceptos=new Ext.data.Store(
+					{
+					    autoDestroy: true,
+					    model: 'modelConceptos',
+					    proxy: {
+				            type: 'ajax',
+				            url: _URL_LoadConceptos,
+				            reader: {
+				                type: 'json',
+				                root: 'loadList'
+				            }
+				        }
 					});
 					
-					/*Ext.define('EditorConceptos', {
+					Ext.define('EditorConceptos', {
 						extend: 'Ext.grid.Panel',
 						name:'editorConceptos',
-						title: 'Conceptos',
+						title: 'Alta de Conceptos',
 						icon        : '${ctx}/resources/fam3icons/icons/paste_plain.png',
 						frame: true,
-						selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
+						//selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
+						selType  : 'rowmodel',
 						initComponent: function(){
 							Ext.apply(this, {
 							//width: 850,
 							height: 250,
 							plugins  :
-							[
-								Ext.create('Ext.grid.plugin.CellEditing',{	clicksToEdit: 1	})
-							],
+						        [
+						            Ext.create('Ext.grid.plugin.CellEditing',
+						            {
+						                clicksToEdit: 1
+						            })
+						        ],
 							store: storeConceptos,
 							columns: 
 							[
@@ -911,12 +961,69 @@
 									]//,flex:1
 								},
 								{
-									header: 'ID CONCEPTO',				dataIndex: 'IDCONCEPTO'
-								},
-								{
-									header: 'CONCEPTO',					dataIndex: 'CONCEPTO'
-								}
-							]
+				 					dataIndex : 'NMORDINA',			width : 20,						hidden: true
+				 				},
+				 				{	
+				 					header : 'Factura',				dataIndex:  'NFACTURA',			hidden: true
+				 				},
+				 				{
+				 					header : 'Tipo Concepto',		dataIndex : 'DESIDCONCEP',		width : 150
+				 				},
+				 				{
+				 					header : 'Codigo Concepto',		dataIndex : 'DESCONCEP',		width : 150
+				 				},
+				 				{
+				 					header : 'Precio',
+				 					dataIndex : 'PTPRECIO',
+				 					width : 150,
+				 					renderer : Ext.util.Format.usMoney
+				 				},{
+				 					header : 'Cantidad',
+				 					dataIndex : 'CANTIDAD',
+				 					width : 150,
+				 					,editor: {
+						                xtype: 'textfield',
+						                allowBlank: false,
+						                editable : true,
+						                minValue: 1
+					            }
+				 				},{
+				 					header : 'Descuento (%)',
+				 					dataIndex : 'DESTOPOR',
+				 					width : 150
+				 				},{
+				 					header : 'Descuento ($)',
+				 					dataIndex : 'DESTOIMP',
+				 					width : 150
+				 				},{
+				 					header : 'Ajuste M&eacute;dico',
+				 					dataIndex : 'TOTAJUSMED',
+				 					width : 150,
+				 					renderer : Ext.util.Format.usMoney
+				 				},{
+				 					header : 'Subtotal Factura',
+				 					dataIndex : 'PTIMPORT',
+				 					width : 150,
+				 					renderer : Ext.util.Format.usMoney
+				 				},{
+				 					header : 'Subtotal Ajustado',
+				 					dataIndex : 'SUBTAJUSTADO',
+				 					width : 150,
+				 					renderer : Ext.util.Format.usMoney
+				 				},{
+				 					header : 'Valor Arancel',
+				 					dataIndex : 'PTMTOARA',
+				 					width : 150,
+				 					renderer : Ext.util.Format.usMoney
+				 				}
+							],
+							tbar:[
+									{
+										text	: 'Agregar Concepto'
+										,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+										//,handler : _p21_agregarFactura
+									}
+								]
 						 });
 							this.callParent();
 						},
@@ -925,7 +1032,7 @@
 							this.getStore().removeAt(rowIndex);
 						}
 					});
-					gridEditorConceptos = new EditorConceptos();*/
+					gridEditorConceptos = new EditorConceptos();
 				
 				
 					Ext.define('modelListadoAutorizacion',{
@@ -1082,7 +1189,7 @@
 			        [
 						panelInicialPral
 						,gridFacturaDirecto
-						//,gridEditorConceptos
+						,gridEditorConceptos
 			        ],
 					buttonAlign:'center',
 					buttons: [
