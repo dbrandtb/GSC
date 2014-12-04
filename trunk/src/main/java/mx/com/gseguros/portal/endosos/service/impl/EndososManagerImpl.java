@@ -1420,27 +1420,28 @@ public class EndososManagerImpl implements EndososManager
 		
 		if(resp.isExito()) {
 			try {
-				
 				// Acciones particulares por Tipo de Endoso:
-	        	switch(enumTipoEndosoElegido) {
-					case SUMA_ASEGURADA_INCREMENTO:
-					case SUMA_ASEGURADA_DECREMENTO:
-						//Si cdramo es gastos medicos mayores y cd tipsit es gastos medicos individual insertamos en mpolicap:
-						if(cdramo.equals(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) &&
-								cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())) {
-							Map<String,String>mapaMpolicap=new LinkedHashMap<String,String>(0);
-							mapaMpolicap.put("pv_cdunieco_i", cdunieco);
-							mapaMpolicap.put("pv_cdramo_i"  , cdramo);
-							mapaMpolicap.put("pv_estado_i"  , estado);
-							mapaMpolicap.put("pv_nmpoliza_i", nmpoliza);
-							mapaMpolicap.put("pv_nmsuplem_i", nmsuplemEndoso);
-							mapaMpolicap.put("pv_ptcapita_i", tvalosit.get("parametros.pv_otvalor06"));
-							endososDAO.insertarMpolicap(mapaMpolicap);
-						}
-						break;
-
-					default:
-						break;
+				if(enumTipoEndosoElegido != null) {
+					switch(enumTipoEndosoElegido) {
+						case SUMA_ASEGURADA_INCREMENTO:
+						case SUMA_ASEGURADA_DECREMENTO:
+							//Si cdramo es gastos medicos mayores y cd tipsit es gastos medicos individual insertamos en mpolicap:
+							if(cdramo.equals(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) &&
+									cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())) {
+								Map<String,String>mapaMpolicap=new LinkedHashMap<String,String>(0);
+								mapaMpolicap.put("pv_cdunieco_i", cdunieco);
+								mapaMpolicap.put("pv_cdramo_i"  , cdramo);
+								mapaMpolicap.put("pv_estado_i"  , estado);
+								mapaMpolicap.put("pv_nmpoliza_i", nmpoliza);
+								mapaMpolicap.put("pv_nmsuplem_i", nmsuplemEndoso);
+								mapaMpolicap.put("pv_ptcapita_i", tvalosit.get("parametros.pv_otvalor06"));
+								endososDAO.insertarMpolicap(mapaMpolicap);
+							}
+							break;
+	
+						default:
+							break;
+					}
 				}
 	        	
 				
