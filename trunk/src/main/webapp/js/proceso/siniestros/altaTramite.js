@@ -631,84 +631,6 @@ Ext.onReady(function() {
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 					,handler : function() {
 						guardarFacturaSiniestro();
-						/*var obtener = [];
-						storeFacturaDirecto.each(function(record) {
-							obtener.push(record.data);
-						});
-						if(obtener.length <= 0){
-							Ext.Msg.show({
-								title:'Error',
-								msg: 'Se requiere al menos una factura en el tr&aacute;mite',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-							return false;
-						}else{
-							
-							for(i=0;i < obtener.length;i++){
-            					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
-            						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""){
-            						centrarVentanaInterna(Ext.Msg.show({
-						                title:'Facturas',
-						                msg: 'Favor de introducir los campos requeridos en la factura',
-						                buttons: Ext.Msg.OK,
-						                icon: Ext.Msg.WARNING
-						            }));
-            						return false;
-            					}
-							}
-							var submitValues={};
-							var formulario=panelInicialPral.form.getValues();
-							submitValues['params']=formulario;
-							var datosTablas = [];
-							storeFacturaDirecto.each(function(record,index){
-								datosTablas.push({
-									nfactura:record.get('noFactura'),
-									ffactura:record.get('fechaFactura'),
-									cdtipser:panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-									cdpresta:panelInicialPral.down('combo[name=cmbProveedor]').getValue(),
-									ptimport:record.get('importe'),
-									cdmoneda:record.get('tipoMonedaName'),
-									tasacamb:record.get('tasaCambio'),
-									ptimporta:record.get('importeFactura')
-								});
-							});
-							submitValues['datosTablas']=datosTablas;
-							panelInicialPral.setLoading(true);
-							Ext.Ajax.request(
-							{
-								url: _URL_GUARDA_FACTURA_TRAMITE,
-								jsonData:Ext.encode(submitValues),
-								success:function(response,opts){
-									panelInicialPral.setLoading(false);
-									var jsonResp = Ext.decode(response.responseText);
-									if(jsonResp.success==true){
-										panelInicialPral.setLoading(false);
-										banderaFactura ="0";
-										debug("VALOR DE LA FACTURA -->"+banderaFactura);
-									}else{
-										centrarVentanaInterna(Ext.Msg.show({
-											title:'Error',
-											msg: 'Favor de introducir los campos requeridos en la factura',
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.ERROR
-										}));
-										respuesta= false;
-									}
-								},
-								failure:function(response,opts)
-								{
-									panelInicialPrincipal.setLoading(false);
-									Ext.Msg.show({
-										title:'Error',
-										msg: 'Error de comunicaci&oacute;n',
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									});
-								}
-							});
-						}
-						storeListAsegPagDirecto.removeAll();*/
 					}
 				},
 				{
@@ -762,7 +684,6 @@ Ext.onReady(function() {
 			listeners: {
 				itemclick: function(dv, record, item, index, e) {
 					/*OBTENEMOS LA INFORMACIÓN DE LOS ASEGURADOS*/
-					//storeListAsegPagDirecto.removeAll();
 					if(panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().hasSelection()){
 						/*if(banderaFactura =="1"){
 							//GUARDAMOS LAS FACTURAS
@@ -1507,6 +1428,8 @@ Ext.onReady(function() {
 			text: 'Guardar cambios',
 			handler: function() {
 				var form = this.up('form').getForm();
+				verificarFacturaAsegurado();
+				
 				if (form.isValid()){
 					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){//PARA PAGO DIRECTO
 						panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
@@ -1687,6 +1610,7 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
 			handler:function()
 			{
+				verificarFacturaAsegurado();
 				windowLoader = Ext.create('Ext.window.Window',{
 					modal       : true,
 					buttonAlign : 'center',
@@ -1717,6 +1641,7 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/page_white_edit.png',
 			handler:function()
 			{
+				verificarFacturaAsegurado();
 				Ext.Ajax.request({
 					url: _UrlGenerarContrarecibo,
 					params: {
@@ -1769,6 +1694,7 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/folder_go.png',
 			handler:function()
 			{
+				verificarFacturaAsegurado();
 				windowLoader = Ext.create('Ext.window.Window',{
 					modal       : true,
 					buttonAlign : 'center',
@@ -1807,6 +1733,7 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/fam3icons/icons/group_go.png',
 			handler:function()
 			{
+				verificarFacturaAsegurado();
 				turnarAreclamaciones();
 			}
 		},
@@ -1815,7 +1742,7 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 			handler:function()
 			{
-				
+				verificarFacturaAsegurado();
 				panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
 					id: 'panelRechazarReclamaciones',
 					width: 650,
@@ -2485,6 +2412,20 @@ Ext.onReady(function() {
 		});
 	}
 	
+	function verificarFacturaAsegurado(){
+		if(banderaFactura =="1"){
+			//GUARDAMOS LAS FACTURAS
+			guardarFacturaSiniestro();
+			//VERIFICAMOS SI TIENE TAMBIEN ASEGURADOS QUE NO SE HAN GUARDADO
+			if(banderaAsegurado =="1"){
+				guardarAseguradosFactura();
+			}
+		}else{
+			if(banderaAsegurado =="1"){
+				guardarAseguradosFactura();
+			}
+		}
+	}
 	function turnarAreclamaciones(){
 		Ext.Ajax.request({
 		url: _UrlValidaDocumentosCargados,
