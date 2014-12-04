@@ -463,6 +463,27 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case RAMO_5_VERSIONES:
 					lista = catalogosManager.cargarTtapvat1(cat.getCdTabla());
 					break;
+				case RAMO_5_NEGOCIO_X_CDTIPSIT:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarNegocioPorCdtipsitRamo5(params.get("cdtipsit"));
+					break;
+				case RAMO_5_USOS_X_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarUsosPorNegocioRamo5(params.get("cdnegocio"));
+					break;
+				case RAMO_5_MARCAS_X_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarMarcasPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
