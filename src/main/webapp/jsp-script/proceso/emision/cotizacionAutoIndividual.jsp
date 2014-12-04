@@ -607,7 +607,7 @@ Ext.onReady(function()
 	    }
 	    //camion
 	    
-	    //tipo uso
+	    //negocio
 	    _fieldByLabel('NEGOCIO').on(
 	    {
 	        change : function(me,val)
@@ -631,7 +631,7 @@ Ext.onReady(function()
 	            }
 	        }
 	    });
-	    //tipo uso
+	    //negocio
 	}
 	//ramo 5
 	

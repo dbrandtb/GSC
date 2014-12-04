@@ -76,6 +76,6 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO>cargarTtapvat1(String cdtabla)throws ApplicationException,Exception;
 	public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit)throws Exception;
-	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio)throws Exception;
+	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception;
 	public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception;
 }
