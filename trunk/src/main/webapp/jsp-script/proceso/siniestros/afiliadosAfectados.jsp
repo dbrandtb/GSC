@@ -379,15 +379,14 @@
 												{
 													json = Ext.decode(response.responseText);
 													if(json.success==true){
-														mensajeCorrecto('Datos guardados',json.mensaje,function(){
-															Ext.create('Ext.form.Panel').submit(
-															{
-																standardSubmit :true
-																,params        :
-																{
-																	'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
-																}
-															});
+														mensajeCorrecto('Autorizaci&oacute;n',json.mensaje,function(){
+															storeAseguradoFactura.removeAll();
+															storeAseguradoFactura.load({
+														    	params: {
+														    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
+														    		'smap.nfactura'   : _11_recordActivo.get('factura')
+														    	}
+														    });
 														});
 													}else{
 														mensajeError(json.mensaje);
@@ -452,8 +451,7 @@
 							centrarVentanaInterna(_11_windowPedirAut);
 						}
 					}else{
-						_11_textfieldNmautserv.setValue('');
-						centrarVentanaInterna(_11_windowPedirAut);Ext.Msg.show({
+						Ext.Msg.show({
 							title: 'Aviso',
 							msg: 'Error al obtener los datos.',
 							buttons: Ext.Msg.OK,
@@ -483,8 +481,6 @@
 
 				if(valido)
 				{
-					debug(' _11_recordActivo --->');
-					debug(_11_recordActivo);
 					var json =
 					{
 						'params.nmautser'  : _11_textfieldNmautserv.getValue()
@@ -503,19 +499,19 @@
 						,success : function(response)
 						{
 							_11_formPedirAuto.setLoading(false);
+							
 							json = Ext.decode(response.responseText);
 							if(json.success==true)
 							{
-								mensajeCorrecto('Datos guardados',json.mensaje,function()
-								{
-									/*Ext.create('Ext.form.Panel').submit(
-									{
-										standardSubmit :true
-										,params        :
-										{
-											'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
-										}
-									});*/
+								//_11_WindowPedirAut.close();
+								mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
+									storeAseguradoFactura.removeAll();
+									storeAseguradoFactura.load({
+								    	params: {
+								    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
+								    		'smap.nfactura'   : _11_recordActivo.get('factura')
+								    	}
+								    });
 								});
 							}
 							else
@@ -1105,7 +1101,7 @@
 	            		        		centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
 	            					},
 	            					success: function(form, action) {
-	            						centrarVentanaInterna(mensajeCorrecto('Datos guardados',"Se ha guardado la Factura",function()
+	            						centrarVentanaInterna(mensajeCorrecto('Guardar Cambios',"Se ha guardado la Factura",function()
            								{
            									Ext.create('Ext.form.Panel').submit(
            									{
@@ -1234,6 +1230,7 @@
 			        fieldLabel  : 'No. de autorizaci&oacute;n'
 			        ,readOnly   : false
 			        ,allowBlank : false
+			        ,hidden : true
 			        ,minLength  : 1
 			    });
 						

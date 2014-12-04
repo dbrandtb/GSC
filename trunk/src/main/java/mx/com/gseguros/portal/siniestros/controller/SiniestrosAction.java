@@ -1853,7 +1853,7 @@ public String consultaListaPlazas(){
     		
     		String                   ntramite  = params.get("ntramite");
 			String                   nfactura  = params.get("nfactura");
-    		String                   fefactura = params.get("ffactura");
+			String                   fefactura = params.get("ffactura").substring(8,10)+"/"+params.get("ffactura").substring(5,7)+"/"+params.get("ffactura").substring(0,4);
     		String                   cdtipser  = params.get("cdtipser");
     		String                   cdpresta  = params.get("cdpresta");
     		String                   ptimport  = params.get("ptimport");
