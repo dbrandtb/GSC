@@ -460,6 +460,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							);
 					break;
 				case RAMO_5_SUBMARCAS:
+				case RAMO_5_TIPOS_USO:
 				case RAMO_5_VERSIONES:
 					lista = catalogosManager.cargarTtapvat1(cat.getCdTabla());
 					break;
@@ -475,7 +476,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String, String>();
 					}
-					lista = catalogosManager.cargarUsosPorNegocioRamo5(params.get("cdnegocio"));
+					lista = catalogosManager.cargarUsosPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
 					break;
 				case RAMO_5_MARCAS_X_NEGOCIO:
 					if(params==null)

@@ -21,6 +21,11 @@ var _p30_urlCotizar                        = '<s:url namespace="/emision"   acti
 ////// variables //////
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
+var _p28_smap1 =
+{
+    cdtipsit : _p30_smap1.cdtipsit
+};
+debug('_p28_smap1:',_p28_smap1);
 
 var _p30_windowAuto              = null;
 var _p30_store                   = null;
@@ -29,6 +34,7 @@ var _p30_recordClienteRecuperado = null;
 
 var _p30_storeSubmarcasRamo5 = null;
 var _p30_storeVersionesRamo5 = null;
+var _p30_storeUsosRamo5      = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -328,6 +334,35 @@ Ext.onReady(function()
             }
         }
     });
+    
+    _p30_storeUsosRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,cargado  : false
+        ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo' : 'RAMO_5_TIPOS_USO'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+            }
+        }
+    });
 	////// stores //////
 	
 	////// componentes //////
@@ -432,6 +467,13 @@ Ext.onReady(function()
 	            {
 	                clicksToEdit  : 1
 	                ,errorSummary : false
+	                ,listeners    :
+	                {
+	                    beforeedit : function()
+	                    {
+	                        debug('beforeedit');
+	                    }
+	                }
                 })
 	        })
 	        ,Ext.create('Ext.panel.Panel',
@@ -697,7 +739,38 @@ Ext.onReady(function()
             }
             return v;
         };
+        _fieldById('_p30_grid').down('[text=TIPO USO]').renderer=function(v)
+        {
+            if(_p30_storeUsosRamo5.cargado&&v+'x'!='x')
+            {
+                v=_p30_storeUsosRamo5.getAt(_p30_storeUsosRamo5.find('key',v)).get('value');
+            }
+            else
+            {
+                v='';
+            }
+            return v;
+        };
         //renderers
+        
+        //negocio
+        _fieldByLabel('NEGOCIO').on(
+        {
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    var tipoUsoName = _fieldById('_p30_grid').down('[text=TIPO USO]').dataIndex;
+                    var marcaName   = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
+                    _p30_store.each(function(record)
+                    {
+                        record.set(tipoUsoName , '');
+                        record.set(marcaName   , '');
+                    });
+                }
+            }
+        });
+        //negocio
     }
     //ramo 5
 	
@@ -763,7 +836,14 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
 function _p30_agregarAuto()
 {
     debug('>_p30_agregarAuto');
-    _p30_store.add(new _p30_modelo());
+    if(!Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue()))
+    {
+        _p30_store.add(new _p30_modelo());
+    }
+    else
+    {
+        mensajeWarning('Seleccione el negocio');
+    }
     debug('<_p30_agregarAuto');
 }
 
