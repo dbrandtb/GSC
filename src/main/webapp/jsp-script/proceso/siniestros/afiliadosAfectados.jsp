@@ -923,22 +923,18 @@
 					Ext.define('EditorConceptos', {
 						extend: 'Ext.grid.Panel',
 						name:'editorConceptos',
-						title: 'Alta de Conceptos',
+						title: 'Conceptos',
 						icon        : '${ctx}/resources/fam3icons/icons/paste_plain.png',
 						frame: true,
-						//selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
-						selType  : 'rowmodel',
+						selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 						initComponent: function(){
 							Ext.apply(this, {
 							//width: 850,
 							height: 250,
 							plugins  :
-						        [
-						            Ext.create('Ext.grid.plugin.CellEditing',
-						            {
-						                clicksToEdit: 1
-						            })
-						        ],
+							[
+								Ext.create('Ext.grid.plugin.CellEditing',{	clicksToEdit: 1	})
+							],
 							store: storeConceptos,
 							columns: 
 							[
@@ -961,18 +957,26 @@
 									]//,flex:1
 								},
 								{
-				 					dataIndex : 'NMORDINA',			width : 20,						hidden: true
-				 				},
-				 				{	
-				 					header : 'Factura',				dataIndex:  'NFACTURA',			hidden: true
-				 				},
-				 				{
-				 					header : 'Tipo Concepto',		dataIndex : 'DESIDCONCEP',		width : 150
-				 				},
-				 				{
-				 					header : 'Codigo Concepto',		dataIndex : 'DESCONCEP',		width : 150
-				 				},
-				 				{
+				 					dataIndex : 'NMORDINA',
+				 					width : 20,
+				 					hidden: true
+				 				},{
+				 					header : 'Factura',
+				 					dataIndex:  'NFACTURA',
+				 					hidden: true
+				 				},{
+				 					header : 'Tipo Concepto',
+				 					dataIndex : 'DESIDCONCEP',
+				 					width : 150
+				 				},{
+				 					header : 'Codigo Concepto',
+				 					dataIndex : 'DESCONCEP',
+				 					width : 150
+				 				},{
+				 					header : 'Subcobertura',
+				 					dataIndex : 'DSSUBGAR',
+				 					width : 150
+				 				},{
 				 					header : 'Precio',
 				 					dataIndex : 'PTPRECIO',
 				 					width : 150,
@@ -980,13 +984,7 @@
 				 				},{
 				 					header : 'Cantidad',
 				 					dataIndex : 'CANTIDAD',
-				 					width : 150,
-				 					,editor: {
-						                xtype: 'textfield',
-						                allowBlank: false,
-						                editable : true,
-						                minValue: 1
-					            }
+				 					width : 150
 				 				},{
 				 					header : 'Descuento (%)',
 				 					dataIndex : 'DESTOPOR',
