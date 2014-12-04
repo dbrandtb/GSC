@@ -15,6 +15,11 @@
     border-left  : 2px solid red;
     border-right : 2px solid red;
 }
+.conTimeout>tbody>tr::after
+{
+    content     : url('${ctx}/resources/fam3icons/icons/clock.png');
+    margin-left : 5px;
+}
 </style>
 <script>
 ////// overrides //////
@@ -80,6 +85,7 @@ var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"       
 var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"                      />';
 var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                          />';
 var _p28_urlCargarParamerizacionCoberturas = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas" />';
+var _p28_urlValidarTractocamionRamo5       = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"           />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -104,6 +110,7 @@ var _p28_selectedCdperpag        = null;
 var _p28_selectedCdplan          = null;
 var _p28_selectedDsplan          = null;
 var _p28_selectedNmsituac        = null;
+var _p28_ramo5_CR_tracto_timeout = null;
 ////// variables //////
 
 Ext.onReady(function()
@@ -546,6 +553,59 @@ Ext.onReady(function()
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
 	    //parametrizacion coberturas
+	    
+	    //camion
+	    if(_p28_smap1.cdtipsit+'x'=='CRx')
+	    {
+	        _fieldLikeLabel('LIZA TRACTOCAMI').allowBlank=false;
+	        _fieldLikeLabel('LIZA TRACTOCAMI').on(
+	        {
+	            change : function(me,val)
+	            {
+	                if(!Ext.isEmpty(_p28_ramo5_CR_tracto_timeout))
+                    {
+                        clearTimeout(_p28_ramo5_CR_tracto_timeout);
+                        me.removeCls('conTimeout');
+                    }
+	                if(!Ext.isEmpty(val)&&val+'x'!='x')
+	                {
+	                    me.addCls('conTimeout');
+	                    _p28_ramo5_CR_tracto_timeout = setTimeout(function()
+	                    {
+	                        me.removeCls('conTimeout');
+	                        me.setLoading(true);
+	                        Ext.Ajax.request(
+	                        {
+	                            url     : _p28_urlValidarTractocamionRamo5
+	                            ,params :
+	                            {
+	                                'smap1.poliza' : val
+	                                ,'smap1.rfc'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.RFCCLI
+	                            }
+	                            ,success : function(response)
+	                            {
+	                                me.setLoading(false);
+	                                var json = Ext.decode(response.responseText);
+	                                debug('### tractocamion:',json);
+	                                if(!json.exito)
+	                                {
+	                                    mensajeWarning(json.respuesta);
+	                                    me.setValue('');
+	                                }
+	                            }
+	                            ,failure : function()
+	                            {
+	                                me.setLoading(false);
+	                                me.setValue('');
+	                                errorComunicacion();
+	                            }
+	                        });
+	                    },5000);
+	                }
+	            }
+	        });
+	    }
+	    //camion
 	}
 	//ramo 5
 	

@@ -308,6 +308,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="cargarValidacionTractocamionRamo5" class="cotizacionAutoAction" method="cargarValidacionTractocamionRamo5">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

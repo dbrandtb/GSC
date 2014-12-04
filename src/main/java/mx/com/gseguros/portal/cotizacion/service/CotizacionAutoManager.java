@@ -129,4 +129,5 @@ public interface CotizacionAutoManager
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
 			,List<Map<String,String>> confTvalosit);
+	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 }

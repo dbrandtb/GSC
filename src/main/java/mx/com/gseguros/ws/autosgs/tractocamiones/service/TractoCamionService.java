@@ -8,5 +8,5 @@ public interface TractoCamionService {
 	 * @param sucursalAdmin
 	 * @return
 	 */
-	public boolean validarPolizaTractoCamion(String numeroPoliza, String rfcCliente);
+	public Object validarPolizaTractoCamion(String numeroPoliza, String rfcCliente);
 }
