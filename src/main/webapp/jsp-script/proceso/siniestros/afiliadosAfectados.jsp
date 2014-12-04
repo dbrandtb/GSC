@@ -383,8 +383,8 @@
 															storeAseguradoFactura.removeAll();
 															storeAseguradoFactura.load({
 														    	params: {
-														    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
-														    		'smap.nfactura'   : _11_recordActivo.get('factura')
+														    		'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+														    		'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
 														    	}
 														    });
 														});
@@ -508,8 +508,8 @@
 									storeAseguradoFactura.removeAll();
 									storeAseguradoFactura.load({
 								    	params: {
-								    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
-								    		'smap.nfactura'   : _11_recordActivo.get('factura')
+								    		'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+								    		'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
 								    	}
 								    });
 								});
