@@ -185,7 +185,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
         	usVO.setClaveUsuarioCaptura(e);
         }
         
-        logger.debug(">>>> Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento (ERROR)");
+        logger.warn(">>>> Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento");
        
         complementaUsuario(usuario);
         session.put("USUARIO", usuario);
