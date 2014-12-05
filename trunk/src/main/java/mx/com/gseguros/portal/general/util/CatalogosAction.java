@@ -459,6 +459,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("cdtipsit")
 							);
 					break;
+				case RAMO_5_MARCAS:
 				case RAMO_5_SUBMARCAS:
 				case RAMO_5_TIPOS_USO:
 				case RAMO_5_VERSIONES:
