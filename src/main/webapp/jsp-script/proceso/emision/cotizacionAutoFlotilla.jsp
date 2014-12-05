@@ -489,6 +489,43 @@ Ext.onReady(function()
 	            itemId      : '_p30_grid'
 	            ,title      : 'INCISOS'
 	            ,tbar       : _p30_gridTbarItems
+	            ,bbar       :
+	            [
+	                '->'
+	                ,{
+	                    xtype       : 'checkbox'
+	                    ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
+	                    ,name       : 'tomarMasiva'
+	                    ,inputValue : '1'
+	                }
+	                ,{
+	                    xtype         : 'filefield'
+	                    ,buttonOnly   : true
+	                    ,buttonConfig :
+	                    {
+	                        text  : 'Carga masiva...'
+	                        ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
+	                    }
+	                    ,listeners :
+	                    {
+	                        change : function(me)
+                            {
+                                var indexofPeriod = me.getValue().lastIndexOf("."),
+                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                debug('uploadedExtension:',uploadedExtension);
+                                if (!Ext.Array.contains(['xls','xlsx'], uploadedExtension))
+                                {
+                                    mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
+                                    me.reset();
+                                }
+                                else
+                                {
+                                    //qwe
+                                }
+                            }
+	                    }
+	                }
+	            ]
 	            ,columns    : _p30_gridCols
 	            ,height     : 350
 	            ,viewConfig : viewConfigAutoSize
