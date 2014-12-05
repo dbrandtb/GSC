@@ -407,10 +407,11 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
 	 */
 	@Override
-	public List<ComponenteVO> obtenerAtributosPersona(String cdperson) throws Exception
+	public List<ComponenteVO> obtenerAtributosPersona(String cdperson, String cdrol) throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdperson" , cdperson);
+		params.put("cdrol" , cdrol);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************")
@@ -434,6 +435,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	protected ObtenerAtributosPersona(DataSource dataSource) {
             super(dataSource,"PKG_LISTAS.P_GET_ATRIPER");
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatriperMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -730,6 +732,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	{
             super(dataSource,"PKG_SATELITES.P_VALIDA_DOCTOS_OBLIGATORIOS");
             declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
@@ -848,6 +851,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		{
 			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dsstatus_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

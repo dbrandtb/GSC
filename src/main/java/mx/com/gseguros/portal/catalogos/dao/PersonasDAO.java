@@ -68,7 +68,7 @@ public interface PersonasDAO
 	/**
 	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
 	 */
-	public List<ComponenteVO> obtenerAtributosPersona(String cdperson) throws Exception;
+	public List<ComponenteVO> obtenerAtributosPersona(String cdperson, String cdrol) throws Exception;
 	/**
 	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA.P_GET_TVALOPER
 	 */
