@@ -756,11 +756,13 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 				coloniaImportarTMP = '';
 			}
 	});
+	
 	_fieldByName('CDMUNICI').on({
 			select: function(){
 				municipioImportarTMP = '';
 			}
 	});
+	
     
     if(!Ext.isEmpty(_cargaCdPerson)){
     	
@@ -1538,7 +1540,45 @@ function _p22_datosAdicionalesClic()
         	     });
         	     
         	     _fieldByName('parametros.pv_otvalor37').setReadOnly(true);
+        	     
+        	     
+				_fieldByName('TELEFONO').on({
+						change: function(me, val){
+			    				_fieldByName('parametros.pv_otvalor38').setValue(val);
+						}
+				});
+				
+				debug('telefono1 allowb: ',_fieldByName('TELEFONO').allowBlank);
+				debug('telefono2ot allowb: ',_fieldByName('parametros.pv_otvalor38').allowBlank);
+				
+				_fieldByName('TELEFONO').allowBlank = _fieldByName('parametros.pv_otvalor38').allowBlank;
+				
+				_fieldByName('EMAIL').vtype = 'email';
+				_fieldByName('EMAIL').on({
+						change: function(me, val){
+			    				_fieldByName('parametros.pv_otvalor39').setValue(val);
+						}
+				});
+				
+				_fieldByName('parametros.pv_otvalor38').hide();
+				_fieldByName('parametros.pv_otvalor39').hide();
                 
+				//rellenar al cargar
+				
+				if(Ext.isEmpty(_fieldByName('TELEFONO').getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor38').getValue())){
+					_fieldByName('TELEFONO').setValue(_fieldByName('parametros.pv_otvalor38').getValue());
+				}
+				if(!Ext.isEmpty(_fieldByName('TELEFONO').getValue()) && Ext.isEmpty(_fieldByName('parametros.pv_otvalor38').getValue())){
+					_fieldByName('parametros.pv_otvalor38').setValue(_fieldByName('TELEFONO').getValue());
+				}
+				
+				if(Ext.isEmpty(_fieldByName('EMAIL').getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor39').getValue())){
+					_fieldByName('EMAIL').setValue(_fieldByName('parametros.pv_otvalor39').getValue());
+				}
+				if(!Ext.isEmpty(_fieldByName('EMAIL').getValue()) && Ext.isEmpty(_fieldByName('parametros.pv_otvalor39').getValue())){
+					_fieldByName('parametros.pv_otvalor39').setValue(_fieldByName('EMAIL').getValue());
+				}
+				
             }
             else
             {
