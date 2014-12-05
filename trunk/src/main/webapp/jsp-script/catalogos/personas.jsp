@@ -78,6 +78,9 @@ var _CDIDEPERselTMP;
 var _CDIDEEXTselTMP;
 var _esSaludDaniosTMP;
 
+var municipioImportarTMP;
+var coloniaImportarTMP;
+
 
 
 var _cargaCdPerson;
@@ -383,8 +386,8 @@ Ext.onReady(function()
 											_p22_formDatosGenerales().hide();
 								    		_p22_formDomicilio().hide();
 								    		_p22_principalDatosAdicionales().hide();
-								    		_fieldByName('CDMUNICI').setFieldLabel("MUNICIPIO");
-											_fieldByName('CDCOLONI').setFieldLabel("COLONIA");
+//								    		_fieldByName('CDMUNICI').setFieldLabel("MUNICIPIO");
+//											_fieldByName('CDCOLONI').setFieldLabel("COLONIA");
 											
 											_p22_cdperson = _p22_cdpersonTMP;
 											_p22_tipoPersona = _p22_tipoPersonaTMP;
@@ -392,6 +395,9 @@ Ext.onReady(function()
 											_CDIDEPERsel = _CDIDEPERselTMP;
 											_CDIDEEXTsel = _CDIDEEXTselTMP;
 											_esSaludDanios = _esSaludDaniosTMP;
+											municipioImportarTMP = '';
+											coloniaImportarTMP = '';
+											_fieldByName('CDMUNICI').forceSelection = false;
 											
 								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
 								    		if("1" == _p22_cdperson){
@@ -421,6 +427,9 @@ Ext.onReady(function()
 											_p22_nacionalidad = '';
 											_CDIDEPERsel = '';
 											_CDIDEEXTsel = '';
+											municipioImportarTMP = '';
+											coloniaImportarTMP = '';
+											_fieldByName('CDMUNICI').forceSelection = false;
 //											form.down('[name=smap1.rfc]').reset();
 //											form.down('[name=smap1.nombre]').reset();
 											_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D';
@@ -473,6 +482,13 @@ Ext.onReady(function()
 	                            text     : 'Guardar datos de Persona'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function(){
+	                            			if(!Ext.isEmpty(municipioImportarTMP)){
+	                            				mensajeWarning("El municipio '" + municipioImportarTMP + "' no se ha encontrado, favor de seleccionar el equivalente u otro municipio de la lista.");
+	                            				return;
+	                            			}
+	                            			
+	                            			_fieldByName('CDMUNICI').forceSelection = true;
+	                            			
 	                            			_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
 	                            }
 	                    }]
@@ -703,10 +719,10 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 						var form=_p22_formBusqueda();
 						form.down('[name=smap1.rfc]').reset();
 						form.down('[name=smap1.nombre]').reset();
-						
-						_fieldByName('CDMUNICI').setValue(json.params.municipioImp);
-						_fieldByName('CDCOLONI').setValue(json.params.coloniaImp);
-						
+	
+						municipioImportarTMP = json.params.municipioImp;
+						coloniaImportarTMP = json.params.coloniaImp;
+	
 						irModoEdicion();
 	                }
 	                else
@@ -722,7 +738,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     
     }
     
-    //_fieldByName('CDMUNICI').forceSelection = false;
+    
 	_fieldByName('CDCOLONI').forceSelection = false;
 	_fieldByName('CDCOLONI').on({
 			change: function(me, val){
@@ -735,6 +751,14 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     				catch(e){
     					debug(e);
     				}
+			},
+			select: function(){
+				coloniaImportarTMP = '';
+			}
+	});
+	_fieldByName('CDMUNICI').on({
+			select: function(){
+				municipioImportarTMP = '';
 			}
 	});
     
@@ -746,7 +770,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			_CDIDEEXTsel = _p22_smap1.cdideext;
 			_esSaludDanios = _p22_smap1.esSaludDanios;
     		irModoEdicion();
-		},1000)
+		},1000);
     	
     }
 });
@@ -963,12 +987,35 @@ function _p22_loadRecordCdperson(callbackload)
 			            debug('json response:',json);
 			            if(json.exito)
 			            {
+			            	
+			            	/**
+			            	 * Conservar orden de Variables 
+			            	 */
+			            	var valorMun = _fieldByName('CDMUNICI').getValue();
 			                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
+			                var valorCol = _fieldByName('CDCOLONI').getValue();
+			                
 			                heredarPanel(_p22_formDomicilio());
 			                
-			                var valor = _fieldByName('CDCOLONI').getValue();
                     		_p22_heredarColonia(function(){
-                    				_fieldByName('CDCOLONI').setValue(valor);
+                    				_fieldByName('CDCOLONI').setValue(valorCol);
+                    				
+                    				debug('valor de codigo colonia: ', valorCol);
+                    				debug('valor de coloniaImportarTMP: ', coloniaImportarTMP);
+                    				debug('valor de municipioImportarTMP: ', municipioImportarTMP);
+                    				
+                    				if(Ext.isEmpty(valorCol) && !Ext.isEmpty(coloniaImportarTMP)){
+                    					_fieldByName('CDCOLONI').setValue(coloniaImportarTMP);
+                    				}
+                    				
+                    				if(Ext.isEmpty(valorMun) && !Ext.isEmpty(municipioImportarTMP)){
+//                    					_fieldByName('CDMUNICI').forceSelection = false;
+                    					_fieldByName('CDMUNICI').setValue(municipioImportarTMP);
+                    					
+//                    					setTimeout(function(){
+//											_fieldByName('CDMUNICI').forceSelection = true;
+//										},500);
+                    				}
                     			}
                     		);
 			                
@@ -1061,6 +1108,11 @@ function _p22_guardarClic(callback, autosave)
     if(valido)
     {
         _p22_PanelPrincipal().setLoading(true);
+        
+    	if(!Ext.isEmpty(municipioImportarTMP)){
+				_fieldByName('CDMUNICI').setValue('');
+		}
+        
         Ext.Ajax.request(
         {
             url       : _p22_urlGuardar
@@ -1083,6 +1135,15 @@ function _p22_guardarClic(callback, autosave)
                     _p22_fieldCdperson().setValue(json.smap1.CDPERSON);
                     _p22_cdperson = json.smap1.CDPERSON;
                     
+                    if(!Ext.isEmpty(municipioImportarTMP)){
+//						_fieldByName('CDMUNICI').forceSelection = false;
+						_fieldByName('CDMUNICI').setValue(municipioImportarTMP);
+                    					
+//    					setTimeout(function(){
+//							_fieldByName('CDMUNICI').forceSelection = true;
+//						},500);
+					}
+		
                     if(!Ext.isEmpty(callback))
                     {
                         callback();
@@ -1157,7 +1218,8 @@ function _p22_datosAdicionalesClic()
 	        {
 	            url       : _UrlActualizaStatusPersona
 	            ,params: {
-            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
+            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue(),
+            		'params.pv_cdrol_i':  '1'
             	}
 	            ,success  : function(response)
 	            {
@@ -1189,7 +1251,7 @@ function _p22_datosAdicionalesClic()
     Ext.Ajax.request(
     {
         url      : _p22_urlTatriperTvaloper
-        ,params  : { 'smap1.cdperson' : _p22_fieldCdperson().getValue() }
+        ,params  : { 'smap1.cdperson' : _p22_fieldCdperson().getValue(), 'smap1.cdrol' : '1' }
         ,success : function(response)
         {
             _p22_PanelPrincipal().setLoading(false);
@@ -1532,6 +1594,7 @@ function _p22_guardarDatosAdicionalesClic()
         _p22_formDatosAdicionales().setLoading(true);
         var jsonData = _p22_formDatosAdicionales().getValues();
         jsonData['cdperson'] = _p22_fieldCdperson().getValue();
+        jsonData['cdrol'] = '1';
         jsonData['esSalud'] = _esSaludDanios;
         jsonData['codigoExterno'] = (_esSaludDanios=='S')?_CDIDEEXTsel:_CDIDEPERsel;
         jsonData['codigoExterno2'] = (_esSaludDanios=='S')?_CDIDEPERsel:_CDIDEEXTsel;
@@ -1561,14 +1624,30 @@ function _p22_guardarDatosAdicionalesClic()
 							_CDIDEPERsel = json.smap1.codigoExterno;
 	                	}
                     
-	                	_p22_loadRecordCdperson(function(){
+	                	_p22_loadRecordCdperson(/*function(){
 								var valor = _fieldByName('CDCOLONI').getValue();
 			                    _p22_heredarColonia(function(){
-			                    			_fieldByName('CDCOLONI').setValue(valor);
-			                    		}
+                    				_fieldByName('CDCOLONI').setValue(valor);
+                    				
+                    				debug('valor de codigo colonia: ' , valor);
+                    				debug('valor de coloniaImportarTMP: ' , coloniaImportarTMP);
+                    				debug('valor de municipioImportarTMP: ' , municipioImportarTMP);
+                    				
+                    				if(Ext.isEmpty(valor)){
+                    					_fieldByName('CDCOLONI').setValue(coloniaImportarTMP);
+                    				}
+                    				if(Ext.isEmpty(_fieldByName('CDMUNICI').getValue())){
+                    					_fieldByName('CDMUNICI').forceSelection = false;
+                    					_fieldByName('CDMUNICI').setValue(municipioImportarTMP);
+                    					
+                    					setTimeout(function(){
+											_fieldByName('CDMUNICI').forceSelection = true;
+										},500);
+                    				}
+                    			}
 			                    );	                		
 	                		}
-	                	);
+	                	*/);
                 }
                 else
                 {
@@ -1580,7 +1659,8 @@ function _p22_guardarDatosAdicionalesClic()
             	        {
             	            url       : _UrlActualizaStatusPersona
             	            ,params: {
-        	            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue()
+        	            		'params.pv_cdperson_i':  _p22_fieldCdperson().getValue(),
+        	            		'params.pv_cdrol_i':  '1'
         	            	}
             	            ,success  : function(response)
             	            {

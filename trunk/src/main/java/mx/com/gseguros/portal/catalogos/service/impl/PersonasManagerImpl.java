@@ -463,7 +463,7 @@ public class PersonasManagerImpl implements PersonasManager
 	 * Obtener los items de tatriper y los valores de tvaloper para un cdperson de PKG_LISTA.P_GET_ATRI_PER y PKG_CONSULTA.P_GET_TVALOPER
 	 * @return exito,respuesta,respuestaOculta,itemsTatriper,fieldsTatriper,tvaloper
 	 */
-	public Map<String,Object> obtenerTatriperTvaloperPorCdperson(String cdperson,long timestamp) throws Exception
+	public Map<String,Object> obtenerTatriperTvaloperPorCdperson(String cdperson, String cdrol,long timestamp) throws Exception
 	{
 		Map<String,Object>result=new HashMap<String,Object>();
 		logger.info(timestamp+""
@@ -483,7 +483,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				List<ComponenteVO>atributos=personasDAO.obtenerAtributosPersona(cdperson);
+				List<ComponenteVO>atributos=personasDAO.obtenerAtributosPersona(cdperson, cdrol);
 				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gc.setCdramo(Ramo.SALUD_VITAL.getCdramo());
 				gc.setCdrol("1");
@@ -540,7 +540,7 @@ public class PersonasManagerImpl implements PersonasManager
 	 * Guardar los datos de tvaloper por cdperson con PKG_CONSULTA.P_MOV_TVALOPER
 	 * @return exito,respuesta,respuestaOculta
 	 */
-	public Map<String,Object> guardarDatosTvaloper(String cdperson
+	public Map<String,Object> guardarDatosTvaloper(String cdperson, String cdrol
 			,String otvalor01,String otvalor02,String otvalor03,String otvalor04,String otvalor05
 			,String otvalor06,String otvalor07,String otvalor08,String otvalor09,String otvalor10
 			,String otvalor11,String otvalor12,String otvalor13,String otvalor14,String otvalor15
@@ -620,6 +620,7 @@ public class PersonasManagerImpl implements PersonasManager
 			{
 				Map<String,String>paramsValidarDocumentos=new HashMap<String,String>();
 				paramsValidarDocumentos.put("cdperson",cdperson);
+				paramsValidarDocumentos.put("cdrol",cdrol);
 				personasDAO.validarDocumentosPersona(paramsValidarDocumentos);
 				
 				personasDAO.movimientosTvaloper("1",cdperson,

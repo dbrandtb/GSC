@@ -167,7 +167,6 @@ public class PersonasAction extends PrincipalCoreAction
 			    		}
 				    	
 				    	agregar.put("CDRFC",    cli.getRfcCli());
-				    	agregar.put("NOMBRE_COMPLETO", (cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc() );
 				    	agregar.put("DSNOMBRE",    (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
 				    	agregar.put("DSNOMBRE1",   "");
 				    	
@@ -190,6 +189,8 @@ public class PersonasAction extends PrincipalCoreAction
 				    		agregar.put("FENACIMI", "");
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
+				    	
+				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI"));
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
@@ -396,7 +397,7 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				if(exito){
 					managerResult=personasManager.guardarDatosTvaloper(
-							cdpersonNuevo,cliImport.getCveEle(),cliImport.getPasaporteCli(),null,null,null,null,null
+							cdpersonNuevo, "1", cliImport.getCveEle(),cliImport.getPasaporteCli(),null,null,null,null,null
 							,cliImport.getOrirecCli(),null,null,cliImport.getNacCli(),null,null,null,null,null,null
 							,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 							,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
@@ -595,7 +596,7 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		try
 		{
-			Map<String,Object> managerResult=personasManager.obtenerTatriperTvaloperPorCdperson(smap1.get("cdperson"),timestamp);
+			Map<String,Object> managerResult=personasManager.obtenerTatriperTvaloperPorCdperson(smap1.get("cdperson"),smap1.get("cdrol"),timestamp);
 			exito           = (Boolean)managerResult.get("exito");
 			respuesta       = (String)managerResult.get("respuesta");
 			respuestaOculta = (String)managerResult.get("respuestaOculta");
@@ -642,7 +643,7 @@ public class PersonasAction extends PrincipalCoreAction
 		try
 		{
 			Map<String,Object>managerResult=personasManager.guardarDatosTvaloper(
-					smap1.get("cdperson")
+					smap1.get("cdperson"),smap1.get("cdrol")
 					,smap1.get("parametros.pv_otvalor01")
 					,smap1.get("parametros.pv_otvalor02")
 					,smap1.get("parametros.pv_otvalor03")
