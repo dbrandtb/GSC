@@ -559,9 +559,7 @@ Ext.onReady(function() {
     Ext.create('Ext.form.Panel',
     	    {
     	        border    : 0
-    	        ,title: 'Ajustes M&eacute;dico'
-    	        ,renderTo : 'div_clau'
-	        	//,bodyPadding: 10
+    	        ,renderTo : 'div_clau2'
 	        	,width: 800
 	            ,defaults 	:
 	    		{

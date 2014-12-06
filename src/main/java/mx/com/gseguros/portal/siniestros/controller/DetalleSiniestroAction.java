@@ -125,6 +125,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   		
 	   		UserVO usuario  = (UserVO)session.get("USUARIO");
 	    	String cdrol    = usuario.getRolActivo().getClave();
+	    	params.put("cdrol", usuario.getRolActivo().getClave());
 	    	String pantalla = "AFILIADOS_AGRUPADOS";
 	    	String seccion  = "COLUMNAS";
 	    	String cdunieco  = params.get("cdunieco");

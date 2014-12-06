@@ -1638,6 +1638,7 @@ public String consultaListaPlazas(){
     	{
 	    	UserVO usuario  = (UserVO)session.get("USUARIO");
 	    	String cdrol    = usuario.getRolActivo().getClave();
+	    	params.put("cdrol", cdrol);
 	    	String pantalla = "SELECCION_COBERTURA";
 	    	String seccion  = "FORMULARIO";
 	    	imap = new HashMap<String,Item>();
@@ -1925,6 +1926,7 @@ public String consultaListaPlazas(){
     		
     		UserVO usuario  = (UserVO)session.get("USUARIO");
 	    	String cdrol    = usuario.getRolActivo().getClave();
+	    	params.put("cdrol", cdrol);
 	    	String pantalla = "AFILIADOS_AGRUPADOS";
 	    	String seccion  = "FORMULARIO";
 	    	
