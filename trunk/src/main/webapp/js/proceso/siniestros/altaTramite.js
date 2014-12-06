@@ -1,6 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
-	var valorIndex= null;
+	var valorIndexSeleccionado= null;
 	var banderaFactura = "0";
 	var banderaAsegurado = "0";
 	var facturaTemporal =null;
@@ -123,6 +123,22 @@ Ext.onReady(function() {
 	{
 		id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',  
 		displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
+		,listeners : {
+			select:function(e){
+				if(e.getValue() =='001'){
+					// EL TIPO DE MONEDA ES PESO
+					valorIndexSeleccionado.set('tasaCambio','0.00');
+					valorIndexSeleccionado.set('importeFactura','0.00');
+					
+					//valorIndexSeleccionado.set('PTMTOARA','0');
+				}else{
+					var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
+					var importeFactura = valorIndexSeleccionado.get('importeFactura');
+					var importeMxn = +tasaCambio * +importeFactura;
+					valorIndexSeleccionado.set('importe',importeMxn);
+				}
+			}
+        }
 	});
 
 	motivoRechazo= Ext.create('Ext.form.ComboBox',
@@ -784,6 +800,14 @@ Ext.onReady(function() {
 					Ext.create('Ext.grid.plugin.CellEditing',
 					{
 						clicksToEdit: 1
+						,listeners :
+							{
+								beforeedit : function()
+								{
+									valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
+									debug('valorIndexSeleccionado:',valorIndexSeleccionado);
+								}
+							}
 					})
 				],
 				store: storeFacturaReembolso,
@@ -878,14 +902,46 @@ Ext.onReady(function() {
 						header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
 						,editor: {
 							xtype: 'textfield',
-							allowBlank: false
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+										
+										//valorIndexSeleccionado.set('PTMTOARA','0');
+									}else{
+										var tasaCambio = e.getValue();
+										var importeFactura = valorIndexSeleccionado.get('importeFactura');
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+									}
+								}
+					        }
 						}
 					},
 					{
 						header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
 						,editor: {
 							xtype: 'textfield',
-							allowBlank: false
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+									}else{
+										var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
+										var importeFactura = e.getValue();
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+									}
+								}
+					        }
 						}
 					},
 					{
@@ -893,23 +949,6 @@ Ext.onReady(function() {
 						,editor: {
 							xtype: 'textfield',
 							allowBlank: false
-						},renderer : function(v) {
-			            	
-			            	if(storeProveedorRender.cargado)
-							{
-								var leyenda = '';
-				            	var tipoMoneda = storeFacturaReembolso.data.items[valorIndex].get('tipoMonedaName');
-				            	if(tipoMoneda =='001'){
-				            		leyenda = storeFacturaReembolso.data.items[valorIndex].get('importe');
-				            	}else{
-				            		var importeCambio = storeFacturaReembolso.data.items[valorIndex].get('importeFactura');
-									var tasaCambio = storeFacturaReembolso.data.items[valorIndex].get('tasaCambio');
-									var totalImporteMxN= +tasaCambio * +importeCambio;
-									leyenda = totalImporteMxN;
-									storeFacturaReembolso.data.items[valorIndex].set('importe',leyenda);
-				            	}
-				            	return Ext.util.Format.usMoney(leyenda);
-							}
 						}
 					}
 				],
@@ -919,12 +958,7 @@ Ext.onReady(function() {
 						,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png'
 						,handler	: _p21_agregarFactura
 					}
-				],
-		 		listeners: {
-					itemclick: function(dv, record, item, index, e) {
-						valorIndex = index;
-					}
-				}
+				]
 			});
 			this.callParent();
 		},
@@ -2003,7 +2037,6 @@ Ext.onReady(function() {
 									storeProveedor.load();
 									panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
 									for(var i = 0; i < json.length; i++){
-										valorIndex = i;
 										var fechaFacturaM = json[i].ffactura.match(/\d+/g); 
 										var dateFac = new Date(fechaFacturaM[2], fechaFacturaM[1]-1,fechaFacturaM[0]);
 										var rec = new modelFacturaSiniestro({
@@ -2021,7 +2054,6 @@ Ext.onReady(function() {
 										});
 										storeFacturaReembolso.add(rec);
 									}
-									//valorIndex= null;
 								}
 							}
 						},

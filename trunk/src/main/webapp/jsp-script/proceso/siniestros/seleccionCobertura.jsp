@@ -437,6 +437,7 @@
                 {
                     'params.ntramite' : _selCobParams.ntramite,
                     'params.tipopago' : _selCobParams.tipopago
+                    'params.cdrol' : _selCobParams.cdrol
                 }
                 
                 Ext.create('Ext.form.Panel').submit(

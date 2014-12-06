@@ -10,6 +10,7 @@
 			var _CONTEXT = '${ctx}';
 			var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 			var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+			var _ROL_MEDICO  = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _CATALOGO_COB_X_VALORES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
 			var _11_url_RequiereAutServ			  = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
 			var _11_urlIniciarSiniestroSinAutServ = '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
@@ -24,7 +25,13 @@
             var _URL_DATOS_VALIDACION          = '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"         />';
             var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
             var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+            var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
+            var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+            var _URL_MONTO_ARANCEL		= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
+            var _UrlAjustesMedicos =  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
             debug("VALOR DE _11_params --->");
+            var _CDROL   = '<s:property value="params.cdrol" />';
+            debug("CD_ROL"+_CDROL);
             debug(_11_params);
 			var _11_itemsForm	=
 			[
@@ -47,6 +54,9 @@
 			var storeFacturaDirectoNva;
 			var gridAutorizacion;
 			var storeListadoAutorizacion;
+			var cmbCveTipoConcepto;
+			var cmbCveConcepto;
+			var _11_conceptoSeleccionado=null;
 			
 			var storeCobertura = Ext.create('Ext.data.Store', {
 		        model:'Generic',
@@ -170,7 +180,6 @@
 				});
 			}
 			
-
 			function _11_editar(grid,rowindex)
 			{
 				_11_recordActivo = grid.getStore().getAt(rowindex);
@@ -464,6 +473,72 @@
 				}else{
 					//storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 				}
+			}
+			
+			
+			function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
+			    var record = grid.getStore().getAt(rowIndex);
+			    var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+			    
+			    if ( _CDROL == _ROL_MEDICO){
+				    windowLoader = Ext.create('Ext.window.Window',{
+				        modal       : true,
+				        buttonAlign : 'center',
+				        title: 'Ajustes M&eacute;dico',
+				        width       : 800,
+				        height      : 450,
+				        //autoScroll  : true,
+				        loader      : {
+				            url     : _UrlAjustesMedicos,
+				            params         :
+				            {
+				            	'params.ntramite'  		: panelInicialPral.down('[name=params.ntramite]').getValue()
+				                ,'params.cdunieco' 		: recordFactura.get('CDUNIECO')
+				                ,'params.cdramo'   		: recordFactura.get('CDRAMO')
+				                ,'params.estado'   		: recordFactura.get('ESTADO')
+				                ,'params.nmpoliza' 		: recordFactura.get('NMPOLIZA')
+				                ,'params.nmsuplem' 		: recordFactura.get('NMSUPLEM')
+				                ,'params.nmsituac' 		: recordFactura.get('NMSITUAC')
+				                ,'params.aaapertu' 		: recordFactura.get('AAAPERTU')
+				                ,'params.status'   		: recordFactura.get('STATUS')
+				                ,'params.nmsinies' 		: recordFactura.get('NMSINIES')
+				                ,'params.nfactura'		: panelInicialPral.down('[name=params.nfactura]').getValue()
+				                ,'params.cdgarant' 		: record.get('CDGARANT')
+				                ,'params.cdconval' 		: record.get('CDCONVAL')
+				                ,'params.cdconcep' 		: record.get('CDCONCEP')
+				                ,'params.idconcep' 		: record.get('IDCONCEP')
+				                ,'params.nmordina' 		: record.get('NMORDINA')
+				                ,'params.precio'   		: record.get('PTPRECIO')
+				                ,'params.cantidad'      : record.get('CANTIDAD')
+				                ,'params.descuentoporc' : record.get('DESTOPOR')
+				                ,'params.descuentonum'  : record.get('DESTOIMP')
+				                ,'params.importe'       : record.get('PTIMPORT')
+				                ,'params.ajusteMedi'    : record.get('TOTAJUSMED')
+				            },
+				            scripts  : true,
+				            loadMask : true,
+				            autoLoad : true,
+				            ajaxOptions: {
+				            	method: 'POST'
+				            }
+				        }
+					    ,
+					    listeners:{
+					         close:function(){
+					             if(true){
+					                 //Actualizamos la información de la consulta del grid inferior
+					            	 storeConceptos.reload();
+					             }
+					         }
+					    }
+				    }).show();
+				    centrarVentanaInterna(windowLoader);
+			    }
+			}
+			
+			function _p21_agregarConcepto()
+			{
+				storeConceptos.add(new modelConceptos({PTPRECIO:'0.00'}));
 			}
 			
 			function _11_asociarAutorizacion()
@@ -920,21 +995,125 @@
 				        }
 					});
 					
+					
+					var storeTipoConcepto = Ext.create('Ext.data.JsonStore', {
+						model:'Generic',
+						proxy: {
+							type: 'ajax',
+							url: _URL_CATALOGOS,
+							extraParams : {catalogo:_CATALOGO_TipoConcepto},
+							reader: {
+								type: 'json',
+								root: 'lista'
+							}
+						}
+					});
+					storeTipoConcepto.load();
+					
+					var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
+						model:'Generic',
+						proxy: {
+							type: 'ajax',
+							url: _URL_CATALOGOS,
+							extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+							reader: {
+								type: 'json',
+								root: 'lista'
+							}
+						}
+					});
+					
+					cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox',
+					{
+						name:'params.idconcep',		store: storeTipoConcepto,		queryMode:'local',
+						displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false,
+						listeners:{
+							select: function (combo, records, opts){
+								debug("VALOR DE COMBO -->");
+								debug(combo);
+								debug("VALOR DE RECORDS -->");
+								debug(records);
+								debug("VALOR DE OPTS -->");
+								debug(opts);
+								var cdTipo =  records[0].get('key');
+								debug("CLAVE DE TIPO --> "+cdTipo);
+								storeConceptosCatalogo.proxy.extraParams=
+								{
+									'params.idPadre' : cdTipo
+									,catalogo        : _CATALOGO_ConceptosMedicos
+								};
+							}
+						}
+					});
+					
+					cmbCveConcepto = Ext.create('Ext.form.ComboBox',
+					{
+			        	name:'params.cdconcep',		store: storeConceptosCatalogo,		queryMode:'remote',
+			        	displayField: 'value',		valueField: 'key',					editable:true,				allowBlank:false,
+			            forceSelection: true,		queryParam  : 'params.descripc',	hideTrigger : true,			minChars    : 3
+			            ,listeners : {
+			   				select:function(e){
+			   					debug("Proveedor -->"+panelInicialPral.down('[name=params.cdpresta]').getValue());
+			   					debug("idConceptoTipo -->"+ e.getValue());
+			   					
+			   					Ext.Ajax.request(
+								{
+								    url     : _URL_MONTO_ARANCEL
+								    ,params:{
+										'params.tipoConcepto'   : _11_conceptoSeleccionado.get('IDCONCEP'),
+										'params.idProveedor'    : panelInicialPral.down('[name=params.cdpresta]').getValue(),
+			                            'params.idConceptoTipo' : e.getValue()
+					                }
+								    ,success : function (response)
+								    {
+								    	if(Ext.decode(response.responseText).montoArancel == null){
+								    		_11_conceptoSeleccionado.set('PTMTOARA','0');
+								    	}else{
+								    		_11_conceptoSeleccionado.set('PTMTOARA',Ext.decode(response.responseText).montoArancel);
+								    	}
+								    },
+								    failure : function ()
+								    {
+								        me.up().up().setLoading(false);
+								        Ext.Msg.show({
+								            title:'Error',
+								            msg: 'Error de comunicaci&oacute;n',
+								            buttons: Ext.Msg.OK,
+								            icon: Ext.Msg.ERROR
+								        });
+								    }
+								});
+			   	    		}
+			   	        }
+			        });
+					
+					
 					Ext.define('EditorConceptos', {
 						extend: 'Ext.grid.Panel',
 						name:'editorConceptos',
 						title: 'Conceptos',
 						icon        : '${ctx}/resources/fam3icons/icons/paste_plain.png',
 						frame: true,
-						selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
+						selType  : 'rowmodel',
 						initComponent: function(){
 							Ext.apply(this, {
 							//width: 850,
 							height: 250,
 							plugins  :
-							[
-								Ext.create('Ext.grid.plugin.CellEditing',{	clicksToEdit: 1	})
-							],
+					        [
+					            Ext.create('Ext.grid.plugin.CellEditing',
+					            {
+					                clicksToEdit: 1
+					                ,listeners :
+				                	{
+				                	    beforeedit : function()
+				                	    {
+				                	    	_11_conceptoSeleccionado = gridEditorConceptos.getView().getSelectionModel().getSelection()[0];
+				                	    	debug('_11_conceptoSeleccionado:',_11_conceptoSeleccionado);
+				                	    }
+				                	}
+					            })
+					        ],
 							store: storeConceptos,
 							columns: 
 							[
@@ -945,17 +1124,18 @@
 									,items        :
 									[
 									    {
-									    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
-									    	,tooltip : 'Capturar Detalle'
+									    	icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+									    	,tooltip : 'Eliminar'
 									    	//,handler : revisarDocumento
 									    }
 									    ,{
-									    	icon     : '${ctx}/resources/fam3icons/icons/cancel.png'
-									    	,tooltip : 'Eliminar'
-									    	//,handler : eliminarAsegurado
+									    	icon     : '${ctx}/resources/fam3icons/icons/page_edit.png'
+									    	,tooltip : 'Ajuste'
+									    	,handler : _mostrarVentanaAjustes
 									    }
 									]//,flex:1
 								},
+								
 								{
 				 					dataIndex : 'NMORDINA',
 				 					width : 20,
@@ -964,35 +1144,135 @@
 				 					header : 'Factura',
 				 					dataIndex:  'NFACTURA',
 				 					hidden: true
-				 				},{
-				 					header : 'Tipo Concepto',
-				 					dataIndex : 'DESIDCONCEP',
-				 					width : 150
-				 				},{
-				 					header : 'Codigo Concepto',
-				 					dataIndex : 'DESCONCEP',
-				 					width : 150
-				 				},{
-				 					header : 'Subcobertura',
-				 					dataIndex : 'DSSUBGAR',
-				 					width : 150
-				 				},{
-				 					header : 'Precio',
-				 					dataIndex : 'PTPRECIO',
-				 					width : 150,
-				 					renderer : Ext.util.Format.usMoney
-				 				},{
-				 					header : 'Cantidad',
-				 					dataIndex : 'CANTIDAD',
-				 					width : 150
-				 				},{
-				 					header : 'Descuento (%)',
-				 					dataIndex : 'DESTOPOR',
-				 					width : 150
-				 				},{
-				 					header : 'Descuento ($)',
-				 					dataIndex : 'DESTOIMP',
-				 					width : 150
+				 				},
+				 				
+				 				{
+									header: 'Tipo Concepto', 				dataIndex: 'IDCONCEP',	width : 150		,  allowBlank: false
+									,editor : cmbCveTipoConcepto
+									,renderer : function(v) {
+									var leyenda = '';
+										if (typeof v == 'string')// tengo solo el indice
+										{
+											storeTipoConcepto.each(function(rec) {
+												if (rec.data.key == v) {
+													leyenda = rec.data.value;
+												}
+											});
+										}else // tengo objeto que puede venir como Generic u otro mas complejo
+										{
+											if (v.key && v.value)
+											{
+												leyenda = v.value;
+											} else {
+												leyenda = v.data.value;
+											}
+										}
+										return leyenda;
+									}
+								},
+								{
+									header: 'Codigo Concepto', 				dataIndex: 'CDCONCEP',	width : 150		,  allowBlank: false
+									,editor : cmbCveConcepto
+									,renderer : function(v) {
+									var leyenda = '';
+										if (typeof v == 'string')// tengo solo el indice
+										{
+											storeConceptosCatalogo.each(function(rec) {
+												if (rec.data.key == v) {
+													leyenda = rec.data.value;
+												}
+											});
+										}else // tengo objeto que puede venir como Generic u otro mas complejo
+										{
+											if (v.key && v.value)
+											{
+												leyenda = v.value;
+											} else {
+												leyenda = v.data.value;
+											}
+										}
+										return leyenda;
+									}
+								},
+								{
+									header: 'Valor Arancel', 				dataIndex: 'PTMTOARA',	width : 150,				renderer: Ext.util.Format.usMoney
+									,editor: {
+										xtype: 'numberfield',
+										decimalSeparator :'.',
+										allowBlank: false
+									}
+								},
+				 				{
+									header: 'Precio Concepto', 				dataIndex: 'PTPRECIO',	width : 150,				renderer: Ext.util.Format.usMoney
+									,editor: {
+										xtype: 'numberfield',
+										decimalSeparator :'.',
+										allowBlank: false,
+										listeners : {
+											change:function(e){
+												var cantidad = _11_conceptoSeleccionado.get('CANTIDAD');
+												var importe = e.getValue();
+												var destopor = _11_conceptoSeleccionado.get('DESTOPOR');
+												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
+												var ImporteConcepto = ((+cantidad * +importe) * (1-( +destopor/100)))- (+destoimp);
+												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+											}
+										}
+									}
+								}
+								,
+								{
+									header: 'Cantidad', 				dataIndex: 'CANTIDAD',		width : 150//,				renderer: Ext.util.Format.usMoney
+									,editor: {
+										xtype: 'numberfield',
+										allowBlank: false,
+										listeners : {
+											change:function(e){
+												var cantidad = e.getValue();
+												var importe = _11_conceptoSeleccionado.get('PTPRECIO');
+												var destopor = _11_conceptoSeleccionado.get('DESTOPOR');
+												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
+												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
+												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+											}
+										}
+									}
+								},
+								{
+				 					header : 'Descuento (%)',			dataIndex : 'DESTOPOR',		width : 150
+				 					,editor: {
+										xtype: 'numberfield',
+										decimalSeparator :'.',
+										allowBlank: false,
+										listeners : {
+											change:function(e){
+												var cantidad = _11_conceptoSeleccionado.get('CANTIDAD');
+												var importe = _11_conceptoSeleccionado.get('PTPRECIO');
+												var destopor = e.getValue();
+												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
+												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
+												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+											}
+										}
+									}
+				 				},
+				 				{
+				 					header : 'Descuento ($)',			dataIndex : 'DESTOIMP',		width : 150
+				 					,editor: {
+										xtype: 'numberfield',
+										decimalSeparator :'.',
+										allowBlank: false,
+										listeners : {
+											change:function(e){
+												var cantidad = _11_conceptoSeleccionado.get('CANTIDAD');
+												var importe = _11_conceptoSeleccionado.get('PTPRECIO');
+												var destopor = _11_conceptoSeleccionado.get('DESTOPOR');
+												var destoimp = e.getValue();
+												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
+												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+											}
+										}
+									}
 				 				},{
 				 					header : 'Ajuste M&eacute;dico',
 				 					dataIndex : 'TOTAJUSMED',
@@ -1008,18 +1288,16 @@
 				 					dataIndex : 'SUBTAJUSTADO',
 				 					width : 150,
 				 					renderer : Ext.util.Format.usMoney
-				 				},{
-				 					header : 'Valor Arancel',
-				 					dataIndex : 'PTMTOARA',
-				 					width : 150,
-				 					renderer : Ext.util.Format.usMoney
 				 				}
 							],
+							selModel: {
+						 		selType: 'cellmodel'
+						 	},
 							tbar:[
 									{
 										text	: 'Agregar Concepto'
 										,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-										//,handler : _p21_agregarFactura
+										,handler : _p21_agregarConcepto
 									}
 								]
 						 });
