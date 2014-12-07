@@ -3,6 +3,7 @@ Ext.onReady(function() {
 	var valorIndexSeleccionado= null;
 	var banderaFactura = "0";
 	var banderaAsegurado = "0";
+	var retornaMC = "0";
 	var facturaTemporal =null;
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
@@ -1465,169 +1466,8 @@ Ext.onReady(function() {
 				verificarFacturaAsegurado();
 				
 				if (form.isValid()){
-					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){//PARA PAGO DIRECTO
-						panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-						var obtener = [];
-						storeFacturaDirecto.each(function(record) {
-							obtener.push(record.data);
-						});
-						/*VERIFICAMOS QUE EXISTA AL MENOS UNA FACTURA*/
-						if(obtener.length <= 0){
-							Ext.Msg.show({
-								title:'Error',
-								msg: 'Se requiere ingresar al menos una factura',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-							return false;
-						}else{
-							/*VERIFICAMOS SI ES UNA FACTURA Y EL NUMERO DE ASEGURADO*/
-							if(obtener.length == 1){
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
-								panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
-								panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
-								Ext.Ajax.request(
-								{
-									url     : _URL_ASEGURADO_FACTURA
-									,params: {
-										'params.nfactura'  : obtener[0].noFactura,
-										'params.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
-									}
-									,success : function (response)
-									{
-										var listadoAsegurado=Ext.decode(response.responseText).slist1;
-										/*	SI ASEGURADO ES IGUAL A 1	*/
-										if(listadoAsegurado.length == "1"){
-											var fecOcurrencia = listadoAsegurado[0].MODFECHAOCURRENCIA.match(/\d+/g);
-											panelInicialPral.down('[name="cdunieco"]').setValue(listadoAsegurado[0].MODUNIECO);
-											panelInicialPral.down('[name="estado"]').setValue(listadoAsegurado[0].MODESTADO);
-											panelInicialPral.down('[name="polizaAfectada"]').setValue(listadoAsegurado[0].MODPOLIZAAFECTADA);
-											panelInicialPral.down('[name="idNmsuplem"]').setValue(listadoAsegurado[0].MODNMSUPLEM);
-											panelInicialPral.down('[name="idNmsolici"]').setValue(listadoAsegurado[0].MODNMSOLICI);
-											panelInicialPral.down('[name="nmsituac"]').setValue(listadoAsegurado[0].MODNMSITUAC);
-											panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
-											panelInicialPral.down('[name=dtFechaOcurrencia]').setValue(fecOcurrencia[2]+"/"+fecOcurrencia[1]+"/"+fecOcurrencia[0]);//(listadoAsegurado[0].MODFECHAOCURRENCIA);
-											storeAsegurados.load({
-												params:{
-													'params.cdperson':listadoAsegurado[0].MODCDPERSON
-												}
-											});
-											panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue(listadoAsegurado[0].MODCDPERSON);//listadoAsegurado[0].MODCDPERSON);
-										}else{
-												/*	SI ASEGURADO ES MAYOR A 1	*/
-												panelInicialPral.down('[name="cdunieco"]').setValue('');
-												panelInicialPral.down('[name="estado"]').setValue('');
-												panelInicialPral.down('[name="polizaAfectada"]').setValue('');
-												panelInicialPral.down('[name="idNmsuplem"]').setValue('');
-												panelInicialPral.down('[name="idNmsolici"]').setValue('');
-												panelInicialPral.down('[name="nmsituac"]').setValue('');
-												//panelInicialPral.down('[name="idCdtipsit"]').setValue('');
-												panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
-												panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-												panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
-										}
-										var submitValues={};
-										var formulario=panelInicialPral.form.getValues();
-										submitValues['params']=formulario;
-										procesaGuardaAltaTramite(submitValues);
-									},
-									failure : function (){
-										Ext.Msg.show({
-											title:'Error',
-											msg: 'Error de comunicaci&oacute;n',
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.ERROR
-										});
-									}
-								});
-							}else{
-								//Obtenemos los valores de
-								panelInicialPral.down('[name=fechaIndFactura]').setValue('');
-								panelInicialPral.down('[name=numIndFactura]').setValue('');
-								var sumaTotal= 0;
-								for(i=0;i < obtener.length;i++){
-									sumaTotal =sumaTotal + (+ obtener[i].importe);
-									panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
-								}
-								
-								var submitValues={};
-								var formulario=panelInicialPral.form.getValues();
-								submitValues['params']=formulario;
-								procesaGuardaAltaTramite(submitValues);
-							}
-						}
-				
-					}else{
-						var obtener = [];
-						/*Verificamos el numero total de facturas*/
-						storeFacturaReembolso.each(function(record) {
-							obtener.push(record.data);
-						});
-						if(obtener.length <= 0){
-							Ext.Msg.show({
-								title:'Error',
-								msg: 'Se requiere ingresar al menos una factura',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-							return false;
-						}else{
-							
-							for(i=0;i < obtener.length;i++){
-            					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
-            						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
-            						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""||
-            						obtener[i].importeFactura == "" ||obtener[i].proveedorName == "" ||obtener[i].tasaCambio == ""){
-            						centrarVentanaInterna(Ext.Msg.show({
-						                title:'Facturas',
-						                msg: 'Favor de introducir los campos requeridos en la factura',
-						                buttons: Ext.Msg.OK,
-						                icon: Ext.Msg.WARNING
-						            }));
-            						return false;
-            					}
-							}
-							
-							if(obtener.length == 1){
-								panelInicialPral.down('combo[name=cmbProveedor]').setValue(obtener[0].proveedorName);
-								panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
-								panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
-								panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
-							
-							}else{
-								panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
-								//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
-								panelInicialPral.down('[name=fechaIndFactura]').setValue('');
-								panelInicialPral.down('[name=numIndFactura]').setValue('');
-								var sumaTotal= 0;
-								for(i=0;i < obtener.length;i++){
-									sumaTotal =sumaTotal + (+ obtener[i].importe);
-									panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
-								}
-							}
-						}
-						var submitValues={};
-						var datosTablas = [];
-						var formulario=panelInicialPral.form.getValues();
-						submitValues['params']=formulario;
-						
-						storeFacturaReembolso.each(function(record,index){
-							datosTablas.push({
-								nfactura:record.get('noFactura'),
-								ffactura:record.get('fechaFactura'),
-								cdtipser:panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-								cdpresta:record.get('proveedorName'),
-								ptimport:record.get('importe'),
-								cdmoneda:record.get('tipoMonedaName'),
-								tasacamb:record.get('tasaCambio'),
-								ptimporta:record.get('importeFactura')
-							});
-						});
-						
-						submitValues['datosTablas']=datosTablas;
-						panelInicialPral.setLoading(true);
-						procesaGuardaAltaTramite(submitValues);
-					}
+					retornaMC = "1";
+					guardarInformacionAdicional();
 				}
 				else{
 					Ext.Msg.show({
@@ -2081,7 +1921,7 @@ Ext.onReady(function() {
 		});
 	}
 
-	function procesaGuardaAltaTramite(submitValues){
+	function procesaGuardaAltaTramite(submitValues,retornaMC){
 		panelInicialPral.setLoading(true);
 		Ext.Ajax.request(
 		{
@@ -2093,28 +1933,30 @@ Ext.onReady(function() {
 				if(jsonResp.success==true){
 					var etiqueta;
 					var mensaje;
-					if(valorAction.ntramite == null){
+					if(retornaMC =="1"){
+						if(valorAction.ntramite == null){
 						etiqueta = "Guardado";
 						mensaje = "Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult; 
-					}else{
-						etiqueta = "Modificaci&oacute;n";
-						mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
-					}
-					mensajeCorrecto(etiqueta,mensaje,function(){
-						Ext.create('Ext.form.Panel').submit(
-						{
-							url		: _p12_urlMesaControl
-							,standardSubmit : true
-							,params         :
+						}else{
+							etiqueta = "Modificaci&oacute;n";
+							mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
+						}
+						mensajeCorrecto(etiqueta,mensaje,function(){
+							Ext.create('Ext.form.Panel').submit(
 							{
-								'smap1.gridTitle'      : 'Siniestros en espera'
-								,'smap2.pv_cdtiptra_i' : 16
-							}
+								url		: _p12_urlMesaControl
+								,standardSubmit : true
+								,params         :
+								{
+									'smap1.gridTitle'      : 'Siniestros en espera'
+									,'smap2.pv_cdtiptra_i' : 16
+								}
+							});
 						});
-					});
-					panelInicialPral.getForm().reset();
-					storeFacturaDirecto.removeAll();
-					windowLoader.close();
+						panelInicialPral.getForm().reset();
+						storeFacturaDirecto.removeAll();
+						windowLoader.close();
+					}
 				}else{
 					Ext.Msg.show({
 						title:'Error',
@@ -2137,6 +1979,197 @@ Ext.onReady(function() {
 		});	
 	}
 
+	function guardarInformacionAdicional()
+	{
+		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){//PARA PAGO DIRECTO
+			panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+			var obtener = [];
+			storeFacturaDirecto.each(function(record) {
+				obtener.push(record.data);
+			});
+			/*VERIFICAMOS QUE EXISTA AL MENOS UNA FACTURA*/
+			if(obtener.length <= 0){
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Se requiere ingresar al menos una factura',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+				return false;
+			}else{
+				/*VERIFICAMOS SI ES UNA FACTURA Y EL NUMERO DE ASEGURADO*/
+				if(obtener.length == 1){
+					panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
+					panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
+					panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
+					Ext.Ajax.request(
+					{
+						url     : _URL_ASEGURADO_FACTURA
+						,params: {
+							'params.nfactura'  : obtener[0].noFactura,
+							'params.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
+						}
+						,success : function (response)
+						{
+							var listadoAsegurado=Ext.decode(response.responseText).slist1;
+							/*	SI ASEGURADO ES IGUAL A 1	*/
+							if(listadoAsegurado.length == "1"){
+								var fecOcurrencia = listadoAsegurado[0].MODFECHAOCURRENCIA.match(/\d+/g);
+								panelInicialPral.down('[name="cdunieco"]').setValue(listadoAsegurado[0].MODUNIECO);
+								panelInicialPral.down('[name="estado"]').setValue(listadoAsegurado[0].MODESTADO);
+								panelInicialPral.down('[name="polizaAfectada"]').setValue(listadoAsegurado[0].MODPOLIZAAFECTADA);
+								panelInicialPral.down('[name="idNmsuplem"]').setValue(listadoAsegurado[0].MODNMSUPLEM);
+								panelInicialPral.down('[name="idNmsolici"]').setValue(listadoAsegurado[0].MODNMSOLICI);
+								panelInicialPral.down('[name="nmsituac"]').setValue(listadoAsegurado[0].MODNMSITUAC);
+								panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
+								panelInicialPral.down('[name=dtFechaOcurrencia]').setValue(fecOcurrencia[2]+"/"+fecOcurrencia[1]+"/"+fecOcurrencia[0]);//(listadoAsegurado[0].MODFECHAOCURRENCIA);
+								storeAsegurados.load({
+									params:{
+										'params.cdperson':listadoAsegurado[0].MODCDPERSON
+									}
+								});
+								panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue(listadoAsegurado[0].MODCDPERSON);//listadoAsegurado[0].MODCDPERSON);
+							}else{
+									/*	SI ASEGURADO ES MAYOR A 1	*/
+									panelInicialPral.down('[name="cdunieco"]').setValue('');
+									panelInicialPral.down('[name="estado"]').setValue('');
+									panelInicialPral.down('[name="polizaAfectada"]').setValue('');
+									panelInicialPral.down('[name="idNmsuplem"]').setValue('');
+									panelInicialPral.down('[name="idNmsolici"]').setValue('');
+									panelInicialPral.down('[name="nmsituac"]').setValue('');
+									//panelInicialPral.down('[name="idCdtipsit"]').setValue('');
+									panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
+									panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+									panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
+							}
+							var submitValues={};
+							var formulario=panelInicialPral.form.getValues();
+							submitValues['params']=formulario;
+							
+							procesaGuardaAltaTramite(submitValues,retornaMC);
+						},
+						failure : function (){
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+				}else{
+					//obtenemos el valor del cdtipsit y le hacemos la asignacion
+					Ext.Ajax.request(
+					{
+					    url     : _URL_VALOR_CDTIPSIT
+					    ,params:{
+							'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue()
+		                }
+					    ,success : function (response)
+					    {
+					    	debug("VALOR DE CDTIPSIT");
+					    	debug(Ext.decode(response.responseText).validaCdTipsitTramite);
+					    	panelInicialPral.down('[name="idCdtipsit"]').setValue(Ext.decode(response.responseText).validaCdTipsitTramite);
+					    	
+					    	panelInicialPral.down('[name=fechaIndFactura]').setValue('');
+							panelInicialPral.down('[name=numIndFactura]').setValue('');
+							var sumaTotal= 0;
+							for(i=0;i < obtener.length;i++){
+								sumaTotal =sumaTotal + (+ obtener[i].importe);
+								panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+							}
+							
+							var submitValues={};
+							var formulario=panelInicialPral.form.getValues();
+							submitValues['params']=formulario;
+							procesaGuardaAltaTramite(submitValues,retornaMC);
+					    },
+					    failure : function ()
+					    {
+					        me.up().up().setLoading(false);
+					        centrarVentanaInterna(Ext.Msg.show({
+					            title:'Error',
+					            msg: 'Error de comunicaci&oacute;n',
+					            buttons: Ext.Msg.OK,
+					            icon: Ext.Msg.ERROR
+					        }));
+					    }
+					});
+				}
+			}
+	
+		}else{ //PAGO POR REEMBOLSO
+			var obtener = [];
+			/*Verificamos el numero total de facturas*/
+			storeFacturaReembolso.each(function(record) {
+				obtener.push(record.data);
+			});
+			if(obtener.length <= 0){
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Se requiere ingresar al menos una factura',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+				return false;
+			}else{
+				
+				for(i=0;i < obtener.length;i++){
+					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
+						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
+						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""||
+						obtener[i].importeFactura == "" ||obtener[i].proveedorName == "" ||obtener[i].tasaCambio == ""){
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Facturas',
+							msg: 'Favor de introducir los campos requeridos en la factura',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING
+						}));
+						return false;
+					}
+				}
+				
+				if(obtener.length == 1){
+					panelInicialPral.down('combo[name=cmbProveedor]').setValue(obtener[0].proveedorName);
+					panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
+					panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
+					panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
+				
+				}else{
+					panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
+					//panelInicialPral.down('[name=ImporteIndFactura]').setValue('');
+					panelInicialPral.down('[name=fechaIndFactura]').setValue('');
+					panelInicialPral.down('[name=numIndFactura]').setValue('');
+					var sumaTotal= 0;
+					for(i=0;i < obtener.length;i++){
+						sumaTotal =sumaTotal + (+ obtener[i].importe);
+						panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
+					}
+				}
+			}
+			var submitValues={};
+			var datosTablas = [];
+			var formulario=panelInicialPral.form.getValues();
+			submitValues['params']=formulario;
+			
+			storeFacturaReembolso.each(function(record,index){
+				datosTablas.push({
+					nfactura:record.get('noFactura'),
+					ffactura:record.get('fechaFactura'),
+					cdtipser:panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+					cdpresta:record.get('proveedorName'),
+					ptimport:record.get('importe'),
+					cdmoneda:record.get('tipoMonedaName'),
+					tasacamb:record.get('tasaCambio'),
+					ptimporta:record.get('importeFactura')
+				});
+			});
+			
+			submitValues['datosTablas']=datosTablas;
+			panelInicialPral.setLoading(true);
+			procesaGuardaAltaTramite(submitValues,retornaMC);
+		}
+	}
 	function limpiarRegistros()
 	{
 		panelInicialPral.down('[name="cdunieco"]').setValue('');
@@ -2238,7 +2271,8 @@ Ext.onReady(function() {
 	                    panelInicialPral.setLoading(false);
 	                    banderaAsegurado = "0";
 	                    debug("VALOR DE BANDERA DE ASEGURADOS ---"+banderaAsegurado);
-	                    //mandoallamar();
+	                    retornaMC = 0;
+	                    guardarInformacionAdicional();
 	                }
 	                else{
 	                    Ext.Msg.show({

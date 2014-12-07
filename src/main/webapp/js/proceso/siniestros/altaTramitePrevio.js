@@ -695,64 +695,7 @@ Ext.onReady(function() {
 	 	}
  	});
     gridFacturaReembolso =new EditorFacturaReembolso();
-    
-    
-    
-    
-    /*Ext.define('EditorAsegPagDirecto', {
-        extend: 'Ext.grid.Panel',
-        requires: [
-            'Ext.grid.*',
-            'Ext.data.*',
-            'Ext.util.*',
-            'Ext.form.*'
-        ],
-        id:'EditorAsegPagDirecto',
-        title: 'Asegurados',
-        frame: false,
 
-        initComponent: function(){
-                Ext.apply(this, {
-                width: 750,
-                height: 200,
-                store: storeListAsegPagDirecto,
-                columns: 
-                [
-                    {	
-                        header: 'Fecha ocurrencia',			dataIndex: 'modFechaOcurrencia',			width:150
-                    },
-                    {
-                        header: 'Asegurado afectado',		dataIndex: 'modCdpersondesc',				width:350
-                    },
-                    {
-                        header: 'N&uacute;mero P&oacute;liza',		dataIndex: 'modnumPoliza',				width:200
-                    },
-                    {
-                        xtype: 'actioncolumn',				width: 30,					 	sortable: false,	 	menuDisabled: true,
-                        items: [{
-                            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-                            tooltip: 'Quitar asegurado',
-                            scope: this,
-                            handler: this.onRemoveClick
-                        }]
-                    }
-                ],
-                tbar: [{
-                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
-                    text: 'Agregar Asegurado',
-                    scope: this
-                }]
-            });
-            this.callParent();
-        },
-        onRemoveClick: function(grid, rowIndex){
-            var record=this.getStore().getAt(rowIndex);
-            this.getStore().removeAt(rowIndex);
-        }
-    });
-
-    gridAsegPagDirecto=new EditorAsegPagDirecto();*/
-    
     /* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
     gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
 	{
@@ -1064,7 +1007,7 @@ Ext.onReady(function() {
     	        buttonAlign:'center',
     	        buttons: [{
     	            id:'botonCotizar',
-    	            icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
+    	            icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
     	            text: 'Generar Tr&aacute;mite',
             		handler: function() {
             			
@@ -1282,6 +1225,7 @@ Ext.onReady(function() {
     	        },
     	        {
     	            text:'Cancelar',
+    	            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
     	            handler:function()
     	            {
     	            	windowLoader.close();

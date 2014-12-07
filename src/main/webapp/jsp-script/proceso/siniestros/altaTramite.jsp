@@ -50,13 +50,13 @@
             var _UrlGenerarContrarecibo				= '<s:url namespace="/siniestros"		action="generarContrarecibo"       />';
             var panDocUrlViewDoc					= '<s:url namespace ="/documentos"		action="descargaDocInline" />';
             var _URL_ActualizaStatusTramite			= '<s:url namespace="/mesacontrol"		action="actualizarStatusTramite" />';
-            var _URL_TurnarAOperadorReclamacion		= '<s:url namespace="/mesacontrol"	action="turnarAOperadorReclamacion" />';
+            var _URL_TurnarAOperadorReclamacion		= '<s:url namespace="/mesacontrol"		action="turnarAOperadorReclamacion" />';
             var _UrlGeneraSiniestroTramite			= '<s:url namespace="/siniestros"		action="generaSiniestroTramite" />';
             var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros"		action="validaDocumentosCargados" />';
             var _URL_ListaRechazos					= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
             var _URL_ListaIncisosRechazos			= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
             var _UrlGeneraCartaRechazo				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
-            
+            var _URL_VALOR_CDTIPSIT					= '<s:url namespace="/siniestros"		action="validaCdTipsitTramite"/>';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>

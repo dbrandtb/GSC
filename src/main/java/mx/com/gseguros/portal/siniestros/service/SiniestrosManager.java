@@ -487,4 +487,6 @@ public interface SiniestrosManager {
 	public  List<Map<String, String>> getConsultaListaAutServicioSiniestro(String cdperson)throws Exception;
 
 	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite,String nfactura)throws Exception;
+	
+	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
 }

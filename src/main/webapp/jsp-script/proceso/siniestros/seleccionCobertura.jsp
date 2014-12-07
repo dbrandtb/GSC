@@ -436,7 +436,7 @@
                 var params =
                 {
                     'params.ntramite' : _selCobParams.ntramite,
-                    'params.tipopago' : _selCobParams.tipopago
+                    'params.tipopago' : _selCobParams.tipopago,
                     'params.cdrol' : _selCobParams.cdrol
                 }
                 

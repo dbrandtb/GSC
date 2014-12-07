@@ -397,4 +397,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaAutirizacionServicio(Map<String, Object> params) throws Exception;
 
 	public List<Map<String, String>> obtieneListaDatosValidacionSiniestro(HashMap<String, Object> params) throws Exception;
+	
+	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
 }

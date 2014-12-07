@@ -258,6 +258,14 @@
 	        <result name="success" type="json"/>
 		</action>
 		
+		<action name="guardarMsinival" class="siniestrosAction" method="guardarMsinival">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
+		
 		<action name="includes/altaTramitePrevio" class="siniestrosAction"  method="altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
 		</action>
@@ -593,6 +601,16 @@
 			</result>
 		</action>
 		
+		<action name="validaCdTipsitTramite" class="siniestrosAction"
+			method="validaCdTipsitTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					validaCdTipsitTramite
+				</param>
+			</result>
+		</action>
 		
 		<action name="validaDocumentosAutoServ" class="siniestrosAction"
 			method="validaDocumentosAutoServ">
@@ -626,7 +644,7 @@
 			</result>
 		</action>
 		
-		<action name="detalleSiniestro" class="detalleSiniestroAction" method="detalleSiniestro">
+		<action name="includes/detalleSiniestro" class="detalleSiniestroAction" method="detalleSiniestro">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
 		
@@ -717,9 +735,9 @@
             <result type="json"></result>
         </action>
         
-        <action name="guardarMsinival" class="siniestrosAction" method="guardarMsinival">
+        <!--<action name="guardarMsinival" class="siniestrosAction" method="guardarMsinival">
             <result type="json"></result>
-        </action>
+        </action>-->
         
         <action name="obtenerTdsinival" class="ajustesMedicosSiniestrosAction" method="obtenerTdsinival">
             <result type="json"></result>
