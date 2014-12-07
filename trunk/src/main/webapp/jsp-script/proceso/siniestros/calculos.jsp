@@ -1668,7 +1668,7 @@ function _p12_validaAutorizaciones()
 			var factura    = _p12_smap2;
 			var siniestros = _p12_slist1;
 			var conceptos  = _p12_llist1; 
-			for(i=0;i<siniestros.length;i++)
+			/*for(i=0;i<siniestros.length;i++)
 			{
 				var siniestroIte = siniestros[i];
 				if(siniestroIte.AUTRECLA!='S')
@@ -1679,7 +1679,7 @@ function _p12_validaAutorizaciones()
 				{
 					result = result + 'El m&eacute;dico no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
-			}
+			}*/
 			for(i=0;i<siniestros.length;i++)
             {
 				var siniestroIte = siniestros[i];

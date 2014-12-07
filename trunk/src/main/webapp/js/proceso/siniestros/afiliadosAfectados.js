@@ -90,7 +90,7 @@ Ext.onReady(function() {
 		,width: 1000
 		,layout     :
 		{
-			type     : 'table'
+			type     : 'table' 
 			,columns : 2
 		}
 		,defaults   :
@@ -105,7 +105,7 @@ Ext.onReady(function() {
 				text     : 'Regresar'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
 				,handler : _11_regresarMC
-			},
+			}/*,
 			{
 				id:'botonCotizar',
 				icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
@@ -114,7 +114,7 @@ Ext.onReady(function() {
 				{
 					alert("GUARDADO TOTAL");
 				}
-			}
+			}*/
 		]
 	}); 
 	_fieldByName('OTVALOR11').forceSelection=true;

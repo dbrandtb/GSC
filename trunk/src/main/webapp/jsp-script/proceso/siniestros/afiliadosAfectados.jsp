@@ -7,32 +7,35 @@
 		<title>Afiliados Afectados</title>
 		<script type="text/javascript">
 		/*INICIO DECLARACION VARIABLES*/
-			var _CONTEXT = '${ctx}';
-			var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-			var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
-			var _ROL_MEDICO  = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
-			var _CATALOGO_COB_X_VALORES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
-			var _11_url_RequiereAutServ			  = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
-			var _11_urlIniciarSiniestroSinAutServ = '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
-			var _11_urlIniciarSiniestroTworksin   = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
-			var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
+			var _CONTEXT 							= '${ctx}';
+			var _URL_CATALOGOS						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+			var _CATALOGO_TipoMoneda				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+			var _ROL_MEDICO							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
+			var _CATALOGO_COB_X_VALORES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
+			var _11_url_RequiereAutServ				= '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
+			var _11_urlIniciarSiniestroSinAutServ	= '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
+			var _11_urlIniciarSiniestroTworksin		= '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
+			var _p12_urlObtenerSiniestrosTramite	= '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
 			var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
-            var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
-            var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
-            var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
-            var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
-            var _URL_LISTA_AUTSERVICIO          = '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"         />';
-            var _URL_DATOS_VALIDACION          = '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"         />';
-            var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
-            var _11_params		=	<s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
-            var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
-            var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
-            var _URL_MONTO_ARANCEL		= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
-            var _UrlAjustesMedicos =  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
-            debug("VALOR DE _11_params --->");
-            var _CDROL   = '<s:property value="params.cdrol" />';
-            debug("CD_ROL"+_CDROL);
-            debug(_11_params);
+			var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
+			var _TIPO_PAGO_DIRECTO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
+			var _TIPO_PAGO_REEMBOLSO				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+			var _URL_GuardaFactura					= '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
+			var _URL_LISTA_AUTSERVICIO				= '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"         />';
+			var _URL_DATOS_VALIDACION				= '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"         />';
+			var _URL_LoadConceptos					= '<s:url namespace="/siniestros" action="obtenerMsinival" />';
+			var _11_params							= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+			debug("VALOR DE _11_params --->");
+			debug(_11_params);
+			var _CATALOGO_TipoConcepto				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
+			var _CATALOGO_ConceptosMedicos			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+			var _URL_MONTO_ARANCEL					= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
+			var _UrlAjustesMedicos					=  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
+			var _URL_GUARDA_CONCEPTO_TRAMITE		= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
+			var _CDROL								= '<s:property value="params.cdrol" />';
+			var _11_urlTabbedPanel					= '<s:url namespace="/siniestros"  action="includes/detalleSiniestro"/>';
+			//var _URL_LOADER_INFO_GRAL_RECLAMACION	= '<s:url namespace="/siniestros" action="includes/loadInfoGeneralReclamacion" />';
+			var _11_urlMesaControl					= '<s:url namespace="/mesacontrol" action="mcdinamica"                    />';
 			var _11_itemsForm	=
 			[
 				<s:property value="imap.itemsForm" />
@@ -56,23 +59,26 @@
 			var storeListadoAutorizacion;
 			var cmbCveTipoConcepto;
 			var cmbCveConcepto;
+			var _11_windowRechazoSiniestro;
+			var _11_formRechazo;
 			var _11_conceptoSeleccionado=null;
-			
+			var _tipoPago = _11_params.OTVALOR02;
+
 			var storeCobertura = Ext.create('Ext.data.Store', {
-		        model:'Generic',
-		        autoLoad:false,
-		        proxy:
-		        {
-		            type: 'ajax',
-		            url : _URL_CATALOGOS,
-		            extraParams : {catalogo:_CATALOGO_COB_X_VALORES},
-		            reader:
-		            {
-		                type: 'json',
-		                root: 'lista'
-		            }
-		        }
-		    });
+				model:'Generic',
+				autoLoad:false,
+				proxy:
+				{
+					type: 'ajax',
+					url : _URL_CATALOGOS,
+					extraParams : {catalogo:_CATALOGO_COB_X_VALORES},
+					reader:
+					{
+						type: 'json',
+						root: 'lista'
+					}
+				}
+			});
 
 			var storeSubcobertura= Ext.create('Ext.data.Store', {
 				model:'Generic',
@@ -179,6 +185,76 @@
 					}
 				});
 			}
+		
+			function _11_rechazoSiniestro()
+			{
+				debug('_11_rechazoSiniestro');
+				
+				var valido = _11_formRechazo.isValid();
+				if(!valido)
+				{
+					datosIncompletos();
+				}
+				
+				if(valido)
+				{
+					//_11_formEdicion.setLoading(true);
+					/*var json =
+					{
+						params : _11_formEdicion.getValues()
+					};
+					json.params['cdunieco'] = _11_recordActivo.get('CDUNIECO');
+					json.params['cdramo']   = _11_recordActivo.get('CDRAMO');
+					json.params['estado']   = _11_recordActivo.get('ESTADO');
+					json.params['nmpoliza'] = _11_recordActivo.get('noPoliza');
+					json.params['nmsituac'] = _11_recordActivo.get('NMSITUAC');
+					json.params['nmsuplem'] = _11_recordActivo.get('NMSUPLEM');
+					json.params['status']   = _11_recordActivo.get('STATUS');
+					json.params['aaapertu'] = _11_recordActivo.get('AAAPERTU');
+					json.params['nmsinies'] = _11_recordActivo.get('IdReclamacion');
+					json.params['cancelar']       = 'si';
+					json.params['cdmotivo']       = _11_itemsRechazo[0].getValue();
+					json.params['cdsubmotivo']    = _11_itemsRechazo[1].getValue();
+					json.params['rechazocomment'] = _11_itemsRechazo[2].getValue();
+					debug('datos enviados:',json);
+					_11_windowRechazoSiniestro.setLoading(true);
+					Ext.Ajax.request(
+					{
+						url       : _11_urlActualizarSiniestro
+						,jsonData : json
+						,success  : function(response)
+						{
+							_11_windowRechazoSiniestro.setLoading(false);
+							json = Ext.decode(response.responseText);
+							if(json.success == true)
+							{
+								mensajeCorrecto('Datos guardados',json.mensaje,function()
+								{
+									Ext.create('Ext.form.Panel').submit(
+									{
+										url             : _11_urlMesaControl
+										,standardSubmit :true
+										,params         :
+										{
+											'smap1.gridTitle'      : 'Siniestros'
+											,'smap2.pv_cdtiptra_i' : 16
+										}
+									});
+								});
+							}
+							else
+							{
+								mensajeError(json.mensaje);
+							}
+						}
+						,failure  : function()
+						{
+							_11_windowRechazoSiniestro.setLoading(false);
+							errorComunicacion();
+						}
+					});*/
+				}
+			}
 			
 			function _11_editar(grid,rowindex)
 			{
@@ -218,17 +294,17 @@
 						storeCobertura.load({
 							params:{
 								'params.ntramite':_11_recordActivo.get('ntramite'),
-								'params.tipopago':"1"
+								'params.tipopago':_tipoPago
 							}
 						});
 						
 						panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
 						
 						storeSubcobertura.load({
-			                params:{
-			                	'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
-			                }
-			            });
+							params:{
+								'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
+							}
+						});
 						panelInicialPral.down('combo[name=params.cdconval]').setValue(_11_recordActivo.get('cdconval'));
 						
 						panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));
@@ -240,11 +316,11 @@
 						panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
 						storeAseguradoFactura.removeAll();
 						storeAseguradoFactura.load({
-					    	params: {
-					    		'smap.ntramite'   : _11_recordActivo.get('ntramite'),
-					    		'smap.nfactura'   : _11_recordActivo.get('factura')
-					    	}
-					    });
+							params: {
+								'smap.ntramite'   : _11_recordActivo.get('ntramite'),
+								'smap.nfactura'   : _11_recordActivo.get('factura')
+							}
+						});
 						if(Ext.decode(response.responseText).datosValidacion != null){
 							var aplicaIVA = null;
 							var ivaRetenido = null;
@@ -416,17 +492,101 @@
 								centrarVentana(msgWindow);
 							}
 						}
+						
+						if(valido)
+						{
+							valido = record.get('VoBoAuto')!='n'&&record.get('VoBoAuto')!='N';
+							if(!valido)
+							{
+								mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno autom&aacute;tico');
+							}
+						}
+						
+						if(valido)
+						{
+						windowLoader = Ext.create('Ext.window.Window',{
+						        modal       : true,
+						        buttonAlign : 'center',
+						        title: 'Informaci&oacute;n general',
+						        width       : 800,
+						        height      : 450,
+						        autoScroll  : true,
+						        loader      : {
+						            url     : _11_urlTabbedPanel
+						            ,params         :
+									{
+										'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
+										,'params.cdunieco' : record.raw.CDUNIECO
+										,'params.cdramo'   : record.raw.CDRAMO
+										,'params.estado'   : record.raw.ESTADO
+										,'params.nmpoliza' : record.raw.NMPOLIZA
+										,'params.nmsuplem' : record.raw.NMSUPLEM
+										,'params.nmsituac' : record.raw.NMSITUAC
+										,'params.aaapertu' : record.raw.AAAPERTU
+										,'params.status'   : record.raw.STATUS
+										,'params.nmsinies' : record.raw.NMSINIES
+										,'params.cdtipsit' : record.raw.CDTIPSIT
+										,'params.cdrol'    : _CDROL
+										,'params.tipopago' : _tipoPago
+									},
+						            scripts  : true,
+						            loadMask : true,
+						            autoLoad : true,
+						            ajaxOptions: {
+						            	method: 'POST'
+						            }
+						        }/*
+							    ,
+							    listeners:{
+							         close:function(){
+							             if(true){
+							                 //Actualizamos la información de la consulta del grid inferior
+							            	 storeConceptos.reload();
+							             }
+							         }
+							    }*/
+						    }).show();
+						    centrarVentanaInterna(windowLoader);
+						}
+						/*
+						'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue(),
+												'params.cdunieco' : record.raw.CDUNIECO,
+												'params.cdramo'   : record.raw.CDRAMO,
+												'params.estado'   : record.raw.ESTADO,
+												'params.nmpoliza' : record.raw.NMPOLIZA,
+												'params.nmsuplem' : record.raw.NMSUPLEM,
+												'params.nmsituac' : record.raw.NMSITUAC,
+												'params.cdtipsit' : record.raw.CDTIPSIT,
+												'params.dateOcurrencia' : record.raw.FEOCURRE,
+						*/
+						/*if(valido)
+						{
+							valido = record.get('AUTRECLA')!='n'&&record.get('AUTRECLA')!='N';
+							if(!valido)
+							{
+								mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea de reclamaciones');
+							}
+						}
+
+						if(valido)
+						{
+							valido = record.get('AUTMEDIC')!='n'&&record.get('AUTMEDIC')!='N';
+							if(!valido)
+							{
+								mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea m&eacute;dica');
+							}
+						}*/
 					},
 					failure : function ()
 					{
-			            Ext.Msg.show({
-			                title:'Error',
-			                msg: 'Error de comunicaci&oacute;n',
-			                buttons: Ext.Msg.OK,
-			                icon: Ext.Msg.ERROR
-			            });
-			        }
-			    });
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
 			}
 			
 			function _11_pedirAutorizacion(record)
@@ -442,7 +602,7 @@
 					if(success){
 						var jsonResponse = Ext.decode(response.responseText);
 						if(jsonResponse.datosInformacionAdicional.length <= 0) {
-							centrarVentanaInterna(Ext.Msg.show({
+							centrarVentanaInterna(Ext.Msg.show({ 
 								title: 'Aviso',
 								msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
 								buttons: Ext.Msg.OK,
@@ -468,7 +628,7 @@
 			
 			function _p21_agregarGrupoClic()
 			{
-				if(_11_params.OTVALOR02 == _TIPO_PAGO_DIRECTO){
+				if(_tipoPago == _TIPO_PAGO_DIRECTO){
 					storeFacturaDirectoNva.add(new modelFacturaSiniestroNva({tasaCambioNva:'0.00',importeFacturaNva:'0.00',tipoMonedaNameNva:'001'}));
 				}else{
 					//storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
@@ -478,6 +638,8 @@
 			
 			function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
 			    var record = grid.getStore().getAt(rowIndex);
+			    debug("record");
+			    debug(record);
 			    var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
 			    
 			    if ( _CDROL == _ROL_MEDICO){
@@ -535,6 +697,107 @@
 				    centrarVentanaInterna(windowLoader);
 			    }
 			}
+			
+			function _guardarConceptosxFactura(){
+			    var obtener = [];
+			    storeConceptos.each(function(record) {
+			        obtener.push(record.data);
+			    });
+			    if(obtener.length <= 0){
+			        Ext.Msg.show({
+			            title:'Error',
+			            msg: 'Se requiere al menos un concepto',
+			            buttons: Ext.Msg.OK,
+			            icon: Ext.Msg.ERROR
+			        });
+			        storeConceptos.reload();
+			        return false;
+			    }else{
+			        
+			        for(i=0;i < obtener.length;i++){
+			            if(obtener[i].IDCONCEP == null ||obtener[i].CDCONCEP == null ||obtener[i].PTMTOARA == null ||obtener[i].PTPRECIO == null ||obtener[i].CANTIDAD == null ||
+			                obtener[i].IDCONCEP == "" ||obtener[i].CDCONCEP == "" ||obtener[i].PTMTOARA == ""||obtener[i].PTPRECIO == "" || obtener[i].CANTIDAD ==""){
+			                centrarVentanaInterna(Ext.Msg.show({
+			                    title:'Concepto',
+			                    msg: 'Favor de introducir los campos requeridos en el concepto',
+			                    buttons: Ext.Msg.OK,
+			                    icon: Ext.Msg.WARNING
+			                }));
+			                return false;
+			            }
+			        }
+			        var submitValues={};
+			        var formulario=panelInicialPral.form.getValues();
+			        submitValues['params']=formulario;
+			        var datosTablas = [];
+			        var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+			        debug(recordFactura);
+			        storeConceptos.each(function(record,index){
+			            datosTablas.push({
+			            	cdunieco  : recordFactura.get('CDUNIECO')
+			            	,cdramo   : recordFactura.get('CDRAMO')
+			                ,estado   : recordFactura.get('ESTADO')
+			                ,nmpoliza : recordFactura.get('NMPOLIZA')
+			                ,nmsuplem : recordFactura.get('NMSUPLEM')
+			                ,nmsituac : recordFactura.get('NMSITUAC')
+			                ,aaapertu : recordFactura.get('AAAPERTU')
+			                ,status   : recordFactura.get('STATUS')
+			                ,nmsinies : recordFactura.get('NMSINIES')
+			                ,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
+			                ,cdgarant : panelInicialPral.down('[name=params.cdgarant]').getValue()
+			                ,cdconval : panelInicialPral.down('combo[name=params.cdconval]').getValue()
+			                ,cdconcep : record.get('CDCONCEP')
+			                ,idconcep : record.get('IDCONCEP')
+			                ,cdcapita : record.get('CDCAPITA')
+			                ,nmordina : record.get('NMORDINA')
+			                ,cdmoneda : "001"
+		                	,ptprecio : record.get('PTPRECIO')
+			                ,cantidad : record.get('CANTIDAD')
+			                ,destopor : record.get('DESTOPOR')
+			                ,destoimp : record.get('DESTOIMP')
+			                ,ptimport : record.get('SUBTAJUSTADO')
+			                ,ptrecobr : record.get('PTRECOBR')
+			                ,nmapunte : record.get('NMAPUNTE')
+			                ,feregist : record.get('FEREGIST')
+			                ,operacion: "I"
+			                ,ptpcioex : "0.00"
+			                ,dctoimex : "0.00"
+			                ,ptimpoex : "0.0"
+			                ,mtoArancel : record.get('PTMTOARA')
+						});
+					});
+			        submitValues['datosTablas']=datosTablas;
+			        debug("VALORES A ENVAR --> submitValues");
+			        debug(submitValues);
+			        
+			        panelInicialPral.setLoading(true);
+			        Ext.Ajax.request(
+			        {
+			            url: _URL_GUARDA_CONCEPTO_TRAMITE,
+			            jsonData:Ext.encode(submitValues),
+			            success:function(response,opts){
+			                panelInicialPral.setLoading(false);
+			                var jsonResp = Ext.decode(response.responseText);
+			                if(jsonResp.success==true){
+			                    panelInicialPral.setLoading(false);
+			                    storeConceptos.reload();
+			                }
+			            },
+			            failure:function(response,opts)
+			            {
+			                panelInicialPrincipal.setLoading(false);
+			                Ext.Msg.show({
+			                    title:'Error',
+			                    msg: 'Error de comunicaci&oacute;n',
+			                    buttons: Ext.Msg.OK,
+			                    icon: Ext.Msg.ERROR
+			                });
+			            }
+			        });
+			    }
+			}
+			
+			
 			
 			function _p21_agregarConcepto()
 			{
@@ -851,11 +1114,13 @@
 								    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
 								    	,tooltip : 'Capturar Detalle'
 								    	,handler : revisarDocumento
-								    }
-								    /*,{
-								    	icon     : '${ctx}/resources/fam3icons/icons/cancel.png'
-								    	,tooltip : 'Eliminar'
-								    }*/
+								    }/*,
+								    {
+										icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+										tooltip: 'Eliminar',
+									 	scope: this,
+									 	handler: this.onRemoveClick
+								 	}*/
 								]
 							},
 							{
@@ -1124,10 +1389,11 @@
 									,items        :
 									[
 									    {
-									    	icon     : '${ctx}/resources/fam3icons/icons/delete.png'
-									    	,tooltip : 'Eliminar'
-									    	//,handler : revisarDocumento
-									    }
+											icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+											tooltip: 'Eliminar',
+										 	scope: this,
+										 	handler: this.onRemoveClick
+									 	}
 									    ,{
 									    	icon     : '${ctx}/resources/fam3icons/icons/page_edit.png'
 									    	,tooltip : 'Ajuste'
@@ -1216,6 +1482,11 @@
 												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
 												var ImporteConcepto = ((+cantidad * +importe) * (1-( +destopor/100)))- (+destoimp);
 												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+												
+												var totalAjusteMedico = _11_conceptoSeleccionado.get('TOTAJUSMED');
+												var totalFactura = _11_conceptoSeleccionado.get('PTIMPORT');
+												var Total = +totalFactura - (+totalAjusteMedico);
+												_11_conceptoSeleccionado.set('SUBTAJUSTADO',ImporteConcepto);
 											}
 										}
 									}
@@ -1234,6 +1505,11 @@
 												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
 												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
 												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+												
+												var totalAjusteMedico = _11_conceptoSeleccionado.get('TOTAJUSMED');
+												var totalFactura = _11_conceptoSeleccionado.get('PTIMPORT');
+												var Total = +totalFactura - (+totalAjusteMedico);
+												_11_conceptoSeleccionado.set('SUBTAJUSTADO',ImporteConcepto);
 											}
 										}
 									}
@@ -1252,6 +1528,11 @@
 												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
 												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
 												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+												
+												var totalAjusteMedico = _11_conceptoSeleccionado.get('TOTAJUSMED');
+												var totalFactura = _11_conceptoSeleccionado.get('PTIMPORT');
+												var Total = +totalFactura - (+totalAjusteMedico);
+												_11_conceptoSeleccionado.set('SUBTAJUSTADO',ImporteConcepto);
 											}
 										}
 									}
@@ -1270,6 +1551,11 @@
 												var destoimp = e.getValue();
 												var ImporteConcepto = ((+cantidad * +importe) *(1-( +destopor/100)))- (+destoimp);
 												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+												
+												var totalAjusteMedico = _11_conceptoSeleccionado.get('TOTAJUSMED');
+												var totalFactura = _11_conceptoSeleccionado.get('PTIMPORT');
+												var Total = +totalFactura - (+totalAjusteMedico);
+												_11_conceptoSeleccionado.set('SUBTAJUSTADO',ImporteConcepto);
 											}
 										}
 									}
@@ -1298,14 +1584,23 @@
 										text	: 'Agregar Concepto'
 										,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 										,handler : _p21_agregarConcepto
+									},
+									{
+										text	: 'Guardar Concepto'
+										,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
+										,handler : function() {
+											_guardarConceptosxFactura();
+										}
 									}
 								]
 						 });
 							this.callParent();
-						},
-						onRemoveClick: function(grid, rowIndex){
+						}
+						,onRemoveClick: function(grid, rowIndex){
+							/*Eliminamos el record del store*/
 							var record=this.getStore().getAt(rowIndex);
 							this.getStore().removeAt(rowIndex);
+							_guardarConceptosxFactura();
 						}
 					});
 					gridEditorConceptos = new EditorConceptos();
@@ -1470,33 +1765,59 @@
 					buttonAlign:'center',
 					buttons: [
 						{
-							text:'Guardar',
+							text:'Guardar Fac',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
 							handler:function()
 							{
-								//windowLoader.close();
-								debug("VALOR  ENVIAR ");
-								debug(panelInicialPral.form);
-								panelInicialPral.form.submit({
-	            		        	waitMsg:'Procesando...',	
-	            		        	url: _URL_GuardaFactura,
-	            		        	failure: function(form, action) {
-	            		        		centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
-	            					},
-	            					success: function(form, action) {
-	            						centrarVentanaInterna(mensajeCorrecto('Guardar Cambios',"Se ha guardado la Factura",function()
-           								{
-           									Ext.create('Ext.form.Panel').submit(
-           									{
-           										standardSubmit :true
-           										,params        :
-           										{
-           											'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
-           										}
-           									});
-           								}));
-	            					}
-	            				});
+								
+								var valido = panelInicialPral.isValid();
+								if(!valido)
+								{
+									datosIncompletos();
+								}else{
+									var autorizaRecla = panelInicialPral.down('[name="params.autrecla"]').getValue()+"";
+									var autorizaMedic = panelInicialPral.down('[name="params.autmedic"]').getValue()+"";
+									if(autorizaRecla == "null" || autorizaRecla == null){
+										autorizaRecla="S";
+									}
+									if(autorizaMedic == "null" || autorizaMedic == null){
+										autorizaMedic="S";
+									}
+									
+									var valido =  autorizaRecla =='S' &&  autorizaMedic!='N' ;
+									if(!valido)
+									{
+										mensajeWarning(
+												'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
+												,function(){_11_windowRechazoSiniestro.show();centrarVentanaInterna(_11_windowRechazoSiniestro);}
+										);
+									}else{
+										//Guardamos la información de la factura
+										//windowLoader.close();
+										debug("VALOR  ENVIAR ");
+										debug(panelInicialPral.form);
+										panelInicialPral.form.submit({
+			            		        	waitMsg:'Procesando...',	
+			            		        	url: _URL_GuardaFactura,
+			            		        	failure: function(form, action) {
+			            		        		centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
+			            					},
+			            					success: function(form, action) {
+			            						centrarVentanaInterna(mensajeCorrecto('Guardar Cambios',"Se ha guardado la Factura",function()
+		           								{
+		           									Ext.create('Ext.form.Panel').submit(
+		           									{
+		           										standardSubmit :true
+		           										,params        :
+		           										{
+		           											'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
+		           										}
+		           									});
+		           								}));
+			            					}
+			            				});
+									}
+								}
 							}
 						},
 						{
@@ -1546,7 +1867,35 @@
 					]
 				});*/
 					
-			
+				Ext.define('_11_WindowRechazoSiniestro',
+			    {
+			        extend         : 'Ext.window.Window'
+			        ,initComponent : function()
+			        {
+			            debug('_11_WindowRechazoSiniestro initComponent');
+			            Ext.apply(this,
+			            {
+			                title        : 'Rechazo de tr&aacute;mite'
+			                ,width       : 600
+			                ,height      : 350
+			                ,autoScroll  : true
+			                ,closeAction : 'hide'
+			                ,modal       : true
+			                ,defaults    : { style : 'margin : 5px; ' }
+			                ,items       : _11_formRechazo
+			                ,buttonAlign : 'center'
+			                ,buttons     :
+			                [
+			                    {
+			                        text     : 'Rechazar'
+			                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+			                        ,handler : _11_rechazoSiniestro
+			                    }
+			                ]
+			            });
+			            this.callParent();
+			        }
+			    });
 			
 				Ext.define('_11_WindowPedirAut',
 				{
@@ -1600,6 +1949,21 @@
 						this.callParent();
 					}
 				});
+				
+				Ext.define('_11_FormRechazo',
+			    {
+			        extend         : 'Ext.form.Panel'
+			        ,initComponent : function()
+			        {
+			            debug('_11_FormRechazo initComponent');
+			            Ext.apply(this,
+			            {
+			                border  : 0
+			                ,items  : _11_itemsRechazo
+			            });
+			            this.callParent();
+			        }
+			    });
 			/**FIN DE COMPONENTES***/
 			
 			/**INICIO DE CONTENIDO***/
@@ -1619,6 +1983,9 @@
 						
 				_11_formPedirAuto  = new _11_FormPedirAuto();
 				_11_windowPedirAut = new _11_WindowPedirAut();
+				_11_formRechazo            = new _11_FormRechazo();
+				_11_windowRechazoSiniestro = new _11_WindowRechazoSiniestro();
+				
 			/**FIN DE CONTENIDO***/
 			});
 		</script>

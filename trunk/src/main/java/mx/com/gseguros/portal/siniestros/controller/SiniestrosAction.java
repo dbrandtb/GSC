@@ -119,6 +119,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private Item                     item;
     private Map<String,Item>         imap;
     private String                   mensaje;
+    private String					 validaCdTipsitTramite;
     private List<Map<String,String>> slist1;
     private List<Map<String,String>> slist2;
     private List<Map<String,String>> slist3;
@@ -2437,57 +2438,50 @@ public String consultaListaPlazas(){
     			+ "\n######                 ######"
     			);
     	logger.debug("params: "+params);
+    	logger.debug("params: "+datosTablas);
     	try
     	{
-    		UserVO usuario = (UserVO)session.get("USUARIO");
     		
-    		String cdunieco  = params.get("cdunieco");
-    		String cdramo    = params.get("cdramo");
-    		String estado    = params.get("estado");
-    		String nmpoliza  = params.get("nmpoliza");
-    		String nmsuplem  = params.get("nmsuplem");
-    		String nmsituac  = params.get("nmsituac");
-    		String aaapertu  = params.get("aaapertu");
-    		String status    = params.get("status");
-    		String nmsinies  = params.get("nmsinies");
-    		String nfactura  = params.get("nfactura");
-    		String cdgarant  = params.get("cdgarant");
-    		String cdconval  = params.get("cdconval");
-    		String cdconcep  = params.get("cdconcep");
-    		String idconcep  = params.get("idconcep");
-    		String cdcapita  = params.get("cdcapita");
-    		String nmordina  = params.get("nmordina");
+    		/*UserVO usuario = (UserVO)session.get("USUARIO");
+    		String userregi  = usuario.getUser();*/
     		Date   dFemovimi = new Date();
-    		String cdmoneda  = params.get("cdmoneda");
-    		String ptprecio  = params.get("ptprecio");
-    		String cantidad  = params.get("cantidad");
-    		String destopor  = params.get("destopor");
-    		String destoimp  = params.get("destoimp");
-    		String ptimport  = params.get("ptimport");
-    		String ptrecobr  = params.get("ptrecobr");
+    		Date   dFeregist = new Date();
     		String nmanno    = Calendar.getInstance().get(Calendar.YEAR)+"";
-    		String nmapunte  = params.get("nmapunte");
-    		String userregi  = usuario.getUser();
-    		String feregist  = params.get("feregist");
-    		Date   dFeregist = new Date();//renderFechas.parse(feregist);
     		
-    		String operacion =  params.get("operacion");
+    		//1.- Eliminamos los registros de la tabla msinival
+    		try {
+    			HashMap<String, Object> paramBajasinival = new HashMap<String, Object>();
+    			paramBajasinival.put("pv_cdunieco_i",datosTablas.get(0).get("cdunieco"));
+    			paramBajasinival.put("pv_cdramo_i",datosTablas.get(0).get("cdramo"));
+    			paramBajasinival.put("pv_estado_i",datosTablas.get(0).get("estado"));
+    			paramBajasinival.put("pv_nmpoliza_i",datosTablas.get(0).get("nmpoliza"));
+    			paramBajasinival.put("pv_nmsuplem_i",datosTablas.get(0).get("nmsuplem"));
+    			paramBajasinival.put("pv_nmsituac_i",datosTablas.get(0).get("nmsituac"));
+    			paramBajasinival.put("pv_aaapertu_i",datosTablas.get(0).get("aaapertu"));
+    			paramBajasinival.put("pv_status_i",datosTablas.get(0).get("status"));
+    			paramBajasinival.put("pv_nmsinies_i",datosTablas.get(0).get("nmsinies"));
+    			paramBajasinival.put("pv_nfactura_i",datosTablas.get(0).get("nfactura"));
+    			siniestrosManager.getBajaMsinival(paramBajasinival);
+    			
+			} catch (Exception e) {
+				logger.error("error al eliminar en TfacMesCtrl ",e);
+			}
+    		//2.- Guardamos los registros de 
     		
-    		String ptpcioex  = params.get("ptpcioex");
-    		String dctoimex  = params.get("dctoimex");
-    		String ptimpoex  = params.get("ptimpoex");
-    		String mtoArancel= params.get("ptprecioArancel");
     		
-    		if(StringUtils.isBlank(operacion)) operacion = Constantes.INSERT_MODE;
-    		
-    		siniestrosManager.P_MOV_MSINIVAL(
-    				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
-    				nmsituac, aaapertu, status, nmsinies, nfactura,
-    				cdgarant, cdconval, cdconcep, idconcep, cdcapita,
-    				nmordina, dFemovimi, cdmoneda, ptprecio, cantidad,
-    				destopor, destoimp, ptimport, ptrecobr, nmanno,
-    				nmapunte, userregi, dFeregist, operacion,ptpcioex,dctoimex,ptimpoex,mtoArancel);
-    		
+    		for(int i=0;i<datosTablas.size();i++)
+            {
+        		
+    			//datosTablas.get(i).get("")
+    			//renderFechas.parse(feregist);
+        		siniestrosManager.P_MOV_MSINIVAL(
+        				datosTablas.get(i).get("cdunieco"), datosTablas.get(i).get("cdramo"), datosTablas.get(i).get("estado"), datosTablas.get(i).get("nmpoliza"), datosTablas.get(i).get("nmsuplem"),
+        				datosTablas.get(i).get("nmsituac"), datosTablas.get(i).get("aaapertu"), datosTablas.get(i).get("status"), datosTablas.get(i).get("nmsinies"), datosTablas.get(i).get("nfactura"),
+        				datosTablas.get(i).get("cdgarant"), datosTablas.get(i).get("cdconval"), datosTablas.get(i).get("cdconcep"), datosTablas.get(i).get("idconcep"), datosTablas.get(i).get("cdcapita"),
+        				datosTablas.get(i).get("nmordina"), dFemovimi, datosTablas.get(i).get("cdmoneda"), datosTablas.get(i).get("ptprecio"), datosTablas.get(i).get("cantidad"),
+        				datosTablas.get(i).get("destopor"), datosTablas.get(i).get("destoimp"),datosTablas.get(i).get("ptimport"), datosTablas.get(i).get("ptrecobr"),nmanno,
+        				datosTablas.get(i).get("nmapunte"), "", dFeregist, datosTablas.get(i).get("operacion"),datosTablas.get(i).get("ptpcioex"),datosTablas.get(i).get("dctoimex"),datosTablas.get(i).get("ptimpoex"),datosTablas.get(i).get("mtoArancel"));
+            }
     		mensaje = "Datos guardados";
     		success = true;
     		
@@ -3293,6 +3287,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					siniestro.get("STATUS"),
     					siniestro.get("NMSINIES"),
     					null);
+    			logger.debug("VALOR DEL CONCEPTOS");
+    			logger.debug(conceptos);
     			slist1     = facturas;
     			
     			//hospitalizacion
@@ -5940,6 +5936,20 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
  	   	return SUCCESS;
     }
     
+    public String validaCdTipsitTramite(){
+	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
+	   	try {
+		   		HashMap<String, Object> paramTramite= new HashMap<String, Object>();
+		   		paramTramite.put("pv_ntramite_i",params.get("ntramite"));
+				
+		   		validaCdTipsitTramite = siniestrosManager.validaCdTipsitAltaTramite(paramTramite);
+	   	}catch( Exception e){
+	   		logger.error("Error al obtener el cdtipsit",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
 	/*public String subirCenso()
 	{
 		logger.info(""
@@ -6678,6 +6688,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setDatosValidacion(List<Map<String, String>> datosValidacion) {
 		this.datosValidacion = datosValidacion;
+	}
+
+
+	public String getValidaCdTipsitTramite() {
+		return validaCdTipsitTramite;
+	}
+
+
+	public void setValidaCdTipsitTramite(String validaCdTipsitTramite) {
+		this.validaCdTipsitTramite = validaCdTipsitTramite;
 	}
 	
 	

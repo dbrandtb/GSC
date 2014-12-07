@@ -23,7 +23,7 @@ Ext.onReady(function() {
 	                        tab.loader.load();
 	                    }
 	                }
-	    	    }, {
+	    	    }/*, {
 	    	        title: 'Revisi&oacute;n Administrativa',
 	    	        loader: {
 	    	        	url: _URL_LOADER_REV_ADMIN,
@@ -45,7 +45,7 @@ Ext.onReady(function() {
 	                        tab.loader.load();
 	                    }
 	                }
-	    	    }, {
+	    	    }*/, {
 	    	        title: 'C&aacute;lculos',
 	    	        loader: {
 	    	        	url: _URL_LOADER_CALCULOS,
@@ -68,7 +68,7 @@ Ext.onReady(function() {
     	});
 	
 	//para visualizar la información de los documentos
-    var venDocuTramite=Ext.create('Ext.window.Window',
+    /*var venDocuTramite=Ext.create('Ext.window.Window',
     {
         title           : 'Documentos del tr&aacute;mite '+ _NTRAMITE//+inputNtramite
         ,closable       : false
@@ -100,5 +100,5 @@ Ext.onReady(function() {
             }
         }
     }).showAt(600,0);
-    venDocuTramite.collapse();
+    venDocuTramite.collapse();*/
 });

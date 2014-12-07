@@ -1400,4 +1400,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaDatosValidacionSiniestro(params);
 	}
+	
+	@Override
+	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception {
+		try {
+			return siniestrosDAO.validaCdTipsitAltaTramite(paramTramite);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }
