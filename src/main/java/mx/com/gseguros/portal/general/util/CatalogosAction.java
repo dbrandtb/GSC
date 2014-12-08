@@ -338,6 +338,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 						}
 					}
 					break;
+				case MEDICOESPECIFICO:
+					List<ConsultaProveedorVO> medicoes = siniestrosManager.getConsultaListaProveedorMedico(
+							"ES", params != null ? params.get("cdpresta") : null);
+					if(catalogoGenerico) {
+						listaGenerica = medicoes;
+					} else {
+						lista = new ArrayList<GenericVO>();
+						for(ConsultaProveedorVO medico : medicoes) {
+							lista.add(new GenericVO(medico.getCdpresta(),medico.getNombre()));
+						}
+					}
+					break;
 				case PROVEEDORES:
 					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico(
 							Rol.CLINICA.getCdrol(), params != null ? params.get("cdpresta") : null);

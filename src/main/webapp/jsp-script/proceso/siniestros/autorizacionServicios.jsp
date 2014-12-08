@@ -14,6 +14,7 @@
             var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS"/>';
             var _CAT_TPENALIZACIONES				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PENALIZACIONES"/>';
             var _CAT_MEDICOS                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
+            var _CAT_MEDICOS_ESPECIFICO             = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOESPECIFICO"/>';
             var _CAT_PROVEEDORES                    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             
             var _CODIGO_CAUSA_ENFERMEDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ENFERMEDAD.codigo"/>';
