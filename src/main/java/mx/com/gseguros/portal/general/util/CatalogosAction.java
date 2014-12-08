@@ -142,14 +142,19 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_RESIDENCIA:
 				case TRATAMIENTOS:
 				case TCUMULOS:
+				case TCANALIN:
 				case TESTADOS:
 				case TZONAS:
+				case TEDOCIVIL:
 				case TFORMATOS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
 					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):null);
+					break;
+				case MC_SUCURSALES_SALUD:
+					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):"1000");
 					break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
@@ -176,6 +181,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
 					}
 					break;
+				case RAMOSALUD:
+					lista =siniestrosManager.getConsultaListaRamoSalud();
+					break;
 				case TIPSIT:
 					List<Map<String,String>>tipsits=kernelManager.obtenerTipsit(params!=null?params.get("idPadre"):null);
 					lista=new ArrayList<GenericVO>(0);
@@ -192,7 +200,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case ENDOSOS:
 					UserVO usuario = (UserVO)session.get("USUARIO");
-					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos(usuario.getRolActivo().getObjeto().getValue());
+					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos(usuario.getRolActivo().getClave());
 					lista=new ArrayList<GenericVO>(0);
 					for(Map<String,String> nombre:nombresEndosos) {
 						lista.add(new GenericVO(nombre.get("CDTIPSUP"), nombre.get("DSTIPSUP")));
@@ -431,6 +439,64 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("tipoUnidad")
 							,params.get("cdagente")
 							);
+					break;
+				case RAMO_5_MODELOS_X_SUBMARCA:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarModelosPorSubmarcaRamo5(
+							params.get("idPadre")
+							,params.get("cdtipsit")
+							);
+					break;
+				case RAMO_5_VERSIONES_X_MODELO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarVersionesPorModeloSubmarcaRamo5(
+							params.get("submarca")
+							,params.get("modelo")
+							,params.get("cdtipsit")
+							);
+					break;
+				case RAMO_5_AUTOS:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarAutosPorCadenaRamo5(
+							params.get("cadena")
+							,params.get("cdtipsit")
+							);
+					break;
+				case RAMO_5_MARCAS:
+				case RAMO_5_SUBMARCAS:
+				case RAMO_5_TIPOS_USO:
+				case RAMO_5_VERSIONES:
+					lista = catalogosManager.cargarTtapvat1(cat.getCdTabla());
+					break;
+				case RAMO_5_NEGOCIO_X_CDTIPSIT:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarNegocioPorCdtipsitRamo5(params.get("cdtipsit"));
+					break;
+				case RAMO_5_USOS_X_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarUsosPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
+					break;
+				case RAMO_5_MARCAS_X_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = catalogosManager.cargarMarcasPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

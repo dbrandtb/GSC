@@ -7,7 +7,7 @@
         <title>Autorizaci&oacute;n de servicio</title>
         
         <script type="text/javascript">
-            var _CONTEXT = '${ctx}';
+            var _CONTEXT = '${ctx}'; 
             
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
