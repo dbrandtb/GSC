@@ -523,7 +523,6 @@ Ext.onReady(function() {
     	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,		width:500,
 		listeners : {
 			change:function(e){
-				//alert(e.getValue());
 				if(e.getValue() =='0'){
 	    			Ext.getCmp('medicoPExt').show();
 	    			Ext.getCmp('especialidadPExt').show();
@@ -536,34 +535,32 @@ Ext.onReady(function() {
 	    		
 				Ext.getCmp('idEspecialidad').setValue('');
 	    		Ext.Ajax.request(
-				{
-				    url     : _URL_CATALOGOS
-				    ,params:{
-						'params.cdpresta': e.getValue(),
-						catalogo         : _CAT_MEDICOS_ESPECIFICO,
-					 	catalogoGenerico : true
-	                }
-				    ,success : function (response)
-				    {
-				    	if(Ext.decode(response.responseText).listaGenerica != null)
-			    		{
-			    			debug("ENTRA-->");
-			    			debug(Ext.decode(response.responseText).listaGenerica);
-				    		var json=Ext.decode(response.responseText).listaGenerica[0];
-    				        Ext.getCmp('idEspecialidad').setValue(json.descesp);
-			    		}
-				    },
-				    failure : function ()
-				    {
-				        me.up().up().setLoading(false);
-				        centrarVentanaInterna(Ext.Msg.show({
-				            title:'Error',
-				            msg: 'Error de comunicaci&oacute;n',
-				            buttons: Ext.Msg.OK,
-				            icon: Ext.Msg.ERROR
-				        }));
-				    }
-				});
+					{
+					    url     : _URL_CATALOGOS
+					    ,params:{
+							'params.cdpresta': e.getValue(),
+							catalogo         : _CAT_MEDICOS_ESPECIFICO,
+   						 	catalogoGenerico : true
+		                }
+					    ,success : function (response)
+					    {
+					    	if(Ext.decode(response.responseText).listaGenerica != null)
+				    		{
+					    		var json=Ext.decode(response.responseText).listaGenerica[0];
+	    				        Ext.getCmp('idEspecialidad').setValue(json.descesp);
+				    		}
+					    },
+					    failure : function ()
+					    {
+					        me.up().up().setLoading(false);
+					        centrarVentanaInterna(Ext.Msg.show({
+					            title:'Error',
+					            msg: 'Error de comunicaci&oacute;n',
+					            buttons: Ext.Msg.OK,
+					            icon: Ext.Msg.ERROR
+					        }));
+					    }
+					});
     		}
         }
     });
