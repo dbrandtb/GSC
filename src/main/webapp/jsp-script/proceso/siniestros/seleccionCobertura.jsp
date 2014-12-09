@@ -125,8 +125,8 @@
                         'Ext.util.*',
                         'Ext.form.*'
                     ],
-                    selType: 'checkboxmodel',
-                    title: 'Facturas en Tr&aacute;mite',
+                    //selType: 'checkboxmodel',
+                    title: 'Facturas en Tr&aacute;mite  Contra-Recibo: '+_selCobParams.ntramite,
                     frame: false,
                     initComponent: function(){
                         this.cellEditing = new Ext.grid.plugin.CellEditing({
