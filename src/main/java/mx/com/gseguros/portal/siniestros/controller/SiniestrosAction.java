@@ -2524,7 +2524,7 @@ public String consultaListaPlazas(){
     		
     		Map<String,String>       tramite    = siniestrosManager.obtenerTramiteCompleto(ntramite);
     		List<Map<String,String>> facturas   = siniestrosManager.obtenerFacturasTramite(ntramite);
-    		List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite(ntramite,null);
+    		List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null);
     		
     		smap = tramite;
     		

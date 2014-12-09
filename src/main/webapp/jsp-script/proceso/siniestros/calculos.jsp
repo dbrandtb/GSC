@@ -1683,10 +1683,10 @@ function _p12_validaAutorizaciones()
 			for(i=0;i<siniestros.length;i++)
             {
 				var siniestroIte = siniestros[i];
-				if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
+				/*if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-				}
+				}*/
 				if(false && factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
@@ -1733,10 +1733,10 @@ function _p12_validaAutorizaciones()
 				result = result + 'Verifica el Descuento ' + facturaIte.NFACTURA + '<br/>';
 			}
 			
-			if(facturaIte.AUTRECLA!='S')
+			/*if(facturaIte.AUTRECLA!='S')
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
-            }
+            }*/
             if(facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';

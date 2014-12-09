@@ -192,6 +192,8 @@ public interface SiniestrosManager {
 	 */
 	public List<Map<String,String>> listaSiniestrosTramite(String ntramite,String procesoInterno) throws Exception;
 	
+	public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite,String procesoInterno) throws Exception;
+	
 	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura,String procesoInterno) throws Exception;
 	
 	/**

@@ -1335,6 +1335,60 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	public List<Map<String,String>> listaSiniestrosMsiniesTramite(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ListaSiniestrosMsiniesTramite(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ListaSiniestrosMsiniesTramite extends StoredProcedure
+	{
+		protected ListaSiniestrosMsiniesTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_MSINIESTTRAMITE");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_autoServ_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSINIES"
+					,"NMAUTSER"
+					,"CDPERSON"
+					,"NOMBRE"
+					,"FEOCURRE"
+					,"CDUNIECO"
+					,"DSUNIECO"
+					,"AAAPERTU"
+					,"ESTADO"
+					,"NMSITUAC"
+					,"NMSUPLEM"
+					,"CDRAMO"
+					,"DSRAMO"
+					,"CDTIPSIT"
+					,"DSTIPSIT"
+					,"STATUS"
+					,"ESTADO"
+					,"NMPOLIZA"
+					,"VOBOAUTO"
+					,"CDICD"
+					,"DSICD"
+					,"CDICD2"
+					,"DSICD2"
+					,"DESCPORC"
+					,"DESCNUME"
+					,"COPAGO"
+					,"PTIMPORT"
+					,"AUTRECLA"
+					,"NMRECLAMO"
+					,"COMMENAR"
+					,"COMMENME"
+					,"AUTMEDIC"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	@Override
 	public List<Map<String,String>> listaSiniestrosTramite2(Map<String, String> params) throws Exception
 	{

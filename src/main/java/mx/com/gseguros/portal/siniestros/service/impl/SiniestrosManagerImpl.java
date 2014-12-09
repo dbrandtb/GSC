@@ -550,6 +550,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
+	public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite,String procesoInterno) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_autoServ_i" , procesoInterno);
+		log.debug("listaSiniestrosTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosMsiniesTramite(params);
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("listaSiniestrosTramite lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
 	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura,String procesoInterno) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
