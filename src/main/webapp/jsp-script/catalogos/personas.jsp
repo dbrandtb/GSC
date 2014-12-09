@@ -407,6 +407,10 @@ Ext.onReady(function()
 								    		
 								    		form.down('[name=smap1.rfc]').reset();
 								    		form.down('[name=smap1.nombre]').reset();
+								    		form.down('[name=smap1.rfc]').getStore().removeAll();
+								    		form.down('[name=smap1.nombre]').getStore().removeAll();
+								    		
+								    		
 											irModoEdicion();
 											
 										}else if(!Ext.isEmpty(valorRFC)){
@@ -430,8 +434,12 @@ Ext.onReady(function()
 											municipioImportarTMP = '';
 											coloniaImportarTMP = '';
 											_fieldByName('CDMUNICI').forceSelection = false;
+											
 											form.down('[name=smap1.rfc]').reset();
 											form.down('[name=smap1.nombre]').reset();
+											form.down('[name=smap1.rfc]').getStore().removeAll();
+								    		form.down('[name=smap1.nombre]').getStore().removeAll();
+											
 											_esSaludDanios = (Ext.ComponentQuery.query('#companiaId')[0].getGroupValue())?'S':'D';
 											
 											irModoAgregar();
@@ -732,7 +740,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	            }
 	            ,failure  : function()
 	            {
-	                errorComunicacion(null,'En importar persona. Consulte a soporte, ext. 8050');
+	                errorComunicacion(null,'En importar persona. Consulte a soporte.');
 	            }
 	});
     
@@ -865,6 +873,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldApat().hide();
         _p22_fieldAmat().hide();
         _p22_fieldSexo().hide();
+        _fieldByName('CDESTCIV').hide();
+        
         _fieldByName('DSNOMBRE').setFieldLabel('Raz&oacute;n social');
         _fieldByName('FENACIMI').setFieldLabel('Fecha de constituci&oacute;n');
         
@@ -884,6 +894,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldApat().show();
         _p22_fieldAmat().show();
         _p22_fieldSexo().show();
+        _fieldByName('CDESTCIV').show();
+        
         _fieldByName('DSNOMBRE').setFieldLabel('Nombre');
         _fieldByName('FENACIMI').setFieldLabel('Fecha de nacimiento');
         
@@ -974,19 +986,17 @@ function _p22_loadRecordCdperson(callbackload)
             	var record = new _p22_modeloGrid(json.smap2);
             	_p22_PanelPrincipal().setLoading(true);
             	
-            	var valTel  = _fieldByName('TELEFONO', null, true).getValue(); 
-            	var valMail = _fieldByName('EMAIL', null, true).getValue(); 
+            	var valTel  = _fieldByName('TELEFONO').getValue(); 
+            	var valMail = _fieldByName('EMAIL').getValue(); 
             	
 			    _p22_formDatosGenerales().loadRecord(record);
 			    
-			    if(!Ext.isEmpty(valTel) && Ext.isEmpty(_fieldByName('TELEFONO', null, true).getValue())){
-			    	_fieldByName('TELEFONO', null, true).setValue(valTel);
+			    if(!Ext.isEmpty(valTel) && Ext.isEmpty(_fieldByName('TELEFONO').getValue())){
+			    	_fieldByName('TELEFONO').setValue(valTel);
 			    }
-			    if(!Ext.isEmpty(valMail) && Ext.isEmpty(_fieldByName('EMAIL', null, true).getValue())){
-			    	_fieldByName('EMAIL', null, true).setValue(valMail);
+			    if(!Ext.isEmpty(valMail) && Ext.isEmpty(_fieldByName('EMAIL').getValue())){
+			    	_fieldByName('EMAIL').setValue(valMail);
 			    }
-			    
-//			    recargaTelefonoEmail();
 			    
 			    Ext.Ajax.request(
 			    {
@@ -1226,28 +1236,28 @@ function recargaTelefonoEmail(){
 	//rellenar al cargar telefono y correo electronico
 	
 	try{
-		debug('Tel en Datos Generales: ' , _fieldByName('TELEFONO', null, true).getValue());
-		debug('Tel en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor38', null, true).getValue());
+		debug('Tel en Datos Generales: ' , _fieldByName('TELEFONO').getValue());
+		debug('Tel en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor38').getValue());
 				
-		if(Ext.isEmpty(_fieldByName('TELEFONO', null, true).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor38', null, true).getValue())){
-			_fieldByName('TELEFONO', null, true).setValue(_fieldByName('parametros.pv_otvalor38', null, true).getValue());
+		if(Ext.isEmpty(_fieldByName('TELEFONO').getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor38').getValue())){
+			_fieldByName('TELEFONO').setValue(_fieldByName('parametros.pv_otvalor38').getValue());
 		}
-		if(!Ext.isEmpty(_fieldByName('TELEFONO', null, true).getValue()) && Ext.isEmpty(_fieldByName('parametros.pv_otvalor38', null, true).getValue())){
-			_fieldByName('parametros.pv_otvalor38', null, true).setValue(_fieldByName('TELEFONO', null, true).getValue());
+		if(!Ext.isEmpty(_fieldByName('TELEFONO').getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor38').getValue()) || _fieldByName('parametros.pv_otvalor38').getValue() != _fieldByName('TELEFONO').getValue() )){
+			_fieldByName('parametros.pv_otvalor38').setValue(_fieldByName('TELEFONO').getValue());
 		}
 	}catch(e){
 		debug('Aun no existe el campo telefono. ', e);
 	}
 	
 	try{
-		debug('Email en Datos Generales: ' , _fieldByName('EMAIL', null, true).getValue());
-		debug('Email en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor39', null, true).getValue());
+		debug('Email en Datos Generales: ' , _fieldByName('EMAIL').getValue());
+		debug('Email en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor39').getValue());
 				
-		if(Ext.isEmpty(_fieldByName('EMAIL', null, true).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor39', null, true).getValue())){
-			_fieldByName('EMAIL', null, true).setValue(_fieldByName('parametros.pv_otvalor39', null, true).getValue());
+		if(Ext.isEmpty(_fieldByName('EMAIL').getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor39').getValue())){
+			_fieldByName('EMAIL').setValue(_fieldByName('parametros.pv_otvalor39').getValue());
 		}
-		if(!Ext.isEmpty(_fieldByName('EMAIL', null, true).getValue()) && Ext.isEmpty(_fieldByName('parametros.pv_otvalor39', null, true).getValue())){
-			_fieldByName('parametros.pv_otvalor39', null, true).setValue(_fieldByName('EMAIL', null, true).getValue());
+		if(!Ext.isEmpty(_fieldByName('EMAIL').getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor39').getValue()) || _fieldByName('parametros.pv_otvalor39').getValue() != _fieldByName('EMAIL').getValue() )){
+			_fieldByName('parametros.pv_otvalor39').setValue(_fieldByName('EMAIL').getValue());
 		}
 		
 	}catch(e){
@@ -1597,15 +1607,15 @@ function _p22_datosAdicionalesClic()
         	     
 				//rfc solo lextura        	     
         	     try{
-        	     	_fieldByName('parametros.pv_otvalor13').setValue(_p22_fieldRFC().getValue());
-        	     	_fieldByName('parametros.pv_otvalor13').setReadOnly(true);
+        	     	_fieldByName('parametros.pv_otvalor13', null, true).setValue(_p22_fieldRFC().getValue());
+        	     	_fieldByName('parametros.pv_otvalor13', null, true).setReadOnly(true);
         	     }catch(e){
         	     	debug('Error en adaptacion de  campo Cliente VIP',e);
         	     }
         	     
 				//cliente VIP solo lextura        	     
         	     try{
-        	     	_fieldByName('parametros.pv_otvalor37').setReadOnly(true);
+        	     	_fieldByName('parametros.pv_otvalor37', null, true).setReadOnly(true);
         	     }catch(e){
         	     	debug('Error en adaptacion de  campo Cliente VIP',e);
         	     }
@@ -1754,7 +1764,7 @@ function _p22_guardarDatosAdicionalesClic()
                     mensajeError(json.respuesta);
                 }
                 
-                /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
+                /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA 
                 Ext.Ajax.request(
             	        {
             	            url       : _UrlActualizaStatusPersona
@@ -1783,7 +1793,7 @@ function _p22_guardarDatosAdicionalesClic()
             	                _p22_formDatosAdicionales().setLoading(false);
             	                errorComunicacion(null,'En actualiza estatus persona');
             	            }
-            	});
+            	});**/
             }
             ,failure  : function()
             {
