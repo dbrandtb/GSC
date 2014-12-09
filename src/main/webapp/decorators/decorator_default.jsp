@@ -1,6 +1,9 @@
-<%@page contentType="text/html" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%@ include file="/taglibs.jsp"%>
+
 <!-- pagina para decorator "default": -->
+
 <!DOCTYPE html>
 <html>
     <head>
