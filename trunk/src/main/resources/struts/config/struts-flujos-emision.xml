@@ -312,6 +312,10 @@
         <action name="cargarValidacionTractocamionRamo5" class="cotizacionAutoAction" method="cargarValidacionTractocamionRamo5">
             <result name="success" type="json" />
         </action>
+        
+        <action name="procesarCargaMasivaFlotilla" class="cotizacionAutoAction" method="procesarCargaMasivaFlotilla">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

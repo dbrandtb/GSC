@@ -16,6 +16,7 @@ var _p30_urlCargarParametros               = '<s:url namespace="/emision"   acti
 var _p30_urlRecuperarCliente               = '<s:url namespace="/"          action="buscarPersonasRepetidas"        />';
 var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos" action="obtieneCatalogo"                />';
 var _p30_urlCotizar                        = '<s:url namespace="/emision"   action="cotizarAutosFlotilla"           />';
+var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"   action="procesarCargaMasivaFlotilla"    />';
 ////// urls //////
 
 ////// variables //////
@@ -493,37 +494,151 @@ Ext.onReady(function()
 	            [
 	                '->'
 	                ,{
-	                    xtype       : 'checkbox'
-	                    ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
-	                    ,name       : 'tomarMasiva'
-	                    ,inputValue : '1'
-	                }
-	                ,{
-	                    xtype         : 'filefield'
-	                    ,buttonOnly   : true
-	                    ,buttonConfig :
-	                    {
-	                        text  : 'Carga masiva...'
-	                        ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
-	                    }
-	                    ,listeners :
-	                    {
-	                        change : function(me)
-                            {
-                                var indexofPeriod = me.getValue().lastIndexOf("."),
-                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                debug('uploadedExtension:',uploadedExtension);
-                                if (!Ext.Array.contains(['xls','xlsx'], uploadedExtension))
-                                {
-                                    mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
-                                    me.reset();
-                                }
-                                else
-                                {
-                                    //qwe
-                                }
+	                    xtype   : 'form'
+	                    ,layout : 'hbox'
+	                    ,items  :
+	                    [
+	                        {
+                                xtype       : 'checkbox'
+                                ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
+                                ,name       : 'smap1.tomarMasiva'
+                                ,inputValue : 'S'
+                                ,style      : 'background:#223772;'
                             }
-	                    }
+	                        ,{
+	                            xtype         : 'filefield'
+	                            ,buttonOnly   : true
+	                            ,style        : 'margin:0px;'
+	                            ,name         : 'excel'
+                                ,style        : 'background:#223772;'
+	                            ,buttonConfig :
+	                            {
+	                                text  : 'Carga masiva...'
+	                                ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
+	                            }
+	                            ,listeners :
+	                            {
+	                                change : function(me)
+                                    {
+                                        var indexofPeriod = me.getValue().lastIndexOf("."),
+                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                        debug('uploadedExtension:',uploadedExtension);
+                                        var valido=Ext.Array.contains(['xls','xlsx'], uploadedExtension);
+                                        if(!valido)
+                                        {
+                                            mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
+                                            me.reset();
+                                        }
+                                        
+                                        if(valido&&_p30_smap1.cdramo+'x'=='5x')
+                                        {
+                                            valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue());
+                                            if(!valido)
+                                            {
+                                                mensajeWarning('Seleccione el negocio');
+                                                me.reset();
+                                            }
+                                        }
+                                        
+                                        if(valido)
+                                        {
+                                            var panelpri = _fieldById('_p30_panelpri');
+                                            panelpri.setLoading(true);
+                                            me.up('form').submit(
+                                            {
+                                                url     : _p30_urlCargaMasiva
+                                                ,params :
+                                                {
+                                                    'smap1.cdramo'    : _p30_smap1.cdramo
+                                                    ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                                }
+                                                ,success : function(form,action)
+                                                {
+                                                    panelpri.setLoading(false);
+                                                    var json = Ext.decode(action.response.responseText);
+                                                    debug('### excel:',json);
+                                                    if(json.exito)
+                                                    {
+                                                        var mrecords = [];
+                                                        
+                                                        for(var i in json.slist1)
+                                                        {
+                                                            var record=new _p30_modelo(json.slist1[i]);
+                                                            _p30_store.add(record);
+                                                            mrecords.push(record);
+                                                            debug('record.data:',record.data);
+                                                        }
+                                                        
+                                                        //recuperar
+                                                        var len = json.slist1.length;
+                                                        panelpri.setLoading(true);
+                                                        var claveName    = _fieldById('_p30_grid').down('[text*=CLAVE GS]').dataIndex;
+                                                        var marcaName    = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
+                                                        var submarcaName = _fieldById('_p30_grid').down('[text=SUBMARCA]').dataIndex;
+                                                        var modeloName   = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
+                                                        var versionName  = _fieldById('_p30_grid').down('[text*=VERSI]').dataIndex;
+                                                        var recupera     = function(i)
+                                                        {
+                                                            _fieldLikeLabel('CLAVE GS').getStore().load(
+                                                            {
+                                                                params    :
+                                                                {
+                                                                    'params.cadena'    : mrecords[i].get(claveName)
+                                                                    ,'params.cdtipsit' : mrecords[i].get('cdtipsit')
+                                                                }
+                                                                ,callback : function(records)
+                                                                {
+                                                                    var index=_fieldLikeLabel('CLAVE GS').getStore().findBy(function(record)
+                                                                    {
+                                                                        var splited=record.get('value').split(' - ');
+                                                                        //debug('splited:'
+                                                                        //    ,splited[0]+','+splited[3]
+                                                                        //    ,mrecords[i].get(claveName)+','+mrecords[i].get(modeloName));
+                                                                        if(splited[0]==mrecords[i].get(claveName)
+                                                                            &&splited[3]==mrecords[i].get(modeloName)
+                                                                            )
+                                                                        {
+                                                                            return true;
+                                                                        }
+                                                                    });
+                                                                    var encontrado = _fieldLikeLabel('CLAVE GS').getStore().getAt(index);
+                                                                    var splited    = encontrado.get('value').split(' - ');
+                                                                    var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
+                                                                    var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
+                                                                    var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
+                                                                    mrecords[i].set(marcaName    , marca);
+                                                                    mrecords[i].set(submarcaName , submarca);
+                                                                    mrecords[i].set(versionName  , version);
+                                                                    i=i+1;
+                                                                    if(i<len)
+                                                                    {
+                                                                        recupera(i);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        panelpri.setLoading(false);
+                                                                    }
+                                                                }
+                                                            }); 
+                                                        };
+                                                        recupera(0);
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(json.respuesta);
+                                                    }
+                                                }
+                                                ,failure : function()
+                                                {
+                                                    panelpri.setLoading(false);
+                                                    errorComunicacion();
+                                                }
+                                            });
+                                        }
+                                    }
+	                            }
+	                        }
+	                    ]
 	                }
 	            ]
 	            ,columns    : _p30_gridCols
@@ -536,7 +651,7 @@ Ext.onReady(function()
 	                ,errorSummary : false
 	                ,listeners    :
 	                {
-	                    beforeedit : function()
+	                    beforeedit : function(editor,context)
 	                    {
 	                        if(_p30_smap1.cdramo+'x'=='5x')
 	                        {
@@ -563,6 +678,17 @@ Ext.onReady(function()
 	                                        });
 	                                    }
 	                                });
+	                                if(!Ext.isEmpty(context.record.get(tipoVehName)))
+	                                {
+	                                    tipoUsoComp.getStore().load(
+                                        {
+                                            params :
+                                            {
+                                                'params.cdtipsit'   : context.record.get(tipoVehName)
+                                                ,'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
+                                            } 
+                                        });
+	                                }
 	                            }
 	                            else
 	                            {

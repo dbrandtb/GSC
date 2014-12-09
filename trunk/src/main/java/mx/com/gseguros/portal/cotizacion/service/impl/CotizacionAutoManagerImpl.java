@@ -1,10 +1,13 @@
 package mx.com.gseguros.portal.cotizacion.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +31,15 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -1785,6 +1793,257 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ cargarValidacionTractocamionRamo5 @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ procesarCargaMasivaFlotilla @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ respetar=").append(respetar)
+				.append("\n@@@@@@ excel=")   .append(excel)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		resp.setSlist(new ArrayList<Map<String,String>>());
+		
+		try
+		{
+			setCheckpoint("Recuperando parametrizacion de excel para COTIFLOT");
+			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
+			logger.debug(config);
+			
+			setCheckpoint("Iniciando procesador de hoja de calculo");
+			FileInputStream input       = new FileInputStream(excel);;
+			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
+			XSSFSheet       sheet       = workbook.getSheetAt(0);
+			Iterator<Row>   rowIterator = sheet.iterator();
+			
+			setCheckpoint("Iterando filas");
+			int fila = 0;
+			String[] columnas=new String[]{
+					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
+					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+			};
+			while (rowIterator.hasNext()) 
+            {
+				fila = fila + 1;
+				setCheckpoint(new StringBuilder("Iterando fila ").append(fila).toString());
+				Row row = rowIterator.next();
+				
+				Map<String,String>record=new LinkedHashMap<String,String>();
+				resp.getSlist().add(record);
+				
+				for(Map<String,String>conf:config)
+				{
+					int      col         = Integer.valueOf(conf.get("COLUMNA"));
+					String   cdtipsitCol = conf.get("CDTIPSIT");
+					String   propiedad   = conf.get("PROPIEDAD");
+					String   tipo        = conf.get("TIPO");
+					boolean  requerido   = !isBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
+					String   decode      = conf.get("DECODE");
+					String[] splited     = null;
+					String   cdtabla1    = conf.get("CDTABLA1");
+					String   cdtabla5    = conf.get("CDTABLA5");
+					if(!isBlank(decode))
+					{
+						splited = decode.split(",");
+					}
+					
+					Cell cell = row.getCell(col);
+					if(propiedad.equals("cdtipsit"))
+					{
+						logger.debug(">>cdtipsit");
+						String valor = cell.getStringCellValue();
+						for(int i=0;i<splited.length/2;i++)
+						{
+							logger.debug(new StringBuilder("[splited=").append(splited[i*2]).append("]").toString());
+							if(valor.equals(splited[(i*2)]))
+							{
+								valor=splited[(i*2)+1];
+							}
+						}
+						if(valor.equals(cell.getStringCellValue()))
+						{
+							throw new ApplicationException(
+									new StringBuilder("El tipo de vehiculo ")
+									.append(valor)
+									.append(" no viene dentro de ")
+									.append(decode)
+									.append(" en la fila ")
+									.append(fila)
+									.toString()
+									); 
+						}
+						logger.debug(new StringBuilder("valor=").append(valor).toString());
+						record.put("cdtipsit",valor);
+					}
+					else
+					{
+						logger.debug(Utilerias.join(">>",propiedad));
+						String cdtipsitRecord = record.get("cdtipsit");
+						if(cdtipsitCol.equals("*")||cdtipsitRecord.equals(cdtipsitCol))
+						{
+							if(isBlank(decode)&&isBlank(cdtabla1)&&isBlank(cdtabla5))
+							{
+								if(tipo.equals("string"))
+								{
+									String valor = null;
+									try
+									{
+										valor=cell.getStringCellValue();
+									}
+									catch(Exception ex)
+									{
+										valor="";
+									}
+									if(requerido&&isBlank(valor))
+									{
+										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									}
+									record.put(propiedad,valor);
+									logger.debug(Utilerias.join("valor=",valor));
+								}
+								else if(tipo.equals("int"))
+								{
+									Double num = null;
+									try
+									{
+										num=cell.getNumericCellValue();
+									}
+									catch(Exception ex)
+									{
+										num=null;
+									}
+									if(requerido&&num==null)
+									{
+										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									}
+									String valor="";
+									if(num!=null)
+									{
+										valor=String.format("%d",num.intValue());
+									}
+									record.put(propiedad,valor);
+									logger.debug(Utilerias.join("valor=",valor));
+								}
+								else if(tipo.equals("double"))
+								{
+									Double num = null;
+									try
+									{
+										num=cell.getNumericCellValue();
+									}
+									catch(Exception ex)
+									{
+										num=null;
+									}
+									if(requerido&&num==null)
+									{
+										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									}
+									String valor="";
+									if(num!=null)
+									{
+										valor=String.format("%.2f",num);
+									}
+									record.put(propiedad,valor);
+									logger.debug(Utilerias.join("valor=",valor));
+								}
+								else if(tipo.length()>"int-string_".length()
+										&&tipo.substring(0,"int-string_".length()).equals("int-string_")
+										)
+								{
+									Double num = null;
+									try
+									{
+										num=cell.getNumericCellValue();
+									}
+									catch(Exception ex)
+									{
+										num=null;
+									}
+									if(requerido&&num==null)
+									{
+										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									}
+									String valor="";
+									if(num!=null)
+									{
+										int len = Integer.valueOf(tipo.split("_")[1]);
+										valor=String.format(Utilerias.join("%0",len,"d"),num.intValue());
+									}
+									record.put(propiedad,valor);
+									logger.debug(Utilerias.join("valor=",valor));
+								}
+								else
+								{
+									throwExc(Utilerias.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
+								}
+							}
+							else if(!isBlank(cdtabla1))
+							{
+								String valor = null;
+								try
+								{
+									valor=cell.getStringCellValue();
+								}
+								catch(Exception ex)
+								{
+									valor="";
+								}
+								if(requerido&&isBlank(valor))
+								{
+									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+								}
+								String clave = "";
+								if(!isBlank(valor))
+								{
+									try
+									{
+									    clave=cotizacionDAO.cargarClaveTtapvat1(cdtabla1, valor);
+									}
+									catch(Exception ex)
+									{
+										if(ex.getClass().equals(ApplicationException.class))
+										{
+											throwExc(Utilerias.join(columnas[col],fila,": ",ex.getMessage()));
+										}
+										else
+										{
+											throw ex;
+										}
+									}
+								}
+								logger.debug(Utilerias.join("valor original=",valor,",clave obtenida=",clave));
+								record.put(propiedad,clave);
+							}
+						}
+					}
+				}
+            }
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ procesarCargaMasivaFlotilla @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
