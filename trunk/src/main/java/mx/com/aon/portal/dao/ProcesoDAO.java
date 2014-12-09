@@ -3893,6 +3893,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setSinocurCli(rs.getInt("sinocurCli"));
     		cliente.setSucursalCli(rs.getInt("sucursalCli"));
     		cliente.setTelefonoCli(rs.getString("telefonoCli"));
+    		
+    		
+    		logger.debug("TElefono cli : " + rs.getString("telefonoCli"));
+    		
     		cliente.setTituloCli(rs.getString("tituloCli"));
     		cliente.setTitulonobCli(rs.getString("titulonobCli"));
     		
@@ -3901,6 +3905,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setCveEle(rs.getString("cveEle"));
     		cliente.setCurpCli(rs.getString("curpCli"));
     		cliente.setMailCli(rs.getString("mailCli"));
+    		
+    		
+    		logger.debug("MailCli: " + rs.getString("mailCli"));
     		cliente.setOrirecCli(rs.getString("orirecCli"));
     		cliente.setAdmconCli(rs.getString("admconCli"));
     		cliente.setApodeCli(rs.getString("apodeCli"));

@@ -285,8 +285,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
-				respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+				respuesta       = "No se encontró ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuestaOculta = "No se encontró ninguna persona al Importar. Consulte a soporte, ext. 8050";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -700,7 +700,12 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta            = (String)managerResult.get("respuesta");
 			respuestaOculta      = (String)managerResult.get("respuestaOculta");
 		
-		
+			params = new HashMap<String, String>();
+   		 	params.put("pv_cdperson_i", smap1.get("cdperson"));
+   		 	params.put("pv_cdrol_i", smap1.get("cdrol"));
+   		 	
+			this.actualizaStatusPersona();
+			
 			if(exito){
 				logger.debug("...Guarda datos de Persona en WS...");
 				String saludDanios = smap1.get("esSalud");
@@ -735,8 +740,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontró ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontró ninguna persona al Guardar. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
