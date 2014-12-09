@@ -60,7 +60,7 @@ Ext.onReady(function()
 		]
 	});
 	
-	_p16_formulario.items.items[0].forceSelection=false;
+	_p16_formulario.items.items[0].forceSelection=true;
 	
 	_p16_gridPolizas = Ext.create('Ext.grid.Panel',
 	{
