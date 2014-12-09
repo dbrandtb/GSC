@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -22,6 +21,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -4259,4 +4259,94 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
     	}
     }
+    
+     @Override
+     public List<Map<String,String>>cargarParametrizacionExcel(
+ 			String proceso
+ 			,String cdramo
+ 			,String cdtipsit)throws Exception
+ 	{
+    	 Map<String,String>params=new LinkedHashMap<String,String>();
+    	 params.put("proceso"  , proceso);
+    	 params.put("cdramo"   , cdramo);
+    	 params.put("cdtipsit" , cdtipsit);
+    	 logger.debug(
+    			 new StringBuilder()
+    			 .append("\n******************************************************")
+    			 .append("\n****** PKG_DESARROLLO.P_GET_CONFIGURACION_EXCEL ******")
+    			 .append("\n****** params=").append(params)
+    			 .append("\n******************************************************")
+    			 .toString()
+    			 );
+    	 Map<String,Object>procResult  = ejecutaSP(new CargarParametrizacionExcel(getDataSource()),params);
+    	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	 if(lista==null||lista.size()==0)
+    	 {
+    		 throw new ApplicationException("No hay configuracion de excel para el proceso/producto/modalidad");
+    	 }
+    	 return lista;
+ 	}
+     
+     protected class CargarParametrizacionExcel extends StoredProcedure
+     {
+     	protected CargarParametrizacionExcel(DataSource dataSource)
+         {
+             super(dataSource,"PKG_DESARROLLO.P_GET_CONFIGURACION_EXCEL");
+             declareParameter(new SqlParameter("proceso"  , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+             String[] cols = new String[]{
+             		"COLUMNA"    , "CDTIPSIT" , "PROPIEDAD" , "TIPO"
+             		,"REQUERIDO" , "DECODE"   , "CDTABLA1"  , "CDTABLA5"
+             		,"COLTABLA5"
+             };
+             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+             compile();
+     	}
+     }
+     
+     @Override
+     public String cargarClaveTtapvat1(String cdtabla,String otvalor)throws Exception
+     {
+    	 Map<String,String>params=new LinkedHashMap<String,String>();
+    	 params.put("cdtabla" , cdtabla);
+    	 params.put("otvalor" , otvalor);
+    	 logger.debug(Utilerias.join(
+    			 "\n*************************************************",
+    			 "\n****** PKG_DESARROLLO.P_GET_CLAVE_TTAPVAT1 ******",
+    			 "\n****** params=",params,
+    			 "\n*************************************************"
+    	 ));
+    	 Map<String,Object>procResult  = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
+    	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	 if(lista==null||lista.size()==0)
+    	 {
+    		 throw new ApplicationException(Utilerias.join(
+    				 "No hay clave para el valor '",otvalor,"' en la tabla de apoyo"
+    				 ));
+    	 }
+    	 if(lista.size()>1)
+    	 {
+    		 throw new ApplicationException(Utilerias.join(
+    				 "Hay claves duplicadas para el valor '",otvalor,"' en la tabla de apoyo"
+    				 ));
+    	 }
+    	 return lista.get(0).get("OTCLAVE");
+     }
+     
+     protected class CargarClaveTtapvat1 extends StoredProcedure
+     {
+     	protected CargarClaveTtapvat1(DataSource dataSource)
+         {
+             super(dataSource,"PKG_DESARROLLO.P_GET_CLAVE_TTAPVAT1");
+             declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("otvalor" , OracleTypes.VARCHAR));
+             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE"})));
+             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+             compile();
+     	}
+     }
 }

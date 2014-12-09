@@ -498,4 +498,9 @@ public interface CotizacionDAO
 			,String cdelemen
 			,String cdtipsit
 			)throws Exception;
+	public List<Map<String,String>>cargarParametrizacionExcel(
+			String proceso
+			,String cdramo
+			,String cdtipsit)throws Exception;
+	public String cargarClaveTtapvat1(String cdtabla,String otvalor)throws Exception;
 }

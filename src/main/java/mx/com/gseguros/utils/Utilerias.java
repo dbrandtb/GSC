@@ -209,4 +209,13 @@ public class Utilerias {
 		return esMovil;
 	}
 
+	public static String join(Object... args)
+	{
+		StringBuilder sb=new StringBuilder();
+		for(Object arg:args)
+		{
+			sb.append(arg);
+		}
+		return sb.toString();
+	}
 }

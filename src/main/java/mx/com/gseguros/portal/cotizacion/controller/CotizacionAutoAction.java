@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -26,15 +27,18 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	private CotizacionAutoManager cotizacionAutoManager;
 	
-	private Map<String,String>       smap1           = null;
-	private Map<String,String>       smap2           = null;
-	private String                   respuesta       = null;
-	private String                   respuestaOculta = null;
-	private boolean                  exito           = false;
-	private Map<String,Item>         imap            = null;
-	private List<Map<String,String>> slist1          = null;
-	private List<Map<String,String>> slist2          = null;
-	private List<Map<String,String>> slist3          = null;
+	private Map<String,String>       smap1            = null;
+	private Map<String,String>       smap2            = null;
+	private String                   respuesta        = null;
+	private String                   respuestaOculta  = null;
+	private boolean                  exito            = false;
+	private Map<String,Item>         imap             = null;
+	private List<Map<String,String>> slist1           = null;
+	private List<Map<String,String>> slist2           = null;
+	private List<Map<String,String>> slist3           = null;
+	private File                     excel            = null;;
+	private String                   excelFileName    = null;
+	private String                   excelContentType = null;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -985,6 +989,53 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String procesarCargaMasivaFlotilla()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#########################################")
+				.append("\n###### procesarCargaMasivaFlotilla ######")
+				.append("\n###### smap1=")           .append(smap1)
+				.append("\n###### excel=")           .append(excel)
+				.append("\n###### excelFileName=")   .append(excelFileName)
+				.append("\n###### excelContentType=").append(excelContentType)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String respetar = smap1.get("tomarMasiva");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkNull(excel, "No se recibio el archivo");
+			
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### procesarCargaMasivaFlotilla ######")
+				.append("\n#########################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -1068,5 +1119,29 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setSlist3(List<Map<String, String>> slist3) {
 		this.slist3 = slist3;
+	}
+
+	public File getExcel() {
+		return excel;
+	}
+
+	public void setExcel(File excel) {
+		this.excel = excel;
+	}
+
+	public String getExcelFileName() {
+		return excelFileName;
+	}
+
+	public void setExcelFileName(String excelFileName) {
+		this.excelFileName = excelFileName;
+	}
+
+	public String getExcelContentType() {
+		return excelContentType;
+	}
+
+	public void setExcelContentType(String excelContentType) {
+		this.excelContentType = excelContentType;
 	}
 }
