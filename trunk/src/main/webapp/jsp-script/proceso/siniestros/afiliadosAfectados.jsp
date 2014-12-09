@@ -63,6 +63,7 @@
 			var _11_formRechazo;
 			var _11_conceptoSeleccionado=null;
 			var _tipoPago = _11_params.OTVALOR02;
+			var banderaConcepto = "0";
 
 			var storeCobertura = Ext.create('Ext.data.Store', {
 				model:'Generic',
@@ -281,15 +282,21 @@
 						panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));
 						panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
 						panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
-							
 						panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
-						debug("FECHA DE FACTURA");
-						debug(_11_recordActivo.get('fechaFactura'));
-						
 						var fechaFacturaM = _11_recordActivo.get('fechaFactura').match(/\d+/g); 
 						var dateFec = fechaFacturaM[2]+"/"+fechaFacturaM[1]+"/"+fechaFacturaM[0];
-						
 						panelInicialPral.down('[name=params.fefactura]').setValue(dateFec);
+						
+						if(_11_recordActivo.get('desctoNum').length == 0){
+							panelInicialPral.down('[name=params.descnume]').setValue("0.00");
+						}else{
+							panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
+						}
+						if(_11_recordActivo.get('desctoPorc').length == 0){
+							panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
+						}else{
+							panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
+						}
 						
 						storeCobertura.load({
 							params:{
@@ -312,8 +319,6 @@
 						panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
 						panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
 						panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
-						panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
-						panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
 						storeAseguradoFactura.removeAll();
 						storeAseguradoFactura.load({
 							params: {
@@ -349,6 +354,8 @@
 								}
 							}
 							/*REALIZAMOS LA ASIGNACIÓN DE LAS VARIABLES*/
+							panelInicialPral.down('[name="params.autrecla"]').setValue("S");
+							panelInicialPral.down('[name="params.autrecla"]').hide();
 							if(aplicaIVA == null){
 								panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
 							}else{
@@ -363,12 +370,6 @@
 								panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
 							}else{
 								panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
-							}
-							
-							if(autAR == null){
-								panelInicialPral.down('[name="params.autrecla"]').setValue(null);
-							}else{
-								panelInicialPral.down('[name="params.autrecla"]').setValue(autAR);
 							}
 							
 							if(commAR == null){
@@ -602,13 +603,14 @@
 					if(success){
 						var jsonResponse = Ext.decode(response.responseText);
 						if(jsonResponse.datosInformacionAdicional.length <= 0) {
+							storeConceptos.removeAll();
 							centrarVentanaInterna(Ext.Msg.show({ 
 								title: 'Aviso',
 								msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
 								buttons: Ext.Msg.OK,
 								icon: Ext.Msg.WARNING
 							}));
-							_11_WindowPedirAut.close();
+							//_11_WindowPedirAut.close();
 						}else{
 							_11_windowPedirAut.show();
 							_11_textfieldNmautserv.setValue('');
@@ -730,19 +732,19 @@
 			        var formulario=panelInicialPral.form.getValues();
 			        submitValues['params']=formulario;
 			        var datosTablas = [];
-			        var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
-			        debug(recordFactura);
+			       // var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+			        //debug(recordFactura);
 			        storeConceptos.each(function(record,index){
 			            datosTablas.push({
-			            	cdunieco  : recordFactura.get('CDUNIECO')
-			            	,cdramo   : recordFactura.get('CDRAMO')
-			                ,estado   : recordFactura.get('ESTADO')
-			                ,nmpoliza : recordFactura.get('NMPOLIZA')
-			                ,nmsuplem : recordFactura.get('NMSUPLEM')
-			                ,nmsituac : recordFactura.get('NMSITUAC')
-			                ,aaapertu : recordFactura.get('AAAPERTU')
-			                ,status   : recordFactura.get('STATUS')
-			                ,nmsinies : recordFactura.get('NMSINIES')
+			            	cdunieco  : record.get('CDUNIECO')
+			            	,cdramo   : record.get('CDRAMO')
+			                ,estado   : record.get('ESTADO')
+			                ,nmpoliza : record.get('NMPOLIZA')
+			                ,nmsuplem : record.get('NMSUPLEM')
+			                ,nmsituac : record.get('NMSITUAC')
+			                ,aaapertu : record.get('AAAPERTU')
+			                ,status   : record.get('STATUS')
+			                ,nmsinies : record.get('NMSINIES')
 			                ,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
 			                ,cdgarant : panelInicialPral.down('[name=params.cdgarant]').getValue()
 			                ,cdconval : panelInicialPral.down('combo[name=params.cdconval]').getValue()
@@ -760,9 +762,9 @@
 			                ,nmapunte : record.get('NMAPUNTE')
 			                ,feregist : record.get('FEREGIST')
 			                ,operacion: "I"
-			                ,ptpcioex : "0.00"
-			                ,dctoimex : "0.00"
-			                ,ptimpoex : "0.0"
+			                ,ptpcioex : record.get('PTPCIOEX')
+			                ,dctoimex : record.get('DCTOIMEX')
+			                ,ptimpoex : record.get('PTIMPOEX')
 			                ,mtoArancel : record.get('PTMTOARA')
 						});
 					});
@@ -780,6 +782,7 @@
 			                var jsonResp = Ext.decode(response.responseText);
 			                if(jsonResp.success==true){
 			                    panelInicialPral.setLoading(false);
+			                    banderaConcepto = "0";
 			                    storeConceptos.reload();
 			                }
 			            },
@@ -801,7 +804,39 @@
 			
 			function _p21_agregarConcepto()
 			{
-				storeConceptos.add(new modelConceptos({PTPRECIO:'0.00'}));
+				if(gridFacturaDirecto.getSelectionModel().hasSelection()){
+					var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+					recordFactura.get('NMSINIES')
+					var idReclamacion = recordFactura.get('NMSINIES');
+					valido = idReclamacion && idReclamacion>0;
+					if(valido){
+						banderaConcepto = "1";
+						storeConceptos.add(new modelConceptos(
+								{
+									PTPRECIO : '0.00',
+									DESTOPOR : '0.00',
+									DESTOIMP : '0.00',
+									CDUNIECO : recordFactura.get('CDUNIECO'),
+									CDRAMO   : recordFactura.get('CDRAMO'),
+									ESTADO   : recordFactura.get('ESTADO'),
+									NMPOLIZA : recordFactura.get('NMPOLIZA'),
+									NMSUPLEM : recordFactura.get('NMSUPLEM'),
+									NMSITUAC : recordFactura.get('NMSITUAC'),
+									AAAPERTU : recordFactura.get('AAAPERTU'),
+									STATUS   : recordFactura.get('STATUS'),
+									NMSINIES : recordFactura.get('NMSINIES'),
+									PTPCIOEX : '0.00',
+									DCTOIMEX : '0.00',
+									PTIMPOEX : '0.00'
+								}));
+					}else{
+						mensajeWarning(
+								'Debes generar una autorizaci&oacute;n para el asegurado'
+						);
+					}
+				}else{
+					centrarVentanaInterna(mensajeWarning("Debe seleccionar un asegurado para agregar sus conceptos"));
+				}
 			}
 			
 			function _11_asociarAutorizacion()
@@ -1178,25 +1213,35 @@
 						],
 						listeners: {
 							select: function (grid, record, index, opts){
-								var numSiniestro = record.get('NMSINIES');
-								if(numSiniestro.length == "0"){
-									revisarDocumento(grid,index)
-									
+								//alert(banderaConcepto);
+								if (banderaConcepto == "1"){
+									debug("Guardamos los conceptos ");
+									//Mandamos a guardar los conceptos
+									_guardarConceptosxFactura();
 								}else{
-									storeConceptos.load({
-										params: {
-											'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
-											'params.cdunieco'  : record.get('CDUNIECO'),
-											'params.cdramo'    : record.get('CDRAMO'),
-											'params.estado'    : record.get('ESTADO'),
-											'params.nmpoliza'  : record.get('NMPOLIZA'),
-											'params.nmsituac'  : record.get('NMSITUAC'),
-											'params.nmsuplem'  : record.get('NMSUPLEM'),
-											'params.status'    : record.get('STATUS'),
-											'params.aaapertu'  : record.get('AAAPERTU'),
-											'params.nmsinies'  : record.get('NMSINIES')
-										}
-									});
+									debug("ENTRA AL ELSE DE LOS CONCEPTOS");
+									var numSiniestro = record.get('NMSINIES');
+									if(numSiniestro.length == "0"){
+										revisarDocumento(grid,index)
+										
+									}else{
+										/*VERIFICAMOS LA INFORMACIÓN ANTES DE CARGA A OTRO*/
+										
+										storeConceptos.load({
+											params: {
+												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
+												'params.cdunieco'  : record.get('CDUNIECO'),
+												'params.cdramo'    : record.get('CDRAMO'),
+												'params.estado'    : record.get('ESTADO'),
+												'params.nmpoliza'  : record.get('NMPOLIZA'),
+												'params.nmsituac'  : record.get('NMSITUAC'),
+												'params.nmsuplem'  : record.get('NMSUPLEM'),
+												'params.status'    : record.get('STATUS'),
+												'params.aaapertu'  : record.get('AAAPERTU'),
+												'params.nmsinies'  : record.get('NMSINIES')
+											}
+										});
+									}
 								}
 							}
 						}
@@ -1288,18 +1333,35 @@
 						}
 					});
 					
+					var storeConceptosCatalogoRender = Ext.create('Ext.data.JsonStore', {
+						model:'Generic',
+						proxy: {
+							type: 'ajax',
+							url: _URL_CATALOGOS,
+							extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+							reader: {
+								type: 'json',
+								root: 'lista'
+							}
+						},listeners:
+						{
+							load : function()
+							{
+								this.cargado=true;
+								if(!Ext.isEmpty(gridEditorConceptos))
+								{
+									gridEditorConceptos.getView().refresh();
+								}
+							}
+						}
+					});
+					
 					cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox',
 					{
 						name:'params.idconcep',		store: storeTipoConcepto,		queryMode:'local',
 						displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false,
 						listeners:{
 							select: function (combo, records, opts){
-								debug("VALOR DE COMBO -->");
-								debug(combo);
-								debug("VALOR DE RECORDS -->");
-								debug(records);
-								debug("VALOR DE OPTS -->");
-								debug(opts);
 								var cdTipo =  records[0].get('key');
 								debug("CLAVE DE TIPO --> "+cdTipo);
 								storeConceptosCatalogo.proxy.extraParams=
@@ -1336,6 +1398,13 @@
 								    	}else{
 								    		_11_conceptoSeleccionado.set('PTMTOARA',Ext.decode(response.responseText).montoArancel);
 								    	}
+								    	var valorArancel = _11_conceptoSeleccionado.get('PTMTOARA');
+								    	
+								    	if(+ valorArancel > 0){
+								    		_11_conceptoSeleccionado.set('PTPRECIO',valorArancel);
+								    	}
+								    		
+								    	
 								    },
 								    failure : function ()
 								    {
@@ -1443,11 +1512,21 @@
 									var leyenda = '';
 										if (typeof v == 'string')// tengo solo el indice
 										{
-											storeConceptosCatalogo.each(function(rec) {
-												if (rec.data.key == v) {
-													leyenda = rec.data.value;
-												}
-											});
+											if(storeConceptosCatalogoRender.cargado)
+											{
+												storeConceptosCatalogoRender.each(function(rec) {
+													if (rec.data.key == v) {
+														leyenda = rec.data.value;
+													}
+												});
+											}
+											else
+											{
+											    leyenda='Cargando...';
+											}
+											
+											
+											
 										}else // tengo objeto que puede venir como Generic u otro mas complejo
 										{
 											if (v.key && v.value)
@@ -1465,7 +1544,13 @@
 									,editor: {
 										xtype: 'numberfield',
 										decimalSeparator :'.',
-										allowBlank: false
+										allowBlank: false,
+										listeners : {
+											change:function(e){
+												var valorArancel = e.getValue();
+												_11_conceptoSeleccionado.set('PTPRECIO',valorArancel);
+											}
+										}
 									}
 								},
 				 				{
@@ -1600,7 +1685,8 @@
 							/*Eliminamos el record del store*/
 							var record=this.getStore().getAt(rowIndex);
 							this.getStore().removeAt(rowIndex);
-							_guardarConceptosxFactura();
+							banderaConcepto = "1";
+							//_guardarConceptosxFactura();
 						}
 					});
 					gridEditorConceptos = new EditorConceptos();
@@ -1699,7 +1785,7 @@
 					,items    :
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'N0. TR&Aacute;MITE',		name	: 'params.ntramite'
+							xtype		: 'textfield',			fieldLabel	: 'N0. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true
 						},
 						{
 							xtype		: 'textfield',			fieldLabel	: 'PROVEEDOR',		name	: 'params.cdpresta',		hidden:true
@@ -1708,7 +1794,7 @@
 							xtype		: 'textfield',			fieldLabel	: 'TIP SERVICIO',		name	: 'params.cdtipser',		hidden:true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura'
+							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura', readOnly   : true
 						},
 						{
 			            	xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
