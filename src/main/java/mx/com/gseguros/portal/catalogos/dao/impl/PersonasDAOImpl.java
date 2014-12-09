@@ -17,6 +17,7 @@ import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -842,6 +843,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 				.toString()
 				);
 		Map<String,Object>resultado=ejecutaSP(new ActualizaStatusPersona(getDataSource()), params);
+		logger.debug("Estatus de la persona: " + resultado.get("pv_dsstatus_o") );
 		return (String)resultado.get("pv_dsstatus_o");
 	}
 	

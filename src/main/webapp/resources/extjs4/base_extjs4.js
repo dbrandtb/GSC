@@ -168,12 +168,15 @@ function datosIncompletos()
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function errorComunicacion(callback)
+function errorComunicacion(callback, mensajeExtra)
 {
+	if(Ext.isEmpty(mensajeExtra)){
+		mensajeExtra = ''; 
+	}
 	var tmpMensajeEmergente=Ext.Msg.show({
         title    : 'Error'
         ,icon    : Ext.Msg.ERROR
-        ,msg     : 'Error de comunicaci&oacute;n'
+        ,msg     : 'Error de comunicaci&oacute;n. ' + mensajeExtra
         ,buttons : Ext.Msg.OK
         ,fn      : callback
     });

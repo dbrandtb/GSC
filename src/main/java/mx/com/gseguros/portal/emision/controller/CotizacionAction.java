@@ -2329,7 +2329,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramDomicil.put("pv_cdedo_i",    cliDom.getCodposCli()+edoAdosPos);
 							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
 							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
-							    			paramDomicil.put("pv_nmnumero_i", null);
+							    			paramDomicil.put("pv_nmnumero_i", cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmnumint_i", null);
 							    			paramDomicil.put("pv_accion_i", "I");
 
@@ -2385,7 +2385,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramValoper.put("pv_otvalor35", null);
 							    			paramValoper.put("pv_otvalor36", null);
 							    			paramValoper.put("pv_otvalor37", null);
-							    			paramValoper.put("pv_otvalor38", null);
+							    			paramValoper.put("pv_otvalor38", cliDom.getTelefonoCli());
 							    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
 							    			paramValoper.put("pv_otvalor40", null);
 							    			paramValoper.put("pv_otvalor41", null);
