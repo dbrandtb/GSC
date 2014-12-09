@@ -125,6 +125,8 @@ public interface SiniestrosDAO {
 	 */
 	public List<Map<String,String>> listaSiniestrosTramite(Map<String, String> params) throws Exception;
 	
+	public List<Map<String,String>> listaSiniestrosMsiniesTramite(Map<String, String> params) throws Exception;
+	
 	public List<Map<String,String>> listaSiniestrosTramite2(Map<String, String> params) throws Exception;
 	
 	/**
