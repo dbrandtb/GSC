@@ -3908,6 +3908,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setUsucapCli(rs.getInt("usucapCli"));
     		cliente.setUsuautCli(rs.getInt("usuautCli"));
     		
+    		cliente.setStatusCli(rs.getString("STATUSCLI"));
+    		
     		cal = Utilerias.getCalendar(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecstaCli(cal);

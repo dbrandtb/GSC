@@ -1478,7 +1478,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			paramValoper.put("pv_otvalor35", null);
 				    			paramValoper.put("pv_otvalor36", null);
 				    			paramValoper.put("pv_otvalor37", null);
-				    			paramValoper.put("pv_otvalor38", null);
+				    			paramValoper.put("pv_otvalor38", cli.getTelefonoCli());
 				    			paramValoper.put("pv_otvalor39", cli.getMailCli());
 				    			paramValoper.put("pv_otvalor40", null);
 				    			paramValoper.put("pv_otvalor41", null);

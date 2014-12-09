@@ -135,8 +135,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontró ninguna persona.";
-					respuestaOculta = "No se encontró ninguna persona.";
+					respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -285,8 +285,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontró ninguna persona.";
-				respuestaOculta = "No se encontró ninguna persona.";
+				respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+				respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -735,8 +735,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontró ninguna persona.";
-					respuestaOculta = "No se encontró ninguna persona.";
+					respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
