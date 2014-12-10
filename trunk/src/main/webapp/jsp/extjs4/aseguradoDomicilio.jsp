@@ -513,6 +513,11 @@ Ext.onReady(function(){
                         success: function(resp) {
                             debug('se desbloquea el boton porque ya copio del cliente');
                             Ext.getCmp('idbotonguardardireccion').setDisabled(false);
+                            var compsDirec = formPanelp4.down('[fieldLabel*=POSTAL]').up('panel').items.items;
+                            for(var ind in compsDirec)
+                            {
+                                compsDirec[ind].setValue(resp.data[compsDirec[ind].name]);
+                            }
                             /*formPanelp4.getForm().setValues(
                             {
                                 'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
@@ -525,7 +530,7 @@ Ext.onReady(function(){
                                 'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
                                 'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
                             });*/
-                            formPanelp4.loadRecord(resp);
+                            //formPanelp4.loadRecord(resp);
                             debug('heredarPanel');
                             if(formPanelp4.down('[name=smap1.CODPOSTAL]').getValue()+'x'!='x'&&formPanelp4.down('[name=smap1.CODPOSTAL]').getValue().length==4)
                             {
