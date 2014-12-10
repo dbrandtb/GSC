@@ -696,15 +696,19 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("parametros.pv_otvalor50")
 					,timestamp
 					);
-			exito                = (Boolean)managerResult.get("exito");
-			respuesta            = (String)managerResult.get("respuesta");
-			respuestaOculta      = (String)managerResult.get("respuestaOculta");
-		
+			
+			
 			params = new HashMap<String, String>();
    		 	params.put("pv_cdperson_i", smap1.get("cdperson"));
    		 	params.put("pv_cdrol_i", smap1.get("cdrol"));
    		 	
 			this.actualizaStatusPersona();
+						
+			exito                = (Boolean)managerResult.get("exito");
+			respuesta            = (String)managerResult.get("respuesta");
+			respuestaOculta      = (String)managerResult.get("respuestaOculta");
+		
+			
 			
 			if(exito){
 				logger.debug("...Guarda datos de Persona en WS...");

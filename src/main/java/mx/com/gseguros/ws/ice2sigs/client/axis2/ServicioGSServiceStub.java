@@ -259,7 +259,7 @@
      */
     public ServicioGSServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://gswas.com.mx:80/ice2sigsdesa/servicios" );
+                    this(configurationContext,"http://10.1.21.68:9080/ice2sigsdesa/servicios" );
                 
     }
 
@@ -268,7 +268,7 @@
      */
     public ServicioGSServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://gswas.com.mx:80/ice2sigsdesa/servicios" );
+                    this("http://10.1.21.68:9080/ice2sigsdesa/servicios" );
                 
     }
 
@@ -4023,7 +4023,7 @@
         }
         return false;
     }
-     //http://gswas.com.mx:80/ice2sigsdesa/servicios
+     //http://10.1.21.68:9080/ice2sigsdesa/servicios
         public static class PolizaGSE
         implements org.apache.axis2.databinding.ADBBean{
         
@@ -65178,6 +65178,51 @@
                             
 
                         /**
+                        * field for MpoSepomex
+                        */
+
+                        
+                                    protected int localMpoSepomex ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localMpoSepomexTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getMpoSepomex(){
+                               return localMpoSepomex;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param MpoSepomex
+                               */
+                               public void setMpoSepomex(int param){
+                            
+                                       // setting primitive attribute tracker to true
+                                       
+                                               if (param==java.lang.Integer.MIN_VALUE) {
+                                           localMpoSepomexTracker = false;
+                                              
+                                       } else {
+                                          localMpoSepomexTracker = true;
+                                       }
+                                   
+                                            this.localMpoSepomex=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for MuncarCli
                         */
 
@@ -67595,6 +67640,35 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localMpoSepomexTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"mpoSepomex", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"mpoSepomex");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("mpoSepomex");
+                                    }
+                                
+                                               if (localMpoSepomex==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("mpoSepomex cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMpoSepomex));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localMuncarCliTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -68961,7 +69035,13 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("mailCli cannot be null!!");
                                         }
-                                    } if (localMuncarCliTracker){
+                                    } if (localMpoSepomexTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "mpoSepomex"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMpoSepomex));
+                            } if (localMuncarCliTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "muncarCli"));
                                  
@@ -69868,6 +69948,26 @@
                                 
                                     else {
                                         
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","mpoSepomex").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setMpoSepomex(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                               object.setMpoSepomex(java.lang.Integer.MIN_VALUE);
+                                           
                                     }
                                 
                                     

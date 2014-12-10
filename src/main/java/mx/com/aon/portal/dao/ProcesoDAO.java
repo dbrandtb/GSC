@@ -3928,6 +3928,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setRazSoc(rs.getString("razSoc"));
     		cliente.setRamoCli(rs.getInt("ramoCli"));
     		cliente.setNumeroExterno(rs.getString("llaveCli"));
+
+    		cliente.setMpoSepomex(rs.getInt("MPOSEPOMEX"));
     		
     		return cliente;
     	}

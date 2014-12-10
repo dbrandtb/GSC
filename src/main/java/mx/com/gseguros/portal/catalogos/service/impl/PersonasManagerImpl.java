@@ -505,7 +505,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				tvaloper=personasDAO.obtenerTvaloper("1",cdperson);
+				tvaloper=personasDAO.obtenerTvaloper(cdrol,cdperson);
 			}
 			catch(Exception ex)
 			{
