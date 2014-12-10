@@ -506,6 +506,32 @@ function manejaException(e,ck,compLoading)
         mensajeError('Error '+(ck.toLowerCase()));
     }
 }
+
+/**
+ * Funcion que calcula los Anios Transcurridos entre dos fechas.
+ * @param {Date} fechaInicial
+ * @param {Date} fechaFinal
+ * @return {number} Numero de Anios Transcurridos o null en caso de error.
+ */
+function calculaAniosTranscurridos(fechaInicial, fechaFinal){
+	
+	var anios = null;
+	
+	var milisegundosPorSegundo = 1000;
+	var milisegundosPorMinuto  = milisegundosPorSegundo * 60;
+	var milisegundosPorHora    = milisegundosPorMinuto * 60;
+	var milisegundosPorDia     = milisegundosPorHora * 24;
+	var milisegundosPorAnio    = milisegundosPorDia * 365.26;
+	
+	try{
+		anios = (fechaFinal - fechaInicial) / milisegundosPorAnio;	
+	}catch(e){
+		debug('Error al calcular edad entre dos fechas', e);
+	}
+
+	return anios;
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
