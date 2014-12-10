@@ -132,4 +132,5 @@ public interface CotizacionAutoManager
 			,List<Map<String,String>> confTvalosit);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);
+	public ManagerRespuestaSlistSmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari);
 }

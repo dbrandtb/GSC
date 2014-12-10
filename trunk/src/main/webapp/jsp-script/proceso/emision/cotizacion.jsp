@@ -1712,7 +1712,7 @@ Ext.onReady(function()
     Ext.define("_0_FormAgrupados",
     {
     	extend         : 'Ext.form.Panel'
-    	,title         : 'Datos generales'
+    	,title         : 'Datos generales de '+(_0_smap1.MODALIDAD.toLowerCase())
     	,initComponent : function()
     	{
     		debug('_0_FormAgrupados initComponent');
@@ -2253,22 +2253,22 @@ Ext.onReady(function()
                 {
                     var limiteInferior = json.smap1.P1VALOR-0;
                     var limiteSuperior = json.smap1.P2VALOR-0;
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').addListener('blur',function()
+                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').validator=function(value)
                     {
+                        var r = true;
                         var anioActual = new Date().getFullYear();
                         var max = anioActual+limiteSuperior;
                         var min = anioActual+limiteInferior;
-                        var value = _0_formAgrupados.down('[name=parametros.pv_otvalor05]').getValue()-0;
                         debug('anioActual:',anioActual);
                         debug('max:',max);
                         debug('min:',min);
                         debug('value:',value);
                         if(value<min||value>max)
                         {
-                            _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue('');
-                            mensajeWarning('El modelo debe estar en el rango '+min+'-'+max);
+                            r='El modelo debe estar en el rango '+min+'-'+max;
                         }
-                   });
+                        return r;
+                   };
                }
                else
                {

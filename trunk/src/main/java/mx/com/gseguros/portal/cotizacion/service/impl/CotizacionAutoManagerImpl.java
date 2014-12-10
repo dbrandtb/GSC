@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -53,6 +54,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	private CotizacionDAO cotizacionDAO;
 	private PantallasDAO  pantallasDAO;
+	private ConsultasDAO  consultasDAO;
 	
 	@Autowired
 	private transient TractoCamionService tractoCamionService;
@@ -126,6 +128,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private void throwExc(String mensaje) throws ApplicationException
 	{
 		throw new ApplicationException(mensaje);
+	}
+	
+	private void checkBlank(String cadena,String mensaje)throws ApplicationException
+	{
+		if(isBlank(cadena))
+		{
+			throwExc(mensaje);
+		}
 	}
 	
 	@Override
@@ -1550,7 +1560,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		            ,null     //nmpolant
 		            ,null     //nmpolnva
 		            ,renderFechas.format(fechaHoy) //fesolici
-		            ,null     //cdramant
+		            ,cdusuari //cdramant
 		            ,null     //cdmejred
 		            ,null     //nmpoldoc
 		            ,null     //nmpoliza2
@@ -2049,6 +2059,120 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSlistSmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				));
+		
+		ManagerRespuestaSlistSmapVO resp = new ManagerRespuestaSlistSmapVO(true);
+		
+		try
+		{
+			setCheckpoint("Buscando cotizacion");
+			List<Map<String,String>>listaCotizaciones=consultasDAO.cargarMpolizasPorParametrosVariables(
+					null      //cdunieco
+					,cdramo
+					,"W"      //estado
+					,nmpoliza
+					,null     //nmsuplem
+					,null     //nmsolici
+					,null     //cdramant
+					);
+			List<Map<String,String>>listaEmisiones=consultasDAO.cargarMpolizasPorParametrosVariables(
+					null      //cdunieco
+					,cdramo
+					,"M"      //estado
+					,null     //nmpoliza
+					,null     //nmsuplem
+					,nmpoliza //nmsolici
+					,null     //cdramant
+					);
+			if(listaCotizaciones.size()+listaEmisiones.size()==0)
+			{
+				throwExc("No existe la cotizacion");
+			}
+			
+			setCheckpoint("Buscando cotizacion del usuario");
+			listaCotizaciones=consultasDAO.cargarMpolizasPorParametrosVariables(
+					null      //cdunieco
+					,cdramo
+					,"W"      //estado
+					,nmpoliza
+					,null     //nmsuplem
+					,null     //nmsolici
+					,cdusuari //cdramant
+					);
+			listaEmisiones=consultasDAO.cargarMpolizasPorParametrosVariables(
+					null      //cdunieco
+					,cdramo
+					,"M"      //estado
+					,null     //nmpoliza
+					,null     //nmsuplem
+					,nmpoliza //nmsolici
+					,cdusuari //cdramant
+					);
+			if(listaCotizaciones.size()+listaEmisiones.size()==0)
+			{
+				throwExc("No tiene permisos para recuperar esta cotizacion");
+			}
+			if(listaCotizaciones.size()+listaEmisiones.size()>1)
+			{
+				throwExc("Cotizacion duplicada");
+			}
+			
+			boolean maestra = false;
+			if(listaEmisiones.size()==1)
+			{
+				maestra=true;
+			}
+			
+			setCheckpoint("Recuperando llave de cotizacion");
+			String cdunieco = null;
+			String estado   = null;
+			String nmsuplem = null;
+			if(maestra)
+			{
+				cdunieco = listaEmisiones.get(0).get("CDUNIECO");
+				estado   = listaEmisiones.get(0).get("ESTADO");
+				nmpoliza = listaEmisiones.get(0).get("NMPOLIZA");
+				nmsuplem = listaEmisiones.get(0).get("NMSUPLEM");
+			}
+			else
+			{
+				cdunieco = listaCotizaciones.get(0).get("CDUNIECO");
+				estado   = listaCotizaciones.get(0).get("ESTADO");
+				nmsuplem = listaCotizaciones.get(0).get("NMSUPLEM");
+			}
+			checkBlank(cdunieco , "No se recupero la sucursal de la cotizacion");
+			checkBlank(estado   , "No se recupero el estado de la cotizacion");
+			checkBlank(nmpoliza , "No se recupero el numero de cotizacion");
+			checkBlank(nmpoliza , "No se recupero el suplemento de la cotizacion");
+			
+			setCheckpoint("Recuperando configuracion de incisos");
+			List<Map<String,String>>tconvalsit=consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			
+			setCheckpoint("Recuperando incisos base");
+			List<Map<String,String>>tbasvalsit=consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ ",resp
+				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -2064,5 +2188,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	public void setSession(Map<String,Object>session){
 		logger.debug("setSession");
 		this.session=session;
+	}
+
+	public void setConsultasDAO(ConsultasDAO consultasDAO) {
+		this.consultasDAO = consultasDAO;
 	}
 }

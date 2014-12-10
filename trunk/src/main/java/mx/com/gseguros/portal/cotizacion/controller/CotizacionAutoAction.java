@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1033,6 +1034,44 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				.append("\n#########################################")
 				.toString()
 				);
+		return SUCCESS;
+	}
+	
+	public String cargarCotizacionAutoFlotilla()
+	{
+		logger.info(Utilerias.join(
+				 "\n##########################################"
+				,"\n###### cargarCotizacionAutoFlotilla ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdramo   = smap1.get("cdramo");
+			String nmpoliza = smap1.get("nmpoliza");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			
+			ManagerRespuestaSlistSmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### cargarCotizacionAutoFlotilla ######"
+				,"\n##########################################"
+				));
 		return SUCCESS;
 	}
 	
