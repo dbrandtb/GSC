@@ -96,6 +96,8 @@ var _0_semaforoAux;
 
 var _0_validacion_custom;
 
+var _parentescoTitular = 'T';
+
 debug('_0_smap1: ',_0_smap1);
 
 
@@ -1354,6 +1356,35 @@ function _0_validarBase()
         {
             mensajeWarning('Los datos de los incisos son requeridos');
         }
+	}
+	
+	if(valido && _0_necesitoIncisos && _0_smap1.SITUACION=='PERSONA'){
+		
+		try{
+			var colNameParentesco = _0_gridIncisos.down('[text=PARENTESCO]').dataIndex; 
+			var colNameFechaNacimi = _0_gridIncisos.down('[text*=NACIMIENTO]').dataIndex; 
+			var fechaHoy = new Date();
+			
+			_0_storeIncisos.each(function(record){
+	
+				var parentescoRecord = record.get(colNameParentesco);
+				var fechaRecord      = record.get(colNameFechaNacimi);
+				
+				debug('fechaHoy: ', fechaHoy);
+				debug('fechaRecord: ', fechaRecord);
+				
+				var years = calculaAniosTranscurridos(fechaRecord,fechaHoy);
+				
+				debug('years: ', years);
+				
+				if((parentescoRecord == _parentescoTitular) && years != null && (years < 18) ){
+					mensajeWarning('El Titular es Menor de Edad, se requerir&aacute; una autorizaci&oacute;n posterior.');
+				}
+	            
+	        });
+		}catch(e){
+			debug('Error en la validacion de Edad del Titular!!!',e);
+		}
 	}
 	
 	//custom validation
