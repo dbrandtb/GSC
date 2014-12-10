@@ -1501,13 +1501,19 @@ function _p22_datosAdicionalesClic()
 				
 				
 				_p22_formDatosAdicionales().items.each(function(item,index,len){
+					
                 	if(!item.allowBlank){
                 		item.allowBlank = true;
                 		if(item.getFieldLabel){
                 			item.inicialField = item.getFieldLabel();
                 			item.setFieldLabel('<span>'+ item.getFieldLabel() +'<img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt=""></span>');
                 		}
+                	}else{
+                		if(item.getFieldLabel){
+                			item.inicialField = item.getFieldLabel();
+                		}
                 	}
+                	
                 });
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
@@ -1530,6 +1536,7 @@ function _p22_datosAdicionalesClic()
                     
                     
                     if('DOC' == itemDocumento.tieneDocu){
+//                    	debug('Icono itemDoc: ' , itemDocumento.icon);
 	                    itemDocumento.up().add(
 	                    		{
 	        						xtype      : 'panel',
@@ -1571,6 +1578,12 @@ function _p22_datosAdicionalesClic()
 	        		                                {
 	        		                                    _p22_cargarArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
 	        		                                }
+	        		                            },{
+	        		                                xtype: 'imagecomponent'
+	        		                                ,docCargado: itemDocumento.name+'ImgDocId'
+	        		                                ,src : "CARGADO" == itemDocumento.icon ? '${ctx}/resources/fam3icons/icons/accept.png' : '${ctx}/resources/fam3icons/icons/cancel.png'
+	        		                                ,height: 24
+	        		                                ,width:  24
 	        		                            }
 	        		                        ]
 	        		                    },{
@@ -2073,9 +2086,13 @@ function panDocSubido()
     _p22_windowAgregarDocu.destroy();
     
     var elemento = _fieldByName(_DocASubir,null,true);
+    
     if(!Ext.isEmpty(elemento.store)){
     	elemento.setValue('S');
     }
+    
+    (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]')[0]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
+    
 }
 
 

@@ -84,6 +84,7 @@ public class ObtieneTatriperMapper implements RowMapper
         	if("DOC".equalsIgnoreCase(rs.getString("DATDOC"))){
         		result.setTieneDocu(rs.getString("DATDOC"));
     		}
+        	result.setIcon(rs.getString("CARGADO"));
         }catch(Exception esql){
         	logger.debug("NO se encontro DATDOC");
         }

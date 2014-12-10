@@ -679,6 +679,10 @@ public class GeneradorCampos
         	{
         		log.debug("Se agrega getTieneDocu "+comp.getTieneDocu()+" a "+comp.getNameCdatribu());
         		item.add("tieneDocu",comp.getTieneDocu());
+        		
+        		if(StringUtils.isNotBlank(comp.getIcon())){
+        			item.add("icon", Constantes.SI.equalsIgnoreCase(comp.getIcon())? "CARGADO" : "SIN_CARGAR");
+        		}
         	}
         	else
         	{
