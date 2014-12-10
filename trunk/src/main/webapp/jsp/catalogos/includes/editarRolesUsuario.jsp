@@ -90,7 +90,7 @@ Ext.onReady(function() {
 						url: _URL_GuardaRolesUsuario,
 						jsonData: {
 							params: {
-								'PV_CDUSUARIO_I' : _cdUsuario
+								'PV_CDUSUARI_I' : _cdUsuario
 					    	},
 							saveList : 	saveList
 						},
