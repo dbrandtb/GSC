@@ -17,6 +17,7 @@ var _p30_urlRecuperarCliente               = '<s:url namespace="/"          acti
 var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos" action="obtieneCatalogo"                />';
 var _p30_urlCotizar                        = '<s:url namespace="/emision"   action="cotizarAutosFlotilla"           />';
 var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"   action="procesarCargaMasivaFlotilla"    />';
+var _p30_urlCargar                         = '<s:url namespace="/emision"   action="cargarCotizacionAutoFlotilla"   />';
 ////// urls //////
 
 ////// variables //////
@@ -304,6 +305,7 @@ Ext.onReady(function()
             {
                 this.cargado=true;
                 _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreSubmarcas').destroy();
             }
         }
     });
@@ -333,6 +335,7 @@ Ext.onReady(function()
             {
                 this.cargado=true;
                 _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreVersiones').destroy();
             }
         }
     });
@@ -362,6 +365,7 @@ Ext.onReady(function()
             {
                 this.cargado=true;
                 _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreUsos').destroy();
             }
         }
     });
@@ -391,6 +395,7 @@ Ext.onReady(function()
             {
                 this.cargado=true;
                 _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreMarcas').destroy();
             }
         }
     });
@@ -428,7 +433,7 @@ Ext.onReady(function()
                             ,itemId  : '_p30_botonCargar'
                             ,text    : 'BUSCAR'
                             ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                            /*,handler : _p28_cargar*/
+                            ,handler : function(){_p30_cargarClic();}
                         }
                     ]
                 }
@@ -1039,6 +1044,48 @@ Ext.onReady(function()
             }
         });
         //negocio
+        
+        //loaders panels
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreMarcas'
+            ,floating : true
+            ,html     : 'Cargando marcas...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,50);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreSubmarcas'
+            ,floating : true
+            ,html     : 'Cargando submarcas...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,90);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreUsos'
+            ,floating : true
+            ,html     : 'Cargando usos...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,130);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreVersiones'
+            ,floating : true
+            ,html     : 'Cargando versiones...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,170);
+        //loaders panels
     }
     //ramo 5
 	
@@ -1787,6 +1834,11 @@ function _p30_cotizar(sinTarificar)
                 error  = error + 'Debe actualizar el valor del veh&iacute;culo '+(_p30_store.indexOf(record)+1)+'</br>';
                 valido = false;
             }
+            if(record.get('cdplan')+'x'=='x')
+            {
+                error  = error + 'Debe seleccionar el plan para el inciso '+(_p30_store.indexOf(record)+1)+'</br>';
+                valido = false;
+            }
         });
         if(!valido)
         {
@@ -1910,6 +1962,9 @@ function _p30_cotizar(sinTarificar)
                 debug('### cotizar:',json);
                 if(json.exito)
                 {
+                    _fieldByName('nmpoliza').semaforo=true;
+                    _fieldByName('nmpoliza').setValue(json.smap1.nmpoliza);
+                    _fieldByName('nmpoliza').semaforo=false;
                 }
                 else
                 {
@@ -1938,6 +1993,90 @@ function _p30_nmpolizaChange(me)
     {
         me.sucio = false;
     }
+}
+
+function _p30_limpiar()
+{
+    debug('>_p30_limpiar');
+    _fieldByName('nmpoliza').semaforo=true;
+    _fieldById('_p30_form').getForm().reset();
+    _fieldByName('nmpoliza').semaforo=false;
+    
+    _p30_store.removeAll();
+    
+    for(var i in _p30_paneles)
+    {
+        _p30_paneles[i].valores=false;
+    }
+    
+    if(_p30_smap1.cdramo+'x'=='5x')
+    {
+        _p30_calculaVigencia();
+        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');    
+        
+        if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            var agente = _fieldByLabel('AGENTE');
+            agente.setValue(_p30_smap1.cdagente);
+            agente.setReadOnly(true);
+            _p30_ramo5AgenteSelect(agente,_p30_smap1.cdagente);
+        }
+    }
+    
+    debug('<_p30_limpiar');
+}
+
+function _p30_cargarClic()
+{
+    debug('>_p30_cargarClic');
+    
+    var panelpri = _fieldById('_p30_panelpri');
+    var ck       = '';
+    try
+    {
+        ck='Validando folio';
+        var nmpoliza = _fieldByName('nmpoliza').getValue();
+        checkEmpty(nmpoliza,'Introduce un n&uacute;mero v&aacute;lido');
+        
+        ck='Invocando servicio de recuperacion de cotizacion';
+        panelpri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url     : _p30_urlCargar
+            ,params :
+            {
+                'smap1.cdramo'    : _p30_smap1.cdramo
+                ,'smap1.nmpoliza' : nmpoliza
+            }
+            ,success : function(response)
+            {
+                panelpri.setLoading(false);
+                var ck = '';
+                try
+                {
+                    ck = 'Descodificando respuesta';
+                    var json = Ext.decode(response.responseText);
+                    debug('### cargar:',json);
+                    checkBool(json.exito,json.respuesta);
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                panelpri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck,panelpri);
+    }
+    
+    debug('<_p30_cargarClic');
 }
 ////// funciones //////
 </script>
