@@ -5,9 +5,11 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
+var _ice_debug=false;
+
 function debug(a,b,c,d)
 {
-	if(false)
+	if(_ice_debug)
 	{
 	    if(d!=undefined)
 	        console.log(a,b,c,d);
@@ -18,6 +20,21 @@ function debug(a,b,c,d)
 	    else
 	        console.log(a);
 	}
+}
+
+function debugError(a,b,c,d)
+{
+    if(_ice_debug)
+    {
+        if(d!=undefined)
+            console.error(a,b,c,d);
+        else if(c!=undefined)
+            console.error(a,b,c);
+        else if(b!=undefined)
+            console.error(a,b);
+        else
+            console.error(a);
+    }
 }
 
 function rendererColumnasDinamico(value,comboName)
@@ -291,7 +308,7 @@ function centrarVentanaInterna(ventana)
 {
     try {
         var y = $(window.parent).scrollTop() + 50;
-        debug('y:',y);
+        //debug('y:',y);
         ventana.setPosition(ventana.getPosition()[0],y);
     } catch(e) {
         debug(e);
@@ -454,6 +471,40 @@ function _fieldLikeLabel(label,parent,ocultarErrores)
     }
     //debug('_fieldLikeLabel comp:',comp);
     return comp;
+}
+
+function checkEmpty(valor,mensaje)
+{
+    if(Ext.isEmpty(valor)||valor+'x'=='x')
+    {
+        throw mensaje;
+    }
+}
+
+function checkBool(valor,mensaje)
+{
+    checkEmpty(valor,mensaje);
+    if(valor==false)
+    {
+        throw mensaje;
+    }
+}
+
+function manejaException(e,ck,compLoading)
+{
+    if(typeof e == 'string')
+    {
+        mensajeError(e);
+    }
+    else
+    {
+        debugError('!exception:',e);
+        if(!Ext.isEmpty(compLoading))
+        {
+            compLoading.setLoading(false);
+        }
+        mensajeError('Error '+(ck.toLowerCase()));
+    }
 }
 ////////////////////////////
 ////// INICIO MODELOS //////
