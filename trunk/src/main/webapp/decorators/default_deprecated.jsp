@@ -106,9 +106,7 @@
 	                                            <div>
 	                                            	<div id="left_1" class="moduletable" >
 	                                            		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_1')}">
-															<s:component template="leftOne.vm" templateDir="templates" theme="pages" >
-																<s:param name="CONTENIDO_LEFT_1" value="%{#session['CONTENIDO_LEFT_1']}"/>
-															</s:component>
+															<s:property value="%{#session['CONTENIDO_LEFT_1']}" escapeHtml="false" />
 														</s:if>
 														<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_1_IMAGE') && #session.containsKey('CONTENIDO_LEFT_1_FILE')}" >
 															<a href="<s:url value="%{#session['CONTENIDO_LEFT_1_FILE']}"/>"><img src="<s:url value="%{#session['CONTENIDO_LEFT_1_IMAGE']}"/>" width="130" height="150" /></a>
@@ -121,9 +119,7 @@
 	                                            <div>
 	                                            	<div id="left_2" class="moduletable">
 	                                            		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_2')}">                                         
-	                                            			<s:component template="leftTwo.vm" templateDir="templates" theme="pages" >
-																<s:param name="CONTENIDO_LEFT_2" value="%{#session['CONTENIDO_LEFT_2']}"/>
-															</s:component>
+															<s:property value="%{#session['CONTENIDO_LEFT_2']}" escapeHtml="false" />
 														</s:if>
 														<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_2_IMAGE') && #session.containsKey('CONTENIDO_LEFT_2_FILE')}" >
 															<a href="<s:url value="%{#session['CONTENIDO_LEFT_2_FILE']}"/>"><img src="<s:url value="%{#session['CONTENIDO_LEFT_2_IMAGE']}"/>" width="130" height="150" /></a>
@@ -136,9 +132,7 @@
 	                                            <div>
 	                                            	<div id="left_3" class="moduletable">
 	                                            		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_3')}">
-	                                            			<s:component template="leftThree.vm" templateDir="templates" theme="pages" >
-																<s:param name="CONTENIDO_LEFT_3" value="%{#session['CONTENIDO_LEFT_3']}"/>
-															</s:component>
+															<s:property value="%{#session['CONTENIDO_LEFT_3']}" escapeHtml="false" />
 														</s:if>
 														<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_3_IMAGE') && #session.containsKey('CONTENIDO_LEFT_3_FILE')}" >
 															<a href="<s:url value="%{#session['CONTENIDO_LEFT_3_FILE']}"/>"><img src="<s:url value="%{#session['CONTENIDO_LEFT_3_IMAGE']}"/>" width="130" height="150" /></a>
@@ -151,9 +145,7 @@
 	                                            <div>
 	                                            	<div id="left_4" class="moduletable">
 	                                            		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_4')}">
-	                                            			<s:component template="leftFour.vm" templateDir="templates" theme="pages" >
-																<s:param name="CONTENIDO_LEFT_4" value="%{#session['CONTENIDO_LEFT_4']}"/>
-															</s:component>
+															<s:property value="%{#session['CONTENIDO_LEFT_4']}" escapeHtml="false" />
 														</s:if>
 														<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_4_IMAGE') && #session.containsKey('CONTENIDO_LEFT_4_FILE')}" >
 															<a href="<s:url value="%{#session['CONTENIDO_LEFT_4_FILE']}"/>"><img src="<s:url value="%{#session['CONTENIDO_LEFT_4_IMAGE']}"/>" width="130" height="150" /></a>
@@ -166,9 +158,7 @@
 	                                            <div>
 	                                            	<div id="left_5" class="moduletable">
 	                                            		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_5')}">
-	                                            			<s:component template="leftFive.vm" templateDir="templates" theme="pages" >
-																<s:param name="CONTENIDO_LEFT_5" value="%{#session['CONTENIDO_LEFT_5']}"/>
-															</s:component>
+															<s:property value="%{#session['CONTENIDO_LEFT_5']}" escapeHtml="false" />
 														</s:if>
 														<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_5_IMAGE') && #session.containsKey('CONTENIDO_LEFT_5_FILE')}" >
 															<a href="<s:url value="%{#session['CONTENIDO_LEFT_5_FILE']}"/>"><img src="<s:url value="%{#session['CONTENIDO_LEFT_5_IMAGE']}"/>" width="130" height="150" /></a>

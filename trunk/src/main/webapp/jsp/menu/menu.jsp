@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ include file="/taglibs.jsp"%>
+
 <!DOCTYPE HTML>
 <html>
     <head>
@@ -19,6 +20,7 @@
                     <s:if test="%{#session.containsKey('USUARIO')}">
                         <strong><s:property value="%{#session['USUARIO'].name}" /></strong>
                         Rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.clave}" /></strong>
+                        Sucursal: <strong><s:property value="%{#session['USUARIO'].cdUnieco}" /></strong>
                     </s:if>
                 </font>
                 </div>
@@ -29,9 +31,7 @@
                                 <td class="showcase">
                                     <div id="top_lefta">
                                         <s:if test="%{#session.containsKey('CONTENIDO_TOPLEFT')}">
-                                            <s:component template="topLeft.vm" templateDir="templates" theme="pages" >
-                                                <s:param name="CONTENIDO_TOPLEFT" value="%{#session['CONTENIDO_TOPLEFT']}"/>
-                                            </s:component>
+                                            <s:property value="%{#session['CONTENIDO_TOPLEFT']}" escapeHtml="false" />
                                         </s:if>
                                         <s:elseif test="%{#session.containsKey('CONTENIDO_TOPLEFT_IMAGE')}">
                                             <img src="<s:url value="%{#session['CONTENIDO_TOPLEFT_IMAGE']}"/>" width="300" height="100" />
@@ -44,9 +44,7 @@
                                 <td class="showcase">
                                     <div id="top_centera">
                                         <s:if test="%{#session.containsKey('CONTENIDO_TOPCENTER')}">
-                                            <s:component template="topCenter.vm" templateDir="templates" theme="pages" >
-                                                <s:param name="CONTENIDO_TOPCENTER" value="%{#session['CONTENIDO_TOPCENTER']}"/>
-                                            </s:component>
+                                            <s:property value="%{#session['CONTENIDO_TOPCENTER']}" escapeHtml="false" />
                                         </s:if>
                                         <s:elseif test="%{#session.containsKey('CONTENIDO_TOPCENTER_IMAGE')}">
                                             <img src="<s:url value="%{#session['CONTENIDO_TOPCENTER_IMAGE']}"/>" width="300" height="100" />
@@ -56,9 +54,7 @@
                                 <td class="showcase">
                                     <div id="top_righta">
                                         <s:if test="%{#session.containsKey('CONTENIDO_TOPRIGHT')}">
-                                            <s:component template="topRight.vm" templateDir="templates" theme="pages" >
-                                                <s:param name="CONTENIDO_TOPRIGHT" value="%{#session['CONTENIDO_TOPRIGHT']}"/>
-                                            </s:component>
+                                            <s:property value="%{#session['CONTENIDO_TOPRIGHT']}" escapeHtml="false" />
                                         </s:if>
                                         <s:elseif test="%{#session.containsKey('CONTENIDO_TOPRIGHT_IMAGE')}">
                                             <img src="<s:url value="%{#session['CONTENIDO_TOPRIGHT_IMAGE']}"/>" width="300" height="100" />
