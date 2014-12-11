@@ -1534,6 +1534,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				return SUCCESS;
 			}
+			
+			
+			try
+			{
+				Map<String,String>paramValidarMenor=new LinkedHashMap<String,String>(0);
+				paramValidarMenor.put("pv_cdunieco" , cdunieco);
+				paramValidarMenor.put("pv_cdramo"   , cdramo);
+				paramValidarMenor.put("pv_estado"   , "W");
+				paramValidarMenor.put("pv_nmpoliza" , panel1.get("nmpoliza"));
+				String existeMenor = kernelManager.validaTitularMenorEdad(paramValidarMenor);
+				
+				if(Constantes.SI.equalsIgnoreCase(existeMenor)){
+					this.respuestaOculta = "El Titular es Menor de Edad, se requerir&aacute; una autorizaci&oacute;n posterior.";
+				}
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error sin impacto funcional al validar Titular menor de edad: ",ex);
+			}
+			
 			////// validar que tengan direccion //1548
 			//////////////////////////////////////////
 			

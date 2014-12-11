@@ -21,6 +21,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1305,6 +1306,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto PValInfoPersonas lista size: "+lista.size());
         return lista;
+	}
+	public String validaTitularMenorEdad(Map<String,String> params) throws ApplicationException
+	{
+		String titularMenor = Constantes.NO;
+		log.debug("### kernel sustituto validaTitularMenorEdad map: "+params);
+		WrapperResultados res=this.returnBackBoneInvoke(params, ProcesoDAO.VALIDA_TITULAR_MENOR_EDAD);
+		titularMenor = (String) res.getItemMap().get("EXISTE_TITULAR_MENOR");
+		log.debug("### kernel sustituto validaTitularMenorEdad: "+titularMenor);
+		return titularMenor;
 	}
 
 

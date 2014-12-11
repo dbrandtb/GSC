@@ -749,6 +749,7 @@
 									                                        }
 									                                        else
 									                                        {
+									                                        	
 										                                        var orden=0;
 															                    var parentescoAnterior='qwerty';
 															                    for(var i=0;i<json.slist1.length;i++)
@@ -1218,6 +1219,11 @@
 										                                        }).showAt(50,50);
 										                                        Ext.getCmp('venDocVenEmiBotNueCotiza').hide();
 										                                        Ext.getCmp('venDocVenEmiBotIrCotiza').hide();
+										                                        
+										                                        if(!Ext.isEmpty(json.respuestaOculta)){
+									                                        		mensajeWarning(json.respuestaOculta);
+									                                        	}
+									                                        	
 										                                        /**/
 									                                        }
 									                                    }
