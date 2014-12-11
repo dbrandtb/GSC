@@ -8,16 +8,16 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.EndosoVO;
@@ -83,7 +83,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	
 	private ConsultaDatosTitularVO datosTitular;
 	
-	private ConsultaDatosContratanteVO datosContratante;
+	private ContratanteVO datosContratante;
 	
 	private List<AseguradoVO> datosAsegurados;
 	
@@ -91,19 +91,19 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	
 	private List<EnfermedadVO> datosEnfermedades;
 	
-	private ConsultaDatosPlanVO datosPlan;
+	private PlanVO datosPlan;
 	
 	private List<CopagoVO> datosCopagosPoliza;
 	
-	private List<CoberturasBasicasVO> datosCoberturasPoliza;
+	private List<CoberturaBasicaVO> datosCoberturasPoliza;
 	
-	private List<CoberturasBasicasVO> datosCoberturasBasicas;
+	private List<CoberturaBasicaVO> datosCoberturasBasicas;
 	
-	private List<ConsultaDatosHistoricoVO> datosHistorico;
+	private List<HistoricoVO> datosHistorico;
 	
 	private List<HistoricoFarmaciaVO> historicoFarmacia;
 	
-	private List<ConsultaPeriodosVigenciaVO> periodosVigencia;
+	private List<PeriodoVigenciaVO> periodosVigencia;
 	
 	/**
      * Obtiene las coincidencias de asegurados
@@ -138,7 +138,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	logger.debug(" **** Entrando a consultaPolizaActual ****");
     	mensajeRes = "";
     	try {    		    		
-    		ConsultaPolizaAseguradoVO poliza = new ConsultaPolizaAseguradoVO();
+    		PolizaAseguradoVO poliza = new PolizaAseguradoVO();
     		poliza.setIcodpoliza(params.get("icodpoliza"));
     		poliza.setNmpoliex(params.get("nmpoliex"));
     		datosPolizaActual = consultasAseguradoManager.obtienePolizaActual(poliza);
@@ -201,7 +201,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     public String consultaDatosPoliza(){
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {			        	
-        	ConsultaPolizaAseguradoVO polizaAseguradoVO = new ConsultaPolizaAseguradoVO();
+        	PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
         	polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
         	polizaAseguradoVO.setCdramo(params.get("cdramo"));
         	polizaAseguradoVO.setEstado(params.get("estado"));
@@ -300,7 +300,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	polizaVO.setNmpoliza(params.get("nmpoliza"));        	
         	polizaVO.setIcodpoliza(params.get("icodpoliza"));
         	
-        	List<ConsultaDatosContratanteVO> lista = consultasAseguradoManager.obtieneDatosContratante(polizaVO);
+        	List<ContratanteVO> lista = consultasAseguradoManager.obtieneDatosContratante(polizaVO);
         	
         	if(lista!=null && !lista.isEmpty())	datosContratante = lista.get(0);
         	
@@ -416,7 +416,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	polizaVO.setNmpoliza(params.get("nmpoliza"));
         	polizaVO.setIcodpoliza(params.get("icodpoliza"));
         	
-        	List<ConsultaDatosPlanVO> lista = consultasAseguradoManager.obtieneDatosPlan(polizaVO);
+        	List<PlanVO> lista = consultasAseguradoManager.obtieneDatosPlan(polizaVO);
         	
         	if(lista!=null && !lista.isEmpty())	datosPlan = lista.get(0);
         	
@@ -534,7 +534,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	mensajeRes = "";
     	try {
     		    		
-    		ConsultaPolizaAseguradoVO poliza = new ConsultaPolizaAseguradoVO();
+    		PolizaAseguradoVO poliza = new PolizaAseguradoVO();
     		poliza.setIcodpoliza(params.get("icodpoliza"));
     		poliza.setNmpoliex(params.get("nmpoliex"));
     		poliza.setCdramo(params.get("cdramo"));
@@ -678,11 +678,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.datosPoliza = datosPoliza;
 	}
 
-	public ConsultaDatosContratanteVO getDatosContratante() {
+	public ContratanteVO getDatosContratante() {
 		return datosContratante;
 	}
 
-	public void setDatosContratante(ConsultaDatosContratanteVO datosContratante) {
+	public void setDatosContratante(ContratanteVO datosContratante) {
 		this.datosContratante = datosContratante;
 	}
 
@@ -694,11 +694,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.datosAsegurados = datosAsegurados;
 	}
 
-	public ConsultaDatosPlanVO getDatosPlan() {
+	public PlanVO getDatosPlan() {
 		return datosPlan;
 	}
 
-	public void setDatosPlan(ConsultaDatosPlanVO datosPlan) {
+	public void setDatosPlan(PlanVO datosPlan) {
 		this.datosPlan = datosPlan;
 	}
 
@@ -710,29 +710,29 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.datosCopagosPoliza = datosCopagosPoliza;
 	}
 
-	public List<CoberturasBasicasVO> getDatosCoberturasPoliza() {
+	public List<CoberturaBasicaVO> getDatosCoberturasPoliza() {
 		return datosCoberturasPoliza;
 	}
 
 	public void setDatosCoberturasPoliza(
-			List<CoberturasBasicasVO> datosCoberturasPoliza) {
+			List<CoberturaBasicaVO> datosCoberturasPoliza) {
 		this.datosCoberturasPoliza = datosCoberturasPoliza;
 	}
 
-	public List<CoberturasBasicasVO> getDatosCoberturasBasicas() {
+	public List<CoberturaBasicaVO> getDatosCoberturasBasicas() {
 		return datosCoberturasBasicas;
 	}
 
 	public void setDatosCoberturasBasicas(
-			List<CoberturasBasicasVO> datosCoberturasBasicas) {
+			List<CoberturaBasicaVO> datosCoberturasBasicas) {
 		this.datosCoberturasBasicas = datosCoberturasBasicas;
 	}
 
-	public List<ConsultaDatosHistoricoVO> getDatosHistorico() {
+	public List<HistoricoVO> getDatosHistorico() {
 		return datosHistorico;
 	}
 
-	public void setDatosHistorico(List<ConsultaDatosHistoricoVO> datosHistorico) {
+	public void setDatosHistorico(List<HistoricoVO> datosHistorico) {
 		this.datosHistorico = datosHistorico;
 	}
 
@@ -744,12 +744,12 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.historicoFarmacia = historicoFarmacia;
 	}
 
-	public List<ConsultaPeriodosVigenciaVO> getPeriodosVigencia() {
+	public List<PeriodoVigenciaVO> getPeriodosVigencia() {
 		return periodosVigencia;
 	}
 
 	public void setPeriodosVigencia(
-			List<ConsultaPeriodosVigenciaVO> periodosVigencia) {
+			List<PeriodoVigenciaVO> periodosVigencia) {
 		this.periodosVigencia = periodosVigencia;
 	}
 

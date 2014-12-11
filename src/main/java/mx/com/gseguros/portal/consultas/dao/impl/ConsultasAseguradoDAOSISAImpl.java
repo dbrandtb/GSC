@@ -12,21 +12,21 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.EndosoVO;
 import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
@@ -96,7 +96,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaPolizaActualVO> obtienePolizaActual(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", polizaAsegurado.getIcodpoliza());
 		Map<String, Object> mapResult = ejecutaSP(
@@ -183,7 +183,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	// Datos generales de la póliza.
 	@Override
 	public List<ConsultaDatosGeneralesPolizaVO> obtieneDatosPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", polizaAsegurado.getIcodpoliza());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosPolizaSP(
@@ -340,11 +340,11 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	//Datos del contratante
 	@Override
-	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
+	public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());			
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosContratanteSP(getDataSource()), params);
-		return (List<ConsultaDatosContratanteVO>) mapResult.get("rs");
+		return (List<ContratanteVO>) mapResult.get("rs");
 		
 	}
 	
@@ -359,10 +359,10 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	public class DatosContratanteMapper implements RowMapper<ConsultaDatosContratanteVO>{
-		public ConsultaDatosContratanteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public class DatosContratanteMapper implements RowMapper<ContratanteVO>{
+		public ContratanteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			
-			ConsultaDatosContratanteVO datosContratante = new ConsultaDatosContratanteVO();
+			ContratanteVO datosContratante = new ContratanteVO();
 			datosContratante.setRazonsocial(rs.getString("vchRazonSocial"));
 			datosContratante.setZonacosto(rs.getString("vchZonaCosto"));
 			datosContratante.setDomicilio(rs.getString("vchDomicilio"));
@@ -498,11 +498,11 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	//Datos del plan
 	@Override
-	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
+	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());			
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaDatosPlanSP(getDataSource()), params);
-		return (List<ConsultaDatosPlanVO>) mapResult.get("rs");
+		return (List<PlanVO>) mapResult.get("rs");
 		
 	}
 	public class ConsultaDatosPlanSP extends StoredProcedure{
@@ -516,9 +516,9 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	public class DatosPlanMapper implements RowMapper<ConsultaDatosPlanVO>{
-		public ConsultaDatosPlanVO mapRow(ResultSet rs, int rowNum) throws SQLException {				
-			ConsultaDatosPlanVO datosPlan = new ConsultaDatosPlanVO();
+	public class DatosPlanMapper implements RowMapper<PlanVO>{
+		public PlanVO mapRow(ResultSet rs, int rowNum) throws SQLException {				
+			PlanVO datosPlan = new PlanVO();
 			datosPlan.setPlan(rs.getString("vchCodPlan"));
 			datosPlan.setFecha(rs.getString("dtFecha"));
 			datosPlan.setDescripcion(rs.getString("vchDescripcion"));
@@ -569,13 +569,13 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	// Coberturas póliza.
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza)
+	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaCoberturasPolizaSP(
 				getDataSource()), params);
-		return (List<CoberturasBasicasVO>) mapResult.get("rs");
+		return (List<CoberturaBasicaVO>) mapResult.get("rs");
 	}
 
 	public class ConsultaCoberturasPolizaSP extends StoredProcedure {
@@ -590,9 +590,9 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 
-	public class CoberturasPolizaMapper implements RowMapper<CoberturasBasicasVO> {
-		public CoberturasBasicasVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-			CoberturasBasicasVO coberturas = new CoberturasBasicasVO();
+	public class CoberturasPolizaMapper implements RowMapper<CoberturaBasicaVO> {
+		public CoberturaBasicaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			CoberturaBasicaVO coberturas = new CoberturaBasicaVO();
 			coberturas.setDescripcion(rs.getString("vchDescripcion"));			
 			return coberturas;
 		}
@@ -600,13 +600,13 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	// Coberturas básicas.
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza)
+	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaCoberturasBasicasSP(
 				getDataSource()), params);
-		return (List<CoberturasBasicasVO>) mapResult.get("rs");
+		return (List<CoberturaBasicaVO>) mapResult.get("rs");
 	}
 
 	public class ConsultaCoberturasBasicasSP extends StoredProcedure {
@@ -621,9 +621,9 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 
-	public class CoberturasBasicasMapper implements RowMapper<CoberturasBasicasVO> {
-		public CoberturasBasicasVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-			CoberturasBasicasVO coberturasBasicas = new CoberturasBasicasVO();
+	public class CoberturasBasicasMapper implements RowMapper<CoberturaBasicaVO> {
+		public CoberturaBasicaVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+			CoberturaBasicaVO coberturasBasicas = new CoberturaBasicaVO();
 			coberturasBasicas.setDescripcion(rs.getString("vchDescripcion"));
 			coberturasBasicas.setCopagoporcentaje(rs.getString("fltCopago"));
 			coberturasBasicas.setCopagomonto(rs.getString("mCopago"));
@@ -636,14 +636,14 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	// Histórico del asegurado 
 	@Override
-	public List<ConsultaDatosHistoricoVO> obtieneHistoricoAsegurado(
-			ConsultaPolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception {		
+	public List<HistoricoVO> obtieneHistoricoAsegurado(
+			PolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception {		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliex_i", polizaAsegurado.getIcodpoliza());
 		params.put("pv_cdperson_i", asegurado.getCdperson());
 		Map<String, Object> mapResult = ejecutaSP(
 				new ConsultaHistoricoAseguradoSP(getDataSource()), params);
-		return (List<ConsultaDatosHistoricoVO>) mapResult.get("rs");
+		return (List<HistoricoVO>) mapResult.get("rs");
 	}
 
 	
@@ -661,10 +661,10 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	}
 	
 	protected class DatosHistoricoMapper implements
-	RowMapper<ConsultaDatosHistoricoVO> {
-		public ConsultaDatosHistoricoVO mapRow(ResultSet rs, int rowNum)
+	RowMapper<HistoricoVO> {
+		public HistoricoVO mapRow(ResultSet rs, int rowNum)
 				throws SQLException {
-			ConsultaDatosHistoricoVO datosHistorico = new ConsultaDatosHistoricoVO();
+			HistoricoVO datosHistorico = new HistoricoVO();
 			datosHistorico.setCdunieco(rs.getString("cdunieco"));
 			datosHistorico.setCdramo(rs.getString("cdramo"));
 			datosHistorico.setEstado(rs.getString("estado"));
@@ -740,13 +740,13 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	//Periodos de Vigencia
 	@Override
-	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
+	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
 		params.put("pv_cdperson_i", asegurado.getCdperson());		
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaPeriodosVigenciaSP(getDataSource()), params);
-		return (List<ConsultaPeriodosVigenciaVO>) mapResult.get("rs");
+		return (List<PeriodoVigenciaVO>) mapResult.get("rs");
 	}
 	
 	protected class ConsultaPeriodosVigenciaSP extends StoredProcedure {
@@ -760,10 +760,10 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	public class PeriodosVigenciaMapper implements RowMapper<ConsultaPeriodosVigenciaVO>{
-		public ConsultaPeriodosVigenciaVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+	public class PeriodosVigenciaMapper implements RowMapper<PeriodoVigenciaVO>{
+		public PeriodoVigenciaVO mapRow(ResultSet rs, int rowNum) throws SQLException{
 			
-			ConsultaPeriodosVigenciaVO periodosVigencia = new ConsultaPeriodosVigenciaVO();
+			PeriodoVigenciaVO periodosVigencia = new PeriodoVigenciaVO();
 			periodosVigencia.setEstatus(rs.getString("vchEstado"));
 			periodosVigencia.setDias(rs.getString("iDias"));
 			periodosVigencia.setAnios(rs.getString("iAnios"));

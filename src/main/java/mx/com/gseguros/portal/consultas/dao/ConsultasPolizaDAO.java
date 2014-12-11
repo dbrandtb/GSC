@@ -73,7 +73,7 @@ public interface ConsultasPolizaDAO {
 	 * @return
 	 * @throws Exception
 	 *
-    public List<ConsultaDatosPolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodpoliza) throws Exception;
+    public List<PolizaVO> obtieneDatosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String icodpoliza) throws Exception;
     */
     
     

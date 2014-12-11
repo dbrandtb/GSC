@@ -196,15 +196,15 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					+ datosComplementarios);
 
 			/*
-			 * ConsultaPolizaAseguradoVO polizaAseguradoVO = new
-			 * ConsultaPolizaAseguradoVO();
+			 * PolizaAseguradoVO polizaAseguradoVO = new
+			 * PolizaAseguradoVO();
 			 * polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
 			 * polizaAseguradoVO.setCdramo(params.get("cdramo"));
 			 * polizaAseguradoVO.setEstado(params.get("estado"));
 			 * polizaAseguradoVO.setNmpoliza(params.get("nmpoliza"));
 			 * polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
 			 * 
-			 * List<ConsultaDatosPolizaVO> lista =
+			 * List<PolizaVO> lista =
 			 * consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
 			 * 
 			 * if(lista!=null && !lista.isEmpty()) datosPoliza = lista.get(0);

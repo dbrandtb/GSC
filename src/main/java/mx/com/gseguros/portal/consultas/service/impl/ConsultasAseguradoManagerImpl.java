@@ -1,35 +1,33 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.EndosoVO;
+import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
-import mx.com.gseguros.portal.consultas.dao.IConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CoberturasBasicasVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosContratanteVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosHistoricoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosPlanVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPeriodosVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CopagoVO;
-import mx.com.gseguros.portal.consultas.model.EndosoVO;
-import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 
 
 
@@ -78,7 +76,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	
 	@Override
 	public List<ConsultaPolizaActualVO> obtienePolizaActual(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		
 		List<ConsultaPolizaActualVO> polizaActual;
 		polizaActual = new ArrayList<ConsultaPolizaActualVO>();
@@ -110,7 +108,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	
 	@Override
 	public List<ConsultaDatosGeneralesPolizaVO> obtieneDatosPoliza(
-			ConsultaPolizaAseguradoVO polizaAsegurado) throws Exception {
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		 List<ConsultaDatosGeneralesPolizaVO> datosPolizas = new ArrayList<ConsultaDatosGeneralesPolizaVO>();
 		 
 		//Si iCodPoliza no es nulo, es información de SISA.
@@ -151,8 +149,8 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 		
 	@Override
-	public List<ConsultaDatosContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
-		List<ConsultaDatosContratanteVO> datosContratante = new ArrayList<ConsultaDatosContratanteVO>();
+	public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
+		List<ContratanteVO> datosContratante = new ArrayList<ContratanteVO>();
 		
 		//Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
@@ -208,8 +206,8 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 
 	@Override
-	public List<ConsultaDatosPlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
-		List<ConsultaDatosPlanVO> datosPlan = new ArrayList<ConsultaDatosPlanVO>();
+	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
+		List<PlanVO> datosPlan = new ArrayList<PlanVO>();
 		
 		//Si iCodPoliza no es nulo, es información de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
@@ -253,9 +251,9 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 	
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
+	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
 		
-		List<CoberturasBasicasVO> coberturasPoliza = new ArrayList<CoberturasBasicasVO>();
+		List<CoberturaBasicaVO> coberturasPoliza = new ArrayList<CoberturaBasicaVO>();
 		//Si iCodPoliza no es nulo, es información de SISA.
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){
 			coberturasPoliza = consultasAseguradoDAOSISA.obtieneCoberturasPoliza(poliza);
@@ -266,9 +264,9 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 	
 	@Override
-	public List<CoberturasBasicasVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
+	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
 		
-		List<CoberturasBasicasVO> coberturasBasicas = new ArrayList<CoberturasBasicasVO>();
+		List<CoberturaBasicaVO> coberturasBasicas = new ArrayList<CoberturaBasicaVO>();
 		//Si iCodPoliza no es nulo, es información de SISA.
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			coberturasBasicas = consultasAseguradoDAOSISA.obtieneCoberturasBasicas(poliza);
@@ -277,10 +275,10 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 	
 	@Override
-	public List<ConsultaDatosHistoricoVO> obtieneHistoricoAsegurado(
-			ConsultaPolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception {
+	public List<HistoricoVO> obtieneHistoricoAsegurado(
+			PolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception {
 		
-		List<ConsultaDatosHistoricoVO> historico = new ArrayList<ConsultaDatosHistoricoVO>();  
+		List<HistoricoVO> historico = new ArrayList<HistoricoVO>();  
 		
 		//Si iCodPoliza es nulo, es información de ICE, sino es de SISA:
 		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza()) == false){			
@@ -305,9 +303,9 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	}
 	
 	@Override
-	public List<ConsultaPeriodosVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
+	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
-		List<ConsultaPeriodosVigenciaVO> periodosVigencia = new ArrayList<ConsultaPeriodosVigenciaVO>();
+		List<PeriodoVigenciaVO> periodosVigencia = new ArrayList<PeriodoVigenciaVO>();
 		// Si iCodPoliza viene vacio, es información de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){			  
 			  periodosVigencia = consultasAseguradoDAOSISA.obtienePeriodosVigencia(poliza, asegurado);
