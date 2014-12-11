@@ -32,6 +32,7 @@
     <include file="struts/config/struts-cobranza.xml"/>
     <include file="struts/config/struts-consultas-poliza.xml"/>
     <include file="struts/config/struts-consultas-siniestro.xml"/>
+    <include file="struts/config/struts-consultas-asegurado.xml"/>
     <include file="struts/config/struts-documentos.xml"/>
     <include file="struts/config/struts-flujos-cancelacion.xml"/>
     <include file="struts/config/struts-flujos-cotizacion.xml"/>

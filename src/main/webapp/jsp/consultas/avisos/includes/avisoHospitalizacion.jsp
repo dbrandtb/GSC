@@ -74,21 +74,6 @@
                     }
                 });
 			    
-			    
-				
-				// Cargar store
-				/*storeHistoricoFarmacia.load({
-                    callback: function(records, operation, success) {
-                    	if (!success) {
-                            showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR);
-                            return;
-                        }
-                        if(records.length == 0){
-                            showMessage('No hay histórico de farmacia', 'Este asegurado no tiene histórico de farmacia', Ext.Msg.OK, Ext.Msg.INFO);
-                            return;
-                        }
-                    }
-                });*/
 				
 				Ext.create('Ext.panel.Panel', {
 					name      : 'pnlAvisoHospitalizacion',
