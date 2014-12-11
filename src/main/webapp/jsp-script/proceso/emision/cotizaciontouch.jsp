@@ -1335,6 +1335,8 @@ Ext.setup({onReady:function()
                     'smap1.vim'       : vim
                     ,'smap1.cdramo'   : _mcotiza_smap1.cdramo
                     ,'smap1.cdtipsit' : _mcotiza_smap1.cdtipsit
+                    ,'smap1.tipoveh'  : _mcotiza_navView.down('[name=parametros.pv_otvalor31]').getValue()
+                    ,'smap1.codpos'   : _mcotiza_navView.down('[name=parametros.pv_otvalor08]').getValue()
                 }
                 ,success : function(response)
                 {

@@ -414,14 +414,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(camposIndividuales.size()>0)
 				{
-					gc.generaComponentes(camposIndividuales,true,true,false,true,true,false);
+					gc.generaComponentes(camposIndividuales,true,true,true,true,true,false);
 					imap.put("camposIndividuales" , gc.getColumns());
 					imap.put("fieldsIndividuales" , gc.getFields());
+					imap.put("itemsIndividuales"  , gc.getItems());
 				}
 				else
 				{
 					imap.put("camposIndividuales" , null);
 					imap.put("fieldsIndividuales" , null);
+					imap.put("itemsIndividuales"  , null);
 				}
 				
 				logger.debug("camposAgrupados: "+camposAgrupados);
@@ -478,16 +480,18 @@ public class CotizacionAction extends PrincipalCoreAction
         	{
         		List<ComponenteVO>modeloExtra = pantallasManager.obtenerComponentes(
 						null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", "MODELO", null);
-				gc.generaComponentes(modeloExtra, true, true, false, true, true, false);
+				gc.generaComponentes(modeloExtra, true, true, true, true, true, false);
 				if(modeloExtra.size()>0)
 				{
 					imap.put("modeloExtraFields"  , gc.getFields());
 					imap.put("modeloExtraColumns" , gc.getColumns());
+					imap.put("modeloExtraItems"   , gc.getItems());
 				}
 				else
 				{
 					imap.put("modeloExtraFields"  , null);
 					imap.put("modeloExtraColumns" , null);
+					imap.put("modeloExtraItems"   , null);
 				}
 	        }
 	        catch(Exception ex)
