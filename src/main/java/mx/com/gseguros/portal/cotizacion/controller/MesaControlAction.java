@@ -647,6 +647,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			UserVO usuario=(UserVO) this.session.get("USUARIO");
 			username=usuario.getUser();
+			smap1.put("cdsisrol" , usuario.getRolActivo().getClave());
 			
 			String cdtiptra                  = smap2.get("pv_cdtiptra_i");
 			String cdramo                    = smap1.get("cdramo");
