@@ -144,6 +144,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_TIPSIT="OBTENER_TIPSIT";
     public static final String P_MOV_TBITACOBROS="P_MOV_TBITACOBROS";
     public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";    
+    public static final String VALIDA_TITULAR_MENOR_EDAD="VALIDA_TITULAR_MENOR_EDAD";    
     public static final String OBTIENE_DATOS_POLIZA_AGENTE =    "OBTIENE_DATOS_POLIZA_AGENTE";
 	public static final String OBTIENE_DATOS_GENERAL_AGENTE =	"OBTIENE_DATOS_GENERAL_AGENTE";
 	public static final String GUARDA_PORCENTAJE_POLIZA =	"GUARDA_PORCENTAJE_POLIZA";
@@ -253,6 +254,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
         addStoredProcedure(P_MOV_TBITACOBROS,new MovBitacobros(getDataSource()));
         addStoredProcedure(P_VAL_INFO_PERSONAS,new PValInfoPersonas(getDataSource()));
+        addStoredProcedure(VALIDA_TITULAR_MENOR_EDAD,new ValidaTitularMenorEdad(getDataSource()));
         
         addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE,      new ObtieneDatosPolizaAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_GENERAL_AGENTE,      new ObtieneDatosGeneralAgente(getDataSource()));
@@ -4231,6 +4233,43 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////////*/
 	////// obtener tipsit x ramo //////
 	///////////////////////////////////
+	
+	//////////////////////////////
+	////// ValidaTitularMenorEdad //////
+	/*//////////////////////////*/
+	public class ValidaTitularMenorEdad extends CustomStoredProcedure
+	{
+		protected ValidaTitularMenorEdad(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_VALIDA_TITULAR_MENOR");
+			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_titular_menor_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			
+			String existeMenor = null;
+			if(map.get("pv_titular_menor_o") != null) existeMenor = map.get("pv_titular_menor_o").toString();
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("EXISTE_TITULAR_MENOR", existeMenor);
+
+			return wrapperResultados;
+		}
+	}
+
+	/*///////////////////////////////*/
+	////// ValidaTitularMenorEdad //////
+	///////////////////////////////////
+	
 	
 	//////////////////////////////
 	////// PValInfoPersonas //////
