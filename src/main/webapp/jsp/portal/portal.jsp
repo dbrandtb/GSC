@@ -84,7 +84,7 @@
 	    sourceForPanel[2]  = '<%=perfil.getTopLeft()!=null?perfil.getTopLeft():""%>'; // /resources/static/infoTit.html
 	    sourceForPanel[3]  = '<%=perfil.getTopCenter()!=null?perfil.getTopCenter():""%>'; // /resources/static/infoTit.html
 	    sourceForPanel[4]  = '<%=perfil.getTopRight()!=null?perfil.getTopRight():""%>'; // /resources/static/infoTit.html
-	    sourceForPanel[5]  = '<%=perfil.getLeft_1()!=null?perfil.getLeft_1():""%>'; // /resources/static/navTit.jsp ++++ despliegaMenuVertical.vm
+	    sourceForPanel[5]  = '<%=perfil.getLeft_1()!=null?perfil.getLeft_1():""%>'; // /resources/static/navTit.jsp
 	    sourceForPanel[6]  = '<%=perfil.getLeft_2()!=null?perfil.getLeft_2():""%>'; // /resources/static/infoTit.html
 	    sourceForPanel[7]  = '<%=perfil.getLeft_3()!=null?perfil.getLeft_3():""%>'; // /resources/static/infoTit.html
 	    sourceForPanel[8]  = '<%=perfil.getLeft_4()!=null?perfil.getLeft_4():""%>'; // /resources/static/infoTit.html
@@ -165,9 +165,7 @@
 												<div id="left_1" class="moduletable">
 													<div id="nav-toolbar-vertical"><h3>Indice</h3></div>
 													<s:if test="%{#session.containsKey('CONTENIDO_LEFT_1')}">
-														<s:component template="leftOne.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_LEFT_1" value="%{#session['CONTENIDO_LEFT_1']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_LEFT_1']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_1_IMAGE') && #session.containsKey('CONTENIDO_LEFT_1_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_LEFT_1_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_LEFT_1_IMAGE']}"/>" width="130" height="150" /></a>
@@ -180,9 +178,7 @@
                                             <div>
                                             	<div id="left_2" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_2')}">                                         
-                                            			<s:component template="leftTwo.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_LEFT_2" value="%{#session['CONTENIDO_LEFT_2']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_LEFT_2']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_2_IMAGE') && #session.containsKey('CONTENIDO_LEFT_2_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_LEFT_2_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_LEFT_2_IMAGE']}"/>" width="130" height="150" /></a>
@@ -195,9 +191,7 @@
                                             <div>
                                             	<div id="left_3" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_3')}">
-                                            			<s:component template="leftThree.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_LEFT_3" value="%{#session['CONTENIDO_LEFT_3']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_LEFT_3']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_3_IMAGE') && #session.containsKey('CONTENIDO_LEFT_3_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_LEFT_3_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_LEFT_3_IMAGE']}"/>" width="130" height="150" /></a>
@@ -210,9 +204,7 @@
                                             <div>
                                             	<div id="left_4" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_4')}">
-                                            			<s:component template="leftFour.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_LEFT_4" value="%{#session['CONTENIDO_LEFT_4']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_LEFT_4']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_4_IMAGE') && #session.containsKey('CONTENIDO_LEFT_4_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_LEFT_4_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_LEFT_4_IMAGE']}"/>" width="130" height="150" /></a>
@@ -225,9 +217,7 @@
                                             <div>
                                             	<div id="left_5" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_LEFT_5')}">
-                                            			<s:component template="leftFive.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_LEFT_5" value="%{#session['CONTENIDO_LEFT_5']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_LEFT_5']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_LEFT_5_IMAGE') && #session.containsKey('CONTENIDO_LEFT_5_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_LEFT_5_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_LEFT_5_IMAGE']}"/>" width="130" height="150" /></a>
@@ -246,9 +236,7 @@
                                             <div>
                                             	<div id="right_1" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_RIGHT_1')}">
-                                            			<s:component template="rightOne.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_RIGHT_1" value="%{#session['CONTENIDO_RIGHT_1']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_RIGHT_1']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_RIGHT_1_IMAGE') && #session.containsKey('CONTENIDO_RIGHT_1_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_RIGHT_1_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_RIGHT_1_IMAGE']}"/>" width="130" height="150" /></a>
@@ -261,9 +249,7 @@
                                             <div>
                                             	<div id="right_2" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_RIGHT_2')}">
-                                            			<s:component template="rightTwo.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_RIGHT_2" value="%{#session['CONTENIDO_RIGHT_2']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_RIGHT_2']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_RIGHT_2_IMAGE') && #session.containsKey('CONTENIDO_RIGHT_2_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_RIGHT_2_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_RIGHT_2_IMAGE']}"/>" width="130" height="150" /></a>
@@ -276,9 +262,7 @@
                                             <div>
                                             	<div id="right_3" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_RIGHT_3')}">
-                                            			<s:component template="rightThree.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_RIGHT_3" value="%{#session['CONTENIDO_RIGHT_3']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_RIGHT_3']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_RIGHT_3_IMAGE') && #session.containsKey('CONTENIDO_RIGHT_3_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_RIGHT_3_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_RIGHT_3_IMAGE']}"/>" width="130" height="150" /></a>
@@ -291,9 +275,7 @@
                                             <div>
                                             	<div id="right_4" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_RIGHT_4')}">
-                                            			<s:component template="rightFour.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_RIGHT_4" value="%{#session['CONTENIDO_RIGHT_4']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_RIGHT_4']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_RIGHT_4_IMAGE') && #session.containsKey('CONTENIDO_RIGHT_4_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_RIGHT_4_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_RIGHT_4_IMAGE']}"/>" width="130" height="150" /></a>
@@ -306,9 +288,7 @@
                                             <div>
                                             	<div id="right_5" class="moduletable">
                                             		<s:if test="%{#session.containsKey('CONTENIDO_RIGHT_5')}">
-                                            			<s:component template="rightFive.vm" templateDir="templates" theme="pages" >
-															<s:param name="CONTENIDO_RIGHT_5" value="%{#session['CONTENIDO_RIGHT_5']}"/>
-														</s:component>
+														<s:property value="%{#session['CONTENIDO_RIGHT_5']}" escapeHtml="false" />
 													</s:if>
 													<s:elseif test="%{#session.containsKey('CONTENIDO_RIGHT_5_IMAGE') && #session.containsKey('CONTENIDO_RIGHT_5_FILE')}" >
 														<a href="<s:url value="%{#session['CONTENIDO_RIGHT_5_FILE']}"/>"><img src="<s:property value="%{#session['CONTENIDO_RIGHT_5_IMAGE']}"/>" width="130" height="150" /></a>
