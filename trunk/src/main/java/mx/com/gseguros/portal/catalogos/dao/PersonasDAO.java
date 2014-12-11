@@ -13,6 +13,7 @@ public interface PersonasDAO
 	 */
 	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception;
 	
+	@Deprecated
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
 	/**
 	 * Guarda mpersona con PKG_SATELITES.P_MOV_MPERSONA
@@ -106,4 +107,6 @@ public interface PersonasDAO
 	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception;
 
 	public void actualizaCodigoExterno(Map<String, String> params) throws Exception;
+	
+	public Map<String,String>cargarPersonaPorCdperson(String cdperson)throws Exception;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
@@ -132,5 +133,5 @@ public interface CotizacionAutoManager
 			,List<Map<String,String>> confTvalosit);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);
-	public ManagerRespuestaSlistSmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari);
+	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari);
 }

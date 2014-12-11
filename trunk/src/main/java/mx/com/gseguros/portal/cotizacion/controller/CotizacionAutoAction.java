@@ -9,6 +9,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
@@ -1058,10 +1059,16 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
-			ManagerRespuestaSlistSmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari);
+			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				slist1 = resp.getSlist1();
+				slist2 = resp.getSlist2();
+			}
 		}
 		catch(Exception ex)
 		{

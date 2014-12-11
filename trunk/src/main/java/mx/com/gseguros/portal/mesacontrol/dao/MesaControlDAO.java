@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.mesacontrol.dao;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface MesaControlDAO
@@ -42,4 +43,13 @@ public interface MesaControlDAO
 			,String cdsucdoc
 			,String comments
 			,Map<String,String>valores)throws Exception;
+	public List<Map<String,String>>cargarTramitesPorParametrosVariables(
+			String cdtiptra
+			,String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

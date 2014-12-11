@@ -9,15 +9,16 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -92,6 +93,8 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+	
+	@Deprecated
 	@Override
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception
 	{
@@ -103,7 +106,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 				.append("\n****************************************************")
 				.toString()
 				);
-		Map<String, Object> resultado         = ejecutaSP(new ObtenerPersonaPorCdperson(getDataSource()), params);
+		Map<String, Object> resultado         = ejecutaSP(new CargarPersonaPorCdperson(getDataSource()), params);
 		List<Map<String,String>>listaPersonas = (List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaPersonas==null||listaPersonas.size()==0)
 		{
@@ -113,9 +116,40 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		return listaPersonas.get(0);
 	}
 	
-	protected class ObtenerPersonaPorCdperson extends StoredProcedure
+	@Override
+	public Map<String,String>cargarPersonaPorCdperson(String cdperson)throws Exception
 	{
-    	protected ObtenerPersonaPorCdperson(DataSource dataSource) {
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdperson_i" , cdperson);
+		logger.debug(Utilerias.join(
+				 "\n****************************************************"
+				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
+				,"\n****** params=",params
+				,"\n****************************************************"
+				));
+		Map<String,Object>procResult     = ejecutaSP(new CargarPersonaPorCdperson(getDataSource()), params);
+		List<Map<String,String>>registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(registro==null||registro.size()==0)
+		{
+			throw new ApplicationException("La persona no existe");
+		}
+		if(registro.size()>1)
+		{
+			throw new ApplicationException("Persona duplicada");
+		}
+		logger.debug(Utilerias.join(
+				 "\n****************************************************"
+				,"\n****** params="   , params
+				,"\n****** registro=" , registro.get(0)
+				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
+				,"\n****************************************************"
+				));
+		return registro.get(0);
+	}
+	
+	protected class CargarPersonaPorCdperson extends StoredProcedure
+	{
+    	protected CargarPersonaPorCdperson(DataSource dataSource) {
             super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON");
             declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
             String[] cols = new String[]{
