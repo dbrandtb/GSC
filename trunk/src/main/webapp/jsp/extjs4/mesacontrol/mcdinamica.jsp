@@ -157,6 +157,93 @@ function _4_cambiarTiptra(cdtiptra)
 	    ,standardSubmit : true
 	});
 }
+
+function _mcdinamica_nuevoTramite(button,turnar)
+{
+	debug('>_mcdinamica_nuevoTramite');
+    var form=button.up().up();
+    debug(form.getForm().getValues());
+    if(form.isValid())
+    {
+        form.setLoading(true);
+        form.submit(
+        {
+            success  : function(form2, action)
+            {
+                form.setLoading(false);
+                var ntramite = action.result.msgResult;
+                var callback = function()
+                {
+                    centrarVentanaInterna(Ext.Msg.show(
+                    {
+                        title    : 'Cambios guardados'
+                        ,msg     : 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ntramite
+                        ,buttons : Ext.Msg.OK
+                        ,fn      : function()
+                        {
+                            button.up('window').hide();
+                            button.up('form').getForm().reset();
+                            loadMcdinStore();
+                        }
+                    }));
+                };
+                if(turnar)
+                {
+                    form.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : mesConUrlUpdateStatus
+                        ,params :
+                        {
+                            'smap1.status'    : 13
+                            ,'smap1.ntramite' : ntramite
+                            ,'smap1.comments' : 'Trámite nuevo turnado a suscripción'
+                        }
+                        ,success : function(response)
+                        {
+                            form.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response:',json);
+                            if(json.success)
+                            {
+                                callback();
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            form.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+                else
+                {
+                    callback();
+                }
+            }
+            ,failure : function()
+            {
+                form.setLoading(false);
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,msg     : 'Error de comunicaci&oacute;n'
+                    ,buttons : Ext.Msg.OK
+                    ,icon    : Ext.Msg.ERROR
+                });
+            }
+        });
+    }
+    else
+    {
+        mensajeWarning('Favor de introducir los campos requeridos');
+    }
+    debug('>_mcdinamica_nuevoTramite');
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -429,47 +516,13 @@ Ext.onReady(function()
                     {
                         text     : 'Guardar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                        ,handler : function()
-                        {
-                            var form=this.up().up();
-                            debug(form.getForm().getValues());
-                            if(form.isValid())
-                            {
-                                form.setLoading(true);
-                                form.submit(
-                                {
-                                    success  : function(form2, action)
-                                    {
-                                        form.setLoading(false);
-                                        centrarVentanaInterna(Ext.Msg.show(
-                                        {
-                                            title    : 'Cambios guardados'
-                                            ,msg     : 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ action.result.msgResult
-                                            ,buttons : Ext.Msg.OK
-                                            ,fn      : function()
-                                            {
-                                            	_4_cambiarTiptra(mcdinInput['tiptra']);
-                                            }
-                                        }));
-                                    }
-                                    ,failure : function()
-                                    {
-                                        form.setLoading(false);
-                                        Ext.Msg.show(
-                                        {
-                                            title    : 'Error'
-                                            ,msg     : 'Error de comunicaci&oacute;n'
-                                            ,buttons : Ext.Msg.OK
-                                            ,icon    : Ext.Msg.ERROR
-                                        });
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                mensajeWarning('Favor de introducir los campos requeridos');
-                            }
-                        }
+                        ,handler : function(me){_mcdinamica_nuevoTramite(me,false);}
+                    }
+                    ,{
+                        text     : 'Turnar a suscripci&oacute;n'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                        ,handler : function(me){_mcdinamica_nuevoTramite(me,true);}
+                        ,hidden  : _4_smap1.cdsisrol!='MESADECONTROL'
                     }
                 ]
             })
