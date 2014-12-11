@@ -676,6 +676,9 @@ Ext.onReady(function()
 			                			panEndAltBajAseValues=form.getValues();
 			                			debug('panEndAltBajAseValues',panEndAltBajAseValues);
 			                			panEndAltBajAseStoreAltas.removeAll();
+			                			var parentescoName = _fieldById('_3_formNuevo').down('[fieldLabel=PARENTESCO]').name;
+			                			var sexoName       = _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').name;
+			                			var nacimientoName = _fieldById('_3_formNuevo').down('[fieldLabel*=NACIMIENTO]').name;
 			                			panEndAltBajAseStoreAltas.add(
 			                			{
 			                				nmsituac          : panEndAltBajAseNmsituac
@@ -684,11 +687,11 @@ Ext.onReady(function()
 			                			    ,Apellido_Paterno : panEndAltBajAseValues['apat']
 			                			    ,Apellido_Materno : panEndAltBajAseValues['amat']
 			                			    ,cdrol            : 2
-			                			    ,Parentesco       : panEndAltBajAseValues['parametros.pv_otvalor16']
+			                			    ,Parentesco       : panEndAltBajAseValues[parentescoName]
 			                			    ,cdrfc            : panEndAltBajAseValues['rfc']
 			                			    ,tpersona         : panEndAltBajAseValues['tpersona']
-			                			    ,sexo             : panEndAltBajAseValues['parametros.pv_otvalor01']
-			                			    ,fenacimi         : panEndAltBajAseValues['parametros.pv_otvalor19']
+			                			    ,sexo             : panEndAltBajAseValues[sexoName]
+			                			    ,fenacimi         : panEndAltBajAseValues[nacimientoName]
 			                			});
 			                			_window.hide();
 			                		}
