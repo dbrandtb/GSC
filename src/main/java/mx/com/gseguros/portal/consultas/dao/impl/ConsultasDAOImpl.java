@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -309,6 +310,139 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"OTVALOR71","OTVALOR72","OTVALOR73","OTVALOR74","OTVALOR75","OTVALOR76","OTVALOR77","OTVALOR78","OTVALOR79","OTVALOR80"
             		,"OTVALOR81","OTVALOR82","OTVALOR83","OTVALOR84","OTVALOR85","OTVALOR86","OTVALOR87","OTVALOR88","OTVALOR89","OTVALOR90"
             		,"OTVALOR91","OTVALOR92","OTVALOR93","OTVALOR94","OTVALOR95","OTVALOR96","OTVALOR97","OTVALOR98","OTVALOR99"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public Map<String,String>cargarMpoliperSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		logger.debug(Utilerias.join(
+				 "\n**************************************************"
+				,"\n****** PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC ******"
+				,"\n****** params=",params
+				,"\n**************************************************"
+				));
+		Map<String,Object>procResult  = ejecutaSP(new CargarMpoliperSituac(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Map<String,String>mpoliper    = null;
+		if(lista!=null&&lista.size()==1)
+		{
+			mpoliper = lista.get(0);
+		}
+		else if(lista!=null&&lista.size()>1)
+		{
+			throw new ApplicationException("Registro de relacion poliza-persona duplicado");
+		}
+		logger.debug(Utilerias.join(
+				 "\n**************************************************"
+				,"\n****** params="   , params
+				,"\n****** registro=" , mpoliper
+				,"\n****** PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC ******"
+				,"\n**************************************************"
+				));
+		return mpoliper;
+	}
+	
+	protected class CargarMpoliperSituac extends StoredProcedure
+    {
+    	protected CargarMpoliperSituac(DataSource dataSource)
+        {
+            super(dataSource,"PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"CDUNIECO"  , "CDRAMO"   , "ESTADO"   , "NMPOLIZA"
+            		,"NMSITUAC" , "CDROL"    , "CDPERSON" , "NMSUPLEM"
+            		,"STATUS"   , "NMORDDOM" , "SWRECLAM" , "SWEXIPER"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public Map<String,String>cargarMpolisitSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		logger.debug(Utilerias.join(
+				 "\n**************************************************"
+				,"\n****** PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC ******"
+				,"\n****** params=",params
+				,"\n**************************************************"
+				));
+		Map<String,Object>procResult  = ejecutaSP(new CargarMpolisitSituac(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Map<String,String>mpoliper    = null;
+		if(lista!=null&&lista.size()==1)
+		{
+			mpoliper = lista.get(0);
+		}
+		else if(lista!=null&&lista.size()>1)
+		{
+			throw new ApplicationException("Registro de relacion poliza-situacion duplicado");
+		}
+		logger.debug(Utilerias.join(
+				 "\n**************************************************"
+				,"\n****** params="   , params
+				,"\n****** registro=" , mpoliper
+				,"\n****** PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC ******"
+				,"\n**************************************************"
+				));
+		return mpoliper;
+	}
+	
+	protected class CargarMpolisitSituac extends StoredProcedure
+    {
+    	protected CargarMpolisitSituac(DataSource dataSource)
+        {
+            super(dataSource,"PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"CDUNIECO"  , "CDRAMO"     , "ESTADO"   , "NMPOLIZA" , "NMSITUAC"
+            		,"NMSUPLEM" , "STATUS"     , "CDTIPSIT" , "SWREDUCI" , "CDAGRUPA"
+            		,"CDESTADO" , "FEFECSIT"   , "FECHAREF" , "CDGRUPO"  , "NMSITUAEXT"
+            		,"NMSITAUX" , "NMSBSITEXT" , "CDPLAN"   , "CDASEGUR" , "DSGRUPO"
             };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

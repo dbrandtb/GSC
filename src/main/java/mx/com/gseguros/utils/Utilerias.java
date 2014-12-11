@@ -1,16 +1,20 @@
 package mx.com.gseguros.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class Utilerias {
@@ -217,5 +221,38 @@ public class Utilerias {
 			sb.append(arg);
 		}
 		return sb.toString();
+	}
+	
+	public static Map<String,String>concatenarParametros(Map<String,String>otvalor,boolean filtrar)
+	{
+		Map<String,String>concat=new LinkedHashMap<String,String>();
+		for(Entry<String,String>en:otvalor.entrySet())
+		{
+			String key = en.getKey();
+			String val = en.getValue();
+			if(StringUtils.isNotBlank(key)
+					&&key.length()>"otvalor".length()
+					&&key.substring(0,"otvalor".length()).equalsIgnoreCase("otvalor")
+					)
+			{
+				concat.put(Utilerias.join("parametros.pv_otvalor",key.substring(key.length()-2)),val);
+			}
+			else if(!filtrar)
+			{
+				concat.put(key,val);
+			}
+		}
+		logger.debug(Utilerias.join("\nconcatenarParametros ",otvalor,"\nen ",concat));
+		return concat;
+	}
+	
+	public static List<Map<String,String>>concatenarParametros(List<Map<String,String>>lista,boolean filtrar)
+	{
+		List<Map<String,String>>concat=new ArrayList<Map<String,String>>();
+		for(Map<String,String>otvalor:lista)
+		{
+			concat.add(Utilerias.concatenarParametros(otvalor,filtrar));
+		}
+		return concat;
 	}
 }

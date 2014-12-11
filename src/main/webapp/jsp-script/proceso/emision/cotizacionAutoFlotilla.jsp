@@ -2058,6 +2058,46 @@ function _p30_cargarClic()
                     var json = Ext.decode(response.responseText);
                     debug('### cargar:',json);
                     checkBool(json.exito,json.respuesta);
+                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                    {
+                        var maestra=json.smap1.ESTADO=='M';
+                        _p30_limpiar();
+                        if(maestra)
+                        {
+                            _fieldByName('nmpoliza').setValue('');
+                            mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.smap1.NMPOLIZA);
+                        }
+                        else
+                        {
+                            _fieldByName('nmpoliza').semaforo=true;
+                            _fieldByName('nmpoliza').setValue(nmpoliza);
+                            _fieldByName('nmpoliza').semaforo=false;
+                        }
+                        var datosGenerales=new _p30_modelo(json.smap1);
+                        if(_p30_smap1.cdramo=='5')
+                        {
+                            datosGenerales.set('parametros.pv_otvalor14','S');
+                        }
+                        ck='Recuperando datos generales';
+                        _fieldById('_p30_form').loadRecord(datosGenerales);
+                        ck='Recuperando configuracion de incisos';
+                        for(var i in json.slist1)
+                        {
+                            var tconvalsit = json.slist1[i];
+                            var cdtipsit   = tconvalsit.CDTIPSIT;
+                            _p30_paneles[cdtipsit].valores=tconvalsit;
+                        }
+                        ck='Recuperando incisos base';
+                        for(var i in json.slist2)
+                        {
+                            _p30_store.add(new _p30_modelo(json.slist2[i]));
+                        }
+                    }
+                    else
+                    {
+                        /*ir a datos complementarios*/
+                        mensajeWarning('[complementarios]');
+                    }
                 }
                 catch(e)
                 {

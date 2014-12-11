@@ -14,12 +14,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
@@ -31,6 +33,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
@@ -52,9 +55,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private static final String RECUPERAR_DESCUENTO_RECARGO_RAMO_5 = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5";
 	private static final String RECUPERAR_DATOS_VEHICULO_RAMO_5    = "RECUPERAR_DATOS_VEHICULO_RAMO_5"   ;
 	
-	private CotizacionDAO cotizacionDAO;
-	private PantallasDAO  pantallasDAO;
-	private ConsultasDAO  consultasDAO;
+	private CotizacionDAO  cotizacionDAO;
+	private PantallasDAO   pantallasDAO;
+	private ConsultasDAO   consultasDAO;
+	private PersonasDAO    personasDAO;
+	private MesaControlDAO mesaControlDAO;
 	
 	@Autowired
 	private transient TractoCamionService tractoCamionService;
@@ -2060,7 +2065,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistSmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari)
+	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari)
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2070,7 +2075,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 		
-		ManagerRespuestaSlistSmapVO resp = new ManagerRespuestaSlistSmapVO(true);
+		ManagerRespuestaSlist2SmapVO resp = new ManagerRespuestaSlist2SmapVO(true);
+		resp.setSmap(new LinkedHashMap<String,String>());
 		
 		try
 		{
@@ -2154,11 +2160,86 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			checkBlank(nmpoliza , "No se recupero el numero de cotizacion");
 			checkBlank(nmpoliza , "No se recupero el suplemento de la cotizacion");
 			
+			resp.getSmap().put("CDUNIECO" , cdunieco);
+			resp.getSmap().put("ESTADO"   , estado);
+			resp.getSmap().put("NMPOLIZA" , nmpoliza);
+			
 			setCheckpoint("Recuperando configuracion de incisos");
-			List<Map<String,String>>tconvalsit=consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			resp.setSlist1(Utilerias.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
 			
 			setCheckpoint("Recuperando incisos base");
-			List<Map<String,String>>tbasvalsit=consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			List<Map<String,String>>incisosBase=consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			for(Map<String,String>incisoBase:incisosBase)
+			{
+				String nmsituac = incisoBase.get("NMSITUAC");
+				incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
+				incisoBase.put("cdtipsit" , incisoBase.get("CDTIPSIT"));
+				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
+			}
+			resp.setSlist2(Utilerias.concatenarParametros(incisosBase,false));
+			
+			setCheckpoint("Recuperando datos generales");
+			resp.getSmap().putAll(cotizacionDAO.cargarTvalosit(cdunieco,cdramo,estado,nmpoliza,"1"));
+			
+			String cdperson = "";
+			String cdideper = "";
+			String ntramite = "";
+			if(!maestra)
+			{
+				setCheckpoint("Recuperando relacion poliza-contratante");
+				Map<String,String>relContratante=consultasDAO.cargarMpoliperSituac(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,"0"//nmsituac
+						);
+				
+				if(relContratante!=null)
+				{
+					setCheckpoint("Recuperando contratante");
+					cdperson = relContratante.get("CDPERSON");
+					Map<String,String>contratante = personasDAO.cargarPersonaPorCdperson(cdperson);
+					cdideper = contratante.get("CDIDEPER");
+				}
+				
+				setCheckpoint("Recuperando tramite");
+				List<Map<String,String>>tramites=mesaControlDAO.cargarTramitesPorParametrosVariables(
+						TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null//ntramite
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						);
+				if(tramites.size()>1)
+				{
+					throwExc("Tramites duplicados para la cotizacion");
+				}
+				if(tramites.size()==1)
+				{
+					ntramite=tramites.get(0).get("NTRAMITE");
+				}
+				
+			}
+			resp.getSmap().put("CDPERSON" , cdperson);
+			resp.getSmap().put("CDIDEPER" , cdideper);
+			resp.getSmap().put("NTRAMITE" , ntramite);
+			
+			if(maestra)
+			{
+				resp.getSmap().put("FEINI" , listaEmisiones.get(0).get("FEEFECTO"));
+				resp.getSmap().put("FEFIN" , listaEmisiones.get(0).get("FEPROREN"));
+			}
+			else
+			{
+				resp.getSmap().put("FEINI" , listaCotizaciones.get(0).get("FEEFECTO"));
+				resp.getSmap().put("FEFIN" , listaCotizaciones.get(0).get("FEPROREN"));
+			}
+			
+			setCheckpoint("0");
 		}
 		catch(Exception ex)
 		{
@@ -2192,5 +2273,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
+	}
+
+	public void setPersonasDAO(PersonasDAO personasDAO) {
+		this.personasDAO = personasDAO;
+	}
+
+	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
+		this.mesaControlDAO = mesaControlDAO;
 	}
 }
