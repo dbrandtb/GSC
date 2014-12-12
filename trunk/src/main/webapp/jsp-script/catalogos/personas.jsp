@@ -410,6 +410,11 @@ Ext.onReady(function()
 								    		form.down('[name=smap1.rfc]').getStore().removeAll();
 								    		form.down('[name=smap1.nombre]').getStore().removeAll();
 								    		
+								    		if( !Ext.isEmpty(_CDIDEEXTsel) || _esSaludDanios == 'S' ){
+									        	_fieldByName('CDSUCEMI').allowBlank = false;
+									        }else {
+									        	_fieldByName('CDSUCEMI').allowBlank = true;
+									        }
 								    		
 											irModoEdicion();
 											
