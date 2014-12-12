@@ -269,6 +269,7 @@ public class PersonasManagerImpl implements PersonasManager
 			,String nongrata
 			,String cdideext
 			,String cdestcivil
+			,String cdsucemi
 			,String nmorddom
 			,String dsdomici
 			,String nmtelefo
@@ -303,6 +304,8 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n conducto:"+conducto
 				+ "\n ptcumupr:"+ptcumupr
 				+ "\n residencia:"+residencia
+				+ "\n cdestcivil:"+cdestcivil
+				+ "\n cdscuemi:"+cdsucemi
 				+ "\n nmorddom:"+nmorddom
 				+ "\n dsdomici:"+dsdomici
 				+ "\n nmtelefo:"+nmtelefo
@@ -362,7 +365,7 @@ public class PersonasManagerImpl implements PersonasManager
 						dsemail, dsnombre1, dsapellido,
 						dsapellido1, feingreso, cdnacion,
 						canaling, conducto, ptcumupr,
-						residencia, nongrata, cdideext, cdestcivil, Constantes.INSERT_MODE);
+						residencia, nongrata, cdideext, cdestcivil, cdsucemi,  Constantes.INSERT_MODE);
 			}
 			catch(Exception ex)
 			{

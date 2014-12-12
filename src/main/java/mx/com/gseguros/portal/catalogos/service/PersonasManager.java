@@ -50,6 +50,7 @@ public interface PersonasManager
 			,String nongrata
 			,String cdideext
 			,String cdestcivil
+			,String cdsucemi
 			,String nmorddom
 			,String dsdomici
 			,String nmtelefo
