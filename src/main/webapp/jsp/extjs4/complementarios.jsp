@@ -146,6 +146,119 @@
            		window.parent.scrollTo(0,0);
           		accordion.setActiveTab(comp);
           	}
+          	
+function _datComTurnarSuscripcion()
+{
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Observaciones para el suscriptor'
+        ,width       : 600
+        ,height      : 400
+        ,buttonAlign : 'center'
+        ,modal       : true
+        ,closable    : false
+        ,autoScroll  : true
+        ,items       :
+        [
+            Ext.create('Ext.form.HtmlEditor',
+            {
+                id        : 'inputTextareaCommentsToSusFromMC'
+                ,width  : 570
+                ,height : 300
+            })
+        ]
+        ,buttons    :
+        [
+            {
+                text     : 'Turnar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/user_go.png'
+                ,handler : function()
+                {
+                    var form=Ext.getCmp('formPanel');
+                    var window=this.up().up();
+                    if(form.isValid())
+                    {
+                        window.setLoading(true);
+                        form.submit(
+                        {
+                            params:
+                            {
+                                'map1.pv_cdunieco' :  inputCdunieco,
+                                'map1.pv_cdramo' :    inputCdramo,
+                                'map1.pv_estado' :    inputEstado,
+                                'map1.pv_nmpoliza' :  inputNmpoliza
+                            },
+                            success:function()
+                            {
+                                Ext.Ajax.request(
+                                {
+                                    url     : datComUrlMCUpdateStatus
+                                    ,params :
+                                    {
+                                        'smap1.ntramite'   : inputNtramite
+                                        ,'smap1.status'    : '13'//en suscripcion
+                                        ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToSusFromMC').getValue()
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        var json=Ext.decode(response.responseText);
+                                        if(json.success==true)
+                                        {
+                                            Ext.create('Ext.form.Panel').submit(
+                                            {
+                                                url             : datComUrlMC
+                                                ,standardSubmit : true
+                                                ,params         :
+                                                {
+                                                    'smap1.gridTitle':'Tareas',
+                                                    'smap2.pv_cdtiptra_i':1,
+                                                    'smap1.editable':1
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            window.setLoading(false);
+                                            Ext.Msg.show(
+                                            {
+                                                title:'Error',
+                                                msg: 'Error al turnar a suscripci&oacute;n',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.ERROR
+                                            });
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        window.setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            },
+                            failure:function()
+                            {
+                                window.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        datosIncompletos();
+                    }
+                }
+            }
+            ,{
+                text  : 'Cancelar'
+                ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show());
+}
             
             Ext.onReady(function(){
                 
@@ -545,6 +658,12 @@
 		                                    });
 		                                }
 		                            }
+		                        },
+		                        {
+		                            text     : 'Turnar a suscripci&oacute;n'
+		                            ,icon    : '${ctx}/resources/fam3icons/icons/user_go.png'
+		                            ,hidden  : sesionDsrol!='MESADECONTROL'
+		                            ,handler : function(){_datComTurnarSuscripcion();}
 		                        },
 		                        <%--
 		                        {
