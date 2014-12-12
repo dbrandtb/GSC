@@ -522,7 +522,7 @@ Ext.onReady(function()
                         text     : 'Turnar a suscripci&oacute;n'
                         ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                         ,handler : function(me){_mcdinamica_nuevoTramite(me,true);}
-                        ,hidden  : _4_smap1.cdsisrol!='MESADECONTROL'
+                        ,hidden  : true
                     }
                 ]
             })
