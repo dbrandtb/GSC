@@ -453,95 +453,95 @@ Ext.onReady(function()
                 		    {
                 		    	header     : 'Tipo concepto'
                 		    	,dataIndex : 'DESCRIPC' 
-                		    	,flex      : 1
+                		    	//,flex      : 1
                 		    }
                 		    ,{
                 		    	header     : 'Concepto'
                 		    	,dataIndex : 'OTVALOR'
-                		    	,flex      : 1
+                		    	//,flex      : 1
                 		    }
                 		    ,{
                                 header     : 'Cantidad'
                                 ,dataIndex : 'CANTIDAD'
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Importe arancel'
                                 ,dataIndex : 'IMP_ARANCEL'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Subtotal arancel'
                                 ,dataIndex : 'SUBTTARANCEL'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Descuento'
                                 ,dataIndex : 'DESTOAPLICA'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Subtotal descuento'
                                 ,dataIndex : 'SUBTTDESCUENTO'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Copago'
                                 ,dataIndex : 'COPAGOAPLICA'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Subtotal copago'
                                 ,dataIndex : 'SUBTTCOPAGO'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'ISR'
                                 ,dataIndex : 'ISRAPLICA'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Impuesto cedular'
                                 ,dataIndex : 'CEDUAPLICA'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Subtotal impuestos'
                                 ,dataIndex : 'SUBTTIMPUESTOS'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'IVA'
                                 ,dataIndex : 'IVAAPLICA'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'IVA RETENIDO'
                                 ,dataIndex : 'IVARETENIDO'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Importe autom&aacute;tico'
                                 ,dataIndex : 'PTIMPORTAUTO'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Importe facturado'
                                 ,dataIndex : 'PTIMPORT'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Autorizaci&oacute;n<br/>m&eacute;dica'
@@ -559,18 +559,18 @@ Ext.onReady(function()
                                     }
                                 	return r;
                                 }
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                                 header     : 'Valor usado'
                                 ,dataIndex : 'VALORUSADO'
                                 ,renderer  : Ext.util.Format.usMoney
-                                ,flex      : 1
+                                //,flex      : 1
                             }
                 		    ,{
                 		    	header     : 'Observaciones<br/>M&eacute;dicas'
                 		    	,dataIndex : 'COMMENME'
-                		    	,flex      : 1
+                		    	//,flex      : 1
                 		    }
                 		]
                 		//,viewConfig :
@@ -776,30 +776,30 @@ Ext.onReady(function()
                     {
                         header     : 'Tipo concepto'
                         ,dataIndex : 'DESCRIPC' 
-                        ,flex      : 1
+                        //,flex      : 1
                     }
                     ,{
                         header     : 'Concepto'
                         ,dataIndex : 'OTVALOR'
-                        ,flex      : 1
+                        //,flex      : 1
                     }
                     ,{
                         header     : 'Importe neto'
                         ,dataIndex : 'PTIMPORT'
                         ,renderer  : Ext.util.Format.usMoney
-                        ,flex      : 1
+                        //,flex      : 1
                     }
                     ,{
                         header     : 'Ajuste'
                         ,dataIndex : 'PTIMPORT_AJUSTADO'
                         ,renderer  : Ext.util.Format.usMoney
-                        ,flex      : 1
+                        //,flex      : 1
                     }
                     ,{
                         header     : 'Subtotal'
                         ,dataIndex : 'SUBTOTAL'
                         ,renderer  : Ext.util.Format.usMoney
-                        ,flex      : 1
+                        //,flex      : 1
                     }
                 ]
                 ,viewConfig :
