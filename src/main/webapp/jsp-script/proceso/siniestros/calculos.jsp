@@ -7,7 +7,7 @@
 var _p12_smap    = <s:property value='smapJson'                    escapeHtml='false' />;
 var _p12_smap2   = <s:property value='smap2Json'                   escapeHtml='false' />;
 var _p12_smap3   = <s:property value='smap3Json'                   escapeHtml='false' />;
-var _p12_slist1  = <s:property value='slist1Json'                  escapeHtml='false' />;//facturas(REEMBOLSO)/siniestros(P DIRECTO)
+var _p12_slist1  = <s:property value='facturasxSiniestroJson'      escapeHtml='false' />;//facturas(REEMBOLSO)/siniestros(P DIRECTO)
 var _p12_slist2  = <s:property value='slist2Json'                  escapeHtml='false' />;//copago/deducible (TODOS)
 var _p12_slist3  = <s:property value='slist3Json'                  escapeHtml='false' />;//proveedores (REEMBOLSO)
 var _p12_llist1  = <s:property value='llist1Json'                  escapeHtml='false' />;//lista de lista de conceptos (TODOS)
@@ -27,7 +27,7 @@ debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
 debug('_p12_smap3:'   , _p12_smap3);
-debug('_p12_slist1:'  , _p12_slist1);
+debug('_p12_slist1 FacturasxSiniestroJson:'  , _p12_slist1);
 debug('_p12_slist2:'  , _p12_slist2);
 debug('_p12_slist3:'  , _p12_slist3);
 debug('_p12_llist1:'  , _p12_llist1);
@@ -89,59 +89,7 @@ Ext.onReady(function()
 		,fields : [ <s:property value="imap.conceptoFields" /> ]
 	});
 	////// modelos //////
-	
-	////// stores //////
-	<%--
-	_p12_storeFacturas = Ext.create('Ext.data.Store',
-    {
-        autoLoad : false
-        ,model   : '_p12_Factura'
-        ,proxy   :
-        {
-            reader :
-            {
-            	type  : 'json'
-            	,root : 'slist1'
-            }
-            ,type  : 'ajax'
-            ,url   : _p12_urlObtenerFacturasTramite
-        }
-    });
-    --%>
-	<%--_p12_storeSiniestros = Ext.create('Ext.data.Store',
-    {
-        autoLoad : false
-        ,model   : '_p12_Siniestro'
-        ,proxy   :
-        {
-            reader :
-            {
-                type  : 'json'
-                ,root : 'slist1'
-            }
-            ,type  : 'ajax'
-            ,url   : _p12_urlObtenerSiniestrosTramite
-        }
-    });--%>
-	<%--
-	_p12_storeConceptos = Ext.create('Ext.data.Store',
-    {
-        autoLoad : false
-        ,model   : '_p12_Concepto'
-        ,proxy   :
-        {
-            reader :
-            {
-                type  : 'json'
-                ,root : 'slist1'
-            }
-            ,type  : 'ajax'
-            ,url   : _p12_urlObtenerConceptosCalculo
-        }
-    });
-    --%>
-	////// stores //////
-	
+
 	////// componentes //////
 	var totalglobal = 0.0;
 	var totalIVA		 = 0.0;
@@ -151,519 +99,585 @@ Ext.onReady(function()
 	//PAGO DIRECTO
     if(_p12_smap.OTVALOR02== _TIPO_PAGO_DIRECTO)
     {
-        debug('PAGO DIRECTO');
-        var indice;
-        for(indice = 0;indice<_p12_slist1.length;indice++)
-        {
-            debug('Iterando siniestros n '+(indice+1));
-            var panelSiniestro = Ext.create('Ext.form.Panel',
+		debug('PAGO DIRECTO');
+		var indice;
+		//RECORREMOS LAS FACTURAS
+		for(indice = 0;indice<_p12_slist1.length;indice++)
+		{
+			debug('Iterando siniestros n '+(indice+1));
+			debug("_p12_slist1.siniestroPD");
+			//va el panel de Asegurados
+			var indiceSiniestro;
+			var indiceConcepto ;
+			var panelSiniestro;
+
+			var panelFacturasPD = Ext.create('Ext.form.Panel',
+			{
+				title		: 'FACTURA',
+				layout		:
+				{
+					type     : 'table'
+					,columns : 2
+				}
+				,border   : 0
+				,defaults :
+				{
+					style : 'margin : 5px;'
+				}
+				,items    :
+                        [
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'N&Uacute;MERO DE FACTURA'
+                            	,name       : 'NFACTURA'
+                            },
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'FECHA'
+                            	,name       : 'FFACTURA'
+                            },
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'COBERTURA'
+                            	,name       : 'DSGARANT'
+                            },
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'DESCUENTO %'
+                            	,name       : 'DESCPORC'
+                            },
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'DESCUENTO $'
+                            	,name       : 'DESCNUME'
+                            },
+                            {
+                            	xtype       : 'displayfield'
+                            	,fieldLabel : 'SERVICIO'
+                            	,name       : 'DESCSERVICIO'
+                            }
+                        ]
+                    });
+                    
+                    panelFacturasPD.loadRecord(new _p12_Factura(_p12_slist1[indice]));
+                    _p12_paneles.push(panelFacturasPD);
+            
+            
+            
+            
+            //
+            for(indiceSiniestro = 0;indiceSiniestro<_p12_slist1[indice].siniestroPD.length ;indiceSiniestro++)
             {
-                layout    :
+            	debug("VALOR DE _p12_slist1[indice].siniestroPD[indiceSiniestro].conceptosAsegurado");
+            	debug(_p12_slist1[indice].siniestroPD[indiceSiniestro].conceptosAsegurado);
+                debug('Iterando siniestros n '+(indiceSiniestro+1));
+                var panelSiniestro = Ext.create('Ext.form.Panel',
                 {
-                	type     : 'table'
-                	,columns : 2
-                }
-                ,border   : 0
-	            ,defaults :
-	            {
-	                style : 'margin : 5px;'
-	            }
-                ,items    :
-                [
+                	layout    :
                     {
-                    	xtype       : 'displayfield'
-                    	,fieldLabel : 'N&Uacute;MERO DE SINIESTRO'
-                    	,name       : 'NMSINIES'
+                    	type     : 'table'
+                    	,columns : 2
                     }
-                    ,{
-                    	xtype       : 'displayfield'
-                    	,fieldLabel : 'SUCURSAL DE LA P&Oacute;LIZA'
-                    	,name       : 'CDUNIECO'
-                    }
-                    ,{
-                        xtype       : 'displayfield'
-                        ,fieldLabel : 'P&Oacute;LIZA'
-                        ,name       : 'NMPOLIZA'
-                    }
-                    ,{
-                        xtype       : 'displayfield'
-                        ,fieldLabel : 'CLAVE ASEGURADO'
-                        ,name       : 'CDPERSON'
-                    }
-                    ,{
-                        xtype       : 'displayfield'
-                        ,fieldLabel : 'ASEGURADO'
-                        ,name       : 'NOMBRE'
-                    }
-                    ,{
-                        xtype       : 'displayfield'
-                        ,fieldLabel : 'FECHA DE OCURRENCIA'
-                        ,name       : 'FEOCURRE'
-                        ,valueToRaw : function(value)
-                        {
-                        	return Ext.Date.format(value,'d M Y');
-                        }
-                    }
-                ]
-            });
-            panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice]));
-            //if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA' ||_p12_smap2.CDGARANT=='4HOS'||_p12_smap2.CDGARANT=='4MAT')
-            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =="1")
-            {
-            	debug('HOSPITAL');
-            	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
-            	var importe   = (_p12_lhosp[indice].PRECIO*1.0);
-            	var descuento = _p12_lhosp[indice].DESCPRECIO*1.0;
-            	debug('importe Inicial'   ,_p12_lhosp[indice].PTIMPORT*1.0);
-            	debug('importe'   , importe);
-            	debug('descuento' , descuento);
-            	var subttDesc = importe - descuento;
-            	debug('subttDesc' , subttDesc);
-            	var deducible = 0;
-            	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
-            	
-            	if(causaSiniestro != _CAUSA_ACCIDENTE){
-            		if(
-                			!(!sDeducible
-                			||sDeducible.toLowerCase()=='na'
-                			||sDeducible.toLowerCase()=='no')
-                			)
-                	{
-                		deducible = sDeducible.replace(',','')*1.0;
-                	}
-            	}
-            	
-            	var subttDedu = subttDesc - deducible;
-            	
-            	if(causaSiniestro != _CAUSA_ACCIDENTE){
-            		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
-            		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
-            		
-            		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
-            	}else{
-                	var copagoaplica = 0.0;
-            	}
-            	
-            	var iva       = _p12_lhosp[indice].IVA*1.0;
-            	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
-            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
-            	
-            	//var ivaIS = _p12_lhosp[indice].IVARETENIDO*1.0;
-            	var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
-            	debug('subttDedu',subttDedu);
-            	debug('subttDesc',subttDesc);
-            	debug('deducible',deducible);
-            	debug('subttDedu',subttDedu);
-            	debug('copago',copago);
-            	debug('tipcopag',tipcopag);
-            	debug('copagoaplica',copagoaplica);
-            	totalIVA 		 = totalIVA + iva;
-            	totalISR  		 = _p12_lhosp[indice].IMPISR*1.0;
-            	totalIVARet 	 = totalIVARet + ivaRetenido;
-            	totalImpCedular  = _p12_lhosp[indice].IMPCED*1.0;
-            	var total = (subttDedu + iva) - (copagoaplica + ivaRetenido+ totalISR + totalImpCedular);
-            	debug('total',total);
-            	totalglobal = totalglobal + total;
-            	var panelCuentas = Ext.create('Ext.panel.Panel',
-            	{
-            		title     : 'Resumen'
-            		,border   : 1
-            		,defaults :
-            		{
-            			style : 'margin : 5px;'
-            		}
-            	    ,items    :
-            	    [
-            	        {
-            	        	xtype       : 'displayfield'
-            	        	,labelWidth : 200
-            	        	,fieldLabel : 'Importe'
-            	        	,value      : importe
-            	        	,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-            	        }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Descuento'
-                            ,value      : descuento
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Subtotal'
-                            ,value      : subttDesc
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Deducible'
-                            ,value      : deducible
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Subtotal'
-                            ,value      : subttDedu
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Copago' //  PAGO DIRECRO
-                            ,value      : copagoaplica
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-                        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Base IVA'
-                            ,value      : baseIva
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        },{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'IVA' //IVA PAGO DIRECTO HOSPI
-                            ,value      : iva
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        },{
-                            xtype       : 'displayfield'
-                                ,labelWidth : 200
-                                ,fieldLabel : 'IVA Retenido' //IVA PAGO DIRECTO HOSPI
-                                ,value      : ivaRetenido
-                                ,valueToRaw : function(value)
-                                {
-                                    return Ext.util.Format.usMoney(value);
-                                }
-                            }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                                ,fieldLabel : 'ISR' //IVA PAGO DIRECTO HOSPI
-                                ,value      : totalISR
-                                ,valueToRaw : function(value)
-                                {
-                                    return Ext.util.Format.usMoney(value);
-                                }
-                        ////		
-                            }
-                        ,{
-                            xtype       : 'displayfield'
-                                ,labelWidth : 200
-                                ,fieldLabel : 'IMP. CEDULAR' //IVA PAGO DIRECTO HOSPI
-                                ,value      : totalImpCedular
-                                ,valueToRaw : function(value)
-                                {
-                                    return Ext.util.Format.usMoney(value);
-                                }
-                            }
-            	        ,{
-                            xtype       : 'displayfield'
-                            ,labelWidth : 200
-                            ,fieldLabel : 'Total'
-                            ,value      : total
-                            ,valueToRaw : function(value)
-                            {
-                                return Ext.util.Format.usMoney(value);
-                            }
-                        }
-            	    ]
-            	});
-            	var panelIterado = Ext.create('Ext.panel.Panel',
-                {
-                    title           : 'SINIESTRO'
-                    ,collapsible    : true
-                    ,titleCollapse  : true
-                    ,collapsed      : true
-                    ,defaults       :
-                    {
-                        style : 'margin : 5px;'
-                    }
-                    ,items          :
+                    ,border   : 0
+    	            ,defaults :
+    	            {
+    	                style : 'margin : 5px;'
+    	            }
+                    ,items    :
                     [
-                        panelSiniestro
-                        ,panelCuentas
+                        {
+                        	xtype       : 'displayfield'
+                        	,fieldLabel : 'N&Uacute;MERO DE SINIESTRO'
+                        	,name       : 'NMSINIES'
+                        }
+                        ,{
+                        	xtype       : 'displayfield'
+                        	,fieldLabel : 'SUCURSAL DE LA P&Oacute;LIZA'
+                        	,name       : 'CDUNIECO'
+                        }
+                        ,{
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'P&Oacute;LIZA'
+                            ,name       : 'NMPOLIZA'
+                        }
+                        ,{
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'CLAVE ASEGURADO'
+                            ,name       : 'CDPERSON'
+                        }
+                        ,{
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'ASEGURADO'
+                            ,name       : 'NOMBRE'
+                        }
+                        ,{
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'FECHA DE OCURRENCIA'
+                            ,name       : 'FEOCURRE'
+                            ,valueToRaw : function(value)
+                            {
+                            	return Ext.Date.format(value,'d M Y');
+                            }
+                        }
                     ]
                 });
-            	_p12_paneles.push(panelIterado);
-            }
-            else
-            {
-            	debug('PAGO DIRECTO');
-            	totalglobal = totalglobal + _p12_lpdir[indice].total*1.0;
-            	totalIVA   = totalIVA + _p12_lpdir[indice].ivaTotalMostrar*1.0;
-            	totalISR = totalISR + _p12_lpdir[indice].iSRMostrar*1.0;
-            	totalIVARet = totalIVARet + _p12_lpdir[indice].ivaRetenidoMostrar*1.0;
-            	totalImpCedular = totalImpCedular + _p12_lpdir[indice].totalcedular*1.0;
-            	var gridCuentas = Ext.create('Ext.grid.Panel',
-            	{
-            		store    : Ext.create('Ext.data.Store',
-            		{
-            			autoLoad : true
-            			,model   : '_p12_Concepto'
-            			,proxy   :
-            			{
-            				type    : 'memory'
-            				,reader : 'json'
-            				,data   : _p12_llist1[indice]
-            			}
-            		})
-            		,height  : 180
-            		,columns :
-            		[
-            		    {
-            		    	header     : 'Tipo concepto'
-            		    	,dataIndex : 'DESCRIPC' 
-            		    	,flex      : 1
-            		    }
-            		    ,{
-            		    	header     : 'Concepto'
-            		    	,dataIndex : 'OTVALOR'
-            		    	,flex      : 1
-            		    }
-            		    ,{
-                            header     : 'Cantidad'
-                            ,dataIndex : 'CANTIDAD'
-                            ,flex      : 1
+                panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice].siniestroPD[indiceSiniestro]));
+                
+                //debug("VALOR DE TIPO DE CALCULO");
+                //debug(_p12_slist1[indice].TIPOFORMATOCALCULO);
+                
+                if(_p12_slist1[indice].TIPOFORMATOCALCULO =="1"){
+                    debug("HOSPITALIZACION");
+                    var causaSiniestro =  _p12_slist1[indice].siniestroPD[indiceSiniestro].CAUSASINIESTRO;
+                    var importe        =  _p12_lhosp[indice].PRECIO*1.0 ;
+                    var descuento      =  _p12_lhosp[indice].DESCPRECIO*1.0;
+                    var subttDesc      =  importe - descuento;
+                    var deducible      =  0;
+                    var sDeducible     =  _p12_slist1[indice].siniestroPD[indiceSiniestro].conceptosAsegurado[indice].DEDUCIBLE;
+                    
+                    debug("CAUSA SINIESTRO -->"+causaSiniestro);
+                    debug("Importe -->"+importe);
+                    debug("descuento -->"+descuento);
+                    debug('subttDesc -->' , subttDesc);
+                    debug('sDeducible -->' , sDeducible);
+                    
+                    if(causaSiniestro != _CAUSA_ACCIDENTE){
+                        if(
+                                !(!sDeducible
+                                ||sDeducible.toLowerCase()=='na'
+                                ||sDeducible.toLowerCase()=='no')
+                        )
+                        {
+                            deducible = sDeducible.replace(',','')*1.0;
                         }
-            		    ,{
-                            header     : 'Importe arancel'
-                            ,dataIndex : 'IMP_ARANCEL'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
+                    }
+                    var subttDedu = subttDesc - deducible;
+                    debug('subttDedu -->' , subttDedu);
+                    
+                    if(causaSiniestro != _CAUSA_ACCIDENTE){
+                        var copagoPesos       = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPESOS;
+                        var copagoPorcentajes = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPORCENTAJES;
+                        
+                        var copagoaplica =  (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
+                    }else{
+                        var copagoaplica = 0.0;
+                    }
+                    
+                    debug("copagoaplica--->"+copagoaplica);
+                    var iva       = _p12_lhosp[indice].IVA*1.0;
+                    var baseIva =   _p12_lhosp[indice].BASEIVA*1.0;
+                    var ivaRetenido = _p12_lhosp[indice].IVARETENIDO*1.0;
+                    debug('subttDedu',subttDedu);
+                    debug('subttDesc',subttDesc);
+                    debug('deducible',deducible);
+                    debug('subttDedu',subttDedu);
+                    debug('copago',copago);
+                    debug('tipcopag',tipcopag);
+                    debug('copagoaplica',copagoaplica);
+                    totalIVA 		 =  totalIVA + iva;
+                    totalISR  		 =  _p12_lhosp[indice].IMPISR*1.0;
+                    totalIVARet 	 =  totalIVARet + ivaRetenido;
+                    totalImpCedular  =  _p12_lhosp[indice].IMPCED*1.0;
+                    var total =  (subttDedu + iva) - (copagoaplica + ivaRetenido+ totalISR + totalImpCedular);
+                    debug('total',total);
+                    totalglobal = totalglobal + total;
+                    var panelCuentas = Ext.create('Ext.panel.Panel',
+                    {
+                        title     : 'Resumen'
+                        ,border   : 1
+                        ,defaults :
+                        {
+                            style : 'margin : 5px;'
                         }
-            		    ,{
-                            header     : 'Subtotal arancel'
-                            ,dataIndex : 'SUBTTARANCEL'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Descuento'
-                            ,dataIndex : 'DESTOAPLICA'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Subtotal descuento'
-                            ,dataIndex : 'SUBTTDESCUENTO'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Copago'
-                            ,dataIndex : 'COPAGOAPLICA'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Subtotal copago'
-                            ,dataIndex : 'SUBTTCOPAGO'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'ISR'
-                            ,dataIndex : 'ISRAPLICA'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Impuesto cedular'
-                            ,dataIndex : 'CEDUAPLICA'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Subtotal impuestos'
-                            ,dataIndex : 'SUBTTIMPUESTOS'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'IVA'
-                            ,dataIndex : 'IVAAPLICA'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'IVA RETENIDO'
-                            ,dataIndex : 'IVARETENIDO'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Importe autom&aacute;tico'
-                            ,dataIndex : 'PTIMPORTAUTO'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Importe facturado'
-                            ,dataIndex : 'PTIMPORT'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-                            header     : 'Autorizaci&oacute;n<br/>m&eacute;dica'
-                            ,dataIndex : 'AUTMEDIC'
-                            ,renderer  : function(v)
+                        ,items    :
+                        [
                             {
-                            	var r ='N/A';
-                            	if(v=='S')
-                            	{
-                            		r='SI';
-                            	}
-                            	else if(v=='N')
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Importe'
+                                ,value      : importe
+                                ,valueToRaw : function(value)
                                 {
-                                    r='NO';
+                                    return Ext.util.Format.usMoney(value);
                                 }
-                            	return r;
                             }
-                            ,flex      : 1
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Descuento'
+                                ,value      : descuento
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Subtotal'
+                                ,value      : subttDesc
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Deducible'
+                                ,value      : deducible
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Subtotal'
+                                ,value      : subttDedu
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Copago' //  PAGO DIRECRO
+                                ,value      : copagoaplica
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Base IVA'
+                                ,value      : baseIva
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            },{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'IVA' //IVA PAGO DIRECTO HOSPI
+                                ,value      : iva
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            },{
+                                xtype       : 'displayfield'
+                                    ,labelWidth : 200
+                                    ,fieldLabel : 'IVA Retenido' //IVA PAGO DIRECTO HOSPI
+                                    ,value      : ivaRetenido
+                                    ,valueToRaw : function(value)
+                                    {
+                                        return Ext.util.Format.usMoney(value);
+                                    }
+                                }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                    ,fieldLabel : 'ISR' //IVA PAGO DIRECTO HOSPI
+                                    ,value      : totalISR
+                                    ,valueToRaw : function(value)
+                                    {
+                                        return Ext.util.Format.usMoney(value);
+                                    }
+                            ////		
+                                }
+                            ,{
+                                xtype       : 'displayfield'
+                                    ,labelWidth : 200
+                                    ,fieldLabel : 'IMP. CEDULAR' //IVA PAGO DIRECTO HOSPI
+                                    ,value      : totalImpCedular
+                                    ,valueToRaw : function(value)
+                                    {
+                                        return Ext.util.Format.usMoney(value);
+                                    }
+                                }
+                            ,{
+                                xtype       : 'displayfield'
+                                ,labelWidth : 200
+                                ,fieldLabel : 'Total'
+                                ,value      : total
+                                ,valueToRaw : function(value)
+                                {
+                                    return Ext.util.Format.usMoney(value);
+                                }
+                            }
+                        ]
+                    });
+                    var panelIterado = Ext.create('Ext.panel.Panel',
+                    {
+                    	title           : 'SINIESTRO',
+                    	defaults       :
+                        {
+                            style : 'margin : 5px;'
                         }
-            		    ,{
-                            header     : 'Valor usado'
-                            ,dataIndex : 'VALORUSADO'
-                            ,renderer  : Ext.util.Format.usMoney
-                            ,flex      : 1
-                        }
-            		    ,{
-            		    	header     : 'Observaciones<br/>M&eacute;dicas'
-            		    	,dataIndex : 'COMMENME'
-            		    	,flex      : 1
-            		    }
-            		]
-	            	,viewConfig :
-	                {
-	                    listeners :
-	                    {
-	                        refresh : function(dataview)
-	                        {
-	                            Ext.each(dataview.panel.columns, function(column)
-	                            {
-	                                column.autoSize();
-	                            });
-	                        }
-	                    }
-	                }
-            	    ,listeners :
-            	    {
-            	    	itemclick : _p12_mostrarWindowAutoriza
-            	    }
-            	});
-	            var panelTotales = Ext.create('Ext.form.Panel',
-	            {
-	                layout    :
-	                {
-	                    type     : 'table'
-	                    ,columns : 1
-	                }
-	                ,border   : 0
-	                ,width    : 800
-	                ,defaults :
-	                {
-	                    style : 'margin : 5px;'
-	                }
-	                ,items    :
-	                [
-	                    {
-	                        xtype       : 'displayfield'
-	                        ,fieldLabel : 'SUBTOTAL'
-	                        ,labelWidth : 200
-	                        ,value      : ((_p12_lpdir[indice].total)*1) + ((_p12_lpdir[indice].iSRMostrar)*1) + ((_p12_lpdir[indice].ivaRetenidoMostrar)*1) - ((_p12_lpdir[indice].ivaTotalMostrar)*1)
-	                        ,valueToRaw : function(value)
-	                        {
-	                        	return Ext.util.Format.usMoney(value);
-	                        }
-	                    },
-	                    {
-	                        xtype       : 'displayfield'
-	                        ,fieldLabel : 'IVA'
-	                        ,labelWidth : 200
-	                        ,value      : _p12_lpdir[indice].ivaTotalMostrar
-	                        ,valueToRaw : function(value)
-	                        {
-	                        	return Ext.util.Format.usMoney(value);
-	                        }
-	                    },
-	                    {
-	                        xtype       : 'displayfield'
-	                        ,fieldLabel : 'IVA Retenido'
-	                        ,labelWidth : 200
-	                        ,value      : _p12_lpdir[indice].ivaRetenidoMostrar
-	                        ,valueToRaw : function(value)
-	                        {
-	                        	return Ext.util.Format.usMoney(value);
-	                        }
-	                    },
-	                    
-	                    {
-	                        xtype       : 'displayfield'
-	                        ,fieldLabel : 'ISR'
-	                        ,labelWidth : 200
-	                        ,value      : _p12_lpdir[indice].iSRMostrar
-	                        ,valueToRaw : function(value)
-	                        {
-	                        	return Ext.util.Format.usMoney(value);
-	                        }
-	                    },
-	                    {
-	                        xtype       : 'displayfield'
-	                        ,fieldLabel : 'TOTAL'
-	                        ,labelWidth : 200
-	                        ,value      : _p12_lpdir[indice].total
-	                        ,valueToRaw : function(value)
-	                        {
-	                        	return Ext.util.Format.usMoney(value);
-	                        }
-	                    }
-	                ]
-	            });
-	            var panelIterado = Ext.create('Ext.panel.Panel',
-	            {
-	            	title          : 'SINIESTRO'
-	            	,collapsible   : true
-	            	,titleCollapse : true
-	            	,collapsed     : true
-	            	,defaults      :
-	                {
-	                    style : 'margin : 5px;'
-	                }
-	                ,items         :
-	                [
-	                    panelSiniestro
-	                    ,gridCuentas
-	                    ,panelTotales
-	                ]
-	            });
-	            _p12_paneles.push(panelIterado);
+                        ,items          :
+                        [
+							panelSiniestro
+                            ,panelCuentas
+                        ]
+                    });
+                    _p12_paneles.push(panelIterado);
+                }
+                else{
+                	debug('PAGO DIRECTO');
+                	totalglobal = totalglobal + _p12_lpdir[indiceSiniestro].total*1.0;
+                	totalIVA   =  totalIVA + _p12_lpdir[indiceSiniestro].ivaTotalMostrar*1.0;
+                	totalISR =  totalISR + _p12_lpdir[indiceSiniestro].iSRMostrar*1.0;
+                	totalIVARet =  totalIVARet + _p12_lpdir[indiceSiniestro].ivaRetenidoMostrar*1.0;
+                	totalImpCedular =  totalImpCedular + _p12_lpdir[indiceSiniestro].totalcedular*1.0;
+                	var gridCuentas = Ext.create('Ext.grid.Panel',
+                	{
+                		store    : Ext.create('Ext.data.Store',
+                		{
+                			autoLoad : true
+                			,model   : '_p12_Concepto'
+                			,proxy   :
+                			{
+                				type    : 'memory'
+                				,reader : 'json'
+                				,data   : _p12_slist1[indice].siniestroPD[indiceSiniestro].conceptosAsegurado 
+                			}
+                		})
+                		,height  : 180
+                		,columns :
+                		[
+                		    {
+                		    	header     : 'Tipo concepto'
+                		    	,dataIndex : 'DESCRIPC' 
+                		    	,flex      : 1
+                		    }
+                		    ,{
+                		    	header     : 'Concepto'
+                		    	,dataIndex : 'OTVALOR'
+                		    	,flex      : 1
+                		    }
+                		    ,{
+                                header     : 'Cantidad'
+                                ,dataIndex : 'CANTIDAD'
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Importe arancel'
+                                ,dataIndex : 'IMP_ARANCEL'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Subtotal arancel'
+                                ,dataIndex : 'SUBTTARANCEL'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Descuento'
+                                ,dataIndex : 'DESTOAPLICA'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Subtotal descuento'
+                                ,dataIndex : 'SUBTTDESCUENTO'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Copago'
+                                ,dataIndex : 'COPAGOAPLICA'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Subtotal copago'
+                                ,dataIndex : 'SUBTTCOPAGO'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'ISR'
+                                ,dataIndex : 'ISRAPLICA'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Impuesto cedular'
+                                ,dataIndex : 'CEDUAPLICA'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Subtotal impuestos'
+                                ,dataIndex : 'SUBTTIMPUESTOS'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'IVA'
+                                ,dataIndex : 'IVAAPLICA'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'IVA RETENIDO'
+                                ,dataIndex : 'IVARETENIDO'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Importe autom&aacute;tico'
+                                ,dataIndex : 'PTIMPORTAUTO'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Importe facturado'
+                                ,dataIndex : 'PTIMPORT'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Autorizaci&oacute;n<br/>m&eacute;dica'
+                                ,dataIndex : 'AUTMEDIC'
+                                ,renderer  : function(v)
+                                {
+                                	var r ='N/A';
+                                	if(v=='S')
+                                	{
+                                		r='SI';
+                                	}
+                                	else if(v=='N')
+                                    {
+                                        r='NO';
+                                    }
+                                	return r;
+                                }
+                                ,flex      : 1
+                            }
+                		    ,{
+                                header     : 'Valor usado'
+                                ,dataIndex : 'VALORUSADO'
+                                ,renderer  : Ext.util.Format.usMoney
+                                ,flex      : 1
+                            }
+                		    ,{
+                		    	header     : 'Observaciones<br/>M&eacute;dicas'
+                		    	,dataIndex : 'COMMENME'
+                		    	,flex      : 1
+                		    }
+                		]
+                		//,viewConfig :
+    	                //{
+    	                    //listeners :
+    	                    //{
+    	                        //refresh : function(dataview)
+    	                        //{
+    	                            //Ext.each(dataview.panel.columns, function(column)
+    	                            //{
+    	                                //column.autoSize();
+    	                            //});
+    	                        //}
+    	                    //}
+    	                //}
+                	    //,listeners :
+                	    //{
+                	    	//itemclick : _p12_mostrarWindowAutoriza
+                	    //}
+                	});
+    	            var panelTotales = Ext.create('Ext.form.Panel',
+    	            {
+    	                layout    :
+    	                {
+    	                    type     : 'table'
+    	                    ,columns : 1
+    	                }
+    	                ,border   : 0
+    	                ,width    : 800
+    	                ,defaults :
+    	                {
+    	                    style : 'margin : 5px;'
+    	                }
+    	                ,items    :
+    	                [
+    	                    {
+    	                        xtype       : 'displayfield'
+    	                        ,fieldLabel : 'SUBTOTAL'
+    	                        ,labelWidth : 200
+    	                        ,value      : ((_p12_lpdir[indiceSiniestro].total)*1) + ((_p12_lpdir[indiceSiniestro].iSRMostrar)*1) + ((_p12_lpdir[indiceSiniestro].ivaRetenidoMostrar)*1) - ((_p12_lpdir[indiceSiniestro].ivaTotalMostrar)*1)
+    	                        ,valueToRaw : function(value)
+    	                        {
+    	                        	return Ext.util.Format.usMoney(value);
+    	                        }
+    	                    },
+    	                    {
+    	                        xtype       : 'displayfield'
+    	                        ,fieldLabel : 'IVA'
+    	                        ,labelWidth : 200
+    	                        ,value      : _p12_lpdir[indiceSiniestro].ivaTotalMostrar
+    	                        ,valueToRaw : function(value)
+    	                        {
+    	                        	return Ext.util.Format.usMoney(value);
+    	                        }
+    	                    },
+    	                    {
+    	                        xtype       : 'displayfield'
+    	                        ,fieldLabel : 'IVA Retenido'
+    	                        ,labelWidth : 200
+    	                        ,value      :  _p12_lpdir[indiceSiniestro].ivaRetenidoMostrar
+    	                        ,valueToRaw : function(value)
+    	                        {
+    	                        	return Ext.util.Format.usMoney(value);
+    	                        }
+    	                    },
+    	                    
+    	                    {
+    	                        xtype       : 'displayfield'
+    	                        ,fieldLabel : 'ISR'
+    	                        ,labelWidth : 200
+    	                        ,value      : _p12_lpdir[indiceSiniestro].iSRMostrar
+    	                        ,valueToRaw : function(value)
+    	                        {
+    	                        	return Ext.util.Format.usMoney(value);
+    	                        }
+    	                    },
+    	                    {
+    	                        xtype       : 'displayfield'
+    	                        ,fieldLabel : 'TOTAL'
+    	                        ,labelWidth : 200
+    	                        ,value      :  _p12_lpdir[indiceSiniestro].total
+    	                        ,valueToRaw : function(value)
+    	                        {
+    	                        	return Ext.util.Format.usMoney(value);
+    	                        }
+    	                    }
+    	                ]
+    	            });
+    	            var panelIterado = Ext.create('Ext.panel.Panel',
+    	            {
+    	            	title           : 'SINIESTRO',
+    	            	collapsible   : true
+    	            	,titleCollapse : true
+    	            	,collapsed     : true
+    	            	,defaults      :
+    	                {
+    	                    style : 'margin : 5px;'
+    	                }
+    	                ,items         :
+    	                [
+    	                    panelSiniestro
+    	                    ,gridCuentas
+    	                    ,panelTotales
+    	                ]
+    	            });
+    	            _p12_paneles.push(panelIterado);
+                }
             }
         }
     }
@@ -742,6 +756,7 @@ Ext.onReady(function()
                 ]
             });
             panelFactura.loadRecord(new _p12_Factura(_p12_slist1[indice]));
+            
             var gridCuentas = Ext.create('Ext.grid.Panel',
             {
                 store    : Ext.create('Ext.data.Store',
@@ -844,11 +859,8 @@ Ext.onReady(function()
             }
             var copago      = _p12_slist2[indice].COPAGO*1.0;
             var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
-            //var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
-            //var _facturaIndividual = _p12_slist1[indice];
             
-            //if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA' || _facturaIndividual.CDGARANT=='4HOS'||_facturaIndividual.CDGARANT=='4MAT')
-           	if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
+            if(_p12_coberturaxcal[indice].tipoFormatoCalculo =='1'){
             	if(causaSiniestro != _CAUSA_ACCIDENTE){
             		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
             		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
@@ -870,7 +882,8 @@ Ext.onReady(function()
             var total = subttdeduc - copagoaplica;
             _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
-            var panelTotales = Ext.create('Ext.panel.Panel',
+
+			var panelTotales = Ext.create('Ext.panel.Panel',
             {
             	defaults :
             	{
@@ -1005,136 +1018,91 @@ Ext.onReady(function()
             _p12_paneles.push(panelIterado);
         }
     }
-	
-	
-	
+    
     _p12_paneles.push(Ext.create('Ext.form.Panel',
-    {
-    	title     : 'TOTAL PAGAR'
-    	,defaults :
-    	{
-    		style : 'margin : 5px;'
-    	}
-        //,layout : 'hbox'
-        ,layout  :
-        {
-        	type     : 'table'
-        	,columns : 1
-        }
-    	,items    :
-    	[
     	    {
-    	    	xtype       : 'displayfield'
-    	    	,labelWidth : 200
-    	    	,fieldLabel : 'TOTAL DEL TR&Aacute;MITE'
-    	    	,value      : totalglobal
-    	    	,valueToRaw : function(value)
-                {
-                    return Ext.util.Format.usMoney(value);
-                }
-    	    }
-    	    ,
-    	    {
-    	    	xtype       : 'displayfield'
-    	    	,labelWidth : 200
-    	    	,fieldLabel : 'IVA'
-    	    	,value      : totalIVA
-    	    	,valueToRaw : function(value)
-                {
-                    return Ext.util.Format.usMoney(value);
-                }
-    	    }
-    	    ,
-    	    {
-    	    	xtype       : 'displayfield'
-    	    	,labelWidth : 200
-    	    	,fieldLabel : 'ISR'
-    	    	,value      : totalISR
-    	    	,valueToRaw : function(value)
-                {
-                    return Ext.util.Format.usMoney(value);
-                }
-    	    }
-    	    ,
-    	    {
-    	    	xtype       : 'displayfield'
-    	    	,labelWidth : 200
-    	    	,fieldLabel : 'IVA RETENIDO'
-    	    	,value      : totalIVARet
-    	    	,valueToRaw : function(value)
-                {
-                    return Ext.util.Format.usMoney(value);
-                }
-    	    }
-    	    ,
-    	    {
-    	    	xtype       : 'displayfield'
-    	    	,labelWidth : 200
-    	    	,fieldLabel : 'IMPUESTO CEDULAR'
-    	    	,value      : totalImpCedular
-    	    	,valueToRaw : function(value)
-                {
-                    return Ext.util.Format.usMoney(value);
-                }
-    	    }
-    	    ,{
-    	    	xtype    : 'button'
-    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-    	    	,text    : 'Aceptar y guardar'
-    	    	,handler : _p12_guardar_click
-    	    }
-    	]
-    }));
-    
-    Ext.define('_p12_FormRechazo',
-    {
-        extend         : 'Ext.form.Panel'
-        ,initComponent : function()
-        {
-            debug('_p12_FormRechazo initComponent');
-            Ext.apply(this,
-            {
-                border  : 0
-                ,items  : _p12_itemsRechazo
-            });
-            this.callParent();
-        }
-    });
-    
-    Ext.define('_p12_WindowRechazo',
-    {
-        extend         : 'Ext.window.Window'
-        ,initComponent : function()
-        {
-            debug('_p12_WindowRechazo initComponent');
-            Ext.apply(this,
-            {
-                title        : 'Rechazo de tr&aacute;mite'
-                ,width       : 600
-                ,height      : 350
-                ,autoScroll  : true
-                ,closeAction : 'hide'
-                ,modal       : true
-                ,defaults    : { style : 'margin : 5px; ' }
-                ,items       : _p12_formRechazo
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        text     : 'Rechazar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
-                        ,handler : _p12_rechazoSiniestro
-                    }
-                ]
-            });
-            this.callParent();
-        }
-    });
-	////// componentes //////
+    	    	title     : 'TOTAL PAGAR'
+    	    	,defaults :
+    	    	{
+    	    		style : 'margin : 5px;'
+    	    	}
+    	        //,layout : 'hbox'
+    	        ,layout  :
+    	        {
+    	        	type     : 'table'
+    	        	,columns : 1
+    	        }
+    	    	,items    :
+    	    	[
+    	    	    {
+    	    	    	xtype       : 'displayfield'
+    	    	    	,labelWidth : 200
+    	    	    	,fieldLabel : 'TOTAL DEL TR&Aacute;MITE'
+    	    	    	,value      : totalglobal
+    	    	    	,valueToRaw : function(value)
+    	                {
+    	                    return Ext.util.Format.usMoney(value);
+    	                }
+    	    	    }
+    	    	    ,
+    	    	    {
+    	    	    	xtype       : 'displayfield'
+    	    	    	,labelWidth : 200
+    	    	    	,fieldLabel : 'IVA'
+    	    	    	,value      : totalIVA
+    	    	    	,valueToRaw : function(value)
+    	                {
+    	                    return Ext.util.Format.usMoney(value);
+    	                }
+    	    	    }
+    	    	    ,
+    	    	    {
+    	    	    	xtype       : 'displayfield'
+    	    	    	,labelWidth : 200
+    	    	    	,fieldLabel : 'ISR'
+    	    	    	,value      : totalISR
+    	    	    	,valueToRaw : function(value)
+    	                {
+    	                    return Ext.util.Format.usMoney(value);
+    	                }
+    	    	    }
+    	    	    ,
+    	    	    {
+    	    	    	xtype       : 'displayfield'
+    	    	    	,labelWidth : 200
+    	    	    	,fieldLabel : 'IVA RETENIDO'
+    	    	    	,value      : totalIVARet
+    	    	    	,valueToRaw : function(value)
+    	                {
+    	                    return Ext.util.Format.usMoney(value);
+    	                }
+    	    	    }
+    	    	    ,
+    	    	    {
+    	    	    	xtype       : 'displayfield'
+    	    	    	,labelWidth : 200
+    	    	    	,fieldLabel : 'IMPUESTO CEDULAR'
+    	    	    	,value      : totalImpCedular
+    	    	    	,valueToRaw : function(value)
+    	                {
+    	                    return Ext.util.Format.usMoney(value);
+    	                }
+    	    	    }
+    	    	    ,{
+    	    	    	xtype    : 'button'
+    	    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+    	    	    	,text    : 'Aceptar y guardar'
+    	    	    	,handler : _p12_guardar_click
+    	    	    }
+    	    	]
+    	    }));
+    	    
+
+    ////// componentes //////
 	
 	////// contenido //////
-	_p12_formRechazo   = new _p12_FormRechazo();
-	_p12_windowRechazo = new _p12_WindowRechazo();
+	//_p12_formRechazo   = new _p12_FormRechazo();
+	//_p12_windowRechazo = new _p12_WindowRechazo();
 	
 	_p12_formAutoriza = Ext.create('Ext.form.Panel',
 	{
@@ -1155,7 +1123,7 @@ Ext.onReady(function()
 		    {
 		    	text     : 'Guardar'
 		    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-		    	,handler : _p12_autorizarConcepto
+		    	//,handler : _p12_autorizarConcepto
 		    }
 		]
 	});
@@ -1195,54 +1163,6 @@ Ext.onReady(function()
         ,items  : [ <s:property value="imap.siniestroItems" /> ]
     });
 	
-	<%--
-	_p12_gridFacturas = Ext.create('Ext.grid.Panel',
-	{
-		title      : 'Facturas'
-		,width     : 450
-		,minHeight : 180
-		,store     : _p12_storeFacturas
-		,selType   : 'checkboxmodel'
-		,columns   : [ <s:property value="imap.facturaColumns" /> ]
-	    ,viewConfig :
-	    {
-	        listeners :
-	        {
-	            refresh : function(dataview)
-	            {
-	                Ext.each(dataview.panel.columns, function(column)
-	                {
-	                	column.autoSize();
-	                });
-	            }
-	        }
-	    }
-	});--%>
-	<%--
-	_p12_gridSiniestros = Ext.create('Ext.grid.Panel',
-    {
-        title      : 'Siniestros'
-        ,width     : 450
-        ,minHeight : 180
-        ,store     : _p12_storeSiniestros
-        ,selType   : 'checkboxmodel'
-        ,style     : 'margin-left : 5px;'
-        ,columns   : [ <s:property value="imap.siniestroColumns" /> ]
-        ,viewConfig :
-        {
-            listeners :
-            {
-                refresh : function(dataview)
-                {
-                    Ext.each(dataview.panel.columns, function(column)
-                    {
-                        column.autoSize();
-                    });
-                }
-            }
-        }
-    });--%>
-	
 	_p12_formProveedor = Ext.create('Ext.form.Panel'
 	,{
 		title   : 'PROVEEDOR'
@@ -1255,28 +1175,6 @@ Ext.onReady(function()
 	    ,items  : [ <s:property value="imap.proveedorItems" /> ]
 	});
 	
-	<%--
-	_p12_gridConceptos = Ext.create('Ext.grid.Panel',
-    {
-        title      : 'Conceptos'
-        ,minHeight : 200
-        ,store     : _p12_storeConceptos
-        ,columns   : [ <s:property value="imap.conceptoColumns" /> ]
-        ,viewConfig :
-        {
-            listeners :
-            {
-                refresh : function(dataview)
-                {
-                    Ext.each(dataview.panel.columns, function(column)
-                    {
-                        column.autoSize();
-                    });
-                }
-            }
-        }
-    });
-    --%>
 	
 	_p12_panelCalculo = Ext.create('Ext.panel.Panel',
 	{
@@ -1311,40 +1209,24 @@ Ext.onReady(function()
 	        	]
 	        }
 	        ,_p12_formTramite
-	        ,_p12_formFactura
 	        ,_p12_formProveedor
-	        ,_p12_formSiniestro
+	        //,_p12_formFactura
+	        //,_p12_formSiniestro
 	        ,_p12_panelCalculo
-	        /*
-	        ,Ext.create('Ext.panel.Panel',
-	        {
-	        	border  : 0
-	        	,layout :
-	        	{
-	        		type     : 'table'
-	        		,columns : 2
-	        	}
-	            ,items  :
-	        	[
-	        	    _p12_gridFacturas
-	        	    ,_p12_gridSiniestros
-	        	]
-	        })
-	        ,_p12_panelCalculo*/
 	    ]
 	});
 	////// contenido //////
 	
 	////// loader //////
-	_p12_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
-    {
-		_p12_formRechazo.items.items[2].setValue(records[0].get('value'));
-    });
+	//_p12_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
+    //{
+	//	_p12_formRechazo.items.items[2].setValue(records[0].get('value'));
+    //});
 	
 	_p12_formTramite.loadRecord(new _p12_Tramite(_p12_smap));
-	_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
+	//_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
 	_p12_formProveedor.loadRecord(new _p12_Proveedor(_p12_smap3));
-	_p12_formSiniestro.loadRecord(new _p12_Siniestro(_p12_smap2));
+	//_p12_formSiniestro.loadRecord(new _p12_Siniestro(_p12_smap2));
 	/*_p12_storeFacturas.load(
 	{
 		params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
@@ -1356,230 +1238,9 @@ Ext.onReady(function()
 	////// loader //////
 });
 
-////// funciones //////
-function _p12_mostrarWindowAutoriza(grid,record)
-{
-	debug('_p12_mostrarWindowAutoriza record:',record.raw);
-	_p12_formAutoriza.getForm().reset();
-	_p12_formAutoriza.loadRecord(new _p12_Concepto(record.raw));
-	_p12_windowAutoriza.show();
-	centrarVentanaInterna(_p12_windowAutoriza);
-}
 
-function _p12_rechazoSiniestro()
-{
-	debug('_p12_rechazoSiniestro');
-	var valido = _p12_formRechazo.isValid();
-	if(!valido)
-	{
-		datosIncompletos();
-	}
-	
-	if(valido)
-	{
-		_p12_windowRechazo.setLoading(true);
-		var json =
-		{
-			params : _p12_formAutoriza.getValues()
-		};
-		json.params['cancela']       = 'si';
-		json.params['cdmotivo']      = _p12_formRechazo.items.items[0].getValue();
-		json.params['commenrechazo'] = _p12_formRechazo.items.items[2].getValue();
-		json.params['ntramite']      = _p12_smap['NTRAMITE'];
-		debug('datos a enviar:',json);
-	    Ext.Ajax.request(
-	    {
-	        url       : _p12_urlAutorizaConceptos
-	        ,jsonData : json
-	        ,success  : function(response)
-	        {
-	        	_p12_windowRechazo.setLoading(false);
-	            json = Ext.decode(response.responseText);
-	            debug('respuesta:',json);
-	            if(json.success==true)
-	            {
-	                mensajeCorrecto('Datos guardados',json.mensaje);
-	                Ext.create('Ext.form.Panel').submit(
-	                {
-	                    url             : _p12_urlMesaControl
-	                	,standardSubmit : true
-	                    ,params         :
-	                    {
-	                        'smap1.gridTitle'      : 'Siniestros'
-	                        ,'smap2.pv_cdtiptra_i' : 16
-	                    }
-	                });
-	            }
-	            else
-	            {
-	                mensajeError(json.mensaje);
-	            }
-	        }
-	        ,failure  : function()
-	        {
-	        	_p12_windowRechazo.setLoading(false);
-	            errorComunicacion();
-	        }
-	    });
-	}
-}
 
-function _p12_autorizarConcepto()
-{
-	debug('_p12_autorizarConcepto');
-	
-	var valido = _p12_formAutoriza.isValid();
-	if(!valido)
-	{
-		datosIncompletos();
-	}
-	
-	if(valido)
-	{
-		
-		var autoMed = _p12_formAutoriza.down('[name="AUTRECLA"]');
-        if(autoMed)
-        {
-            autoMed = autoMed.getValue();
-        }
-        var autoRec = _p12_formAutoriza.down('[name="AUTMEDIC"]');
-        if(autoRec)
-        {
-            autoRec = autoRec.getValue();
-        }
-        debug('autoMed',autoMed,'autoRec',autoRec);
-        var cancelar = (autoMed && autoMed =='N') || (autoRec && autoRec == 'N');
-        debug('cancelar sin tipopago',cancelar ? 'si' : 'no');
-        cancelar = cancelar && _p12_smap['OTVALOR02']=='1';
-        debug('cancelar con tipopago',cancelar ? 'si' : 'no');
-        if(cancelar)
-        {
-            //jtezva
-            mensajeWarning(
-                    'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizada alguno de los conceptos'
-                    ,function(){_p12_windowRechazo.show();centrarVentanaInterna(_p12_windowRechazo);}
-            );
-        }
-        else
-        {
-			_p12_formAutoriza.setLoading(true);
-			Ext.Ajax.request(
-			{
-				url       : _p12_urlAutorizaConceptos
-				,jsonData :
-				{
-					params : _p12_formAutoriza.getValues() 
-				}
-				,success  : function(response)
-				{
-					_p12_formAutoriza.setLoading(false);
-					var json = Ext.decode(response.responseText);
-					debug('respuesta:',json);
-					if(json.success==true)
-					{
-						mensajeCorrecto('Datos guardados',json.mensaje);
-						Ext.create('Ext.form.Panel').submit(
-						{
-							standardSubmit : true
-							,params        :
-							{
-								'params.ntramite'  : _NTRAMITE
-								,'params.tipopago' : _TIPOPAGO
-							}
-						});
-					}
-					else
-					{
-						mensajeError(json.mensaje);
-					}
-				}
-				,failure  : function()
-				{
-					_p12_formAutoriza.setLoading(false);
-					errorComunicacion();
-				}
-			});
-        }
-	}
-}
-<%--
-function _p12_calcular()
-{
-	debug('_p12_calcular');
-	
-	var valido=true;
-	
-	if(valido)
-	{
-		valido = _p12_gridFacturas.getSelectionModel().selected.length==1&&_p12_gridSiniestros.getSelectionModel().selected.length==1;
-		if(!valido)
-		{
-			mensajeWarning('Seleccione la factura y el siniestro');
-		}
-	}
-	
-	if(valido)
-	{
-		var panel     = _p12_panelCalculo;
-		var factura   = _p12_gridFacturas.getSelectionModel().selected.items[0];
-		var siniestro = _p12_gridSiniestros.getSelectionModel().selected.items[0];
-		
-		panel.setLoading(true);
-		Ext.Ajax.request(
-		{
-			url     : _p12_urlObtenerDatosProveedor
-			,params :
-			{
-				'smap.cdpresta' : factura.get('CDPRESTA')
-			}
-		    ,success : function(response)
-		    {
-		    	var datosProveedor = Ext.decode(response.responseText);
-		    	debug('respuesta de datos de proveedor: ',datosProveedor);
-		    	
-		    	valido = datosProveedor.success; 
-		    	if(!valido)
-		    	{
-		    		panel.setLoading(false);
-		    		mensajeError('Error al obtener datos del proveedor',respuestaProveedor.mensaje);
-		    	}
-		    	
-		    	if(valido)
-		    	{
-		    		_p12_storeConceptos.load(
-		    		{
-		    			params :
-		    			{
-		    				'smap.ntramite' : _p12_smap.NTRAMITE
-		    			}
-			    		,callback: function(records, operation, success)
-	                    {
-			    			if(success)
-			    			{
-			    				panel.setLoading(false);
-			    				datosProveedor = datosProveedor.smap;
-			                    _p12_formProveedor.loadRecord(new _p12_Proveedor(datosProveedor));
-			    			}
-			    			else
-			    			{
-			    				panel.setLoading(false);
-			    				mensajeError('Error al obtener los conceptos');
-			    			}
-	                    }
-		    		});
-		    	}
-		    	
-		    }
-		    ,failure : function()
-		    {
-		    	panel.setLoading(false);
-		    	errorComunicacion();
-		    }
-		});
-	}
-}
---%>
-
+//////funciones //////
 function _p12_guardar_click()
 {
 	debug('_p12_guardar_click');
@@ -1655,7 +1316,8 @@ function _p12_validaAutorizaciones()
 	if(esPagoDirecto)
 	{
 		//var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
-		var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
+		//var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
+		var esHospital =  _p12_slist1[0].TIPOFORMATOCALCULO =='1';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
 		{
@@ -1663,36 +1325,27 @@ function _p12_validaAutorizaciones()
 		}
 		else
 		{
-			debug('validando pago directo');
+			//VERIFICAR VALIDACIONES DE LAS FACTURAS
+			
+			/*debug('validando pago directo');
 			var i;
 			var factura    = _p12_smap2;
 			var siniestros = _p12_slist1;
 			var conceptos  = _p12_llist1; 
-			/*for(i=0;i<siniestros.length;i++)
-			{
-				var siniestroIte = siniestros[i];
-				if(siniestroIte.AUTRECLA!='S')
-                {
-                    result = result + 'Reclamaciones no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-                }
-				if(false && siniestroIte.AUTMEDIC!='S')
-				{
-					result = result + 'El m&eacute;dico no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-				}
-			}*/
+			
 			for(i=0;i<siniestros.length;i++)
             {
 				var siniestroIte = siniestros[i];
-				/*if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
+				if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-				}*/
+				}
 				if(false && factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
-            }
-			if(!esHospital)
+            }*/
+			/*if(!esHospital)
 			{
 				for(i=0;i<siniestros.length;i++)
 	            {
@@ -1702,17 +1355,13 @@ function _p12_validaAutorizaciones()
 	                for(j=0;j<conceptosSiniestro.length;j++)
 	                {
 	                	var conceptoSiniestroIte = conceptosSiniestro[j];
-	                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
-	                    {
-	                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-	                    }*/
-	                    if(false && conceptoSiniestroIte.AUTMEDIC!='S')
+	                	if(false && conceptoSiniestroIte.AUTMEDIC!='S')
 	                    {
 	                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
 	                    }
 	                }
 	            }
-			}
+			}*/
 		}
 	}
 	else
@@ -1724,6 +1373,8 @@ function _p12_validaAutorizaciones()
 		for(i=0;i<facturas.length;i++)
 		{
 			var facturaIte = facturas[i];
+			debug("FACTURA --->>"+i);
+			debug(facturaIte);
 			
 			if(+ facturaIte.PTIMPORT <= 0){
 				result = result + 'Verifica el Importe ' + facturaIte.NFACTURA + '<br/>';
@@ -1733,10 +1384,10 @@ function _p12_validaAutorizaciones()
 				result = result + 'Verifica el Descuento ' + facturaIte.NFACTURA + '<br/>';
 			}
 			
-			/*if(facturaIte.AUTRECLA!='S')
+			if(facturaIte.AUTRECLA!='S')
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
-            }*/
+            }
             if(facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';

@@ -1347,6 +1347,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			super(dataSource, "PKG_SINIESTRO.P_LISTA_MSINIESTTRAMITE");
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_autoServ_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"NMSINIES"

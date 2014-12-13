@@ -550,10 +550,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite,String procesoInterno) throws Exception
+	public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite,String factura, String procesoInterno) throws Exception
+	//public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite, String procesoInterno) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_nfactura_i" , factura);
 		params.put("pv_autoServ_i" , procesoInterno);
 		log.debug("listaSiniestrosTramite params: "+params);
 		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosMsiniesTramite(params);
