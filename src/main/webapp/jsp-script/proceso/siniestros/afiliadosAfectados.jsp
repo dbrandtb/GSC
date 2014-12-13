@@ -9,6 +9,7 @@
 		/*INICIO DECLARACION VARIABLES*/
 			var _CONTEXT 							= '${ctx}';
 			var _URL_CATALOGOS						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+			var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 			var _CATALOGO_TipoMoneda				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 			var _ROL_MEDICO							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _CATALOGO_COB_X_VALORES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
@@ -2051,7 +2052,39 @@
 			        }
 			    });
 			/**FIN DE COMPONENTES***/
-			
+			var venDocuTramite=Ext.create('Ext.window.Window',
+				    {
+				        title           : 'Documentos del tr&aacute;mite '
+				        ,closable       : false
+				        ,width          : 370
+				        ,height         : 300
+				        ,autoScroll     : true
+				        ,collapsible    : true
+				        ,titleCollapse  : true
+				        ,startCollapsed : true
+				        ,resizable      : false
+				        ,loader         :
+				        {
+				            scripts   : true
+				            ,autoLoad : true
+				            ,url      : _UrlDocumentosPoliza
+				            ,params   :
+				            {
+				                'smap1.ntramite'   : _11_params.NTRAMITE
+				                ,'smap1.cdtippag' : _11_params.OTVALOR02
+				                ,'smap1.cdtipate' : ''
+				                ,'smap1.cdtiptra' : _11_params.CDTIPTRA
+				                ,'smap1.cdunieco' : ''
+				                ,'smap1.cdramo'   : ''
+				                ,'smap1.estado'   : ''
+				                ,'smap1.nmpoliza' : ''
+				                ,'smap1.nmsuplem' : ''
+				                ,'smap1.nmsolici' : ''
+				                ,'smap1.tipomov'  :  _11_params.OTVALOR02
+				            }
+				        }
+				    }).showAt(600,0);
+				    venDocuTramite.collapse();
 			/**INICIO DE CONTENIDO***/
 				_11_textfieldAsegurado = Ext.create('Ext.form.TextField',
 				{
@@ -2078,7 +2111,6 @@
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>
 		<script>
 			Ext.onReady(function(){
-
 			});
 		</script>
 	</head>
