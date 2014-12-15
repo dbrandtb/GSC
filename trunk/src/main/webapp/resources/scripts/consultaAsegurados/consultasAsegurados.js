@@ -144,12 +144,13 @@ Ext.onReady(function() {
                                 	tabDatosGeneralesPoliza.child('#tabDatosContratante').tab.show();
                                 	tabDatosGeneralesPoliza.child('#tabDatosTitular').tab.show();
                                 	tabDatosGeneralesPoliza.child('#tabDatosAsegurados').tab.show();                            	
-                                	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();
-                                	tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();                                	
                                 	if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
                                 	} else {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
+                                	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
                                 	}
                                     tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
                                     tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.hide();
@@ -372,8 +373,26 @@ Ext.onReady(function() {
                                     
                                     // Se llenan los datos generales de la poliza elegida
                                     panelDatosPoliza.getForm().loadRecord(records[0]);
+                                    
                                     //Mensaje DXN
                                     cambiaTextoMensajeAgente3(records[0].get('dsperpag'));
+                                    
+                                    //Resaltar en otro color en plan cuando sea Opción Hospitalaria
+                                    if(records[0].get('dsplan') == 'OPCIÓN HOSPITALARIA'){
+                                    	panelDatosPoliza.down('[name=dsplan]').setFieldStyle({'color':'#005B9A','font-weight':'bold'});                                    	
+                                    } else {
+                                    	panelDatosPoliza.down('[name=dsplan]').setFieldStyle({'color':'#00E','font-weight':'bold'});
+                                    }
+                                    
+                                    //Cuando el Agente sea PREVEX que se identifique fácilmente
+                                    //console.log(records[0].get('cdunieco'));
+                                    if(records[0].get('cdunieco') == '1403'){
+                                        panelDatosPoliza.down('[name=agente]').setFieldStyle({'color':'#0F6280','font-weight':'bold'});
+                                        cambiaTextoMensajeAgente4('AVISO: ATENCION EXCLUSIVA EN RED CERRADA HOSPITAL CLINICA NOVA');
+                                    } else {
+                                        panelDatosPoliza.down('[name=agente]').setFieldStyle({'color':'#000000','font-weight':'normal'});
+                                        cambiaTextoMensajeAgente4('');
+                                    }
                                 } else {
                                     showMessage('Aviso', 
                                         'No existen datos generales de la p\u00F3liza elegida. La P&oacute;iza no existe, verifique sus datos', 
@@ -521,7 +540,8 @@ Ext.onReady(function() {
             {type:'string', name:'contratante'},
             {type:'string', name:'cdrfc'},            
             {type:'string', name:'titular'},
-            {type:'string', name:'agente'}
+            {type:'string', name:'agente'},
+            {type:'string', name:'cdunieco'}
                                    
         ]
     });
@@ -591,8 +611,8 @@ Ext.onReady(function() {
         {
             layout : 'hbox',
             items : [
-                {xtype: 'textfield', name: 'dsplan',   fieldLabel: 'Plan',      readOnly: true, labelWidth: 60, width: 400, fieldStyle:{'color':'#00E','font-weight':'bold'}},
-                {xtype: 'textfield', name: 'statuspoliza', fieldLabel: 'Estatus P&oacute;liza', readOnly: true, labelWidth: 120,  width: 400, labelAlign: 'right'}
+                {xtype: 'textfield', name: 'dsplan',   fieldLabel: 'Plan',      readOnly: true, labelWidth: 60, width: 500},
+                {xtype: 'textfield', name: 'statuspoliza', fieldLabel: 'Estatus P&oacute;liza', readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
             ]
         },
     	{
@@ -949,7 +969,14 @@ Ext.onReady(function() {
         },{
             layout : 'hbox',
             items : [ 
-                {xtype:'textfield', name:'beneficiomaximoanual', fieldLabel: 'Beneficio M&aacute;ximo Anual', readOnly: true, labelWidth: 200, width: 400, renderer:Ext.util.Format.usMoney}, 
+                {
+                    xtype:'textfield', 
+                    name:'beneficiomaximoanual', 
+                    fieldLabel: 'Beneficio M&aacute;ximo Anual', 
+                    readOnly: true, 
+                    labelWidth: 200, 
+                    width: 400
+                }, 
                 {xtype:'textfield', name:'beneficiomaximovida',   fieldLabel: 'Beneficio M&aacute;ximo por Vida',         readOnly: true, labelWidth: 200,  width: 400, labelAlign: 'right', renderer:Ext.util.Format.usMoney}
             ]
         },{
@@ -1705,7 +1732,7 @@ Ext.onReady(function() {
     //Model
     Ext.define('FarmaciaModel', {
         extend:'Ext.data.Model',
-        fields:['iultimo','poliza','tigrupo','maximo','total','pendiente','gastototal','disponible']
+        fields:['iultimo','poliza','tigrupo','maximo','total','pendiente','gastototal','disponible','orden']
     });
     
     //Store
@@ -1765,8 +1792,27 @@ Ext.onReady(function() {
         },{
             header    : 'Disponible',
             dataIndex : 'disponible',
+            flex      : 1,            
+            renderer : function(value, meta) {
+                if(value < 0) {
+                	//Si está excedido, lo marcará en color rojo.
+                    meta.style = "background-color:red;usMoney";                    
+                }                
+                return Ext.util.Format.usMoney(value);
+            }            
+        },{
+            header    : 'Observaciones',
+            dataIndex : 'orden',
             flex      : 1,
-            renderer  : 'usMoney'
+            renderer : function(value, meta) {
+                if(value == 'ACTUAL') {
+                    meta.style = "background-color:yellow;";
+                    
+                } else {
+                    meta.style = "background-color:pink;";
+                }
+                return value;
+            }   
         }
         ]
     });
@@ -2143,6 +2189,7 @@ Ext.onReady(function() {
                                     cambiaTextoMensajeAgente("");
                                     cambiaTextoMensajeAgente2("");
                                     cambiaTextoMensajeAgente3("");
+                                    cambiaTextoMensajeAgente4("");
                                 	
                                     switch (newValue.tipoBusqueda) {
                                         case 1:
@@ -2294,6 +2341,7 @@ Ext.onReady(function() {
                             	cambiaTextoMensajeAgente("");
                                 cambiaTextoMensajeAgente2("");
                                 cambiaTextoMensajeAgente3("");
+                                cambiaTextoMensajeAgente4("");
                             	
                                 var formBusqueda = this.up('form').getForm();
                                 panelBusqueda.setLoading(true);
@@ -2376,6 +2424,12 @@ Ext.onReady(function() {
                     margin: '5',
                     border: false,
                     name: 'mensajeAgente3',
+                    html:''
+                 },{
+                    layout: 'column',
+                    margin: '5',
+                    border: false,
+                    name: 'mensajeAgente4',
                     html:''
                  }
             ]
@@ -2516,6 +2570,14 @@ Ext.onReady(function() {
         	}
         }else {
             panelBusqueda.down('[name=mensajeAgente3]').update('<span></span>');
+        }
+    }
+    
+    function cambiaTextoMensajeAgente4(texto) {
+        if(!Ext.isEmpty(texto)){
+            panelBusqueda.down('[name=mensajeAgente4]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">'+texto+'</span>');
+        }else {
+            panelBusqueda.down('[name=mensajeAgente4]').update('<span></span>');
         }
     }
     
