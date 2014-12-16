@@ -1363,7 +1363,7 @@
 						displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false,
 						listeners:{
 							select: function (combo, records, opts){
-								var cdTipo =  records[0].get('key');
+								var cdTipo = records[0].get('key');
 								debug("CLAVE DE TIPO --> "+cdTipo);
 								storeConceptosCatalogo.proxy.extraParams=
 								{
@@ -1381,9 +1381,6 @@
 			            forceSelection: true,		queryParam  : 'params.descripc',	hideTrigger : true,			minChars    : 3
 			            ,listeners : {
 			   				select:function(e){
-			   					debug("Proveedor -->"+panelInicialPral.down('[name=params.cdpresta]').getValue());
-			   					debug("idConceptoTipo -->"+ e.getValue());
-			   					
 			   					Ext.Ajax.request(
 								{
 								    url     : _URL_MONTO_ARANCEL
@@ -1445,6 +1442,12 @@
 				                	    {
 				                	    	_11_conceptoSeleccionado = gridEditorConceptos.getView().getSelectionModel().getSelection()[0];
 				                	    	debug('_11_conceptoSeleccionado:',_11_conceptoSeleccionado);
+				                	    	
+				                	    	storeConceptosCatalogo.proxy.extraParams=
+											{
+												'params.idPadre' :  _11_conceptoSeleccionado.get('IDCONCEP')
+												,catalogo        : _CATALOGO_ConceptosMedicos
+											};
 				                	    }
 				                	}
 					            })
@@ -1510,24 +1513,16 @@
 									header: 'Codigo Concepto', 				dataIndex: 'CDCONCEP',	width : 150		,  allowBlank: false
 									,editor : cmbCveConcepto
 									,renderer : function(v) {
-									var leyenda = '';
-										if (typeof v == 'string')// tengo solo el indice
+										var leyenda = v;
+										//var leyenda = '';
+										debug("VALOR DE V-->"+v);
+										/*if (typeof v == 'string')// tengo solo el indice
 										{
-											if(storeConceptosCatalogoRender.cargado)
-											{
-												storeConceptosCatalogoRender.each(function(rec) {
-													if (rec.data.key == v) {
-														leyenda = rec.data.value;
-													}
-												});
-											}
-											else
-											{
-											    leyenda='Cargando...';
-											}
-											
-											
-											
+											storeConceptosCatalogo.each(function(rec) {
+												if (rec.data.key == v) {
+													leyenda = rec.data.value;
+												}
+											});
 										}else // tengo objeto que puede venir como Generic u otro mas complejo
 										{
 											if (v.key && v.value)
@@ -1536,7 +1531,7 @@
 											} else {
 												leyenda = v.data.value;
 											}
-										}
+										}*/
 										return leyenda;
 									}
 								},
@@ -1550,6 +1545,17 @@
 											change:function(e){
 												var valorArancel = e.getValue();
 												_11_conceptoSeleccionado.set('PTPRECIO',valorArancel);
+												var cantidad = _11_conceptoSeleccionado.get('CANTIDAD');
+												var importe = _11_conceptoSeleccionado.get('PTPRECIO');
+												var destopor = _11_conceptoSeleccionado.get('DESTOPOR');
+												var destoimp = _11_conceptoSeleccionado.get('DESTOIMP');
+												var ImporteConcepto = ((+cantidad * +importe) * (1-( +destopor/100)))- (+destoimp);
+												_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+												
+												var totalAjusteMedico = _11_conceptoSeleccionado.get('TOTAJUSMED');
+												var totalFactura = _11_conceptoSeleccionado.get('PTIMPORT');
+												var Total = +totalFactura - (+totalAjusteMedico);
+												_11_conceptoSeleccionado.set('SUBTAJUSTADO',ImporteConcepto);
 											}
 										}
 									}
@@ -1849,6 +1855,16 @@
 						,gridFacturaDirecto
 						,gridEditorConceptos
 			        ],
+			        listeners:{
+				         close:function(){
+				             if(true){
+				            	panelInicialPral.getForm().reset();
+								storeAseguradoFactura.removeAll();
+								storeConceptos.removeAll();
+								//modPolizasAltaTramite.close();
+				             }
+				         }
+				    },
 					buttonAlign:'center',
 					buttons: [
 						{
@@ -1912,6 +1928,9 @@
 							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
 							handler:function()
 							{
+								panelInicialPral.getForm().reset();
+								storeAseguradoFactura.removeAll();
+								storeConceptos.removeAll();
 								modPolizasAltaTramite.close();
 							}
 						}

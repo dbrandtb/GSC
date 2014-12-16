@@ -3344,12 +3344,12 @@ public String consultaListaPlazas(){
     				//reembolso
     				
     				String destopor = facturaIte.get("DESCPORC");
-    				if(StringUtils.isBlank(destopor))
+    				if(StringUtils.isBlank(destopor) || destopor  == null)
     				{
     					facturaObj.put("DESCPORC","0");
     				}
     				String destoimp = facturaIte.get("DESCNUME");
-    				if(StringUtils.isBlank(destoimp))
+    				if(StringUtils.isBlank(destoimp)  || destoimp  == null)
     				{
     					facturaObj.put("DESCNUME","0");
     				}
@@ -3540,9 +3540,20 @@ public String consultaListaPlazas(){
     				logger.debug("deducible :"+deducibleFacturaIte);
     				logger.debug("scopago: "+sCopagoFacturaIte);
     				logger.debug("tipocopago: "+tipoCopagoFacturaIte);
+    				logger.debug("facturaIte.get(DESCPORC) -->"+facturaIte.get("DESCPORC"));
     				double totalFactura  = Double.valueOf(mprem.get("SUBTOTAL"));
-    				double destoPorFac   = Double.valueOf(facturaIte.get("DESCPORC"));
-    				double destoImpFac   = Double.valueOf(facturaIte.get("DESCNUME"));
+    				double destoPorFac = 0d;
+    				double destoImpFac= 0d;
+    				if(!StringUtils.isBlank(facturaIte.get("DESCPORC")) || !(facturaIte.get("DESCPORC")  == null))
+    				{
+    					destoPorFac = Double.valueOf(facturaIte.get("DESCPORC"));
+    				}
+    				if(!StringUtils.isBlank(facturaIte.get("DESCNUME"))  || !(facturaIte.get("DESCNUME")  == null))
+    				{
+    					destoImpFac = Double.valueOf(facturaIte.get("DESCNUME"));
+    				}
+    				//double destoPorFac   = Double.valueOf(facturaIte.get("DESCPORC"));
+    				//double destoImpFac   = Double.valueOf(facturaIte.get("DESCNUME"));
     				double destoAplicado = (totalFactura*(destoPorFac/100d)) + destoImpFac;
     				logger.debug("subtotal: "+totalFactura);
     				totalFactura -= destoAplicado;
