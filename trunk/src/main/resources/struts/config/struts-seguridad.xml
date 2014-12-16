@@ -100,6 +100,7 @@
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
+		    <result name="consultaAsegurados">/jsp/consultas/consultasAsegurados.jsp</result>
         </action>
         
 	</package>
