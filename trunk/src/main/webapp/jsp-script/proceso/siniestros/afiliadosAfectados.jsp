@@ -299,6 +299,13 @@
 							panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
 						}
 						
+						storeCobertura.proxy.extraParams=
+						{
+							'params.ntramite':_11_recordActivo.get('ntramite')
+							,'params.tipopago':_tipoPago
+							,catalogo        : _CATALOGO_COB_X_VALORES
+						};
+						
 						storeCobertura.load({
 							params:{
 								'params.ntramite':_11_recordActivo.get('ntramite'),
