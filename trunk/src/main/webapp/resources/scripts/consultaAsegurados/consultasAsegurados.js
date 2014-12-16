@@ -2136,17 +2136,11 @@ Ext.onReady(function() {
         id:'main-panel',
         baseCls:'x-plain',
         renderTo: 'dvConsultasAsegurados',
-        layout: {
-            type: 'column',
-            columns: 2
-        },
         autoScroll:true,
         defaults: {frame:true, width:200, height: 200, margin : '2'},
         items:[{
             title:'B&Uacute;SQUEDA DE ASEGURADOS',
-            colspan:2,
             width:990,
-            /*height:170,*/
             height:190,
             items: [
                 {
@@ -2433,36 +2427,38 @@ Ext.onReady(function() {
                     html:''
                  }
             ]
-        },
-        {
-            //Panel de la póliza actual. Está oculto pero de aquí se toman datos. NO ELIMINAR ESTE COMPONENTE.
-            title:'P&Oacute;LIZA',
-            width:990,
-            height:150,
-            colspan:2,
-            autoScroll:true,
-            hidden:true,
-            items : [
-                gridSuplementos
-            ]
-        },
-        {
-            //title:
-            width: 130,
-            height: 400,
-            items: [
-                listViewOpcionesConsulta
-            ]
-        },
-        {
-            //title:
-            width:850,
-            height:400,
-            colspan:2,
-            autoScroll:true,
-            items : [
-                tabDatosGeneralesPoliza                
-            ]
+        },{
+        	layout: 'hbox',
+        	frame:false,
+        	border: 0,
+        	width:990,
+        	height: 410,
+        	defaults: {
+        		autoScroll:true,
+        		frame:true,
+        		height: 400
+        	},
+        	items: [{
+                //Panel de la póliza actual. Está oculto pero de aquí se toman datos. NO ELIMINAR ESTE COMPONENTE.
+                title:'P&Oacute;LIZA',
+                hidden:true,
+                items : [
+                    gridSuplementos
+                ]
+            },{
+                //title:
+                width: 135,
+                style: 'margin-right:5px',
+                items: [
+                    listViewOpcionesConsulta
+                ]
+            },{
+                //title:
+                width:850,
+                items : [
+                    tabDatosGeneralesPoliza
+                ]
+            }]
         }]
     });
     
