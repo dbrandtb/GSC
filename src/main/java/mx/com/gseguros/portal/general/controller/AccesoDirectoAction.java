@@ -32,9 +32,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 
 	private static org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(AccesoDirectoAction.class);
 	
-	public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
-    public static String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
-    public static String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
+	public static final String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
+    public static final String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
+    public static final String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
+    
+    public static final String ACCESO_COTIZADOR = "cotizador";
+    public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
+    public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
+    
     
     /**
      * Success property
@@ -107,7 +112,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     	String acceso = (String)params.get("acceso");
     	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user));
     	
-    	if("cotizador".equals(acceso) || "consultaPolizas".equals(acceso)){
+    	if(ACCESO_COTIZADOR.equals(acceso) || ACCESO_CONSULTA_POLIZAS.equals(acceso) || ACCESO_CONSULTA_ASEGURADOS.equals(acceso)){
     		instanciaUsuarioLigaDirecta();
     		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
