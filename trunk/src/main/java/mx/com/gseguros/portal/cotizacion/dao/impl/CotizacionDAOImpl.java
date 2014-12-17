@@ -3050,6 +3050,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					    ,"agente_sec"
 					    ,"porparti"
 					    ,"prima_total"
+					    ,"cdpostal"
+					    ,"otfisjur"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
