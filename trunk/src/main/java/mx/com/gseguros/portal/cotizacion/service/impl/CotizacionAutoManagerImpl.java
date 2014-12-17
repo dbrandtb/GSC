@@ -1758,7 +1758,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					);
 			
 			setCheckpoint("Recuperando tarificacion");
-			resp.setSlist(cotizacionDAO.cargarResultadosCotizacion(cdusuari, cdunieco, cdramo, estado, nmpoliza, cdelemen, cdtipsit));
+			resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza));
 		}
 		catch(Exception ex)
 		{

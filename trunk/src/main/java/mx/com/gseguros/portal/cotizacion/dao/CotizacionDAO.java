@@ -503,4 +503,9 @@ public interface CotizacionDAO
 			,String cdramo
 			,String cdtipsit)throws Exception;
 	public String cargarClaveTtapvat1(String cdtabla,String otvalor)throws Exception;
+	public List<Map<String,String>>cargarResultadosCotizacionAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
 }
