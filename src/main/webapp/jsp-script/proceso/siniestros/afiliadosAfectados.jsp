@@ -9,7 +9,7 @@
 		/*INICIO DECLARACION VARIABLES*/
 			var _CONTEXT 							= '${ctx}';
 			var _URL_CATALOGOS						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-			var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
+			var _UrlDocumentosPoliza				= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 			var _CATALOGO_TipoMoneda				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 			var _ROL_MEDICO							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _CATALOGO_COB_X_VALORES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
@@ -544,16 +544,7 @@
 						            ajaxOptions: {
 						            	method: 'POST'
 						            }
-						        }/*
-							    ,
-							    listeners:{
-							         close:function(){
-							             if(true){
-							                 //Actualizamos la información de la consulta del grid inferior
-							            	 storeConceptos.reload();
-							             }
-							         }
-							    }*/
+						        }
 						    }).show();
 						    centrarVentanaInterna(windowLoader);
 						}
@@ -1157,13 +1148,7 @@
 								    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
 								    	,tooltip : 'Capturar Detalle'
 								    	,handler : revisarDocumento
-								    }/*,
-								    {
-										icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-										tooltip: 'Eliminar',
-									 	scope: this,
-									 	handler: this.onRemoveClick
-								 	}*/
+								    }
 								]
 							},
 							{
@@ -1282,22 +1267,6 @@
 					         	{type:'string',	name:'PTMTOARA'},		{type:'string',	name:'TOTAJUSMED'},		{type:'string',	name:'SUBTAJUSTADO'}
 							]
 					});
-					
-					/*storeConceptos = Ext.create('Ext.data.Store',
-					{
-						autoLoad : false
-						,model   : 'modelConceptos'
-						,proxy   :
-						{
-							reader :
-							{
-								type  : 'json'
-								,root : 'slist1'
-							}
-							,type  : 'ajax'
-							,url   : _p12_urlObtenerSiniestrosTramite
-					    }
-					});*/
 					
 					storeConceptos=new Ext.data.Store(
 					{
