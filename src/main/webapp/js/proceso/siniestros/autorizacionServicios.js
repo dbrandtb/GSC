@@ -393,7 +393,11 @@ Ext.onReady(function() {
 					Ext.getCmp('polizaAfectadaCom').setValue(record.get('numPoliza'));
 					
 					Ext.getCmp('iddsplanAsegurado').setValue(record.get('dsplan'));
-					Ext.getCmp('idMontoBase').setValue(record.get('mtoBase'));
+					if(record.get('mtoBase') == null || record.get('mtoBase')==''){
+						Ext.getCmp('idMontoBase').setValue("21000");
+					}else{
+						Ext.getCmp('idMontoBase').setValue(record.get('mtoBase'));
+					}
 					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
 					Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
 					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
@@ -2175,7 +2179,7 @@ Ext.onReady(function() {
 				},
 			 	{
 			 		colspan:2,xtype       : 'textfield'				,fieldLabel : 'Especialidad'				,id       : 'idEspecialidad',		name:'idEspecialidad'
-		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
+		 			,labelWidth: 170							,readOnly   : true
 			 	},
 			 	{
 			 		colspan:2,  xtype       : 'textfield'				,fieldLabel : 'Deducible'					,id       : 'idDeducible'
@@ -2645,7 +2649,11 @@ Ext.onReady(function() {
 	            	if(Ext.decode(response.responseText).polizaUnica != null)
             		{
 	            		var json=Ext.decode(response.responseText).polizaUnica[0];
-	            		Ext.getCmp('idMontoBase').setValue(json.mtoBase);
+	            		if(json.mtoBase == null ||json.mtoBase ==''){
+							Ext.getCmp('idMontoBase').setValue("21000");
+						}else{
+							Ext.getCmp('idMontoBase').setValue(json.mtoBase);
+						}
 						Ext.getCmp('idNmsuplem').setValue(json.nmsuplem);
 						Ext.getCmp('idZonaContratadaPoliza').setValue(json.zonaContratada);
 						Ext.getCmp('polizaAfectadaCom').setValue(json.numPoliza);
