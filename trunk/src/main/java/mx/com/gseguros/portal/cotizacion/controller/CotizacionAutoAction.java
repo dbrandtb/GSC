@@ -914,6 +914,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkList(slist2, "No se recibieron las situaciones base");
 			checkList(slist3, "No se recibieron las configuraciones de plan");
 			
+			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
+			
 			ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
 					cdusuari
 					,cdsisrol
@@ -930,7 +932,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,cdideperCli
 					,slist1
 					,slist2
-					,slist3);
+					,slist3
+					,noTarificar
+					);
 			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -1079,6 +1083,47 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				 "\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n##########################################"
 				));
+		return SUCCESS;
+	}
+	
+	public String recuperacionSimpleLista()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### recuperacionSimpleLista ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String procedimiento = smap1.get("procedimiento");
+			checkNull(procedimiento, "No se recibio el procedimiento");
+			checkBool(cotizacionAutoManager.obtenerMapaProcedimientosSimples().containsKey(procedimiento),"El procedimiento no existe");
+			
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.recuperacionSimpleLista(procedimiento,smap1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1=resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### recuperacionSimpleLista ######")
+				.append("\n#####################################")
+				.toString()
+				);
 		return SUCCESS;
 	}
 	
