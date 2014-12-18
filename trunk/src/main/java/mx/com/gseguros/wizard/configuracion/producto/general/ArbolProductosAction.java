@@ -161,8 +161,8 @@ public class ArbolProductosAction extends Padre{
 				removerLlavesSession(Integer.parseInt(nivel));				
 				session.put("CODIGO_NIVEL0", codigos.get(0).getKey());
 			}
-			if(isDebugEnabled){
-				log.debug("sube a session el objeto lista produtos"+listaProductos);
+			if(isDebugEnabled && listaProductos != null){
+				log.debug("objeto lista produtos size: " + listaProductos.size());
 			}
 			session.put("ARBOL_PRODUCTOS", listaProductos);
 		}
