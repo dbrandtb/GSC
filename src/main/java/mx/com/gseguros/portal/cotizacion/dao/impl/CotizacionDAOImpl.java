@@ -4414,4 +4414,122 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     			 ,"\n*******",StringUtils.leftPad("",len,"*"),"******"
     			 ));
      }
+     
+     @Override
+     public List<Map<String,String>>cargarDetallesCotizacionAutoFlotilla(
+ 			String cdunieco
+ 			,String cdramo
+ 			,String estado
+ 			,String nmpoliza
+ 			,String cdperpag
+ 			)throws Exception
+ 	{
+    	 Map<String,String>params=new LinkedHashMap<String,String>();
+    	 params.put("cdunieco" , cdunieco);
+    	 params.put("cdramo"   , cdramo);
+    	 params.put("estado"   , estado);
+    	 params.put("nmpoliza" , nmpoliza);
+    	 params.put("cdperpag" , cdperpag);
+    	 debugPrecedure("PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT", params);
+    	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCotizacionAutoFlotilla(getDataSource()),params);
+    	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	 if(lista==null||lista.size()==0)
+    	 {
+    		 throw new ApplicationException("No hay detalles de cotizacion");
+    	 }
+    	 debugPrecedure("PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT", params,lista);
+    	 return lista;
+ 	}
+     
+     protected class CargarDetallesCotizacionAutoFlotilla extends StoredProcedure
+     {
+     	protected CargarDetallesCotizacionAutoFlotilla(DataSource dataSource)
+         {
+             super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT");
+             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+             String[] cols=new String[]{
+            		 "CDUNIECO"
+            		 ,"CDRAMO"
+            		 ,"ESTADO"
+            		 ,"NMPOLIZA"
+            		 ,"NMSITUAC"
+            		 ,"NMSUPLEM"
+            		 ,"STATUS"
+            		 ,"CDGARANT"
+            		 ,"CDTIPCON"
+            		 ,"CDCONTAR"
+            		 ,"PRIMA"
+            		 ,"CDAGRUPA"
+            		 ,"ORDEN"
+            		 ,"CDPERPAG"
+            		 ,"CDPLAN"
+            		 ,"COBERTURA"
+            		 ,"TITULO"
+            		 };
+             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+             compile();
+     	}
+     }
+     
+     @Override
+     public List<Map<String,String>>cargarDetallesCoberturasCotizacionAutoFlotilla(
+ 			String cdunieco
+ 			,String cdramo
+ 			,String estado
+ 			,String nmpoliza
+ 			,String cdperpag
+ 			)throws Exception
+ 	{
+    	 Map<String,String>params=new LinkedHashMap<String,String>();
+    	 params.put("cdunieco" , cdunieco);
+    	 params.put("cdramo"   , cdramo);
+    	 params.put("estado"   , estado);
+    	 params.put("nmpoliza" , nmpoliza);
+    	 params.put("cdperpag" , cdperpag);
+    	 debugPrecedure("PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT", params);
+    	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCoberturasCotizacionAutoFlotilla(getDataSource()),params);
+    	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	 if(lista==null||lista.size()==0)
+    	 {
+    		 throw new ApplicationException("No hay detalles de cotizacion");
+    	 }
+    	 debugPrecedure("PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT", params,lista);
+    	 return lista;
+ 	}
+     
+     protected class CargarDetallesCoberturasCotizacionAutoFlotilla extends StoredProcedure
+     {
+     	protected CargarDetallesCoberturasCotizacionAutoFlotilla(DataSource dataSource)
+         {
+             super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT");
+             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+             declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+             String[] cols=new String[]{
+            		 "CDUNIECO"
+            		 ,"CDRAMO"
+            		 ,"ESTADO"
+            		 ,"NMPOLIZA"
+            		 ,"NMSITUAC"
+            		 ,"CDGARANT"
+            		 ,"NMSUPLEM"
+            		 ,"CDCAPITA"
+            		 ,"COBERTURA"
+            		 ,"SUMASEG"
+            		 ,"TITULO"
+            		 };
+             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+             compile();
+     	}
+     }
 }

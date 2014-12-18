@@ -508,4 +508,18 @@ public interface CotizacionDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza)throws Exception;
+	public List<Map<String,String>>cargarDetallesCotizacionAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdperpag
+			)throws Exception;
+	public List<Map<String,String>>cargarDetallesCoberturasCotizacionAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdperpag
+			)throws Exception;
 }

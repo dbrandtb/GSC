@@ -19,6 +19,7 @@ var _p30_urlCotizar                        = '<s:url namespace="/emision"   acti
 var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"   action="procesarCargaMasivaFlotilla"    />';
 var _p30_urlCargar                         = '<s:url namespace="/emision"   action="cargarCotizacionAutoFlotilla"   />';
 var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"   action="recuperacionSimple"             />';
+var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"   action="recuperacionSimpleLista"        />';
 ////// urls //////
 
 ////// variables //////
@@ -34,6 +35,7 @@ var _p30_windowAuto              = null;
 var _p30_store                   = null;
 var _p30_selectedRecord          = null;
 var _p30_recordClienteRecuperado = null;
+var _p30_selectedTarifa          = null;
 
 var _p30_storeSubmarcasRamo5 = null;
 var _p30_storeVersionesRamo5 = null;
@@ -285,6 +287,31 @@ Ext.onReady(function()
             'CDPERPAG'
             ,'DSPERPAG'
             ,'PRIMA'
+        ]
+    });
+    
+    Ext.define('_p30_modeloDetalleCotizacion',
+    {
+        extend : 'Ext.data.Model'
+        ,fields :
+        [
+            'COBERTURA'
+            ,{
+                name : 'PRIMA'
+                ,type : 'float'
+            }
+            ,'TITULO'
+        ]
+    });
+    
+    Ext.define('_p30_modeloCoberturaCotizacion',
+    {
+        extend : 'Ext.data.Model'
+        ,fields :
+        [
+            'COBERTURA'
+            ,'SUMASEG'
+            ,'TITULO'
         ]
     });
 	////// modelos //////
@@ -1983,6 +2010,7 @@ function _p30_cotizar(sinTarificar)
                 ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
                 ,cdagente    : _fieldByLabel('AGENTE').getValue()
+                ,notarificar : sinTarificar ? 'si' : ''
             }
             ,slist1 : []
             ,slist2 : []
@@ -2210,14 +2238,14 @@ function _p30_cotizar(sinTarificar)
                                         ,text     : 'Detalles'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
-                                        /*,handler  : _p28_detalles*/
+                                        ,handler  : _p30_detalles
                                     }
                                     ,{
                                         itemId    : '_p30_botonCoberturas'
                                         ,text     : 'Coberturas'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
                                         ,disabled : true
-                                        /*,handler  : _p28_coberturas*/
+                                        ,handler  : _p30_coberturas
                                     }
                                     ,{
                                         itemId   : '_p30_botonEditar'
@@ -2522,11 +2550,11 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
     debug('columnName',columnName);
     if(columnName=='DSPERPAG')
     {
-        /*_fieldById('_p30_botonCoberturas').setDisabled(true);*/
         /*_fieldById('_p30_botonComprar').setDisabled(true);*/
         /*_fieldById('_p30_botonImprimir').setDisabled(true);*/
         /*_fieldById('_p30_botonEnviar').setDisabled(true);*/
-        /*_fieldById('_p30_botonDetalles').setDisabled(true);*/
+        _fieldById('_p30_botonDetalles').setDisabled(true);
+        _fieldById('_p30_botonCoberturas').setDisabled(true);
     }
     else
     {
@@ -2535,11 +2563,11 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _p30_selectedTarifa = record;
         debug('_p30_selectedTarifa:',_p30_selectedTarifa);
         
-        /*_fieldById('_p30_botonCoberturas').setDisabled(false);*/
         /*_fieldById('_p30_botonComprar').setDisabled(false);*/
         /*_fieldById('_p30_botonImprimir').setDisabled(false);*/
         /*_fieldById('_p30_botonEnviar').setDisabled(false);*/
-        /*_fieldById('_p30_botonDetalles').setDisabled(false);*/
+        _fieldById('_p30_botonDetalles').setDisabled(false);
+        _fieldById('_p30_botonCoberturas').setDisabled(false);
     }
 }
 
@@ -2614,6 +2642,252 @@ function _p30_nueva()
     _p30_editar();
     _p30_limpiar();
     debug('<_p30_nueva');
+}
+
+function _p30_detalles()
+{
+    debug('>_p30_detalles');
+    var panelpri = _fieldById('_p30_panelpri');
+    panelpri.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p30_urlRecuperacionSimpleLista
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA'
+            ,'smap1.cdunieco'     : _p30_smap1.cdunieco
+            ,'smap1.cdramo'       : _p30_smap1.cdramo
+            ,'smap1.estado'       : 'W'
+            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza').getValue()
+            ,'smap1.cdperpag'     : _p30_selectedTarifa.get('CDPERPAG')
+        }
+        ,success : function(response)
+        {
+            panelpri.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### detalles:',json);
+            if(json.exito)
+            {
+                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                {
+                    title       : 'Detalles de cotizaci&oacute;n'
+                    ,width      : 600
+                    ,maxHeight  : 500
+                    ,autoScroll : true
+                    ,modal      : true
+                    ,items      :
+                    [
+                        Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model       : '_p30_modeloDetalleCotizacion'
+                                ,groupField : 'TITULO'
+                                ,sorters    :
+                                [
+                                    {
+                                        sorterFn : function(o1,o2)
+                                        {
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
+                                            {
+                                                return 0;
+                                            }
+                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+                                        }
+                                    }
+                                ]
+                                ,proxy      :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                }
+                                ,data : json.slist1
+                            })
+                            ,columns :
+                            [
+                                {
+                                    header           : 'Nombre de la cobertura'
+                                    ,dataIndex       : 'COBERTURA'
+                                    ,width           : 400
+                                    ,summaryType     : 'count'
+                                    ,summaryRenderer : function(value)
+                                    {
+                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+                                    }
+                                }
+                                ,{
+                                    header       : 'Importe por cobertura'
+                                    ,dataIndex   : 'PRIMA'
+                                    ,width       : 150
+                                    ,renderer    : Ext.util.Format.usMoney
+                                    ,align       : 'right'
+                                    ,summaryType : 'sum'
+                                } 
+                            ]
+                            ,features :
+                            [
+                                {
+                                    groupHeaderTpl :
+                                    [
+                                        '{name:this.formatName}'
+                                        ,{
+                                            formatName : function(name)
+                                            {
+                                                return name.split("_")[1];
+                                            }
+                                        }
+                                    ]
+                                    ,ftype          : 'groupingsummary'
+                                    ,startCollapsed : false
+                                }
+                            ]
+                        })
+                        ,Ext.create('Ext.toolbar.Toolbar',
+                        {
+                            buttonAlign : 'right'
+                            ,items      :
+                            [
+                                '->'
+                                ,Ext.create('Ext.form.Label',
+                                {
+                                    style          : 'color:white;'
+                                    ,initComponent : function()
+                                    {
+                                        var sum = 0;
+                                        for ( var i = 0; i < json.slist1.length; i++)
+                                        {
+                                            sum += parseFloat(json.slist1[i].PRIMA);
+                                        }
+                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+                                        this.callParent();
+                                    }
+                                })
+                            ]
+                        })
+                    ]
+                }).show());
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            panelpri.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p30_detalles');
+}
+
+function _p30_coberturas()
+{
+    debug('>_p30_coberturas');
+    var panelpri = _fieldById('_p30_panelpri');
+    panelpri.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _p30_urlRecuperacionSimpleLista
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA'
+            ,'smap1.cdunieco'     : _p30_smap1.cdunieco
+            ,'smap1.cdramo'       : _p30_smap1.cdramo
+            ,'smap1.estado'       : 'W'
+            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza').getValue()
+            ,'smap1.cdperpag'     : _p30_selectedTarifa.get('CDPERPAG')
+        }
+        ,success : function(response)
+        {
+            panelpri.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### detalles:',json);
+            if(json.exito)
+            {
+                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                {
+                    title       : 'Coberturas'
+                    ,width      : 600
+                    ,maxHeight  : 500
+                    ,autoScroll : true
+                    ,modal      : true
+                    ,items      :
+                    [
+                        Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model       : '_p30_modeloCoberturaCotizacion'
+                                ,groupField : 'TITULO'
+                                ,sorters    :
+                                [
+                                    {
+                                        sorterFn : function(o1,o2)
+                                        {
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
+                                            {
+                                                return 0;
+                                            }
+                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+                                        }
+                                    }
+                                ]
+                                ,proxy      :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                }
+                                ,data : json.slist1
+                            })
+                            ,columns :
+                            [
+                                {
+                                    header           : 'Nombre de la cobertura'
+                                    ,dataIndex       : 'COBERTURA'
+                                    ,width           : 400
+                                }
+                                ,{
+                                    header       : 'Suma asegurada'
+                                    ,dataIndex   : 'SUMASEG'
+                                    ,width       : 150
+                                }
+                            ]
+                            ,features :
+                            [
+                                {
+                                    groupHeaderTpl :
+                                    [
+                                        '{name:this.formatName}'
+                                        ,{
+                                            formatName : function(name)
+                                            {
+                                                return name.split("_")[1];
+                                            }
+                                        }
+                                    ]
+                                    ,ftype          : 'groupingsummary'
+                                    ,startCollapsed : false
+                                }
+                            ]
+                        })
+                    ]
+                }).show());
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            panelpri.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p30_coberturas');
 }
 ////// funciones //////
 </script>

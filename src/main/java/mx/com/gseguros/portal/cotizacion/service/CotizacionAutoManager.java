@@ -130,8 +130,14 @@ public interface CotizacionAutoManager
 			,String cdideperCli
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
-			,List<Map<String,String>> confTvalosit);
+			,List<Map<String,String>> confTvalosit
+			,boolean noTarificar
+			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);
 	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari);
+	public ManagerRespuestaSlistVO recuperacionSimpleLista(
+			String procedimiento
+			,Map<String,String>parametros
+			);
 }

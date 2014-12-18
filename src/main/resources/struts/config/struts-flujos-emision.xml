@@ -320,6 +320,10 @@
         <action name="cargarCotizacionAutoFlotilla" class="cotizacionAutoAction" method="cargarCotizacionAutoFlotilla">
             <result name="success" type="json" />
         </action>
+        
+        <action name="recuperacionSimpleLista" class="cotizacionAutoAction" method="recuperacionSimpleLista">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     
