@@ -153,11 +153,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 			
 			String email=paginaPrincipalManager.getUserEmail(user.getUser());
 			
-			if(email!=null){
+			if(email != null){
 				user.setEmail(email);
-		        logger.error("Email del usuario>> "+user.getEmail());	
+		        logger.debug("Email del usuario>> "+user.getEmail());	
 			}else {
-		        logger.error("ERROR no se pudo obteber el email del usuario>> "+user.getUser());
+		        logger.error("ERROR no se pudo obtener el email del usuario>> "+user.getUser());
 			}
 			
 			if (lista.size() == 0){
