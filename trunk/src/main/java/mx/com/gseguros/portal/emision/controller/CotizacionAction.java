@@ -42,6 +42,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.EmAdmfolId;
 import mx.com.gseguros.ws.folioserviciopublico.service.AgentePorFolioService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -1520,6 +1521,34 @@ public class CotizacionAction extends PrincipalCoreAction
 	                ////// 3. completar faltantes //////
 	                
 	                ////// 4. custom //////
+                	ManagerRespuestaSmapVO respTvalositConst=cotizacionManager.obtenerParametrosCotizacion(
+                			ParametroCotizacion.TVALOSIT_CONSTANTE
+                			,cdramo
+                			,cdtipsit
+                			,null
+                			,null);
+                	if(respTvalositConst.isExito())
+                	{
+                		for(int i=1;i<=13;i++)
+                		{
+                			String key = respTvalositConst.getSmap().get(Utilerias.join("P",i,"CLAVE"));
+                			String val = respTvalositConst.getSmap().get(Utilerias.join("P",i,"VALOR"));
+                			if(StringUtils.isNotBlank(key)&&StringUtils.isNotBlank(val))
+                			{
+	                			mapaValositIterado.put
+	                			(
+	                					Utilerias.join
+	                					(
+	                							"pv_otvalor"
+	                							,StringUtils.leftPad(key,2,"0")
+	                					)
+	                					,val
+	                			);
+                			}
+                		}
+                	}
+	                
+                	/*
 	                if(cdtipsit.equals("SL"))
 	                {
 	                	mapaValositIterado.put("pv_otvalor11","S");
@@ -1539,6 +1568,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	mapaValositIterado.put("pv_otvalor16",mapaValositIterado.get("pv_otvalor01"));
 	                }
+	                */
 	                ////// 4. custom //////
 	                
 	                kernelManager.insertaValoresSituaciones(mapaValositIterado);
