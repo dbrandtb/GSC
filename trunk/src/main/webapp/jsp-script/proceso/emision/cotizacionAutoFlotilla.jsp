@@ -9,17 +9,19 @@
 ////// overrides //////
 
 ////// urls //////
-var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"   action="cargarSumaAseguradaRamo5"       />';
-var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"   action="cargarCduniecoAgenteAuto"       />';
-var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"   action="cargarRetroactividadSuplemento" />';
-var _p30_urlCargarParametros               = '<s:url namespace="/emision"   action="obtenerParametrosCotizacion"    />';
-var _p30_urlRecuperarCliente               = '<s:url namespace="/"          action="buscarPersonasRepetidas"        />';
-var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos" action="obtieneCatalogo"                />';
-var _p30_urlCotizar                        = '<s:url namespace="/emision"   action="cotizarAutosFlotilla"           />';
-var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"   action="procesarCargaMasivaFlotilla"    />';
-var _p30_urlCargar                         = '<s:url namespace="/emision"   action="cargarCotizacionAutoFlotilla"   />';
-var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"   action="recuperacionSimple"             />';
-var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"   action="recuperacionSimpleLista"        />';
+var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"       />';
+var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"       />';
+var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
+var _p30_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
+var _p30_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"        />';
+var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                />';
+var _p30_urlCotizar                        = '<s:url namespace="/emision"         action="cotizarAutosFlotilla"           />';
+var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"    />';
+var _p30_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacionAutoFlotilla"   />';
+var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
+var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"        />';
+var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
+var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"            />';
 ////// urls //////
 
 ////// variables //////
@@ -2298,7 +2300,7 @@ function _p30_cotizar(sinTarificar)
                                         ,text     : 'Emitir'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
                                         ,disabled : true
-                                        /*,handler  : _p28_comprar*/
+                                        ,handler  : _p30_comprar
                                     }
                                 ]
                             })
@@ -2512,8 +2514,20 @@ function _p30_cargarClic()
                     }
                     else
                     {
-                        /*ir a datos complementarios*/
-                        mensajeWarning('[complementarios]');
+                        Ext.create('Ext.form.Panel').submit(
+                        {
+                            url             : _p30_urlDatosComplementarios
+                            ,standardSubmit : true
+                            ,params         :
+                            {
+                                'smap1.cdunieco'  : json.smap1.CDUNIECO
+                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                ,'smap1.cdtipsit' : json.smap1.cdtipsit
+                                ,'smap1.estado'   : 'W'
+                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                ,'smap1.ntramite' : json.smap1.NTRAMITE
+                            }
+                        });
                     }
                 }
                 catch(e)
@@ -2550,11 +2564,11 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
     debug('columnName',columnName);
     if(columnName=='DSPERPAG')
     {
-        /*_fieldById('_p30_botonComprar').setDisabled(true);*/
         /*_fieldById('_p30_botonImprimir').setDisabled(true);*/
         /*_fieldById('_p30_botonEnviar').setDisabled(true);*/
         _fieldById('_p30_botonDetalles').setDisabled(true);
         _fieldById('_p30_botonCoberturas').setDisabled(true);
+        _fieldById('_p30_botonComprar').setDisabled(true);
     }
     else
     {
@@ -2563,11 +2577,11 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _p30_selectedTarifa = record;
         debug('_p30_selectedTarifa:',_p30_selectedTarifa);
         
-        /*_fieldById('_p30_botonComprar').setDisabled(false);*/
         /*_fieldById('_p30_botonImprimir').setDisabled(false);*/
         /*_fieldById('_p30_botonEnviar').setDisabled(false);*/
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
+        _fieldById('_p30_botonComprar').setDisabled(false);
     }
 }
 
@@ -2888,6 +2902,80 @@ function _p30_coberturas()
         }
     });
     debug('<_p30_coberturas');
+}
+
+function _p30_comprar()
+{
+    debug('_p30_comprar');
+    var panelPri = _fieldById('_p30_panelpri');
+    panelPri.setLoading(true);
+    var nombreTitular = '';
+    
+    Ext.Ajax.request(
+    {
+        url      : _p30_urlComprar
+        ,params  :
+        {
+            comprarNmpoliza        : _fieldByName('nmpoliza').getValue()
+            ,comprarCdplan         : '*'
+            ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
+            ,comprarCdramo         : _p30_smap1.cdramo
+            ,comprarCdciaaguradora : '20'
+            ,comprarCdunieco       : _p30_smap1.cdunieco
+            ,cdtipsit              : _p30_smap1.cdtipsit
+            ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+            ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+            ,'smap1.ntramite'      : _p30_smap1.ntramite
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+            ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+            ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
+        }
+        ,success : function(response,opts)
+        {
+            panelPri.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### Comprar:',json);
+            if (json.exito)
+            {
+                centrarVentanaInterna(Ext.Msg.show(
+               {
+                   title    : 'Tr&aacute;mite generado'
+                   ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                              + json.smap1.ntramite
+                              + '<br/>y no podr&aacute; ser modificada posteriormente'
+                   ,buttons : Ext.Msg.OK
+                   ,fn      : function()
+                   {
+                       var swExiper = (!Ext.isEmpty(_p30_recordClienteRecuperado) && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
+                       Ext.create('Ext.form.Panel').submit(
+                       {
+                           url             : _p30_urlDatosComplementarios
+                           ,standardSubmit : true
+                           ,params         :
+                           {
+                               'smap1.cdunieco'  : _p30_smap1.cdunieco
+                               ,'smap1.cdramo'   : _p30_smap1.cdramo
+                               ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                               ,'smap1.estado'   : 'W'
+                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
+                               ,'smap1.ntramite' : json.smap1.ntramite
+                               ,'smap1.swexiper' : swExiper
+                           }
+                       });
+                   }
+                }));                
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            panelPri.setLoading(false);
+            errorComunicacion();
+        }
+    });
 }
 ////// funciones //////
 </script>

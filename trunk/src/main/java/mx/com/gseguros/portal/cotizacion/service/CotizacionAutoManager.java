@@ -140,4 +140,13 @@ public interface CotizacionAutoManager
 			String procedimiento
 			,Map<String,String>parametros
 			);
+	public ManagerRespuestaImapSmapVO emisionAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdusuari
+			);
 }
