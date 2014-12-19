@@ -49,4 +49,11 @@ public interface ConsultasDAO
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac)throws Exception;
+	
+	public List<Map<String,String>>cargarTvalosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem)throws Exception;
 }

@@ -377,6 +377,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String nmsolici
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -387,6 +388,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsolici" , nmsolici);
 		logger.debug(Utilerias.join(
 				 "\n*********************************************************"
 				,"\n****** PKG_DESARROLLO.P_GET_TMESACONTROL_X_PAR_VAR ******"
@@ -421,6 +423,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
 					"NTRAMITE"  ,"CDUNIECO" ,"CDRAMO"   ,"ESTADO"   ,"NMPOLIZA" ,"NMSUPLEM"  ,"NMSOLICI" ,"CDSUCADM"
 					,"CDSUCDOC" ,"CDSUBRAM" ,"CDTIPTRA" ,"FERECEPC" ,"CDAGENTE" ,"REFERENCIA","NOMBRE"   ,"FECSTATU"

@@ -2514,6 +2514,7 @@ function _p30_cargarClic()
                     }
                     else
                     {
+                        var swExiper = (Ext.isEmpty(json.smap1.CDPERSON) && !Ext.isEmpty(json.smap1.CDIDEPER))? 'N' : 'S' ;
                         Ext.create('Ext.form.Panel').submit(
                         {
                             url             : _p30_urlDatosComplementarios
@@ -2522,10 +2523,11 @@ function _p30_cargarClic()
                             {
                                 'smap1.cdunieco'  : json.smap1.CDUNIECO
                                 ,'smap1.cdramo'   : json.smap1.cdramo
-                                ,'smap1.cdtipsit' : json.smap1.cdtipsit
+                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
                                 ,'smap1.estado'   : 'W'
                                 ,'smap1.nmpoliza' : json.smap1.nmpoliza
                                 ,'smap1.ntramite' : json.smap1.NTRAMITE
+                                ,'smap1.swexiper' : swExiper
                             }
                         });
                     }

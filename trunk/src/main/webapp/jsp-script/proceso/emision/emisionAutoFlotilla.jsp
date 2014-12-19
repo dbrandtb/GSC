@@ -7,9 +7,8 @@
 <script>
 ////// urls //////
 var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';
-var _p31_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
+var _p31_urlCotizacionAutoFlotilla         = '<s:url namespace="/emision"    action="cotizacionAutoFlotilla"             />';
 var _p31_urlCargarDatosComplementarios     = '<s:url namespace="/emision"    action="cargarDatosComplementariosAutoInd"    />';
-var _p31_urlCargarTvalosit                 = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
 var _p31_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    action="cargarRetroactividadSuplemento"       />';
 var _p31_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                   />';
 var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoIndividual" />';
@@ -17,9 +16,10 @@ var _p31_urlRecotizar                      = '<s:url namespace="/"           act
 var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
+var _p31_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
 
-var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
-var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
+var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
+var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"             />';
 
 
 ////// urls //////
@@ -198,16 +198,18 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        itemId   : '_p31_botonEmitir'
-                        ,text    : 'Emitir'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                        ,handler : _p31_emitirClic
+                        itemId    : '_p31_botonEmitir'
+                        ,text     : 'Emitir'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/key.png'
+                        ,handler  : _p31_emitirClic
+                        ,disabled : true
                     }
                     ,{
-                        itemId   : '_p31_botonGuardar'
-                        ,text    : 'Guardar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                        ,handler : function(){ _p31_guardar(); }
+                        itemId    : '_p31_botonGuardar'
+                        ,text     : 'Guardar'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler  : function(){ _p31_guardar(); }
+                        ,disabled : true
                     }
                     ,{
                         text     : 'Nueva'
@@ -289,14 +291,15 @@ Ext.onReady(function()
     
     Ext.Ajax.request(
     {
-        url     : _p31_urlCargarTvalosit
+        url     : _p31_urlRecuperacionSimpleLista
         ,params :
         {
-            'smap1.cdunieco'  : _p31_smap1.cdunieco
-            ,'smap1.cdramo'   : _p31_smap1.cdramo
-            ,'smap1.estado'   : _p31_smap1.estado
-            ,'smap1.nmpoliza' : _p31_smap1.nmpoliza
-            ,'smap1.nmsituac' : '1'
+            'smap1.procedimiento' : 'RECUPERAR_TVALOSIT'
+            ,'smap1.cdunieco'     : _p31_smap1.cdunieco
+            ,'smap1.cdramo'       : _p31_smap1.cdramo
+            ,'smap1.estado'       : _p31_smap1.estado
+            ,'smap1.nmpoliza'     : _p31_smap1.nmpoliza
+            ,'smap1.nmsuplem'     : '0'
         }
         ,success : function(response)
         {
@@ -304,6 +307,7 @@ Ext.onReady(function()
             debug('### tvalosit:',json);
             if(json.exito)
             {
+                /*
                 var form = _fieldById('_p31_adicionalesForm');
                 for(var i in json.smap1)
                 {
@@ -322,6 +326,7 @@ Ext.onReady(function()
                 }
 
                 _p31_loadCallback();
+                */
             }
             else
             {
@@ -345,7 +350,7 @@ function _p31_nuevaClic()
     _fieldById('_p31_panelpri').setLoading(true);
     Ext.create('Ext.form.Panel').submit(
     {
-        url     : _p31_urlCotizacionAutoIndividual
+        url     : _p31_urlCotizacionAutoFlotilla
         ,params :
         {
             'smap1.cdramo'    : _p31_smap1.cdramo

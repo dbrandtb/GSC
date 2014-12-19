@@ -56,7 +56,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    RECUPERAR_DESCUENTO_RECARGO_RAMO_5                       = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5"
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
-	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA";
+	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
+	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT";
 	
 	private CotizacionDAO  cotizacionDAO;
 	private PantallasDAO   pantallasDAO;
@@ -949,6 +950,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_DATOS_VEHICULO_RAMO_5                         , null);
 		procedimientos.put(RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            , null);
 		procedimientos.put(RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA , null);
+		procedimientos.put(RECUPERAR_TVALOSIT                                      , null);
 		return procedimientos;
 	}
 	
@@ -2198,7 +2200,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			if(!maestra)
 			{
 				setCheckpoint("Recuperando relacion poliza-contratante");
-				Map<String,String>relContratante=consultasDAO.cargarMpoliperSituac(
+				Map<String,String>relContratante0=consultasDAO.cargarMpoliperSituac(
 						cdunieco
 						,cdramo
 						,estado
@@ -2206,11 +2208,26 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,nmsuplem
 						,"0"//nmsituac
 						);
+				Map<String,String>relContratante1=consultasDAO.cargarMpoliperSituac(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,"1"//nmsituac
+						);
 				
-				if(relContratante!=null)
+				if(relContratante0!=null||relContratante1!=null)
 				{
 					setCheckpoint("Recuperando contratante");
-					cdperson = relContratante.get("CDPERSON");
+					if(relContratante0!=null)
+					{
+						cdperson = relContratante0.get("CDPERSON");
+					}
+					else
+					{
+						cdperson = relContratante1.get("CDPERSON");
+					}
 					Map<String,String>contratante = personasDAO.cargarPersonaPorCdperson(cdperson);
 					cdideper = contratante.get("CDIDEPER");
 				}
@@ -2218,12 +2235,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				setCheckpoint("Recuperando tramite");
 				List<Map<String,String>>tramites=mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
-						,null//ntramite
+						,null     //ntramite
 						,cdunieco
 						,cdramo
 						,estado
-						,nmpoliza
+						,null     //nmpoliza
 						,nmsuplem
+						,nmpoliza //nmsolici
 						);
 				if(tramites.size()>1)
 				{
@@ -2301,6 +2319,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String nmpoliza = parametros.get("nmpoliza");
 				String cdperpag = parametros.get("cdperpag");
 				resp.setSlist(cotizacionDAO.cargarDetallesCoberturasCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza, cdperpag));
+			}
+			else if(procedimiento.equals(RECUPERAR_TVALOSIT))
+			{
+				String cdunieco = parametros.get("cdunieco");
+				String cdramo   = parametros.get("cdramo");
+				String estado   = parametros.get("estado");
+				String nmpoliza = parametros.get("nmpoliza");
+				String nmsuplem = parametros.get("nmsuplem");
+				resp.setSlist(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem));
 			}
 			
 			setCheckpoint("0");

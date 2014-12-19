@@ -384,4 +384,8 @@ public interface CotizacionManager
 			,String nmsuplem
 			,String nmsituac
 			,String circHosp);
+	
+	public String cargarTabuladoresGMIParche(
+			String circulo
+			,String cdatribu)throws Exception;
 }
