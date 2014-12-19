@@ -2320,6 +2320,106 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaImapSmapVO emisionAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdusuari
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ emisionAutoFlotilla @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ ntramite=").append(ntramite)
+				.append("\n@@@@@@ cdusuari=").append(cdusuari)
+				.toString()
+				);
+		
+		ManagerRespuestaImapSmapVO resp=new ManagerRespuestaImapSmapVO(true);
+		resp.setImap(new HashMap<String,Item>());
+		resp.setSmap(new HashMap<String,String>());
+		
+		try
+		{
+			setCheckpoint("Procesando datos de entrada");
+			resp.getSmap().put("cdusuari" , cdusuari);
+			
+			setCheckpoint("Recuperando tipo de situacion");
+			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
+			
+			setCheckpoint("Recuperando atributos variables de poliza");
+			List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
+			
+			/*
+			setCheckpoint("Recuperando atributos variables de situacion");
+			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+			
+			setCheckpoint("Filtrando atributos de datos complementarios");
+			List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+			for(ComponenteVO tatri:tatrisit)
+			{
+				if(isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
+				{
+					aux.add(tatri);
+				}
+			}
+			tatrisit=aux;
+			*/
+			
+			setCheckpoint("Recuperando componentes de pantalla");
+			List<ComponenteVO>polizaComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_FLOT", "POLIZA", null);
+			List<ComponenteVO>agenteComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_FLOT", "AGENTE", null);
+			
+			setCheckpoint("Generando componentes");
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			
+			gc.generaComponentes(tatripol, true, true, true, false, false, false);
+			resp.getImap().put("polizaAdicionalesFields" , gc.getFields());
+			resp.getImap().put("polizaAdicionalesItems"  , gc.getItems());
+			
+			/*
+			gc.generaComponentes(tatrisit, true, true, true, false, false, false);
+			resp.getImap().put("adicionalesFields" , gc.getFields());
+			resp.getImap().put("adicionalesItems"  , gc.getItems());
+			*/
+			
+			gc.generaComponentes(polizaComp, true, true, true, false, false, false);
+			resp.getImap().put("polizaFields" , gc.getFields());
+			resp.getImap().put("polizaItems"  , gc.getItems());
+			
+			gc.generaComponentes(agenteComp, true, true, true, false, false, false);
+			resp.getImap().put("agenteFields" , gc.getFields());
+			resp.getImap().put("agenteItems"  , gc.getItems());
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ emisionAutoFlotilla @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

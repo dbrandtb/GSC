@@ -1127,6 +1127,70 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String emisionAutoFlotilla()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#################################")
+				.append("\n###### emisionAutoFlotilla ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		setCheckpoint("Validando datos de entrada");
+		try
+		{
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String ntramite = smap1.get("ntramite");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el ramo");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(ntramite , "No se recibio el numero de tramite");
+			
+			checkNull(session,"No hay sesion");
+			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			
+			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoFlotilla(cdunieco, cdramo, cdtipsit, estado, nmpoliza, ntramite, cdusuari);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				imap = resp.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### result=").append(result)
+				.append("\n###### emisionAutoFlotilla ######")
+				.append("\n#################################")
+				.toString()
+				);
+		return result;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

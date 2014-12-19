@@ -324,6 +324,11 @@
         <action name="recuperacionSimpleLista" class="cotizacionAutoAction" method="recuperacionSimpleLista">
             <result name="success" type="json" />
         </action>
+        
+        <action name="emisionAutoFlotilla" class="cotizacionAutoAction" method="emisionAutoFlotilla">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/emisionAutoFlotilla.jsp</result>
+        </action>
        
     </package>
     
