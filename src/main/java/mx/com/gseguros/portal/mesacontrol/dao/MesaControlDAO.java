@@ -51,5 +51,6 @@ public interface MesaControlDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String nmsolici
 			)throws Exception;
 }

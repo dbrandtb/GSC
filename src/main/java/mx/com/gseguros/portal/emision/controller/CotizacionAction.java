@@ -1548,6 +1548,15 @@ public class CotizacionAction extends PrincipalCoreAction
                 		}
                 	}
 	                
+                	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
+                	{
+                		mapaValositIterado.put("pv_otvalor22",
+                				cotizacionManager.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "22")
+                		);
+                		mapaValositIterado.put("pv_otvalor23",
+                				cotizacionManager.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "23")
+                		);
+                	}
                 	/*
 	                if(cdtipsit.equals("SL"))
 	                {

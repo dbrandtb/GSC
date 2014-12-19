@@ -522,4 +522,7 @@ public interface CotizacionDAO
 			,String nmpoliza
 			,String cdperpag
 			)throws Exception;
+	public String cargarTabuladoresGMIParche(
+			String circulo
+			,String cdatribu)throws Exception;
 }

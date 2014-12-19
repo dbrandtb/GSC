@@ -255,4 +255,35 @@ public class Utilerias {
 		}
 		return concat;
 	}
+	
+	public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params)
+    {
+		int len = storedProcedureName.length();
+		logger.debug
+		(
+				Utilerias.join
+				(
+				 "\n*******",StringUtils.leftPad("",len,"*"),"******"
+				,"\n****** ",storedProcedureName," ******"
+				,"\n****** params=",params
+				,"\n*******",StringUtils.leftPad("",len,"*"),"******"
+				)
+		);
+    }
+    
+    public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params,List<Map<String,String>>lista)
+    {
+    	int len = storedProcedureName.length();
+    	logger.debug
+    	(
+    			Utilerias.join
+    			(
+    					 "\n*******",StringUtils.leftPad("",len,"*"),"******"
+    					,"\n****** params=",params
+    					,"\n****** registro=",lista
+    					,"\n****** ",storedProcedureName," ******"
+    					,"\n*******",StringUtils.leftPad("",len,"*"),"******"
+    			)
+    	);
+    }
 }

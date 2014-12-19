@@ -4658,6 +4658,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+	@Override
+	public String cargarTabuladoresGMIParche(
+			String circulo
+			,String cdatribu)throws Exception
+	{
+		return cotizacionDAO.cargarTabuladoresGMIParche(circulo, cdatribu);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
