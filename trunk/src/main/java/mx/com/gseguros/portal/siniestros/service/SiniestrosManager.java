@@ -357,7 +357,7 @@ public interface SiniestrosManager {
 	
 	public Map<String, Object> actualizaDatosGeneralesSiniestro(String cdunieco, String cdramo, String estado, 
 			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, Date feocurre,
-			String nmreclamo, String cdicd, String cdicd2, String cdcausa) throws Exception;
+			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval) throws Exception;
 	
 	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception;
