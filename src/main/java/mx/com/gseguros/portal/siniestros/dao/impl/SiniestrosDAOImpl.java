@@ -1406,38 +1406,15 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_autoServ_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"NMSINIES"
-					,"NMAUTSER"
-					,"CDPERSON"
-					,"NOMBRE"
-					,"FEOCURRE"
-					,"CDUNIECO"
-					,"DSUNIECO"
-					,"AAAPERTU"
-					,"ESTADO"
-					,"NMSITUAC"
-					,"NMSUPLEM"
-					,"CDRAMO"
-					,"DSRAMO"
-					,"CDTIPSIT"
-					,"DSTIPSIT"
-					,"STATUS"
-					,"ESTADO"
-					,"NMPOLIZA"
-					,"VOBOAUTO"
-					,"CDICD"
-					,"DSICD"
-					,"CDICD2"
-					,"DSICD2"
-					,"DESCPORC"
-					,"DESCNUME"
-					,"COPAGO"
-					,"PTIMPORT"
-					,"AUTRECLA"
-					,"NMRECLAMO"
-					,"COMMENAR"
-					,"COMMENME"
-					,"AUTMEDIC"
+					"NMSINIES",			"NMAUTSER",			"CDPERSON",			"NOMBRE"
+					,"FEOCURRE",		"CDUNIECO",			"DSUNIECO",			"AAAPERTU"
+					,"ESTADO",			"NMSITUAC",			"NMSUPLEM",			"CDRAMO"
+					,"DSRAMO",			"CDTIPSIT",			"DSTIPSIT",			"STATUS"
+					,"ESTADO",			"NMPOLIZA",			"VOBOAUTO",			"CDICD"
+					,"DSICD",			"CDICD2",			"DSICD2",			"DESCPORC"
+					,"DESCNUME",		"COPAGO",			"PTIMPORT",			"AUTRECLA"
+					,"NMRECLAMO",		"COMMENAR",			"COMMENME",			"AUTMEDIC"
+					,"CDCAUSA",			"CDGARANT",			"CDCONVAL"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2374,6 +2351,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             declareParameter(new SqlParameter("pv_cdicd_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdicd2_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdcausa_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
