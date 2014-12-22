@@ -369,12 +369,13 @@ Ext.onReady(function() {
 									maxLength  : 30,
 									maxLengthText: 'Longitud m&aacute;xima de 30 caracteres',
 						    		value      : _CDTABLA,
-						    		readOnly      : true,
-						    		allowBlank    : false
+						    		readOnly   : true,
+						    		allowBlank : false
 						        },{
 						        	xtype      : 'textfield',
 						    		name       : 'pi_dstabla',
 						    		allowBlank : false,
+						    		readOnly   : true,
 						    		fieldLabel : 'Descripci&oacute;n de la Tabla',
 						    		width      : 545,
 						    		labelWidth : 130,
