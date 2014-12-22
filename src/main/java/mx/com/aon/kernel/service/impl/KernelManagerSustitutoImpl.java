@@ -882,7 +882,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		log.debug("### kernel sustituto obtenerListaDocumentos parameters: "+params);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_LISTA_DOC_POLIZA_NUEVA);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-        log.debug("### kernel sustituto obtenerListaDocumentos lista size: "+lista.size());
+        log.info("### kernel sustituto obtenerListaDocumentos lista: "+lista);
         return lista;
 	}
 	
