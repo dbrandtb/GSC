@@ -425,7 +425,7 @@ Ext.onReady(function()
 											_esSaludDanios = _esSaludDaniosTMP;
 											municipioImportarTMP = '';
 											coloniaImportarTMP = '';
-											_fieldByName('CDMUNICI').forceSelection = false;
+//											_fieldByName('CDMUNICI').forceSelection = false;
 											
 								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
 								    		if("1" == _p22_cdperson){
@@ -466,7 +466,7 @@ Ext.onReady(function()
 											_CDIDEEXTsel = '';
 											municipioImportarTMP = '';
 											coloniaImportarTMP = '';
-											_fieldByName('CDMUNICI').forceSelection = false;
+//											_fieldByName('CDMUNICI').forceSelection = false;
 											
 											form.down('[name=smap1.rfc]').reset();
 											form.down('[name=smap1.nombre]').reset();
@@ -490,7 +490,7 @@ Ext.onReady(function()
 	        	    	title     : 'Datos generales de la Persona'
 	        	    	,itemId   : '_p22_formDatosGenerales'
                         ,border   : 0
-	        	    	,defaults : { style : 'margin:5px' , width: 320}
+	        	    	,defaults : { style : 'margin:5px' , width: 310}
 	        	        ,layout   :
 	        	        {
 	        	        	type     : 'table'
@@ -798,7 +798,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     
     }
     
-    
+    _fieldByName('CDMUNICI').forceSelection = false;
 	_fieldByName('CDCOLONI').forceSelection = false;
 	_fieldByName('CDCOLONI').on({
 			change: function(me, val){
@@ -835,6 +835,13 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			_CDIDEEXTsel = _p22_smap1.cdideext;
 			_esSaludDanios = _p22_smap1.esSaludDanios;
 			
+			if('D' == _esSaludDanios){
+				_fieldByName('CDIDEEXT').hide();
+				_fieldByName('CDSUCEMI').hide();				
+			}else if('S' == _esSaludDanios){
+				_fieldByName('CDIDEPER').hide();
+			}
+				
 			if(!Ext.isEmpty(_cargaCP)){
 				_p22_comboCodPostal().setReadOnly(true);
 			}
@@ -850,6 +857,13 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     	setTimeout(function(){
 			if(!Ext.isEmpty(_cargaCompania)){
 				Ext.ComponentQuery.query('#companiaId')[0].setValue(_cargaCompania);
+				
+				if('D' == _cargaCompania){
+					_fieldByName('CDIDEEXT').hide();
+					_fieldByName('CDSUCEMI').hide();				
+				}else if('S' == _cargaCompania){
+					_fieldByName('CDIDEPER').hide();
+				}
 			}
 			
 			Ext.ComponentQuery.query('#companiaGroupId')[0].hide();
@@ -959,8 +973,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldSexo().hide();
         _fieldByName('CDESTCIV').hide();
         
-        _fieldByName('DSNOMBRE').setFieldLabel('Raz&oacute;n social');
-        _fieldByName('FENACIMI').setFieldLabel('Fecha de constituci&oacute;n');
+        _fieldByName('DSNOMBRE').setFieldLabel('Raz&oacute;n social*');
+        _fieldByName('FENACIMI').setFieldLabel('Fecha de constituci&oacute;n*');
         
         if(value == 'S'){
         	_fieldByName('FENACIMI').allowBlank = true;
@@ -980,8 +994,8 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldSexo().show();
         _fieldByName('CDESTCIV').show();
         
-        _fieldByName('DSNOMBRE').setFieldLabel('Nombre');
-        _fieldByName('FENACIMI').setFieldLabel('Fecha de nacimiento');
+        _fieldByName('DSNOMBRE').setFieldLabel('Nombre*');
+        _fieldByName('FENACIMI').setFieldLabel('Fecha de nacimiento*');
         
         _fieldByName('FENACIMI').allowBlank = false;
     	_fieldByName('FENACIMI').setValue('');
@@ -1108,6 +1122,7 @@ function _p22_loadRecordCdperson(callbackload)
 							}
 			                
 			                var valorCol = _fieldByName('CDCOLONI').getValue();
+			                
 			                heredarPanel(_p22_formDomicilio());
                     		_p22_heredarColonia(function(){
                     				_fieldByName('CDCOLONI').setValue(valorCol);
