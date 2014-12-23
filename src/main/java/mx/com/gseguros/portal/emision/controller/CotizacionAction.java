@@ -58,6 +58,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
@@ -4438,15 +4441,18 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				
 				FileInputStream input      = null;
-				XSSFWorkbook    workbook   = null;
-				XSSFSheet       sheet      = null;
+				//XSSFWorkbook  workbook   = null;
+				Workbook        workbook   = null;
+				//XSSFSheet     sheet      = null;
+				Sheet           sheet      = null;
 				File            archivoTxt = null;
 				PrintStream     output     = null;
 				
 				try
 				{	
 					input    = new FileInputStream(censo);
-					workbook = new XSSFWorkbook(input);
+					//workbook = new XSSFWorkbook(input);
+					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
 					
 					nombreCenso        = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
