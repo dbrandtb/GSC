@@ -1432,20 +1432,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdusuari" , cdusuari);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*********************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRI_SITUACION ******")
-				.append("\n****** params=").append(params)
-				.append("\n*********************************************")
-				.toString()
-				);
+		Utilerias.debugPrecedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params);
 		Map<String,Object>procResult = ejecutaSP(new CargarTatrisit(getDataSource()),params);
 		List<ComponenteVO>lista      = (List<ComponenteVO>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
 			throw new Exception("No hay tatrisit");
 		}
+		Utilerias.debugPrecedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params,lista);
 		return lista;
 	}
 	
@@ -4542,6 +4536,49 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{ "TABULADOR" })));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public void sigsvdefEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdgarant
+			,String cdtipsup)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsituac" , nmsituac);
+    	params.put("nmsuplem" , nmsuplem);
+    	params.put("cdgarant" , cdgarant);
+    	params.put("cdtipsup" , cdtipsup);
+    	Utilerias.debugPrecedure(logger, "P_EXEC_SIGSVDEFEND", params);
+    	ejecutaSP(new SigsvdefEnd(getDataSource()),params);
+	}
+    
+    protected class SigsvdefEnd extends StoredProcedure
+    {
+    	protected SigsvdefEnd(DataSource dataSource)
+    	{
+    		super(dataSource,"P_EXEC_SIGSVDEFEND");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
     	}
     }

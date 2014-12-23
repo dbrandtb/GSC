@@ -181,7 +181,7 @@ Ext.onReady(function()
 	        {
 	            itemId      : '_p29_clientePanel'
 	            ,title      : 'CLIENTE'
-	            ,height     : 300
+	            ,height     : 400
 	            ,autoScroll : true
 	            ,loader     :
 	            {

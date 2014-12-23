@@ -18,4 +18,16 @@ public interface ConsultasManager
 	 */
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD, LinkedHashMap<String,Object>params) throws Exception;
 	
+	public void validarDatosObligatoriosPrevex(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	
+	public void validarDatosDXN(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem)throws Exception;
 }

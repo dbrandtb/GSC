@@ -1455,12 +1455,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return cdtipsit;
 	}
 	
-	public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException{
-		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_DATOS_DXN);
-		boolean exito = "1".equals(res.getItemMap().get("EXITO"));
-		return exito;
-	}
-	
 	public WrapperResultados validaUsuarioSucursal(String cdunieco, String cdramo, String cdtipsit, String username) throws ApplicationException {
 		
 		try {

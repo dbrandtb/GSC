@@ -149,4 +149,30 @@ public interface CotizacionAutoManager
 			,String ntramite
 			,String cdusuari
 			);
+	public ManagerRespuestaVoidVO guardarComplementariosAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String agenteSec
+			,String porpartiSec
+			,String feini
+			,String fefin
+			,Map<String,String>tvalopol
+			,List<Map<String,String>>tvalosit
+			,String ntramite
+			);
+	
+	public ManagerRespuestaSlistVO recotizarAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,boolean notarifica
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsit
+			,String cdperpag
+			);
 }

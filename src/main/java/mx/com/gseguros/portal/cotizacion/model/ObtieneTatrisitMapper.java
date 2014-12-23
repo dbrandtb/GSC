@@ -16,10 +16,6 @@ public class ObtieneTatrisitMapper implements RowMapper
 
 	public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 	{
-		logger.info("cdatribu: " + rs.getString("CDATRIBU") + " swsuscri: "
-				+ rs.getString("SWSUSCRI") + " dsatribu: "
-				+ rs.getString("DSATRIBU"));
-		
 		ComponenteVO result = new ComponenteVO();
 		
 		result.setFlagEsAtribu(true);
@@ -149,6 +145,13 @@ public class ObtieneTatrisitMapper implements RowMapper
 		result.setCotflotrol(colflotrol);
 
 		result.setSwpresenflot(rs.getString("SWPRESENFLOT"));
+		
+		String swCompFlot = rs.getString("SWCOMPFLOT");
+		if(StringUtils.isBlank(swCompFlot))
+		{
+			swCompFlot="N";
+		}
+		result.setSwCompFlot(swCompFlot);
 
 		return result;
 	}

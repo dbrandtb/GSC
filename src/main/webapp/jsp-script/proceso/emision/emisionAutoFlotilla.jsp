@@ -7,21 +7,19 @@
 <script>
 ////// urls //////
 var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';
-var _p31_urlCotizacionAutoFlotilla         = '<s:url namespace="/emision"    action="cotizacionAutoFlotilla"             />';
+var _p31_urlCotizacionAutoFlotilla         = '<s:url namespace="/emision"    action="cotizacionAutoFlotilla"               />';
 var _p31_urlCargarDatosComplementarios     = '<s:url namespace="/emision"    action="cargarDatosComplementariosAutoInd"    />';
 var _p31_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    action="cargarRetroactividadSuplemento"       />';
 var _p31_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                   />';
-var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoIndividual" />';
-var _p31_urlRecotizar                      = '<s:url namespace="/"           action="recotizar"                            />';
+var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoFlotilla"   />';
+var _p31_urlRecotizar                      = '<s:url namespace="/emision"    action="recotizarAutoFlotilla"                />';
 var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 var _p31_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
-
-var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
-var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"             />';
-
-
+var urlReintentarWS                        = '<s:url namespace="/"           action="reintentaWSautos"                     />';
+var _urlEnviarCorreo                       = '<s:url namespace="/general"    action="enviaCorreo"                          />';
+var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  action="obtieneCatalogo"                      />';
 ////// urls //////
 
 ////// variables //////
@@ -29,11 +27,13 @@ var _p31_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false
 debug('_p31_smap1:',_p31_smap1);
 
 var _p31_polizaAdicionalesItems = null;
-var _p31_adicionalesItems       = null;
 var _p22_parentCallback         = false;
+var _p31_incisoColumns          = null;
+var _p31_storeIncisos           = null;
+var _p31_storeVersionesRamo5    = null;
+var _p31_incisoColumnsConf      = null;
 
 var _SWexiper = _p31_smap1.swexiper;
-
 var _paramsRetryWS;
 var _mensajeEmail;
             
@@ -65,24 +65,85 @@ Ext.onReady(function()
         ]
     });
     
-    Ext.define('ModeloDetalleCotizacion',
+    Ext.define('_p31_modeloDetalleCotizacion',
+    {
+        extend : 'Ext.data.Model'
+        ,fields :
+        [
+            'COBERTURA'
+            ,{
+                name : 'PRIMA'
+                ,type : 'float'
+            }
+            ,'TITULO'
+        ]
+    });
+    
+    Ext.define('_p31_modelo',
     {
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            {name  : 'Codigo_Garantia'}
-            ,{name : 'Importe',type : 'float'}
-            ,{name : 'Nombre_garantia'}
-            ,{name : 'cdtipcon'}
-            ,{name : 'nmsituac'}
-            ,{name : 'orden'}
-            ,{name : 'parentesco'}
-            ,{name : 'orden_parentesco'}
+             'parametros.pv_otvalor01','parametros.pv_otvalor02','parametros.pv_otvalor03','parametros.pv_otvalor04','parametros.pv_otvalor05'
+            ,'parametros.pv_otvalor06','parametros.pv_otvalor07','parametros.pv_otvalor08','parametros.pv_otvalor09','parametros.pv_otvalor10'
+            ,'parametros.pv_otvalor11','parametros.pv_otvalor12','parametros.pv_otvalor13','parametros.pv_otvalor14','parametros.pv_otvalor15'
+            ,'parametros.pv_otvalor16','parametros.pv_otvalor17','parametros.pv_otvalor18','parametros.pv_otvalor19','parametros.pv_otvalor20'
+            ,'parametros.pv_otvalor21','parametros.pv_otvalor22','parametros.pv_otvalor23','parametros.pv_otvalor24','parametros.pv_otvalor25'
+            ,'parametros.pv_otvalor26','parametros.pv_otvalor27','parametros.pv_otvalor28','parametros.pv_otvalor29','parametros.pv_otvalor30'
+            ,'parametros.pv_otvalor31','parametros.pv_otvalor32','parametros.pv_otvalor33','parametros.pv_otvalor34','parametros.pv_otvalor35'
+            ,'parametros.pv_otvalor36','parametros.pv_otvalor37','parametros.pv_otvalor38','parametros.pv_otvalor39','parametros.pv_otvalor40'
+            ,'parametros.pv_otvalor41','parametros.pv_otvalor42','parametros.pv_otvalor43','parametros.pv_otvalor44','parametros.pv_otvalor45'
+            ,'parametros.pv_otvalor46','parametros.pv_otvalor47','parametros.pv_otvalor48','parametros.pv_otvalor49','parametros.pv_otvalor50'
+            ,'parametros.pv_otvalor51','parametros.pv_otvalor52','parametros.pv_otvalor53','parametros.pv_otvalor54','parametros.pv_otvalor55'
+            ,'parametros.pv_otvalor56','parametros.pv_otvalor57','parametros.pv_otvalor58','parametros.pv_otvalor59','parametros.pv_otvalor60'
+            ,'parametros.pv_otvalor61','parametros.pv_otvalor62','parametros.pv_otvalor63','parametros.pv_otvalor64','parametros.pv_otvalor65'
+            ,'parametros.pv_otvalor66','parametros.pv_otvalor67','parametros.pv_otvalor68','parametros.pv_otvalor69','parametros.pv_otvalor70'
+            ,'parametros.pv_otvalor71','parametros.pv_otvalor72','parametros.pv_otvalor73','parametros.pv_otvalor74','parametros.pv_otvalor75'
+            ,'parametros.pv_otvalor76','parametros.pv_otvalor77','parametros.pv_otvalor78','parametros.pv_otvalor79','parametros.pv_otvalor80'
+            ,'parametros.pv_otvalor81','parametros.pv_otvalor82','parametros.pv_otvalor83','parametros.pv_otvalor84','parametros.pv_otvalor85'
+            ,'parametros.pv_otvalor86','parametros.pv_otvalor87','parametros.pv_otvalor88','parametros.pv_otvalor89','parametros.pv_otvalor90'
+            ,'parametros.pv_otvalor91','parametros.pv_otvalor92','parametros.pv_otvalor93','parametros.pv_otvalor94','parametros.pv_otvalor95'
+            ,'parametros.pv_otvalor96','parametros.pv_otvalor97','parametros.pv_otvalor98','parametros.pv_otvalor99'
+            ,'cdtipsit','nmsituac'
         ]
     });
     ////// modelos //////
     
     ////// stores //////
+    _p31_storeIncisos = Ext.create('Ext.data.Store',
+    {
+        model : '_p31_modelo'
+    });
+    
+    _p31_storeVersionesRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,cargado  : false
+        ,autoLoad : _p31_smap1.cdramo+'x'=='5x'
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p31_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo' : 'RAMO_5_VERSIONES'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p31_gridIncisos').getView().refresh();
+                _fieldById('_p31_panelStoreVersiones').destroy();
+            }
+        }
+    });
     ////// stores //////
     
     ////// componentes //////
@@ -94,15 +155,17 @@ Ext.onReady(function()
             ,format     : 'd/m/Y'
             ,fieldLabel : 'INICIO DE VIGENCIA'
             ,name       : 'feini'
-            ,listeners  : { change : _p31_fefinChange }
             ,style      : 'margin:5px;'
+            ,listeners  :
+            {
+                change : _p31_feiniChange
+            }
         }
         ,{
             xtype       : 'datefield'
             ,format     : 'd/m/Y'
             ,fieldLabel : 'FIN DE VIGENCIA'
             ,name       : 'fefin'
-            ,readOnly   : true
             ,style      : 'margin:5px;'
         }
     ];
@@ -119,10 +182,30 @@ Ext.onReady(function()
         _p31_polizaAdicionalesItems[i].labelWidth=295;
     }
     
-    _p31_adicionalesItems = [];
-    <s:if test='%{getImap().get("adicionalesItems")!=null}'>
-        _p31_adicionalesItems = [<s:property value="imap.adicionalesItems" />];
+    _p31_incisoColumns =
+    [
+        { xtype : 'rownumberer' }
+    ];
+    _p31_incisoColumnsConf = [];
+    <s:if test='%{getImap().get("incisoColumns")!=null}'>
+        _p31_incisoColumnsConf = [<s:property value="imap.incisoColumns" />];
     </s:if>
+    for(var i in _p31_incisoColumnsConf)
+    {
+        if(_p31_smap1.cdramo+'x'=='5x')
+        {
+            if(
+                _p31_incisoColumnsConf[i].editor.name=='cdtipsit'
+                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor06'
+                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor09'
+                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor10'
+            )
+            {
+                _p31_incisoColumnsConf[i].editor='';
+            }
+        }
+        _p31_incisoColumns.push(_p31_incisoColumnsConf[i]);
+    }
     
     var _p31_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
     for(var i=0;i<_p31_datosGeneralesItems.length;i++)
@@ -165,23 +248,26 @@ Ext.onReady(function()
                     }
                 ]
             })
-            ,Ext.create('Ext.form.Panel',
+            ,Ext.create('Ext.grid.Panel',
             {
-                itemId    : '_p31_adicionalesForm'
-                ,title    : 'DATOS ADICIONALES DE INCISO'
-                ,defaults : { style : 'margin:5px;' }
-                ,layout   :
+                itemId      : '_p31_gridIncisos'
+                ,title      : 'DATOS ADICIONALES DE INCISO'
+                ,columns    : _p31_incisoColumns
+                ,store      : _p31_storeIncisos
+                ,minHeight  : 150
+                ,maxHeight  : 300
+                ,viewConfig : viewConfigAutoSize
+                ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
                 {
-                    type     : 'table'
-                    ,columns : 2
-                }
-                ,items    : _p31_adicionalesItems
+                    clicksToEdit  : 1
+                    ,errorSummary : false
+                })
             })
             ,Ext.create('Ext.panel.Panel',
             {
                 itemId      : '_p31_clientePanel'
                 ,title      : 'CLIENTE'
-                ,height     : 300
+                ,height     : 400
                 ,autoScroll : true
                 ,loader     :
                 {
@@ -198,18 +284,16 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        itemId    : '_p31_botonEmitir'
-                        ,text     : 'Emitir'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/key.png'
-                        ,handler  : _p31_emitirClic
-                        ,disabled : true
+                        itemId   : '_p31_botonEmitir'
+                        ,text    : 'Emitir'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                        ,handler : _p31_emitirClic
                     }
                     ,{
-                        itemId    : '_p31_botonGuardar'
-                        ,text     : 'Guardar'
-                        ,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
-                        ,handler  : function(){ _p31_guardar(); }
-                        ,disabled : true
+                        itemId   : '_p31_botonGuardar'
+                        ,text    : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : function(){ _p31_guardar(); }
                     }
                     ,{
                         text     : 'Nueva'
@@ -225,6 +309,43 @@ Ext.onReady(function()
     ////// custom //////
     /*_fieldByLabel('AGENTE').hide();*/
     _fieldByName('porparti').setMaxValue(99);
+    
+    //ramo 5
+    if(_p31_smap1.cdramo+'x'=='5x')
+    {
+        //renderers
+        _fieldById('_p31_gridIncisos').down('[text*=VERSI]').renderer=function(v)
+        {
+            if(_p31_storeVersionesRamo5.cargado&&v+'x'!='x')
+            {
+                var index = _p31_storeVersionesRamo5.find('key',v);
+                if(index==-1)
+                {
+                    v='...';
+                }
+                else
+                {
+                    v=_p31_storeVersionesRamo5.getAt(index).get('value');
+                }
+            }
+            else
+            {
+                v='';
+            }
+            return v;
+        };
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p31_panelStoreVersiones'
+            ,floating : true
+            ,html     : 'Cargando versiones...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,330);
+        //renderers
+    }//ramo 5
     ////// custom //////
     
     ////// loaders //////
@@ -307,26 +428,13 @@ Ext.onReady(function()
             debug('### tvalosit:',json);
             if(json.exito)
             {
-                /*
-                var form = _fieldById('_p31_adicionalesForm');
-                for(var i in json.smap1)
+                for(var i in json.slist1)
                 {
-                    var item = _fieldByName(i,form,true);
-                    if(item)
-                    {
-                        item.setValue(json.smap1[i]);
-                        if(_p31_smap1.cdramo+'x'=='5x')
-                        {
-                            if(item.fieldLabel=='CONDUCTOR'&&Ext.isEmpty(json.smap1[i]))
-                            {
-                                item.setValue(json.smap1['parametros.pv_otvalor15']);
-                            }
-                        }
-                    }
+                    json.slist1[i]['cdtipsit']=json.slist1[i].CDTIPSIT;
+                    json.slist1[i]['nmsituac']=json.slist1[i].NMSITUAC;
+                    _p31_storeIncisos.add(new _p31_modelo(json.slist1[i]));
                 }
-
                 _p31_loadCallback();
-                */
             }
             else
             {
@@ -339,12 +447,6 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-function _p31_fefinChange(me,newVal,oldVal)
-{
-    debug('>_p31_fefinChange:',newVal,oldVal,'DUMMY');
-    debug('<_p31_fefinChange');
-}
-
 function _p31_nuevaClic()
 {
     _fieldById('_p31_panelpri').setLoading(true);
@@ -362,10 +464,10 @@ function _p31_nuevaClic()
 
 function _p31_loadCallback()
 {
-    var vigen = _fieldByLabel('VIGENCIA');
-    vigen.hide();
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
+    /*var vigen = _fieldByLabel('VIGENCIA');
+    vigen.hide();
     feini.on(
     {
         change : function(me,val)
@@ -379,7 +481,7 @@ function _p31_loadCallback()
                 debug(e);
             }
         }
-    });
+    });*/
     
     Ext.Ajax.request(
     {
@@ -409,55 +511,6 @@ function _p31_loadCallback()
         }
         ,failure : errorComunicacion
     });
-    
-    if(_p31_smap1.cdramo+'x'=='5x')
-    {
-        Ext.Ajax.request(
-        {
-            url     : _p31_urlRecuperacionSimple
-            ,params :
-            {
-                'smap1.procedimiento' : 'RECUPERAR_DATOS_VEHICULO_RAMO_5'
-                ,'smap1.cdunieco'     : _p31_smap1.cdunieco
-                ,'smap1.cdramo'       : _p31_smap1.cdramo
-                ,'smap1.estado'       : _p31_smap1.estado
-                ,'smap1.nmpoliza'     : _p31_smap1.nmpoliza 
-            }
-            ,success : function(response)
-            {
-                var json = Ext.decode(response.responseText);
-                debug('### recuperar datos vehiculo ramo 5:',json);
-                if(json.exito)
-                {
-                    var _f1_aux=
-                    [
-                        {
-                            xtype       : 'displayfield'
-                            ,fieldLabel : 'VEH&Iacute;CULO'
-                            ,value      : json.smap1.datos
-                        }
-                    ];
-                    var form=_fieldById('_p31_adicionalesForm');
-                    var anteriores=form.removeAll(false);
-                    form.add(
-                    {
-                        xtype       : 'displayfield'
-                        ,fieldLabel : 'VEH&Iacute;CULO'
-                        ,value      : json.smap1.datos
-                    });
-                    for(var i=0;i<anteriores.length;i++)
-                    {
-                        form.add(anteriores[i]);
-                    }
-                }
-                else
-                {
-                    mensajeError(json.respuesta);
-                }
-            }
-            ,failure : function(){ errorComunicacion(); }
-        });
-    }
 }
 
 function _p31_personaSaved()
@@ -508,11 +561,48 @@ function _p31_guardar(callback)
 {
     debug('>_p31_guardar');
     var form1  = _fieldById('_p31_polizaForm');
-    var form2  = _fieldById('_p31_adicionalesForm');
-    var valido = form1.isValid()&&form2.isValid();
+    var valido = form1.isValid();
     if(!valido)
     {
         datosIncompletos();
+    }
+    
+    if(valido)
+    {
+        var editables = [];
+        for(var i in _p31_incisoColumnsConf)
+        {
+            if(!Ext.isEmpty(_p31_incisoColumnsConf[i].editor))
+            {
+                editables[_p31_incisoColumnsConf[i].text]=_p31_incisoColumnsConf[i].editor.name;
+            }
+        }
+        debug('editables:',editables);
+        
+        var error='';
+        _p31_storeIncisos.each(function(record)
+        {
+            debug('iterando:',record.data);
+            var faltan = '';
+            for(var i in editables)
+            {
+                if(Ext.isEmpty(record.get(editables[i])))
+                {
+                    faltan = faltan + i +','; 
+                }
+            }
+            debug('faltan:',faltan);
+            if(!Ext.isEmpty(faltan))
+            {
+                error = error + 'Para el inciso '+(_p31_storeIncisos.indexOf(record)+1)+' falta: '+faltan+'<br/>';
+            }
+            debug('error:',error);
+        });
+        valido = Ext.isEmpty(error);
+        if(!valido)
+        {
+            mensajeWarning(error);
+        }
     }
     
     if(valido)
@@ -528,18 +618,23 @@ function _p31_guardar(callback)
     {
         var json =
         {
-            smap1  : form1.getValues()
-            ,smap2 : form2.getValues()
+            smap1   : form1.getValues()
+            ,slist1 : []
         };
         
         json.smap1['cdunieco'] = _p31_smap1.cdunieco;
         json.smap1['cdramo']   = _p31_smap1.cdramo;
         json.smap1['estado']   = _p31_smap1.estado;
         json.smap1['ntramite'] = _p31_smap1.ntramite;
-        json.smap1['cdagente'] = _fieldByLabel('AGENTE').getValue();
+        
+        _p31_storeIncisos.each(function(record)
+        {
+            json.slist1.push(record.data);
+        });
         
         debug('json para guardar:',json);
         var panelPri = _fieldById('_p31_panelpri');
+
         panelPri.setLoading(true);
         Ext.Ajax.request(
         {
@@ -587,100 +682,78 @@ function _p31_mostrarVistaPrevia()
         url     : _p31_urlRecotizar
         ,params :
         {
-            cdunieco             : _p31_smap1.cdunieco
-            ,cdramo              : _p31_smap1.cdramo
-            ,cdtipsit            : _p31_smap1.cdtipsit
-            ,'panel1.nmpoliza'   : _p31_smap1.nmpoliza
-            ,'panel1.notarifica' : 'si'
+            'smap1.cdunieco'    : _p31_smap1.cdunieco
+            ,'smap1.cdramo'     : _p31_smap1.cdramo
+            ,'smap1.cdtipsit'   : _p31_smap1.cdtipsit
+            ,'smap1.estado'     : 'W'
+            ,'smap1.nmpoliza'   : _p31_smap1.nmpoliza
+            ,'smap1.notarifica' : 'si'
+            ,'smap1.cdperpag'   : _fieldByName('cdperpag').getValue()
         }
         ,success : function(response)
         {
             panelpri.setLoading(false);
             var json = Ext.decode(response.responseText);
             debug('### retarificar:',json);
-            if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+            if(json.exito)
             {
-                centrarVentanaInterna(Ext.Msg.show(
-                {
-                    title    :'Verificar datos'
-                    ,msg     : json.mensajeRespuesta
-                    ,buttons : Ext.Msg.OK
-                    ,icon    : Ext.Msg.WARNING
-                }));
-            }
-            else
-            {
-                var orden=0;
-                var parentescoAnterior='qwerty';
-                for(var i=0;i<json.slist1.length;i++)
-                {
-                    if(json.slist1[i].parentesco!=parentescoAnterior)
-                    {
-                        orden++;
-                        parentescoAnterior=json.slist1[i].parentesco;
-                    }
-                    json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
-                }
                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                 {
-                    title          : 'Tarifa final'
-                    ,autoScroll    : true
-                    ,width         : 660
-                    ,height        : 400
-                    ,defaults      : { width: 650 }
-                    ,modal         : false
-                    ,closable      : false
-                    ,collapsible   : true
-                    ,titleCollapse : true
-                    ,items         :
+                    title       : 'Tarifa final'
+                    ,width      : 660
+                    ,maxHeight  : 500
+                    ,autoScroll : true
+                    ,modal      : true
+                    ,closable   : false
+                    ,items      :
                     [
                         Ext.create('Ext.grid.Panel',
                         {
-                            width  : 600
-                            ,store : Ext.create('Ext.data.Store',
+                            store    : Ext.create('Ext.data.Store',
                             {
-                                model       : 'ModeloDetalleCotizacion'
-                                ,groupField : 'orden_parentesco'
+                                model       : '_p31_modeloDetalleCotizacion'
+                                ,groupField : 'TITULO'
                                 ,sorters    :
                                 [
                                     {
-                                        sorterFn: function(o1, o2)
+                                        sorterFn : function(o1,o2)
                                         {
-                                            if (o1.get('orden') === o2.get('orden'))
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
                                             {
                                                 return 0;
                                             }
-                                            return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
                                         }
                                     }
                                 ]
-                                ,proxy :
+                                ,proxy      :
                                 {
                                     type    : 'memory'
                                     ,reader : 'json'
                                 }
-                                ,data:json.slist1
+                                ,data : json.slist1
                             })
                             ,columns :
                             [
                                 {
                                     header           : 'Nombre de la cobertura'
-                                    ,dataIndex       : 'Nombre_garantia'
-                                    ,flex            : 2
+                                    ,dataIndex       : 'COBERTURA'
+                                    ,width           : 480
                                     ,summaryType     : 'count'
                                     ,summaryRenderer : function(value)
                                     {
-                                        return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
                                     }
                                 }
                                 ,{
                                     header       : 'Importe por cobertura'
-                                    ,dataIndex   : 'Importe'
-                                    ,flex        : 1
+                                    ,dataIndex   : 'PRIMA'
+                                    ,width       : 150
                                     ,renderer    : Ext.util.Format.usMoney
                                     ,align       : 'right'
                                     ,summaryType : 'sum'
-                                }
+                                } 
                             ]
                             ,features :
                             [
@@ -689,14 +762,14 @@ function _p31_mostrarVistaPrevia()
                                     [
                                         '{name:this.formatName}'
                                         ,{
-                                            formatName:function(name)
+                                            formatName : function(name)
                                             {
                                                 return name.split("_")[1];
                                             }
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : true
+                                    ,startCollapsed : false
                                 }
                             ]
                         })
@@ -711,12 +784,12 @@ function _p31_mostrarVistaPrevia()
                                     style          : 'color:white;'
                                     ,initComponent : function()
                                     {
-                                        var sum=0;
-                                        for(var i=0;i<json.slist1.length;i++)
+                                        var sum = 0;
+                                        for ( var i = 0; i < json.slist1.length; i++)
                                         {
-                                            sum+=parseFloat(json.slist1[i].Importe);
+                                            sum += parseFloat(json.slist1[i].PRIMA);
                                         }
-                                        this.setText('Total: '+Ext.util.Format.usMoney(sum));
+                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
                                         this.callParent();
                                     }
                                 })
@@ -748,7 +821,7 @@ function _p31_mostrarVistaPrevia()
                                     itemId : 'botonEnvioEmail'
                                     ,xtype : 'button'
                                     ,text  : 'Enviar Email'
-                                    ,icon  : '${ctx}//resources/fam3icons/icons/email.png'
+                                    ,icon  : '${ctx}/resources/fam3icons/icons/email.png'
                                     ,disabled: true
                                     ,handler:function()
                                     {
@@ -867,6 +940,10 @@ function _p31_mostrarVistaPrevia()
                     ]
                 }).show());
             }
+            else
+            {
+                mensajeWarning(json.respuesta);
+            }
         }
         ,failure : function()
         {
@@ -895,6 +972,7 @@ function _p31_emitirFinal(me)
             ,'panel1.pv_nmpoliza' : _p31_smap1.nmpoliza
             ,'panel2.pv_nmpoliza' : _p31_smap1.nmpoliza
             ,'panel2.pv_cdtipsit' : _p31_smap1.cdtipsit
+            ,'panel1.flotilla'    : 'si'
         }
         ,success:function(response)
         {
@@ -1000,6 +1078,7 @@ function _p31_emitirFinal(me)
                                 ,'nmpoliza'           : json.nmpoliza
                                 ,'nmsuplem'           : json.nmsuplem                                                                       
                                 ,'cdIdeper'           : json.cdIdeper
+                                ,'panel1.flotilla'    : 'si'
                             };
                             reintentarWSAuto(me.up().up(), paramsWS);
                         }
@@ -1088,6 +1167,13 @@ function reintentarWSAuto(loading, params){
                         
 }
 
+function _p31_feiniChange(comp,val)
+{
+    debug('_p31_feiniChange:',val);
+    var fefin = _fieldByName('fefin');
+    fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+    fefin.isValid();
+}
 ////// funciones //////
 </script>
 </head>

@@ -525,4 +525,13 @@ public interface CotizacionDAO
 	public String cargarTabuladoresGMIParche(
 			String circulo
 			,String cdatribu)throws Exception;
+	public void sigsvdefEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdgarant
+			,String cdtipsup)throws Exception;
 }

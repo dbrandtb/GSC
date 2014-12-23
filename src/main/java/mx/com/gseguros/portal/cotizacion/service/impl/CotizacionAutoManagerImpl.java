@@ -2327,7 +2327,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String estado   = parametros.get("estado");
 				String nmpoliza = parametros.get("nmpoliza");
 				String nmsuplem = parametros.get("nmsuplem");
-				resp.setSlist(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem));
+				resp.setSlist(Utilerias.concatenarParametros(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem),false));
 			}
 			
 			setCheckpoint("0");
@@ -2387,21 +2387,28 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			setCheckpoint("Recuperando atributos variables de poliza");
 			List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
 			
-			/*
 			setCheckpoint("Recuperando atributos variables de situacion");
 			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
 			
+			setCheckpoint("Recuperando editor de situacion");
+			List<ComponenteVO>auxEditorSit = pantallasDAO.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
+					, cdtipsit, null, null
+					, "EMISION_AUTO_FLOT", "EDITOR_SITUACION", null);
+			ComponenteVO editorSit = auxEditorSit.get(0);
+			editorSit.setSoloLectura(true);
+			
 			setCheckpoint("Filtrando atributos de datos complementarios");
 			List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+			aux.add(editorSit);
 			for(ComponenteVO tatri:tatrisit)
 			{
-				if(isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
+				if(tatri.getSwCompFlot().equals("S"))
 				{
 					aux.add(tatri);
 				}
 			}
 			tatrisit=aux;
-			*/
 			
 			setCheckpoint("Recuperando componentes de pantalla");
 			List<ComponenteVO>polizaComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_FLOT", "POLIZA", null);
@@ -2416,11 +2423,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("polizaAdicionalesFields" , gc.getFields());
 			resp.getImap().put("polizaAdicionalesItems"  , gc.getItems());
 			
-			/*
-			gc.generaComponentes(tatrisit, true, true, true, false, false, false);
-			resp.getImap().put("adicionalesFields" , gc.getFields());
-			resp.getImap().put("adicionalesItems"  , gc.getItems());
-			*/
+			gc.generaComponentes(tatrisit, true, false, false, true, true, false);
+			resp.getImap().put("incisoColumns" , gc.getColumns());
 			
 			gc.generaComponentes(polizaComp, true, true, true, false, false, false);
 			resp.getImap().put("polizaFields" , gc.getFields());
@@ -2444,6 +2448,279 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
+		return resp;
+	}@Override
+	public ManagerRespuestaVoidVO guardarComplementariosAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String agenteSec
+			,String porpartiSec
+			,String feini
+			,String fefin
+			,Map<String,String>tvalopol
+			,List<Map<String,String>>tvalosit
+			,String ntramite
+			)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarComplementariosAutoFlotilla @@@@@@"
+				,"\n@@@@@@ cdunieco="    , cdunieco
+				,"\n@@@@@@ cdramo="      , cdramo
+				,"\n@@@@@@ estado="      , estado
+				,"\n@@@@@@ nmpoliza="    , nmpoliza
+				,"\n@@@@@@ agenteSec="   , agenteSec
+				,"\n@@@@@@ porpartiSec=" , porpartiSec
+				,"\n@@@@@@ feini="       , feini
+				,"\n@@@@@@ fefin="       , fefin
+				,"\n@@@@@@ tvalopol="    , tvalopol
+				,"\n@@@@@@ tvalosit="    , tvalosit
+				,"\n@@@@@@ ntramite="    , ntramite
+				));
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Actualizando poliza");
+			cotizacionDAO.actualizaMpolizas(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"  //nmsuplem
+					,null //swestado
+					,null //nmsolici
+					,null //feautori
+					,null //cdmotanu
+					,null //feanulac
+					,null //swautori
+					,null //cdmoneda
+					,null //feinisus
+					,null //fefinsus
+					,null //ottempot
+					,renderFechas.parse(feini)
+					,null //hhefecto
+					,renderFechas.parse(fefin)
+					,null //fevencim
+					,null //nmrenova
+					,null //ferecibo
+					,null //feultsin
+					,null //nmnumsin
+					,null //cdtipcoa
+					,null //swtarifi
+					,null //swabrido
+					,null //feemisio
+					,null //cdperpag
+					,null //nmpoliex
+					,null //nmcuadro
+					,null //porredau
+					,null //swconsol
+					,null //nmpolant
+					,null //nmpolnva
+					,null //fesolici
+					,null //cdramant
+					,null //cdmejred
+					,null //nmpoldoc
+					,null //nmpoliza2
+					,null //nmrenove
+					,null //nmsuplee
+					,null //ttipcamc
+					,null //ttipcamv
+					,null //swpatent
+					,null //nmpolmst
+					,null //pcpgocte
+					);
+			
+			if(!isBlank(agenteSec))
+			{
+				setCheckpoint("Recuperando agentes");
+				List<Map<String,String>>agentes = consultasDAO.cargarMpoliage(cdunieco, cdramo, estado, nmpoliza);
+				String cdagente = null;
+				for(Map<String,String>agente:agentes)
+				{
+					if(agente.get("CDTIPOAG").equals("1"))
+					{
+						cdagente=agente.get("CDAGENTE");
+					}
+				}
+				
+				setCheckpoint("Desligando agentes anteriores");
+				cotizacionDAO.borrarAgentesSecundarios(cdunieco, cdramo, estado, nmpoliza, "0");
+				
+				setCheckpoint("Recuperando cuadros de agentes");
+				String nmcuadro    = cotizacionDAO.obtenerDatosAgente(cdagente  , cdramo).get("NMCUADRO");
+    			String nmcuadroSec = cotizacionDAO.obtenerDatosAgente(agenteSec , cdramo).get("NMCUADRO");
+				
+				setCheckpoint("Guardando agente nuevo");
+				cotizacionDAO.movimientoMpoliage(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdagente
+						,"0"
+						,"V"
+						,"1"
+						,"0"
+						,nmcuadro
+						,null
+						,Constantes.INSERT_MODE
+						,ntramite
+						,String.format("%.2f",100d-Double.valueOf(porpartiSec))
+						);
+				
+				if(Double.valueOf(porpartiSec)>0d)
+				{
+					cotizacionDAO.movimientoMpoliage(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,agenteSec
+							,"0"
+							,"V"
+							,"2"
+							,"0"
+							,nmcuadroSec
+							,null
+							,Constantes.INSERT_MODE
+							,null//ntramite
+							,porpartiSec
+							);
+				}
+			}
+				
+			setCheckpoint("Guardando datos adicionales de poliza");
+			Map<String,String>tvalopolAux=new HashMap<String,String>();
+			for(Entry<String,String>en:tvalopol.entrySet())
+			{
+				String key = en.getKey();
+				if(!isBlank(key)
+						&&key.length()>"parametros.pv_otvalor".length()
+						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+				{
+					tvalopolAux.put(key.substring("parametros.pv_".length()),en.getValue());
+				}
+			}
+			cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
+			
+			setCheckpoint("Guardando datos adicionales de situacion");
+			for(Map<String,String>tvalositIte:tvalosit)
+			{
+				Map<String,String>tvalositAux=new HashMap<String,String>();
+				for(Entry<String,String>en:tvalositIte.entrySet())
+				{
+					String key = en.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_otvalor".length()
+							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
+					{
+						tvalositAux.put(key.substring("parametros.pv_".length()),en.getValue());
+					}
+				}
+				cotizacionDAO.actualizaValoresSituacion(cdunieco,cdramo,estado,nmpoliza,"0",tvalositIte.get("nmsituac"),tvalositAux);
+			}
+			
+			resp.setRespuesta("Datos guardados");
+			resp.setRespuestaOculta("Datos guardados");
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO recotizarAutoFlotilla(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,boolean notarifica
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsit
+			,String cdperpag
+			)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
+				,"\n@@@@@@ cdunieco="   , cdunieco
+				,"\n@@@@@@ cdramo="     , cdramo
+				,"\n@@@@@@ estado="     , estado
+				,"\n@@@@@@ nmpoliza="   , nmpoliza
+				,"\n@@@@@@ nmsuplem="   , nmsuplem
+				,"\n@@@@@@ notarifica=" , notarifica
+				,"\n@@@@@@ cdusuari="   , cdusuari
+				,"\n@@@@@@ cdelemen="   , cdelemen
+				,"\n@@@@@@ cdtipsit="   , cdtipsit
+				,"\n@@@@@@ cdperpag="   , cdperpag
+				));
+
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			setCheckpoint("Validando datos obligatorios de PREVEX");
+			//consultasDAO.validarDatosObligatoriosPrevex(cdunieco, cdramo, estado, nmpoliza);
+			
+			setCheckpoint("Validando datos de descuento por nomina");
+			//consultasDAO.validarAtributosDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			
+			if(!notarifica)
+			{
+				cotizacionDAO.sigsvdefEnd(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0"    //nmsituac
+						,"0"    //nmsuplem
+						,"TODO" //cdgarant
+						,"1"    //cdtipsup
+						);
+				
+				cotizacionDAO.tarificaEmi(
+						cdusuari
+						,cdelemen
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,"0" //nmsuplem
+						,cdtipsit
+						);
+			}
+			
+			resp.setSlist(cotizacionDAO.cargarDetallesCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza, cdperpag));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ ",resp
+				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return resp;
 	}
 	

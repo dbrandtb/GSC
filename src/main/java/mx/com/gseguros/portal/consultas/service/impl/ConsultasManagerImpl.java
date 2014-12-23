@@ -39,6 +39,27 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return lista;
 	}
 	
+	@Override
+	public void validarDatosObligatoriosPrevex(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+		consultasDAO.validarDatosObligatoriosPrevex(cdunieco, cdramo, estado, nmpoliza);
+	}
+	
+	@Override
+	public void validarDatosDXN(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem)throws Exception
+	{
+		consultasDAO.validarAtributosDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////
