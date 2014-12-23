@@ -1087,13 +1087,13 @@ Ext.onReady(function()
     	                {
     	                    return Ext.util.Format.usMoney(value);
     	                }
-    	    	    }
+    	    	    }/*
     	    	    ,{
     	    	    	xtype    : 'button'
     	    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
     	    	    	,text    : 'Aceptar y guardar'
     	    	    	,handler : _p12_guardar_click
-    	    	    }
+    	    	    }*/
     	    	]
     	    }));
     	    
@@ -1194,7 +1194,7 @@ Ext.onReady(function()
 	    ,renderTo : '_p12_divpri'
 	    ,items    :
 	    [
-	        {
+	        /*{
 	        	xtype     : 'panel'
 	        	,title    : 'C&Aacute;LCULOS DEL TR&Aacute;MITE'
 	        	,items :
@@ -1208,7 +1208,8 @@ Ext.onReady(function()
 			        }
 	        	]
 	        }
-	        ,_p12_formTramite
+	        ,*/
+	        _p12_formTramite
 	        ,_p12_formProveedor
 	        //,_p12_formFactura
 	        //,_p12_formSiniestro

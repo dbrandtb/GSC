@@ -880,6 +880,10 @@
             <result type="json"></result>
         </action>
         
+        <action name="generarCalculoSiniestros" class="siniestrosAction" method="generarCalculoSiniestros">
+            <result type="json"></result>
+        </action>
+        
         <action name="eliminarAsegurado" class="siniestrosAction" method="eliminarAsegurado">
             <result type="json"></result>
         </action>

@@ -651,7 +651,7 @@
                     name       : 'CDICD2',
                     labelWidth : 120
                 }
-		    ],
+		    ]/*,
 		    buttonAlign:'center',
 		    buttons: [{
 		        icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
@@ -710,7 +710,7 @@
 		                }));
 		            }
 		        }
-		    }/*,{
+		    },{
 		        text:'Restaurar',
 		        icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
 		        handler:function(){
@@ -729,7 +729,7 @@
         			    ,standardSubmit : true
         			});
 		        }
-		    }*/]
+		    ]}*/
 		});
 		
 		storeInfoGralSiniestro.load({
