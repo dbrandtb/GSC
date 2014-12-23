@@ -35,7 +35,7 @@ public class GenericMapper implements RowMapper
 		{
 			for(String col:columnas)
 			{
-				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe")||col!=null&&col.substring(0,2).equalsIgnoreCase("ff"))
 				{
 					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
 				}

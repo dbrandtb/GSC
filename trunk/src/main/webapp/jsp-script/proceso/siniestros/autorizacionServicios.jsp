@@ -61,6 +61,11 @@
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             var _URL_MONTO_DISP_PROVEEDOR           = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
             
+            var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
+            var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
+            var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
+            var _URL_LOADER_VER_EXCLUSIONES         = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
+
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>

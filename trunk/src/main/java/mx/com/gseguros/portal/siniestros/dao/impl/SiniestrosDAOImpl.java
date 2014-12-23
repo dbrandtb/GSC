@@ -1414,7 +1414,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"DSICD",			"CDICD2",			"DSICD2",			"DESCPORC"
 					,"DESCNUME",		"COPAGO",			"PTIMPORT",			"AUTRECLA"
 					,"NMRECLAMO",		"COMMENAR",			"COMMENME",			"AUTMEDIC"
-					,"CDCAUSA",			"CDGARANT",			"CDCONVAL"
+					,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
+					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
+					,"PTIMPCEDASEG"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2320,16 +2322,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
-	/*
-	protected class ObtieneDatosGeneralesSiniestroMapper  implements RowMapper<DatosGeneralesSiniestroVO> {
-        public DatosGeneralesSiniestroVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	DatosGeneralesSiniestroVO datosSiniestro = new DatosGeneralesSiniestroVO();
-        	// TODO: Terminar cuando este listo el SP
-            return datosSiniestro;
-        }
-    }
-    */
-	
 	
 	@Override
 	public Map<String, Object> actualizaDatosGeneralesSiniestro(Map<String, Object> params) throws Exception {
@@ -2353,6 +2345,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             declareParameter(new SqlParameter("pv_cdcausa_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, Object> actualizaMsiniestroReferenciado(Map<String, Object> params) throws Exception {
+		return ejecutaSP(new ActualizaMsiniestroReferenciado(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaMsiniestroReferenciado extends StoredProcedure {
+		protected ActualizaMsiniestroReferenciado(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_ACTUALIZA_SINI_REFERENCIADO");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_status_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsinref_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -3784,6 +3800,33 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"NMAUTSER","FESOLICI","CDPROVEE","NOMPROV"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaMsiniestMaestro(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaMsiniestMaestro(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaMsiniestMaestro extends StoredProcedure {
+		protected ObtieneListaMsiniestMaestro(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_SINIESTROS_REFERENCIA");
+			declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSINIES","CDCAUSA","DSCAUSA","CDICD","DSICD","FEOCURRE","FEAPERTU"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

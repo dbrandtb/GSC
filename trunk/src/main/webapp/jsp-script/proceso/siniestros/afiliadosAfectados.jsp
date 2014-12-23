@@ -22,6 +22,7 @@
 			var _TIPO_PAGO_REEMBOLSO				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
 			var _URL_GuardaFactura					= '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
 			var _URL_LISTA_AUTSERVICIO				= '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"		 />';
+			var _URL_LISTA_MSINIESTRO				= '<s:url namespace="/siniestros" action="consultaSiniestroMaestro"		 />';
 			var _URL_DATOS_VALIDACION				= '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"		 />';
 			var _URL_LoadConceptos					= '<s:url namespace="/siniestros" action="obtenerMsinival" />';
 			var _11_params							= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
@@ -36,6 +37,10 @@
 			var _CAT_CAUSASINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
 			var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
 			var _URL_ACTUALIZA_INFO_GRAL_SIN        = '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
+			var _URL_ASOCIA_MSINEST_REFERENCIADO    = '<s:url namespace="/siniestros"      action="asociaMsiniestroReferenciado" />';
+			var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
+			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+			var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
 			debug("VALOR DE _11_params --->");
 			debug(_11_params);
 			var _11_itemsForm	=
@@ -53,12 +58,16 @@
 			var recordsStoreFactura = [];
 			var _11_textfieldAsegurado;
 			var _11_textfieldNmautserv;
+			var _11_textfieldAseguradoMsiniest;
+			var _11_textfieldNmSiniest;
 			var panelInicialPral;
 			var storeAseguradoFactura;
 			var modPolizasAltaTramite;
 			//var storeFacturaDirectoNva;
 			var gridAutorizacion;
+			var gridMsiniestMaestro;
 			var storeListadoAutorizacion;
+			var storeListadoSiniestMaestro;
 			var cmbCveTipoConcepto;
 			var cmbCveConcepto;
 			var _11_windowRechazoSiniestro;
@@ -71,7 +80,7 @@
 			var storeSubcobertura;
 			var storeCoberturaxAsegurado;
 			var storeSubcoberturaAsegurado;
-
+			var ventanaAgregarAsegurado;
 			<s:set name="contadorFactura" value="0" />
 			<s:iterator value="slist2">
 				recordsStoreFactura.push({
@@ -163,7 +172,10 @@
 						{type:'string',	name:'NMSUPLEM'},		{type:'string',	name:'NOMBRE'},
 						{type:'string',	name:'PTIMPORT'},		{type:'string',	name:'STATUS'},
 						{type:'string',	name:'VOBOAUTO'},		{type:'string',	name:'CDCAUSA'},
-						{type:'string',	name:'CDGARANT'},		{type:'string',	name:'CDCONVAL'}
+						{type:'string',	name:'CDGARANT'},		{type:'string',	name:'CDCONVAL'},
+						{type:'string',	name:'NMSINREF'},		{type:'string',	name:'IMPORTEASEG'},
+						{type:'string',	name:'PTIVAASEG'},		{type:'string',	name:'PTIVARETASEG'},
+						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -197,8 +209,25 @@
 					fields: [  	{type:'string',	name:'NMAUTSER'},	   		{type:'string',	name:'CDPROVEE'},
 								{type:'string',	name:'FESOLICI'},			{type:'string',	name:'NOMPROV'}]
 				});
-
-
+//MODELO PARA EL LISTADO DE LA ASOCIACION
+				Ext.define('modelListadoSiniestroMaestro',{
+					extend: 'Ext.data.Model',
+					fields: [  	{type:'string',	name:'NMSINIES'},	   		{type:'string',	name:'CDCAUSA'},
+								{type:'string',	name:'DSCAUSA'},			{type:'string',	name:'CDICD'},
+								{type:'string',	name:'DSICD'},	   			{type:'string',	name:'FEOCURRE'},
+								{type:'string',	name:'FEAPERTU'}]
+				});
+//MODELO PARA LA OBTENER LA INFORMACION DE LA POLIZA
+Ext.define('modelListadoPoliza',{
+    extend: 'Ext.data.Model',
+    fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
+				{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
+				{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
+				{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
+				{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
+				{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
+				{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
+});
 				/*############################		STORE		########################################*/
 //STORE DE LAS COBERTURAS X VALORES
 				storeCobertura = Ext.create('Ext.data.Store', {
@@ -286,6 +315,20 @@
 				{
 					pageSize : 5
 					,model	  : 'modelListadoAutorizacion'
+					,autoLoad  : false
+					,proxy	 :
+					{
+						enablePaging : true,
+						reader	   : 'json',
+						type		 : 'memory',
+						data		 : []
+					}
+				});
+// STORE PARA EL LISTADO SINIESTRO MAESTRO
+				storeListadoSiniestMaestro = new Ext.data.Store(
+				{
+					pageSize : 5
+					,model	  : 'modelListadoSiniestroMaestro'
 					,autoLoad  : false
 					,proxy	 :
 					{
@@ -485,7 +528,34 @@
 						}
 					}
 				});
-
+//STORE DE LAS POLIZAS
+				var storeListadoPoliza = new Ext.data.Store(
+				{
+					pageSize : 5
+					,model      : 'modelListadoPoliza'
+					,autoLoad  : false
+					,proxy     :
+					{
+						enablePaging : true,
+						reader       : 'json',
+						type         : 'memory',
+						data         : []
+					}
+				});
+//STORE LISTADO DE ASEGURADOS
+				var storeAsegurados = Ext.create('Ext.data.Store', {
+				    model:'Generic',
+				    autoLoad:false,
+				    proxy: {
+				        type: 'ajax',
+				        url : _URL_LISTADO_ASEGURADO,
+				        reader: {
+				            type: 'json',
+				            root: 'listaAsegurado'
+				        }
+				    }
+				});
+				
 				/*############################		DECLARACION DE COMBOX Y LABEL		########################################*/
 				var comboICDPrimario = Ext.create('Ext.form.field.ComboBox',
 				{
@@ -522,7 +592,22 @@
 				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
 				{
 					name:'params.tipoMoneda',		fieldLabel	: 'MONEDA',		store: storeTipoMoneda,			queryMode:'local',  
-					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false
+					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false,
+					listeners : {
+						select:function(e){
+							if(e.getValue() == "001"){
+								panelInicialPral.down('[name=params.tasacamb]').setValue("0.00");
+								panelInicialPral.down('[name=params.ptimporta]').setValue("0.00");
+								panelInicialPral.down('[name=params.tasacamb]').hide();
+								panelInicialPral.down('[name=params.ptimporta]').hide();
+							}else{
+								panelInicialPral.down('[name=params.tasacamb]').setValue('');
+								panelInicialPral.down('[name=params.ptimporta]').setValue('');
+								panelInicialPral.down('[name=params.tasacamb]').show();
+								panelInicialPral.down('[name=params.ptimporta]').show();
+							}
+						}
+					}
 				});
 
 				
@@ -679,6 +764,8 @@
 											}
 										});
 										
+										
+										
 									}
 								}
 							})
@@ -693,14 +780,19 @@
 								,items		:
 								[
 									{
-										icon	 : '${ctx}/resources/fam3icons/icons/folder.png'
-										,tooltip : 'Capturar Detalle'
+										icon	 : '${ctx}/resources/fam3icons/icons/application_edit.png'
+										,tooltip : 'Generar Siniestro'
 										,handler : revisarDocumento
 									},
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
 										,handler : guardarDatosComplementarios
+									},
+									{
+										icon	 : '${ctx}/resources/fam3icons/icons/folder.png'
+										,tooltip : 'Alex'
+										,handler : _11_pedirMsiniestMaestro
 									}
 								]
 							},
@@ -709,6 +801,9 @@
 							},
 							{
 								header: '# Auto.',					dataIndex: 'NMAUTSER'
+							},
+							{
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF'
 							},
 							{
 								header: 'Causa <br/> Siniestro', 				dataIndex: 'CDCAUSA'
@@ -762,18 +857,21 @@
 							{
 								header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
 								,editor: subCoberturaAsegurado
-								,renderer : function(v) {
+								/*,renderer : function(v) {
 									var leyenda = v;
 									return leyenda;
 								}
-								/*,renderer : function(v) {
+								*/,renderer : function(v) {
 									var leyenda = '';
 									if (typeof v == 'string')
 									{
+										debug("VAlor de V",v, "Valor de recargado",storeSubcoberturaAseguradoRender.cargado);
 										if(storeSubcoberturaAseguradoRender.cargado)
 										{
+											
 											storeSubcoberturaAseguradoRender.each(function(rec)
 										    {
+												debug("Valor de REC",rec.data.key);
 												if (rec.data.key == v)
 											    {
 													leyenda = rec.data.value;
@@ -795,7 +893,7 @@
 										}
 									}
 									return leyenda;
-								}*/
+								}
 							},
 							{
 								header: 'ICD<br/>Principal', 				dataIndex: 'CDICD'
@@ -878,7 +976,8 @@
 								header: 'P&oacute;liza',			dataIndex: 'NMPOLIZA'
 							},
 							{
-								header: 'Vo.Bo.<br/>Auto.',			dataIndex: 'VOBOAUTO',
+								header: 'Vo.Bo.<br/>Auto.',			dataIndex: 'VOBOAUTO', 
+								hidden: true,
 								renderer		: function(v)
 								{
 									var r=v;
@@ -900,15 +999,46 @@
 								header: '$<br/>Facturado',			dataIndex: 'PTIMPORT',			renderer	   :Ext.util.Format.usMoney
 							},
 							{
-								header: '#<br/>Reclamo',			dataIndex: 'NMRECLAMO'
+								header: '#<br/>Reclamo',			dataIndex: 'NMRECLAMO',			hidden	:	true
 							},
 							{
 								header: 'Tipsit',					dataIndex: 'DSTIPSIT',			hidden	:	true
-							}
+							},
+							{
+								header: 'Subtotal',	dataIndex: 'IMPORTEASEG',renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'IVA',	dataIndex: 'PTIVAASEG',renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'IVA Retenido',	dataIndex: 'PTIVARETASEG',renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'ISR',	dataIndex: 'PTISRASEG',renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'Imp. Cedular',	dataIndex: 'PTIMPCEDASEG',renderer  : Ext.util.Format.usMoney
+							}/*,
+							{
+								header: 'Imp. Cedular',	dataIndex: 'PTIMPCEDASEG',renderer  : Ext.util.Format.usMoney
+							}*/
 						],
+						tbar:[
+								/*{
+									text	: 'Agregar Asegurado'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,handler : _p21_agregarAsegurado
+								}*/
+								{
+									text	: 'Generar Calculo'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,handler : _p21_generarCalculo
+								}
+							],
+							
 						listeners: {
 							select: function (grid, record, index, opts){
-								//alert(banderaConcepto);
+								debug("VALOR DEL RECORD SELECCIONADO", record);
 								if (banderaConcepto == "1"){
 									debug("Guardamos los conceptos ");
 									//Mandamos a guardar los conceptos
@@ -938,6 +1068,7 @@
 								}
 							}
 						}
+						
 					 });
 						this.callParent();
 					},
@@ -1290,6 +1421,76 @@
 					}
 				]);
 
+				gridMsiniestMaestro = Ext.create('Ext.grid.Panel',
+				{
+					id			 : 'msiniestMaestroGridId'
+					,store		 :  storeListadoSiniestMaestro
+					,style		 : 'margin:5px'
+					,selType: 'checkboxmodel'
+					,width   : 600
+					,height: 200
+					,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
+					,columns	   :
+					[
+						 {
+							 header	 : 'N&uacute;mero <br/> Siniestro'
+							 ,dataIndex : 'NMSINIES'
+							 ,width	 	: 100
+						 },
+						 {
+							 header	 : 'Causa Siniestro'
+							 ,dataIndex : 'CDCAUSA'
+							 ,width	 : 100
+							 ,hidden : true
+						 }
+						 ,
+						 {
+							 header	 : 'Causa <br/> Siniestro'
+							 ,dataIndex : 'DSCAUSA'
+							 ,width	 : 100
+						 }
+						 ,
+						 {
+							 header	 : 'Id ICD'
+							 ,dataIndex : 'CDICD'
+							 ,width	 : 300
+							 ,hidden : true
+						 },
+						 {
+							 header	 : 'ICD'
+							 ,dataIndex : 'DSICD'
+							 ,width	 : 300
+						 },
+						 {
+							 header	 : 'Fecha <br/> Ocurrencia'
+							 ,dataIndex : 'FEOCURRE'
+							 ,width	 : 100
+						 },
+						 {
+							 header	 : 'Fecha <br/> Apertura'
+							 ,dataIndex : 'FEAPERTU'
+							 ,width	 : 100
+						 }
+					 ],
+					 bbar	 :
+					 {
+						 displayInfo : true,
+						 store	   : storeListadoSiniestMaestro,
+						 xtype	   : 'pagingtoolbar'
+					 },
+					//aqui va el listener
+					listeners: {
+						itemclick: function(dv, record, item, index, e) {
+							debug("VALOR RECORD-->",record);
+							_11_textfieldNmSiniest.setValue(record.get('NMSINIES'));
+						}
+					}	
+				});
+				gridMsiniestMaestro.store.sort([
+					{
+						property	: 'nmautser',			direction   : 'DESC'
+					}
+				]);
 				panelInicialPral= Ext.create('Ext.form.Panel',
 				{
 					border	: 0
@@ -1323,15 +1524,37 @@
 						subCobertura,
 						cmbTipoMoneda,
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE MXN',			name	: 'params.ptimport',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						},
-						{
 							xtype		: 'numberfield',		fieldLabel 	: 'TASA CAMBIO',			name	: 'params.tasacamb',
-							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
+							listeners : {
+								'change':function(e){
+									if(panelInicialPral.down('combo[name=params.tipoMoneda]').getValue() !="001"){
+										var tasaCambio = e.getValue();
+										var montoFactura = panelInicialPral.down('[name=params.ptimporta]').getValue();
+										var montoFacturamxn = +tasaCambio * +montoFactura
+										panelInicialPral.down('[name=params.ptimport]').setValue(montoFacturamxn);
+									}
+									
+								}
+							}
 						},
 						{
 							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE FACTURA',		name	: 'params.ptimporta',
+							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
+							listeners : {
+								'change':function(e){
+									if(panelInicialPral.down('combo[name=params.tipoMoneda]').getValue() !="001"){
+										var tasaCambio = panelInicialPral.down('[name=params.tasacamb]').getValue();
+										var montoFactura = e.getValue();
+										var montoFacturamxn = +tasaCambio * +montoFactura
+										panelInicialPral.down('[name=params.ptimport]').setValue(montoFacturamxn);
+									}
+									
+								}
+							}
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE MXN',			name	: 'params.ptimport',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
 						{
@@ -1446,6 +1669,337 @@
 					]
 				});
 
+				
+				gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
+				{
+					id            : 'polizaGridAltaTramite',
+					store         : storeListadoPoliza,
+					selType	      : 'checkboxmodel',
+					width         : 700,
+					height		  : 200,
+					columns       :
+					[
+						
+						
+						{
+							 header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
+						},
+						{
+							 header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
+						},
+						{
+							 header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',						dataIndex : 'vigenciaPoliza',		width	    : 200
+						},
+						{
+							 header     : 'Fecha alta <br/> asegurado',		dataIndex : 'faltaAsegurado',		width	    : 100
+						},
+						{
+							 header     : 'Fecha cancelaci&oacute;n <br/> asegurado',						dataIndex : 'fcancelacionAfiliado',		width	    : 150
+						},
+						{
+							 header     : 'Estatus<br/> asegurado',						dataIndex : 'desEstatusCliente',		width	    : 100
+						},
+						{
+							 header     : 'Producto',							dataIndex : 'dsramo',		width       : 150
+						},
+						{
+							 header     : 'Sucursal',							dataIndex : 'dssucursal',	width       : 150
+						},
+						{
+							 header     : 'Estado',								dataIndex : 'estado',		width	    : 100
+						},
+						{
+							 header     : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		width	    : 150
+						 }
+					],
+					bbar :
+					{
+						displayInfo : true,
+						store       : storeListadoPoliza,
+						xtype       : 'pagingtoolbar'
+					},
+					listeners: {
+							itemclick: function(dv, record, item, index, e){
+								//1.- Validamos que el asegurado este vigente
+								if(record.get('desEstatusCliente')=="Vigente")
+								{
+									var valorFechaOcurrencia;
+									var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
+									valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
+									
+									var valorFechaInicial = new Date(record.get('feinicio').substring(6,10)+"/"+record.get('feinicio').substring(3,5)+"/"+record.get('feinicio').substring(0,2));
+									var valorFechaFinal =   new Date(record.get('fefinal').substring(6,10)+"/"+record.get('fefinal').substring(3,5)+"/"+record.get('fefinal').substring(0,2));
+									var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
+									
+									if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
+										if( valorFechaOcurrencia >= valorFechaAltaAsegurado )
+										{
+												panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.get('cdunieco'));
+												panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.get('cdramo'));
+												panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.get('estado'));
+												panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue(record.get('nmpoliza'));
+												panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue(record.get('nmsolici'));
+												panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue(record.get('nmsuplem'));
+												panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue(record.get('nmsituac'));
+												panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue(record.get('cdtipsit'));
+												modPolizasAsegurado.hide();
+										}else{
+											// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+											Ext.Msg.show({
+												title:'Error',
+												msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											});
+											modPolizasAsegurado.hide();
+											//limpiarRegistros();
+										}
+									}else{
+										// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+										Ext.Msg.show({
+											title:'Error',
+											msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+										modPolizasAsegurado.hide();
+										//limpiarRegistros();
+									}
+								}else{
+									// El asegurado no se encuentra vigente
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+									modPolizasAsegurado.hide();
+									//limpiarRegistros();
+								}
+							}
+						}
+
+				});
+				gridPolizasAltaTramite.store.sort([
+					{
+						property    : 'nmpoliza',			direction   : 'DESC'
+					}
+				]);
+				
+				var modPolizasAsegurado = Ext.create('Ext.window.Window',
+				{
+					title        : 'Listado de P&oacute;liza'
+					,modal       : true
+					,resizable   : false
+					,buttonAlign : 'center'
+					,closable    : false
+					,width		 : 710
+					,minHeight 	 : 100 
+					,maxheight   : 400
+					,items       :
+						[
+							gridPolizasAltaTramite
+						]
+				});
+				
+				var panelListadoAsegurado= Ext.create('Ext.form.Panel',{
+					border  : 0
+					,startCollapsed : true
+					,bodyStyle:'padding:5px;'
+					,url: _URL_GUARDA_ASEGURADO
+					,items :
+					[   			
+						{
+							xtype      : 'datefield',		name       : 'dtfechaOcurrencias',		fieldLabel : 'Fecha ocurrencia',
+							maxValue   :  new Date(),		format		: 'd/m/Y'
+						},
+						{	
+							xtype      : 'textfield',		name       : 'cdUniecoAsegurado',		fieldLabel : 'Unieco',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'cdRamoAsegurado',			fieldLabel : 'Ramo',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'estadoAsegurado',			fieldLabel : 'Estado',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'nmPolizaAsegurado',		fieldLabel : 'Poliza Asegurado',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'nmSoliciAsegurado',		fieldLabel : 'No. Solicitud',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'nmSuplemAsegurado',		fieldLabel : 'No. Suplement',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'nmSituacAsegurado',		fieldLabel : 'No. Situac',
+							hidden:true//,					allowBlank:false
+						},
+						{	
+							xtype      : 'textfield',		name       : 'cdTipsitAsegurado',		fieldLabel : 'Cdtipsit',
+							hidden:true//,					allowBlank:false
+						},
+						{
+							xtype: 'combo',					name:'cmbAseguradoAfect',				fieldLabel : 'Asegurado',
+							displayField : 'value',			valueField   : 'key',					width:500,
+							minChars  : 2,					forceSelection : true,					matchFieldWidth: false,
+							queryMode :'remote',			queryParam: 'params.cdperson',			store : storeAsegurados,
+							triggerAction: 'all',			hideTrigger:true,						allowBlank: false,
+							listeners : {
+								
+								'select' : function(combo, record) {
+									var params = {'params.cdperson' : this.getValue(),
+												  'params.cdramo' : _11_params.CDRAMO };
+									
+									cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+										if(success){
+											var jsonResponse = Ext.decode(response.responseText);
+											if(jsonResponse.listaPoliza == null) {
+												Ext.Msg.show({
+													title: 'Aviso',
+													msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+												
+												combo.clearValue();
+												modPolizasAsegurado.hide();
+												return;
+											}
+											
+										}else{
+											Ext.Msg.show({
+												title: 'Aviso',
+												msg: 'Error al obtener los datos.',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											});
+										}
+									});
+									modPolizasAsegurado.show();
+								}
+							}
+						}
+					]
+				});
+
+				/*PANTALLA EMERGENTE PARA EL PAGO DIRECTO */
+				ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
+					title: 'Asegurados',
+					//height: 200,
+					closeAction: 'hide',
+					modal: true, 
+					resizable: false,
+					items:[panelListadoAsegurado],
+					buttonAlign : 'center',
+					buttons:[
+						{
+							text: 'Aceptar',
+							icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+							handler: function() {
+								if (panelListadoAsegurado.form.isValid()) {
+									var datos=panelListadoAsegurado.form.getValues();
+									
+									if(datos.cmbAseguradoAfect==''|| datos.cmbAseguradoAfect== null && datos.dtfechaOcurrencias==''|| datos.dtfechaOcurrencias== null )
+									{
+										Ext.Msg.show({
+											title: 'Aviso',
+											msg: 'Complete la informaci&oacute;n requerida',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.WARNING
+										});
+									}else{
+										debug("Entra al else000",datos);
+										Ext.Ajax.request(
+												{
+													url	 : _URL_GUARDA_ASEGURADO
+													,params:{
+														//'params.nmtramite'  : _11_params.NTRAMITE,
+														'params.cdunieco'   : datos.cdUniecoAsegurado,
+														'params.cdramo'     : datos.cdRamoAsegurado,
+														'params.estado'     : datos.estadoAsegurado,
+														'params.nmpoliza'   : datos.nmPolizaAsegurado,
+														'params.nmsolici'   : datos.nmSoliciAsegurado,
+														'params.nmsuplem'   : datos.nmSuplemAsegurado,
+														'params.nmsituac'   : datos.nmSituacAsegurado,
+														'params.cdtipsit'   : datos.cdTipsitAsegurado,
+														'params.cdperson'   : datos.cmbAseguradoAfect,
+														'params.feocurre'   : datos.dtfechaOcurrencias
+													}
+													,success : function (response)
+													{
+														alert("Guardado");
+													},
+													failure : function ()
+													{
+														me.up().up().setLoading(false);
+														Ext.Msg.show({
+															title:'Error',
+															msg: 'Error de comunicaci&oacute;n',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														});
+													}
+												});
+										
+										
+										
+										panelListadoAsegurado.form.submit({
+										waitMsg:'Procesando...',
+										//standardSubmit : true,
+										params: {
+											//'params.nmtramite'  : _11_params.NTRAMITE,
+											'params.cdunieco'   : datos.cdUniecoAsegurado,
+											'params.cdramo'     : datos.cdRamoAsegurado,
+											'params.estado'     : datos.estadoAsegurado,
+											'params.nmpoliza'   : datos.nmPolizaAsegurado,
+											'params.nmsolici'   : datos.nmSoliciAsegurado,
+											'params.nmsuplem'   : datos.nmSuplemAsegurado,
+											'params.nmsituac'   : datos.nmSituacAsegurado,
+											'params.cdtipsit'   : datos.cdTipsitAsegurado,
+											'params.cdperson'   : datos.cmbAseguradoAfect,
+											'params.feocurre'   : datos.dtfechaOcurrencias
+										},
+										failure: function(form, action) {
+											centrarVentanaInterna(mensajeError("Error al guardar el Asegurado"));
+										},
+										success: function(form, action) {
+											alert("Correcto");
+											
+											
+										}
+									});
+									//limpiarRegistros();
+									panelListadoAsegurado.getForm().reset();
+									ventanaAgregarAsegurado.close();
+								}
+								} else {
+									Ext.Msg.show({
+										title: 'Aviso',
+										msg: 'Complete la informaci&oacute;n requerida',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.WARNING
+									});
+								}
+							}
+						},
+						{
+							text: 'Cancelar',
+							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+							handler: function(){
+								panelListadoAsegurado.getForm().reset();
+								ventanaAgregarAsegurado.close();
+							}
+						}
+					]
+				});
+				
 				Ext.define('_11_WindowRechazoSiniestro',
 				{
 					extend		 : 'Ext.window.Window'
@@ -1529,6 +2083,62 @@
 					}
 				});
 				
+				
+				
+				Ext.define('_11_WindowPedirMsiniest',
+						{
+							extend		 : 'Ext.window.Window'
+							,initComponent : function()
+							{
+								debug('_11_WindowPedirMsiniest initComponent');
+								Ext.apply(this,
+								{
+									title		: 'Asociar Reclamaci&oacute;n'
+									,icon		: '${ctx}/resources/fam3icons/icons/tick.png'
+									,closeAction : 'hide'
+									,modal	   : true
+									,defaults	: { style : 'margin : 5px; ' }
+									,items	   : _11_formPedirMsiniest
+									,buttonAlign : 'center'
+									,buttons	 :
+									[
+										{
+											text	 : 'Asociar Siniestro'
+											,icon	: '${ctx}/resources/fam3icons/icons/disk.png'
+											,handler : _11_asociarMsiniestMaestro
+										}
+									]
+								});
+								this.callParent();
+							}
+						});
+						Ext.define('_11_formPedirMsiniest',
+						{
+							extend		 : 'Ext.form.Panel'
+							,initComponent : function()
+							{
+								debug('_11_formPedirMsiniest initComponent');
+								Ext.apply(this,
+								{
+									border : 0
+									,items :
+									[
+										{
+											xtype : 'label'
+											,text : 'Se requiere el Siniestro para continuar'
+										}
+										,_11_textfieldAseguradoMsiniest
+										,_11_textfieldNmSiniest
+										,gridMsiniestMaestro
+									]
+								});
+								this.callParent();
+							}
+						});
+				
+				
+				
+				
 				Ext.define('_11_FormRechazo',
 				{
 					extend		 : 'Ext.form.Panel'
@@ -1591,9 +2201,28 @@
 					,hidden : true
 					,minLength  : 1
 				});
+				
+				_11_textfieldAseguradoMsiniest = Ext.create('Ext.form.TextField',
+				{
+					fieldLabel : 'Asegurado'
+					,width	 : 500
+					,readOnly  : true
+				});
+				_11_textfieldNmSiniest = Ext.create('Ext.form.NumberField',
+				{
+					fieldLabel  : 'No. de Siniestro'
+					,name : 'nmsiniestroRef'
+					,readOnly   : false
+					,allowBlank : false
+					,hidden : true
+					,minLength  : 1
+				});
 						
 				_11_formPedirAuto	= new _11_FormPedirAuto();
 				_11_windowPedirAut	= new _11_WindowPedirAut();
+				_11_formPedirMsiniest	= new _11_formPedirMsiniest();
+				_11_WindowPedirMsiniest	= new _11_WindowPedirMsiniest();
+				
 				_11_formRechazo		= new _11_FormRechazo();
 				_11_windowRechazoSiniestro = new _11_WindowRechazoSiniestro();
 				
@@ -1651,9 +2280,7 @@
 				panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
 				panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
 				panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
-				var fechaFacturaM = _11_recordActivo.get('fechaFactura').match(/\d+/g); 
-				var dateFec = fechaFacturaM[2]+"/"+fechaFacturaM[1]+"/"+fechaFacturaM[0];
-				panelInicialPral.down('[name=params.fefactura]').setValue(dateFec);
+				panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));
 				
 				if(_11_recordActivo.get('desctoNum').length == 0){
 					panelInicialPral.down('[name=params.descnume]').setValue("0.00");
@@ -1691,9 +2318,21 @@
 				
 				panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));
 				
-				panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
-				panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
-				panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
+				if(_11_recordActivo.get('cdmoneda') =="001"){
+					panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+					panelInicialPral.down('[name=params.tasacamb]').setValue("0.00");
+					panelInicialPral.down('[name=params.ptimporta]').setValue("0.00");
+					panelInicialPral.down('[name=params.tasacamb]').hide();
+					panelInicialPral.down('[name=params.ptimporta]').hide();
+					
+				}else{
+					panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+					panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
+					panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
+					panelInicialPral.down('[name=params.tasacamb]').show();
+					panelInicialPral.down('[name=params.ptimporta]').show();
+				}
+				
 				storeAseguradoFactura.removeAll();
 				storeAseguradoFactura.load({
 					params: {
@@ -1774,6 +2413,72 @@
 		});
 	}
 	
+	function _11_asociarMsiniestMaestro(){
+		
+		debug("Record activo#####",_11_recordActivo.data);
+		
+		
+		var valido = _11_formPedirMsiniest.isValid();
+		if(!valido)
+		{
+			datosIncompletos();
+		}else{
+			
+			var formulario=_11_formPedirMsiniest.form.getValues();
+			Ext.Ajax.request(
+			{
+				url	 : _URL_ASOCIA_MSINEST_REFERENCIADO
+				,params:{
+					'params.nmsiniesRef' : formulario.nmsiniestroRef
+					,'params.cdunieco' : _11_recordActivo.data.CDUNIECO
+					,'params.cdramo'     : _11_recordActivo.data.CDRAMO
+					,'params.estado'     : _11_recordActivo.data.ESTADO
+					,'params.nmpoliza'   : _11_recordActivo.data.NMPOLIZA
+					,'params.nmsuplem'   : _11_recordActivo.data.NMSUPLEM
+					,'params.nmsituac'   : _11_recordActivo.data.NMSITUAC
+					,'params.aaapertu'   : _11_recordActivo.data.AAAPERTU
+					,'params.status'     : _11_recordActivo.data.STATUS
+					,'params.nmsinies'   : _11_recordActivo.data.NMSINIES
+				}
+				,success : function (response)
+				{
+					mensajeCorrecto('Asociar',"Se ha asociado el siniestro a uno existente",function(){
+						_11_WindowPedirMsiniest.close();
+						storeAseguradoFactura.removeAll();
+						storeAseguradoFactura.load({
+							params: {
+								'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+								'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+							}
+						});
+					});
+				},
+				failure : function ()
+				{
+					me.up().up().setLoading(false);
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
+		}
+		
+		
+		//var record = grid.getStore().getAt(rowIndex);
+		//alert("Entra");
+		/*var valido = _11_formPedirMsiniest.isValid();
+		if(!valido)
+		{
+			datosIncompletos();
+		}else{
+		
+		}*/
+
+	}
+	
 	function guardarDatosComplementarios(grid,rowIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		Ext.Ajax.request(
@@ -1817,7 +2522,80 @@
 			}
 		});
 	}
-			
+	
+	function _11_pedirMsiniestMaestro(grid,rowIndex)
+	{
+		//1.- Ver si esta ya tiene generado un siniestro
+		var record = grid.getStore().getAt(rowIndex);
+		_11_recordActivo = record;
+		debug('_11_recordAsegurado: ###########',record.data);
+		
+		var idReclamacion = record.data.NMSINIES;
+		debug("VALOR -->",idReclamacion);
+		valido = idReclamacion && idReclamacion>0;
+		debug("Valido",valido);
+		if(!valido){
+			_11_pedirAutorizacion(record);
+		}
+		else{
+			msgWindow = Ext.Msg.show({
+				title: 'Aviso',
+				msg: '&iquest;Desea asociar la reclamaci&oacute;n a un siniestro existente?',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.Msg.QUESTION,
+				fn: function(buttonId, text, opt){
+					if(buttonId == 'no'){
+						//Solo actualizare los registros de los asegurados
+						storeAseguradoFactura.load({
+							params: {
+								'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+								'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+							}
+						});
+					}else{
+						var params = {
+							'params.cdunieco'	:	record.data.CDUNIECO
+							,'params.cdramo'	:	record.data.CDRAMO
+							,'params.estado'	:	record.data.ESTADO
+							,'params.nmpoliza'	:	record.data.NMPOLIZA
+							,'params.nmsuplem'	:	record.data.NMSUPLEM
+							,'params.nmsituac'	:	record.data.NMSITUAC
+							,'params.status'	:	record.data.STATUS
+						};
+						debug("params-->",params);
+						_11_textfieldAseguradoMsiniest.setValue(record.data.NOMBRE);
+						
+						cargaStorePaginadoLocal(storeListadoSiniestMaestro, _URL_LISTA_MSINIESTRO, 'datosInformacionAdicional', params, function(options, success, response){
+							if(success){
+								var jsonResponse = Ext.decode(response.responseText);
+								if(jsonResponse.datosInformacionAdicional.length <= 0) {
+									storeConceptos.removeAll();
+									centrarVentanaInterna(Ext.Msg.show({ 
+										title: 'Aviso',
+										msg: 'No existen siniestro para el asegurado elegido.',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.WARNING
+									}));
+								}else{
+									_11_WindowPedirMsiniest.show();
+									_11_textfieldNmSiniest.setValue('');
+									centrarVentanaInterna(_11_WindowPedirMsiniest);
+								}
+							}else{
+								Ext.Msg.show({
+									title: 'Aviso',
+									msg: 'Error al obtener los datos.',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+									});
+							}
+						});
+					}
+				}
+			});
+			centrarVentana(msgWindow);
+		}
+	}
 	function revisarDocumento(grid,rowIndex)
 	{
 		var record = grid.getStore().getAt(rowIndex);
@@ -2162,6 +2940,17 @@
 		}
 	}
 
+	function _p21_agregarAsegurado(){
+		ventanaAgregarAsegurado.show();
+	}
+	
+	function _p21_generarCalculo(){
+		//Genero el calculo
+		
+		//se realiza la validación correspondiente
+	}
+	
+	
 	function _p21_agregarConcepto()
 	{
 		if(gridFacturaDirecto.getSelectionModel().hasSelection()){
