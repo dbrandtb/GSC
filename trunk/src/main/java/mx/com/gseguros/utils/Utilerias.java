@@ -271,7 +271,7 @@ public class Utilerias {
 		);
     }
     
-    public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params,List<Map<String,String>>lista)
+    public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
     	int len = storedProcedureName.length();
     	logger.debug

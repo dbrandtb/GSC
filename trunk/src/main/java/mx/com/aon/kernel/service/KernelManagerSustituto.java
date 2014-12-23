@@ -270,8 +270,6 @@ public interface KernelManagerSustituto {
     		,String nmpoliza
     		,String nmsuplem) throws ApplicationException;
     
-    public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException;
-    
     /**
      * Valida si usuario tiene asociada una sucursal dada
      * @param cdunieco Sucursal a validar

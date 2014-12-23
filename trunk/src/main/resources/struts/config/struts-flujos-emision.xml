@@ -329,6 +329,18 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/emisionAutoFlotilla.jsp</result>
         </action>
+        
+        <action name="guardarComplementariosAutoFlotilla" class="cotizacionAutoAction" method="guardarComplementariosAutoFlotilla">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
+        <action name="recotizarAutoFlotilla" class="cotizacionAutoAction" method="recotizarAutoFlotilla">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

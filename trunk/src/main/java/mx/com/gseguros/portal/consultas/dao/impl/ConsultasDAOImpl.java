@@ -505,4 +505,115 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+	public List<Map<String,String>>cargarMpoliage(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("cdagente" , null);
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_OBTIENE_MPOLIAGE2", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarMpoliage(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No hay agentes para la poliza");
+    	}
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_OBTIENE_MPOLIAGE2", params, lista);
+    	return lista;
+	}
+    
+    protected class CargarMpoliage extends StoredProcedure
+    {
+    	protected CargarMpoliage(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_OBTIENE_MPOLIAGE2");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"CDUNIECO" , "CDRAMO"   , "ESTADO"   , "NMPOLIZA" , "CDAGENTE" , "NMSUPLEM"
+            		,"STATUS"  , "CDTIPOAG" , "PORREDAU" , "NMCUADRO" , "CDSUCURS"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public void validarDatosObligatoriosPrevex(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_VALIDA_DATOS_OBLIG_PREVEX", params);
+    	ejecutaSP(new ValidarDatosObligatoriosPrevex(getDataSource()),params);
+	}
+    
+    protected class ValidarDatosObligatoriosPrevex extends StoredProcedure
+    {
+    	protected ValidarDatosObligatoriosPrevex(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_VALIDA_DATOS_OBLIG_PREVEX");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public void validarAtributosDXN(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsuplem" , nmsuplem);
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_VALIDA_ATRIB_FP_DXN", params);
+    	ejecutaSP(new ValidarAtributosDXN(getDataSource()),params);
+	}
+    
+    protected class ValidarAtributosDXN extends StoredProcedure
+    {
+    	protected ValidarAtributosDXN(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_VALIDA_ATRIB_FP_DXN");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_swexito_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

@@ -56,4 +56,23 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem)throws Exception;
+
+	public List<Map<String,String>>cargarMpoliage(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	
+	public void validarDatosObligatoriosPrevex(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	
+	public void validarAtributosDXN(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem)throws Exception;
 }

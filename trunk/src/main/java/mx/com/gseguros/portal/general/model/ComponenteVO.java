@@ -66,6 +66,7 @@ public class ComponenteVO
 	private String nmpanelflot  = null;
 	private String cotflotrol   = null;
 	private String swpresenflot = null;
+	private String swCompFlot   = null;
 
 	private String icon = null;
 	private String handler = null;
@@ -392,7 +393,10 @@ public class ComponenteVO
 	@Override
 	public String toString()
 	{
-		return new StringBuilder("NAME/CDATRIBU=").append(this.nameCdatribu).append(",LABEL=").append(this.label).toString();
+		return new StringBuilder("\nNAME/CDATRIBU=").append(this.nameCdatribu)
+				.append(",LABEL=").append(this.label)
+				.append(",swCompFlot=").append(this.swCompFlot)
+				.toString();
 	}
 
 	public boolean isComboVacio() {
@@ -521,5 +525,13 @@ public class ComponenteVO
 
 	public void setSwpresenflot(String swpresenflot) {
 		this.swpresenflot = swpresenflot;
+	}
+
+	public String getSwCompFlot() {
+		return swCompFlot;
+	}
+
+	public void setSwCompFlot(String swCompFlot) {
+		this.swCompFlot = swCompFlot;
 	}
 }

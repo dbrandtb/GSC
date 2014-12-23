@@ -858,6 +858,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String cdpersonCli = null;
     	String cdideperCli = null;
     	String cdagenteExt = null;
+    	boolean esFlotilla = false;
     	
     	//sesion valida
     	if(exito)
@@ -902,6 +903,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				fechaFin    = smap1.get("fechaFin");
     				completos   = StringUtils.isNotBlank(fechaInicio)
     						&&StringUtils.isNotBlank(fechaFin);
+    				esFlotilla  = StringUtils.isNotBlank(smap1.get("flotilla"))&&smap1.get("flotilla").equalsIgnoreCase("si");
     			}
     			
     			if(!completos)
@@ -1180,6 +1182,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	//generar cotizacion
     	if(exito
     			&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
+    			&&!esFlotilla
     			)
     	{
             try

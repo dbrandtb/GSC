@@ -1191,6 +1191,132 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	public String guardarComplementariosAutoFlotilla()
+	{
+		logger.info(Utilerias.join(
+				 "\n################################################"
+				,"\n###### guardarComplementariosAutoFlotilla ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1  , "No se recibieron datos de poliza");
+			checkList(slist1 , "No se recibieron los incisos");
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String agenteSec   = smap1.get("agente_sec");
+			String porpartiSec = smap1.get("porparti");
+			String feini       = smap1.get("feini");
+			String fefin       = smap1.get("fefin");
+			String ntramite    = smap1.get("ntramite");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(feini    , "No se recibio la fecha de inicio");
+			checkBlank(fefin    , "No se recibio la fecha de fin");
+			checkBlank(ntramite , "No se recibio el numero de tramite");
+			
+			ManagerRespuestaVoidVO resp = cotizacionAutoManager.guardarComplementariosAutoFlotilla(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,agenteSec
+					,porpartiSec
+					,feini
+					,fefin
+					,smap1
+					,slist1
+					,ntramite
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarComplementariosAutoFlotilla ######"
+				,"\n################################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String recotizarAutoFlotilla()
+	{
+		logger.info(Utilerias.join(
+				 "\n###################################"
+				,"\n###### recotizarAutoFlotilla ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco   = smap1.get("cdunieco");
+			String cdramo     = smap1.get("cdramo");
+			String cdtipsit   = smap1.get("cdtipsit");
+			String estado     = smap1.get("estado");
+			String nmpoliza   = smap1.get("nmpoliza");
+			String notarifica = smap1.get("notarifica");
+			String cdperpag   = smap1.get("cdperpag");
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(cdperpag , "No se recibio la forma de pago");
+			
+			checkNull(session, "No hay sesion");
+			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.recotizarAutoFlotilla(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsit
+					,StringUtils.isNotBlank(notarifica)&&notarifica.equalsIgnoreCase("si")
+					,cdusuari
+					,cdelemen
+					,cdtipsit
+					,cdperpag
+					);
+			
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### recotizarAutoFlotilla ######"
+				,"\n###################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

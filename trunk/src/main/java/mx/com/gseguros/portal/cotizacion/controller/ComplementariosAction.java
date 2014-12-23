@@ -1430,15 +1430,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			try
 			{
-				LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
-				paramsValues.put("param1", cdunieco);
-				paramsValues.put("param2", cdramo);
-				paramsValues.put("param3", "W");
-				paramsValues.put("param4", panel1.get("nmpoliza"));
-				storedProceduresManager.procedureVoidCall(
-						ObjetoBD.VALIDA_DATOS_EMISION_PREVEX.getNombre(),
-						paramsValues,
-						null);
+				consultasManager.validarDatosObligatoriosPrevex(cdunieco, auxiliarProductoCdramo, "W", panel1.get("nmpoliza"));
 			}
 			catch(Exception ex)
 			{
@@ -1449,15 +1441,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			try
 			{
-				HashMap<String, Object> paramsValida = new HashMap<String, Object>();
-				paramsValida.put("pv_cdunieco_i", cdunieco);
-				paramsValida.put("pv_cdramo_i", cdramo);
-				paramsValida.put("pv_estado_i", "W");
-				paramsValida.put("pv_nmpoliza_i", panel1.get("nmpoliza"));
-				paramsValida.put("pv_nmsuplem_i", "0");
-				
-				kernelManager.validaDatosDxN(paramsValida);
-				
+				consultasManager.validarDatosDXN(cdunieco, cdramo, "W", panel1.get("nmpoliza"), "0");
 			}
 			catch(Exception ex)
 			{
@@ -1750,6 +1734,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String cdRamoGS        = null;
+		boolean esFlotilla     = false;
 		
 		////// obtener parametros
 		if(success)
@@ -1762,6 +1747,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = success && (cdramo   = panel2.get("pv_cdramo")        )!=null;
 				success = success && (cdtipsit = panel2.get("pv_cdtipsit")      )!=null;
 				success = success && (nmpoliza = panel2.get("pv_nmpoliza")      )!=null;
+				esFlotilla = StringUtils.isNotBlank(panel1.get("flotilla"))
+						&&panel1.get("flotilla").equalsIgnoreCase("si");
 				if(!success)
 				{
 					mensajeRespuesta="No se recibieron todos los datos";
@@ -1941,7 +1928,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
-		if(success)
+		if(success&&!esFlotilla)
 		{
 					String _cdunieco = cdunieco;
 					String _cdramo   = cdramo;
