@@ -41,6 +41,7 @@
 			var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
 			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
 			var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
+			var _URL_GENERAR_CALCULO				= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			debug("VALOR DE _11_params --->");
 			debug(_11_params);
 			var _11_itemsForm	=
@@ -857,41 +858,8 @@ Ext.define('modelListadoPoliza',{
 							{
 								header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
 								,editor: subCoberturaAsegurado
-								/*,renderer : function(v) {
+								,renderer : function(v) {
 									var leyenda = v;
-									return leyenda;
-								}
-								*/,renderer : function(v) {
-									var leyenda = '';
-									if (typeof v == 'string')
-									{
-										debug("VAlor de V",v, "Valor de recargado",storeSubcoberturaAseguradoRender.cargado);
-										if(storeSubcoberturaAseguradoRender.cargado)
-										{
-											
-											storeSubcoberturaAseguradoRender.each(function(rec)
-										    {
-												debug("Valor de REC",rec.data.key);
-												if (rec.data.key == v)
-											    {
-													leyenda = rec.data.value;
-												}
-											});
-										}
-										else
-										{
-										    leyenda='Cargando...';
-										}
-									}
-									else
-									{
-										if (v.key && v.value)
-										{
-											leyenda = v.value;
-										} else {
-											leyenda = v.data.value;
-										}
-									}
 									return leyenda;
 								}
 							},
@@ -1082,7 +1050,7 @@ Ext.define('modelListadoPoliza',{
 				Ext.define('EditorConceptos', {
 					extend: 'Ext.grid.Panel',
 					name:'editorConceptos',
-					title: 'Conceptos',
+					title: 'DETALLE DEL ASEGURADO (CONCEPTOS)',
 					icon		: '${ctx}/resources/fam3icons/icons/paste_plain.png',
 					frame: true,
 					selType  : 'rowmodel',
@@ -1891,7 +1859,7 @@ Ext.define('modelListadoPoliza',{
 
 				/*PANTALLA EMERGENTE PARA EL PAGO DIRECTO */
 				ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
-					title: 'Asegurados',
+					title: 'ASEGURADOS',
 					//height: 200,
 					closeAction: 'hide',
 					modal: true, 
@@ -1917,36 +1885,36 @@ Ext.define('modelListadoPoliza',{
 									}else{
 										debug("Entra al else000",datos);
 										Ext.Ajax.request(
-												{
-													url	 : _URL_GUARDA_ASEGURADO
-													,params:{
-														//'params.nmtramite'  : _11_params.NTRAMITE,
-														'params.cdunieco'   : datos.cdUniecoAsegurado,
-														'params.cdramo'     : datos.cdRamoAsegurado,
-														'params.estado'     : datos.estadoAsegurado,
-														'params.nmpoliza'   : datos.nmPolizaAsegurado,
-														'params.nmsolici'   : datos.nmSoliciAsegurado,
-														'params.nmsuplem'   : datos.nmSuplemAsegurado,
-														'params.nmsituac'   : datos.nmSituacAsegurado,
-														'params.cdtipsit'   : datos.cdTipsitAsegurado,
-														'params.cdperson'   : datos.cmbAseguradoAfect,
-														'params.feocurre'   : datos.dtfechaOcurrencias
-													}
-													,success : function (response)
-													{
-														alert("Guardado");
-													},
-													failure : function ()
-													{
-														me.up().up().setLoading(false);
-														Ext.Msg.show({
-															title:'Error',
-															msg: 'Error de comunicaci&oacute;n',
-															buttons: Ext.Msg.OK,
-															icon: Ext.Msg.ERROR
-														});
-													}
+										{
+											url	 : _URL_GUARDA_ASEGURADO
+											,params:{
+												//'params.nmtramite'  : _11_params.NTRAMITE,
+												'params.cdunieco'   : datos.cdUniecoAsegurado,
+												'params.cdramo'     : datos.cdRamoAsegurado,
+												'params.estado'     : datos.estadoAsegurado,
+												'params.nmpoliza'   : datos.nmPolizaAsegurado,
+												'params.nmsolici'   : datos.nmSoliciAsegurado,
+												'params.nmsuplem'   : datos.nmSuplemAsegurado,
+												'params.nmsituac'   : datos.nmSituacAsegurado,
+												'params.cdtipsit'   : datos.cdTipsitAsegurado,
+												'params.cdperson'   : datos.cmbAseguradoAfect,
+												'params.feocurre'   : datos.dtfechaOcurrencias
+											}
+											,success : function (response)
+											{
+												alert("Guardado");
+											},
+											failure : function ()
+											{
+												me.up().up().setLoading(false);
+												Ext.Msg.show({
+													title:'Error',
+													msg: 'Error de comunicaci&oacute;n',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
 												});
+											}
+										});
 										
 										
 										
@@ -2945,9 +2913,34 @@ Ext.define('modelListadoPoliza',{
 	}
 	
 	function _p21_generarCalculo(){
-		//Genero el calculo
+		// Se manda a llamar al procedimiento y se guarda
+		Ext.Ajax.request(
+		{
+			url	 : _URL_GENERAR_CALCULO
+			,params:{
+				'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
+			}
+			,success : function (response)
+			{
+				storeAseguradoFactura.load({
+					params: {
+						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+					}
+				});
+			},
+			failure : function ()
+			{
+				me.up().up().setLoading(false);
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			}
+		});
 		
-		//se realiza la validación correspondiente
 	}
 	
 	
