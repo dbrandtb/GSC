@@ -274,7 +274,7 @@
 			                           			});
 			                           		}
 			                           	}
-		                           }, {
+		                           }, /*{
 		                               //title: 'DATOS TARIFICACION',
 		                           	title: 'COPAGOS',
 		                           	loader: {
@@ -299,7 +299,7 @@
 		                           			});
 		                           		}
 		                           	}
-		                           }, {
+		                           },*/ {
 		                               title: 'ASEGURADOS',
 		                               loader: {
 			                           		url: _URL_LOADER_ASEGURADOS_POLIZA,

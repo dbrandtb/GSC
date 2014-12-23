@@ -271,6 +271,8 @@ public interface SiniestrosDAO {
 	
 	public Map<String, Object> actualizaDatosGeneralesSiniestro(Map<String, Object> params) throws Exception;
 	
+	public Map<String, Object> actualizaMsiniestroReferenciado(Map<String, Object> params) throws Exception;
+	
 	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(Map<String, Object> params) throws Exception;
 	
 	
@@ -397,6 +399,8 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
 
 	public List<Map<String, String>> obtieneListaAutirizacionServicio(Map<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> obtieneListaMsiniestMaestro(Map<String, Object> params) throws Exception;
 
 	public List<Map<String, String>> obtieneListaDatosValidacionSiniestro(HashMap<String, Object> params) throws Exception;
 	

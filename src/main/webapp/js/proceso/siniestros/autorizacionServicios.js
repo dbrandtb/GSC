@@ -2108,7 +2108,7 @@ Ext.onReady(function() {
 			 		,layout     :
 			 		{
 			 			type     : 'table'
-		 				,columns : 3
+		 				,columns : 5
 			 		},
 			 		items    :
 			 			[
@@ -2151,7 +2151,133 @@ Ext.onReady(function() {
 	 						 			}
 		 							 }).showAt(150,150);
 				 				 }
-				 			 })				
+				 			 }),
+							{
+								//colspan: 1,
+								xtype  : 'button',
+								text   : 'Detalle p&oacute;liza',
+								//width  : 180,
+								icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+								handler: function() {
+									var windowDetPol = Ext.create('Ext.window.Window', {
+									title        : 'Detalle de la p&oacute;liza',
+									modal       : true,
+									buttonAlign : 'center',
+									width       : 830,
+									height      : 500,
+									autoScroll  : true,
+									items: [Ext.create('Ext.tab.Panel', {
+										width: 830,
+										items: [
+											{
+												title : 'DATOS DE LA POLIZA',
+												loader: {
+													url: _URL_LOADER_DATOS_POLIZA,
+													scripts: true,
+													loadMask : true,
+													autoLoad: false,
+													ajaxOptions: {
+														method: 'POST'
+													}
+												},
+												listeners: {
+													activate: function(tab) {
+														tab.loader.load({
+															params : {
+																'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+																'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+																'params.estado'  : Ext.getCmp('idEstado').getValue(),
+																'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue()
+															}
+														});
+													}
+												}
+											}, 
+											{
+												title: 'ASEGURADOS',
+												loader: {
+													url: _URL_LOADER_ASEGURADOS_POLIZA,
+													scripts: true,
+													loadMask : true,
+													autoLoad: false,
+													ajaxOptions: {
+														method: 'POST'
+													}
+												},
+												listeners: {
+													activate: function(tab) {
+														tab.loader.load({
+															params : {
+																'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+																'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+																'params.estado'    : Ext.getCmp('idEstado').getValue(),
+																'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+																'params.suplemento': Ext.getCmp('idNmsuplem').getValue()
+															}
+														});
+													}
+												}
+											},
+											{
+												title: 'RECIBOS',
+												loader: {
+													url: _URL_LOADER_RECIBOS,
+													scripts: true,
+													loadMask : true,
+													autoLoad: false,
+													ajaxOptions: {
+														method: 'POST'
+													}
+												},
+												listeners: {
+													activate: function(tab) {
+														tab.loader.load({
+															params : {
+																'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+																'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+																'params.estado'  : Ext.getCmp('idEstado').getValue(),
+																'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+																'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue()
+															}
+														});
+													}
+												}
+											}
+										]
+									})]
+									}).show();
+									centrarVentana(windowDetPol);
+								}
+							},
+							{
+								//colspan : 1,
+								xtype   : 'button',
+								text    : 'Exclusi&oacute;n p&oacute;liza',
+								//width   : 180,
+								icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+								handler : function() {
+									centrarVentanaInterna(Ext.create('Ext.window.Window', {
+										title       : 'Exclusiones de la p&oacute;liza',
+										modal       : true,
+										buttonAlign : 'center',
+										autoScroll  : true,
+										width       : 450,
+										height      : 455,
+										loader      : {
+											url     : _URL_LOADER_VER_EXCLUSIONES,
+											scripts : true,
+											autoLoad: true,
+											params:{
+												'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+												'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+												'params.estado'  : Ext.getCmp('idEstado').getValue(),
+												'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+												'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+											}
+										}
+									}).show());
+								}
+							}
 			 			 ]
 			 	},
 			 	sucursal,

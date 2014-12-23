@@ -26,13 +26,17 @@ Ext.onReady(function(){
             {type:'date',   name:'feproren', dateFormat: 'd/m/Y'},
             {type:'string', name:'dstarifi'},
             {type:'string', name:'dsmoneda'},
-            {type:'string', name:'nmcuadro'},
+            {type:'string', name:'dscuadro'},
             {type:'string', name:'dsperpag'},
             {type:'string', name:'dstempot'},
             {type:'string', name:'nmpoliex'},
             {type:'string', name:'cdagente'},
             {type:'string', name:'statuspoliza'},
-            {type:'string', name:'nmpolant'}
+            {type:'string', name:'nmpolant'},
+            {type:'string', name:'dsunieco'},
+            {type:'string', name:'dsramo'},
+            {type:'string', name:'dsplan'},
+            {type:'string', name:'dstipsit'}
         ]
     });
 
@@ -58,10 +62,60 @@ Ext.onReady(function(){
         //height : 280,
         renderTo: 'divDatGen',
         defaults : {
-            bodyPadding : 5,
+            bodyPadding : 10,
             border : false
         },
         items : [ {
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'dsunieco', fieldLabel: 'Sucursal',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'dsramo',   fieldLabel: 'Ramo',      readOnly: true, labelWidth: 65,  width: 290, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'P&oacute;liza', readOnly: true, labelWidth: 50,  width: 210, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'dsplan',   fieldLabel: 'Plan',      readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'dstipsit', fieldLabel: 'Subramo', readOnly: true, labelWidth: 65,  width: 290, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield',                  name: 'statuspoliza', fieldLabel: 'Estatus',                readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', id: 'nmpolant',  name: 'nmpolant',     fieldLabel: 'P&oacute;liza anterior', readOnly: true, labelWidth: 100, width: 210, labelAlign: 'right'},
+                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici',     fieldLabel: 'No. de solicitud',       readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
+            ]
+        },
+        {
+            layout : 'hbox',
+            items : [ 
+                {xtype:'textfield', name:'titular', fieldLabel: 'Contratante', readOnly: true, labelWidth: 120, width: 590}, 
+                {xtype:'textfield', name:'cdrfc',   fieldLabel: 'RFC',         readOnly: true, labelWidth: 80,  width: 210, labelAlign: 'right'}
+            ]
+        }, {
+            layout : 'hbox',
+            items : [ 
+                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 300}, 
+                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha inicio vigencia',         format: 'd/m/Y', readOnly: true, labelWidth: 200, width: 290, labelAlign: 'right'}, 
+                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha fin vigencia', format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 210, labelAlign: 'right'}
+            ]
+        }, {
+            layout : 'hbox',
+            items : [ 
+                {xtype: 'textfield', name: 'dstarifi', fieldLabel: 'Tipo de tarificaci&oacute;n', readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'dscuadro', fieldLabel: 'Cuadro de comisiones',        readOnly: true, labelWidth: 150, width: 290, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'dsmoneda', fieldLabel: 'Moneda',                      readOnly: true, labelWidth: 120, width: 210, labelAlign: 'right'}
+            ]
+        }, {
+            layout : 'hbox',
+            items : [ 
+                {xtype: 'textfield', name: 'dsperpag', fieldLabel: 'Forma de Pago',  readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', name: 'dstempot', fieldLabel: 'Tipo de P&oacute;liza', readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
+            ]
+        }
+        
+        
+        /*{
         	layout : 'hbox',
             items : [
                 {xtype: 'textfield',                  name: 'nmpoliex', fieldLabel: 'N&uacute;mero de P&oacute;liza', readOnly: true, labelWidth: 120, width: 300},
@@ -99,7 +153,7 @@ Ext.onReady(function(){
         }, {
             layout : 'hbox',
             items : {xtype: 'textfield', name: 'statuspoliza', fieldLabel: 'ESTATUS', readOnly: true, labelWidth: 120}
-        }   
+        }*/  
         ]
     });
 	

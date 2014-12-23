@@ -956,6 +956,24 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return siniestrosDAO.actualizaDatosGeneralesSiniestro(params);
 	}
 	
+	@Override
+	public Map<String, Object> actualizaMsiniestroReferenciado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, String aaapertu, String status, String nmsinies, String nmsinref) throws Exception {
+		HashMap<String,Object> params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_aaapertu_i", aaapertu);
+		params.put("pv_status_i", status);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_nmsinref_i", nmsinref);
+		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
+		return siniestrosDAO.actualizaMsiniestroReferenciado(params);
+	}
+	
 	
 	@Override
 	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
@@ -1410,6 +1428,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_cdperson_i", cdperson);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaAutirizacionServicio(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> getConsultaListaMSiniestMaestro(String cdunieco,String cdramo, String estado, String nmpoliza, 
+																	 String nmsuplem,String nmsituac,String status) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_status_i", status);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaMsiniestMaestro(params);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ Ext.onReady(function(){
 	var _estado                       = '<s:property value="params.estado" />';
 	var _nmpoliza                     = '<s:property value="params.nmpoliza" />';
 	var _nmsuplem                     = '<s:property value="params.suplemento" />';
+	var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
 	
 	// Modelo
     Ext.define('AseguradosModel', {
@@ -52,6 +53,7 @@ Ext.onReady(function(){
         store   : storeAsegurados,
         id      : 'gridDatosAsegurado',
         width   : 830,
+        autoScroll:true,
         renderTo: 'divAsegs',
         autoScroll:true,
         items:[{
@@ -65,7 +67,45 @@ Ext.onReady(function(){
             {text:'Estatus',dataIndex:'status',width:90,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:110,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
-            {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+            {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+            {
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
+                tooltip      : 'Ver endosos',
+                width        : 30,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+                    
+                    params ={
+                    	'params.cdunieco': _cdUnieco,
+                    	'params.cdramo': _cdRamo,
+                    	'params.estado': _estado,
+                    	'params.nmpoliza': _nmpoliza,
+                    	'params.suplemento': _nmsuplem,
+                    	'params.nmsituac':record.get('nmsituac')
+                    };
+                    
+                    
+                    Ext.create('Ext.window.Window', {
+                        title       : 'Endosos',
+                        modal       : true,
+                        buttonAlign : 'center',
+                        autoScroll  : true,
+                        width       : 450,
+                        height      : 455,
+                        loader      :
+                        {
+                            url      : _URL_LOADER_VER_EXCLUSIONES,
+                            scripts  : true,
+                            autoLoad : true,
+                            params   : params
+                        }
+                     }).show();
+                }
+            }
         ]
     });
     

@@ -554,18 +554,34 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
 		try {
+			logger.debug(params);
 			Date dFeocurre = renderFechas.parse(params.get("feocurre"));
-            siniestrosManager.actualizaDatosGeneralesSiniestro(
+				siniestrosManager.actualizaDatosGeneralesSiniestro(
+						params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"),
+						params.get("nmsuplem"),params.get("aaapertu"),
+						params.get("nmsinies"), dFeocurre,
+						params.get("nmreclamo"), params.get("cdicd"),
+						params.get("cdicd2"), params.get("cdcausa"),
+						params.get("cdgarant"), params.get("cdconval"));
+			success = true;
+		}catch(Exception e){
+	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+	   	}
+		return SUCCESS;
+	}
+	
+	
+	public String asociaMsiniestroReferenciado() throws Exception {
+		try {
+			siniestrosManager.actualizaMsiniestroReferenciado(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),
-					params.get("nmsuplem"),params.get("aaapertu"),
-					params.get("nmsinies"), dFeocurre,
-					params.get("nmreclamo"), params.get("cdicd"),
-					params.get("cdicd2"), params.get("cdcausa"),
-					params.get("cdgarant"),params.get("cdconval"));
+					params.get("nmsuplem"),params.get("nmsituac"),
+					params.get("aaapertu"),params.get("status"),
+					params.get("nmsinies"), params.get("nmsiniesRef"));
 			success = true;
 		} catch(Exception e) {
 	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);

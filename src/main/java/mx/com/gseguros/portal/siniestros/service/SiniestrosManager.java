@@ -359,6 +359,9 @@ public interface SiniestrosManager {
 			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, Date feocurre,
 			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval) throws Exception;
 	
+	public Map<String, Object> actualizaMsiniestroReferenciado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, String aaapertu, String status, String nmsinies, String nmsinref) throws Exception;
+	
 	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception;
 	
@@ -488,6 +491,9 @@ public interface SiniestrosManager {
 	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
 
 	public  List<Map<String, String>> getConsultaListaAutServicioSiniestro(String cdperson)throws Exception;
+	
+	public  List<Map<String, String>> getConsultaListaMSiniestMaestro(String cdunieco,String cdramo, String estado, String nmpoliza, 
+																	  String nmsuplem,String nmsituac,String status)throws Exception;
 
 	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite,String nfactura)throws Exception;
 	
