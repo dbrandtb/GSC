@@ -4100,6 +4100,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
 					,true     , null/*ntramite*/, null/*cdagente*/
+					,false //sincenso
+					,false //censoAtrasado
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4340,6 +4342,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
 			
+			String sincensoS      = smap1.get("sincenso");
+			boolean sincenso      = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
+			String censoAtrasadoS = smap1.get("censoAtrasado");
+			boolean censoAtrasado = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
+			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
 			logger.info("inTimestamp "+inTimestamp);
@@ -4352,6 +4359,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				nmpoliza = (String)kernelManager.calculaNumeroPoliza(cdunieco,cdramo,"W").getItemMap().get("NUMERO_POLIZA");
 				smap1.put("nmpoliza",nmpoliza);
+			}
+			
+			if(exito)
+			{
+				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
 			}
 			
 			//mpolizas
@@ -4437,7 +4449,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			if(exito&&(!hayTramite||hayTramiteVacio))
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado)&&!sincenso)
 			{
 				
 				FileInputStream input      = null;
@@ -4454,8 +4466,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					//workbook = new XSSFWorkbook(input);
 					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
-					
-					nombreCenso        = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
 					
 					archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 					output     = new PrintStream(archivoTxt);
@@ -4568,8 +4578,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			                {
 			                	try
 			                	{
-					                logger.info("SEXO: "+row.getCell(5).getStringCellValue()+"|");
-					                output.print(row.getCell(5).getStringCellValue()+"|");
+			                		String sexo = row.getCell(5).getStringCellValue();
+			                		if(StringUtils.isEmpty(sexo)
+			                				||(!sexo.equals("H")&&!sexo.equals("M")))
+			                		{
+			                			throw new ApplicationException("El sexo no se reconoce [H,M]");
+			                		}
+					                logger.info("SEXO: "+sexo+"|");
+					                output.print(sexo+"|");
 				                }
 				                catch(Exception ex)
 				                {
@@ -4585,8 +4601,20 @@ public class CotizacionAction extends PrincipalCoreAction
 			                {
 			                	try
 			                	{
-					                logger.info("PARENTESCO: "+row.getCell(6).getStringCellValue()+"|");
-					                output.print(row.getCell(6).getStringCellValue()+"|");
+			                		String parentesco = row.getCell(6).getStringCellValue();
+			                		if(StringUtils.isEmpty(parentesco)
+			                				||(!parentesco.equals("T")
+			                						&&!parentesco.equals("H")
+			                						&&!parentesco.equals("P")
+			                						&&!parentesco.equals("C")
+			                						&&!parentesco.equals("D")
+			                						)
+			                						)
+			                		{
+			                			throw new ApplicationException("El parentesco no se reconoce [H,M]");
+			                		}
+					                logger.info("PARENTESCO: "+parentesco+"|");
+					                output.print(parentesco+"|");
 				                }
 				                catch(Exception ex)
 				                {
@@ -4831,7 +4859,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//pl censo
-			if(exito&&(!hayTramite||hayTramiteVacio))
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 			{
 				try
 				{
@@ -4839,18 +4867,20 @@ public class CotizacionAction extends PrincipalCoreAction
 					String cdmunici      = smap1.get("cdmunici");
 					String cdplanes[]    = new String[5];
 					
+					int nGru=0;
 					for(Map<String,Object>iGrupo:olist1)
 					{
 						String  cdgrupo      = (String)iGrupo.get("letra");
 						String  cdplan       = (String)iGrupo.get("cdplan");
 						Integer indGrupo     = Integer.valueOf(cdgrupo);
 						cdplanes[indGrupo-1] = cdplan;
+						nGru=nGru+1;
 					}
 					
-					if(esCensoSolo)
+					if(esCensoSolo||sincenso)
 					{
 						LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-						params.put("param01",nombreCenso);
+						params.put("param01",sincenso?"layout_censo"+nGru+".txt":nombreCenso);
 						params.put("param02",cdunieco);
 						params.put("param03",cdramo);
 						params.put("param04","W");
@@ -4902,6 +4932,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdtipsit , hayTramite , hayTramiteVacio
 						,user     , cdelemento , ntramiteVacio
 						,false    , ntramite   , cdagente
+						,sincenso , censoAtrasado
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5197,6 +5228,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			,boolean reinsertaContratante
 			,String ntramite
 			,String cdagente
+			,boolean sincenso
+			,boolean censoAtrasado
 			)
 	{
 		logger.debug(
@@ -5218,6 +5251,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## reinsertaContratante: ").append(reinsertaContratante)
 				.append("\n## ntramite: ")            .append(ntramite)
 				.append("\n## cdagente: ")            .append(cdagente)
+				.append("\n## sincenso: ")            .append(sincenso)
+				.append("\n## censoAtrasado: ")       .append(censoAtrasado)
 				.toString()
 				);
 		
@@ -5309,7 +5344,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvdef
-		if(resp.exito&&(!hayTramite||hayTramiteVacio))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
@@ -5335,7 +5370,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//tvalogar
-		if(resp.exito)
+		if(resp.exito&&false)
 		{
 			try
 			{
@@ -5465,7 +5500,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					exiper   = "N";
 				}
 				
-				if(exiper.equals("N")||reinsertaContratante)
+				if(exiper.equals("N")||reinsertaContratante||censoAtrasado)
 				{
 					LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 					parametros.put("param01_pv_cdperson_i"    , cdperson);
@@ -5546,11 +5581,11 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//tramite
-		if(resp.exito&&(!hayTramite||hayTramiteVacio))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
-				if(!hayTramiteVacio)//es agente
+				if(!hayTramite&&!hayTramiteVacio)//es agente
 				{
 					Map<String,Object>params=new HashMap<String,Object>();
 					params.put("pv_cdunieco_i"   , cdunieco);
@@ -5571,6 +5606,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_nmsolici_i"   , nmpoliza);
 					params.put("pv_cdtipsit_i"   , cdtipsit);
 					params.put("pv_otvalor01"    , clasif);
+					params.put("pv_otvalor02"    , sincenso ? "S" : "N");
 					WrapperResultados wr=kernelManager.PMovMesacontrol(params);
 					String ntramiteNew = (String)wr.getItemMap().get("ntramite");
 					smap1.put("ntramite",ntramiteNew);
@@ -5586,10 +5622,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					kernelManager.mesaControlUpdateSolici(ntramiteVacio, nmpoliza);
 					Map<String,Object>params=new HashMap<String,Object>();
-					params.put("pv_ntramite_i"  , ntramiteVacio);
+					String ntramiteActualiza = ntramite;
+					if(hayTramiteVacio)
+					{
+						ntramiteActualiza = ntramiteVacio;
+					}
+					kernelManager.mesaControlUpdateSolici(ntramiteActualiza, nmpoliza);
+					params.put("pv_ntramite_i"  , ntramiteActualiza);
 					params.put("pv_otvalor01_i" , clasif);
+					params.put("pv_otvalor02_i" , sincenso ? "S" : "N");
 					siniestrosManager.actualizaOTValorMesaControl(params);
 				}
 			}
