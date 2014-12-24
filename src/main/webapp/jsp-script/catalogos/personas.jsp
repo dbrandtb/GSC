@@ -836,10 +836,10 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			_esSaludDanios = _p22_smap1.esSaludDanios;
 			
 			if('D' == _esSaludDanios){
-				_fieldByName('CDIDEEXT').hide();
+				_fieldByName('DSL_CDIDEEXT').hide();
 				_fieldByName('CDSUCEMI').hide();				
 			}else if('S' == _esSaludDanios){
-				_fieldByName('CDIDEPER').hide();
+				_fieldByName('DSL_CDIDEPER').hide();
 			}
 				
 			if(!Ext.isEmpty(_cargaCP)){
@@ -859,10 +859,10 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 				Ext.ComponentQuery.query('#companiaId')[0].setValue(_cargaCompania);
 				
 				if('D' == _cargaCompania){
-					_fieldByName('CDIDEEXT').hide();
+					_fieldByName('DSL_CDIDEEXT').hide();
 					_fieldByName('CDSUCEMI').hide();				
 				}else if('S' == _cargaCompania){
-					_fieldByName('CDIDEPER').hide();
+					_fieldByName('DSL_CDIDEPER').hide();
 				}
 			}
 			

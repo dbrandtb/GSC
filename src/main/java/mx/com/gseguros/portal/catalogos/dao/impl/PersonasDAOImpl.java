@@ -67,6 +67,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             String[] cols=new String[]{
             		"CDPERSON"
             		,"CDIDEPER"
+            		,"DSL_CDIDEPER"
             		,"DSNOMBRE"
             		,"DSNOMBRE1"
             		,"DSAPELLIDO"
@@ -84,6 +85,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             		,"RESIDENTE"
             		,"NOMBRE_COMPLETO"
             		,"CDIDEEXT"
+            		,"DSL_CDIDEEXT"
             		,"DIRECCIONCLI"
             		,"CDESTCIV"
             		,"CDSUCEMI"
@@ -156,6 +158,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             String[] cols = new String[]{
             		"CDPERSON"
             		,"CDIDEPER"
+            		,"DSL_CDIDEPER"
             		,"DSNOMBRE"
             		,"DSNOMBRE1"
             		,"DSAPELLIDO"
@@ -172,6 +175,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             		,"STATUS"
             		,"RESIDENTE"
             		,"CDIDEEXT"
+            		,"DSL_CDIDEEXT"
             		,"CDESTCIV"
             		,"CDSUCEMI"
             };
