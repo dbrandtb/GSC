@@ -282,6 +282,7 @@ function _4_onComplementariosClick(rowIndex)
                         ,'smap1.ntramite' : record.get('ntramite')
                         ,'smap1.cdagente' : record.get('cdagente')
                         ,'smap1.status'   : record.get('status')
+                        ,'smap1.sincenso' : record.raw.otvalor02
                     }
                 });
         	}

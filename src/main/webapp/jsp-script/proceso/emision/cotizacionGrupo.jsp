@@ -731,7 +731,7 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
                                 ,defaults : { style : 'margin:5px;' }
-                                ,hidden   : _p21_ntramite ? true : false
+                                ,hidden   : _p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false
                                 ,items    :
                                 [
                                     {
@@ -760,7 +760,7 @@ Ext.onReady(function()
                                         ,fieldLabel : 'Censo de asegurados'
                                         ,name       : 'censo'
                                         ,buttonText : 'Examinar...'
-                                        ,allowBlank : _p21_ntramite ? true : false
+                                        ,allowBlank : _p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false
                                         ,buttonOnly : false
                                         ,width      : 450
                                         ,cAccept    : ['xls','xlsx']
@@ -1217,6 +1217,15 @@ Ext.onReady(function()
     _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
+    try
+    {
+        if(_p21_ntramite&&_p21_smap1.sincenso!='S')
+        {
+            Ext.ComponentQuery.query('[text=Guardar sin censo]')[0].hide();
+        }
+    }
+    catch(e)
+    {}
     ////// loaders //////
 });
 
@@ -2151,14 +2160,28 @@ function _p21_query(regex)
     return Ext.ComponentQuery.query(regex);
 }
 
-function _p21_generarTramiteClic(callback)
+function _p21_generarTramiteClic(callback,sincenso)
 {
-    debug('>_p21_generarTramiteClic');
+    debug('>_p21_generarTramiteClic:',sincenso,'DUMMY');
     var valido = true;
     
     if(valido)
     {
+        //parche para sin censo>
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            _fieldByName('censo').allowBlank=true;
+        }
+        //<parche para sin censo
+        
         valido = _p21_tabConcepto().down('[xtype=form]').isValid();
+        
+        //parche para sin censo>
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            _fieldByName('censo').allowBlank=_p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false;
+        }
+        //<parche para sin censo
         if(!valido)
         {
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p21_setActiveConcepto);
@@ -2221,15 +2244,10 @@ function _p21_generarTramiteClic(callback)
         var form=_p21_tabConcepto().down('[xtype=form]');
         form.setLoading(true);
         var timestamp = new Date().getTime();
-        form.submit(
+        
+        var micallback=function()
         {
-            params   :
-            {
-                'smap1.timestamp' : timestamp
-                ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : ''
-            }
-            ,success : function()
-            {
+                var form=_p21_tabConcepto().down('[xtype=form]');
                 var conceptos = form.getValues();
                 conceptos['timestamp']       = timestamp;
                 conceptos['clasif']          = _p21_clasif;
@@ -2237,26 +2255,16 @@ function _p21_generarTramiteClic(callback)
                 conceptos['cdunieco']        = _p21_smap1.cdunieco;
                 conceptos['cdramo']          = _p21_smap1.cdramo;
                 conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
-                conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : ''
+                conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
+                conceptos['sincenso']        = !Ext.isEmpty(sincenso)&&sincenso==true?'S':'N';
+                conceptos['censoAtrasado']   = !Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S'?'S':'N';
                 var grupos = [];
-                /*
-                if(_p21_clasif==_p21_TARIFA_LINEA)
+                _p21_storeGrupos.each(function(record)
                 {
-                    _p21_storeGrupos.each(function(record)
-                    {
-                        var grupo = record.data;
-                        grupos.push(grupo);
-                    });
-                }
-                else
-                {*/
-                    _p21_storeGrupos.each(function(record)
-                    {
-                        var grupo = record.data;
-                        grupo['tvalogars']=record.tvalogars;
-                        grupos.push(grupo);
-                    });
-                /*}*/
+                    var grupo = record.data;
+                    grupo['tvalogars']=record.tvalogars;
+                    grupos.push(grupo);
+                });
                 Ext.Ajax.request(
                 {
                     url       : _p21_urlGenerarTramiteGrupo
@@ -2318,71 +2326,6 @@ function _p21_generarTramiteClic(callback)
                                     }).show());
                                 });
                             }
-                            
-                            /*
-                            _p21_tabConcepto().down('[xtype=form]').setDisabled(true);
-                        
-                            Ext.define('_p21_modeloTarifa',
-                            {
-                                extend  : 'Ext.data.Model'
-                                ,fields : Ext.decode(json.smap1.fields)
-                            });
-                    
-                            _p21_gridTarifas=Ext.create('Ext.grid.Panel',
-                            {
-                                title             : 'Resultados'
-                                ,store            : Ext.create('Ext.data.Store',
-                                {
-                                    model : '_p21_modeloTarifa'
-                                    ,data : json.slist2
-                                })
-                                ,columns          : Ext.decode(json.smap1.columnas)
-                                ,selType          : 'cellmodel'
-                                ,minHeight        : 100
-                                ,enableColumnMove : false
-                                ,buttonAlign      : 'center'
-                                ,buttons          :
-                                [
-                                    {
-                                        text      : 'Generar tr&aacute;mite'
-                                        ,itemId   : '_p21_botonComprar'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                        ,handler  : _p21_comprarClic
-                                        ,disabled : true
-                                    }
-                                    ,{
-                                        text      : 'Detalles'
-                                        ,itemId   : '_p21_botonDetalles'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
-                                        ,handler  : _p21_detallesClic
-                                        ,disabled : true
-                                    }
-                                    ,{
-                                        text     : 'Editar'
-                                        ,itemId  : '_p21_botonEditar'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-                                        ,handler : _p21_editarClic
-                                    }
-                                    ,{
-                                        text     : 'Clonar'
-                                        ,itemId  : '_p21_botonClonar'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-                                        ,handler : _p21_cotizarClonar
-                                    }
-                                    ,{
-                                        text     : 'Nueva'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                        ,handler : _p21_cotizarNueva
-                                    }
-                                ]
-                                ,listeners :
-                                {
-                                    select : _p21_tarifaSelect
-                                }
-                            });
-                            
-                            _p21_tabConcepto().add(_p21_gridTarifas);
-                            setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);*/
                         }
                         else
                         {
@@ -2395,13 +2338,32 @@ function _p21_generarTramiteClic(callback)
                         errorComunicacion();
                     }
                 });
-            }
-            ,failure : function()
+        }
+        
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            micallback();
+        }
+        else
+        {
+            form.submit(
             {
-                form.setLoading(false);
-                errorComunicacion();
-            }
-        });
+                params   :
+                {
+                    'smap1.timestamp' : timestamp
+                    ,'smap1.ntramite' : _p21_ntramite&&_p21_smap1.sincenso!='S' ? _p21_ntramite : ''
+                }
+                ,success : function()
+                {
+                    micallback();
+                }
+                ,failure : function()
+                {
+                    form.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
     }
     
     debug('<_p21_generarTramiteClic');
