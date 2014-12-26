@@ -264,7 +264,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   	success = true;
 	   	return SUCCESS;
 	}
-	
+
 	public String guardaFacturaTramite() throws ApplicationException{
 		logger.debug(""
 		+ "\n######################################"
@@ -279,6 +279,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),null);
 	   		
 	   		List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
+	   		logger.debug("#####VALOR DE LOS ASEGURADOS######");
+	   		logger.debug(asegurados);
+	   		
 	   		for(int i =0; i < asegurados.size();i++){
 	   			String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
 	   			if(!munSiniestro.equalsIgnoreCase("null")){

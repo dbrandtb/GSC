@@ -686,8 +686,8 @@
 			</result>
 		</action>
 
-		<action name="guardaFacturaTramite" class="detalleSiniestroAction"
-			method="guardaFacturaTramite">
+		<action name="guardaCambiosFactura" class="detalleSiniestroAction"
+			method="guardaCambiosFactura">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -727,6 +727,10 @@
             <result type="json"></result>
         </action>
         
+        <action name="guardaFacturaTramite" class="detalleSiniestroAction" method="guardaFacturaTramite">
+            <result type="json"></result>
+        </action>
+        
          <action name="asociaMsiniestroReferenciado" class="detalleSiniestroAction" method="asociaMsiniestroReferenciado">
             <result type="json"></result>
         </action>
@@ -739,10 +743,6 @@
 		<action name="obtenerMsinival" class="siniestrosAction" method="obtenerMsinival">
             <result type="json"></result>
         </action>
-        
-        <!--<action name="guardarMsinival" class="siniestrosAction" method="guardarMsinival">
-            <result type="json"></result>
-        </action>-->
         
         <action name="obtenerTdsinival" class="ajustesMedicosSiniestrosAction" method="obtenerTdsinival">
             <result type="json"></result>
