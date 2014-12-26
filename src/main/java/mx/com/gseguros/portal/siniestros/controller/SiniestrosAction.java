@@ -7176,12 +7176,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		
         		for(Map<String, Object> totalFacturaIte : facturasxSiniestro)
         		{
+        			logger.debug("VALOR DE LAS FACTURAS -->"+totalFacturaIte);
         			String ntramiteA     = (String) totalFacturaIte.get("NTRAMITE");
         			String nfacturaA     = (String) totalFacturaIte.get("NFACTURA");
         			String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURA"); 
         			siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA);
         		}
-        		success = true;
+        		success = true; 
         		mensaje = "Datos guardados";
         	}
         	catch(Exception ex)

@@ -880,6 +880,7 @@ Ext.onReady(function()
                 }
            	}
             var total = subttdeduc - copagoaplica;
+            debug("VALOR DEL TOTAL---> ",_p12_slist1[indice]['TOTALFACTURA']);
             _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
 
