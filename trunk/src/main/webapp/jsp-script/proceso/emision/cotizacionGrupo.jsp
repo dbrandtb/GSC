@@ -1026,7 +1026,10 @@ Ext.onReady(function()
                             }
                         }
                     }
-                    _fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                    _fieldByName('cdmunici').heredar(true,function()
+                    {
+                        _fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                    });
                     _p21_clasif = json.params['clasif'];
                     debug('_p21_clasif:',_p21_clasif);
                     var auxCargarGrupos=function(callback)
