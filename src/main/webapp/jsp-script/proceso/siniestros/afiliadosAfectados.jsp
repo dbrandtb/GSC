@@ -798,13 +798,13 @@ Ext.define('modelListadoPoliza',{
 								]
 							},
 							{
-								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES'
+								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',		width: 50 
 							},
 							{
-								header: '# Auto.',					dataIndex: 'NMAUTSER'
+								header: '# Auto.',					dataIndex: 'NMAUTSER',		width: 50
 							},
 							{
-								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF'
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90
 							},
 							{
 								header: 'Causa <br/> Siniestro', 				dataIndex: 'CDCAUSA'
@@ -986,10 +986,7 @@ Ext.define('modelListadoPoliza',{
 							},
 							{
 								header: 'Imp. Cedular',	dataIndex: 'PTIMPCEDASEG',renderer  : Ext.util.Format.usMoney
-							}/*,
-							{
-								header: 'Imp. Cedular',	dataIndex: 'PTIMPCEDASEG',renderer  : Ext.util.Format.usMoney
-							}*/
+							}
 						],
 						tbar:[
 								/*{
@@ -1595,6 +1592,7 @@ Ext.define('modelListadoPoliza',{
 					]
 					
 				});
+				
 				for(var i=0;i<panelInicialPral.items.items.length;i++)
 				{
 					panelInicialPral.items.items[i].labelWidth =150;
