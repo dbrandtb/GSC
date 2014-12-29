@@ -519,7 +519,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				if(params.get("cmbProveedor").toString().length() > 0){
 					parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 				}
-				/*Si el tr&aacute;mite es nuevo*/
+				//Si el tr&aacute;mite es nuevo
 				if(params.get("idNumTramite").toString().length() <= 0){
 				    WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 				    if(res.getItemMap() == null)
@@ -531,9 +531,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				        ProcesoAltaTramite(msgResult);
 			        }
 				}else{
-					/*Existe el trámite y solo lo vamos a actualizar*/
+					//Existe el trámite y solo lo vamos a actualizar
 					HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
-					/*1.- Verificamos si cambio el tipo de atención*/
+					//1.- Verificamos si cambio el tipo de atención
 					List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
 					String valorTipoAtencion = lista.get(0).getOtvalor07mc();
 					if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
@@ -542,7 +542,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					}else{
 						modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
 					}
-					/*Actualizar los valores de ntramite*/
+					//Actualizar los valores de ntramite
 					
 					modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
 					modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -573,8 +573,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
 					siniestrosManager.actualizaValorMC(modMesaControl);
 					
-					/*2.- Verificamos si el tipo de pago es rembolso se tendra que realizar los cambios*/
-					if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo()))
+					//2.- Verificamos Si el tipo de pago es 
+					//    1.- Reembolso
+					//    2.- Indemnizacion
+					//
+					if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))
 					{
 						 ProcesoAltaTramite(params.get("idNumTramite"));
 					}
@@ -5442,19 +5445,25 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         }else{
         	/*Se agrega la información de las facturas*/
         	if(params.get("idNumTramite").toString().length() > 0){
-        		// SE REALIZA LA ELIMINACION EN TFACMESCTRL
         		try {
-        			// numero de tramite, 
+        			// Se realiza la eliminacion de las facturas
 					siniestrosManager.getEliminacionTFacMesaControl(msgResult);
 				} catch (Exception e) {
 					logger.error("error al eliminar en TfacMesCtrl ",e);
 				}
         	}
+        	
         	for(int i=0;i<datosTablas.size();i++)
             {
+        		String nfactura= "0";
+        		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())){
+            		nfactura = datosTablas.get(i).get("nfactura");
+        		}else{
+        			nfactura= msgResult;
+        		}
         		siniestrosManager.guardaListaFacMesaControl(
                     msgResult, 
-                    datosTablas.get(i).get("nfactura"),
+                    nfactura,
                     datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4),
                     datosTablas.get(i).get("cdtipser"),
                     datosTablas.get(i).get("cdpresta"),
