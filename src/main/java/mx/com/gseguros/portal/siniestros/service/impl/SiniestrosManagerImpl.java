@@ -1446,10 +1446,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite, String nfactura) throws Exception {
+	public List<Map<String, String>> getConsultaDatosValidacionSiniestro(String ntramite, String nfactura,String tipoPago) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_nfactura_i", nfactura);
+		params.put("pv_tipoPago_i", tipoPago);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaDatosValidacionSiniestro(params);
 	}
