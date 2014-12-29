@@ -15,6 +15,8 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 public interface CotizacionManager
 {
 	
+	public void setSession(Map<String,Object>session);
+	
 	public void movimientoTvalogarGrupo(
 			String cdunieco
 			,String cdramo
@@ -388,4 +390,19 @@ public interface CotizacionManager
 	public String cargarTabuladoresGMIParche(
 			String circulo
 			,String cdatribu)throws Exception;
+	
+	public ManagerRespuestaVoidVO guardarContratanteColectivo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String rfc
+			,String cdperson
+			,String nombre
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
+			,String dsdomici
+			,String nmnumero
+			,String nmnumint);
 }
