@@ -1,8 +1,10 @@
 package mx.com.gseguros.portal.general.controller;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -23,6 +25,9 @@ public class EnvironmentAction extends ActionSupport {
 	public String obtieneDatosAmbiente() throws Exception {
 		
 		try {
+			Calendar calendar = Calendar.getInstance();
+			TimeZone timeZone = calendar.getTimeZone();
+			
 			props = new HashMap<String, Object>();
 			props.put("DisplayName", Locale.getDefault().getDisplayName());
 			props.put("user.country", System.getProperty("user.country"));
@@ -36,6 +41,8 @@ public class EnvironmentAction extends ActionSupport {
 			props.put("user.variant", System.getProperty("user.variant"));
 			props.put("Variant", Locale.getDefault().getVariant());
 			props.put("DisplayVariant", Locale.getDefault().getDisplayVariant());
+			props.put("TimeZone Name", timeZone.getDisplayName());
+			props.put("TimeZone Id", timeZone.getID());
 		} catch(Exception e) {
 			logger.error(new StringBuilder("Error: ").append(e.getMessage()), e);
 		}
