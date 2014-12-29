@@ -3847,6 +3847,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_SINIESTRO.P_GET_TVALOSIN_Y_MAUTSINI");
 			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoPago_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"OTVALOR01","OTVALOR02","OTVALOR03","AREAAUTO","SWAUTORI","COMENTARIOS" 
 			};

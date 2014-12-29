@@ -2239,6 +2239,7 @@ Ext.define('modelListadoPoliza',{
 			,params:{
 				'params.ntramite': _11_recordActivo.get('ntramite')
 				,'params.nfactura': _11_recordActivo.get('factura')
+				,'params.tipoPago': _tipoPago
 			}
 			,success : function (response)
 			{

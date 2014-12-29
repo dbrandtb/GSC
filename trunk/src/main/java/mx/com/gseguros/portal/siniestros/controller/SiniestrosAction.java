@@ -6008,7 +6008,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	logger.debug(" **** Entrando al metodo para obtener los datos de la validacion****");
     	logger.debug(params);
     	try {
-    		datosValidacion = siniestrosManager.getConsultaDatosValidacionSiniestro(params.get("ntramite"),params.get("nfactura"));
+    		datosValidacion = siniestrosManager.getConsultaDatosValidacionSiniestro(params.get("ntramite"),params.get("nfactura"),params.get("tipoPago"));
     			logger.debug("###VALOR DE RESPUESTA ###");
     			logger.debug(datosValidacion);
  			}catch( Exception e){
