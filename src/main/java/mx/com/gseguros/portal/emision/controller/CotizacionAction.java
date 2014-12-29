@@ -101,6 +101,100 @@ public class CotizacionAction extends PrincipalCoreAction
 	private CotizacionManager                cotizacionManager;
 	private SiniestrosManager                siniestrosManager;
 	
+	public CotizacionAction()
+	{
+		logger.debug("new CotizacionAction");
+		this.session=ActionContext.getContext().getSession();
+	}
+	
+	/**
+	 * Guarda el estado actual en sesion
+	 * @param checkpoint
+	 */
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	/**
+	 * Obtiene el estado actual de sesion
+	 * @return checkpoint
+	 */
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	/**
+	 * Da valor a las variables exito, respuesta y respuestaOculta.
+	 * Tambien guarda el checkpoint en 0
+	 * @param ex
+	 */
+	private void manejaException(Exception ex)
+	{
+		long timestamp  = System.currentTimeMillis();
+		exito           = false;
+		respuestaOculta = ex.getMessage();
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
+		}
+		else
+		{
+			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
+		}
+		
+		logger.error(respuesta,ex);
+		setCheckpoint("0");
+	}
+	
+	/**
+	 * Revisa cadena vacia y arroja ApplicationException
+	 */
+	private void checkBlank(String cadena,String mensaje)throws ApplicationException
+	{
+		if(StringUtils.isBlank(cadena))
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	/**
+	 * Revisa nulo y arroja ApplicationException
+	 */
+	private void checkNull(Object objeto,String mensaje)throws ApplicationException
+	{
+		if(objeto==null)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	/**
+	 * Revisa boolean y arroja ApplicationException
+	 */
+	private void checkBool(boolean bool,String mensaje)throws ApplicationException
+	{
+		if(bool==false)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	/**
+	 * Revisa null y lista vacia
+	 */
+	private void checkList(List<?> lista,String mensaje)throws ApplicationException
+	{
+		checkNull(lista,mensaje);
+		if(lista.size()==0)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
 	/////////////////////////////////
 	////// cotizacion dinamica //////
 	/*/////////////////////////////*/
@@ -2773,7 +2867,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				List<ComponenteVO>componentesContratante=pantallasManager.obtenerComponentes(
 						null, null, null,
-						null, null, null,
+						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
 				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
 				imap.put("itemsContratante"  , gc.getItems());
@@ -7882,6 +7976,74 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarContratanteColectivo()
+	{
+		logger.debug(Utilerias.join(
+				 "\n#########################################"
+				,"\n###### guardarContratanteColectivo ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String rfc      = smap1.get("cdrfc");
+			String cdperson = smap1.get("cdperson");
+			String nombre   = smap1.get("nombre");
+			String cdpostal = smap1.get("codpostal");
+			String cdedo    = smap1.get("cdedo");
+			String cdmunici = smap1.get("cdmunici");
+			String dsdomici = smap1.get("dsdomici");
+			String nmnumero = smap1.get("nmnumero");
+			String nmnumint = smap1.get("nmnumint");
+			
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el ramo");
+			checkBlank(estado   , "No se recibio el estado");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(rfc      , "No se recibio el rfc");
+			checkBlank(nombre   , "No se recibio el nombre");
+			checkBlank(cdpostal , "No se recibio el codigo postal");
+			checkBlank(cdedo    , "No se recibio el estado");
+			checkBlank(cdmunici , "No se recibio el municipio");
+			checkBlank(dsdomici , "No se recibio el domicilio");
+			
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarContratanteColectivo(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,rfc
+					,cdperson
+					,nombre
+					,cdpostal
+					,cdedo
+					,cdmunici
+					,dsdomici
+					,nmnumero
+					,nmnumint);
+			
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.debug(Utilerias.join(
+				 "\n###### guardarContratanteColectivo ######"
+				,"\n#########################################"
+				));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -8027,6 +8189,7 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setCotizacionManager(CotizacionManager cotizacionManager) {
 		this.cotizacionManager = cotizacionManager;
+		this.cotizacionManager.setSession(session);
 	}
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {

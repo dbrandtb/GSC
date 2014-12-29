@@ -341,6 +341,14 @@
         <action name="recotizarAutoFlotilla" class="cotizacionAutoAction" method="recotizarAutoFlotilla">
             <result name="success" type="json" />
         </action>
+        
+        <action name="guardarContratanteColectivo" class="CotizacionAction" method="guardarContratanteColectivo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
        
     </package>
     

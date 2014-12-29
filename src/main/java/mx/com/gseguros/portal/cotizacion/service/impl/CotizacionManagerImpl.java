@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
@@ -32,6 +33,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,6 +53,91 @@ public class CotizacionManagerImpl implements CotizacionManager
 	private PantallasDAO   pantallasDAO;
 	private PersonasDAO    personasDAO;
 	private MesaControlDAO mesaControlDAO;
+	
+	private Map<String,Object> session;
+	
+	@Override
+	public void setSession(Map<String,Object>session){
+		logger.debug("setSession");
+		this.session=session;
+	}
+	
+	/**
+	 * Guarda el estado actual en sesion
+	 */
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	/**
+	 * Obtiene el estado actual de sesion
+	 */
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	/**
+	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
+	 * Tambien guarda el checkpoint en 0
+	 */
+	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
+	{
+		long timestamp = System.currentTimeMillis();
+		resp.setExito(false);
+		resp.setRespuestaOculta(ex.getMessage());
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append(ex.getMessage())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		else
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error ")
+					.append(getCheckpoint().toLowerCase())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		
+		logger.error(resp.getRespuesta(),ex);
+		setCheckpoint("0");
+	}
+	
+	/**
+	 * Atajo a StringUtils.isBlank
+	 */
+	private boolean isBlank(String mensaje)
+	{
+		return StringUtils.isBlank(mensaje);
+	}
+	
+	/**
+	 * Arroja una ApplicationException
+	 */
+	private void throwExc(String mensaje) throws ApplicationException
+	{
+		throw new ApplicationException(mensaje);
+	}
+	
+	private void checkBlank(String cadena,String mensaje)throws ApplicationException
+	{
+		if(isBlank(cadena))
+		{
+			throwExc(mensaje);
+		}
+	}
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -1688,7 +1775,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
 						null, null, null,
-						null, null, null,
+						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
 				gcGral.generaComponentes(componentesContratante, true,false,true,false,false,false);
 				resp.getImap().put("itemsContratante"  , gcGral.getItems());
@@ -4664,6 +4751,122 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdatribu)throws Exception
 	{
 		return cotizacionDAO.cargarTabuladoresGMIParche(circulo, cdatribu);
+	}
+	
+	@Override
+	public ManagerRespuestaVoidVO guardarContratanteColectivo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String rfc
+			,String cdperson
+			,String nombre
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
+			,String dsdomici
+			,String nmnumero
+			,String nmnumint)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ rfc="      , rfc
+				,"\n@@@@@@ cdperson=" , cdperson
+				,"\n@@@@@@ nombre="   , nombre
+				,"\n@@@@@@ cdpostal=" , cdpostal
+				,"\n@@@@@@ cdedo="    , cdedo
+				,"\n@@@@@@ cdmunici=" , cdmunici
+				,"\n@@@@@@ dsdomici=" , dsdomici
+				,"\n@@@@@@ nmnumero=" , nmnumero
+				,"\n@@@@@@ nmnumint=" , nmnumint
+				));
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			String swexiper = "S";
+			if(StringUtils.isBlank(cdperson))
+			{
+				cdperson = personasDAO.obtenerNuevoCdperson();
+				swexiper = "N";
+			}
+			
+			personasDAO.movimientosMpersona(
+					cdperson
+					,"1"         //cdtipide
+					,null        //cdideper
+					,nombre
+					,"1"         //cdtipper
+					,"M"         //otfisjur
+					,"H"         //otsexo
+					,new Date()  //fenacimi
+					,rfc
+					,""          //dsemail
+					,null        //dsnombre1
+					,null        //dsapellido
+					,null        //dsapellido1
+					,new Date()  //feingreso
+					,null        //cdnacion
+					,null        //canaling
+					,null        //conducto
+					,null        //ptcumupr
+					,null        //residencia
+					,null		 //nongrata
+					,null		 //cdideext
+					,null		 //cdestcivil
+					,null		 //cdsucemi
+					,Constantes.INSERT_MODE
+					);
+			
+			cotizacionDAO.movimientoMpoliper(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"       //nmsituac
+					,"1"       //cdrol
+					,cdperson
+					,"0"       //nmsuplem
+					,"V"       //status
+					,"1"       //nmorddom
+					,null      //swreclam
+					,Constantes.INSERT_MODE
+					,swexiper
+					);
+			
+			personasDAO.movimientosMdomicil(
+					cdperson
+					,"1"        //nmorddom
+					,dsdomici
+					,null       //nmtelefo
+					,cdpostal
+					,cdedo
+					,cdmunici
+					,null       //cdcoloni
+					,nmnumero
+					,nmnumint
+					,Constantes.INSERT_MODE
+					);
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return resp;
 	}
 	
 	///////////////////////////////
