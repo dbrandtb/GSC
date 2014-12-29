@@ -99,8 +99,8 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception {
-		return catalogosDAO.obtieneSucursales(cdunieco);
+	public List<GenericVO> obtieneSucursales(String cdunieco,String cdusuari) throws Exception {
+		return catalogosDAO.obtieneSucursales(cdunieco,cdusuari);
 	}
 	
 	@Override

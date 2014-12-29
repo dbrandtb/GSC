@@ -151,10 +151,22 @@ public class CatalogosAction extends PrincipalCoreAction {
 	                break;
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
-					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):null);
+					String padre    = null;
+					String cdusuari = null;
+					if(params!=null)
+					{
+						padre    = params.get("idPadre");
+						cdusuari = params.get("cdusuari");
+					}
+					lista = catalogosManager.obtieneSucursales(padre,cdusuari);
 					break;
 				case MC_SUCURSALES_SALUD:
-					lista = catalogosManager.obtieneSucursales(params!=null?params.get("idPadre"):"1000");
+					String padreSalud = "1000";
+					if(params!=null)
+					{
+						padreSalud = params.get("idPadre");
+					}
+					lista = catalogosManager.obtieneSucursales(padreSalud,null);
 					break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);

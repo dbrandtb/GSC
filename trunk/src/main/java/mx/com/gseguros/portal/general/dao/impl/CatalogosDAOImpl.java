@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -467,9 +468,11 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     }
 	
 	@Override
-	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception {
+	public List<GenericVO> obtieneSucursales(String cdunieco,String cdusuari) throws Exception {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
-		params.put("pv_suc_admon_i", cdunieco);
+		params.put("pv_suc_admon_i" , cdunieco);
+		params.put("pv_cdusuari_i"  , cdusuari);
+		Utilerias.debugPrecedure(logger, "PKG_LISTAS.P_GET_SUCURSALES", params);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneSucursales(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("pv_registro_o");
 	}
@@ -478,6 +481,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	protected ObtieneSucursales(DataSource dataSource) {
             super(dataSource,"PKG_LISTAS.P_GET_SUCURSALES");
             declareParameter(new SqlParameter("pv_suc_admon_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneSucursalesMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
