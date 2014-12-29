@@ -39,7 +39,7 @@ public interface CatalogosDAO {
 	 * @return Listado de sucursales
 	 * @throws Exception
 	 */
-	public List<GenericVO> obtieneSucursales(String cdunieco) throws Exception;
+	public List<GenericVO> obtieneSucursales(String cdunieco,String cdusuari) throws Exception;
 	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 	
