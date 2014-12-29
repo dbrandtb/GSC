@@ -1,5 +1,6 @@
 package mx.com.gseguros.wizard.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -168,6 +169,29 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 			compile();
+		}
+	}
+
+	@Override
+	public String cargaMasiva(Integer nmtabla, Integer tipoTabla, String nombreArchivo, String separador) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("PV_TIPOTABLA_I", tipoTabla);
+		params.put("PV_NMTABLA_I", nmtabla);
+		params.put("PV_FILENAME_I", nombreArchivo);
+		params.put("PV_SEPARADOR_I", separador);
+		Map<String, Object> resultado = ejecutaSP(new CargaMasivaTablaApoyoSP(getDataSource()), params);
+		return (String) resultado.get("PV_TITLE_O");
+	}
+	
+	protected class CargaMasivaTablaApoyoSP extends StoredProcedure {
+		protected CargaMasivaTablaApoyoSP(DataSource dataSource) {
+			super(dataSource,"PKG_TABAPOYO.P_BULK_INSERT_TABLA_APOYO");
+			declareParameter(new SqlParameter("PV_TIPOTABLA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("PV_FILENAME_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SEPARADOR_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 		}
 	}
 
