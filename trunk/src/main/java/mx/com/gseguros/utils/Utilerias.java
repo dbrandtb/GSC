@@ -21,6 +21,7 @@ public class Utilerias {
 	
 	private static Logger logger          = Logger.getLogger(Utilerias.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private static String stringDateFormat = "dd/MM/yyyy";
 	
 	/**
 	 * Formatea un string con el contenido de una fecha
@@ -181,7 +182,8 @@ public class Utilerias {
 					String fecha=en.getValue();
 					if(fecha!=null&&fecha.length()>0)
 					{
-						omap.put(llave,renderFechas.parse(fecha));
+//						omap.put(llave,renderFechas.parse(fecha));
+						omap.put( llave, getCalendar(fecha, stringDateFormat).getTime() );
 					}
 					else
 					{
