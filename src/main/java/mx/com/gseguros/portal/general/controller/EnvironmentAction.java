@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import mx.com.gseguros.utils.Utilerias;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 public class EnvironmentAction extends ActionSupport {
@@ -118,6 +120,30 @@ public class EnvironmentAction extends ActionSupport {
 		}
 		return SUCCESS;
 	}
+	
+	public String ponFechas() throws Exception {
+    	
+    	String fechaStr = "18/07/2014";
+		if(params != null && params.get("fecha") != null) {
+			fechaStr = params.get("fecha");
+		}
+    	
+		logger.debug("Entrando a ponFechas");
+        params = new HashMap<String, String>();
+        params.put("pv_cdelemen_i", "6442");
+        params.put("pv_fecha_i"   , fechaStr);
+        params.put("pv_estado_i"  , "M");
+        params.put("pv_cdusuari_i", "SUSCRIPTOR");
+        params.put("pv_cdunieco_i", "1403");
+        params.put("pv_nmpoliza_i", "93");
+        params.put("pv_cdtipsup_i", "19");
+        params.put("pv_proceso_i" , "END");
+        params.put("pv_cdramo_i"  , "2");
+        logger.debug("map IN="+ params);
+        props = Utilerias.ponFechas(params);
+        logger.debug("map OUT="+ props);
+        return SUCCESS;
+    }
 	
 	//Getters and setters:
 
