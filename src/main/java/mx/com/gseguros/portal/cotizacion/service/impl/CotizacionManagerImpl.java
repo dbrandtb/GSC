@@ -1774,7 +1774,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				}
 				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
-						null, null, null,
+						null, null, "|"+status+"|",
 						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
 				gcGral.generaComponentes(componentesContratante, true,false,true,false,false,false);

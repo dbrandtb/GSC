@@ -2866,7 +2866,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("editorDeducibleColumn",gc.getColumns());
 				
 				List<ComponenteVO>componentesContratante=pantallasManager.obtenerComponentes(
-						null, null, null,
+						null, null, "|"+status+"|",
 						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "CONTRATANTE", null);
 				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
