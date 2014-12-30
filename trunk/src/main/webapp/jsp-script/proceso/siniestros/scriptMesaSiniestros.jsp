@@ -10,6 +10,7 @@ var _CONTEXT = '${ctx}';
 // Catalogo Tipos de pago a utilizar:
 var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
+var _INDEMNIZACION= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo" />';
 var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
 // Catalogo Estatus de tramite a utilizar:
 var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
@@ -317,7 +318,7 @@ var msgWindow;
 															var formPanel = this.up().up();
 															if (formPanel.form.isValid()) {
 																
-																if(record.get('parametros.pv_otvalor02') == _REEMBOLSO){
+																if(record.get('parametros.pv_otvalor02') == _REEMBOLSO || record.get('parametros.pv_otvalor02') == _INDEMNIZACION){
 																	Ext.Ajax.request({
 																		url: _UrlGeneraSiniestroTramite,
 																		params: {
