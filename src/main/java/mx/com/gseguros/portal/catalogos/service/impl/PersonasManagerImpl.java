@@ -323,6 +323,9 @@ public class PersonasManagerImpl implements PersonasManager
 		String  cdpersonNuevo   = null;
 		
 		
+		/**
+		 * Se comenta validacion de RFC repetidos, puesto que El usuario lo solicitó de esa forma Pedro Hernandez 
+		 *
 		if(exito&&StringUtils.isBlank(cdperson))
 		{
 			try
@@ -337,6 +340,7 @@ public class PersonasManagerImpl implements PersonasManager
 				respuestaOculta = "sin respuesta oculta";
 			}
 		}
+		*/
 		
 		if(exito&&StringUtils.isBlank(cdperson))
 		{
