@@ -2839,7 +2839,7 @@ Ext.onReady(function() {
 											handler: function() {
 												var formPanel = this.up().up();
 												if (formPanel.form.isValid()) {
-													if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _REEMBOLSO){
+													if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _REEMBOLSO || panelInicialPral.down('combo[name=cmbTipoPago]').getValue() ==_INDEMNIZACION){
 														Ext.Ajax.request({
 															url: _UrlGeneraSiniestroTramite,
 															params: {
