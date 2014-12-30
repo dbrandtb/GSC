@@ -349,6 +349,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="cargarTramite" class="CotizacionAction" method="cargarTramite">
+            <result type="json" />
+        </action>
        
     </package>
     
