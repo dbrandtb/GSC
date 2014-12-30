@@ -106,6 +106,11 @@ public class EnvironmentAction extends ActionSupport {
 			logger.debug("Date con Calendar: " + cal.getTime());
 			
 			logger.debug("\n");
+			cal = Calendar.getInstance();
+			cal.set(anio, mes, dia, 0, 0);
+			logger.debug("Date con Calendar Hora Cero : " + cal.getTime());
+			
+			logger.debug("\n");
 			cal = Calendar.getInstance(TimeZone.getTimeZone("Mexico/General"),new Locale("es", "MX"));
 			cal.set(anio, mes, dia);
 			logger.debug("Date con Calendar TimeZone y Locale Mexico/General: " + cal.getTime());
