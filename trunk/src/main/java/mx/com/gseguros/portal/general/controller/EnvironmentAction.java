@@ -107,7 +107,7 @@ public class EnvironmentAction extends ActionSupport {
 			
 			logger.debug("\n");
 			cal = Calendar.getInstance();
-			cal.set(anio, mes, dia, 0, 0);
+			cal.set(anio, mes, dia, 0, 0, 0);
 			logger.debug("Date con Calendar Hora Cero : " + cal.getTime());
 			
 			logger.debug("\n");
