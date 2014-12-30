@@ -8,6 +8,10 @@
         <action name="obtieneDatosAmbiente" class="environmentAction" method="obtieneDatosAmbiente">
             <result name="success" type="json" />
         </action>
+        
+        <action name="testFechasTimezone" class="environmentAction" method="testFechasTimezone">
+            <result name="success" type="json" />
+        </action>
     
         <action name="includes/loadRecibos" class="recibosAction" method="loadRecibos">
             <result name="success">/resources/scripts/consultaPolizas/includes/consultaRecibos.jsp</result>

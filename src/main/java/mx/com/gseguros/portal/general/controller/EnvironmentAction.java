@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,6 +17,7 @@ public class EnvironmentAction extends ActionSupport {
 
 	private Map<String, Object> props;
 	
+	private Map<String, String> params;
 	
 	/**
 	 * Obtiene los datos del ambiente en el que se ejecuta la aplicaci&oacute;n 
@@ -50,6 +52,73 @@ public class EnvironmentAction extends ActionSupport {
 	}
 
 	
+	/**
+	 * Test de fechas para verificar que el parseo de una fecha de String a Date se haga correctamente segun el Timezone
+	 * @return
+	 * @throws Exception
+	 */
+	public String testFechasTimezone() throws Exception {
+		
+		try {
+			String fechaStr = "18/07/2014";
+			if(params != null && params.get("fecha") != null) {
+				fechaStr = params.get("fecha");
+			}
+
+			SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			logger.debug("Timezone por default : " + renderFechas.getTimeZone());
+			logger.debug("Fecha Parseada a Date: " + renderFechas.parse(fechaStr));
+
+			logger.debug("\n");
+			renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			renderFechas.setTimeZone(TimeZone.getTimeZone("Mexico/General"));
+			logger.debug("Fecha Parseada a Date Con TimeZone Mexico/General: " + renderFechas.parse(fechaStr));
+			
+			logger.debug("\n");
+			renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			renderFechas.setTimeZone(TimeZone.getTimeZone("America/Mexico_City"));
+			logger.debug("Fecha Parseada a Date Con TimeZone America/Mexico_City: " + renderFechas.parse(fechaStr));
+
+			logger.debug("\n");
+			renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			renderFechas.setTimeZone(TimeZone.getTimeZone("GMT"));
+			logger.debug("Timezone nuevo para GMT: " + renderFechas.getTimeZone());
+			logger.debug("Fecha Parseada a Date Con TimeZone GMT: " + renderFechas.parse(fechaStr));
+			
+			logger.debug("\n");
+			renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			renderFechas.setTimeZone(TimeZone.getTimeZone("UTC"));
+			logger.debug("Timezone nuevo para UTC: " + renderFechas.getTimeZone());
+			logger.debug("Fecha Parseada a Date Con TimeZone UTC: " + renderFechas.parse(fechaStr));
+
+			Calendar  cal = null;
+
+			String [] fechaArr = fechaStr.split("/");   
+			    int dia  =  Integer.parseInt(fechaArr[0]);
+			    int mes  =  Integer.parseInt(fechaArr[1])-1;
+			    int anio =  Integer.parseInt(fechaArr[2]);
+			    cal = Calendar.getInstance();
+			    cal.set(anio, mes, dia);
+
+			logger.debug("\n");
+			logger.debug("Date con Calendar: " + cal.getTime());
+			
+			logger.debug("\n");
+			cal = Calendar.getInstance(TimeZone.getTimeZone("Mexico/General"),new Locale("es", "MX"));
+			cal.set(anio, mes, dia);
+			logger.debug("Date con Calendar TimeZone y Locale Mexico/General: " + cal.getTime());
+			
+			logger.debug("\n");
+			cal = Calendar.getInstance(TimeZone.getTimeZone("America/Mexico_City"),new Locale("es", "MX"));
+			cal.set(anio, mes, dia);
+			logger.debug("Date con Calendar TimeZone y Locale America/Mexico_City: " + cal.getTime());
+			
+		} catch(Exception e) {
+			logger.error(new StringBuilder("Error: ").append(e.getMessage()).toString(), e);
+		}
+		return SUCCESS;
+	}
+	
 	//Getters and setters:
 
 	public Map<String, Object> getProps() {
@@ -58,6 +127,16 @@ public class EnvironmentAction extends ActionSupport {
 
 	public void setProps(Map<String, Object> props) {
 		this.props = props;
+	}
+
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 
 
