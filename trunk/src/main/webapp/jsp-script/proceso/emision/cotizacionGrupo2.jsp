@@ -64,6 +64,7 @@ var _p25_urlCargarConceptosGlobales     = '<s:url namespace="/emision"         a
 var _p25_urlEmitir                      = '<s:url namespace="/emision"         action="emitirColectivo"               />';
 var _p25_urlVentanaDocumentosClon       = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"   />';
 var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         action="guardarContratanteColectivo"   />';
+var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                 />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -915,6 +916,27 @@ Ext.onReady(function()
     if(_p25_ntramiteVacio)
     {
         _fieldByName('ntramite').setValue(_p25_ntramiteVacio);
+        _p25_tabpanel().setLoading(true);
+        Ext.Ajax.request(
+        {
+            url     : _p25_urlRecuperarProspecto
+            ,params :
+            {
+                'smap1.ntramite' : _p25_ntramiteVacio
+            }
+            ,success : function(response)
+            {
+                _p25_tabpanel().setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('prospecto:',json);
+                _fieldByName('nombre').setValue(json.smap1.NOMBRE);
+            }
+            ,failure : function()
+            {
+                _p25_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
     }
     else if(_p25_ntramite)
     {

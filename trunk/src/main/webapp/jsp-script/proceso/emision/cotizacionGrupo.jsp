@@ -67,6 +67,7 @@ var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
 var _p21_urlCargarConceptosGlobales      = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"  />';
 var _p21_urlGuardarContratanteColectivo  = '<s:url namespace="/emision"         action="guardarContratanteColectivo"   />';
+var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         action="cargarTramite"                 />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -958,6 +959,27 @@ Ext.onReady(function()
     if(_p21_ntramiteVacio)
     {
         _fieldByName('ntramite').setValue(_p21_ntramiteVacio);
+        _p21_tabpanel().setLoading(true);
+        Ext.Ajax.request(
+        {
+            url     : _p21_urlRecuperarProspecto
+            ,params :
+            {
+                'smap1.ntramite' : _p21_ntramiteVacio
+            }
+            ,success : function(response)
+            {
+                _p21_tabpanel().setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('prospecto:',json);
+                _fieldByName('nombre').setValue(json.smap1.NOMBRE);
+            }
+            ,failure : function()
+            {
+                _p21_tabpanel().setLoading(false);
+                errorComunicacion();
+            }
+        });
     }
     else if(_p21_ntramite)
     {

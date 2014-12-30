@@ -405,4 +405,6 @@ public interface CotizacionManager
 			,String dsdomici
 			,String nmnumero
 			,String nmnumint);
+	
+	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
 }

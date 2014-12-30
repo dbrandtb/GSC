@@ -8044,6 +8044,42 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarTramite()
+	{
+		logger.debug(Utilerias.join(
+				 "\n###########################"
+				,"\n###### cargarTramite ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos");
+			checkNull(smap1, "No se recibieron datos");
+			String ntramite = smap1.get("ntramite");
+			checkBlank(ntramite, "No se recibio el numero de tramite");
+			
+			ManagerRespuestaSmapVO resp = cotizacionManager.cargarTramite(ntramite);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.debug(Utilerias.join(
+				 "\n###### cargarTramite ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

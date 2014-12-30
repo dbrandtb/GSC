@@ -4869,6 +4869,57 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSmapVO cargarTramite(String ntramite)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarTramite @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				));
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando tramite");
+			
+			List<Map<String,String>>lista=mesaControlDAO.cargarTramitesPorParametrosVariables(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,ntramite
+					,null //cdunieco
+					,null //cdramo
+					,null //estado
+					,null //nmpoliza
+					,null //nmsuplem
+					,null //nmsolici
+					);
+			
+			if(lista==null||lista.size()==0)
+			{
+				throwExc("No hay tramite");
+			}
+			if(lista.size()>1)
+			{
+				throwExc("Tramite duplicado");
+			}
+			resp.setSmap(lista.get(0));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ cargarTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
