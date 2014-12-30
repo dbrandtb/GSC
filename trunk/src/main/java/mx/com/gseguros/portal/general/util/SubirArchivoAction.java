@@ -20,10 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -49,6 +53,10 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     private List<Map<String,String>>slist1;
     private boolean success;
     private String mensajeRespuesta;
+    private MesaControlManager mesaControlManager;
+    private boolean exito;
+    private String respuesta;
+    private String respuestaOculta;
     
     public String mostrarPanel()
     {
@@ -396,6 +404,9 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.debug("se guardara el contrarecibo en: "+filePath);
 			HttpUtil.generaArchivo(requestUrl, filePath);
 			uploadKey="contrarecibo_"+timestamp+"_"+random+".pdf";
+			
+			mesaControlManager.guardarRegistroContrarecibo(smap1.get("ntramite"),usu.getUser());
+			
 			success=true;
 		}
 		catch(Exception ex)
@@ -441,6 +452,114 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		return SUCCESS;
 	}
 	
+	public String actualizarNombreDocumento()
+	{
+		logger.info(Utilerias.join(
+				 "\n#######################################"
+				,"\n###### actualizarNombreDocumento ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			exito = true;
+			
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron valores");
+			}
+			String ntramite = smap1.get("ntramite");
+			String cddocume = smap1.get("cddocume");
+			String nuevo    = smap1.get("nuevo");
+			
+			if(StringUtils.isBlank(ntramite))
+			{
+				throw new ApplicationException("No se recibio el numero de tramite");
+			}
+			if(StringUtils.isBlank(cddocume))
+			{
+				throw new ApplicationException("No se recibio el codigo del documento");
+			}
+			
+			mesaControlManager.actualizarNombreDocumento(ntramite,cddocume,nuevo);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			if(ex.getClass().equals(ApplicationException.class))
+			{
+				respuesta = ex.getMessage()+" #"+timestamp;
+			}
+			else
+			{
+				respuesta = "Error al actualizar el nombre del documento #"+timestamp;
+			}
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### actualizarNombreDocumento ######"
+				,"\n#######################################"
+				));
+		return SUCCESS;
+	}
+	
+
+	
+	public String borrarDocumento()
+	{
+		logger.info(Utilerias.join(
+				 "\n#############################"
+				,"\n###### borrarDocumento ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			exito = true;
+			
+			if(smap1==null)
+			{
+				throw new ApplicationException("No se recibieron valores");
+			}
+			String ntramite = smap1.get("ntramite");
+			String cddocume = smap1.get("cddocume");
+			
+			if(StringUtils.isBlank(ntramite))
+			{
+				throw new ApplicationException("No se recibio el numero de tramite");
+			}
+			if(StringUtils.isBlank(cddocume))
+			{
+				throw new ApplicationException("No se recibio el codigo del documento");
+			}
+			
+			mesaControlManager.borrarDocumento(ntramite,cddocume);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			if(ex.getClass().equals(ApplicationException.class))
+			{
+				respuesta = ex.getMessage()+" #"+timestamp;
+			}
+			else
+			{
+				respuesta = "Error al borrar el documento #"+timestamp;
+			}
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### borrarDocumento ######"
+				,"\n#############################"
+				));
+		return SUCCESS;
+	}
 	
 	/////////////////////////////////
 	////// getters and setters //////
@@ -539,6 +658,34 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 
 	public void setMensajeRespuesta(String mensajeRespuesta) {
 		this.mensajeRespuesta = mensajeRespuesta;
+	}
+
+	public void setMesaControlManager(MesaControlManager mesaControlManager) {
+		this.mesaControlManager = mesaControlManager;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public String getRespuestaOculta() {
+		return respuestaOculta;
+	}
+
+	public void setRespuestaOculta(String respuestaOculta) {
+		this.respuestaOculta = respuestaOculta;
 	}
     
 }

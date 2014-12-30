@@ -30,6 +30,24 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return cdagente;
 	}
 	
+	@Override
+	public void guardarRegistroContrarecibo(String ntramite,String cdusuari)throws Exception
+	{
+		mesaControlDAO.guardarRegistroContrarecibo(ntramite,cdusuari);
+	}
+	
+	@Override
+	public void actualizarNombreDocumento(String ntramite,String cddocume,String nuevo)throws Exception
+	{
+		mesaControlDAO.actualizarNombreDocumento(ntramite,cddocume,nuevo);
+	}
+	
+	@Override
+	public void borrarDocumento(String ntramite,String cddocume)throws Exception
+	{
+		mesaControlDAO.borrarDocumento(ntramite,cddocume);
+	}
+	
 	/*
 	 * Getters y setters
 	 */

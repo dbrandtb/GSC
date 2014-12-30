@@ -71,6 +71,14 @@
             </result>
         </action>
 
+        <action name="actualizarNombreDocumento" class="beanSubirArchivo" method="actualizarNombreDocumento">
+            <result name="success" type="json" />
+        </action>
+
+        <action name="borrarDocumento" class="beanSubirArchivo" method="borrarDocumento">
+            <result name="success" type="json" />
+        </action>
+
 	</package>
 
 </struts>
