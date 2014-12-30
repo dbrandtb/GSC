@@ -80,8 +80,6 @@ Ext.onReady(function() {
 	});
 	
 
-				
-				
 	_11_form=Ext.create('Ext.form.Panel',{
 		border    : 0
 		,title: 'Afiliados Afectados'
@@ -103,18 +101,39 @@ Ext.onReady(function() {
 		,buttons:[
 			{
 				text     : 'Regresar'
-				,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/book_previous.png'
 				,handler : _11_regresarMC
-			}/*,
+			},
 			{
-				id:'botonCotizar',
-				icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-				text: 'Guardar xx',
-				handler: function()
-				{
-					alert("GUARDADO TOTAL");
-				}
-			}*/
+				text     : 'Rechazar Tr&aacute;mite'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+				,handler : _11_rechazarTramiteSiniestro
+			},
+			{
+				text     : 'Turnar &Aacute;rea M&eacute;dica'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
+				,handler : _11_turnarAreaMedica
+			},
+			{
+				text     : 'Solicitar Pago'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/money_dollar.png'
+				//,handler : _11_regresarMC
+			},
+			{
+				text     : 'Turnar Operador Reclamaci&oacute;n'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
+				,handler : _11_retornarMedAjustadorAOperador
+			},
+			{
+				text     : 'Historial'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/clock.png'
+				,handler : _11_historialTramite
+			},
+			{
+				text     : 'Devolver'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/note_go.png'
+				,handler : _11_turnarDevolucionTramite
+			}
 		]
 	}); 
 	_fieldByName('OTVALOR11').forceSelection=true;
