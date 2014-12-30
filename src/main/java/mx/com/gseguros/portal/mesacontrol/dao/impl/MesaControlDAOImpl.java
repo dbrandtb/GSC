@@ -440,4 +440,75 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarRegistroContrarecibo(String ntramite,String cdusuari)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdusuari" , cdusuari);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO", params);
+		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
+	}
+	
+	protected class GuardarRegistroContrarecibo extends StoredProcedure
+	{
+		protected GuardarRegistroContrarecibo(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizarNombreDocumento(String ntramite,String cddocume,String nuevo)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cddocume" , cddocume);
+		params.put("nuevo"    , nuevo);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME", params);
+		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
+	}
+	
+	protected class ActualizarNombreDocumento extends StoredProcedure
+	{
+		protected ActualizarNombreDocumento(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nuevo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borrarDocumento(String ntramite,String cddocume)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cddocume" , cddocume);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL", params);
+		ejecutaSP(new BorrarDocumento(getDataSource()),params);
+	}
+	
+	protected class BorrarDocumento extends StoredProcedure
+	{
+		protected BorrarDocumento(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

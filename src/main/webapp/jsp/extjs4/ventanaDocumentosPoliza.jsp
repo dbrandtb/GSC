@@ -67,6 +67,9 @@ var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContr
 var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocumentos"          />';
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
 
+var panDocUrlActualizarNombreDocumento = '<s:url namespace="/documentos" action="actualizarNombreDocumento" />';
+var panDocUrlBorrarDocumento           = '<s:url namespace="/documentos" action="borrarDocumento"           />';
+
 var panelSeleccionDocumento;
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var panDocSmap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -85,6 +88,113 @@ function panDocSubido()
 {
     Ext.getCmp('panDocWinPopupAddDoc').destroy();
     panDocStoreDoc.load();
+}
+
+function panDocEditarClic(row)
+{
+    var record=panDocStoreDoc.getAt(row);
+    debug('record a editar:',record.data);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title   : 'Editar nombre'
+        ,modal  : true
+        ,items  :
+        [
+            {
+                xtype       : 'textfield'
+                ,fieldLabel : 'Nombre'
+                ,value      : record.get('dsdocume')
+                ,style      : 'margin:5px'
+            }
+        ]
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Guardar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                ,handler : function(but)
+                {
+                    var ven = but.up('window');
+                    ven.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : panDocUrlActualizarNombreDocumento
+                        ,params :
+                        {
+                            'smap1.ntramite'  : record.get('ntramite')
+                            ,'smap1.cddocume' : record.get('cddocume')
+                            ,'smap1.nuevo'    : ven.down('textfield').getValue()
+                        }
+                        ,success : function(response)
+                        {
+                            ven.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('### renombrar:',json);
+                            if(json.exito)
+                            {
+                                ven.destroy();
+                                panDocStoreDoc.load();
+                            }
+                            else
+                            {
+                                mensajeError(json.respuesta);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            ven.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
+        ]
+    }).show());
+}
+
+function panDocBorrarClic(row,confir)
+{
+    var confirmado = !Ext.isEmpty(confir)&&confir==true;
+    
+    if(!confirmado)
+    {
+        centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', '¿Desea borrar el documento?', function(btn)
+        {
+            if(btn === 'yes')
+            {
+                panDocBorrarClic(row,true);
+            }
+        }));
+    }
+    else
+    {
+        var record=panDocStoreDoc.getAt(row);
+        debug('record a borrar:',record.data);
+        Ext.Ajax.request(
+        {
+            url     : panDocUrlBorrarDocumento
+            ,params :
+            {
+                'smap1.ntramite'  : record.get('ntramite')
+                ,'smap1.cddocume' : record.get('cddocume')
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### borrar:',json);
+                if(json.exito)
+                {
+                    panDocStoreDoc.load();
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : errorComunicacion
+        });
+    }
 }
 /*//////////////////////*/
 ////// funciones    //////
@@ -110,6 +220,7 @@ Ext.onReady(function()
             ,'nmsuplem'
             ,'orden'
             ,'nsuplogi'
+            ,'editable'
         ]
     });
     
@@ -213,7 +324,9 @@ Ext.onReady(function()
         //,title         : 'Documentos'
         //,collapsible   : true
         //,titleCollapse : true
-        ,height        : 300
+        //,height        : 300
+        ,minHeight     : 150
+        //,width         : 550
         ,onContrareciboClick : function(button,e)
         {
         	var window=button.up().up();
@@ -270,6 +383,7 @@ Ext.onReady(function()
         	                }
         	            }).show();
         	            windowVerDocu.center();
+        	            panDocStoreDoc.load();
         			}
         			else
         			{
@@ -560,12 +674,12 @@ Ext.onReady(function()
                     ,*/{
                         header     : 'Descripci&oacute;n'
                         ,dataIndex : 'dsdocume'
-                        ,flex      : 2
+                        ,flex      : 1
                     }
                     ,{
                         header     : 'Fecha'
                         ,dataIndex : 'feinici'
-                        ,flex      : 1
+                        ,width     : 100
                         ,renderer  : Ext.util.Format.dateRenderer('d M Y')
                     }
                     ,{
@@ -610,6 +724,36 @@ Ext.onReady(function()
                                 }
                             }
                             return res;
+                        }
+                    },{
+                        dataIndex : 'editable'
+                        ,width    : 30
+                        ,renderer : function(v,meta,record,row)
+                        {
+                            if(v=='N')
+                            {
+                                v='';
+                            }
+                            else
+                            {
+                                v='<a href="#" onclick="panDocEditarClic('+row+'); return false;"><img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar" /></a>';
+                            }
+                            return v;
+                        }
+                    },{
+                        dataIndex : 'editable'
+                        ,width    : 30
+                        ,renderer : function(v,meta,record,row)
+                        {
+                            if(v=='N')
+                            {
+                                v='';
+                            }
+                            else
+                            {
+                                v='<a href="#" onclick="panDocBorrarClic('+row+'); return false;"><img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Borrar" /></a>';
+                            }
+                            return v;
                         }
                     }
                     /*
@@ -930,4 +1074,4 @@ Ext.onReady(function()
     //////////////////////////
 });
 </script>
-<div id="pan_doc_maindiv" style="height:400px;"></div>
+<div id="pan_doc_maindiv" style="height:340px;"></div>

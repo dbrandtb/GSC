@@ -45,7 +45,8 @@
     </bean> -->
     
     <bean id="beanSubirArchivo" class="mx.com.gseguros.portal.general.util.SubirArchivoAction" scope="prototype">
-        <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="kernelManager"      ref="kernelManagerSustituto" />
+        <property name="mesaControlManager" ref="mesaControlManagerImpl" />
     </bean>
     
     <bean id="beanDatosComplementarios" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosAction" scope="prototype">
