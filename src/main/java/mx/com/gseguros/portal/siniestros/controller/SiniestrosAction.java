@@ -1331,6 +1331,12 @@ public String generarSiniestroSinAutorizacion()
            
            UserVO usuario=(UserVO)session.get("USUARIO");
            //urlContrareciboSiniestro
+           String reporteSeleccion = null;
+           if(paramsO.get("pv_cdramo_i") == "4"){
+        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
+           }else{
+        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
+           }
            String urlAutorizacionServicio = ""
            					   + getText("ruta.servidor.reports")
                                + "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
@@ -1343,7 +1349,7 @@ public String generarSiniestroSinAutorizacion()
                                + "&desformat=PDF"
                                + "&userid="+getText("pass.servidor.reports")
                                + "&ACCESSIBLE=YES"
-                               + "&report="+getText("rdf.siniestro.autorizacion.servicio.nombre")
+                               + "&report="+reporteSeleccion
                                + "&paramform=no"
                                ;
            logger.debug(urlAutorizacionServicio);
