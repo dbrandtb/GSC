@@ -51,7 +51,7 @@ var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="
 var _URL_TurnarAOperadorReclamacion =  '<s:url namespace="/mesacontrol" action="turnarAOperadorReclamacion" />';
 var _URL_VALIDA_FACTURAASEGURADO  	=  '<s:url namespace="/siniestros"		action="validarFacturaAsegurado" />';
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-
+var _URL_VAL_AJUSTADOR_MEDICO		= '<s:url namespace="/siniestros" action="consultaDatosValidacionAjustadorMed"		 />';
 
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
@@ -830,8 +830,58 @@ var msgWindow;
 		if(record.get('status') == _STATUS_TRAMITE_CONFIRMADO){
 			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');	
 			return;
+		}else{
+			if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
+				mostrarSolicitudPago(grid,rowIndex,colIndex);
+			}else{
+				Ext.Ajax.request({
+					url	 : _URL_VAL_AJUSTADOR_MEDICO
+					,params:{
+						'params.ntramite': record.get('ntramite')
+					}
+					,success : function (response)
+					{
+						if(Ext.decode(response.responseText).datosValidacion != null){
+							var autAM = null;
+							var result ="";
+							banderaValidacion = "0";
+							var json = Ext.decode(response.responseText).datosValidacion;
+							if(json.length > 0){
+								for(var i = 0; i < json.length; i++){
+									if(json[i].AREAAUTO =="ME"){
+										var valorValidacion = json[i].SWAUTORI+"";
+										if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+											banderaValidacion = "1";
+											result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+										}
+									}
+								}
+								if(banderaValidacion == "1"){
+									centrarVentanaInterna(mensajeWarning(result));
+								}else{
+									mostrarSolicitudPago(grid,rowIndex,colIndex);
+								}
+							}else{
+								centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
+							}
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
+				
+			}
 		}
-		
+	}
+	
+	function mostrarSolicitudPago(grid,rowIndex,colIndex){
 		storeDestinoPago =Ext.create('Ext.data.Store', {
 	        model:'Generic',
 	        autoLoad:true,

@@ -3859,6 +3859,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
+	public List<Map<String, String>> obtieneListaDatosValidacionAjustadorMed(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaDatosValidacionAjustadorMed(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaDatosValidacionAjustadorMed extends StoredProcedure {
+		protected ObtieneListaDatosValidacionAjustadorMed(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_GET_OBTIENE_VAL_AJUSTADORMED");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NFACTURA","AREAAUTO","SWAUTORI" 
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	@Override
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception {
 		Map<String, Object> resultado = ejecutaSP(new ObtieneCdTipsitAltaTramite(getDataSource()), paramTramite);
 		logger.debug( resultado.get("pv_existe_o"));

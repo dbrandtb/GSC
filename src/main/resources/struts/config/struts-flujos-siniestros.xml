@@ -863,6 +863,16 @@
 			</result>
 		</action>
 		
+		<action name="consultaDatosValidacionAjustadorMed" class="siniestrosAction"
+			method="consultaDatosValidacionAjustadorMed">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
 		
 		<action name="guardarCartaRechazoAutServ" class="siniestrosAction" method="guardarCartaRechazoAutServ">
             <result type="json" />

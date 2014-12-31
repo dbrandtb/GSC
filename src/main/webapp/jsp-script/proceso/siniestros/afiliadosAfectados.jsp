@@ -24,6 +24,7 @@
 			var _URL_LISTA_AUTSERVICIO				= '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"		 />';
 			var _URL_LISTA_MSINIESTRO				= '<s:url namespace="/siniestros" action="consultaSiniestroMaestro"		 />';
 			var _URL_DATOS_VALIDACION				= '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"		 />';
+			var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" action="consultaDatosValidacionAjustadorMed"		 />';
 			var _URL_LoadConceptos					= '<s:url namespace="/siniestros" action="obtenerMsinival" />';
 			var _11_params							= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
 			var _CATALOGO_TipoConcepto				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
@@ -52,6 +53,13 @@
             var mesConUrlFinDetalleMC 				= '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
             var _STATUS_DEVOLVER_TRAMITE			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
             var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros" action="validaDocumentosCargados"        />';
+            var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
+            var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
+            var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
+            var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
+            var _URL_CONSULTA_TRAMITE       = '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
+            var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
+            var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
 
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -94,6 +102,8 @@
 			var storeSubcoberturaAsegurado;
 			var storeRechazos;
 			var storeIncisosRechazos;
+			var storeDestinoPago;
+			var storeCatConcepto;
 			var ventanaAgregarAsegurado;
 			<s:set name="contadorFactura" value="0" />
 			<s:iterator value="slist2">
@@ -619,6 +629,38 @@
 						reader: {
 							type: 'json',
 							root: 'loadList'
+						}
+					}
+				});
+				
+				storeDestinoPago =Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:true,
+					proxy:
+					{
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CAT_DESTINOPAGO},
+						reader:
+						{
+							type: 'json',
+							root: 'lista'
+						}
+					}
+				});
+
+				storeCatConcepto =Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:true,
+					proxy:
+					{
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CAT_CONCEPTO},
+						reader:
+						{
+							type: 'json',
+							root: 'lista'
 						}
 					}
 				});
@@ -3673,6 +3715,255 @@
 				mensajeError('Error al turnar.');
 			}
 		});
+	}
+	
+	function _11_revDocumentosWindow(){
+		windowLoader = Ext.create('Ext.window.Window',{
+			modal       : true,
+			buttonAlign : 'center',
+			width       : 600,
+			height      : 400,
+			autoScroll  : true,
+			loader      : {
+				url     : _UrlRevisionDocsSiniestro,
+				params  : {
+					'params.nmTramite'  :  _11_params.NTRAMITE,
+					'params.cdTipoPago' : _11_params.OTVALOR02,
+					'params.cdTipoAtencion'  : _11_params.OTVALOR07,
+					'params.tieneCR'  : !Ext.isEmpty(_11_params.OTVALOR01)
+				},
+				scripts  : true,
+				loadMask : true,
+				autoLoad : true,
+				ajaxOptions: {
+					method: 'POST'
+				}
+			}
+		}).show();
+		centrarVentanaInterna(windowLoader);
+	}
+	
+	function _11_solicitarPago(){
+		//1.- Verificamos que el tramite ya esta pagado
+		if(_11_params.STATUS  == _STATUS_TRAMITE_CONFIRMADO){
+			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');
+			return;
+		}else{
+			if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+				_11_mostrarSolicitudPago();
+			}else{
+				//Verificamos si tiene la validacion del dictaminador medico
+				Ext.Ajax.request({
+					url	 : _URL_VAL_AJUSTADOR_MEDICO
+					,params:{
+						'params.ntramite': _11_params.NTRAMITE
+					}
+					,success : function (response)
+					{
+						if(Ext.decode(response.responseText).datosValidacion != null){
+							var autAM = null;
+							var result ="";
+							banderaValidacion = "0";
+							var json = Ext.decode(response.responseText).datosValidacion;
+							if(json.length > 0){
+								for(var i = 0; i < json.length; i++){
+									if(json[i].AREAAUTO =="ME"){
+										var valorValidacion = json[i].SWAUTORI+"";
+										if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+											banderaValidacion = "1";
+											result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+										}
+										
+									}
+								}
+								if(banderaValidacion == "1"){
+									centrarVentanaInterna(mensajeWarning(result));
+								}else{
+									_11_mostrarSolicitudPago();
+								}
+							}else{
+								centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
+							}
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
+			}
+		}
+	}
+	
+	function _11_mostrarSolicitudPago(){
+		msgWindow = Ext.Msg.show({
+			title: 'Aviso',
+				msg: '&iquest;Esta seguro que desea solicitar el pago?',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.Msg.QUESTION,
+				fn: function(buttonId, text, opt){
+					if(buttonId == 'yes'){
+						var pagocheque = Ext.create('Ext.form.field.ComboBox',
+						{
+							colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
+							allowBlank : false,			editable     	: false,			displayField    : 'value',
+							valueField:'key',			forceSelection  : true,			width			:350,
+							queryMode    :'local',		store 			: storeDestinoPago
+						});
+
+						var concepPago = Ext.create('Ext.form.field.ComboBox',
+						{
+							colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
+							allowBlank : false,			editable     	: false,			displayField    : 'value',
+							valueField:'key',			forceSelection  : true,			width			:350,
+							queryMode    :'local',		store 			: storeCatConcepto
+						});
+
+						var cdramoTramite="";
+						var cdtipsitTramite ="";
+						//3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
+						Ext.Ajax.request({
+							url     : _URL_CONSULTA_TRAMITE
+							,params:{
+								'params.ntramite': _11_params.NTRAMITE
+							}
+							,success : function (response)
+							{
+								if(Ext.decode(response.responseText).listaMesaControl != null)
+								{
+									var json=Ext.decode(response.responseText).listaMesaControl[0];
+									cdramoTramite = json.cdramomc;
+									cdtipsitTramite = json.cdtipsitmc;
+									if(json.otvalor18mc !=null)
+									{
+										panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
+									}
+									if(json.otvalor19mc !=null)
+									{
+										panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
+									}
+								}
+							},
+							failure : function ()
+							{
+								me.up().up().setLoading(false);
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
+						
+						windowCvePago = Ext.create('Ext.window.Window',{
+							modal       : true,
+							buttonAlign : 'center',
+							width       : 550,
+							autoScroll  : true,
+							items       : [
+								panelModificacion = Ext.create('Ext.form.Panel', {
+									title: 'Destino de Pago',
+									bodyPadding: 5,
+									items: [pagocheque,
+											concepPago],
+									buttonAlign:'center',
+									buttons: [
+									{
+										text: 'Solicitar'
+										,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+										,buttonAlign : 'center'
+										,handler: function() { 
+											if (panelModificacion.form.isValid()) {
+												var datos=panelModificacion.form.getValues();
+												//4.- Guardamos la informacion del destino y el tipo de concepto
+												Ext.Ajax.request({
+													url     : _URL_CONCEPTODESTINO
+													,jsonData: {
+														params:{
+															ntramite:_11_params.NTRAMITE,
+															cdtipsit:cdtipsitTramite,
+															destinoPago:datos.destinoPago,
+															concepPago:datos.concepPago
+														}
+													}
+													,success : function (response)
+													{
+														windowCvePago.close();
+														//5.- Solicitamos el pago le mandamos el tramite y el tipo de pago
+														Ext.Ajax.request({
+															url: _UrlSolicitarPago,
+															params: {
+																'params.pv_ntramite_i' : _11_params.NTRAMITE,
+																'params.pv_tipmov_i'   : _11_params.OTVALOR02
+															},
+															success: function(response, opts) {
+																var respuesta = Ext.decode(response.responseText);
+																if(respuesta.success){
+																	centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
+																		Ext.create('Ext.form.Panel').submit(
+																		{
+																			url		: _11_urlMesaControl
+																			,standardSubmit : true
+																			,params         :
+																			{
+																				'smap1.gridTitle'      : 'Siniestros en espera'
+																				,'smap2.pv_cdtiptra_i' : 16
+																			}
+																		});
+																	}));
+																}else {
+																	centrarVentanaInterna(mensajeError(respuesta.mensaje));
+																}
+															},
+															failure: function(){
+																centrarVentanaInterna(mensajeError('No se pudo solicitar el pago.'));
+															}
+														});
+													},
+													failure : function ()
+													{
+														me.up().up().setLoading(false);
+														Ext.Msg.show({
+															title:'Error',
+															msg: 'Error de comunicaci&oacute;n',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														});
+													}
+												});
+											}else {
+												Ext.Msg.show({
+													title: 'Aviso',
+													msg: 'Complete la informaci&oacute;n requerida',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+											}
+										}
+									},
+									{
+										text: 'Cancelar',
+										icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+										buttonAlign : 'center',
+										handler: function() {
+											windowCvePago.close();
+										}
+									}
+									]
+								})  
+							]
+						}).show();
+						centrarVentana(windowCvePago);
+					}
+				}
+		});
+		centrarVentana(msgWindow);
 	}
 	
 	//FIN DE FUNCIONES

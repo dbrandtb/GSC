@@ -1456,6 +1456,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
+	public List<Map<String, String>> getConsultaDatosValidacionAjustadorMed(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaDatosValidacionAjustadorMed(params);
+	}
+	
+	@Override
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception {
 		try {
 			return siniestrosDAO.validaCdTipsitAltaTramite(paramTramite);
