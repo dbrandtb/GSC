@@ -185,9 +185,10 @@ Ext.onReady(function()
 								name          : 'smap1.rfc',
 					            valueField    : 'CDRFC',
 					            displayField  : 'NOMBRE_COMPLETO',
-					            //forceSelection: true,
-					            //typeAhead     : true,
-					            anyMatch      : true,
+					            forceSelection: false,
+					            autoSelect    : false,
+	                            typeAhead     : false,
+					            anyMatch      : false,
 					            hideTrigger   : true,
 					            tpl: Ext.create('Ext.XTemplate',
 					                    '<tpl for=".">',
@@ -285,9 +286,10 @@ Ext.onReady(function()
 								name          : 'smap1.nombre',
 					            valueField    : 'CDRFC',
 					            displayField  : 'NOMBRE_COMPLETO',
-					            //forceSelection: true,
-					            //                                                                      typeAhead     : true,
-					            anyMatch      : true,
+					            forceSelection: false,
+					            autoSelect    : false,
+	                            typeAhead     : false,
+					            anyMatch      : false,
 					            hideTrigger   : true,
 					            tpl: Ext.create('Ext.XTemplate',
 					                    '<tpl for=".">',
@@ -454,29 +456,61 @@ Ext.onReady(function()
 										    _p22_principalDatosAdicionales().hide();
 											
 										    if(form.down('[name=smap1.rfc]').getStore().count() > 0){
-										    	mensajeWarning('El RFC ya existe. Favor de seleccionar uno de la lista.');
-										    	return;
+										    	
+										    	var confirm = Ext.Msg.show({
+							    		            title: 'Confirmar acci&oacute;n',
+							    		            msg: 'Este RFC ya existe. &iquest;Desea duplicar este cliente?, de no ser as&iacute; seleccione un elemento de la lista.',
+							    		            buttons: Ext.Msg.YESNO,
+							    		            fn: function(buttonId, text, opt) {
+							    		            	if(buttonId == 'yes') {
+							    		            		_p22_fieldRFC().setValue(valorRFC);
+															_p22_cdperson = '';
+															_p22_tipoPersona = '';
+															_p22_nacionalidad = '';
+															_CDIDEPERsel = '';
+															_CDIDEEXTsel = '';
+															municipioImportarTMP = '';
+															coloniaImportarTMP = '';
+				//											_fieldByName('CDMUNICI').forceSelection = false;
+															
+															form.down('[name=smap1.rfc]').reset();
+															form.down('[name=smap1.nombre]').reset();
+															form.down('[name=smap1.rfc]').getStore().removeAll();
+												    		form.down('[name=smap1.nombre]').getStore().removeAll();
+															
+															_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
+															
+															irModoAgregar();
+							    		            	}else{
+							    		            		return;
+							    		            	}
+							            			},
+							    		            icon: Ext.Msg.QUESTION
+							        			});
+							        			
+							        			centrarVentana(confirm);
+										    	
+										    }else{
+										    	_p22_fieldRFC().setValue(valorRFC);
+												_p22_cdperson = '';
+												_p22_tipoPersona = '';
+												_p22_nacionalidad = '';
+												_CDIDEPERsel = '';
+												_CDIDEEXTsel = '';
+												municipioImportarTMP = '';
+												coloniaImportarTMP = '';
+	//											_fieldByName('CDMUNICI').forceSelection = false;
+												
+												form.down('[name=smap1.rfc]').reset();
+												form.down('[name=smap1.nombre]').reset();
+												form.down('[name=smap1.rfc]').getStore().removeAll();
+									    		form.down('[name=smap1.nombre]').getStore().removeAll();
+												
+												_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
+												
+												irModoAgregar();
 										    }
 										    
-											_p22_fieldRFC().setValue(valorRFC);
-											_p22_cdperson = '';
-											_p22_tipoPersona = '';
-											_p22_nacionalidad = '';
-											_CDIDEPERsel = '';
-											_CDIDEEXTsel = '';
-											municipioImportarTMP = '';
-											coloniaImportarTMP = '';
-//											_fieldByName('CDMUNICI').forceSelection = false;
-											
-											form.down('[name=smap1.rfc]').reset();
-											form.down('[name=smap1.nombre]').reset();
-											form.down('[name=smap1.rfc]').getStore().removeAll();
-								    		form.down('[name=smap1.nombre]').getStore().removeAll();
-											
-											_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
-											
-											irModoAgregar();
-											
 										}else if(!Ext.isEmpty(valorNombre)){
 											mensajeWarning('Para agregar una persona nueva llene el campo de RFC.');
 											return;
