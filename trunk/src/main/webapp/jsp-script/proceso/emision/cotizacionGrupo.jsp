@@ -2116,6 +2116,12 @@ function _p21_guardarGrupo(panelGrupo)
          recordGrupo['tvalogars'] = tvalogars;
          recordGrupo['valido']    = true;
          debug('recordGrupo:',recordGrupo);
+         if(_p21_smap1.FACTORES=='S')
+         {
+             var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
+             debug('storeFactores:',storeFactores);
+             storeFactores.commitChanges();
+         }
          mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
      }
      
@@ -2170,7 +2176,7 @@ function _p21_setActiveTab(itemId)
 function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 {
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
-    if(oldValue+'x'!='x'&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
+    if(!Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
     {
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
