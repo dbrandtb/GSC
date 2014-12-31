@@ -668,6 +668,22 @@ Ext.define('RowCobertura',{
         {type:'string',name:'sumaAsegurada'}
     ]
 });
+
+var _g_storeSino = Ext.create('Ext.data.Store',
+{
+    model : 'Generic'
+    ,data :
+    [
+        {
+            key    : 'S'
+            ,value : 'Si'
+        }
+        ,{
+            key    : 'N'
+            ,value : 'No'
+        }
+    ]
+});
 /////////////////////////
 ////// FIN MODELOS //////
 /////////////////////////
