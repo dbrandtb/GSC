@@ -264,8 +264,20 @@ Ext.onReady(function() {
 					if(!position.record.phantom){
 		    			return position.record.get('FEDESDE');
 		    		}
-//		    		alert("validando valor: FEDESDE");
-		           return newValue;
+		    		
+		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+		    		if(regexFormato.test(newValue)){
+                		return newValue;
+                	}else{
+                		setTimeout(function(){
+                			mensajeWarning("El valor ' "+ newValue +" ' debe ser una fecha v&aacute;lida (Fila " + (position.row+1) + ", Columna Fecha Desde)",
+                				function(){
+                					position.focus();
+                				}
+                			);
+                		},200);
+                		return position.record.get('FEDESDE');
+                	}
 		       }
             },
             {text: 'Fecha Hasta',    dataIndex: 'FEHASTA', menuDisabled: true, sortable: false, hidden: _TIPO_1CLAVE,
@@ -276,7 +288,20 @@ Ext.onReady(function() {
 					if(!position.record.phantom){
 		    			return position.record.get('FEHASTA');
 		    		}
-		           return newValue;
+		    		
+		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+		    		if(regexFormato.test(newValue)){
+                		return newValue;
+                	}else{
+                		setTimeout(function(){
+                			mensajeWarning("El valor ' "+ newValue +" ' debe ser una fecha v&aacute;lida (Fila " + (position.row+1) + ", Columna Fecha Hasta)",
+                				function(){
+                					position.focus();
+                				}
+                			);
+                		},200);
+                		return position.record.get('FEHASTA');
+                	}
 		       }
             },
             {text: 'OTVALOR1',  itemId: 'OTVALOR1',  dataIndex: 'OTVALOR01', hidden: true, menuDisabled: true, sortable: false},
@@ -627,10 +652,70 @@ Ext.onReady(function() {
                 	debug('ClaveIndex:', index+1);
                     // Asignamos la descripción de las columnas de forma dinamica:
                     grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setText(record.get('DSCLAVE1'));
-                    grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setVisible(true);
                     
                     panelValoresTablaApoyo.down('[name=params.PV_OTCLAVE'+ (index+1) +'_I]').setFieldLabel(record.get('DSCLAVE1'));
                     panelValoresTablaApoyo.down('[name=params.PV_OTCLAVE'+ (index+1) +'_I]').setReadOnly(false);
+                    
+                    
+                    var dsFormato;
+                    var regexFormato;
+                    var tipoFormato = record.get('SWFORMA1');
+                    var valMinimo = record.get('NMLMIN1');
+                    var valMaximo = record.get('NMLMAX1');
+                     
+                    
+                    if(tipoFormato == 'A'){
+                    	regexFormato = new RegExp("^[a-zA-Z0-9]+$");
+                    	dsFormato = 'Alfanum&eacute;rico';
+                    }else if(tipoFormato == 'N'){
+                    	regexFormato = new RegExp("^([0-9])+$");
+                    	dsFormato = 'Num&eacute;rico Entero';
+                    }else if(tipoFormato == 'P'){
+                    	regexFormato = new RegExp("^\\d+(\\.\\d+)?$");
+                    	dsFormato = 'Porcentual';
+                    }else if(tipoFormato == 'F'){
+                    	regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+                    	dsFormato = 'Fecha v&aacute;lida';
+                    }
+                    
+                    var mensajeLongitud = "Longitud m&iacute;nima " + valMinimo + ", m&aacute;xima "+valMaximo;
+                    if(tipoFormato == 'F') mensajeLongitud  = "";
+                    
+                    grid.getView().headerCt.child("#OTCLAVE"+(index+1)).cellwriter = function(newValue, position){
+                    	
+                    	if(!Ext.isEmpty(newValue)){
+	                    	if(regexFormato.test(newValue)){
+	                    		if(String(newValue).length >= valMinimo && String(newValue).length <= valMaximo){
+	                    			return newValue;
+	                    		}else{
+	                    			if(tipoFormato == 'F') return newValue;
+	                    			
+		                    		setTimeout(function(){
+			                    			mensajeWarning("El valor ' "+ newValue +" ' debe ser de " + mensajeLongitud + " (Fila " + (position.row+1) + ", Columna " + record.get('DSCLAVE1') + ") </br>&nbsp;",
+			                    				function(){
+			                    					position.focus();
+			                    				}
+			                    			);
+		                    		},200);
+		                    		return '';
+		                    	}
+	                    	}else{
+	                    		setTimeout(function(){
+	                    			mensajeWarning("El valor ' "+ newValue +" ' debe ser " + dsFormato + " (Fila " + (position.row+1) + ", Columna " + record.get('DSCLAVE1') + ") </br>" + mensajeLongitud + "</br>&nbsp;",
+	                    				function(){
+	                    					position.focus();
+	                    				}
+	                    			);
+	                    		},200);
+	                    		return '';
+	                    	}
+                    	}else{
+                    		return newValue;
+                    	}
+                    	
+                    }
+                    
+                    grid.getView().headerCt.child("#OTCLAVE"+(index+1)).setVisible(true);
                     
                 });
                 
@@ -643,6 +728,66 @@ Ext.onReady(function() {
 		                	debug('AtrIndex:', index+1);
 		                    // Asignamos la descripción de las columnas de forma dinamica:
 		                    grid.getView().headerCt.child("#OTVALOR"+(index+1)).setText(record.get('DSATRIBU'));
+		                    
+		                    var dsFormato;
+		                    var regexFormato;
+		                    var tipoFormato = record.get('SWFORMAT');
+		                    var valMinimo = record.get('NMLMIN');
+		                    var valMaximo = record.get('NMLMAX');
+		                     
+		                    
+		                    if(tipoFormato == 'A'){
+		                    	regexFormato = new RegExp("^[a-zA-Z0-9]+$");
+		                    	dsFormato = 'Alfanum&eacute;rico';
+		                    }else if(tipoFormato == 'N'){
+		                    	regexFormato = new RegExp("^([0-9])+$");
+		                    	dsFormato = 'Num&eacute;rico Entero';
+		                    }else if(tipoFormato == 'P'){
+		                    	regexFormato = new RegExp("^\\d+(\\.\\d+)?$");
+		                    	dsFormato = 'Porcentual';
+		                    }else if(tipoFormato == 'F'){
+		                    	regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+		                    	dsFormato = 'Fecha v&aacute;lida';
+		                    }
+		                    
+		                    var mensajeLongitud = "Longitud m&iacute;nima " + valMinimo + ", m&aacute;xima "+valMaximo;
+		                    if(tipoFormato == 'F') mensajeLongitud  = "";
+		                    
+		                    grid.getView().headerCt.child("#OTVALOR"+(index+1)).cellwriter = function(newValue, position){
+		                    	
+		                    	if(!Ext.isEmpty(newValue)){
+			                    	if(regexFormato.test(newValue)){
+			                    		if(String(newValue).length >= valMinimo && String(newValue).length <= valMaximo){
+			                    			return newValue;
+			                    		}else{
+			                    			if(tipoFormato == 'F') return newValue;
+			                    			
+				                    		setTimeout(function(){
+					                    			mensajeWarning("El valor ' "+ newValue +" ' debe ser de " + mensajeLongitud + " (Fila " + (position.row+1) + ", Columna " + record.get('DSATRIBU') + ") </br>&nbsp;",
+					                    				function(){
+					                    					position.focus();
+					                    				}
+					                    			);
+				                    		},200);
+				                    		return '';
+				                    	}
+			                    	}else{
+			                    		setTimeout(function(){
+			                    			mensajeWarning("El valor ' "+ newValue +" ' debe ser " + dsFormato + " (Fila " + (position.row+1) + ", Columna " + record.get('DSATRIBU') + ") </br>" + mensajeLongitud + "</br>&nbsp;",
+			                    				function(){
+			                    					position.focus();
+			                    				}
+			                    			);
+			                    		},200);
+			                    		return '';
+			                    	}
+		                    	}else{
+		                    		return newValue;
+		                    	}
+		                    	
+		                    }
+		                    
+		                    
 		                    grid.getView().headerCt.child("#OTVALOR"+(index+1)).setVisible(true);
 		                });
 		                
