@@ -105,6 +105,11 @@ Ext.onReady(function() {
 				,handler : _11_regresarMC
 			},
 			{
+				text     : 'Revisi&oacute;n de documentos'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/folder_table.png'
+				,handler : _11_revDocumentosWindow
+			},
+			{
 				text     : 'Rechazar Tr&aacute;mite'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
 				,handler : _11_rechazarTramiteSiniestro
@@ -113,11 +118,13 @@ Ext.onReady(function() {
 				text     : 'Turnar &Aacute;rea M&eacute;dica'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_turnarAreaMedica
+				,hidden:  _CDROL == _ROL_MEDICO
 			},
 			{
 				text     : 'Solicitar Pago'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/money_dollar.png'
-				//,handler : _11_regresarMC
+				,handler : _11_solicitarPago
+				,hidden:  _CDROL == _ROL_MEDICO
 			},
 			{
 				text     : 'Turnar Operador Reclamaci&oacute;n'
@@ -133,6 +140,7 @@ Ext.onReady(function() {
 				text     : 'Devolver'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/note_go.png'
 				,handler : _11_turnarDevolucionTramite
+				,hidden:  _CDROL == _ROL_MEDICO
 			}
 		]
 	}); 

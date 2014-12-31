@@ -6019,6 +6019,21 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
  	   	return SUCCESS;
     }
     
+    public String consultaDatosValidacionAjustadorMed(){
+    	logger.debug(" **** Entrando al metodo para obtener consultaDatosValidacionAjustadorMed ****");
+    	logger.debug(params);
+    	try {
+    		datosValidacion = siniestrosManager.getConsultaDatosValidacionAjustadorMed(params.get("ntramite"));
+    			logger.debug("###VALOR DE RESPUESTA ###");
+    			logger.debug(datosValidacion);
+ 			}catch( Exception e){
+ 				logger.error("Error al obtener las consultaDatosValidacionAjustadorMed",e);
+ 				return SUCCESS;
+ 			}
+ 	   	success = true;
+ 	   	return SUCCESS;
+    }
+    
     public String validaCdTipsitTramite(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
 	   	try {
