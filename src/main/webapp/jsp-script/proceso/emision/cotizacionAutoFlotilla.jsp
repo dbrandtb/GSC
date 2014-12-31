@@ -1003,6 +1003,7 @@ Ext.onReady(function()
             debug('combo cliente nuevo store load');
             _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
         });
+        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
         //cliente nuevo
         
         //renderers

@@ -2902,6 +2902,7 @@ Ext.onReady(function()
             debug('combo cliente nuevo store load');
             combcl.setValue('S');
         });
+        combcl.setValue('S');
         
         //modelo
         if(_0_smap1.cdtipsit+'x'=='ATx')

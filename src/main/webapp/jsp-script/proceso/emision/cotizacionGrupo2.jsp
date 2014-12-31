@@ -703,7 +703,7 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
                                 ,defaults : { style : 'margin:5px;' }
-                                ,hidden   : _p25_ntramite ? true : false
+                                ,hidden   : _p25_ntramite&&_p25_smap1.sincenso!='S' ? true : false
                                 ,items    :
                                 [
                                     {
@@ -732,7 +732,7 @@ Ext.onReady(function()
                                         ,fieldLabel : 'Censo de asegurados'
                                         ,name       : 'censo'
                                         ,buttonText : 'Examinar...'
-                                        ,allowBlank : _p25_ntramite ? true : false
+                                        ,allowBlank : _p25_ntramite&&_p25_smap1.sincenso!='S' ? true : false
                                         ,buttonOnly : false
                                         ,width      : 450
                                         ,cAccept    : ['xls','xlsx']
@@ -1179,6 +1179,16 @@ Ext.onReady(function()
     _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    try
+    {
+        if(_p25_ntramite&&_p25_smap1.sincenso!='S')
+        {
+            Ext.ComponentQuery.query('[text=Guardar sin censo]')[0].hide();
+        }
+    }
+    catch(e)
+    {}
     ////// loaders //////
 });
 
@@ -2167,14 +2177,28 @@ function _p25_setActiveResumen()
     debug('<_p25_setActiveResumen');
 }
 
-function _p25_generarTramiteClic(callback)
+function _p25_generarTramiteClic(callback,sincenso)
 {
-    debug('>_p25_generarTramiteClic');
+    debug('>_p25_generarTramiteClic',sincenso,'DUMMY');
     var valido = true;
     
     if(valido)
     {
+        //parche para sin censo>
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            _fieldByName('censo').allowBlank=true;
+        }
+        //<parche para sin censo
+        
         valido = _p25_tabConcepto().down('[xtype=form]').isValid();
+        
+        //parche para sin censo>
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            _fieldByName('censo').allowBlank=_p25_ntramite&&_p25_smap1.sincenso!='S' ? true : false;
+        }
+        //<parche para sin censo
         if(!valido)
         {
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p25_setActiveConcepto);
@@ -2237,110 +2261,126 @@ function _p25_generarTramiteClic(callback)
         var form=_p25_tabConcepto().down('[xtype=form]');
         form.setLoading(true);
         var timestamp = new Date().getTime();
-        form.submit(
+        
+        var micallback = function()
         {
-            params   :
+            var form=_p25_tabConcepto().down('[xtype=form]');
+            var conceptos = form.getValues();
+            conceptos['timestamp']       = timestamp;
+            conceptos['clasif']          = _p25_clasif;
+            conceptos['LINEA_EXTENDIDA'] = _p25_smap1.LINEA_EXTENDIDA;
+            conceptos['cdunieco']        = _p25_smap1.cdunieco;
+            conceptos['cdramo']          = _p25_smap1.cdramo;
+            conceptos['cdtipsit']        = _p25_smap1.cdtipsit;
+            conceptos['ntramiteVacio']   = _p25_ntramiteVacio ? _p25_ntramiteVacio : ''
+            conceptos['sincenso']        = !Ext.isEmpty(sincenso)&&sincenso==true?'S':'N';
+            conceptos['censoAtrasado']   = !Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S'?'S':'N';
+            var grupos = [];
+            _p25_storeGrupos.each(function(record)
             {
-                'smap1.timestamp' : timestamp
-                ,'smap1.ntramite' : _p25_ntramite ? _p25_ntramite : ''
-            }
-            ,success : function()
+                var grupo = record.data;
+                grupo['tvalogars']=record.tvalogars;
+                grupos.push(grupo);
+            });
+            Ext.Ajax.request(
             {
-                var conceptos = form.getValues();
-                conceptos['timestamp']       = timestamp;
-                conceptos['clasif']          = _p25_clasif;
-                conceptos['LINEA_EXTENDIDA'] = _p25_smap1.LINEA_EXTENDIDA;
-                conceptos['cdunieco']        = _p25_smap1.cdunieco;
-                conceptos['cdramo']          = _p25_smap1.cdramo;
-                conceptos['cdtipsit']        = _p25_smap1.cdtipsit;
-                conceptos['ntramiteVacio']   = _p25_ntramiteVacio ? _p25_ntramiteVacio : ''
-                var grupos = [];
-                _p25_storeGrupos.each(function(record)
+                url       : _p25_urlGenerarTramiteGrupo
+                ,jsonData :
                 {
-                    var grupo = record.data;
-                    grupo['tvalogars']=record.tvalogars;
-                    grupos.push(grupo);
-                });
-                Ext.Ajax.request(
+                    smap1   : conceptos
+                    ,olist1 : grupos
+                }
+                ,success  : function(response)
                 {
-                    url       : _p25_urlGenerarTramiteGrupo
-                    ,jsonData :
+                    form.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('json response:',json);
+                    if(json.exito)
                     {
-                        smap1   : conceptos
-                        ,olist1 : grupos
-                    }
-                    ,success  : function(response)
-                    {
-                        form.setLoading(false);
-                        var json=Ext.decode(response.responseText);
-                        debug('json response:',json);
-                        if(json.exito)
+                        if(_p25_ntramite||_p25_ntramiteVacio)
                         {
-                            if(_p25_ntramite||_p25_ntramiteVacio)
+                            if(callback)
                             {
-                                if(callback)
-                                {
-                                    callback(json);
-                                }
-                                else
-                                {
-                                    mensajeError(json.respuesta+'<br/>Se guard&oacute; la informaci&oacute;n pero no hay callback');
-                                }
+                                callback(json);
                             }
                             else
                             {
-                                _p25_fieldNmpoliza().setValue(json.smap1.nmpoliza);
-                                _p25_fieldNtramite().setValue(json.smap1.ntramite);
-                                _p25_tabpanel().setDisabled(true);
-                                
-                                mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
-                                {
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-                                    {
-                                        width        : 600
-                                        ,height      : 400
-                                        ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
-                                        ,closable    : false
-                                        ,modal       : true
-                                        ,loadingMask : true
-                                        ,loader      :
-                                        {
-                                            url       : _p25_urlVentanaDocumentos
-                                            ,scripts  : true
-                                            ,autoLoad : true
-                                            ,params   :
-                                            {
-                                                'smap1.cdunieco'  : json.smap1.cdunieco
-                                                ,'smap1.cdramo'   : json.smap1.cdramo
-                                                ,'smap1.estado'   : 'W'
-                                                ,'smap1.nmpoliza' : '0'
-                                                ,'smap1.nmsuplem' : '0'
-                                                ,'smap1.ntramite' : json.smap1.ntramite
-                                                ,'smap1.tipomov'  : '0'
-                                            }
-                                        }
-                                    }).show());
-                                });
+                                mensajeError(json.respuesta+'<br/>Se guard&oacute; la informaci&oacute;n pero no hay callback');
                             }
                         }
                         else
                         {
-                            mensajeError(json.respuesta,function(){});
+                            _p25_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                            _p25_fieldNtramite().setValue(json.smap1.ntramite);
+                            _p25_tabpanel().setDisabled(true);
+                            
+                            mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                            {
+                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                {
+                                    width        : 600
+                                    ,height      : 400
+                                    ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                    ,closable    : false
+                                    ,modal       : true
+                                    ,loadingMask : true
+                                    ,loader      :
+                                    {
+                                        url       : _p25_urlVentanaDocumentos
+                                        ,scripts  : true
+                                        ,autoLoad : true
+                                        ,params   :
+                                        {
+                                            'smap1.cdunieco'  : json.smap1.cdunieco
+                                            ,'smap1.cdramo'   : json.smap1.cdramo
+                                            ,'smap1.estado'   : 'W'
+                                            ,'smap1.nmpoliza' : '0'
+                                            ,'smap1.nmsuplem' : '0'
+                                            ,'smap1.ntramite' : json.smap1.ntramite
+                                            ,'smap1.tipomov'  : '0'
+                                        }
+                                    }
+                                }).show());
+                            });
                         }
                     }
-                    ,failure  : function()
+                    else
                     {
-                        form.setLoading(false);
-                        errorComunicacion();
+                        mensajeError(json.respuesta,function(){});
                     }
-                });
-            }
-            ,failure : function()
+                }
+                ,failure  : function()
+                {
+                    form.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+        
+        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        {
+            micallback();
+        }
+        else
+        {
+            form.submit(
             {
-                form.setLoading(false);
-                errorComunicacion();
-            }
-        });
+                params   :
+                {
+                    'smap1.timestamp' : timestamp
+                    ,'smap1.ntramite' : _p25_ntramite&&_p25_smap1.sincenso!='S' ? _p25_ntramite : ''
+                }
+                ,success : function()
+                {
+                    micallback();
+                }
+                ,failure : function()
+                {
+                    form.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
     }
     
     debug('<_p25_generarTramiteClic');

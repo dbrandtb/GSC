@@ -540,107 +540,114 @@ public class GeneradorCampos
             ///////////////////
             ////// store //////
             //////       //////
-            Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
-            item.add(store);
-            store.add("model","Generic");
-            
-            ////// autoLoad //////
-            boolean autoLoad = true;
-            if(esHijo||esAutocompleter)
+            if(comp.getCatalogo().indexOf("SINO")>0)
             {
-            	autoLoad=false;
+            	item.add(new Item("store","_g_storeSino").setQuotes(""));
             }
-            store.add("autoLoad",autoLoad);
-            ////// autoLoad //////
-            
-            ///////////////////
-            ////// proxy //////
-            Item proxy=new Item("proxy",null,Item.OBJ);
-            store.add(proxy);
-            proxy.add("type","ajax");
-            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
-            proxy.add(
-            		Item.crear("reader", null, Item.OBJ)
-            		.add("type","json")
-            		.add("root","lista")
-            		.add("rootProperty","lista")
-            		);
-            
-            ////// extraParams //////
-            if(comp.getType()==ComponenteVO.TIPO_TATRISIT)
+            else
             {
-            	proxy.add(
-                        Item.crear("extraParams" , null, Item.OBJ)
-                        .add("'params.cdatribu'" , cdatribu)
-                        .add("'params.cdtipsit'" , cdtipsit)
-                        .add("catalogo"          , Catalogos.TATRISIT.getCdTabla())
-                        );
-            }
-            else if(comp.getType()==ComponenteVO.TIPO_TATRISIN)
-            {
-            	proxy.add(
-                        Item.crear("extraParams" , null, Item.OBJ)
-                        .add("'params.cdatribu'" , cdatribu)
-                        .add("'params.cdtipsit'" , "SL")
-                        .add("catalogo"          , Catalogos.TATRISIN.getCdTabla())
-                        );
-            }
-            else if(comp.getType()==ComponenteVO.TIPO_TATRIPOL)
-            {
-            	proxy.add(
-                        Item.crear("extraParams" , null, Item.OBJ)
-                        .add("'params.cdatribu'" , cdatribu)
-                        .add("'params.cdramo'"   , Ramo.SALUD_VITAL.getCdramo())
-                        .add("catalogo"          , Catalogos.TATRIPOL.getCdTabla())
-                        );
-            }
-            else if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
-            {
-            	proxy.add(
-                        Item.crear("extraParams" , null, Item.OBJ)
-                        .add("'params.cdatribu'" , cdatribu)
-                        .add("'params.cdgarant'" , cdgarant)
-                        .add("'params.cdramo'" ,   cdramo==null?Ramo.SALUD_VITAL.getCdramo():cdramo)
-                        .add("'params.cdtipsit'" , cdtipsit==null?TipoSituacion.SALUD_VITAL.getCdtipsit():cdtipsit)
-                        .add("catalogo"          , Catalogos.TATRIGAR.getCdTabla())
-                        );
-            }
-            else if(comp.getType()==ComponenteVO.TIPO_TATRIPER)
-            {
-            	proxy.add(
-                        Item.crear("extraParams", null, Item.OBJ)
-                        .add("'params.cdramo'"  , cdramo)
-                        .add("'params.cdrol'"   , cdrol)
-                        .add("'params.cdatribu'", cdatribu)
-                        .add("'params.cdtipsit'", cdtipsit)
-                        .add("catalogo"         , Catalogos.TATRIPER.getCdTabla())
-                        );
-            }
-            else if(comp.getType()==ComponenteVO.TIPO_GENERICO)
-            {
-            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
-            			.add("catalogo",comp.getCatalogo());
-            	if(StringUtils.isNotBlank(comp.getParamName1()))
-            	{
-            		extraParams.add(Item.crear(comp.getParamName1(),comp.getParamValue1()).setQuotes(""));
-            	}
-            	if(StringUtils.isNotBlank(comp.getParamName2()))
-            	{
-            		extraParams.add(Item.crear(comp.getParamName2(),comp.getParamValue2()).setQuotes(""));
-            	}
-            	if(StringUtils.isNotBlank(comp.getParamName3()))
-            	{
-            		extraParams.add(Item.crear(comp.getParamName3(),comp.getParamValue3()).setQuotes(""));
-            	}
-            	if(StringUtils.isNotBlank(comp.getParamName4()))
-            	{
-            		extraParams.add(Item.crear(comp.getParamName4(),comp.getParamValue4()).setQuotes(""));
-            	}
-            	if(StringUtils.isNotBlank(comp.getParamName5()))
-            	{
-            		extraParams.add(Item.crear(comp.getParamName5(),comp.getParamValue5()).setQuotes(""));
-            	}
-            	proxy.add(extraParams);
+	            Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
+	            item.add(store);
+	            store.add("model","Generic");
+	            
+	            ////// autoLoad //////
+	            boolean autoLoad = true;
+	            if(esHijo||esAutocompleter)
+	            {
+	            	autoLoad=false;
+	            }
+	            store.add("autoLoad",autoLoad);
+	            ////// autoLoad //////
+	            
+	            ///////////////////
+	            ////// proxy //////
+	            Item proxy=new Item("proxy",null,Item.OBJ);
+	            store.add(proxy);
+	            proxy.add("type","ajax");
+	            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
+	            proxy.add(
+	            		Item.crear("reader", null, Item.OBJ)
+	            		.add("type","json")
+	            		.add("root","lista")
+	            		.add("rootProperty","lista")
+	            		);
+	            
+	            ////// extraParams //////
+	            if(comp.getType()==ComponenteVO.TIPO_TATRISIT)
+	            {
+	            	proxy.add(
+	                        Item.crear("extraParams" , null, Item.OBJ)
+	                        .add("'params.cdatribu'" , cdatribu)
+	                        .add("'params.cdtipsit'" , cdtipsit)
+	                        .add("catalogo"          , Catalogos.TATRISIT.getCdTabla())
+	                        );
+	            }
+	            else if(comp.getType()==ComponenteVO.TIPO_TATRISIN)
+	            {
+	            	proxy.add(
+	                        Item.crear("extraParams" , null, Item.OBJ)
+	                        .add("'params.cdatribu'" , cdatribu)
+	                        .add("'params.cdtipsit'" , "SL")
+	                        .add("catalogo"          , Catalogos.TATRISIN.getCdTabla())
+	                        );
+	            }
+	            else if(comp.getType()==ComponenteVO.TIPO_TATRIPOL)
+	            {
+	            	proxy.add(
+	                        Item.crear("extraParams" , null, Item.OBJ)
+	                        .add("'params.cdatribu'" , cdatribu)
+	                        .add("'params.cdramo'"   , Ramo.SALUD_VITAL.getCdramo())
+	                        .add("catalogo"          , Catalogos.TATRIPOL.getCdTabla())
+	                        );
+	            }
+	            else if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
+	            {
+	            	proxy.add(
+	                        Item.crear("extraParams" , null, Item.OBJ)
+	                        .add("'params.cdatribu'" , cdatribu)
+	                        .add("'params.cdgarant'" , cdgarant)
+	                        .add("'params.cdramo'" ,   cdramo==null?Ramo.SALUD_VITAL.getCdramo():cdramo)
+	                        .add("'params.cdtipsit'" , cdtipsit==null?TipoSituacion.SALUD_VITAL.getCdtipsit():cdtipsit)
+	                        .add("catalogo"          , Catalogos.TATRIGAR.getCdTabla())
+	                        );
+	            }
+	            else if(comp.getType()==ComponenteVO.TIPO_TATRIPER)
+	            {
+	            	proxy.add(
+	                        Item.crear("extraParams", null, Item.OBJ)
+	                        .add("'params.cdramo'"  , cdramo)
+	                        .add("'params.cdrol'"   , cdrol)
+	                        .add("'params.cdatribu'", cdatribu)
+	                        .add("'params.cdtipsit'", cdtipsit)
+	                        .add("catalogo"         , Catalogos.TATRIPER.getCdTabla())
+	                        );
+	            }
+	            else if(comp.getType()==ComponenteVO.TIPO_GENERICO)
+	            {
+	            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
+	            			.add("catalogo",comp.getCatalogo());
+	            	if(StringUtils.isNotBlank(comp.getParamName1()))
+	            	{
+	            		extraParams.add(Item.crear(comp.getParamName1(),comp.getParamValue1()).setQuotes(""));
+	            	}
+	            	if(StringUtils.isNotBlank(comp.getParamName2()))
+	            	{
+	            		extraParams.add(Item.crear(comp.getParamName2(),comp.getParamValue2()).setQuotes(""));
+	            	}
+	            	if(StringUtils.isNotBlank(comp.getParamName3()))
+	            	{
+	            		extraParams.add(Item.crear(comp.getParamName3(),comp.getParamValue3()).setQuotes(""));
+	            	}
+	            	if(StringUtils.isNotBlank(comp.getParamName4()))
+	            	{
+	            		extraParams.add(Item.crear(comp.getParamName4(),comp.getParamValue4()).setQuotes(""));
+	            	}
+	            	if(StringUtils.isNotBlank(comp.getParamName5()))
+	            	{
+	            		extraParams.add(Item.crear(comp.getParamName5(),comp.getParamValue5()).setQuotes(""));
+	            	}
+	            	proxy.add(extraParams);
+	            }
             }
             ////// extraParams //////
             

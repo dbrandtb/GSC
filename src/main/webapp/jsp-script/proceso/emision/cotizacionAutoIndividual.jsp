@@ -471,6 +471,7 @@ Ext.onReady(function()
             debug('combo cliente nuevo store load');
             combcl.setValue('S');
         });
+        combcl.setValue('S');
 	    //cliente nuevo
 	    
 	    //version
