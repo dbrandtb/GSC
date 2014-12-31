@@ -1332,7 +1332,7 @@ public String generarSiniestroSinAutorizacion()
            UserVO usuario=(UserVO)session.get("USUARIO");
            //urlContrareciboSiniestro
            String reporteSeleccion = null;
-           if(paramsO.get("pv_cdramo_i") == "4"){
+           if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
         	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
            }else{
         	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
