@@ -320,6 +320,8 @@ public interface CotizacionManager
 			,String nmnumeroCli
 			,String nmnumintCli
 			,String cdelemen
+			,boolean sincenso
+			,boolean censoAtrasado
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();

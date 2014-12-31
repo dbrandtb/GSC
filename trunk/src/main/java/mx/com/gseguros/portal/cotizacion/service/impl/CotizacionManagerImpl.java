@@ -2117,6 +2117,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmnumeroCli
 			,String nmnumintCli
 			,String cdelemen
+			,boolean sincenso
+			,boolean censoAtrasado
 			)
 	{
 		logger.info(
@@ -2157,6 +2159,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ nmnumeroCli=")            .append(nmnumeroCli)
 				.append("\n@@@@@@ nmnumintCli=")            .append(nmnumintCli)
 				.append("\n@@@@@@ cdelemen=")               .append(cdelemen)
+				.append("\n@@@@@@ sincenso=")               .append(sincenso)
+				.append("\n@@@@@@ censoAtrasado=")          .append(censoAtrasado)
 				.toString()
 				);
 		
@@ -2308,7 +2312,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso     = null;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado)&&!sincenso)
 		{
 			FileInputStream input       = null;
 			XSSFSheet       sheet       = null;
@@ -2982,13 +2986,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//pl censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			String nombreProcedureCenso = null;
-			String tipoCensoParam       = "INDIVIDUAL";
-			if(!esCensoSolo)
+			String tipoCensoParam       = "AGRUPADO";
+			if(esCensoSolo||sincenso)
 			{
-				tipoCensoParam = "AGRUPADO";
+				tipoCensoParam = "INDIVIDUAL";
 			}
 			
 			//obtener el PL
@@ -3032,13 +3036,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 			//ejecutar el PL
 			if(resp.isExito())
 			{
+				//contar grupos
+				int nGru=grupos.size();
+				
 				try
 				{
 					cotizacionDAO.procesarCenso(
 							nombreProcedureCenso
 							,cdusuari
 							,cdsisrol
-							,nombreCenso
+							,sincenso?"layout_censo"+nGru+".txt":nombreCenso
 							,cdunieco
 							,cdramo
 							,"W"
@@ -3088,6 +3095,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdusuari
 					,cdelemen
 					,false //reinsertarContratante
+					,sincenso
+					,censoAtrasado
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3134,6 +3143,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdusuari
 			,String cdelemen
 			,boolean reinsertaContratante
+			,boolean sincenso
+			,boolean censoAtrasado
 			)
 	{
 		logger.info(
@@ -3164,6 +3175,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
 				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
 				.append("\n@@@@@@ reinsertaContratante=").append(reinsertaContratante)
+				.append("\n@@@@@@ sincenso=")            .append(sincenso)
+				.append("\n@@@@@@ censoAtrasado=")       .append(censoAtrasado)
 				.toString()
 				);
 		
@@ -3217,7 +3230,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
@@ -3335,7 +3348,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					swexiper = "N";
 				}
 				
-				if(swexiper.equals("N")||reinsertaContratante)
+				if(swexiper.equals("N")||reinsertaContratante||censoAtrasado)
 				{
 					personasDAO.movimientosMpersona(
 							cdpersonCli
@@ -3406,14 +3419,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//tramite
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
-				if(!hayTramiteVacio)//es agente
+				if(!hayTramite&&!hayTramiteVacio)//es agente
 				{
 					Map<String,String>otvalorMesaControl=new HashMap<String,String>();
-					otvalorMesaControl.put("otvalor01",clasif);
+					otvalorMesaControl.put("otvalor01" , clasif);
+					otvalorMesaControl.put("otvalor02" , sincenso ? "S" : "N");
 					ntramite = mesaControlDAO.movimientoMesaControl(
 							cdunieco
 							,cdramo
@@ -3446,12 +3460,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 				}
 				else
 				{
-					mesaControlDAO.actualizarNmsoliciTramite(ntramiteVacio, nmpoliza);
+					String ntramiteActualiza = ntramite;
+					if(hayTramiteVacio)
+					{
+						ntramiteActualiza = ntramiteVacio;
+					}
+					
+					mesaControlDAO.actualizarNmsoliciTramite(ntramiteActualiza, nmpoliza);
 					
 					Map<String,String>valoresTramite=new HashMap<String,String>();
 					valoresTramite.put("otvalor01" , clasif);
+					valoresTramite.put("otvalor02" , sincenso ? "S" : "N");
 					mesaControlDAO.actualizaValoresTramite(
-							ntramiteVacio
+							ntramiteActualiza
 							,null    //cdramo
 							,null    //cdtipsit
 							,null    //cdsucadm
@@ -4630,7 +4651,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdagente
 					,cdusuari
 					,cdelemen
-					,true);
+					,true
+					,false
+					,false
+					);
 		}
 		
 		logger.info(

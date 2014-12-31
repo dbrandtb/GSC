@@ -4271,6 +4271,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmnumintCli             = null;
 		String cdelemen                = null;
 		
+		boolean sincenso      = false;
+		boolean censoAtrasado = false;
+		
 		//datos de entrada
 		try
 		{
@@ -4321,6 +4324,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			userServerLayouts       = getText("user.server.layouts");
 			passServerLayouts       = getText("pass.server.layouts");
 			directorioServerLayouts = getText("directorio.server.layouts");
+			
+			String sincensoS      = smap1.get("sincenso");
+			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
+			String censoAtrasadoS = smap1.get("censoAtrasado");
+			censoAtrasado         = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4377,6 +4385,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmnumeroCli
 					,nmnumintCli
 					,cdelemen
+					,sincenso
+					,censoAtrasado
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
