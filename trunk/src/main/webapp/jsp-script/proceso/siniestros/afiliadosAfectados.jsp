@@ -147,17 +147,17 @@
 						}
 					]
 				},{
-					text	:'Reclamaci&oacute;n',		dataIndex	:'reclamacion',		width	: 100
+					text	:'Reclamaci&oacute;n',		dataIndex	:'reclamacion'
 				},{
 					text	:'Factura',					dataIndex	:'factura'
 				},{
 					text	:'Fecha Factura',			dataIndex	:'fechaFactura',	format	:'d/m/Y',			xtype	:'datecolumn'
 				},{
-					text	:'Cobertura',				dataIndex	:'descCdgarant',	width	: 300
+					text	:'Cobertura',				dataIndex	:'descCdgarant'
 				},{
-					text	:'Subcobertura',			dataIndex	:'dssubgar',		width	: 300
+					text	:'Subcobertura',			dataIndex	:'dssubgar'
 				},{
-					text	:'Proveedor',				dataIndex	:'nomProveedor',	width	: 350
+					text	:'Proveedor',				dataIndex	:'nomProveedor'
 				},{
 					text	:'Moneda',					dataIndex	:'descMoneda'
 				},{
