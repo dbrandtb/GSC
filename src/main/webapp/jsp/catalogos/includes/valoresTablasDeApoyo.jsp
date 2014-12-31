@@ -11,6 +11,8 @@ var _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES = '<s:url namespace="/catalogos" ac
 var _URL_GuardaValoresTablaApoyo = '<s:url namespace="/catalogos" action="guardaValoresTablaApoyo" />';
 var _URL_CONSULTA_VALORES_TABLA_UNA_CLAVE = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo1clave" />';
 
+var _URL_Carga_Masiva = '<s:url namespace="/cargamasiva" action="invocaCargaMasiva" />';
+
 var _NMTABLA = '<s:property value="params.nmtabla" />';
 var _CDTABLA = '<s:property value="params.cdtabla" />';
 var _DSTABLA = '<s:property value="params.dstabla" />';
@@ -603,7 +605,148 @@ Ext.onReady(function() {
 						    				});
 						    			}
 						        	}
-						        }
+						        },{
+							    	text : 'Carga Masiva',
+							    	tooltip: 'Carga Masiva de la tabla, agrega sin eliminar los registros existentes.',
+							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
+							    	handler: function(btn){
+							    			
+						    			var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
+							            {
+							                title       : 'Subir Archivo de Carga Masiva'
+							                ,closable    : false
+							                ,modal       : true
+							                ,width       : 500
+							                //,height   : 700
+							                ,bodyPadding : 5
+							                ,items       :
+							                [
+							                    panelSeleccionDocumento= Ext.create('Ext.form.Panel',
+							                    {
+							                        border       : 0
+							                        ,url         : _URL_Carga_Masiva
+							                        ,timeout     : 600
+							                        ,buttonAlign : 'center'
+							                        ,items       :
+							                        [
+							                            {
+							                                xtype       : 'filefield'
+							                                ,fieldLabel : 'Documento'
+							                                ,buttonText : 'Examinar...'
+							                                ,buttonOnly : false
+							                                ,width      : 450
+							                                ,name       : 'file'
+							                                ,cAccept    : ['xls','xlsx']
+							                                ,listeners  :
+							                                {
+							                                    change : function(me)
+							                                    {
+							                                        var indexofPeriod = me.getValue().lastIndexOf("."),
+							                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+							                                        if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+							                                        {
+							                                            Ext.MessageBox.show(
+							                                            {
+							                                                title   : 'Error de tipo de archivo',
+							                                                msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+							                                                buttons : Ext.Msg.OK,
+							                                                icon    : Ext.Msg.WARNING
+							                                            });
+							                                            me.reset();
+							                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(true);
+							                                        }
+							                                        else
+							                                        {
+							                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+							                                        }
+							                                    }
+							                                }
+							                            }
+							                        ]
+							                        ,buttons     :
+							                        [
+							                            {
+							                                id        : '_p22_botGuaDoc'
+							                                ,text     : 'Agregar'
+							                                ,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
+							                                ,disabled : true
+							                                ,handler  : function (button,e)
+							                                {
+							                                    button.setDisabled(true);
+							                                    Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
+							                                    
+							                                    button.up().up().getForm().submit(
+							                                    {
+							                                        //standardSubmit : true
+							                                        params        :
+							                                        {
+							                                            'params.pi_nmtabla': _NMTABLA
+							                                            ,'params.tipotabla': _TIPOTABLA
+							                                        },
+							                                        waitMsg: 'Ejecutando Carga Masiva...',
+												                    success: function(fp, o) {
+												                    	_p22_windowAgregarDocu.destroy();
+												                        mensajeCorrecto('Exito', 'La carga masiva se ha ejecutado correctamente.');
+												                    },
+												                    failure: function(form, action) {
+												                    	
+												                    	Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+												                    	Ext.getCmp('_p22_BotCanDoc').setDisabled(false);
+												                    	
+												                		switch (action.failureType) {
+												                            case Ext.form.action.Action.CONNECT_FAILURE:
+												                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+												                                break;
+												                            case Ext.form.action.Action.SERVER_INVALID:
+												                            case Ext.form.action.Action.LOAD_FAILURE:
+												                            	 var msgServer = Ext.isEmpty(action.result.mensaje) ? 'Error al realizar la carga masiva, consulte a soporte' : action.result.mensaje;
+												                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+												                                break;
+												                        }
+												        			}
+							                                    });
+							                                }
+							                            }
+							                            ,{
+							                                id       : '_p22_BotCanDoc'
+							                                ,text    : 'Cancelar'
+							                                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+							                                ,handler : function (button,e)
+							                                {
+							                                    _p22_windowAgregarDocu.destroy();
+							                                }
+							                            }
+							                        ]
+							                    })
+							                ]
+							            }).show();
+							            centrarVentanaInterna(_p22_windowAgregarDocu);
+							    			
+//							    			var form = panelCobranza.getForm();
+//							                form.submit({
+//							                    url: _UrlSubirArchivoCobranza,
+//							                    waitMsg: 'Subiendo Archivo...',
+//							                    success: function(fp, o) {
+//							                        mensajeCorrecto('Exito', 'La cobranza se ha cargado correctamente.');
+//							                        btn.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
+//							                        	element.enable();
+//							    	        		});
+//							                    },
+//							                    failure: function(form, action) {
+//							                		switch (action.failureType) {
+//							                            case Ext.form.action.Action.CONNECT_FAILURE:
+//							                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+//							                                break;
+//							                            case Ext.form.action.Action.SERVER_INVALID:
+//							                            case Ext.form.action.Action.LOAD_FAILURE:
+//							                            	 var msgServer = Ext.isEmpty(action.result.mensajeRespuesta) ? 'Error interno del servidor, consulte a soporte' : action.result.mensajeRespuesta;
+//							                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+//							                                break;
+//							                        }
+//							        			}
+//							                });
+							    	}
+							    }
 						      ]
 		});
     

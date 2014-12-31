@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.portal.general.model.CampoVO;
-import mx.com.gseguros.portal.general.model.FormatoArchivoCSV;
+//import mx.com.gseguros.portal.general.model.CampoVO;
+//import mx.com.gseguros.portal.general.model.FormatoArchivoCSV;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
-import mx.com.gseguros.portal.general.service.impl.ExcelValidacionesFormatoStrategyImpl;
-import mx.com.gseguros.utils.ValidadorFormatoContext;
+import mx.com.gseguros.utils.FTPSUtils;
+//import mx.com.gseguros.portal.general.service.impl.ExcelValidacionesFormatoStrategyImpl;
+//import mx.com.gseguros.utils.ValidadorFormatoContext;
 import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -45,8 +46,14 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	
 	private String mensaje;
 	
-	@Autowired
-	private ValidadorFormatoContext validadorFormatoContext;
+	private File file;
+    private String fileFileName;
+    private String fileContentType;
+    
+    private boolean success;
+	
+//	@Autowired
+//	private ValidadorFormatoContext validadorFormatoContext;
 	
 	
 	@Action(value="invocaCargaMasiva",
@@ -54,80 +61,37 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	)
 	public String invocaCargaMasiva() throws Exception {
 		
+		logger.debug(">>>>>  Parametros para la carga masiva de Tablas de Apoyo: " + params);
+		
 		Integer tipoTabla = Integer.parseInt(params.get("tipotabla"));//5;//Tabla de 1 o 5 claves
 		
+		try{
+        	success = FTPSUtils.upload(
+        			this.getText("dominio.server.layouts"), 
+        			this.getText("user.server.layouts"), 
+        			this.getText("pass.server.layouts"), 
+        			file.getAbsolutePath(),
+        			this.getText("directorio.server.layouts")+"/"+fileFileName);
+        	
+        	if(!success) {
+        		mensaje = "Error al subir archivo.";
+        		return SUCCESS;
+        	}
+        }catch(Exception ex) {
+        	logger.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts"), ex);
+        	mensaje = "Error al subir archivo.";
+        	success= false;
+        	return SUCCESS;
+        }
+		
 		// Archivo a validar:
-		String ruta = params.get("ruta");//"C:\\Users\\Ricardo\\Desktop\\Tablas de apoyo\\3737_ok.xlsx";
-		File archivo = new File(ruta);
+		//String ruta = params.get("ruta");//"C:\\Users\\Ricardo\\Desktop\\Tablas de apoyo\\3737_ok.xlsx";
+		//File archivo = new File(ruta);
 		
-		// Formato del archivo (para tabla de 1 o 5 claves):		
-		List<CampoVO> campos = new ArrayList<CampoVO>();
-		for (int i = 0, totalClaves = tipoTabla; i < totalClaves; i++) {
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, null, null, null, true)); 
-		}
-		
-		logger.debug("Se obtienen claves...");
-		
-		logger.debug("catalogosManager:"+ catalogosManager);
-		logger.debug("params:"+params);
-		
-		try {
-			List<Map<String, String>> claves = catalogosManager.obtieneClavesTablaApoyo(params);
-			for (Map<String, String> cve : claves) {
-				campos.set(new Integer(cve.get("NUMCLAVE"))-1, 
-						new CampoVO(
-								cve.get("SWFORMA1"), 
-								null, 
-								NumberUtils.createInteger(cve.get("NMLMIN1")), 
-								NumberUtils.createInteger(cve.get("NMLMAX1")), 
-								false));
-			}
-		} catch (Exception e) {
-			logger.error("Las claves no están correctamente parametrizadas", e);
-		}
-		
-		FormatoArchivoCSV formatoArchivoCSV = new FormatoArchivoCSV(campos);
-		//Archivo separado por un caracter
-		formatoArchivoCSV.setNombreCompleto("C:\\Users\\Ricardo\\Desktop\\conversion.txt");
-		formatoArchivoCSV.setSeparador("|");
-		
-		//logger.debug("campos:" + campos);
-		logger.debug("Se validan campos de excel...");
-		
-		ValidadorFormatoContext validadorFormatoContext = new ValidadorFormatoContext(new ExcelValidacionesFormatoStrategyImpl());
-		
-		//TODO: agregar fecha como nombre de archivo
-		String nombreCompletoArchivoErrores = getText("ruta.documentos.temporal") + (File.separator) + "conversion" + ".csv";
-		
-		//File file = validadorFormato.ejecutaValidacionesFormato(archivo, new FormatoArchivoVO(campos), nombreCompletoArchivoErrores);
-		File file = validadorFormatoContext.ejecutaValidacionesFormato(archivo, formatoArchivoCSV, nombreCompletoArchivoErrores, "EXCEL");
-		
-		/*
-		ProcesadorArchivos procArchivos = new ProcesadorArchivos(new ProcesamientoArchivoTabla5Claves("C:\\Users\\Ricardo\\Desktop\\conversion.txt", 4444, ProcesamientoArchivoTabla5Claves.TipoTabla.CINCO));
-		
-		File archErr2 = procArchivos.ejecutaProcesamientoArchivo(archivo);
-		*/
-		
-		logger.debug("file:::" + file);
-		if(file != null && file.length() > 0) {
-			mensaje = "Archivo tiene errores";
-		} else {
-			mensaje = "Archivo sin errores";
-		}
-		
-		logger.debug(mensaje);
-		
-		/*
-		logger.debug("Archivo de errores de guardado:" + archErr2);
-		if(archErr2 != null && archErr2.length() > 0) {
-			logger.debug("Guardado con errores");
-		} else {
-			logger.debug("Guardado correcto");
-		}
-		*/
 		
 		logger.debug("Fin del proceso");
 		
+		success = true;
 		return SUCCESS;
 	}
 	
@@ -163,6 +127,46 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+
+	public File getFile() {
+		return file;
+	}
+
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+
+	public String getFileFileName() {
+		return fileFileName;
+	}
+
+
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+
+
+	public String getFileContentType() {
+		return fileContentType;
+	}
+
+
+	public void setFileContentType(String fileContentType) {
+		this.fileContentType = fileContentType;
+	}
+
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	
 }
