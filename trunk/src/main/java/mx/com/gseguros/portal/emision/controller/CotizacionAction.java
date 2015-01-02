@@ -4585,6 +4585,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(exito)
 				{
+					int nSituac = 0;
+					
 					if(esCensoSolo)
 					{
 						//Iterate through each rows one by one
@@ -4600,7 +4602,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			                Date auxDate = null;
 			                Cell auxCell = null;
 			                
-			                fila = fila + 1;
+			                fila    = fila + 1;
+			                nSituac = nSituac + 1;
 			                
 			                if(exito)
 			                {
@@ -4902,6 +4905,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			                	{
 					                logger.info("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
 					                output.print(String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+					                
+					                nSituac = nSituac + (int)row.getCell(2).getNumericCellValue();
 				                }
 				                catch(Exception ex)
 				                {
@@ -4939,6 +4944,26 @@ public class CotizacionAction extends PrincipalCoreAction
 			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								+ "\n##############################################"
 								);
+					}
+					
+					if(exito)
+					{
+						if(clasif.equals(LINEA)&&nSituac>49)
+						{
+							long timestamp  = System.currentTimeMillis();
+							exito           = false;
+							respuesta       = Utilerias.join("No se permiten mas de 49 asegurados #",timestamp);
+							respuestaOculta = respuesta;
+							logger.error(respuesta);
+						}
+						else if(!clasif.equals(LINEA)&&nSituac<50)
+						{
+							long timestamp  = System.currentTimeMillis();
+							exito           = false;
+							respuesta       = Utilerias.join("No se permiten menos de 50 asegurados #",timestamp);
+							respuestaOculta = respuesta;
+							logger.error(respuesta);
+						}
 					}
 					
 					if(exito)
