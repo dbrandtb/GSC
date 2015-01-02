@@ -101,7 +101,7 @@ Ext.define("Ext.locale.es.picker.Date", {
     disabledDatesText: "",
     nextText: 'Mes Siguiente (Control+Right)',
     prevText: 'Mes Anterior (Control+Left)',
-    monthYearText: 'Seleccione un mes (Control+Up/Down para desplazar el año)',
+    monthYearText: 'Seleccione un mes (Control+Up/Down para desplazar el a&ntilde;o)',
     todayTip: "{0} (Barra espaciadora)",
     format: "d/m/Y",
     startDay: 1
@@ -133,8 +133,8 @@ Ext.define("Ext.locale.es.form.field.Base", {
 
 Ext.define("Ext.locale.es.form.field.Text", {
     override: "Ext.form.field.Text",
-    minLengthText: "El tamaño m&iacute;nimo para este campo es de {0}",
-    maxLengthText: "El tamaño m&aacute;ximo para este campo es de {0}",
+    minLengthText: "El tama&ntilde;o m&iacute;nimo para este campo es de {0}",
+    maxLengthText: "El tama&ntilde;o m&aacute;ximo para este campo es de {0}",
     blankText: "Este campo es obligatorio",
     regexText: "",
     emptyText: null
@@ -205,12 +205,12 @@ Ext.define("Ext.locale.es.form.field.HtmlEditor", {
             },
             increasefontsize: {
                 title: 'Aumentar la fuente',
-                text: 'Aumenta el tamaño de la fuente',
+                text: 'Aumenta el tama&ntilde;o de la fuente',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             decreasefontsize: {
                 title: 'Reducir la fuente',
-                text: 'Reduce el tamaño de la fuente.',
+                text: 'Reduce el tama&ntilde;o de la fuente.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             backcolor: {
@@ -239,8 +239,8 @@ Ext.define("Ext.locale.es.form.field.HtmlEditor", {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             insertunorderedlist: {
-                title: 'Lista de viñetas',
-                text: 'Inicia una lista con viñetas.',
+                title: 'Lista de vi&ntilde;etas',
+                text: 'Inicia una lista con vi&ntilde;etas.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             insertorderedlist: {
