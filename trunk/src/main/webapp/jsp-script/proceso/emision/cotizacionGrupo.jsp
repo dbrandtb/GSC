@@ -95,28 +95,22 @@ var expande                 = function(){};
 
 var _p21_arrayNombresFactores =
 [
-    'FACTOR RENOVACIÓN (%)'
-    ,'FACTOR RENOVACION (%)'
+     'FACTOR RENOVACION'
     ,'FACTOR RENOVACIÓN'
-    ,'FACTOR RENOVACIÓN '
-    ,'FACTOR INFLACIÓN (%)'
-    ,'FACTOR INFLACION (%)'
+    ,'FACTOR INFLACION'
     ,'FACTOR INFLACIÓN'
 ];
 
 var _p21_arrayNombresIncrinfl =
 [
-    'FACTOR INFLACIÓN (%)'
+    'FACTOR INFLACION'
     ,'FACTOR INFLACIÓN'
-    ,'FACTOR INFLACION (%)'
 ];
 
 var _p21_arrayNombresExtrreno =
 [
-   'FACTOR RENOVACIÓN (%)'
-   ,'FACTOR RENOVACION (%)'
-   ,'FACTOR RENOVACIÓN'
-   ,'FACTOR RENOVACIÓN '
+   'FACTOR RENOVACIÓN'
+   ,'FACTOR RENOVACION'
 ];
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -1516,7 +1510,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     debug('revisando hijo:',"'"+hijo.fieldLabel+"'");
                                                     $.each(_p21_arrayNombresFactores,function(a,nombre)
                                                     {
-                                                        if(hijo.fieldLabel==nombre)
+                                                        if(hijo.fieldLabel.indexOf(nombre)>-1)
                                                         {
                                                             debug('ocultar:',"'"+hijo.fieldLabel+"'");
                                                             hijo.hidden     = true;
@@ -1524,7 +1518,26 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         }
                                                     });
                                                 }
-                                            } 
+                                            }
+                                            //para factores menor a cero
+                                            if(hijos&&hijos.length>0)
+                                            {
+                                                debug('se pondran los factores menor a cero');
+                                                for(var k=0;k<hijos.length;k++)
+                                                {
+                                                    var hijo=hijos[k];
+                                                    debug('revisando hijo:',"'"+hijo.fieldLabel+"'");
+                                                    $.each(_p21_arrayNombresFactores,function(a,nombre)
+                                                    {
+                                                        if(hijo.fieldLabel.indexOf(nombre)>-1)
+                                                        {
+                                                            debug('factor < 0:',hijo);
+                                                            hijo.minValue=-100;
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
                                                 width       : 470
@@ -1712,7 +1725,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     debug('pestania:',pestania);
                                                                     $.each(_p21_arrayNombresIncrinfl,function(i,nombre)
                                                                     {
-                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
                                                                         debug('componentes para poner factor incrinfl:',componentes);
                                                                         $.each(componentes,function(i,comp)
                                                                         {
@@ -1727,7 +1740,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     debug('pestania:',pestania);
                                                                     $.each(_p21_arrayNombresExtrreno,function(i,nombre)
                                                                     {
-                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel='+nombre+']',pestania);
+                                                                        var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
                                                                         debug('componentes para poner factor extrreno:',componentes);
                                                                         $.each(componentes,function(i,comp)
                                                                         {

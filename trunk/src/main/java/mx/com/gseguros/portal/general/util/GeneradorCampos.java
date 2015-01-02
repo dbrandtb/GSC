@@ -373,7 +373,10 @@ public class GeneradorCampos
         ////// numericos no menores a cero //////
         if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
         {
-        	item.add("minValue",0);
+        	if(!comp.isMenorCero())
+        	{
+        		item.add("minValue",0);
+        	}
         	if(comp.getMaxValue()!=null)
         	{
         		item.add("maxValue",comp.getMaxValue());

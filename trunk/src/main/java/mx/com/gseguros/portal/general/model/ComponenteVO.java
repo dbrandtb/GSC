@@ -73,6 +73,8 @@ public class ComponenteVO
 	
 	private int width = 0;
 	
+	private boolean menorCero = false;
+	
 	public ComponenteVO(){}
 	
 	public ComponenteVO(
@@ -533,5 +535,13 @@ public class ComponenteVO
 
 	public void setSwCompFlot(String swCompFlot) {
 		this.swCompFlot = swCompFlot;
+	}
+
+	public boolean isMenorCero() {
+		return menorCero;
+	}
+
+	public void setMenorCero(boolean menorCero) {
+		this.menorCero = menorCero;
 	}
 }
