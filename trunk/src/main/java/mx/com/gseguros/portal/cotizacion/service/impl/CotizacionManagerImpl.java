@@ -4849,6 +4849,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,Constantes.INSERT_MODE
 					);
 			
+			cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, "0", "1");
+			
 			cotizacionDAO.movimientoMpoliper(
 					cdunieco
 					,cdramo
