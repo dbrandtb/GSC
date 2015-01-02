@@ -1745,6 +1745,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						logger.debug(new StringBuilder("SE AGREGA PARA FACTOR ").append(iTatri).toString());
 						iTatri.setColumna("S");
 						factores.add(iTatri);
+						iTatri.setMenorCero(true);
 					}
 				}
 				if(factores.size()>0)
