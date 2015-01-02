@@ -2343,6 +2343,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			//crear pipes y ejecutar procedure
 			if(resp.isExito())
 			{
+				int nSituac = 0;
+				
 				//pipes para censo solo
 				if(esCensoSolo)
 				{
@@ -2361,7 +2363,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                Date auxDate = null;
 		                Cell auxCell = null;
 		                
-		                fila = fila + 1;
+		                fila    = fila + 1;
+		                nSituac = nSituac + 1;
 		                
 		                if(resp.isExito())
 		                {
@@ -2889,6 +2892,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                		.toString());
 				                output.print(
 				                		new StringBuilder(String.format("%.0f",row.getCell(2).getNumericCellValue())).append("|").toString());
+				                
+				                nSituac = nSituac + (int)row.getCell(2).getNumericCellValue();
 			                }
 			                catch(Exception ex)
 			                {
@@ -2960,6 +2965,26 @@ public class CotizacionManagerImpl implements CotizacionManager
 							.append("\n----------------------------------------------")
 		            		.toString()
 							);
+				}
+				
+				if(resp.isExito())
+				{
+					if(clasif.equals("1")&&nSituac>49)
+					{
+						long timestamp  = System.currentTimeMillis();
+						resp.setExito(false);
+						resp.setRespuesta(Utilerias.join("No se permiten mas de 49 asegurados #",timestamp));
+						resp.setRespuestaOculta(resp.getRespuesta());
+						logger.error(resp.getRespuesta());
+					}
+					else if(!clasif.equals("1")&&nSituac<50)
+					{
+						long timestamp  = System.currentTimeMillis();
+						resp.setExito(false);
+						resp.setRespuesta(Utilerias.join("No se permiten menos de 50 asegurados #",timestamp));
+						resp.setRespuestaOculta(resp.getRespuesta());
+						logger.error(resp.getRespuesta());
+					}
 				}
 				
 				//enviar archivo
