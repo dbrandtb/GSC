@@ -4582,4 +4582,53 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
     	}
     }
+    
+    @Override
+    public void borrarMpoliperSituac0(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String cdrol)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsituac" , null);
+    	params.put("cdrol"    , cdrol);
+    	params.put("cdperson" , null);
+    	params.put("nmsuplem" , nmsuplem);
+    	params.put("status"   , null);
+    	params.put("nmorddom" , null);
+    	params.put("swreclam" , null);
+    	params.put("accion"   , null);
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_BORRA_MPOLIPER", params);
+    	ejecutaSP(new BorrarMpoliperSituac0(getDataSource()),params);
+    }
+    
+    protected class BorrarMpoliperSituac0 extends StoredProcedure
+    {
+    	protected BorrarMpoliperSituac0(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdrol"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmorddom" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swreclam" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

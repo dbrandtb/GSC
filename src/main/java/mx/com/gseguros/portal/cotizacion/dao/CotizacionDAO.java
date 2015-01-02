@@ -534,4 +534,11 @@ public interface CotizacionDAO
 			,String nmsuplem
 			,String cdgarant
 			,String cdtipsup)throws Exception;
+	public void borrarMpoliperSituac0(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String cdrol)throws Exception;
 }
