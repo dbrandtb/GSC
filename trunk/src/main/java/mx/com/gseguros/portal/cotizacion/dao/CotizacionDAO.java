@@ -541,4 +541,6 @@ public interface CotizacionDAO
     		,String nmpoliza
     		,String nmsuplem
     		,String cdrol)throws Exception;
+	public String cargarTipoVehiculoRamo5(String clave)throws Exception;
+	public Map<String,String>cargarDetalleNegocioRamo5(String negocio)throws Exception;
 }

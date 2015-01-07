@@ -86,6 +86,7 @@ var _p28_urlCargarConfig                   = '<s:url namespace="/emision"       
 var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                          />';
 var _p28_urlCargarParamerizacionCoberturas = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas" />';
 var _p28_urlValidarTractocamionRamo5       = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"           />';
+var _p28_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"          />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -506,6 +507,10 @@ Ext.onReady(function()
 	                }
 	            });
 	        }
+	        ,change : function()
+	        {
+	            tipoValor.setValue('');
+	        }
 	    });
 	    //version
 	    
@@ -529,7 +534,25 @@ Ext.onReady(function()
 	    //tipovalor
 	    tipoValor.on(
 	    {
-	        select : function(){ _p28_cargarRangoValorRamo5(); }
+	        select : function()
+	        {
+	            var valor = tipoValor.getValue();
+	            if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
+                {
+                    var modelo = _fieldByLabel('MODELO').getValue()-0;
+                    var anioAc = new Date().getFullYear()-0;
+                    if(anioAc-modelo>1)
+                    {
+                        mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+                        tipoValor.setValue('');
+                    }
+                    _p28_cargarRangoValorRamo5();
+                }
+                else
+                {
+                    _p28_cargarRangoValorRamo5();
+                }
+	        }
 	    });
 	    //tipovalor
 	    
@@ -558,6 +581,14 @@ Ext.onReady(function()
 	    //camion
 	    if(_p28_smap1.cdtipsit+'x'=='CRx')
 	    {
+	        _fieldLikeLabel('CLAVE').on(
+	        {
+	            select : function(){ _p28_recuperaObligatorioCamionRamo5(); }
+	        });
+	        _fieldLikeLabel('VALOR VEH').on(
+	        {
+	            change : function(){ _p28_recuperaObligatorioCamionRamo5(); }
+	        });
 	        _fieldLikeLabel('LIZA TRACTOCAMI').allowBlank=false;
 	        _fieldLikeLabel('LIZA TRACTOCAMI').on(
 	        {
@@ -629,6 +660,16 @@ Ext.onReady(function()
                             'params.cdnegocio' : val
                         }
                     });
+                    if(_p28_smap1.cdtipsit+'x'=='CRx'||_p28_smap1.cdtipsit+'x'=='PCx')
+                    {
+                        _fieldByLabel('CARGA').getStore().load(
+                        {
+                            params :
+                            {
+                                'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+                            }
+                        });
+                    }
 	            }
 	        }
 	    });
@@ -1454,6 +1495,10 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
             debug('### cargar suma asegurada:',json);
             if(json.exito)
             {
+                if(!Ext.isEmpty(json.respuesta))
+                {
+                    mensajeWarning(json.respuesta);
+                }
                 var sumaseg = _fieldByName('parametros.pv_otvalor13');
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;
@@ -2496,6 +2541,34 @@ function _p28_cargarConfig()
         }
     });
     debug('<_p28_cargarConfig');
+}
+
+function _p28_recuperaObligatorioCamionRamo5()
+{
+    debug('>_p28_recuperaObligatorioCamionRamo5');
+    _fieldLikeLabel('TRACTO').setLoading(true);
+    Ext.Ajax.request(
+    {
+        url     : _p28_urlCargarObligatorioCamionRamo5
+        ,params :
+        {
+            'smap1.clave' : _fieldLikeLabel('CLAVE').getValue()
+        }
+        ,success : function(response)
+        {
+            _fieldLikeLabel('TRACTO').setLoading(false);
+            var json = Ext.decode(response.responseText);
+            debug('### obligatorio camion:',json);
+            _fieldLikeLabel('TRACTO').allowBlank=json.smap1.tipo-0!=13;
+            _fieldLikeLabel('TRACTO').isValid();
+        }
+        ,failure : function()
+        {
+            _fieldLikeLabel('TRACTO').setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p28_recuperaObligatorioCamionRamo5');
 }
 ////// funciones //////
 </script>

@@ -12,6 +12,7 @@ import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.wizard.dao.WizardDAO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -690,6 +691,55 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarNegociosPorAgenteRamo5 @@@@@@")
+				.append("\n@@@@@@ cdagente=").append(cdagente)
+				.toString()
+				);
+		
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(cdagente))
+		{
+			lista=catalogosDAO.cargarNegociosPorAgenteRamo5(cdagente);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ cargarNegociosPorAgenteRamo5 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ negocio="  , negocio
+				));
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(negocio))
+		{
+			lista=catalogosDAO.cargarCargasPorNegocioRamo5(cdsisrol, negocio);
+		}
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return lista;
 	}
 }

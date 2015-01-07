@@ -22,6 +22,7 @@ var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"       
 var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"        />';
 var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"            />';
+var _p30_urlCargarDetalleNegocioRamo5      = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
 ////// urls //////
 
 ////// variables //////
@@ -885,12 +886,36 @@ Ext.onReady(function()
         {
             select : function()
             {
-                _fieldLikeLabel('VERSI',_p30_windowAuto).heredar();
+                var nameTipoValor = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
+                var tipovalor     = _p30_selectedRecord.get(nameTipoValor)-0;
+                var modeloVal     = _fieldByLabel('MODELO',_p30_windowAuto).getValue()-0;
+                var anioAc        = new Date().getFullYear()-0; 
+                if(tipovalor==3&&anioAc-modeloVal>1)
+                {
+                    mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+                    _fieldByLabel('MODELO',_p30_windowAuto).setValue('');
+                }
+                else
+                {
+                    _fieldLikeLabel('VERSI',_p30_windowAuto).heredar();
+                    _p30_herenciaAscendente();
+                }
             }
-        });
-        _fieldByLabel('MODELO',_p30_windowAuto).on(
-        {
-            select : function(){_p30_herenciaAscendente();}
+            ,change : function(comb,nuevo)
+            {
+                if((nuevo+'x').length==5)
+                {
+                    var nameTipoValor = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
+                    var tipovalor     = _p30_selectedRecord.get(nameTipoValor)-0;
+                    var modeloVal     = _fieldByLabel('MODELO',_p30_windowAuto).getValue()-0;
+                    var anioAc        = new Date().getFullYear()-0;
+                    if(tipovalor==3&&anioAc-modeloVal>1)
+                    {
+                        mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
+                        _fieldByLabel('MODELO',_p30_windowAuto).setValue('');
+                    }
+                }
+            }
         });
         //modelo
         
@@ -911,6 +936,35 @@ Ext.onReady(function()
         }
         //agente
         
+        //negocio
+        if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            _fieldByLabel('NEGOCIO').getStore().load(
+            {
+                params :
+                {
+                    'params.cdagente' : _p30_smap1.cdagente
+                }
+            });
+        }
+        else
+        {
+            _fieldByLabel('AGENTE').on(
+            {
+                select : function()
+                {
+                    _fieldByLabel('NEGOCIO').getStore().load(
+                    {
+                        params :
+                        {
+                            'params.cdagente' : _fieldByLabel('AGENTE').getValue()
+                        }
+                    });
+                }
+            });
+        }
+        //negocio
+        
         //tipo valor
         var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
         for(var i=0;i<_p30_gridCols.length;i++)
@@ -922,7 +976,7 @@ Ext.onReady(function()
                 debug('tipo valor es:',_p30_gridCols[i].editor);
                 _p30_gridCols[i].editor.on(
                 {
-                    change : function()
+                    change : function(comb,nuevo)
                     {
                         var record = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
                         debug('record sel:',record);
@@ -932,6 +986,14 @@ Ext.onReady(function()
                             mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
                             record.set(valorName,'');
                             debug('cambiado:',valorName,record);
+                        }
+                        var modeloName = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
+                        var modelo     = record.get(modeloName)-0;
+                        var anioAc     = new Date().getFullYear()-0;
+                        if(nuevo-0==3&&anioAc-modelo>1&&modelo!=0)
+                        {
+                            mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+                            comb.setValue('');
                         }
                     }
                 });
@@ -1102,6 +1164,61 @@ Ext.onReady(function()
                     {
                         record.set(tipoUsoName , '');
                         record.set(marcaName   , '');
+                    });
+                }
+            }
+            ,select : function()
+            {
+                if(_p30_smap1.cdsisrol=='PROMOTORAUTO'||_p30_smap1.cdsisrol=='SUSCRIAUTO')
+                {
+                    var negoCmp = _fieldByLabel('NEGOCIO');
+                    var negoVal = negoCmp.getValue();
+                    negoCmp.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : _p30_urlCargarDetalleNegocioRamo5
+                        ,params :
+                        {
+                            'smap1.negocio' : negoVal
+                        }
+                        ,success : function(response)
+                        {
+                            negoCmp.setLoading(false);
+                            var json = Ext.decode(response.responseText);
+                            debug('### detalle negocio:',json);
+                            _fieldByName('fefin').validator=function(val)
+                            {
+                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                                debug('feiniVal:',feiniVal);
+                                var fefinVal=[];
+                                for(var i=1;i<=json.smap1.MULTIANUAL-0;i++)
+                                {
+                                    debug('mas anios:',i);
+                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                                }
+                                debug('validar contra:',fefinVal);
+                                var valido = true;
+                                if(!Ext.Array.contains(fefinVal,val))
+                                {
+                                    valido = 'Solo se permite:';
+                                    for(var i in fefinVal)
+                                    {
+                                        valido = valido + ' ' + fefinVal[i];
+                                        if(fefinVal.length>1&&i<fefinVal.length-1)
+                                        {
+                                            valido = valido + ',';
+                                        }
+                                    }
+                                }
+                                return valido;
+                            }
+                            _fieldByName('fefin').isValid();
+                        }
+                        ,failure : function()
+                        {
+                            negoCmp.setLoading(false);
+                            errorComunicacion();
+                        }
                     });
                 }
             }
@@ -1442,28 +1559,43 @@ function _p30_herenciaDescendiente(record)
     var modelov   = splitted[3];
     var versionv  = splitted[4];
     
-    marca.setValue(marca.findRecord('value',marcav));
-    submarca.heredar(true,function()
+    //modelo
+    var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
+    var tipovalorval  = _p30_selectedRecord.get(tipovalorName);
+    var anioAc        = new Date().getFullYear()-0;
+    var valido        = true;
+    if(tipovalorval-0==3&&anioAc-modelov>1)
     {
-        submarca.setValue(submarca.findRecord('value',submarcav));
-        modelo.heredar(true,function()
+        mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
+        valido = false;
+    }
+    //modelo
+    
+    if(valido)
+    {
+        marca.setValue(marca.findRecord('value',marcav));
+        submarca.heredar(true,function()
         {
-            modelo.setValue(modelo.findRecord('value',modelov));
-            version.getStore().load(
+            submarca.setValue(submarca.findRecord('value',submarcav));
+            modelo.heredar(true,function()
             {
-                params :
+                modelo.setValue(modelo.findRecord('value',modelov));
+                version.getStore().load(
                 {
-                    'params.submarca' : submarca.getValue()
-                    ,'params.modelo'  : modelo.getValue()
-                }
-                ,callback : function()
-                {
-                    version.setValue(version.findRecord('value',versionv));
-                    _p30_cargarSumaAseguradaRamo5();
-                }
+                    params :
+                    {
+                        'params.submarca' : submarca.getValue()
+                        ,'params.modelo'  : modelo.getValue()
+                    }
+                    ,callback : function()
+                    {
+                        version.setValue(version.findRecord('value',versionv));
+                        _p30_cargarSumaAseguradaRamo5();
+                    }
+                });
             });
         });
-    });
+    }
     
     debug('<_p30_herenciaDescendiente');
 }
@@ -1489,6 +1621,10 @@ function _p30_cargarSumaAseguradaRamo5(callback)
             debug('### cargar suma asegurada:',json);
             if(json.exito)
             {
+                if(!Ext.isEmpty(json.respuesta))
+                {
+                    mensajeWarning(json.respuesta);
+                }
                 var sumaseg = _fieldByName('parametros.pv_otvalor13',_p30_windowAuto);
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;

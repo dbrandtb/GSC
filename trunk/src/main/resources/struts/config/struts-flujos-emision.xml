@@ -353,6 +353,14 @@
         <action name="cargarTramite" class="CotizacionAction" method="cargarTramite">
             <result type="json" />
         </action>
+        
+        <action name="cargarObligatorioTractocamionRamo5" class="cotizacionAutoAction" method="cargarObligatorioTractocamionRamo5">
+            <result type="json" />
+        </action>
+        
+        <action name="cargarDetalleNegocioRamo5" class="cotizacionAutoAction" method="cargarDetalleNegocioRamo5">
+            <result type="json" />
+        </action>
        
     </package>
     

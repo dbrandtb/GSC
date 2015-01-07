@@ -4631,4 +4631,79 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
     	}
     }
+    
+    @Override
+    public String cargarTipoVehiculoRamo5(String clave)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("clave" , clave);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_TIPOVEHI_RAMO5", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarTipoVehiculoRamo5(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No se encontro el tipo de vehiculo");
+    	}
+    	if(lista.size()>1)
+    	{
+    		throw new ApplicationException("Tipo de vehiculo duplicado");
+    	}
+    	return lista.get(0).get("TIPOVEHI");
+    }
+    
+    protected class CargarTipoVehiculoRamo5 extends StoredProcedure
+    {
+    	protected CargarTipoVehiculoRamo5(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_DESARROLLO.P_GET_TIPOVEHI_RAMO5");
+            declareParameter(new SqlParameter("clave" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"TIPOVEHI"})));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public Map<String,String>cargarDetalleNegocioRamo5(String negocio)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("negocio" , negocio);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_DETALLE_NEGOCIO_RAMO5", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarDetalleNegocioRamo5(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No se encontro detalle de negocio");
+    	}
+    	if(lista.size()>1)
+    	{
+    		throw new ApplicationException("Detalle de negocio duplicado");
+    	}
+    	return lista.get(0);
+    }
+    
+    protected class CargarDetalleNegocioRamo5 extends StoredProcedure
+    {
+    	protected CargarDetalleNegocioRamo5(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_NEGOCIO_RAMO5");
+    		declareParameter(new SqlParameter("negocio" , OracleTypes.VARCHAR));
+    		String[] cols=new String[]{
+    				"TARIFA"
+    				,"UDI"
+    				,"MULTIANUAL"
+    				,"PERIODO_GRACIA"
+    				,"FONDO_ESPECIAL"
+    				,"F1"
+    				,"F2"
+    				,"F3"
+    				,"PORC_BONO"
+    				};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
