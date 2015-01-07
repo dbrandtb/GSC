@@ -577,7 +577,8 @@ Ext.onReady(function() {
     	minChars  : 2,					triggerAction: 'all',			hideTrigger:true,
 		listeners : {
 			change:function(e){
-				validarDatosProveedor();
+				//validarDatosProveedor();
+				obtieneInformacion();
     		}
         }
     });
@@ -612,7 +613,7 @@ Ext.onReady(function() {
     	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
 		listeners : {
-					'select':function(e){
+					'change':function(e){
 						//obtieneInformacion();
 						if(Ext.getCmp('cveTipoAutorizaG').getValue()=="3" && (Ext.getCmp('claveTipoAutoriza').getValue()=="2" ||Ext.getCmp('claveTipoAutoriza').getValue()=="3" )){
 							Ext.getCmp('cveTipoAutorizaG').setValue("2");
@@ -1865,7 +1866,11 @@ Ext.onReady(function() {
 			 	//se agrupa el No. de autorización , el No. de autorización anterior y el botón de buscar
 			 	
 			 	{
-	 				 colspan:2,xtype       : 'textfield',			fieldLabel : 'ValSesiones'		,id       : 'idValSesiones', 	name:'ValSesiones',
+	 				 xtype       : 'textfield',			fieldLabel : 'ValSesiones'		,id       : 'idValSesiones', 	name:'ValSesiones',
+					 labelWidth: 170,					hidden:true
+	 			},
+	 			{
+	 				 xtype       : 'textfield',			fieldLabel : 'Tipo Hospitalario',id       : 'idTipoHospitalarioM', 	name:'idTipoHospitalarioM',
 					 labelWidth: 170,					hidden:true
 	 			},
 			 	{
@@ -3081,7 +3086,7 @@ Ext.onReady(function() {
 		            	Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 		            	Ext.getCmp('idCopago').setValue(json.copago);
 		            	
-		            	if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && /*Ext.getCmp('idEstatusTramite').getValue() != "2" &&*/ Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
+		            	if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
 							Ext.Ajax.request(
 			    					{
 			    					    url     : _URL_CATALOGOS
@@ -3346,6 +3351,12 @@ Ext.onReady(function() {
 				Ext.getCmp('idReqPenalizacion').setValue(json.REQPENALIZACION);
 				Ext.getCmp('idValMaternidad').setValue(json.VALMATERNIDAD);
 				Ext.getCmp('idValSesiones').setValue(json.VALSESIONES);
+				if(json.MENSAJEMATERNIDAD == "null"|| json.MENSAJEMATERNIDAD ==null){
+					Ext.getCmp('observaciones').setValue('');
+				}else{
+					var mensajeCompleto = json.MENSAJEMATERNIDAD + " CONTRATANTE.";
+					Ext.getCmp('observaciones').setValue(mensajeCompleto);
+				}
 				
 				if(Ext.getCmp('idValMaternidad').getValue() =="1"){
 					Ext.Ajax.request(
