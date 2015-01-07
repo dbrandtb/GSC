@@ -98,4 +98,6 @@ public interface CatalogosManager {
     public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit);
     public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit);
     public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit);
+    public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception;
+    public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception;
 }

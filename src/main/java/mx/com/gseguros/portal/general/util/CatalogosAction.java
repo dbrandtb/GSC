@@ -510,6 +510,21 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.cargarMarcasPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
 					break;
+				case RAMO_5_NEGOCIO_X_AGENTE:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.cargarNegociosPorAgenteRamo5(params.get("cdagente"));
+					break;
+				case RAMO_5_CARGAS_X_NEGOCIO:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					UserVO usuarioCargaRamo5 = (UserVO)session.get("USUARIO");
+					lista = catalogosManager.cargarCargasPorNegocioRamo5(usuarioCargaRamo5.getRolActivo().getClave(),params.get("negocio"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

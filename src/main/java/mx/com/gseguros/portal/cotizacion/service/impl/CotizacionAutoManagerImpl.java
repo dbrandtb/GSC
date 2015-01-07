@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.autosgs.infovehiculo.client.axis2.VehiculoWSServiceStub.ResponseValor;
 import mx.com.gseguros.ws.autosgs.infovehiculo.service.InfoVehiculoService;
 import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
 
@@ -245,7 +246,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,cdunieco
 					,cdramo
 					,cdtipsit
-					,"W"
+					,"I"
 					,cdsisrol
 					,"COTIZACION_CUSTOM"
 					,"SUSTITUTOS"
@@ -416,8 +417,31 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
+			setCheckpoint("Invocando servicio web");
+			ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
+			boolean wsExito      = true;
+			if(wsResp==null)
+			{
+				resp.setRespuesta("Hubo un error al invocar el servicio web para recuperar el valor");
+				wsExito = false;
+			}
+			if(wsExito&&wsResp.getExito()==false)
+			{
+				resp.setRespuesta("El servicio web para recuperar el valor tuvo un error interno");
+				wsExito = false;
+			}
+			
 			setCheckpoint("Recuperando suma asegurada");
 			resp.setSmap(cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit,clave,modelo,cdsisrol));
+			
+			if(wsExito&&wsResp.getValor_comercial()>0d)
+			{
+				resp.getSmap().put("sumaseg" , String.format("%.2f", wsResp.getValor_comercial()));
+			}
+			if(wsExito)
+			{
+				resp.getSmap().put("sumasegWS" , Double.toString(wsResp.getValor_comercial()));
+			}
 			
 			setCheckpoint("0");
 		}
@@ -1303,7 +1327,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,cdunieco
 					,cdramo
 					,cdtipsit
-					,"W"
+					,"C"
 					,cdsisrol
 					,"COTIZACION_CUSTOM"
 					,"SUSTITUTOS"
@@ -2724,6 +2748,69 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
+				,"\n@@@@@@ clave=",clave
+				));
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		resp.setSmap(new LinkedHashMap<String,String>());
+		
+		try
+		{
+			setCheckpoint("Recuperando tipo de vehiculo");
+			resp.getSmap().put("tipo",cotizacionDAO.cargarTipoVehiculoRamo5(clave));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ ",resp
+				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+
+	@Override
+	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
+				,"\n@@@@@@ negocio=",negocio
+				));
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando detalle de negocio");
+			
+			resp.setSmap(cotizacionDAO.cargarDetalleNegocioRamo5(negocio));
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return resp;
 	}

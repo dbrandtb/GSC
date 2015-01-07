@@ -1317,6 +1317,79 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarObligatorioTractocamionRamo5()
+	{
+		logger.info(Utilerias.join(
+				 "\n################################################"
+				,"\n###### cargarObligatorioTractocamionRamo5 ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			
+			String clave = smap1.get("clave");
+			checkBlank(clave, "No se recibio la clave del vehiculo");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarObligatorioTractocamionRamo5(clave);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### cargarObligatorioTractocamionRamo5 ######"
+				,"\n################################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String cargarDetalleNegocioRamo5()
+	{
+		logger.info(Utilerias.join(
+				 "\n#######################################"
+				,"\n###### cargarDetalleNegocioRamo5 ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos para cargar detalle de negocio");
+			String negocio = smap1.get("negocio");
+			checkBlank(negocio, "No se recibio clave de negocio");
+			
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarDetalleNegocioRamo5(negocio);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### cargarDetalleNegocioRamo5 ######"
+				,"\n#######################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

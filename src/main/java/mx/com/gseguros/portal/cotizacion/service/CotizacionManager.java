@@ -409,4 +409,5 @@ public interface CotizacionManager
 			,String nmnumint);
 	
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
+	
 }

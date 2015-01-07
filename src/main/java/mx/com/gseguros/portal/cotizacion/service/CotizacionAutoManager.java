@@ -175,4 +175,8 @@ public interface CotizacionAutoManager
 			,String cdtipsit
 			,String cdperpag
 			);
+	
+	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave);
+	
+	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio);
 }
