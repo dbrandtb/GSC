@@ -22,6 +22,7 @@ import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWS
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CodigoPostal;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.ConfiguracionPaquete;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Cotizacion;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CotizacionNegocio;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CotizacionRequest;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.FormasDePago_type0;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.GuardarCotizacionResponse;
@@ -73,7 +74,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private StoredProceduresManager storedProceduresManager;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
+			String estado, String nmpoliza, String tipopol, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -90,6 +91,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			params.put("param3" , estado);
 			params.put("param4" , nmpoliza);
 			params.put("param5" , nmsuplem);
+			params.put("param6" , tipopol);
 			
 			List<Map<String,String>>lista = null;
 			
@@ -125,6 +127,21 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 
 				datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
+				
+				datosCotizacionAuto.setContarPAI(Boolean.valueOf(m.get("contarPAI")));
+				datosCotizacionAuto.setNombreAlterno(m.get("nombreAlterno"));
+				
+				CotizacionNegocio cotNeg =  new CotizacionNegocio();
+				
+				cotNeg.setIdTarifa(Integer.valueOf(m.get("idTarifa")));
+				cotNeg.setUdi(Double.valueOf(m.get("udi")));
+				cotNeg.setMultianual(Integer.valueOf(m.get("multianual")));
+				cotNeg.setPeriodoGracia(Integer.valueOf(m.get("periodoGracia")));
+				cotNeg.setFondoEspecial(Double.valueOf(m.get("fondoEspecial")));
+				cotNeg.setF1(Double.valueOf(m.get("f1")));
+				cotNeg.setF2(Double.valueOf(m.get("f2")));
+				cotNeg.setF3(Double.valueOf(m.get("f3")));
+				cotNeg.setPorcentajeBono(Double.valueOf(m.get("porcentajeBono")));
 				
 				//idagente y sucursal
 				Agente agente=new Agente();

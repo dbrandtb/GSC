@@ -55,7 +55,7 @@ public class TestAction extends PrincipalCoreAction {
 		
 		emisionAutos = emisionAutosService.cotizaEmiteAutomovilWS(
 				params.get("cdunieco"), params.get("cdramo"), 
-				params.get("estado"), params.get("nmpoliza"), 
+				params.get("estado"), params.get("nmpoliza"), "I",
 				params.get("nmsuplem"), params.get("nmtramite"),
 				params.get("cdtipsit"),
 				(UserVO) session.get("USUARIO"));
