@@ -3296,23 +3296,7 @@ Ext.onReady(function() {
 								Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
 								Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
 								Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
-								
-								/* una vez que tengo los valores se realiza la validacion de los campos para ver el copago total
-									si el TiHospitalPlus es 0, entonces se aplicara el % de copago contratado en la póliza.
-									Si el TiHospitalPlus es 1, entonces deberá recuperar el valor DHospitalPlusPuntos y sumarlo al %  de copago contratado en la póliza.
-								*/
-								if(Ext.getCmp('idHospitalPlus').getValue() =="0"){
-									Ext.getCmp('idCopagoFin').setValue(copagoOrig);
-								}else{
-									if( copagoOrig =="NO" || copagoOrig =="NA" || copagoOrig ==''|| copagoOrig == null)
-								    {
-								        var sumatoria = +Ext.getCmp('idPorcIncremento').getValue();
-										Ext.getCmp('idCopagoFin').setValue(sumatoria);
-								    }else{
-								    	var sumatoria = + copagoOrig + +Ext.getCmp('idPorcIncremento').getValue();
-										Ext.getCmp('idCopagoFin').setValue(sumatoria);
-								    }
-								}
+								validacionCopagoTotal();
 							}
 						},
 						failure : function ()
@@ -3372,34 +3356,62 @@ Ext.onReady(function() {
 		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
 		var tipoCopago = Ext.getCmp('idTipoCopago').getValue() ;
 		var sumatoria = 0;
-	    if( copagoOrig =="NO" || copagoOrig =="NA")
-	    {
-	        sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() +  +Ext.getCmp('idPenalCambioZona').getValue();
-	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
-	        return true;
-	    }
-	    if(tipoCopago =="$")
-	    {
-	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + + Ext.getCmp('idPenalCambioZona').getValue();
-	        if(sumatoria > 0){
-	        	Ext.getCmp('idCopagoFin').setValue("$"+copagoOrig +" y "+ sumatoria +"%");
-	        }else{
-	        	Ext.getCmp('idCopagoFin').setValue(copagoOrig);
-	        }
-	        
-	        return true;
-	    }
-	    if(tipoCopago =="%")
-	    {
-	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
-	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
-	        return true;
-	    }
-	    else{
-	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig;//.replace("%","");
-	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
-	        return true;
-	    }
+	    
+	    if(Ext.getCmp('idcdRamo').getValue() =="2"){
+			if( copagoOrig =="NO" || copagoOrig =="NA")
+		    {
+		        sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() +  +Ext.getCmp('idPenalCambioZona').getValue();
+		        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+		        return true;
+		    }
+		    if(tipoCopago =="$")
+		    {
+		    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + + Ext.getCmp('idPenalCambioZona').getValue();
+		        if(sumatoria > 0){
+		        	Ext.getCmp('idCopagoFin').setValue("$"+copagoOrig +" y "+ sumatoria +"%");
+		        }else{
+		        	Ext.getCmp('idCopagoFin').setValue(copagoOrig);
+		        }
+		        
+		        return true;
+		    }
+		    if(tipoCopago =="%")
+		    {
+		    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
+		        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+		        return true;
+		    }
+		    else{
+		    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig;//.replace("%","");
+		        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+		        return true;
+		    }			
+		}else{
+			if(Ext.getCmp('idHospitalPlus').getValue() =="0"){
+				Ext.getCmp('idCopagoFin').setValue(copagoOrig);
+				return true;
+			}else{
+				var valorCopago = 0;
+				if( copagoOrig =="NO" || copagoOrig =="NA" || copagoOrig =="null"|| copagoOrig == null)
+		    	{
+		    		valorCopago = 0;
+		    	}else{
+		    		valorCopago = copagoOrig;
+		    	}
+		    	
+		    	if(tipoCopago =="$")
+			    {
+			    	Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
+			        return true;
+			    }
+			    if(tipoCopago =="%")
+			    {
+			    	var sumatoria = + valorCopago + +Ext.getCmp('idPorcIncremento').getValue();
+					Ext.getCmp('idCopagoFin').setValue(sumatoria);
+			        return true;
+			    }
+			}
+		}
 	    return true;
 	}
 	

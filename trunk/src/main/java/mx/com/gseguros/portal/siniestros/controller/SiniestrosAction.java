@@ -400,6 +400,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
 							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
 							paramsMCAut.put("pv_otvalor06",params.get("copagoTotal"));					// Total Penalizacinn
+							paramsMCAut.put("pv_otvalor07",params.get("idHospitalPlus"));				// Tipo Hospital Plus
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
 							
 							if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -429,6 +430,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    		otvalor.put("pv_otvalor03_i"  , params.get("feautori"));
 				    		otvalor.put("pv_otvalor04_i"  , params.get("fevencim"));
 				    		otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
+				    		otvalor.put("pv_otvalor07_i",params.get("idHospitalPlus"));
 				    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
 				    		
 				    		// Tenemos que actualizar el status para el guardado
@@ -2688,13 +2690,21 @@ public String consultaListaPlazas(){
             		   		paramExclusion.put("pv_nmpoliza_i",nmpoliza);
             		   		paramExclusion.put("pv_nmsituac_i",nmsituac);
             		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-            		   		//4.2.- Obtenemos la penalización por cambio de Zona
-            		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-            						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
-            		   		aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
-            				//4.3.- Obtenemos la penalización por circulo Hospitalario
-            				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
-            				aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
+            		   		
+            		   		//1.- verificamos el ramo
+            		   		if(cdramo.equalsIgnoreCase("2")){
+                		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+                		   		//4.2.- Obtenemos la penalización por cambio de Zona
+                		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+                						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
+                		   		aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
+                				//4.3.- Obtenemos la penalización por circulo Hospitalario
+                				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
+                				aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);            		   			
+            		   		}else{
+            		   			aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
+            		   			aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
+            		   		}
             				
         		   		}else{
         		   			//4.2.- Obtenemos la penalización por cambio de Zona
@@ -2704,7 +2714,10 @@ public String consultaListaPlazas(){
         		   		}
         				
         				//4.4.- Obtenemos el total de penalización
-        				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
+        				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+        																			 copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"),
+        																			 informacionGral.get(0).get("CDPROVEE"),cdramo, informacionGral.get(0).get("FEOCURRE"));
+        				
         				aseguradoObj.put("TOTALPENALIZACIONGLOBAL",""+calcularTotalPenalizacion);
         				String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
         				penalizacionPorcentaje = penalizacionT[0].toString();
@@ -3421,21 +3434,32 @@ public String consultaListaPlazas(){
     						paramExclusion.put("pv_cdramo_i",siniestro.get("CDRAMO"));
     						paramExclusion.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
     						paramExclusion.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
-    						//1.- Verificamos si existe exclusión de penalización
-    						existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-    						//2.- Obtenemos la penalización por cambio de Zona
-    						penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-    								informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
-    						//3.- Obtenemos la penalización por circulo Hospitalario
-    						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
-    						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+    						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase("2")){
+    							//--> SALUD VITAL
+    							//1.- Verificamos si existe exclusión de penalización
+        						existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+        						//2.- Obtenemos la penalización por cambio de Zona
+        						penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+        								informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
+        						//3.- Obtenemos la penalización por circulo Hospitalario
+        						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
+        						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+    						}else{
+    							// --> DIFERENTE DE SALUD VITAL
+    							penalizacionCambioZona = 0d;
+    							penalizacionCirculoHosp = 0d;
+    						}
     					}
     				}
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
     				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
     				
     				//3.- Obtenemos el total de penalización
-    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"));
+    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+    																			 copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"),
+    																			 informacionGral.get(0).get("CDPROVEE"),siniestro.get("CDRAMO"), informacionGral.get(0).get("FEOCURRE"));
+    				
+    				
     				penalizacion.put("totalPenalizacionGlobal",""+calcularTotalPenalizacion);
     				String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
     				penalizacion.put("copagoPorcentajes",penalizacionT[0].toString());
@@ -3675,7 +3699,7 @@ public String consultaListaPlazas(){
     
     
     //calcularPorcentajeTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
-    private String calcularTotalPenalizacion(double penalizacionCambioZona, double penalizacionCirculoHosp, String causaSiniestro, String copagoOriginal, String tipoCopago) {
+    private String calcularTotalPenalizacion(double penalizacionCambioZona, double penalizacionCirculoHosp, String causaSiniestro, String copagoOriginal, String tipoCopago,String proveedor,String ramo, String fechaOcurrencia) {
     	double copagoPenaPorcentaje = 0d;
     	double copagoPenaPesos = 0d;
     	String copagoFinal= null;
@@ -3696,20 +3720,78 @@ public String consultaListaPlazas(){
     	if(causaSiniestro != null)
     	{
     		if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-        		if(tipoCopago.equalsIgnoreCase("%")){
-        			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
-        			if(copagoPenaPorcentaje <= 0){
-        				copagoPenaPorcentaje= 0d;
-        			}
-        			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
-        		}else{
-        			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp;
-        			if(copagoPenaPorcentaje <= 0){
-        				copagoPenaPorcentaje= 0d;
-        			}
-        			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
-        			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
-        		}
+    			//1.- Verificamos el el Ramo
+    			if(ramo.equalsIgnoreCase("2")){ //SALUD VITAL
+            		if(tipoCopago.equalsIgnoreCase("%")){
+            			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
+            			if(copagoPenaPorcentaje <= 0){
+            				copagoPenaPorcentaje= 0d;
+            			}
+            			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+            		}else{
+            			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp;
+            			if(copagoPenaPorcentaje <= 0){
+            				copagoPenaPorcentaje= 0d;
+            			}
+            			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
+            			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+            		}    				
+    			}else{ // DIFERENTE DE SALUD VITAL
+    				try {
+						datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(proveedor,ramo,fechaOcurrencia);
+						logger.debug(datosInformacionAdicional.get(0).get("MULTINCREMENTO"));
+	    				logger.debug(datosInformacionAdicional.get(0).get("HOSPITALPLUS"));
+	    				logger.debug(datosInformacionAdicional.get(0).get("PORCINCREMENTO"));
+	    				if(datosInformacionAdicional.get(0).get("HOSPITALPLUS").toString().equalsIgnoreCase("0")){
+	    					copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+	    				}else{
+	    					if(tipoCopago.equalsIgnoreCase("%")){
+	                			copagoPenaPorcentaje =  Double.parseDouble(""+copagoOriginalPoliza) + Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
+	                			if(copagoPenaPorcentaje <= 0){
+	                				copagoPenaPorcentaje= 0d;
+	                			}
+	                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+	                		}else{
+	                			copagoPenaPorcentaje = Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
+	                			if(copagoPenaPorcentaje <= 0){
+	                				copagoPenaPorcentaje= 0d;
+	                			}
+	                			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
+	                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+	                		}
+	    				}
+	    				
+    				} catch (Exception e) {
+    					logger.error("error al obtener los datos del proveedor",e);
+    				}
+    				
+    				/*
+    							if(Ext.getCmp('idHospitalPlus').getValue() =="0"){
+									Ext.getCmp('idCopagoFin').setValue(copagoOrig);
+									return true;
+								}else{
+									var valorCopago = 0;
+									if( copagoOrig =="NO" || copagoOrig =="NA" || copagoOrig =="null"|| copagoOrig == null)
+							    	{
+							    		valorCopago = 0;
+							    	}else{
+							    		valorCopago = copagoOrig;
+							    	}
+							    	
+							    	if(tipoCopago =="$")
+								    {
+								    	Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
+								        return true;
+								    }
+								    if(tipoCopago =="%")
+								    {
+								    	var sumatoria = + valorCopago + +Ext.getCmp('idPorcIncremento').getValue();
+										Ext.getCmp('idCopagoFin').setValue(sumatoria);
+								        return true;
+								    }
+								}
+    				*/
+    			}
     		}else{
     			if(tipoCopago.equalsIgnoreCase("%")){
         			copagoFinal = copagoOriginalPoliza+"|"+copagoPenaPesos;
@@ -3972,14 +4054,19 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		   		paramExclusion.put("pv_cdramo_i",cdramo);
         		   		paramExclusion.put("pv_nmpoliza_i",nmpoliza);
         		   		paramExclusion.put("pv_nmsituac_i",nmsituac);
-        		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-        		   		//4.2.- Obtenemos la penalización por cambio de Zona
-        		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-        						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
-        				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
-        				//4.3.- Obtenemos la penalización por circulo Hospitalario
-        				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
-        				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
+        		   		if(cdramo.equalsIgnoreCase("2")){
+	        		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+	        		   		//4.2.- Obtenemos la penalización por cambio de Zona
+	        		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+	        						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
+	        				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
+	        				//4.3.- Obtenemos la penalización por circulo Hospitalario
+	        				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
+	        				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
+        		   		}else{
+        		   			penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
+        		   			penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
+        		   		}
         				
     		   		}else{
     		   			//4.2.- Obtenemos la penalización por cambio de Zona
@@ -3989,7 +4076,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		   		}
     				
     				//4.4.- Obtenemos el total de penalización
-    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
+    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+    																			 copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"),
+    																			 informacionGral.get(0).get("CDPROVEE"),cdramo, informacionGral.get(0).get("FEOCURRE"));
+
     				penalizacion.put("totalPenalizacionGlobal",""+calcularTotalPenalizacion);
     				String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
     				penalizacionPorcentaje = penalizacionT[0].toString();
@@ -4706,22 +4796,34 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
             		   		paramExclusion.put("pv_cdramo_i",siniestro.get("CDRAMO"));
             		   		paramExclusion.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
             		   		paramExclusion.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
-            		   		//1.- Verificamos si existe exclusión de penalización
-            		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-            		   		//2.- Obtenemos la penalización por cambio de Zona
-    	    		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-    	    						informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
-    	    		   		//3.- Obtenemos la penalización por circulo Hospitalario
-    	    		   		List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
-    						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+            		   		
+            		   		if(siniestro.get("CDRAMO").toString().equalsIgnoreCase("2")){
+            		   			//--> SALUD VITAL
+            		   			//1.- Verificamos si existe exclusión de penalización
+                		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+                		   		//2.- Obtenemos la penalización por cambio de Zona
+        	    		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+        	    						informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
+        	    		   		//3.- Obtenemos la penalización por circulo Hospitalario
+        	    		   		List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
+        						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+            		   		}else{
+            		   			// --> DIFERENTE DE SALUD VITAL
+            		   			penalizacionCambioZona = 0d;
+            		   			penalizacionCirculoHosp = 0d;
+            		   		}
+            		   		
     		   			}
 					}
     		   		penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
     				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
     				
     				//3.- Obtenemos el total de penalización
-    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"));
-                    penalizacion.put("totalPenalizacionGlobal",""+calcularTotalPenalizacion);
+    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+    																			 copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"),
+    																			 informacionGral.get(0).get("CDPROVEE"),siniestro.get("CDRAMO"), informacionGral.get(0).get("FEOCURRE"));
+
+    				penalizacion.put("totalPenalizacionGlobal",""+calcularTotalPenalizacion);
                     String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
                     penalizacion.put("copagoPorcentajes",penalizacionT[0].toString());
                     penalizacion.put("copagoPesos",penalizacionT[1].toString());
@@ -6146,14 +6248,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					null, null, null, null, null, null, null, null, null, factura.get("NFACTURA"));
     				logger.debug("OBTENEMOS LA INFORMACION DE LOS CONCEPTOS POR FACTURA -->"+conceptos);
         			
-    				/*LINEA PARA IR GUARDANDA A CADA UNO DE LOS ASEGURADOS
-        			 * 					facturaObj.put("siniestroPD", siniestros);
-        			 */
-        			
     				//RECORREMOS LOS SINIESTROS
     				this.aseguradosxSiniestro=new ArrayList<Map<String,Object>>();
     				for( int j= 0; j < siniestros.size();j++){
-    					
     					//Se realiza la asignacion del primer asegurado
         				siniestroIte    = siniestros.get(j);
         				Map<String,Object>aseguradoObj=new HashMap<String,Object>();
@@ -6172,8 +6269,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         				String nfactura = factura.get("NFACTURA");
         				
         				//Asignacion de variables
-        				//Map<String,String> penalizacion = new HashMap<String,String>();
-        				//Map<String,String> calcxCobe = new HashMap<String,String>();
         				double penalizacionCambioZona =0d;
         				double penalizacionCirculoHosp =0d;
         				String aplicaIVA= "S";
@@ -6224,15 +6319,21 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
             		   		paramExclusion.put("pv_cdramo_i",cdramo);
             		   		paramExclusion.put("pv_nmpoliza_i",nmpoliza);
             		   		paramExclusion.put("pv_nmsituac_i",nmsituac);
-            		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-            		   		//4.2.- Obtenemos la penalización por cambio de Zona
-            		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-            						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
-            		   		aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
-            				//4.3.- Obtenemos la penalización por circulo Hospitalario
-            				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
-            				aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
-            				
+            		   		
+            		   		//1.- verificamos el ramo
+            		   		if(cdramo.equalsIgnoreCase("2")){
+                		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+                		   		//4.2.- Obtenemos la penalización por cambio de Zona
+                		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+                						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"));
+                		   		aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
+                				//4.3.- Obtenemos la penalización por circulo Hospitalario
+                				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
+                				aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);            		   			
+            		   		}else{
+            		   			aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
+            		   			aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
+            		   		}
         		   		}else{
         		   			//4.2.- Obtenemos la penalización por cambio de Zona
         		   			aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
@@ -6241,7 +6342,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		   		}
         				
         				//4.4.- Obtenemos el total de penalización
-        				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
+        				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+        																			 copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"),
+        																			 informacionGral.get(0).get("CDPROVEE"),cdramo, informacionGral.get(0).get("FEOCURRE"));
+
         				aseguradoObj.put("TOTALPENALIZACIONGLOBAL",""+calcularTotalPenalizacion);
         				String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
         				penalizacionPorcentaje = penalizacionT[0].toString();
@@ -6958,21 +7062,32 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						paramExclusion.put("pv_cdramo_i",siniestro.get("CDRAMO"));
     						paramExclusion.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
     						paramExclusion.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
-    						//1.- Verificamos si existe exclusión de penalización
-    						existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-    						//2.- Obtenemos la penalización por cambio de Zona
-    						penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-    								informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
-    						//3.- Obtenemos la penalización por circulo Hospitalario
-    						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
-    						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+    						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase("2")){
+    							//--> SALUD VITAL
+    							//1.- Verificamos si existe exclusión de penalización
+        						existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+        						//2.- Obtenemos la penalización por cambio de Zona
+        						penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+        								informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"));
+        						//3.- Obtenemos la penalización por circulo Hospitalario
+        						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
+        						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"));
+    						}else{
+    							// --> DIFERENTE DE SALUD VITAL
+    							penalizacionCambioZona = 0d;
+    							penalizacionCirculoHosp = 0d;
+    						}
+    						
     					}
     				}
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
     				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
     				
     				//3.- Obtenemos el total de penalización
-    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"));
+    				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
+    																			 copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"),
+    																			 informacionGral.get(0).get("CDPROVEE"),siniestro.get("CDRAMO"), informacionGral.get(0).get("FEOCURRE"));
+
     				penalizacion.put("totalPenalizacionGlobal",""+calcularTotalPenalizacion);
     				String penalizacionT[] = calcularTotalPenalizacion.split("\\|");
     				penalizacion.put("copagoPorcentajes",penalizacionT[0].toString());
