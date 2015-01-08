@@ -584,6 +584,9 @@ Ext.onReady(function()
 	_fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    _p22_fieldCdperson().mpoliper = false;
+    _p22_fieldCdperson().validado = false;
 	////// loaders //////
     
     
@@ -1294,6 +1297,7 @@ function _p22_guardarClic(callback, autosave)
                 if(json.exito)
                 {
                     _p22_fieldCdperson().setValue(json.smap1.CDPERSON);
+                    _p22_fieldCdperson().validado = _p22_fieldCdperson().validado||Ext.isEmpty(autosave)||autosave==false;
                     _p22_cdperson = json.smap1.CDPERSON;
                     
                     if(!Ext.isEmpty(municipioImportarTMP)){
