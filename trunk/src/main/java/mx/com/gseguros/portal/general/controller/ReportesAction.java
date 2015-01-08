@@ -94,6 +94,23 @@ public class ReportesAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String exportaTablaApoyo() throws Exception {
+		
+		try {
+			logger.debug(" >>>>>> Parametros para exportar tabla de apoyo: " + params);
+			params.put("pv_cdreporte_i", "PRUEBA");
+			params.put("pv_usuario_i", "ALEX");
+			contentType     = TipoArchivo.XLS.getContentType();
+			filename        = params.get("pi_cdtabla")+"_"+ params.get("pi_dstabla") + TipoArchivo.XLS.getExtension();
+			fileInputStream = reportesManager.exportaTablaApoyo(params);
+		} catch (Exception e) {
+			logger.error("Error al exportar tabla", e);
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+	
 	
 	//Getters and setters:
 

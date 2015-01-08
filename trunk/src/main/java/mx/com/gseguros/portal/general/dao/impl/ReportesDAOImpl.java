@@ -320,5 +320,41 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
             return new ByteArrayInputStream(lobHandler.getBlobAsBytes(rs, "DATA"));
         }
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public InputStream exportaTablaApoyo(Map<String, String> params) throws Exception {
+    	
+    	InputStream archivo =  null;
+    	try {
+    		Map<String, Object> resultado = ejecutaSP(new ExportaTablaApoyo(getDataSource()), params);
+    		logger.debug("resultado:"+resultado);
+    		ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
+    		archivo = inputList.get(0);
+    	} catch (Exception e) {
+    		throw new Exception(e.getMessage(), e);
+    	}
+    	
+    	return archivo;
+    }
+    
+    protected class ExportaTablaApoyo extends StoredProcedure {
+    	protected ExportaTablaApoyo(DataSource dataSource) {
+    		super(dataSource,"PKG_TABAPOYO.P_EXPORTA_TABLA_APOYO");
+    		declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_usuario_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ExportaTablaApoyoMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class ExportaTablaApoyoMapper implements RowMapper<InputStream> {
+    	public InputStream mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		OracleLobHandler lobHandler = new OracleLobHandler();
+    		return new ByteArrayInputStream(lobHandler.getBlobAsBytes(rs, "DATA"));
+    	}
+    }
     
 }
