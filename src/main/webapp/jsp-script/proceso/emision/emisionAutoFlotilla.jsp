@@ -538,7 +538,11 @@ function _p31_personaSaved()
         {
             var json=Ext.decode(response.responseText);
             debug('### mpoliper:',json);
-            if(json.exito==false)
+            if(json.exito)
+            {
+                _p22_fieldCdperson().mpoliper=true;
+            }
+            else
             {
                 mensajeError(json.respuesta);
             }
@@ -607,10 +611,10 @@ function _p31_guardar(callback)
     
     if(valido)
     {
-        valido = !Ext.isEmpty(_p22_fieldCdperson().getValue());
+        valido = _p22_fieldCdperson().mpoliper==true&&_p22_fieldCdperson().validado==true;
         if(!valido)
         {
-            mensajeWarning('Debe buscar o agregar el cliente');
+            mensajeWarning('Debe guardar el cliente');
         }
     }
     
