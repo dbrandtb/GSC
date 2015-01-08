@@ -65,6 +65,11 @@ public class ReportesManagerImpl implements ReportesManager {
 	}
 	
 	
+	public InputStream exportaTablaApoyo(Map<String, String> params) throws Exception{
+		
+		return reportesDAO.exportaTablaApoyo(params);
+	}
+	
 	public void setReportesDAO(ReportesDAO reportesDAO) {
 		this.reportesDAO = reportesDAO;
 	}

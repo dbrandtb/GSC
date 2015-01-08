@@ -35,5 +35,13 @@ public interface ReportesManager {
 	 * @throws Exception
 	 */
 	public InputStream obtenerDatosReporte(String cdreporte, String username, Map<String, String> params) throws Exception;
+
+	/**
+	 * Exporta una tabla de apoyo a excel
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public InputStream exportaTablaApoyo(Map<String, String> params) throws Exception;
 	
 }

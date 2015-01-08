@@ -56,5 +56,7 @@ public interface ReportesDAO {
 	 * @throws Exception
 	 */
 	public InputStream obtenerReporte(String cdreporte, String username) throws Exception;
+
+	public InputStream exportaTablaApoyo(Map<String, String> params) throws Exception;
 	
 }
