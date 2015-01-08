@@ -969,14 +969,15 @@ function _p31_emitirFinal(me)
         ,timeout : 240000
         ,params  :
         {
-            'panel1.pv_ntramite'  : _p31_smap1.ntramite
-            ,'panel2.pv_cdunieco' : _p31_smap1.cdunieco
-            ,'panel2.pv_cdramo'   : _p31_smap1.cdramo
-            ,'panel2.pv_estado'   : _p31_smap1.estado
-            ,'panel1.pv_nmpoliza' : _p31_smap1.nmpoliza
-            ,'panel2.pv_nmpoliza' : _p31_smap1.nmpoliza
-            ,'panel2.pv_cdtipsit' : _p31_smap1.cdtipsit
-            ,'panel1.flotilla'    : 'si'
+            'panel1.pv_ntramite'      : _p31_smap1.ntramite
+            ,'panel2.pv_cdunieco'     : _p31_smap1.cdunieco
+            ,'panel2.pv_cdramo'       : _p31_smap1.cdramo
+            ,'panel2.pv_estado'       : _p31_smap1.estado
+            ,'panel1.pv_nmpoliza'     : _p31_smap1.nmpoliza
+            ,'panel2.pv_nmpoliza'     : _p31_smap1.nmpoliza
+            ,'panel2.pv_cdtipsit'     : _p31_smap1.cdtipsit
+            ,'panel1.flotilla'        : 'si'
+            ,'panel1.tipoGrupoInciso' : 'C'
         }
         ,success:function(response)
         {
