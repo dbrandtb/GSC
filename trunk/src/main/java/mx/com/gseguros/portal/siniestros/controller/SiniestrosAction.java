@@ -7236,7 +7236,26 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
-    
+    public String consultaCirculoHospitalario(){
+		logger.debug(" **** Entrando a consultaCirculoHospitalario **");
+		logger.debug(params);
+		
+		try {
+			String fechaAutorizacion = params.get("feautori");
+			logger.debug("fechaAutorizacion -->"+fechaAutorizacion);
+			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+			logger.debug("feAutorizacion -->"+feAutorizacion);
+			
+			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(params.get("cdpresta"),params.get("cdramo"),feAutorizacion);
+			logger.debug("VALOR DE RESPUESTA -->");
+			logger.debug(datosInformacionAdicional);
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de consultaCirculoHospitalario",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+    }
 	/*public String subirCenso()
 	{
 		logger.info(""

@@ -385,6 +385,8 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoRamoSalud()  throws Exception;
 
 	public List<Map<String, String>> obtieneDatosAdicionales(Map<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> obtieneDatosCirculoHospitalario(Map<String, Object> params) throws Exception;
 
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 

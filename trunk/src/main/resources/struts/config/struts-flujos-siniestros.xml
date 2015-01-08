@@ -102,6 +102,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaCirculoHospitalario" class="siniestrosAction"
+			method="consultaCirculoHospitalario">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosInformacionAdicional.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="consultaListaSubcobertura" class="siniestrosAction"
 			method="consultaListaSubcobertura">
 			<result type="json">

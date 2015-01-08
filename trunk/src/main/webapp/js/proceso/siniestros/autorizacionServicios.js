@@ -1863,31 +1863,31 @@ Ext.onReady(function() {
 			 	
 			 	{
 	 				 xtype       : 'textfield',			fieldLabel : 'ValSesiones'		,id       : 'idValSesiones', 	name:'ValSesiones',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'Hospital Plus',id       : 'idHospitalPlus', 	name:'idHospitalPlus',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'porcentajeIncremento',id       : 'idPorcIncremento', 	name:'idPorcIncremento',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'Multiplo Incremento',id       : 'idMultiploIncrem', 	name:'idMultiploIncrem',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 			 	{
 	 				 xtype       : 'textfield',			fieldLabel : 'mtoBase'				,id       : 'idMontoBase',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'Tipo Autorizacion id:(claveTipoAutoriza)'				,id       : 'claveTipoAutoriza',				name       : 'claveTipoAutoriza'
-					 ,allowBlank : false,				labelWidth: 170,	value:2//,	hidden:true
+					 ,allowBlank : false,				labelWidth: 170,	value:2,	hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'Tipo Autorizacion id:(claveTipoAutoriza)'				,id       : 'cveTipoAutorizaG',				name       : 'cveTipoAutorizaG'
-					 ,allowBlank : false,				labelWidth: 170//,	hidden:true
+					 ,allowBlank : false,				labelWidth: 170,	hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'Unieco'				,id       : 'idUnieco',				name       : 'cdunieco'
@@ -3274,7 +3274,58 @@ Ext.onReady(function() {
 				Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				Ext.getCmp('idPenalCambioZona').setValue("0");
 				debug("VALOR DEL CDPRESTA --> ", Ext.getCmp('idProveedor').getValue(),Ext.getCmp('fechaAutorizacion').getValue());
-				
+				Ext.Ajax.request(
+					{
+						url     : _URL_CIRCULO_HOSPITALARIO
+						,params : 
+						{
+							'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
+							'params.cdramo': Ext.getCmp('idcdRamo').getValue(),
+							'params.feautori': Ext.getCmp('fechaAutorizacion').getValue()
+						}
+						,success : function (response)
+						{
+							var datosExtras = Ext.decode(response.responseText);
+							debug("VALOR DE DATOS EXTRAS -->",datosExtras);
+							
+							if(Ext.decode(response.responseText).datosInformacionAdicional != null)
+							{
+								var copagoOrig = Ext.getCmp('idCopago').getValue() ;
+								var sumatoria = 0;
+								var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+								Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
+								Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
+								Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
+								
+								/* una vez que tengo los valores se realiza la validacion de los campos para ver el copago total
+									si el TiHospitalPlus es 0, entonces se aplicara el % de copago contratado en la póliza.
+									Si el TiHospitalPlus es 1, entonces deberá recuperar el valor DHospitalPlusPuntos y sumarlo al %  de copago contratado en la póliza.
+								*/
+								if(Ext.getCmp('idHospitalPlus').getValue() =="0"){
+									Ext.getCmp('idCopagoFin').setValue(copagoOrig);
+								}else{
+									if( copagoOrig =="NO" || copagoOrig =="NA" || copagoOrig ==''|| copagoOrig == null)
+								    {
+								        var sumatoria = +Ext.getCmp('idPorcIncremento').getValue();
+										Ext.getCmp('idCopagoFin').setValue(sumatoria);
+								    }else{
+								    	var sumatoria = + copagoOrig + +Ext.getCmp('idPorcIncremento').getValue();
+										Ext.getCmp('idCopagoFin').setValue(sumatoria);
+								    }
+								}
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							centrarVentanaInterna(Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							}));
+						}
+					});
 				
 				
 			}
