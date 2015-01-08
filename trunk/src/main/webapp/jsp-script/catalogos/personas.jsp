@@ -265,8 +265,10 @@ Ext.onReady(function()
 				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
 				                        			store.removeAll();
 				                        			var form=_p22_formBusqueda();
-				                        			if(!Ext.isEmpty(form.down('[name=smap1.rfc]').getValue())) mensajeWarning('La persona para el RFC: '+ form.down('[name=smap1.rfc]').getValue() +' ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+				                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
 				                        			form.down('[name=smap1.rfc]').reset();
+				                        		}else if(_esCargaClienteNvo && successful){
+				                        			irModoAgregar();
 				                        		}
 				                        	}
 				                        }
@@ -393,7 +395,7 @@ Ext.onReady(function()
                          text     : _esCargaClienteNvo?'Continuar':'Agregar Cliente'
                          ,xtype   : 'button'
                          ,itemId  : 'btnContinuarId'
-                         ,disabled: true
+                         ,disabled: !_esCargaClienteNvo
                          ,icon    : '${ctx}/resources/fam3icons/icons/building_go.png'
                          ,handler : function (){
 										var form = _p22_formBusqueda();
@@ -508,7 +510,12 @@ Ext.onReady(function()
 												
 												_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
 												
-												irModoAgregar();
+												if(_esCargaClienteNvo){
+													form.down('[name=smap1.rfc]').doQuery(valorRFC,true,false);
+												}else{
+													irModoAgregar();
+												}
+												
 										    }
 										    
 										}else if(!Ext.isEmpty(valorNombre)){
@@ -907,7 +914,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			var form=_p22_formBusqueda();
 			form.down('[name=smap1.rfc]').setFieldLabel('Ingrese el RFC');
 			form.down('[name=smap1.nombre]').hide();
-			
+			form.down('[name=smap1.rfc]').minChars = 100;
 			
 			if(!Ext.isEmpty(_cargaCP)){
 				_p22_comboCodPostal().setReadOnly(true);
