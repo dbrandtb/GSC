@@ -12,6 +12,7 @@ var _URL_GuardaValoresTablaApoyo = '<s:url namespace="/catalogos" action="guarda
 var _URL_CONSULTA_VALORES_TABLA_UNA_CLAVE = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo1clave" />';
 
 var _URL_Carga_Masiva = '<s:url namespace="/cargamasiva" action="invocaCargaMasiva" />';
+var _URL_Exporta_Tabla = '<s:url namespace="/reportes" action="exportaTablaApoyo" />';
 
 var _NMTABLA = '<s:property value="params.nmtabla" />';
 var _CDTABLA = '<s:property value="params.cdtabla" />';
@@ -369,7 +370,7 @@ Ext.onReady(function() {
 						            },
 			            			border: false,
 			            			defaults: {
-										style : 'margin:5px;'
+										style : 'margin:3px;'
 									},
 			            			items: [{
 									xtype      : 'hidden',
@@ -391,7 +392,7 @@ Ext.onReady(function() {
 									readOnly      : true
 								},{
 						        	xtype      : 'textfield',
-						    		name       : 'pi_cdtabla',
+						    		name       : 'params.pi_cdtabla',
 						    		fieldLabel : 'C&oacute;digo de la Tabla',
 									maxLength  : 30,
 									maxLengthText: 'Longitud m&aacute;xima de 30 caracteres',
@@ -400,7 +401,7 @@ Ext.onReady(function() {
 						    		allowBlank : false
 						        },{
 						        	xtype      : 'textfield',
-						    		name       : 'pi_dstabla',
+						    		name       : 'params.pi_dstabla',
 						    		allowBlank : false,
 						    		readOnly   : true,
 						    		fieldLabel : 'Descripci&oacute;n de la Tabla',
@@ -416,53 +417,54 @@ Ext.onReady(function() {
 						    	title: 'Filtrar datos de Tabla',
 						    	border: false,
 						    	defaults: {
-						    		style: 'margin: 3px'// para hacer que los componentes se separen 5px
+						    		style: 'margin: 3px',// para hacer que los componentes se separen 5px
+						    		width: 220
 						    	},
 						    	buttonAlign: 'center',
 						    	items: [{
 							    	xtype: 'textfield',
 							    	fieldLabel: 'Clave 1',
-							    	labelWidth: 50,
+							    	labelWidth: 120,
 							    	readOnly: true,
 							    	name: 'params.PV_OTCLAVE1_I'
 							    },{
 							    	xtype: 'textfield',
 							    	fieldLabel: 'Clave 2',
-							    	labelWidth: 50,
+							    	labelWidth: 120,
 							    	readOnly: true,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_OTCLAVE2_I'
 							    },{
 							    	xtype: 'textfield',
 							    	fieldLabel: 'Clave 3',
-							    	labelWidth: 50,
+							    	labelWidth: 120,
 							    	readOnly: true,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_OTCLAVE3_I'
 							    },{
 							    	xtype: 'textfield',
 							    	fieldLabel: 'Clave 4',
-							    	labelWidth: 50,
+							    	labelWidth: 120,
 							    	readOnly: true,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_OTCLAVE4_I'
 							    },{
 							    	xtype: 'textfield',
 							    	fieldLabel: 'Clave 5',
-							    	labelWidth: 50,
+							    	labelWidth: 120,
 							    	readOnly: true,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_OTCLAVE5_I'
 							    },{
 							    	xtype: 'datefield',
 							    	fieldLabel: 'Fecha Desde',
-							    	labelWidth: 60,
+							    	labelWidth: 80,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_FEDESDE_I'
 							    },{
 							    	xtype: 'datefield',
 							    	fieldLabel: 'Fecha Hasta',
-							    	labelWidth: 60,
+							    	labelWidth: 80,
 							    	hidden: _TIPO_1CLAVE,
 							    	name: 'params.PV_FEHASTA_I'
 							    }],
@@ -502,110 +504,6 @@ Ext.onReady(function() {
 					buttonAlign : 'center',
 							    buttons:
 							    	[{
-						        	text: 'Guardar Valores',
-						        	itemId: 'botonGuardarValoresId',
-						        	icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
-						        	handler: function(btn, e) {
-
-						        		/**
-						        		 * PARA HACER QUE EL EDITOR DE LA TABLA FINALICE EL RECORD CON EL MISMO VALOR
-						        		 */
-						        		var posActual = panelValoresTabCincoClaves.getSelectionModel().getCurrentFocusPosition();
-						        		panelValoresTabCincoClaves.getSelectionModel().setCurrentFocusPosition(posActual);
-						        		
-						        		
-						        		if (panelValoresTablaApoyo.isValid()) {
-						        			
-						        			Ext.Msg.show({
-						    		            title: 'Confirmar acci&oacute;n',
-						    		            msg: '&iquest;Esta seguro que desea actualizar esta tabla?',
-						    		            buttons: Ext.Msg.YESNO,
-						    		            fn: function(buttonId, text, opt) {
-						    		            	if(buttonId == 'yes') {
-						    		            		
-						    		            		// PARA AGREGAR NUEVAS FILAS A  GUARDAR
-						    		            		var deleteList = [];
-						    		            		var saveList = [];
-						    		            		var updateList = [];
-    													
-
-						    		            		if(_TIPO_1CLAVE){
-									                		storeTablaUnaClave.getRemovedRecords().forEach(function(record,index,arr){
-													        	deleteList.push(record.data);
-													    	});
-							    		            		
-							    		            		storeTablaUnaClave.getNewRecords().forEach(function(record,index,arr){
-													    		if(record.dirty){
-													    			saveList.push(record.data);
-													    		}
-													    	});
-													    	
-													    	storeTablaUnaClave.getUpdatedRecords().forEach(function(record,index,arr){
-													    		updateList.push(record.data);
-													    	});
-									                	}else{
-									                		storeTablaCincoClaves.getRemovedRecords().forEach(function(record,index,arr){
-													        	deleteList.push(record.data);
-													    	});
-							    		            		
-							    		            		storeTablaCincoClaves.getNewRecords().forEach(function(record,index,arr){
-													    		if(record.dirty){
-													    			saveList.push(record.data);
-													    		}
-													    	});
-													    	
-													    	storeTablaCincoClaves.getUpdatedRecords().forEach(function(record,index,arr){
-													    		updateList.push(record.data);
-													    	});	
-									                	}
-												    	
-													    debug('Claves Removed: ' , deleteList);
-													    debug('Claves Added: '   , saveList);
-													    debug('Claves Updated: ' , updateList);
-												    	
-												    	
-						    		            		panelValoresTablaApoyo.setLoading(true);
-						    		            		
-						    		            		Ext.Ajax.request({
-										    	            url: _URL_GuardaValoresTablaApoyo,
-										    	            jsonData : {
-										    	            	params: panelValoresTablaApoyo.getValues(),
-										    	                'deleteList' : deleteList,
-										    	                'saveList'   : saveList,
-										    	                'updateList' : updateList
-										    	            },
-										    	            success  : function(response){
-										    	                panelValoresTablaApoyo.setLoading(false);
-										    	                var json = Ext.decode(response.responseText);
-										    	                if(json.success){
-										    	                	recargagridTabla5Claves();
-										    	                	mensajeCorrecto('Aviso','Se ha guardado correctamente la tabla');
-										    	                }else{
-										    	                    mensajeError(json.msgRespuesta);
-										    	                }
-										    	            }
-										    	            ,failure  : function()
-										    	            {
-										    	                panelValoresTablaApoyo.setLoading(false);
-										    	                errorComunicacion();
-										    	            }
-												    	});
-						    		            	}
-						            			},
-						    		            animateTarget: btn,
-						    		            icon: Ext.Msg.QUESTION
-						        			});
-						    			} else {
-						    				Ext.Msg.show({
-						    					title: 'Aviso',
-						    		            msg: 'Complete la informaci&oacute;n requerida',
-						    		            buttons: Ext.Msg.OK,
-						    		            animateTarget: btn,
-						    		            icon: Ext.Msg.WARNING
-						    				});
-						    			}
-						        	}
-						        },{
 							    	text : 'Carga Masiva',
 							    	tooltip: 'Carga Masiva de la tabla, agrega sin eliminar los registros existentes.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
@@ -721,32 +619,143 @@ Ext.onReady(function() {
 							                ]
 							            }).show();
 							            centrarVentanaInterna(_p22_windowAgregarDocu);
-							    			
-//							    			var form = panelCobranza.getForm();
-//							                form.submit({
-//							                    url: _UrlSubirArchivoCobranza,
-//							                    waitMsg: 'Subiendo Archivo...',
-//							                    success: function(fp, o) {
-//							                        mensajeCorrecto('Exito', 'La cobranza se ha cargado correctamente.');
-//							                        btn.up('panel').getDockedItems('toolbar[dock="bottom"]').forEach(function(element, index, array){
-//							                        	element.enable();
-//							    	        		});
-//							                    },
-//							                    failure: function(form, action) {
-//							                		switch (action.failureType) {
-//							                            case Ext.form.action.Action.CONNECT_FAILURE:
-//							                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-//							                                break;
-//							                            case Ext.form.action.Action.SERVER_INVALID:
-//							                            case Ext.form.action.Action.LOAD_FAILURE:
-//							                            	 var msgServer = Ext.isEmpty(action.result.mensajeRespuesta) ? 'Error interno del servidor, consulte a soporte' : action.result.mensajeRespuesta;
-//							                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-//							                                break;
-//							                        }
-//							        			}
-//							                });
 							    	}
-							    }
+							    },{
+							    	text : 'Exportar',
+							    	tooltip: 'Exporta la tabla a formato Excel.',
+							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
+							    	handler: function(btn){
+							    		panelValoresTablaApoyo.setLoading(true);
+							    		
+							    		setTimeout(function(){
+				                			panelValoresTablaApoyo.setLoading(false);
+				                		},5000);
+							    		
+							    		Ext.create('Ext.form.Panel').submit({
+											url : _URL_Exporta_Tabla,
+											standardSubmit : true,
+											params : panelValoresTablaApoyo.getValues(),
+	                                        waitMsg: 'Exportando Tabla de Apoyo...',
+						                    failure: function(form, action) {
+						                		switch (action.failureType) {
+						                            case Ext.form.action.Action.CONNECT_FAILURE:
+						                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+						                                break;
+						                            case Ext.form.action.Action.SERVER_INVALID:
+						                            case Ext.form.action.Action.LOAD_FAILURE:
+						                            	 var msgServer = Ext.isEmpty(action.result.mensaje) ? 'Error al exportar, consulte a soporte' : action.result.mensaje;
+						                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+						                                break;
+						                        }
+						        			}
+										});
+										
+							    	}
+							    },'->',{
+						        	text: 'Guardar Valores',
+						        	itemId: 'botonGuardarValoresId',
+						        	icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
+						        	handler: function(btn, e) {
+
+						        		/**
+						        		 * PARA HACER QUE EL EDITOR DE LA TABLA FINALICE EL RECORD CON EL MISMO VALOR
+						        		 */
+						        		var posActual = panelValoresTabCincoClaves.getSelectionModel().getCurrentFocusPosition();
+						        		panelValoresTabCincoClaves.getSelectionModel().setCurrentFocusPosition(posActual);
+						        		
+						        		
+						        		if (panelValoresTablaApoyo.isValid()) {
+						        			
+						        			Ext.Msg.show({
+						    		            title: 'Confirmar acci&oacute;n',
+						    		            msg: '&iquest;Esta seguro que desea actualizar esta tabla?',
+						    		            buttons: Ext.Msg.YESNO,
+						    		            fn: function(buttonId, text, opt) {
+						    		            	if(buttonId == 'yes') {
+						    		            		
+						    		            		// PARA AGREGAR NUEVAS FILAS A  GUARDAR
+						    		            		var deleteList = [];
+						    		            		var saveList = [];
+						    		            		var updateList = [];
+    													
+
+						    		            		if(_TIPO_1CLAVE){
+									                		storeTablaUnaClave.getRemovedRecords().forEach(function(record,index,arr){
+													        	deleteList.push(record.data);
+													    	});
+							    		            		
+							    		            		storeTablaUnaClave.getNewRecords().forEach(function(record,index,arr){
+													    		if(record.dirty){
+													    			saveList.push(record.data);
+													    		}
+													    	});
+													    	
+													    	storeTablaUnaClave.getUpdatedRecords().forEach(function(record,index,arr){
+													    		updateList.push(record.data);
+													    	});
+									                	}else{
+									                		storeTablaCincoClaves.getRemovedRecords().forEach(function(record,index,arr){
+													        	deleteList.push(record.data);
+													    	});
+							    		            		
+							    		            		storeTablaCincoClaves.getNewRecords().forEach(function(record,index,arr){
+													    		if(record.dirty){
+													    			saveList.push(record.data);
+													    		}
+													    	});
+													    	
+													    	storeTablaCincoClaves.getUpdatedRecords().forEach(function(record,index,arr){
+													    		updateList.push(record.data);
+													    	});	
+									                	}
+												    	
+													    debug('Claves Removed: ' , deleteList);
+													    debug('Claves Added: '   , saveList);
+													    debug('Claves Updated: ' , updateList);
+												    	
+												    	
+						    		            		panelValoresTablaApoyo.setLoading(true);
+						    		            		
+						    		            		Ext.Ajax.request({
+										    	            url: _URL_GuardaValoresTablaApoyo,
+										    	            jsonData : {
+										    	            	params: panelValoresTablaApoyo.getValues(),
+										    	                'deleteList' : deleteList,
+										    	                'saveList'   : saveList,
+										    	                'updateList' : updateList
+										    	            },
+										    	            success  : function(response){
+										    	                panelValoresTablaApoyo.setLoading(false);
+										    	                var json = Ext.decode(response.responseText);
+										    	                if(json.success){
+										    	                	recargagridTabla5Claves();
+										    	                	mensajeCorrecto('Aviso','Se ha guardado correctamente la tabla');
+										    	                }else{
+										    	                    mensajeError(json.msgRespuesta);
+										    	                }
+										    	            }
+										    	            ,failure  : function()
+										    	            {
+										    	                panelValoresTablaApoyo.setLoading(false);
+										    	                errorComunicacion();
+										    	            }
+												    	});
+						    		            	}
+						            			},
+						    		            animateTarget: btn,
+						    		            icon: Ext.Msg.QUESTION
+						        			});
+						    			} else {
+						    				Ext.Msg.show({
+						    					title: 'Aviso',
+						    		            msg: 'Complete la informaci&oacute;n requerida',
+						    		            buttons: Ext.Msg.OK,
+						    		            animateTarget: btn,
+						    		            icon: Ext.Msg.WARNING
+						    				});
+						    			}
+						        	}
+						        }
 						      ]
 		});
     
