@@ -1735,6 +1735,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String cdRamoGS        = null;
 		boolean esFlotilla     = false;
+		String tipoGrupoInciso = "I";
 		
 		////// obtener parametros
 		if(success)
@@ -1749,6 +1750,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = success && (nmpoliza = panel2.get("pv_nmpoliza")      )!=null;
 				esFlotilla = StringUtils.isNotBlank(panel1.get("flotilla"))
 						&&panel1.get("flotilla").equalsIgnoreCase("si");
+				
+				if(StringUtils.isNotBlank(panel1.get("tipoGrupoInciso"))
+						&&panel1.get("tipoGrupoInciso").equals("C"))
+				{
+					tipoGrupoInciso = "C";
+				}
+				
 				if(!success)
 				{
 					mensajeRespuesta="No se recibieron todos los datos";
