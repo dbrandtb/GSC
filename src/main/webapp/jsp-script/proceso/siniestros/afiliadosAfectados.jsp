@@ -199,7 +199,8 @@
 						{type:'string',	name:'CDGARANT'},		{type:'string',	name:'CDCONVAL'},
 						{type:'string',	name:'NMSINREF'},		{type:'string',	name:'IMPORTEASEG'},
 						{type:'string',	name:'PTIVAASEG'},		{type:'string',	name:'PTIVARETASEG'},
-						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'}
+						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'},
+						{type:'string',	name:'DEDUCIBLE'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1066,6 +1067,9 @@
 									}
 									return r;
 								}
+							},
+							{
+								header: 'Deducible',				dataIndex: 'DEDUCIBLE'
 							},
 							{
 								header: 'Copago',					dataIndex: 'COPAGO'
