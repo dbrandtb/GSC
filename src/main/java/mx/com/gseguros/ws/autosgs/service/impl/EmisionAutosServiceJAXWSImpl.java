@@ -76,8 +76,9 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 	@Autowired
 	private StoredProceduresManager storedProceduresManager;
 	
-	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
+	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco,
+			String cdramo, String estado, String nmpoliza, String tipopol,
+			String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
