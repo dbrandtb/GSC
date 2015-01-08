@@ -1360,6 +1360,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("requiereInformacionAdicional params: "+params);
 		return siniestrosDAO.obtieneDatosAdicionales(params);
 	}
+	
+	@Override
+	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, String feautori) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_feautori_i",   feautori);
+		log.debug("listaConsultaCirculoHospitalario params: "+params);
+		return siniestrosDAO.obtieneDatosCirculoHospitalario(params);
+	}
 
 	@Override
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
