@@ -2784,6 +2784,7 @@ function _p30_bloquear(b)
 function _p30_clonar()
 {
     debug('>_p30_clonar');
+    _fieldById('_p30_form').formOculto.getForm().reset();
     _p30_editar();
     _fieldByName('nmpoliza').setValue('');
     debug('<_p30_clonar');

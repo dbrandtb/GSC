@@ -169,7 +169,10 @@ Ext.onReady(function()
 	        {
 	            itemId    : '_p29_adicionalesForm'
 	            ,title    : 'DATOS ADICIONALES DE INCISO'
-	            ,defaults : { style : 'margin:5px;' }
+	            ,defaults :
+	            {
+	                style : 'margin:5px;margin-right:160px;'
+	            }
 	            ,layout   :
 	            {
 	                type     : 'table'
@@ -480,7 +483,11 @@ function _p29_personaSaved()
         {
             var json=Ext.decode(response.responseText);
             debug('### mpoliper:',json);
-            if(json.exito==false)
+            if(json.exito)
+            {
+                _p22_fieldCdperson().mpoliper=true;
+            }
+            else
             {
                 mensajeError(json.respuesta);
             }
@@ -512,10 +519,10 @@ function _p29_guardar(callback)
     
     if(valido)
     {
-        valido = !Ext.isEmpty(_p22_fieldCdperson().getValue());
+        valido = _p22_fieldCdperson().mpoliper==true&&_p22_fieldCdperson().validado==true;
         if(!valido)
         {
-            mensajeWarning('Debe buscar o agregar el cliente');
+            mensajeWarning('Debe guardar el cliente');
         }
     }
     

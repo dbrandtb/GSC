@@ -646,11 +646,16 @@ Ext.onReady(function()
 	        {
 	            if(me.findRecord('key',val)!=false)
 	            {
+	                _fieldByLabel('TIPO USO').forceSelection=false;
 	                _fieldByLabel('TIPO USO').getStore().load(
 	                {
 	                    params :
 	                    {
 	                        'params.cdnegocio' : val
+	                    }
+	                    ,callback : function()
+	                    {
+	                        _fieldByLabel('TIPO USO').forceSelection=true;
 	                    }
 	                });
 	                marca.getStore().load(
@@ -1830,6 +1835,7 @@ function _p28_nmpolizaChange(me)
 function _p28_clonar()
 {
     debug('>_p28_clonar');
+    _fieldById('_p28_form').formOculto.getForm().reset();
     _p28_editar();
     _fieldByName('nmpoliza').setValue('');
     debug('<_p28_clonar');
