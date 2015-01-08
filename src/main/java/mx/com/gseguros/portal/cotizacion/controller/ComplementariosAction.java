@@ -115,6 +115,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String mensajeRespuesta;
 	private String auxiliarProductoCdramo   = null;
 	private String auxiliarProductoCdtipsit = null;
+	private String tipoGrupoInciso;
+	
 	private ConsultasManager consultasManager;
 	private boolean exito = false;
 	private PantallasManager pantallasManager;
@@ -1735,7 +1737,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String cdRamoGS        = null;
 		boolean esFlotilla     = false;
-		String tipoGrupoInciso = "I";
+		tipoGrupoInciso = "I";
 		
 		////// obtener parametros
 		if(success)
@@ -2030,7 +2032,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							)
 					{
 						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-									edoPoliza, nmpolizaEmitida,"I", nmsuplemEmitida, ntramite,cdtipsit , us);
+									edoPoliza, nmpolizaEmitida, tipoGrupoInciso, nmsuplemEmitida, ntramite,cdtipsit , us);
 						
 						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 						retryWS = !success;
@@ -4082,6 +4084,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setCotizacionManager(CotizacionManager cotizacionManager) {
 		this.cotizacionManager = cotizacionManager;
+	}
+
+	public String getTipoGrupoInciso() {
+		return tipoGrupoInciso;
+	}
+
+	public void setTipoGrupoInciso(String tipoGrupoInciso) {
+		this.tipoGrupoInciso = tipoGrupoInciso;
 	}
 
 }
