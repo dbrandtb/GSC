@@ -80,4 +80,9 @@ public interface CatalogosDAO {
 	public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception;
 	public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception;
 	public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception;
+	public List<GenericVO>cargarPlanesPorNegocioModeloClavegsRamo5(
+			String cdtipsit
+			,String modelo
+			,String negocio
+			,String clavegs)throws Exception;
 }

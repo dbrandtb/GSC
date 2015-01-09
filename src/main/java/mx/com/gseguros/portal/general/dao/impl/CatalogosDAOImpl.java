@@ -1195,4 +1195,50 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>cargarPlanesPorNegocioModeloClavegsRamo5(
+			String cdtipsit
+			,String modelo
+			,String negocio
+			,String clavegs)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdramo"   , "5");
+		params.put("cdtipsit" , cdtipsit);
+		params.put("modelo"   , modelo);
+		params.put("negocio"  , negocio);
+		params.put("clavegs"  , clavegs);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5", params);
+		Map<String,Object>procResult  = ejecutaSP(new CargarPlanesPorNegocioModeloClavegsRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5", params, lista);
+		List<GenericVO>listaGen = new ArrayList<GenericVO>();
+		for(Map<String,String>plan:lista)
+		{
+			listaGen.add(new GenericVO(plan.get("CDPLAN"),plan.get("DSPLAN")));
+		}
+		return listaGen;
+	}
+	
+	protected class CargarPlanesPorNegocioModeloClavegsRamo5 extends StoredProcedure
+	{
+		protected CargarPlanesPorNegocioModeloClavegsRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDPLAN"
+					,"DSPLAN"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

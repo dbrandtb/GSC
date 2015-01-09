@@ -4706,4 +4706,39 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		compile();
     	}
     }
+    
+    @Override
+    public List<Map<String,String>>cargarConfiguracionTvalositFlotillas(String cdramo,String cdtipsit)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo"   , cdramo);
+    	params.put("cdtipsit" , cdtipsit);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException(Utilerias.join("No hay configuracion para los valores del ramo ",cdramo," y subramo ",cdtipsit));
+    	}
+    	return lista;
+    }
+    
+    protected class CargarConfiguracionTvalositFlotillas extends StoredProcedure
+    {
+    	protected CargarConfiguracionTvalositFlotillas(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS");
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+    		String[] cols=new String[]{
+    				"CDATRIBU"
+    				,"VALOR"
+    				};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
