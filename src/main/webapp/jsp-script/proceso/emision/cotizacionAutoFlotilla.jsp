@@ -541,6 +541,7 @@ Ext.onReady(function()
         ,fieldLabel : 'INICIO DE VIGENCIA'
         ,value      : new Date()
         ,style      : 'margin:5px;'
+        ,readOnly   : _p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol!='SUSCRIAUTO'
     }
     ,{
         xtype       : 'datefield'
@@ -1315,7 +1316,7 @@ Ext.onReady(function()
             }
             ,select : function()
             {
-                if(_p30_smap1.cdsisrol=='PROMOTORAUTO'||_p30_smap1.cdsisrol=='SUSCRIAUTO')
+                if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA'||_p30_smap1.cdsisrol=='PROMOTORAUTO')
                 {
                     var negoCmp = _fieldByLabel('NEGOCIO');
                     var negoVal = negoCmp.getValue();
@@ -2486,7 +2487,7 @@ function _p30_cotizar(sinTarificar)
                         ,width        : 450
                         ,windowCesion : Ext.create('Ext.window.Window',
                         {
-                            title        : 'CESI&Oacute;N DE COTIZACIO&Oacute;N'
+                            title        : 'CESI&Oacute;N DE COMISI&Oacute;N'
                             ,autoScroll  : true
                             ,closeAction : 'hide'
                             ,modal       : true

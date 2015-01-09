@@ -87,6 +87,7 @@ var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"       
 var _p28_urlCargarParamerizacionCoberturas = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas" />';
 var _p28_urlValidarTractocamionRamo5       = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"           />';
 var _p28_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"          />';
+var _p28_urlCargarDetalleNegocioRamo5      = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                   />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -331,6 +332,7 @@ Ext.onReady(function()
         ,fieldLabel : 'INICIO DE VIGENCIA'
         ,value      : new Date()
         ,style      : 'margin-left:15px;'
+        ,readOnly   : _p28_smap1.cdramo+'x'=='5x'&&_p28_smap1.cdsisrol!='SUSCRIAUTO'
     }
     ,{
         xtype       : 'datefield'
@@ -675,6 +677,59 @@ Ext.onReady(function()
                             }
                         });
                     }
+                    
+                    if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA'||_p28_smap1.cdsisrol=='PROMOTORAUTO')
+                {
+                    var negoCmp = _fieldByLabel('NEGOCIO');
+                    var negoVal = negoCmp.getValue();
+                    negoCmp.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : _p28_urlCargarDetalleNegocioRamo5
+                        ,params :
+                        {
+                            'smap1.negocio' : negoVal
+                        }
+                        ,success : function(response)
+                        {
+                            negoCmp.setLoading(false);
+                            var json = Ext.decode(response.responseText);
+                            debug('### detalle negocio:',json);
+                            _fieldByName('fefin').validator=function(val)
+                            {
+                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                                debug('feiniVal:',feiniVal);
+                                var fefinVal=[];
+                                for(var i=1;i<=json.smap1.MULTIANUAL-0;i++)
+                                {
+                                    debug('mas anios:',i);
+                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                                }
+                                debug('validar contra:',fefinVal);
+                                var valido = true;
+                                if(!Ext.Array.contains(fefinVal,val))
+                                {
+                                    valido = 'Solo se permite:';
+                                    for(var i in fefinVal)
+                                    {
+                                        valido = valido + ' ' + fefinVal[i];
+                                        if(fefinVal.length>1&&i<fefinVal.length-1)
+                                        {
+                                            valido = valido + ',';
+                                        }
+                                    }
+                                }
+                                return valido;
+                            }
+                            _fieldByName('fefin').isValid();
+                        }
+                        ,failure : function()
+                        {
+                            negoCmp.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
 	            }
 	        }
 	    });
@@ -839,7 +894,7 @@ function _p28_cotizar(sinTarificar)
                         ,width        : 450
                         ,windowCesion : Ext.create('Ext.window.Window',
                         {
-                            title        : 'CESI&Oacute;N DE COTIZACIO&Oacute;N'
+                            title        : 'CESI&Oacute;N DE COMISI&Oacute;N'
                             ,autoScroll  : true
                             ,closeAction : 'hide'
                             ,modal       : true
