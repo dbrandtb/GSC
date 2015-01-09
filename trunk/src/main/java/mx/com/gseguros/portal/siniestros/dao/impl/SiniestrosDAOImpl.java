@@ -2580,10 +2580,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion,String cdRamo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_zcontratada_i", zonaContratada);
 		params.put("pv_zatencion_i", zonaAtencion);
+		params.put("pv_cdRamo_i", cdRamo);
 		Map<String, Object> mapResult = ejecutaSP(new ValidaPorcentajePenalizacionSP(getDataSource()), params);
 		return (String) mapResult.get("pv_penalizacion_o");
 	}
@@ -2594,6 +2595,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_PRESINIESTRO.P_GET_PENALIZACION");
 			declareParameter(new SqlParameter("pv_zcontratada_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_zatencion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdRamo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_penalizacion_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

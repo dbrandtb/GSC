@@ -1067,9 +1067,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion,String cdRamo) throws Exception {
 		try {
-			return siniestrosDAO.validaPorcentajePenalizacion(zonaContratada,zonaAtencion);
+			return siniestrosDAO.validaPorcentajePenalizacion(zonaContratada,zonaAtencion,cdRamo);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
