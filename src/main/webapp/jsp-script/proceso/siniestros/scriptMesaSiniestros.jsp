@@ -504,7 +504,7 @@ var msgWindow;
 		var urlDestino;
 		if(esPagoDirecto||true)
 		{
-			if(conCoberYSubcober)
+			if(true)
 			{
 				if(esPagoDirecto)
 				{

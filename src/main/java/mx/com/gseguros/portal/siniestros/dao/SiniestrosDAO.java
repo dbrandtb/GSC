@@ -300,7 +300,7 @@ public interface SiniestrosDAO {
 			String nmsinies,
 			String nfactura) throws Exception;
 	
-	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception;
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion, String cdRamo) throws Exception;
 
 	public String obtieneAutorizacionProceso(String nmAutSer) throws Exception;
 	

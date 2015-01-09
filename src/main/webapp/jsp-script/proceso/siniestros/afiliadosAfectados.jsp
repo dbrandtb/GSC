@@ -722,7 +722,7 @@
 				
 				var cobertura = Ext.create('Ext.form.field.ComboBox',
 				{
-					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	allowBlank: false,				displayField : 'value',
+					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	/*allowBlank: false,*/				displayField : 'value',
 					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeCobertura,		editable:false,
 					listeners : {
@@ -770,7 +770,7 @@
 
 				var subCobertura = Ext.create('Ext.form.field.ComboBox',
 				{
-					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',
+					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	/*allowBlank: false,*/				displayField : 'value',			id:'idSubcobertura',
 					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 				});
@@ -2858,10 +2858,17 @@
 			}
 			,success : function (response)
 			{
+				
 				var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
-				var requiereAutorizacion = json.REQAUTSERV
-				debug(requiereAutorizacion);
-
+				//var json=Ext.decode(response.responseText);
+				if( json == undefined || json == 'undefined'){
+					var requiereAutorizacion = 'OP';
+					debug(requiereAutorizacion);
+				}else{
+					var requiereAutorizacion = json.REQAUTSERV
+					debug(requiereAutorizacion);
+				}
+				
 				if(requiereAutorizacion == "SI"){ //Requiere autorizacion de servicio
 					var idReclamacion = record.raw.NMSINIES;
 					valido = idReclamacion && idReclamacion>0;
