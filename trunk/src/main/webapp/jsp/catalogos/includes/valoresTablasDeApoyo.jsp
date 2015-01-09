@@ -34,8 +34,8 @@ Ext.onReady(function() {
 	
 	var  _NUM_MAX_FILAS = 1000;
 	
-	var loadMaskTabla = new Ext.LoadMask('mainDivTabs', {msg:"Cargando Tabla..."});
-	loadMaskTabla.show();
+	var loadMaskTabla = new Ext.LoadMask('divValoresCincoClaves', {msg:"Cargando Tabla..."});
+	
 	
 	//Models:
 	
@@ -625,17 +625,17 @@ Ext.onReady(function() {
 							    	tooltip: 'Exporta la tabla a formato Excel.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
 							    	handler: function(btn){
-							    		panelValoresTablaApoyo.setLoading(true);
-							    		
+							    		var loadMaskExport = new Ext.LoadMask('divValoresCincoClaves', {msg:"Exportando Tabla de Apoyo..."});
+										loadMaskExport.show();
 							    		setTimeout(function(){
-				                			panelValoresTablaApoyo.setLoading(false);
-				                		},5000);
+				                			loadMaskExport.hide();
+				                		},25000);
 							    		
 							    		Ext.create('Ext.form.Panel').submit({
 											url : _URL_Exporta_Tabla,
 											standardSubmit : true,
 											params : panelValoresTablaApoyo.getValues(),
-	                                        waitMsg: 'Exportando Tabla de Apoyo...',
+	                                        //waitMsg: 'Exportando Tabla de Apoyo...',
 						                    failure: function(form, action) {
 						                		switch (action.failureType) {
 						                            case Ext.form.action.Action.CONNECT_FAILURE:
@@ -765,6 +765,7 @@ Ext.onReady(function() {
     
 		
 	recargagridTabla5Claves = function(){
+		loadMaskTabla.show();
 		
 		cargaStorePaginadoLocal(_TIPO_1CLAVE?storeTablaUnaClave:storeTablaCincoClaves, _TIPO_1CLAVE?_URL_CONSULTA_VALORES_TABLA_UNA_CLAVE :_URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES, 'loadList', panelValoresTablaApoyo.getValues(), function (options, success, response){
     		if(success){
