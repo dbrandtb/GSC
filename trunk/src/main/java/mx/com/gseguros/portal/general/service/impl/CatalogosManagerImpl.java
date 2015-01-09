@@ -585,7 +585,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		logger.info(
 				new StringBuilder()
-				.append("\n@@@@@@ lista=").append(lista)
+				.append("\n@@@@@@ lista=").append(lista.size()>15?lista.size():lista)
 				.append("\n@@@@@@ cargarTtapvat1 @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
@@ -742,4 +742,32 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarPlanesPorNegocioModeloClavegsRamo5(
+    		String cdtipsit
+    		,String modelo
+    		,String negocio
+    		,String clavegs)throws Exception
+    {
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ modelo="   , modelo
+				,"\n@@@@@@ negocio="  , negocio
+				,"\n@@@@@@ clavegs="  , clavegs
+				));
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(clavegs))
+		{
+			lista=catalogosDAO.cargarPlanesPorNegocioModeloClavegsRamo5(cdtipsit,modelo,negocio,clavegs);
+		}
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ cargarPlanesPorNegocioModeloClavegsRamo5 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
 }

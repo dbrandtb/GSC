@@ -184,7 +184,10 @@ Ext.onReady(function()
     
     _p31_incisoColumns =
     [
-        { xtype : 'rownumberer' }
+        {
+            dataIndex : 'nmsituac'
+            ,width    : 30
+        }
     ];
     _p31_incisoColumnsConf = [];
     <s:if test='%{getImap().get("incisoColumns")!=null}'>

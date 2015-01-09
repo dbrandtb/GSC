@@ -525,6 +525,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 					UserVO usuarioCargaRamo5 = (UserVO)session.get("USUARIO");
 					lista = catalogosManager.cargarCargasPorNegocioRamo5(usuarioCargaRamo5.getRolActivo().getClave(),params.get("negocio"));
 					break;
+				case RAMO_5_PLAN_X_NEGOCIO_TIPSIT_TIPOVEHI:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.cargarPlanesPorNegocioModeloClavegsRamo5(
+							params.get("cdtipsit")
+							,params.get("modelo")
+							,params.get("negocio")
+							,params.get("clavegs")
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

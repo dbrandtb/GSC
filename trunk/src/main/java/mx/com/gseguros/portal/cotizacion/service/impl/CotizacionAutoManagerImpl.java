@@ -55,7 +55,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private static final String
-	    RECUPERAR_DESCUENTO_RECARGO_RAMO_5                       = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5"
+		RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS                = "RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS"
+	    ,RECUPERAR_DESCUENTO_RECARGO_RAMO_5                      = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5"
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
 	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
@@ -979,6 +980,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            , null);
 		procedimientos.put(RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA , null);
 		procedimientos.put(RECUPERAR_TVALOSIT                                      , null);
+		procedimientos.put(RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS               , null);
 		return procedimientos;
 	}
 	
@@ -1619,7 +1621,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						);
 				
 				setCheckpoint("Insertando situaciones y maestro de situaciones");
-				int i=1;
 				for(Map<String,String>tvalositIte:tvalosit)
 				{
 					cotizacionDAO.movimientoMpolisit(
@@ -1627,7 +1628,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdramo
 							,estado
 							,nmpoliza
-							,String.valueOf(i)         //nmsituac
+							,tvalositIte.get("nmsituac")
 							,"0"                       //nmsuplem
 							,"V"                       //status
 							,tvalositIte.get("cdtipsit")
@@ -1662,22 +1663,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdramo
 							,estado
 							,nmpoliza
-							,String.valueOf(i) //nmsituac
+							,tvalositIte.get("nmsituac")
 							,"0"               //nmsuplem
 							,"V"               //status
 							,tvalositIte.get("cdtipsit")
 							,valores
 							,"I"               //accion
 							);
-	
-					i=i+1;
 				}
 				
 				setCheckpoint("Borrando situaciones base anteriores");
 				cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
 				
 				setCheckpoint("Inserando situaciones base");
-				i=1;
 				for(Map<String,String>baseTvalositIte:baseTvalosit)
 				{
 					Map<String,String>valores=new HashMap<String,String>();
@@ -1697,20 +1695,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdramo
 							,estado
 							,nmpoliza
-							,String.valueOf(i) //nmsituac
+							,String.valueOf(baseTvalositIte.get("nmsituac")) //nmsituac
 							,"0"               //nmsuplem
 							,"V"               //status
 							,baseTvalositIte.get("cdtipsit")
 							,valores);
-					
-					i=i+1;
 				}
 				
 				setCheckpoint("Borrando configuracion de situaciones anteriores");
 				cotizacionDAO.borrarTconvalsit(cdunieco, cdramo, estado, nmpoliza);
 				
 				setCheckpoint("Inserando configuracion de situaciones");
-				i=1;
+				int aux=1;
 				for(Map<String,String>confTvalositIte:confTvalosit)
 				{
 					Map<String,String>valores=new HashMap<String,String>();
@@ -1730,17 +1726,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdramo
 							,estado
 							,nmpoliza
-							,String.valueOf(i) //nmsituac
+							,String.valueOf(aux) //nmsituac
 							,"0"               //nmsuplem
 							,"V"               //status
 							,confTvalositIte.get("cdtipsit")
 							,valores);
 					
-					i=i+1;
+					aux=aux+1;
 				}
 				
 				setCheckpoint("Clonando situaciones");
-				i=1;
 				for(Map<String,String>tvalositIte:tvalosit)
 				{
 					cotizacionDAO.clonarPersonas(
@@ -1749,7 +1744,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdramo
 							,estado
 							,nmpoliza
-							,String.valueOf(i) //nmsituac
+							,tvalositIte.get("nmsituac")
 							,tvalositIte.get("cdtipsit")
 							,fechaHoy
 							,cdusuari
@@ -1761,8 +1756,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,fechaHoy          //fenacimi
 							,""                //parentesco
 							);
-					
-					i=i+1;
 				}
 				
 				if(!isBlank(cdpersonCli))
@@ -2216,6 +2209,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
 				incisoBase.put("cdtipsit" , incisoBase.get("CDTIPSIT"));
 				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
+				incisoBase.put("nmsituac" , incisoBase.get("NMSITUAC"));
 			}
 			resp.setSlist2(Utilerias.concatenarParametros(incisosBase,false));
 			
@@ -2356,6 +2350,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String nmpoliza = parametros.get("nmpoliza");
 				String nmsuplem = parametros.get("nmsuplem");
 				resp.setSlist(Utilerias.concatenarParametros(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem),false));
+			}
+			else if(procedimiento.equals(RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS))
+			{
+				String cdramo   = parametros.get("cdramo");
+				String cdtipsit = parametros.get("cdtipsit");
+				resp.setSlist(cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit));
 			}
 			
 			setCheckpoint("0");

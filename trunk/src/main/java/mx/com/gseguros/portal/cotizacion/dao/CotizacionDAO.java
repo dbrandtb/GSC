@@ -543,4 +543,5 @@ public interface CotizacionDAO
     		,String cdrol)throws Exception;
 	public String cargarTipoVehiculoRamo5(String clave)throws Exception;
 	public Map<String,String>cargarDetalleNegocioRamo5(String negocio)throws Exception;
+	public List<Map<String,String>>cargarConfiguracionTvalositFlotillas(String cdramo,String cdtipsit)throws Exception;
 }

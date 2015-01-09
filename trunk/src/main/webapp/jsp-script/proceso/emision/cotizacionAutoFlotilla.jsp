@@ -44,6 +44,7 @@ var _p30_storeSubmarcasRamo5 = null;
 var _p30_storeVersionesRamo5 = null;
 var _p30_storeUsosRamo5      = null;
 var _p30_storeMarcasRamo5    = null;
+var _p30_storePlanesRamo5    = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -55,7 +56,10 @@ var _p30_gridColsConf =
 ];
 var _p30_gridCols =
 [
-    { xtype : 'rownumberer' }
+    {
+        dataIndex : 'nmsituac'
+        ,width    : 30
+    }
     ,{
         sortable      : false
         ,menuDisabled : true
@@ -90,16 +94,19 @@ _p30_gridCols.push(
         {
             tooltip  : 'Seleccionar auto'
             ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
+            ,iconBkp : '${ctx}/resources/fam3icons/icons/car.png'
             ,handler : _p30_gridBotonAutoClic
         }
         ,{
-            tooltip  : 'Configurar plan'
+            tooltip  : 'Configurar paquete'
             ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
+            ,iconBkp : '${ctx}/resources/fam3icons/icons/cog.png'
             ,handler : _p30_gridBotonConfigClic
         }
         ,{
             tooltip  : 'Eliminar'
             ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,iconBkp : '${ctx}/resources/fam3icons/icons/delete.png'
             ,handler : _p30_gridBotonEliminarClic
         }
     ]
@@ -268,7 +275,7 @@ Ext.onReady(function()
             ,'parametros.pv_otvalor86','parametros.pv_otvalor87','parametros.pv_otvalor88','parametros.pv_otvalor89','parametros.pv_otvalor90'
             ,'parametros.pv_otvalor91','parametros.pv_otvalor92','parametros.pv_otvalor93','parametros.pv_otvalor94','parametros.pv_otvalor95'
             ,'parametros.pv_otvalor96','parametros.pv_otvalor97','parametros.pv_otvalor98','parametros.pv_otvalor99'
-            ,'cdplan','cdtipsit','personalizado'
+            ,'cdplan','cdtipsit','personalizado',{name:'nmsituac',type:'int'}
         ]
 	});
 	
@@ -441,6 +448,38 @@ Ext.onReady(function()
                 this.cargado=true;
                 _fieldById('_p30_grid').getView().refresh();
                 _fieldById('_p30_panelStoreMarcas').destroy();
+            }
+        }
+    });
+    
+    _p30_storePlanesRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,cargado  : false
+        ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo'         : 'PLANES_X_PRODUCTO'
+                ,'params.cdramo'   : '5'
+                ,'params.cdtipsit' : 'AR'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStorePlanes').destroy();
             }
         }
     });
@@ -757,14 +796,101 @@ Ext.onReady(function()
                                             } 
                                         });
 	                                }
+	                                
+	                                var claveName = _fieldById('_p30_grid').down('[text*=CLAVE]').dataIndex;
+	                                var clavegs   = context.record.get(claveName);
+	                                
+	                                var modeloVal = context.record.get(_fieldById('_p30_grid').down('[text=MODELO]').dataIndex);
+
+                                    var planCmp  = Ext.ComponentQuery.query('[id*=_editor_][name=cdplan]')[0];
+	                                
+	                                if(Ext.isEmpty(clavegs))
+	                                {
+	                                    planCmp.allowBlank=true;
+	                                    planCmp.getStore().removeAll();
+	                                }
+	                                else
+	                                {
+	                                    planCmp.allowBlank=false;
+	                                    planCmp.getStore().load(
+	                                    {
+	                                        params :
+	                                        {
+	                                            'params.cdtipsit' : context.record.get('cdtipsit')
+	                                            ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+	                                            ,'params.modelo'  : modeloVal
+	                                            ,'params.clavegs' : clavegs
+	                                        }
+	                                    });
+	                                    
+	                                    tipoVehComp.on(
+                                        {
+                                            select : function(me,rec)
+                                            {
+                                                debug('select:',rec[0].get('key'));
+                                                planCmp.getStore().load(
+                                                {
+                                                    params :
+                                                    {
+                                                        'params.cdtipsit' : rec[0].get('key')
+                                                        ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+                                                        ,'params.modelo'  : modeloVal
+                                                        ,'params.clavegs' : clavegs
+                                                    }
+                                                });
+                                            }
+                                        });
+	                                }
+	                                
+	                                //serie opcional
+	                                var serieName = _fieldById('_p30_grid').down('[text*=SERIE]').dataIndex;
+	                                var serieCmp  = Ext.ComponentQuery.query('[id*=_editor_][name='+serieName+']')[0];
+	                                if(!Ext.isEmpty(context.record.get(tipoVehName)))
+	                                {
+	                                    serieCmp.allowBlank=context.record.get('cdtipsit')!='AF'&&context.record.get('cdtipsit')!='PU';
+	                                    serieCmp.isValid();
+	                                }
+	                                tipoVehComp.on(
+                                    {
+                                        select : function(me,rec)
+                                        {
+                                            serieCmp.allowBlank=tipoVehComp.getValue()!='AF'&&tipoVehComp.getValue()!='PU';
+                                            serieCmp.isValid();
+                                        }
+                                    });
+	                                //serie opcional
 	                            }
 	                            else
 	                            {
 	                                mensajeWarning('Seleccione el negocio');
 	                                return false;
 	                            }
-	                        } 
+	                        }
+	                        
+	                        //no mostrar cols
+	                        for(i in _p30_gridCols[_p30_gridCols.length-1].items)
+	                        {
+	                            _p30_gridCols[_p30_gridCols.length-1].items[i].icon = '';;
+	                        }
 	                    }
+	                    ,afteredit : function()
+	                    {
+	                        //no mostrar cols
+                            for(i in _p30_gridCols[_p30_gridCols.length-1].items)
+                            {
+                                var item  = _p30_gridCols[_p30_gridCols.length-1].items[i];
+                                item.icon = item.iconBkp;
+                            }
+	                    }
+                        ,canceledit : function()
+                        {
+                            //no mostrar cols
+                            for(i in _p30_gridCols[_p30_gridCols.length-1].items)
+                            {
+                                var item  = _p30_gridCols[_p30_gridCols.length-1].items[i];
+                                item.icon = item.iconBkp;
+                            }
+                        }
 	                }
                 })
 	        })
@@ -1006,52 +1132,52 @@ Ext.onReady(function()
         //tipo valor
         
         //tipo vehiculo
-        var tipoVehiName = _fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex;
-        for(var i=0;i<_p30_gridCols.length;i++)
+        var tipoVehiName   = _fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex;
+        var editorTipoVehi = Ext.ComponentQuery.query('[id*=_editor_][name='+tipoVehiName+']')[0];
+        debug('editorTipoVehi:',editorTipoVehi);
+        editorTipoVehi.on(
         {
-            debug('buscando editor tipo vehiculo');
-            if(!Ext.isEmpty(_p30_gridCols[i].editor)
-                &&_p30_gridCols[i].editor.name==tipoVehiName)
+            change : function()
             {
-                debug('tipo vehiculo es:',_p30_gridCols[i].editor);
-                _p30_gridCols[i].editor.on(
+                var record    = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
+                var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
+                var personalizado = false;
+                var conValor      = false;
+                if(record.get('personalizado')+'x'=='six')
                 {
-                    change : function()
+                    personalizado = true;
+                }
+                if(record.get(valorName)+'x'!='x')
+                {
+                    conValor = true;
+                }
+                record.set('personalizado' , '');
+                record.set(valorName       , '');
+                if(personalizado&&conValor)
+                {
+                    mensajeWarning('Debe actualizar la configuraci&oacute;n del paquete y el valor del veh&iacute;culo');
+                }
+                else if(conValor)
+                {
+                    mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
+                }
+                else if(personalizado)
+                {
+                    mensajeWarning('Debe actualizar la configuraci&oacute;n del paquete');
+                }
+                
+                var tipoServName   = _fieldById('_p30_grid').down('[text=TIPO SERVICIO]').dataIndex;
+                var editorTipoServ = Ext.ComponentQuery.query('[id*=_editor_][name='+tipoServName+']')[0];
+                debug('editorTipoServ:',editorTipoServ);
+                editorTipoServ.getStore().load(
+                {
+                    params :
                     {
-                        var record    = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
-                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
-                        var personalizado = false;
-                        var conValor      = false;
-                        if(record.get('personalizado')+'x'=='six')
-                        {
-                            personalizado = true;
-                        }
-                        if(record.get(valorName)+'x'!='x')
-                        {
-                            conValor = true;
-                        }
-                        record.set('personalizado' , '');
-                        record.set(valorName       , '');
-                        if(personalizado&&conValor)
-                        {
-                            mensajeWarning('Debe actualizar la configuraci&oacute;n del plan y el valor del veh&iacute;culo');
-                        }
-                        else if(conValor)
-                        {
-                            mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
-                        }
-                        else if(personalizado)
-                        {
-                            mensajeWarning('Debe actualizar la configuraci&oacute;n del plan');
-                        }
+                        'params.cdtipsit' : editorTipoVehi.getValue()
                     }
                 });
             }
-            else
-            {
-                debug('tipo vehiculo no es:',_p30_gridCols[i].editor);
-            }
-        }
+        });
         //tipo vehiculo
         
         //cliente nuevo
@@ -1141,6 +1267,26 @@ Ext.onReady(function()
                 else
                 {
                     v=_p30_storeMarcasRamo5.getAt(index).get('value');
+                }
+            }
+            else
+            {
+                v='';
+            }
+            return v;
+        };
+        _fieldById('_p30_grid').down('[text=PAQUETE]').renderer=function(v)
+        {
+            if(_p30_storePlanesRamo5.cargado&&v+'x'!='x')
+            {
+                var index = _p30_storePlanesRamo5.find('key',v);
+                if(index==-1)
+                {
+                    v='...';
+                }
+                else
+                {
+                    v=_p30_storePlanesRamo5.getAt(index).get('value');
                 }
             }
             else
@@ -1265,6 +1411,16 @@ Ext.onReady(function()
             ,height   : 30
             ,frame    : true
         }).showAt(770,170);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStorePlanes'
+            ,floating : true
+            ,html     : 'Cargando planes...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,210);
         //loaders panels
     }
     //ramo 5
@@ -1272,6 +1428,40 @@ Ext.onReady(function()
 	////// custom //////
 	
 	////// loaders //////
+	for(var cdtipsit in _p30_paneles)
+	{
+	    Ext.Ajax.request(
+	    {
+	        url     : _p30_urlRecuperacionSimpleLista
+	        ,params :
+	        {
+	            'smap1.procedimiento' : 'RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS'
+	            ,'smap1.cdramo'       : _p30_smap1.cdramo
+	            ,'smap1.cdtipsit'     : cdtipsit
+	        }
+	        ,success : function(response)
+	        {
+	            var json=Ext.decode(response.responseText);
+	            debug('### config:',json);
+	            if(json.exito)
+	            {
+	                _p30_paneles[json.smap1.cdtipsit].valores    = {};
+	                _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
+	                for(var i in json.slist1)
+	                {
+	                    _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+json.slist1[i].CDATRIBU]    = json.slist1[i].VALOR;
+	                    _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+json.slist1[i].CDATRIBU] = json.slist1[i].VALOR;
+	                }
+	                debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
+	            }
+	            else
+	            {
+	                mensajeError(json.respuesta);
+	            }
+	        }
+	        ,failure : errorComunicacion
+	    });
+	}
 	////// loaders //////
 });
 
@@ -1334,6 +1524,7 @@ function _p30_agregarAuto()
     if(!Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue()))
     {
         _p30_store.add(new _p30_modelo());
+        _p30_numerarIncisos();
     }
     else
     {
@@ -1358,7 +1549,7 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
         var cdtipsitPanel = _p30_smap1['destino_'+cdtipsit];
         debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
         var panel = _p30_paneles[cdtipsitPanel];
-        panel.setTitle('CONFIGURACI&Oacute;N DE PLAN');
+        panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE');
         var form  = panel.down('form');
         if(record.get('personalizado')=='si')
         {
@@ -1393,6 +1584,7 @@ function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
 {
     debug('>_p30_gridBotonEliminarClic:',record);
     _p30_store.remove(record);
+    _p30_numerarIncisos();
     debug('<_p30_gridBotonEliminarClic');
 }
 
@@ -1429,6 +1621,35 @@ function _p30_gridBotonAutoClic(grid,row,col,item,e,record)
             {
                 _p30_selectedRecord.set(i,datos[i]);
             }
+            var planVal = _p30_selectedRecord.get('cdplan');
+            var planCmp = Ext.ComponentQuery.query('[id*=_editor_][name=cdplan]')[0];
+            planCmp.getStore().load({
+                params :
+                {
+                    'params.cdtipsit' : _p30_selectedRecord.get('cdtipsit')
+                    ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+                    ,'params.modelo'  : _p30_selectedRecord.get(_fieldById('_p30_grid').down('[text=MODELO]').dataIndex)
+                    ,'params.clavegs' : _p30_selectedRecord.get(_fieldById('_p30_grid').down('[text*=CLAVE]').dataIndex)
+                }
+                ,callback : function(records)
+                {
+                    var valido = false;
+                    for(var i in records)
+                    {
+                        var rplan = records[i];
+                        if(rplan.get('key')==planVal)
+                        {
+                            valido = true;
+                        }
+                    }
+                    if(!valido)
+                    {
+                        _p30_selectedRecord.set('cdplan','');
+                        mensajeWarning('Debe actualizar el paquete para el inciso');
+                    }
+                }
+            });
+            
             debug('_p30_selectedRecord:',_p30_selectedRecord);
         });
     }
@@ -2015,10 +2236,21 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        valido = _p30_store.getCount()>0;
-        if(!valido)
+        if(_p30_smap1.cdsisrol=='SUSCRIAUTO')
         {
-            mensajeWarning('No se han capturado incisos. Debe capturar al menos uno');
+            valido = _p30_store.getCount()>=1;
+            if(!valido)
+            {
+                mensajeWarning('Debe capturar al menos un inciso');
+            }
+        }
+        else
+        {
+            valido = _p30_store.getCount()>=5;
+            if(!valido)
+            {
+                mensajeWarning('Debe capturar al menos cinco incisos');
+            }
         }
     }
     
@@ -2035,7 +2267,7 @@ function _p30_cotizar(sinTarificar)
             }
             if(record.get('cdplan')+'x'=='x')
             {
-                error  = error + 'Debe seleccionar el plan para el inciso '+(_p30_store.indexOf(record)+1)+'</br>';
+                error  = error + 'Debe seleccionar el paquete para el inciso '+(_p30_store.indexOf(record)+1)+'</br>';
                 valido = false;
             }
         });
@@ -2536,7 +2768,7 @@ function _p30_limpiar()
     
     for(var i in _p30_paneles)
     {
-        _p30_paneles[i].valores=false;
+        _p30_paneles[i].valores=_p30_paneles[i].valoresBkp;
     }
     
     if(_p30_smap1.cdramo+'x'=='5x')
@@ -3116,6 +3348,15 @@ function _p30_comprar()
             panelPri.setLoading(false);
             errorComunicacion();
         }
+    });
+}
+
+function _p30_numerarIncisos()
+{
+    var i=1;
+    _p30_store.each(function(record)
+    {
+        record.set('nmsituac',i++);
     });
 }
 ////// funciones //////
