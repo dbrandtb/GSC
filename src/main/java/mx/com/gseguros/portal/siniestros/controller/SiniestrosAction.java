@@ -2673,7 +2673,7 @@ public String consultaListaPlazas(){
         				}
         				
         				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
-        						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+        						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura, tramite.get("OTVALOR02"));
         				logger.debug("INFORMACION DEDUCIBLE/COPAGO ASEGURADO -->"+copagoDeducibleSiniestroIte);
         				
         				String tipoFormatoCalculo         = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
@@ -3389,7 +3389,7 @@ public String consultaListaPlazas(){
     				String nfactura = facturaIte.get("NFACTURA");
     				
     				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
-    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"));
     				
     				//1.- Obtenemos la información de Autorización de Factura
     				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
@@ -3416,7 +3416,7 @@ public String consultaListaPlazas(){
     				//3.- Guardamos los valores en calculosPenalizaciones
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
     						siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
-    						siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"));
+    						siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"));
     						
     				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
     				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
@@ -4036,7 +4036,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				}
     				
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
-    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"));
     				//logger.debug("%%%%RESPUESTA%%%%"+copagoDeducibleSiniestroIte);
     				//copagoDeducibleSiniestroIte.get("TIPOCOPAGO");
     				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
@@ -4750,7 +4750,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				String nfactura = facturaIte.get("NFACTURA");
     				
     				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
-    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"));
     				
     				//1.- Obtenemos la información de Autorización de Factura
     				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
@@ -4777,7 +4777,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		   		//3.- Guardamos los valores en calculosPenalizaciones
     		   		Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
     		   				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
-    		   				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"));
+    		   				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"));
     		   				
     				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
     				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
@@ -6295,7 +6295,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         				//1.- Obtenemos los datos generales del siniestros
         				List<Map<String,String>> informacionGral = siniestrosManager.obtieneDatosGeneralesSiniestro(cdunieco, cdramo,
         						estado, nmpoliza,nmsituac, nmsuplem, status, aaapertu, nmsinies, factura.get("NTRAMITE"));
-        				
+        				logger.debug("VALOR DE informacionGral -->"+informacionGral);
         				if(informacionGral.size()>0){
         					aseguradoObj.put("CAUSASINIESTRO", informacionGral.get(0).get("CDCAUSA"));
         				}else{
@@ -6303,7 +6303,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         				}
         				
         				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
-        						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+        						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"));
         				logger.debug("INFORMACION DEDUCIBLE/COPAGO ASEGURADO -->"+copagoDeducibleSiniestroIte);
         				
         				String tipoFormatoCalculo         = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
@@ -7017,7 +7017,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				String nfactura = facturaIte.get("NFACTURA");
     				
     				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
-    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"));
     				
     				//1.- Obtenemos la información de Autorización de Factura
     				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
@@ -7044,7 +7044,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//3.- Guardamos los valores en calculosPenalizaciones
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
     						siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
-    						siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"));
+    						siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"));
     						
     				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
     				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");

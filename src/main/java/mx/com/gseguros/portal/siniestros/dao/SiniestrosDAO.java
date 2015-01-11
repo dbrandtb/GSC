@@ -298,7 +298,8 @@ public interface SiniestrosDAO {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception;
+			String nfactura,
+			String tipopago) throws Exception;
 	
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion, String cdRamo) throws Exception;
 

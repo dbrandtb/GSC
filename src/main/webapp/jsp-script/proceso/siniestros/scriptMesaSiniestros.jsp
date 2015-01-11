@@ -492,17 +492,17 @@ var msgWindow;
 		params['params.ntramite'] = record.get('ntramite');
 		
 		var conCoberYSubcober = false;
-		if(esPagoDirecto||true)
+		/*if(esPagoDirecto||true)
 		{
 			if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
 			{
 				conCoberYSubcober = true;
 			}
-		}
+		}*/
 		debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
 		
 		var urlDestino;
-		if(esPagoDirecto||true)
+		if(esPagoDirecto||true) 
 		{
 			if(true)
 			{
@@ -520,15 +520,39 @@ var msgWindow;
 				}
 				else
 				{
-					urlDestino = _selCobUrlAvanza;
-					debug('urlDestino_2 :',urlDestino);
-					debug('params_2:',params);
-					Ext.create('Ext.form.Panel').submit(
+					// Pago diferente a Directo
+					if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
 					{
-						url             : urlDestino
-						,params         : params
-					    ,standardSubmit : true
-					});
+						conCoberYSubcober = true;
+					}
+					
+					if(conCoberYSubcober)// true
+					{
+						urlDestino = _selCobUrlAvanza;
+						debug('urlDestino_2 :',urlDestino);
+						debug('params_2:',params);
+						Ext.create('Ext.form.Panel').submit(
+						{
+							url             : urlDestino
+							,params         : params
+						    ,standardSubmit : true
+						});
+					}else{
+						//PASAMOS LOS VALORES PARA SELECCIONAR LA COBERTURA Y SUBCOBERTURA
+						urlDestino = _urlSeleccionCobertura;
+						params['params.cdunieco']  = record.get('cdsucdoc');
+						params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
+						params['params.cdramo']    = record.get('cdramo');
+						params['params.cdtipsit']  = record.get('cdtipsit');
+						debug('urlDestino_4 :',urlDestino);
+						debug('params_4 :',params);
+						Ext.create('Ext.form.Panel').submit(
+						{
+							url             : urlDestino
+							,params         : params
+						    ,standardSubmit : true
+						});
+					}
 				}
 			}
 			else

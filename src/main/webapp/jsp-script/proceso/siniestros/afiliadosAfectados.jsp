@@ -2596,6 +2596,7 @@
 					var commAR = null;
 					var commAM = null;
 					var json=Ext.decode(response.responseText).datosValidacion;
+					debug("VALOR DEL JSON DE LA RESPUESTA -->",json);
 					if(json.length > 0){
 						aplicaIVA = json[0].OTVALOR01;
 						ivaAntesDespues = json[0].OTVALOR02;

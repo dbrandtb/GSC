@@ -2511,7 +2511,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception
+			String nfactura,
+			String tipopago) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("cdunieco" , cdunieco);
@@ -2524,6 +2525,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("status"   , status);
 		p.put("nmsinies" , nmsinies);
 		p.put("nfactura" , nfactura);
+		p.put("tipopago" , tipopago);
 		logger.debug("obtenerCopagoDeducible params: "+p);
 		Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
@@ -2555,6 +2557,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsinies" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipopago" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDGARANT"
 					,"OTCLAVE2"
