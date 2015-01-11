@@ -1061,9 +1061,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception
+			String nfactura,
+			String tipopago) throws Exception
 	{
-		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura);
+		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago);
 	}
 	
 	@Override

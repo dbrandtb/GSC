@@ -394,7 +394,8 @@ public interface SiniestrosManager {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception;
+			String nfactura,
+			String tipoPago) throws Exception;
 
 	public String validaPorcentajePenalizacion(String zonaContratada, String zonaAtencion, String cdRamo) throws Exception;
 
