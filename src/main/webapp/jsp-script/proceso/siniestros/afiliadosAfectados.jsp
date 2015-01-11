@@ -60,6 +60,7 @@
             var _URL_CONSULTA_TRAMITE       = '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
             var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
             var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
+            var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
 
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
