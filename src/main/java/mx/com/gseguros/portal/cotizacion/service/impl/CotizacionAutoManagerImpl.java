@@ -2355,7 +2355,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			{
 				String cdramo   = parametros.get("cdramo");
 				String cdtipsit = parametros.get("cdtipsit");
-				resp.setSlist(cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit));
+				String negocio  = parametros.get("negocio");
+				resp.setSlist(cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit, negocio));
 			}
 			
 			setCheckpoint("0");

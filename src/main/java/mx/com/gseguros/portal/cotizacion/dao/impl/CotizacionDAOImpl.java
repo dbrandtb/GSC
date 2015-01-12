@@ -4708,11 +4708,16 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
-    public List<Map<String,String>>cargarConfiguracionTvalositFlotillas(String cdramo,String cdtipsit)throws Exception
+    public List<Map<String,String>>cargarConfiguracionTvalositFlotillas(
+    		String cdramo
+    		,String cdtipsit
+    		,String negocio
+    		)throws Exception
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
+    	params.put("negocio"  , negocio);
     	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -4731,6 +4736,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		super(dataSource,"PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS");
     		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
     				"CDATRIBU"
     				,"VALOR"
