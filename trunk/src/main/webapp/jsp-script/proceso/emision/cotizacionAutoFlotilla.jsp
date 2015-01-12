@@ -809,6 +809,7 @@ Ext.onReady(function()
 	                                {
 	                                    planCmp.allowBlank=true;
 	                                    planCmp.getStore().removeAll();
+	                                    planCmp.setFieldLabel('(Seleccionar veh&iacute;culo primero)');
 	                                }
 	                                else
 	                                {
@@ -821,6 +822,10 @@ Ext.onReady(function()
 	                                            ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
 	                                            ,'params.modelo'  : modeloVal
 	                                            ,'params.clavegs' : clavegs
+	                                        }
+	                                        ,callback : function()
+	                                        {
+	                                            planCmp.setFieldLabel('');
 	                                        }
 	                                    });
 	                                    
@@ -1312,6 +1317,42 @@ Ext.onReady(function()
                         record.set(tipoUsoName , '');
                         record.set(marcaName   , '');
                     });
+                    
+                    for(var cdtipsit in _p30_paneles)
+                    {
+                        Ext.Ajax.request(
+                        {
+                            url     : _p30_urlRecuperacionSimpleLista
+                            ,params :
+                            {
+                                'smap1.procedimiento' : 'RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS'
+                                ,'smap1.cdramo'       : _p30_smap1.cdramo
+                                ,'smap1.cdtipsit'     : cdtipsit
+                                ,'smap1.negocio'      : val
+                            }
+                            ,success : function(response)
+                            {
+                                var json=Ext.decode(response.responseText);
+                                debug('### config:',json);
+                                if(json.exito)
+                                {
+                                    _p30_paneles[json.smap1.cdtipsit].valores    = {};
+                                    _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
+                                    for(var i in json.slist1)
+                                    {
+                                        _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+json.slist1[i].CDATRIBU]    = json.slist1[i].VALOR;
+                                        _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+json.slist1[i].CDATRIBU] = json.slist1[i].VALOR;
+                                    }
+                                    debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : errorComunicacion
+                        });
+                    }
                 }
             }
             ,select : function()
@@ -1429,40 +1470,6 @@ Ext.onReady(function()
 	////// custom //////
 	
 	////// loaders //////
-	for(var cdtipsit in _p30_paneles)
-	{
-	    Ext.Ajax.request(
-	    {
-	        url     : _p30_urlRecuperacionSimpleLista
-	        ,params :
-	        {
-	            'smap1.procedimiento' : 'RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS'
-	            ,'smap1.cdramo'       : _p30_smap1.cdramo
-	            ,'smap1.cdtipsit'     : cdtipsit
-	        }
-	        ,success : function(response)
-	        {
-	            var json=Ext.decode(response.responseText);
-	            debug('### config:',json);
-	            if(json.exito)
-	            {
-	                _p30_paneles[json.smap1.cdtipsit].valores    = {};
-	                _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
-	                for(var i in json.slist1)
-	                {
-	                    _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+json.slist1[i].CDATRIBU]    = json.slist1[i].VALOR;
-	                    _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+json.slist1[i].CDATRIBU] = json.slist1[i].VALOR;
-	                }
-	                debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
-	            }
-	            else
-	            {
-	                mensajeError(json.respuesta);
-	            }
-	        }
-	        ,failure : errorComunicacion
-	    });
-	}
 	////// loaders //////
 });
 
