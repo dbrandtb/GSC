@@ -105,4 +105,6 @@ public interface CatalogosManager {
     		,String modelo
     		,String negocio
     		,String clavegs)throws Exception;
+    public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(String cdtipsit,String cdagente)throws Exception;
+    public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio)throws Exception;
 }

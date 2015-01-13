@@ -75,6 +75,8 @@ public class ComponenteVO
 	
 	private boolean menorCero = false;
 	
+	private boolean sinCargar = false;
+	
 	public ComponenteVO(){}
 	
 	public ComponenteVO(
@@ -109,6 +111,7 @@ public class ComponenteVO
 			,boolean isComboVacio
 			,String icon
 			,String handler
+			,boolean sinCargar
 			)
 	{
 		this.type          = type;
@@ -142,6 +145,7 @@ public class ComponenteVO
 		this.comboVacio    = isComboVacio;
 		this.icon          = icon;
 		this.handler       = handler;
+		this.sinCargar     = sinCargar;
 	}
 	
 	public String getLabel() {
@@ -543,5 +547,13 @@ public class ComponenteVO
 
 	public void setMenorCero(boolean menorCero) {
 		this.menorCero = menorCero;
+	}
+
+	public boolean isSinCargar() {
+		return sinCargar;
+	}
+
+	public void setSinCargar(boolean sinCargar) {
+		this.sinCargar = sinCargar;
 	}
 }

@@ -1024,7 +1024,7 @@ Ext.onReady(function()
                 var anioAc        = new Date().getFullYear()-0; 
                 if(tipovalor==3&&anioAc-modeloVal>1)
                 {
-                    mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+                    mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
                     _fieldByLabel('MODELO',_p30_windowAuto).setValue('');
                 }
                 else
@@ -1340,8 +1340,8 @@ Ext.onReady(function()
                                     _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
                                     for(var i in json.slist1)
                                     {
-                                        _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+json.slist1[i].CDATRIBU]    = json.slist1[i].VALOR;
-                                        _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+json.slist1[i].CDATRIBU] = json.slist1[i].VALOR;
+                                        _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))]    = json.slist1[i].VALOR;
+                                        _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))] = json.slist1[i].VALOR;
                                     }
                                     debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
                                 }
@@ -1353,6 +1353,18 @@ Ext.onReady(function()
                             ,failure : errorComunicacion
                         });
                     }
+                    
+                    var tipoSitCmp = Ext.ComponentQuery.query('[id*=editor_][name='
+                    +_fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex+
+                    ']')[0];
+                    tipoSitCmp.getStore().load(
+                    {
+                        params :
+                        {
+                            'params.negocio' : val
+                        }
+                    });
+                    
                 }
             }
             ,select : function()
@@ -2390,6 +2402,7 @@ function _p30_cotizar(sinTarificar)
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
                 ,cdagente    : _fieldByLabel('AGENTE').getValue()
                 ,notarificar : sinTarificar ? 'si' : ''
+                ,tipoflot    : _p30_smap1.tipoflot
             }
             ,slist1 : []
             ,slist2 : []
@@ -2905,6 +2918,7 @@ function _p30_cargarClic()
                                 ,'smap1.nmpoliza' : json.smap1.nmpoliza
                                 ,'smap1.ntramite' : json.smap1.NTRAMITE
                                 ,'smap1.swexiper' : swExiper
+                                ,'smap1.tipoflot' : json.smap1.TIPOFLOT
                             }
                         });
                     }
@@ -3341,6 +3355,7 @@ function _p30_comprar()
                                ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
                                ,'smap1.ntramite' : json.smap1.ntramite
                                ,'smap1.swexiper' : swExiper
+                               ,'smap1.tipoflot' : _p30_smap1.tipoflot
                            }
                        });
                    }

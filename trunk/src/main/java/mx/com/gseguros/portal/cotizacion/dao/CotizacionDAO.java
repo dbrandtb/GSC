@@ -182,6 +182,7 @@ public interface CotizacionDAO
             ,String ttipcamv
             ,String swpatent
             ,String pcpgocte
+            ,String tipoflot
             ,String accion
 			) throws Exception;
 	public void movimientoTvalopol(

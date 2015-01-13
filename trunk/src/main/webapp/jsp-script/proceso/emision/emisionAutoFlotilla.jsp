@@ -348,6 +348,14 @@ Ext.onReady(function()
             ,frame    : true
         }).showAt(770,330);
         //renderers
+        
+        //pai
+        if(_p31_smap1.tipoflot+'x'!='Fx')
+        {
+            _fieldLikeLabel('PARA PAI').allowBlank=true;
+            _fieldLikeLabel('PARA PAI').hide();
+        }
+        //pai
     }//ramo 5
     ////// custom //////
     
@@ -460,6 +468,7 @@ function _p31_nuevaClic()
         {
             'smap1.cdramo'    : _p31_smap1.cdramo
             ,'smap1.cdtipsit' : _p31_smap1.cdtipsit
+            ,'smap1.tipoflot' : _p31_smap1.tipoflot
         }
         ,standardSubmit : true
     });

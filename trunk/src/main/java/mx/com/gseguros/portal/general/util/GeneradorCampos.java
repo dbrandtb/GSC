@@ -555,7 +555,7 @@ public class GeneradorCampos
 	            
 	            ////// autoLoad //////
 	            boolean autoLoad = true;
-	            if(esHijo||esAutocompleter)
+	            if(esHijo||esAutocompleter||comp.isSinCargar())
 	            {
 	            	autoLoad=false;
 	            }

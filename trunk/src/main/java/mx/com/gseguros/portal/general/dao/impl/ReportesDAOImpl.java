@@ -227,7 +227,8 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
 					paramValue1   , paramName2    , paramValue2,
 					paramName3    , paramValue3   , paramName4,
 					paramValue4   , paramName5    , paramValue5,
-					isComboVacio  , icon          , handler
+					isComboVacio  , icon          , handler,
+					false
 					);
 			
 			return comp;

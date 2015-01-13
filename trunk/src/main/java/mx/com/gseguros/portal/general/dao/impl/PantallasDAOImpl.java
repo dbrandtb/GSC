@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,23 +33,6 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	/////////////////////////////////
 	////// obtener componentes //////
 	/*/////////////////////////////*/
-	/**
-	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
-	 */
-	@Override
-	public List<ComponenteVO> obtenerComponentes(Map<String, String> params) throws Exception
-	{
-		logger.debug(
-			new StringBuilder()
-			.append("\n***********************************************")
-			.append("\n****** PKG_CONF_PANTALLAS.P_GET_TCONFCMP ******")
-			.append("\n****** params=").append(params)
-			.append("\n***********************************************")
-			.toString()
-			);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
-		return (List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
-	}
 	
 	@Override
 	public List<ComponenteVO> obtenerComponentes(String cdtiptra
@@ -70,21 +55,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDTIPTRA_I" , cdtiptra);
 		params.put("PV_ORDEN_I"    , orden);
 		params.put("PV_SECCION_I"  , seccion);
-		logger.debug(
-				new StringBuilder()
-				.append("\n***********************************************")
-				.append("\n****** PKG_CONF_PANTALLAS.P_GET_TCONFCMP ******")
-				.append("\n****** params=").append(params)
-				.append("\n***********************************************")
-				.toString()
-				);
+		Utilerias.debugPrecedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		List<ComponenteVO>lista=(List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
 		if(lista==null)
 		{
 			lista=new ArrayList<ComponenteVO>();
 		}
-		logger.debug("obtenerComponentes lista size: "+lista.size());
+		Utilerias.debugPrecedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params, lista);
 		return lista;
 	}
 	
@@ -141,6 +119,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		String llaveComboVacio  = "SWCVACIO";
 		String llaveIcon        = "ICONO";
 		String llaveHandler     = "HANDLER";
+		String llaveSwNoLoad    = "SWNOLOAD";
 		
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
@@ -249,6 +228,13 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			String  icon    = rs.getString(llaveIcon);
 			String  handler = rs.getString(llaveHandler);
 			
+			boolean noLoad   = false;
+			String  swNoLoad = rs.getString(llaveSwNoLoad);
+			if(StringUtils.isNotBlank(swNoLoad)&&swNoLoad.equals("S"))
+			{
+				noLoad=true;
+			}
+			
 			ComponenteVO comp = new ComponenteVO(
 					ComponenteVO.TIPO_GENERICO,
 					label         , tipoCampo     , catalogo,
@@ -260,7 +246,8 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					paramValue1   , paramName2    , paramValue2,
 					paramName3    , paramValue3   , paramName4,
 					paramValue4   , paramName5    , paramValue5,
-					isComboVacio  , icon          , handler
+					isComboVacio  , icon          , handler,
+					noLoad
 					);
 			
 			return comp;
@@ -277,8 +264,26 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
 	 */
 	@Override
-	public List<Map<String,String>> obtenerParametros(Map<String, String> params) throws Exception
+	public List<Map<String,String>> obtenerParametros(String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden) throws Exception
 	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_CDTIPSIT_I" , cdtipsit);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_CDSISROL_I" , cdsisrol);
+		params.put("PV_CDTIPTRA_I" , cdtiptra);
+		params.put("PV_ORDEN_I"    , orden);
+		params.put("PV_SECCION_I"  , seccion);
 		logger.debug(
 				new StringBuilder()
 				.append("\n***********************************************")
@@ -315,7 +320,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					,"QUERYPARAM" , "VALUE"    , "SWOCULTO" , "PARAM1"        , "VALUE1"
 					,"PARAM2"     , "VALUE2"   , "PARAM3"   , "VALUE3"        , "PARAM4"
 					,"VALUE4"     , "PARAM5"   , "VALUE5"   , "SWFINAL"       , "SWCVACIO"
-					,"HANDLER"    , "ICONO"
+					,"HANDLER"    , "ICONO"    , "SWNOLOAD"
 			};
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
@@ -436,6 +441,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_SWCVACIO_I"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ICONO_I"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_HANDLER_I"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SWNOLOAD_I"      , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
