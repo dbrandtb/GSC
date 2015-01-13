@@ -104,12 +104,12 @@ public class Utilerias {
 		return xmlCal;
 	}
 	
-	public static boolean esFechaValida(String dateToValidate, String dateFromat){
+	public static boolean esFechaValida(String dateToValidate, String dateFormat){
 		 
 		if(dateToValidate == null){
 			return false;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		sdf.setLenient(false);
  
 		try {
