@@ -1158,7 +1158,9 @@
     
 Ext.onReady(function()
 {
-    
+	// Se aumenta el timeout para todas las peticiones:
+    Ext.Ajax.timeout = 60000; // 60 seconds
+	
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
