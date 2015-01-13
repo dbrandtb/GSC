@@ -4781,6 +4781,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     						}
     					}else{
     						//COBERTURA DIFERENTE HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD
+    						if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
     							if(tipoCopagoFacturaIte.equalsIgnoreCase("$")){
         							copagoAplicadoFacturaIte = cantidadCopagoFacturaIte;
         						}
@@ -4788,6 +4789,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         						{
         							copagoAplicadoFacturaIte = totalFactura * ( cantidadCopagoFacturaIte / 100d );
         						}
+    						}else{
+    							copagoAplicadoFacturaIte = 0d;
+    						}
     					}
 					}
     				totalFactura -= copagoAplicadoFacturaIte;
