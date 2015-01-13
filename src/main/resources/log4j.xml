@@ -8,7 +8,7 @@
         <param name="File" value="/u01/wlserver/wllogs/gseguros/application.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
-        <param name="MaxBackupIndex" value="6"/>
+        <param name="MaxBackupIndex" value="10"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
@@ -20,7 +20,7 @@
         <param name="File" value="/u01/wlserver/wllogs/gseguros/dev.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="50MB"/>
-		<param name="MaxBackupIndex" value="6"/>
+		<param name="MaxBackupIndex" value="10"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
 		</layout>
@@ -32,7 +32,7 @@
         <param name="File" value="/u01/wlserver/wllogs/gseguros/sql.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
-        <param name="MaxBackupIndex" value="6"/>
+        <param name="MaxBackupIndex" value="10"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
