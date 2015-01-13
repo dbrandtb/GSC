@@ -86,6 +86,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
+	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado(
+			HashMap<String, Object> paramCobertura) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCoberturaAsegurado(paramCobertura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(
 			HashMap<String, Object> paramDatSubGral)
 			throws Exception {

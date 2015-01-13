@@ -35,6 +35,8 @@ public interface SiniestrosDAO {
 	
 	public List<CoberturaPolizaVO> obtieneListadoCoberturaPoliza(HashMap<String, Object> paramCobertura) throws Exception;
 
+	public List<CoberturaPolizaVO> obtieneListadoCoberturaAsegurado(HashMap<String, Object> paramCobertura) throws Exception;
+	
 	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
 	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws Exception;

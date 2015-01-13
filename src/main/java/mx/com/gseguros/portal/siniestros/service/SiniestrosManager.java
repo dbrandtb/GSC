@@ -63,6 +63,8 @@ public interface SiniestrosManager {
 	
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(HashMap<String, Object> paramCobertura) throws Exception;
 	
+	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado(HashMap<String, Object> paramCobertura) throws Exception;
+	
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob) throws Exception;
