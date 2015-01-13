@@ -1234,6 +1234,15 @@ function _p28_ramo5AgenteSelect(comp,records)
         }
         ,failure : errorComunicacion
     });
+    
+    _fieldByLabel('NEGOCIO').getStore().load(
+    {
+        params :
+        {
+            'params.cdagente' : cdagente
+        }
+    });
+    
     debug('<_p28_ramo5AgenteSelect');
 }
 

@@ -1241,4 +1241,80 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(String cdtipsit,String cdagente)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdagente" , cdagente);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params);
+		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorTipoSituacionAgenteRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>negocio:lista)
+			{
+				listaGen.add(new GenericVO(negocio.get("OTCLAVE"),negocio.get("OTVALOR")));
+			}
+		}
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class CargarNegociosPorTipoSituacionAgenteRamo5 extends StoredProcedure
+	{
+		protected CargarNegociosPorTipoSituacionAgenteRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"OTCLAVE"
+					,"OTVALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("negocio" , negocio);
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params);
+		Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorNegocioRamo5(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("CDTIPSIT"),tiposit.get("DSTIPSIT")));
+			}
+		}
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class CargarTiposSituacionPorNegocioRamo5 extends StoredProcedure
+	{
+		protected CargarTiposSituacionPorNegocioRamo5(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5");
+			declareParameter(new SqlParameter("negocio" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDTIPSIT"
+					,"DSTIPSIT"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -161,7 +161,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"NMCUADRO" , "PORREDAU" , "SWCONSOL" , "NMPOLANT" , "NMPOLNVA"
             		,"FESOLICI" , "CDRAMANT" , "CDMEJRED" , "NMPOLDOC" , "NMPOLIZA2"
             		,"NMRENOVE" , "NMSUPLEE" , "TTIPCAMC" , "TTIPCAMV" , "SWPATENT"
-            		,"NMPOLMST" , "PCPGOCTE"
+            		,"NMPOLMST" , "PCPGOCTE" , "TIPOFLOT"
             };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

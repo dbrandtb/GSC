@@ -1617,6 +1617,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,null     //ttipcamv
 			            ,null     //swpatent
 			            ,"100"    //pcpgocte
+			            ,null     //tipoflot
 			            ,"U"      //accion
 						);
 				
@@ -2176,18 +2177,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String cdunieco = null;
 			String estado   = null;
 			String nmsuplem = null;
+			String tipoflot = null;
 			if(maestra)
 			{
 				cdunieco = listaEmisiones.get(0).get("CDUNIECO");
 				estado   = listaEmisiones.get(0).get("ESTADO");
 				nmpoliza = listaEmisiones.get(0).get("NMPOLIZA");
 				nmsuplem = listaEmisiones.get(0).get("NMSUPLEM");
+				tipoflot = listaEmisiones.get(0).get("TIPOFLOT");
 			}
 			else
 			{
 				cdunieco = listaCotizaciones.get(0).get("CDUNIECO");
 				estado   = listaCotizaciones.get(0).get("ESTADO");
 				nmsuplem = listaCotizaciones.get(0).get("NMSUPLEM");
+				tipoflot = listaCotizaciones.get(0).get("TIPOFLOT");
 			}
 			checkBlank(cdunieco , "No se recupero la sucursal de la cotizacion");
 			checkBlank(estado   , "No se recupero el estado de la cotizacion");
@@ -2197,6 +2201,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().put("CDUNIECO" , cdunieco);
 			resp.getSmap().put("ESTADO"   , estado);
 			resp.getSmap().put("NMPOLIZA" , nmpoliza);
+			resp.getSmap().put("TIPOFLOT" , tipoflot);
 			
 			setCheckpoint("Recuperando configuracion de incisos");
 			resp.setSlist1(Utilerias.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));

@@ -2248,6 +2248,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            ,null     //ttipcamv
 			            ,null     //swpatent
 			            ,pcpgocte
+			            ,null     //tipoflot
 			            ,"U"      //accion
 						);
 			}
@@ -3931,6 +3932,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            ,null     //ttipcamv
 		            ,null     //swpatent
 		            ,pcpgocte
+		            ,null     //tipoflot
 		            ,"U"      //accion
 					);
 		}

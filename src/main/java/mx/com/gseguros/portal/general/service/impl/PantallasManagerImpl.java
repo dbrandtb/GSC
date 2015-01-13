@@ -10,12 +10,13 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.log4j.Logger;
 
 public class PantallasManagerImpl implements PantallasManager
 {
-	private static Logger log = Logger.getLogger(PantallasManagerImpl.class);
+	private final static Logger logger = Logger.getLogger(PantallasManagerImpl.class);
 	
 	private PantallasDAO  pantallasDAO;
 	
@@ -35,24 +36,26 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		Map<String,String>params = new LinkedHashMap<String,String>(0);
-		
-		params.put("PV_CDUNIECO_I" , cdunieco);
-		params.put("PV_CDRAMO_I"   , cdramo);
-		params.put("PV_CDTIPSIT_I" , cdtipsit);
-		params.put("PV_ESTADO_I"   , estado);
-		params.put("PV_PANTALLA_I" , pantalla);
-		params.put("PV_CDSISROL_I" , cdsisrol);
-		params.put("PV_CDTIPTRA_I" , cdtiptra);
-		params.put("PV_ORDEN_I"    , orden);
-		params.put("PV_SECCION_I"  , seccion);
-		
-		log.debug("PantallasManager obtenerComponentes params: "+params);
-		
-		List<ComponenteVO> lista=pantallasDAO.obtenerComponentes(params);
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtenerComponentes @@@@@@"
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ pantalla=" , pantalla
+				,"\n@@@@@@ seccion="  , seccion
+				,"\n@@@@@@ orden="    , orden
+				));
+		List<ComponenteVO> lista=pantallasDAO.obtenerComponentes(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
-		log.debug("PantallasManager obtenerComponentes lista size: "+lista.size());
-		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista size=",lista.size()
+				,"\n@@@@@@ obtenerComponentes @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return lista;
 	}
 	
@@ -72,21 +75,26 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		Map<String,String>params = new LinkedHashMap<String,String>(0);
-		
-		params.put("PV_CDUNIECO_I" , cdunieco);
-		params.put("PV_CDRAMO_I"   , cdramo);
-		params.put("PV_CDTIPSIT_I" , cdtipsit);
-		params.put("PV_ESTADO_I"   , estado);
-		params.put("PV_PANTALLA_I" , pantalla);
-		params.put("PV_CDSISROL_I" , cdsisrol);
-		params.put("PV_CDTIPTRA_I" , cdtiptra);
-		params.put("PV_ORDEN_I"    , orden);
-		params.put("PV_SECCION_I"  , seccion);
-		log.debug("EndososManager obtenerParametros params: "+params);
-		List<Map<String,String>> lista=pantallasDAO.obtenerParametros(params);
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtenerParametros @@@@@@"
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ pantalla=" , pantalla
+				,"\n@@@@@@ seccion="  , seccion
+				,"\n@@@@@@ orden="    , orden
+				));
+		List<Map<String,String>> lista=pantallasDAO.obtenerParametros(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		log.debug("EndososManager obtenerParametros lista size: "+lista.size());
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista size=",lista.size()
+				,"\n@@@@@@ obtenerParametros @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return lista;
     }
 	
@@ -121,9 +129,9 @@ public class PantallasManagerImpl implements PantallasManager
 		params.put("PV_SECCION_I"  , seccion);
 		params.put("PV_ACCION_I"   , accion);
 		params.put("PV_IDPRO_I"    , idproceso);
-		log.debug("EndososManager movParametros params: "+params);
+		logger.debug("EndososManager movParametros params: "+params);
 		pantallasDAO.movParametros(params);
-		log.debug("EndososManager movParametros end");
+		logger.debug("EndososManager movParametros end");
     }
 	
 	/**
@@ -132,9 +140,9 @@ public class PantallasManagerImpl implements PantallasManager
 	@Override
 	public void insertarParametros(Map<String,String> params) throws Exception
 	{
-		log.debug("EndososManager insertarParametros params: "+params);
+		logger.debug("EndososManager insertarParametros params: "+params);
 		pantallasDAO.insertarParametros(params);
-		log.debug("EndososManager insertarParametros end");
+		logger.debug("EndososManager insertarParametros end");
 	}
 	
 	/**
@@ -143,12 +151,12 @@ public class PantallasManagerImpl implements PantallasManager
 	@Override
 	public Item obtenerArbol() throws Exception
     {
-		log.debug("EndososManager obtenerArbol inicio");
+		logger.debug("EndososManager obtenerArbol inicio");
 		
 		//obtener registros
 		List<Map<String,String>> lista=pantallasDAO.obtenerArbol();
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		log.debug("EndososManager obtenerArbol lista size: "+lista.size());
+		logger.debug("EndososManager obtenerArbol lista size: "+lista.size());
 		
 		String pantallaKey   = "PANTALLA";
 		String componenteKey = "SECCION";
@@ -170,7 +178,7 @@ public class PantallasManagerImpl implements PantallasManager
 			arbol.get(pantallaIte).add(componenteIte);
 		}
 		
-		log.debug("EndososManager obtenerArbol arbol map: "+arbol);
+		logger.debug("EndososManager obtenerArbol arbol map: "+arbol);
 		
 		Item iArbol=new Item("root",null,Item.OBJ);
 		iArbol.add("expanded",true);
@@ -181,13 +189,13 @@ public class PantallasManagerImpl implements PantallasManager
 		
 		for(Entry<String,List<String>>pantallaIte:arbol.entrySet())
 		{
-			log.debug("pantallaIte: "+pantallaIte);
+			logger.debug("pantallaIte: "+pantallaIte);
 			
 			String      nombrePantallaIte      = pantallaIte.getKey();
 			List<String>pantallaItecomponentes = pantallaIte.getValue();
 			
-			log.debug("nombrePantallaIte: "      + nombrePantallaIte);
-			log.debug("pantallaItecomponentes: " + pantallaItecomponentes);
+			logger.debug("nombrePantallaIte: "      + nombrePantallaIte);
+			logger.debug("pantallaItecomponentes: " + pantallaItecomponentes);
 			
 			Item iPantallaIte=new Item(null,null,Item.OBJ);
 			
@@ -204,7 +212,7 @@ public class PantallasManagerImpl implements PantallasManager
 				
 				for(String pantallaItecomponenteIte:pantallaItecomponentes)
 				{
-					log.debug("pantallaItecomponenteIte: "+pantallaItecomponenteIte);
+					logger.debug("pantallaItecomponenteIte: "+pantallaItecomponenteIte);
 					
 					if(pantallaItecomponenteIte!=null)
 					{
@@ -219,7 +227,7 @@ public class PantallasManagerImpl implements PantallasManager
 			}			
 		}
 		
-		log.debug("EndososManager obtenerArbol arbol item: "+iArbol);
+		logger.debug("EndososManager obtenerArbol arbol item: "+iArbol);
 		
 		return iArbol;
     }

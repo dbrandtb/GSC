@@ -1988,6 +1988,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             ,String ttipcamv
             ,String swpatent
             ,String pcpgocte
+            ,String tipoflot
             ,String accion
 			) throws Exception
 	{
@@ -2038,6 +2039,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         params.put("ttipcamv"  , ttipcamv);
         params.put("swpatent"  , swpatent);
         params.put("pcpgocte"  , pcpgocte);
+        params.put("tipoflot"  , tipoflot);
         params.put("accion"    , accion);
         logger.debug(
         		new StringBuilder()
@@ -2101,6 +2103,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		declareParameter(new SqlParameter("ttipcamv"  , OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("swpatent"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pcpgocte"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("tipoflot"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));	
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
