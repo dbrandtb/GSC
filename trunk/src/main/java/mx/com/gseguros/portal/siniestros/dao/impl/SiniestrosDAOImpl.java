@@ -255,6 +255,32 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<CoberturaPolizaVO> obtieneListadoCoberturaAsegurado(
+			HashMap<String, Object> paramCobertura) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCoberturaAsegurado(getDataSource()), paramCobertura);
+		
+		@SuppressWarnings("unchecked")
+		List<CoberturaPolizaVO> listaDatosPoliza = (List<CoberturaPolizaVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	protected class ObtieneListadoCoberturaAsegurado extends StoredProcedure {
+
+		protected ObtieneListadoCoberturaAsegurado(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_COBERT_ASEG");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaCoberturasMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
     protected class DatosListaCoberturasMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	CoberturaPolizaVO consulta = new CoberturaPolizaVO();

@@ -6277,6 +6277,19 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         				String nmsinies = siniestroIte.get("NMSINIES");
         				String nfactura = factura.get("NFACTURA");
         				
+        				
+            			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+        				paramCobertura.put("pv_cdunieco_i",cdunieco);
+        				paramCobertura.put("pv_estado_i",estado);
+        				paramCobertura.put("pv_cdramo_i",cdramo);
+        				paramCobertura.put("pv_nmpoliza_i",nmpoliza);
+        				paramCobertura.put("pv_nmsituac_i",nmsituac);
+        				paramCobertura.put("pv_cdgarant_i",null);
+        				
+        				List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramCobertura);
+            			logger.debug("VALOR DE LAS COBERTURAS P DIRECTO--->"+listaCobertura);
+            			
+            			
         				//Asignacion de variables
         				double penalizacionCambioZona =0d;
         				double penalizacionCirculoHosp =0d;
@@ -6942,6 +6955,17 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			logger.debug("VALOR DEL CONCEPTOS");
     			logger.debug(conceptos);
     			slist1     = facturasAux;
+    			
+    			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+				paramCobertura.put("pv_cdunieco_i",siniestro.get("CDUNIECO"));
+				paramCobertura.put("pv_estado_i",siniestro.get("ESTADO"));
+				paramCobertura.put("pv_cdramo_i",siniestro.get("CDRAMO"));
+				paramCobertura.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
+				paramCobertura.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
+				paramCobertura.put("pv_cdgarant_i",null);
+				
+				List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
+    			logger.debug("VALOR DE LAS COBERTURAS --->"+listaCobertura);
     			
     			//hospitalizacion
     			Map<String,String> hosp = new HashMap<String,String>();
