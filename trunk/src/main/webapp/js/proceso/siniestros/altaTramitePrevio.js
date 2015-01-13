@@ -314,11 +314,19 @@ Ext.onReady(function() {
     			}else if(e.getValue() == _TIPO_PAGO_REEMBOLSO){
     				//PAGO POR REEMBOLSO
     				limpiarRegistrosTipoPago(e.getValue());
-    				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+    				if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
+			    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+			    	}else{
+			    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+			    	}
     			}else{
     				//PAGO POR REEMBOLSO
     				limpiarRegistrosTipoPago(e.getValue());
-    				panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+    				if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
+			    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+			    	}else{
+			    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+			    	}
     			}
     		}
     	}
@@ -1278,6 +1286,16 @@ Ext.onReady(function() {
 											panelInicialPral.down('[name=ImporteIndFactura]').setValue(sumaTotal);
 									}
 									
+									if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
+										if(panelInicialPral.down('[name=ImporteIndFactura]').getValue() <= "5000"){
+											panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+										}else{
+											panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+										}
+									}
+									
+									
+									
 									for(i=0;i < obtener.length;i++){
 	                					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
 	                						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
@@ -1489,10 +1507,13 @@ Ext.onReady(function() {
     	limpiarRegistrosTipoPago(panelInicialPral.down('combo[name=cmbTipoPago]').getValue());
     	/*Oficina Emisora*/
     	oficinaEmisora.load();
-    	panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-	}else{
-        //ENTRA AL CASO 2
-    }
+    	if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"  && panelInicialPral.down('combo[name=cmbTipoPago]').getValue() ==_TIPO_PAGO_DIRECTO){
+    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+    	}else{
+    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+    	}
+    	
+	}
     
     
     

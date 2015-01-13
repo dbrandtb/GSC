@@ -3188,7 +3188,7 @@ Ext.onReady(function() {
         	Ext.getCmp('idPenalCambioZona').setValue('0');
 		}else{
 			//1.- Verificamos si el producto es de Salud Vital
-			if(Ext.getCmp('idcdRamo').getValue() =="2"){
+			if(Ext.getCmp('idcdRamo').getValue() =="2" || Ext.getCmp('idcdRamo').getValue() =="7" ){
 				//2.- SALUD VITAL
 				//Consultamos si tiene exclusion para la validación de circulo hospitalario
 				Ext.Ajax.request(
@@ -3212,9 +3212,9 @@ Ext.onReady(function() {
 					        Ext.getCmp('idPenalCambioZona').setValue("0");
 					        var valor1="";
 						    var valor2="";
-						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100") {       valor1="A";    }
-						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500") {       valor1="B";    }
-						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000"){      valor1="C";     }
+						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100"  || Ext.getCmp('iddsplanAsegurado').getValue() == "B") {       valor1="A";    }
+						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500"  || Ext.getCmp('iddsplanAsegurado').getValue() == "A") {       valor1="B";    }
+						    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000" || Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS"){      valor1="C";     }
 						    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 100") {       valor2="A";    }
 						    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 500") {       valor2="B";    }
 						    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 1000"){      valor2="C";     }
@@ -3236,10 +3236,10 @@ Ext.onReady(function() {
 					            	Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
 					            	var valor1="";
 					        	    var valor2="";
-					        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100") {       valor1="A";    }
-					        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500") {       valor1="B";    }
-					        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000"){      valor1="C";     }
-					        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 100") {       valor2="A";    }
+					        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100"  || Ext.getCmp('iddsplanAsegurado').getValue() == "B") {       valor1="A";    }
+									if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500"  || Ext.getCmp('iddsplanAsegurado').getValue() == "A") {       valor1="B";    }
+									if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000" || Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS"){      valor1="C";     }
+									if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 100") {       valor2="A";    }
 					        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 500") {       valor2="B";    }
 					        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 1000"){      valor2="C";     }
 					        	    validacionCirculoHospitalario(valor1,valor2);
@@ -3330,10 +3330,19 @@ Ext.onReady(function() {
 	            break;
 	        case "BA" :
 	        case "CB" :
-	        	Ext.getCmp('idPenalCircHospitalario').setValue('-5');
+	        		if (Ext.getCmp('idcdRamo').getValue() == "2"){
+	        			Ext.getCmp('idPenalCircHospitalario').setValue('-5');
+	        		}else{
+	        			Ext.getCmp('idPenalCircHospitalario').setValue('-10');
+	        		}
+	        		
 	            break;
 	        case "CA" :
-	        	Ext.getCmp('idPenalCircHospitalario').setValue('-10');
+	        		if (Ext.getCmp('idcdRamo').getValue() == "2"){
+	        			Ext.getCmp('idPenalCircHospitalario').setValue('-10');
+	        		}else{
+	        			Ext.getCmp('idPenalCircHospitalario').setValue('-20');
+	        		}
 	            break;
 	        case "AB" :
 	        case "BC" :
@@ -3358,7 +3367,7 @@ Ext.onReady(function() {
 		var tipoCopago = Ext.getCmp('idTipoCopago').getValue() ;
 		var sumatoria = 0;
 	    
-	    if(Ext.getCmp('idcdRamo').getValue() =="2"){
+	    if(Ext.getCmp('idcdRamo').getValue() =="2" || Ext.getCmp('idcdRamo').getValue() =="7"){
 			if( copagoOrig =="NO" || copagoOrig =="NA")
 		    {
 		        sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() +  +Ext.getCmp('idPenalCambioZona').getValue();
