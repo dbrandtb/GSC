@@ -829,6 +829,10 @@ Ext.onReady(function()
                 	if(causaSiniestro == _CAUSA_ACCIDENTE){
                 		deducible = 0;
                 	}
+               	}else{
+               		if(causaSiniestro == _CAUSA_ACCIDENTE){
+                		deducible = 0;
+                	}
                	}
             }
             
@@ -859,6 +863,7 @@ Ext.onReady(function()
             		var copagoaplica = 0.0;
             	}
            	}else{
+           		if(causaSiniestro != _CAUSA_ACCIDENTE){
            		if(tipcopag=='$'){
                     var copagoaplica = copago;
                 }
@@ -866,6 +871,9 @@ Ext.onReady(function()
                     var copagoaplica = subttdeduc*(copago/100.0);
                 }
                 else{
+                        var copagoaplica = 0.0;
+                    }
+           		}else{
                     var copagoaplica = 0.0;
                 }
            	}
