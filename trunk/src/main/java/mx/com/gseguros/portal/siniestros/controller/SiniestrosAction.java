@@ -3472,6 +3472,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 							deducibleFacturaIte = 0d;
 						}
 					}else{
+						//verificamos la causa del siniestro
+						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 							deducibleFacturaIte = 0d;
 						}
@@ -4753,6 +4755,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 							deducibleFacturaIte = 0d;
 						}
 					}else{
+						//verificamos la causa del siniestro
+						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 							deducibleFacturaIte = 0d;
 						}
