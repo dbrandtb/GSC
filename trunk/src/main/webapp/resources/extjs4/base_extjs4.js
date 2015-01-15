@@ -532,6 +532,35 @@ function calculaAniosTranscurridos(fechaInicial, fechaFinal){
 	return anios;
 }
 
+function parseaFechas(recordData)
+{
+    debug('>parseaFechas entrada:',recordData);
+    var datos={};
+    for(var key in recordData)
+    {
+        var value=recordData[key];
+        if((typeof value=='object')&&value&&value.getDate)
+        {
+            var fecha='';
+            fecha+=value.getDate();
+            if((fecha+'x').length==2)//1x
+            {
+                fecha = ('x'+fecha).replace('x','0');//x1=01
+            }
+            fecha+='/';
+            fecha+=value.getMonth()+1<10?
+                (('x'+(value.getMonth()+1)).replace('x','0'))
+                :(value.getMonth()+1);
+            fecha+='/';
+            fecha+=value.getFullYear();
+            value=fecha;
+        }
+        datos[key]=value;
+    }
+    debug('<parseaFechas salida:',datos);
+    return datos;
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
