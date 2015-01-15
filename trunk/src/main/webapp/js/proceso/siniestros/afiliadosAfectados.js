@@ -130,6 +130,7 @@ Ext.onReady(function() {
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_retornarMedAjustadorAOperador
+				,hidden:  _CDROL ==  _OPERADOR_REC
 			},
 			{
 				text     : 'Historial'

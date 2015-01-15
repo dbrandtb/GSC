@@ -906,9 +906,9 @@ var msgWindow;
 	}
 	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
-		storeDestinoPago =Ext.create('Ext.data.Store', {
-	        model:'Generic',
-	        autoLoad:true,
+		storeDestinoPago = Ext.create('Ext.data.JsonStore', {
+		    model:'Generic',
+	        //autoLoad:true,
 	        proxy:
 	        {
 	            type: 'ajax',
@@ -921,10 +921,9 @@ var msgWindow;
 	            }
 	        }
 	    });
-		
-		storeCatConcepto =Ext.create('Ext.data.Store', {
+		storeDestinoPago.load();
+		storeCatConcepto = Ext.create('Ext.data.JsonStore', {
 	        model:'Generic',
-	        autoLoad:true,
 	        proxy:
 	        {
 	            type: 'ajax',
@@ -937,7 +936,7 @@ var msgWindow;
 	            }
 	        }
 	    });
-		
+		storeCatConcepto.load();
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -950,7 +949,7 @@ var msgWindow;
 	        		var pagocheque = Ext.create('Ext.form.field.ComboBox',
    		    	    {
    		    	        colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
-   		    	        allowBlank : false,			editable     	: false,			displayField    : 'value',
+   		    	        allowBlank : false,			editable     	: true,			displayField    : 'value',
    		    	        valueField:'key',			forceSelection  : true,			width			:350,
    		    	        queryMode    :'local',		store 			: storeDestinoPago
    		    	    });
@@ -958,7 +957,7 @@ var msgWindow;
    		    		var concepPago = Ext.create('Ext.form.field.ComboBox',
    		    	    {
    		    	        colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
-   		    	        allowBlank : false,			editable     	: false,			displayField    : 'value',
+   		    	        allowBlank : false,			editable     	: true,			displayField    : 'value',
    		    	        valueField:'key',			forceSelection  : true,			width			:350,
    		    	        queryMode    :'local',		store 			: storeCatConcepto
    		    	    });
