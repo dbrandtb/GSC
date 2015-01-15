@@ -1132,6 +1132,77 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+        else if(recordOperacion.get('funcion')=='endosobeneficiarios')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nAsegActivos=0;
+            var recordActivo;
+            var arrayEditados=[];
+            var hayCliente=false;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;//solo para tener una referencia de los datos de poliza
+                    arrayEditados.push(record.raw);
+                    if(record.get("nmsituac")==0)
+                    {
+                        hayCliente=true;
+                    }
+                }
+            });
+            var valido=true;
+            
+            if(valido)
+            {
+                valido=nAsegActivos==1;
+                if(!valido)
+                {
+                    mensajeWarning('Seleccione solo un asegurado');
+                }
+            }
+            
+            if(valido)
+            {
+                valido=!hayCliente;
+                if(!valido)
+                {
+                    mensajeWarning('No se puede seleccionar el cliente');
+                }
+            }
+            
+            if(valido)
+            {
+                debug(arrayEditados);
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var json={};
+                json['slist1']=arrayEditados;
+                var smap1=
+                {
+                    'cdunieco'     : recordActivo.get('CDUNIECO')
+                    ,'cdramo'      : recordActivo.get('CDRAMO')
+                    ,'estado'      : recordActivo.get('ESTADO')
+                    ,'nmpoliza'    : recordActivo.get('NMPOLIZA')
+                    ,'nmsuplem'    : '0'
+                    ,'nmsituac'    : recordActivo.get('nmsituac')
+                    ,'cdrolPipes'  : '3'
+                    ,'cdtipsup'    : '27'
+                    ,'ntramite'    : recordActivo.get('NTRAMITE')
+                    ,'ultimaImagen': 'S'
+                };
+                json['smap1']=smap1;
+                debug(json);
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : json
+                });
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -1461,6 +1532,11 @@ Ext.onReady(function()
                     texto    : '39'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosotopemenos'
+                }
+                ,{
+                    texto    : '27'
+                    ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />'
+                    ,funcion : 'endosobeneficiarios'
                 }
             ]
         }
