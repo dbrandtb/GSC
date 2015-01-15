@@ -456,7 +456,7 @@ function _datComTurnarSuscripcion()
                                             readOnly:true,       //<<maquillado
                                             fieldLabel:'Poliza', //<<maquillado
                                             value:'0',           //<<maquillado
-                                            style:'margin:5px;', //<<maquillado
+                                            style:'margin:5px;' //<<maquillado
 		                                },                       //<<maquillado
 		                                {
 		                                    xtype:'combo',
@@ -594,7 +594,14 @@ function _datComTurnarSuscripcion()
 		                                    queryMode:'local',
 		                                    style:'margin:5px;',
 		                                    allowBlank:false
-		                                }
+		                                },
+		                                {
+                                            xtype:'textfield',
+                                            name:'panel2.dsplan',
+                                            readOnly:true,
+                                            fieldLabel:'Plan',
+                                            style:'margin:5px;'
+                                        }
 		                            ]
 		                        }),
 		                        Ext.create('Ext.panel.Panel',{
