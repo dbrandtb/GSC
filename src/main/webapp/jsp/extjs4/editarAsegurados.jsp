@@ -43,6 +43,7 @@
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
 	var urlValositp2        ='<s:url namespace="/" action="pantallaValosit" />';
+	var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
 	var editorFechap2;
 	var contextop2='${ctx}';
 	var gridTomadorp2;
@@ -766,7 +767,6 @@ debug("validarYGuardar flag:2");
    	        		var recordContra=store.getAt(indexTomador);
    	        		storeTomadorp2.add(recordContra);
                     storePersonasp2.remove(recordContra);
-                    
    	        		debug('checar cual si un asegurado es el contratante');
    	        		if(recordContra.get('cdperson')&&recordContra.get('cdperson').length>0)
    	        		{
@@ -1720,6 +1720,38 @@ debug("validarYGuardar flag:2");
 	            debug('se puso en sesion recordTomadorp2',recordTomadorp2);
                 storeTomadorp2.removeAll();
                 storeTomadorp2.add(recordTomadorp2);
+	        }
+	        ,onBeneficiariosClick : function(grid,row)
+	        {
+	            var record=grid.getStore().getAt(row);
+	            if(Ext.getCmp('beneficiariosAccordionEl'))
+                {
+                    Ext.getCmp('beneficiariosAccordionEl').destroy();
+                }
+                accordion.add(
+                {
+                    id:'beneficiariosAccordionEl'
+                    ,title:'Editar beneficiarios de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,cls:'claseTitulo'
+                    ,loader:
+                    {
+                        url : urlPantallaBeneficiarios
+                        ,params   :
+                        {
+                            'smap1.cdunieco'      : inputCduniecop2
+                            ,'smap1.cdramo'       : inputCdramop2
+                            ,'smap1.estado'       : inputEstadop2
+                            ,'smap1.nmpoliza'     : inputNmpolizap2
+                            ,'smap1.nmsuplem'     : 0
+                            ,'smap1.nmsituac'     : record.get('nmsituac')
+                            ,'smap1.cdrolPipes'   : '3'
+                            ,'smap1.cdtipsup'     : '1'
+                            ,'smap1.ultimaImagen' : 'N'
+                        }
+                        ,autoLoad:true
+                        ,scripts:true
+                    }
+                });
 	        }
             ,onValositClick : function(grid,rowIndex)
             {

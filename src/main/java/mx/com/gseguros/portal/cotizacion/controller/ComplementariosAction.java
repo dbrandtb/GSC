@@ -831,7 +831,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	                        }]*/
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
-					.add(new Item("width", 110))
+					.add(new Item("width", 130))
 					//.add(new Item("width", 80))
 					.add(new Item("menuDisabled", true))
 					.add(new Item("header", "Acciones"))
@@ -859,6 +859,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 								.add("tooltip","Datos de situaci&oacute;n asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onValositClick").setQuotes(""))
+								)
+						.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/money.png")
+								.add("tooltip","Beneficiarios")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onBeneficiariosClick").setQuotes(""))
 								)
 						/*
 						.add(Item.crear(null,null,Item.OBJ)

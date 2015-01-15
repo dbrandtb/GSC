@@ -361,6 +361,14 @@
         <action name="cargarDetalleNegocioRamo5" class="cotizacionAutoAction" method="cargarDetalleNegocioRamo5">
             <result type="json" />
         </action>
+        
+        <action name="guardarPantallaBeneficiarios" class="cotizacionAutoAction" method="guardarPantallaBeneficiarios">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
        
     </package>
     

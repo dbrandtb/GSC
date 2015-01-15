@@ -385,6 +385,14 @@
             <result type="json" />
         </action>
         
+        <action name="guardarEndosoBeneficiarios" class="EndososAction" method="guardarEndosoBeneficiarios">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>

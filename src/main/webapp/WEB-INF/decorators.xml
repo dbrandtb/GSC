@@ -13,6 +13,7 @@
 		<pattern>/jsp/portal/portal.jsp</pattern>
 		<pattern>/jsp/menu/menu.jsp</pattern>
 		<pattern>/load.action</pattern>
+		<pattern>/jsp-script/general/includes/errorPantalla.jsp</pattern>
 		
 		<pattern>/cancelacion/pantallaCancelar.action</pattern>
         <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>

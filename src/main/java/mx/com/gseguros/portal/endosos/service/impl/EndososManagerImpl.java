@@ -11,8 +11,10 @@ import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -30,6 +32,7 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,10 +44,12 @@ public class EndososManagerImpl implements EndososManager
 {
     private static final Logger logger = Logger.getLogger(EndososManagerImpl.class);
     
+    private Map<String,Object> session;
 	private EndososDAO      endososDAO;
 	private CotizacionDAO   cotizacionDAO;
 	private PantallasDAO    pantallasDAO;
 	private MesaControlDAO  mesaControlDAO;
+	private PersonasDAO     personasDAO;
 	@Autowired
 	private Ice2sigsService ice2sigsService;
 	
@@ -1620,6 +1625,289 @@ public class EndososManagerImpl implements EndososManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,List<Map<String,String>>mpoliperMpersona
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ nmsituac="         , nmsituac
+				,"\n@@@@@@ mpoliperMpersona=" , mpoliperMpersona
+				,"\n@@@@@@ cdelemen="         , cdelemen
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				));
+
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Iniciando endoso");
+			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,new Date()
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			setCheckpoint("Iterando registros");
+			for(Map<String,String>rec:mpoliperMpersona)
+			{
+				String mov    = rec.get("mov");
+				int agregar   = 1;
+				int eliminar  = 2;
+				int operacion = 0;
+				if(StringUtils.isNotBlank(mov))
+				{
+					if(mov.equals("+"))
+					{
+						operacion=agregar;
+					}
+					else if(mov.equals("-"))
+					{
+						operacion=eliminar;
+					}
+				}
+				
+				if(operacion==agregar)
+				{
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"I");
+					
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,"3"
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,"V"
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,"N" //swexiper
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"I"
+							);
+				}
+				else if(operacion==eliminar)
+				{
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,rec.get("CDROL")
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,rec.get("STATUS")
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,rec.get("SWEXIPER")
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"B"
+							);
+					
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"B");
+				}
+				else
+				{
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,rec.get("CDROL")
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,rec.get("STATUS")
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,rec.get("SWEXIPER")
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"U"
+							);
+					
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"U");
+				}
+			}
+			
+			setCheckpoint("Confirmando endoso");
+			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,"");
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
+	/********************** BASE MANAGER ***********************/
+	/**
+	 * Guarda el estado actual en sesion
+	 */
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	/**
+	 * Obtiene el estado actual de sesion
+	 */
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	/**
+	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
+	 * Tambien guarda el checkpoint en 0
+	 */
+	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
+	{
+		long timestamp = System.currentTimeMillis();
+		resp.setExito(false);
+		resp.setRespuestaOculta(ex.getMessage());
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append(ex.getMessage())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		else
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error ")
+					.append(getCheckpoint().toLowerCase())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		
+		logger.error(resp.getRespuesta(),ex);
+		setCheckpoint("0");
+	}
+	/********************** BASE MANAGER ***********************/
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
@@ -1637,6 +1925,15 @@ public class EndososManagerImpl implements EndososManager
 
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
+	}
+	@Override
+	public void setSession(Map<String,Object>session)
+	{
+		this.session=session;
+	}
+
+	public void setPersonasDAO(PersonasDAO personasDAO) {
+		this.personasDAO = personasDAO;
 	}
 	
 }

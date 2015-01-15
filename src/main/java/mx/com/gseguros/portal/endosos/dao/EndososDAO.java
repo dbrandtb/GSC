@@ -195,4 +195,20 @@ public interface EndososDAO
 	 */
 	public void insertarMpolicap(Map<String, String> params) throws Exception;
 	
+	public void movimientoMpoliperBeneficiario(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			,String nmsuplem
+			,String status
+			,String nmorddom
+			,String swreclam
+			,String swexiper
+			,String cdparent
+			,String porbenef
+			,String accion)throws Exception;
 }

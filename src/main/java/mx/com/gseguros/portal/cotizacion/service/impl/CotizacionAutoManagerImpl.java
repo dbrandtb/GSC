@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -60,13 +61,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
 	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
-	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT";
+	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
+	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
+	    ,RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             = "RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC" 
+	    ;
 	
 	private CotizacionDAO  cotizacionDAO;
 	private PantallasDAO   pantallasDAO;
 	private ConsultasDAO   consultasDAO;
 	private PersonasDAO    personasDAO;
 	private MesaControlDAO mesaControlDAO;
+	private EndososDAO     endososDAO;
 	
 	@Autowired
 	private transient TractoCamionService tractoCamionService;
@@ -981,6 +986,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA , null);
 		procedimientos.put(RECUPERAR_TVALOSIT                                      , null);
 		procedimientos.put(RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS               , null);
+		procedimientos.put(RECUPERAR_ULTIMO_NMSUPLEM                               , null);
+		procedimientos.put(RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             , null);
 		return procedimientos;
 	}
 	
@@ -1019,6 +1026,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String estado   = parametros.get("estado");
 				String nmpoliza = parametros.get("nmpoliza");
 				resp.setSmap(cotizacionDAO.cargarDatosVehiculoRamo5(cdunieco,cdramo,estado,nmpoliza));
+			}
+			else if(procedimiento.equals(RECUPERAR_ULTIMO_NMSUPLEM))
+			{
+				String cdunieco = parametros.get("cdunieco");
+				String cdramo   = parametros.get("cdramo");
+				String estado   = parametros.get("estado");
+				String nmpoliza = parametros.get("nmpoliza");
+				resp.setSmap(consultasDAO.cargarUltimoNmsuplemPoliza(cdunieco,cdramo,estado,nmpoliza));
 			}
 			
 			setCheckpoint("0");
@@ -2363,6 +2378,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String negocio  = parametros.get("negocio");
 				resp.setSlist(cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit, negocio));
 			}
+			else if(procedimiento.equals(RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC))
+			{
+				String cdunieco = parametros.get("cdunieco");
+				String cdramo   = parametros.get("cdramo");
+				String estado   = parametros.get("estado");
+				String nmpoliza = parametros.get("nmpoliza");
+				String nmsuplem = parametros.get("nmsuplem");
+				String nmsituac = parametros.get("nmsituac");
+				String roles    = parametros.get("roles");
+				resp.setSlist(consultasDAO.cargarMpoliperOtrosRolesPorNmsituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, roles));
+			}
 			
 			setCheckpoint("0");
 		}
@@ -2821,6 +2847,211 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaVoidVO guardarPantallaBeneficiarios(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,List<Map<String,String>>mpoliperMpersona)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				));
+		
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		
+		try
+		{
+			setCheckpoint("Iterando registros");
+			for(Map<String,String>rec:mpoliperMpersona)
+			{
+				String mov    = rec.get("mov");
+				int agregar   = 1;
+				int eliminar  = 2;
+				int operacion = 0;
+				if(StringUtils.isNotBlank(mov))
+				{
+					if(mov.equals("+"))
+					{
+						operacion=agregar;
+					}
+					else if(mov.equals("-"))
+					{
+						operacion=eliminar;
+					}
+				}
+				
+				if(operacion==agregar)
+				{
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"I");
+					
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,"3"
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,"V"
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,"N" //swexiper
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"I"
+							);
+				}
+				else if(operacion==eliminar)
+				{
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,rec.get("CDROL")
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,rec.get("STATUS")
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,rec.get("SWEXIPER")
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"B"
+							);
+					
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"B");
+				}
+				else
+				{
+					endososDAO.movimientoMpoliperBeneficiario(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,rec.get("CDROL")
+							,rec.get("CDPERSON")
+							,nmsuplem
+							,rec.get("STATUS")
+							,rec.get("NMORDDOM")
+							,rec.get("SWRECLAM")
+							,rec.get("SWEXIPER")
+							,rec.get("CDPARENT")
+							,rec.get("PORBENEF")
+							,"U"
+							);
+					
+					personasDAO.movimientosMpersona(
+							rec.get("CDPERSON")
+							,rec.get("CDTIPIDE")
+							,rec.get("CDIDEPER")
+							,rec.get("DSNOMBRE")
+							,rec.get("CDTIPPER")
+							,rec.get("OTFISJUR")
+							,rec.get("OTSEXO")
+							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+									renderFechas.parse(rec.get("FENACIMI"))
+									:null
+							,rec.get("CDRFC")
+							,rec.get("DSEMAIL")
+							,rec.get("DSNOMBRE1")
+							,rec.get("DSAPELLIDO")
+							,rec.get("DSAPELLIDO1")
+							,new Date()
+							,rec.get("CDNACION")
+							,rec.get("CANALING")
+							,rec.get("CONDUCTO")
+							,rec.get("PTCUMUPR")
+							,rec.get("RESIDENCIA")
+							,rec.get("NONGRATA")
+							,rec.get("CDIDEEXT")
+							,rec.get("CDESTCIV")
+							,rec.get("CDSUCEMI")
+							,"U");
+				}
+			}
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}	
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ ",resp
+				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
@@ -2848,5 +3079,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
+	}
+
+	public void setEndososDAO(EndososDAO endososDAO) {
+		this.endososDAO = endososDAO;
 	}
 }
