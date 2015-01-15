@@ -423,7 +423,23 @@ function _p32_guardarClic()
                 {
                     if(_p32_smap1.cdtipsup-0==1)
                     {
-                        mensajeCorrecto('Datos guardados','Datos guardados');
+                        mensajeCorrecto('Datos guardados','Datos guardados',function()
+                        {
+                            try
+                            {
+                                //////////////////////////////////
+                                ////// usa codigo del padre //////
+                                /*//////////////////////////////*/
+                                expande(2);
+                                /*//////////////////////////////*/
+                                ////// usa codigo del padre //////
+                                //////////////////////////////////
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,'Manejando navegacion');
+                            }
+                        });
                         _p32_cargarStore();
                     }
                     else
