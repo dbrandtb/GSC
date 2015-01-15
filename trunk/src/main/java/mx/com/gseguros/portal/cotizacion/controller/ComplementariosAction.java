@@ -239,6 +239,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.ferenova"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.dsplan"));
 			}
 			catch(Exception ex)
 			{
@@ -396,6 +397,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					renderFechas.format((Date) select.get("feproren")));
 			panel2.put("cdtipopol", (String) select.get("ottempot"));
 			panel2.put("cdperpag", (String) select.get("cdperpag"));
+			panel2.put("dsplan", (String) select.get("dsplan"));
 			/*/////////////////////////////////*/
 			////// Cargar info de mpolizas //////
 			/////////////////////////////////////
