@@ -1178,7 +1178,7 @@
                 Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 var json={};
-                json['slist1']=arrayEditados;
+                //json['slist1']=arrayEditados;
                 var smap1=
                 {
                     'cdunieco'     : recordActivo.get('CDUNIECO')
@@ -1535,7 +1535,7 @@ Ext.onReady(function()
                 }
                 ,{
                     texto    : '27'
-                    ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />'
+                    ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiariosSMD" />'
                     ,funcion : 'endosobeneficiarios'
                 }
             ]

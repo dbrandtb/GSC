@@ -1390,6 +1390,58 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarPantallaBeneficiarios()
+	{
+		logger.info(Utilerias.join(
+				 "\n##########################################"
+				,"\n###### guardarPantallaBeneficiarios ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
+			String nmsituac = smap1.get("nmsituac");
+			
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(nmsuplem , "No se recibio el numero de suplemento");
+			checkBlank(nmsituac , "No se recibio el numero de situacion");
+			
+			ManagerRespuestaVoidVO resp=cotizacionAutoManager.guardarPantallaBeneficiarios(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,nmsituac
+					,slist1);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarPantallaBeneficiarios ######"
+				,"\n##########################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

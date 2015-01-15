@@ -37,6 +37,7 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -80,6 +81,12 @@ public class EndososAction extends PrincipalCoreAction
 	private String  respuesta       = null;
 	private String  respuestaOculta = null;
 
+	public EndososAction()
+	{
+		logger.debug("new EndososAction");
+		this.session=ActionContext.getContext().getSession();
+	}
+	
 	//////////////////////////////
 	////// marco de endosos //////
 	/*//////////////////////////*/
@@ -7541,6 +7548,115 @@ public class EndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarEndosoBeneficiarios()
+	{
+		logger.info(Utilerias.join(
+				 "\n########################################"
+				,"\n###### guardarEndosoBeneficiarios ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsituac = smap1.get("nmsituac");
+			String cdtipsup = smap1.get("cdtipsup");
+			String ntramite = smap1.get("ntramite");
+			
+			checkBlank(cdunieco , "No se recibio la sucursal");
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(estado   , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza , "No se recibio el numero de poliza");
+			checkBlank(nmsituac , "No se recibio el numero de situacion");
+			checkBlank(cdtipsup , "No se recibio el tipo de suplemento");
+			checkBlank(ntramite , "No se recibio el numero de tramite");
+			
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdelemen = ((UserVO)session.get("USUARIO")).getCdElemento();
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			
+			ManagerRespuestaVoidVO resp=endososManager.guardarEndosoBeneficiarios(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsituac
+					,slist1
+					,cdelemen
+					,cdusuari
+					,cdtipsup
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarEndosoBeneficiarios ######"
+				,"\n########################################"
+				));
+		return SUCCESS;
+	}
+	
+	/****************************** BASE ACTION **********************************/
+	private void manejaException(Exception ex)
+	{
+		long timestamp  = System.currentTimeMillis();
+		exito           = false;
+		respuestaOculta = ex.getMessage();
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
+		}
+		else
+		{
+			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
+		}
+		
+		logger.error(respuesta,ex);
+		setCheckpoint("0");
+	}
+	
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	private void checkNull(Object objeto,String mensaje)throws ApplicationException
+	{
+		if(objeto==null)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	private void checkBlank(String cadena,String mensaje)throws ApplicationException
+	{
+		if(StringUtils.isBlank(cadena))
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	/****************************** BASE ACTION **********************************/
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -7570,6 +7686,7 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
+		this.endososManager.setSession(session);
 	}
 
 	public Item getItem1() {

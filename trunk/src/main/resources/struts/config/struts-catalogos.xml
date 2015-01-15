@@ -477,6 +477,23 @@
             </result>
 	   </action>
 	   
-	</package>
-
+        <action name="pantallaBeneficiarios" class="personasAction" method="pantallaBeneficiarios">
+            <result name="success">/jsp-script/catalogos/pantallaBeneficiarios.jsp</result>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+        </action>
+        
+        <action name="includes/pantallaBeneficiariosSMD" class="personasAction" method="pantallaBeneficiarios">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success">/jsp-script/catalogos/pantallaBeneficiarios.jsp</result>
+            <result name="error">/jsp-script/general/includes/errorPantalla.jsp</result>
+        </action>
+        
+        <action name="includes/pantallaBeneficiarios" class="personasAction" method="pantallaBeneficiarios">
+            <result name="success">/jsp-script/catalogos/pantallaBeneficiarios.jsp</result>
+            <result name="error">/jsp-script/general/includes/errorPantalla.jsp</result>
+        </action>
+    </package>
 </struts>

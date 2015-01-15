@@ -11,17 +11,21 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class PersonasAction extends PrincipalCoreAction
 {
@@ -46,6 +50,12 @@ public class PersonasAction extends PrincipalCoreAction
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
 	private boolean personaWS;
+	
+	public PersonasAction()
+	{
+		logger.debug("new PersonasAction");
+		this.session=ActionContext.getContext().getSession();
+	}
 	
 	/**
 	 * Carga los elementos de la pantalla de asegurados
@@ -135,8 +145,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontró ninguna persona. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontrï¿½ ninguna persona. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontrï¿½ ninguna persona. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -285,8 +295,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontró ninguna persona al Importar. Consulte a soporte, ext. 8050";
-				respuestaOculta = "No se encontró ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuesta       = "No se encontrï¿½ ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuestaOculta = "No se encontrï¿½ ninguna persona al Importar. Consulte a soporte, ext. 8050";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -746,8 +756,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontró ninguna persona al Guardar. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontró ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontrï¿½ ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontrï¿½ ninguna persona al Guardar. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -961,6 +971,136 @@ public class PersonasAction extends PrincipalCoreAction
 		return usuario.getRolActivo().getClave();
 	}
 	
+	public String pantallaBeneficiarios()
+	{
+		logger.info(Utilerias.join(
+				 "\n###################################"
+				,"\n###### pantallaBeneficiarios ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			
+			//validados
+			String cdunieco   = smap1.get("cdunieco");
+			String cdramo     = smap1.get("cdramo");
+			String estado     = smap1.get("estado");
+			String nmpoliza   = smap1.get("nmpoliza");
+			String nmsuplem   = smap1.get("nmsuplem");
+			String nmsituac   = smap1.get("nmsituac");
+			String cdrolPipes = smap1.get("cdrolPipes");
+			String cdtipsup   = smap1.get("cdtipsup");
+			String ntramite   = smap1.get("ntramite");
+			
+			checkBlank(cdunieco   , "No se recibio la sucursal");
+			checkBlank(cdramo     , "No se recibio el producto");
+			checkBlank(estado     , "No se recibio el estado de la poliza");
+			checkBlank(nmpoliza   , "No se recibio el numero de poliza");
+			checkBlank(nmsuplem   , "No se recibio el numero de suplemento");
+			checkBlank(nmsituac   , "No se recibio el numero de situacion");
+			checkBlank(cdrolPipes , "No se recibieron los roles permitidos");
+			checkBlank(cdtipsup   , "No se recibio el tipo de suplemento");
+			if(!cdtipsup.equals("1"))
+			{
+				checkBlank(ntramite, "No se recibio el numero de tramite");
+			}
+			
+			//no validados
+			String ultimaImagen = smap1.get("ultimaImagen");
+			if(StringUtils.isBlank(ultimaImagen)
+					||!ultimaImagen.equals("S"))
+			{
+				ultimaImagen="N";
+			}
+			
+			smap1.put("ultimaImagen" , ultimaImagen);
+			
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			
+			ManagerRespuestaImapVO resp=personasManager.pantallaBeneficiarios(cdunieco,cdramo,estado,cdsisrol,cdtipsup);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				imap = resp.getImap();
+			}
+			else
+			{
+				exito = false;
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### pantallaBeneficiarios ######"
+				,"\n###################################"
+				));
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
+		}
+		return result;
+	}
+	
+	/****************************** BASE ACTION **********************************/
+	private void manejaException(Exception ex)
+	{
+		long timestamp  = System.currentTimeMillis();
+		exito           = false;
+		respuestaOculta = ex.getMessage();
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
+		}
+		else
+		{
+			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
+		}
+		
+		logger.error(respuesta,ex);
+		setCheckpoint("0");
+	}
+	
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	private void checkNull(Object objeto,String mensaje)throws ApplicationException
+	{
+		if(objeto==null)
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	
+	private void checkBlank(String cadena,String mensaje)throws ApplicationException
+	{
+		if(StringUtils.isBlank(cadena))
+		{
+			throw new ApplicationException(mensaje);
+		}
+	}
+	/****************************** BASE ACTION **********************************/
+	
 	/*
 	 * GETTERS Y SETTERS
 	 */
@@ -992,8 +1132,10 @@ public class PersonasAction extends PrincipalCoreAction
 		this.respuestaOculta = respuestaOculta;
 	}
 
-	public void setPersonasManager(PersonasManager personasManager) {
+	public void setPersonasManager(PersonasManager personasManager)
+	{
 		this.personasManager = personasManager;
+		this.personasManager.setSession(session);
 	}
 
 	public Map<String, Item> getImap() {

@@ -327,4 +327,16 @@ public interface EndososManager
 			,String rutaServReports
 			,String passServReports
 			);
+	public void setSession(Map<String,Object>session);
+	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,List<Map<String,String>>mpoliperMpersona
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			);
 }

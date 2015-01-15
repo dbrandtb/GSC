@@ -616,4 +616,112 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+	public Map<String,String>cargarUltimoNmsuplemPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utilerias.debugPrecedure(logger, "PKG_CONSULTA.P_GET_MAX_SUPLEMENTO", params);
+    	Map<String,Object>procResult = ejecutaSP(new CargarUltimoNmsuplemPoliza(getDataSource()),params);
+    	Map<String,String>salida = new LinkedHashMap<String,String>();
+    	salida.put("nmsuplem" , (String)procResult.get("pv_nmsuplem_o"));
+    	return salida;
+	}
+    
+    protected class CargarUltimoNmsuplemPoliza extends StoredProcedure
+    {
+    	protected CargarUltimoNmsuplemPoliza(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_MAX_SUPLEMENTO");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public List<Map<String,String>>cargarMpoliperOtrosRolesPorNmsituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String rolesPipes)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsuplem" , nmsuplem);
+    	params.put("nmsituac" , nmsituac);
+    	params.put("roles"    , rolesPipes);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarMpoliperOtrosRolesPorNmsituac(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES", params, lista);
+    	return lista;
+	}
+    
+    protected class CargarMpoliperOtrosRolesPorNmsituac extends StoredProcedure
+    {
+    	protected CargarMpoliperOtrosRolesPorNmsituac(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("roles"    , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		"CDUNIECO"    , "CDRAMO"
+            		,"ESTADO"     , "NMPOLIZA"
+            		,"NMSITUAC"   , "CDROL"
+                    ,"CDPERSON"   , "NMSUPLEM"
+                    ,"STATUS"     , "NMORDDOM"
+                    ,"SWRECLAM"   , "SWEXIPER"
+                    ,"CDPARENT"   , "PORBENEF"
+                    ,"CDTIPIDE"   , "CDIDEPER"
+                    ,"DSNOMBRE"   , "CDTIPPER"
+                    ,"OTFISJUR"   , "OTSEXO"
+                    ,"FENACIMI"   , "CDRFC"
+                    ,"DSEMAIL"    , "DSNOMBRE1"
+                    ,"DSAPELLIDO" , "DSAPELLIDO1"
+                    ,"CDNACION"   , "DSCOMNOM"
+                    ,"DSRAZSOC"   , "FEINGRESO"
+                    ,"FEACTUAL"   , "DSNOMUSU"
+                    ,"CDESTCIV"   , "CDGRUECO"
+                    ,"CDSTIPPE"   , "NMNUMNOM"
+                    ,"CURP"       , "CANALING"
+                    ,"CONDUCTO"   , "PTCUMUPR"
+                    ,"STATUS_PER" , "RESIDENCIA"
+                    ,"NONGRATA"   , "CDIDEEXT"
+                    ,"CDSUCEMI"
+            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

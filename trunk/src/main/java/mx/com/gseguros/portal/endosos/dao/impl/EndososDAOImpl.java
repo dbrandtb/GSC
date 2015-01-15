@@ -2124,4 +2124,65 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void movimientoMpoliperBeneficiario(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			,String nmsuplem
+			,String status
+			,String nmorddom
+			,String swreclam
+			,String swexiper
+			,String cdparent
+			,String porbenef
+			,String accion)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("cdrol"    , cdrol);
+		params.put("cdperson" , cdperson);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("status"   , status);
+		params.put("nmorddom" , nmorddom);
+		params.put("swreclam" , swreclam);
+		params.put("swexiper" , swexiper);
+		params.put("cdparent" , cdparent);
+		params.put("porbenef" , porbenef);
+		params.put("accion"   , accion);
+		Utilerias.debugPrecedure(logger, "PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC", params);
+		ejecutaSP(new MovimientoMpoliperBeneficiario(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpoliperBeneficiario extends StoredProcedure {
+		protected MovimientoMpoliperBeneficiario(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrol"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmorddom" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swreclam" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swexiper" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdparent" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("porbenef" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

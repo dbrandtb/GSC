@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+
 public interface PersonasManager
 {
 	/**
@@ -99,4 +101,8 @@ public interface PersonasManager
 	public String eliminaAccionistas(Map<String, String> params)throws Exception;
 
 	public String actualizaStatusPersona(Map<String, String> params)throws Exception;
+	
+	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup);
+	
+	public void setSession(Map<String,Object>session);
 }

@@ -75,4 +75,19 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem)throws Exception;
+	
+	public Map<String,String>cargarUltimoNmsuplemPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+	
+	public List<Map<String,String>>cargarMpoliperOtrosRolesPorNmsituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String rolesPipes)throws Exception;
 }

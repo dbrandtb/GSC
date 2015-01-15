@@ -6,15 +6,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,6 +31,8 @@ public class PersonasManagerImpl implements PersonasManager
 	private final Logger logger = Logger.getLogger(PersonasManagerImpl.class);
 	private PantallasDAO pantallasDAO;
 	private PersonasDAO  personasDAO;
+	private EndososDAO   endososDAO;
+	private Map<String,Object>session;
 	
 	/**
 	 * Carga los componentes de la pantalla de personas
@@ -324,7 +332,7 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		
 		/**
-		 * Se comenta validacion de RFC repetidos, puesto que El usuario lo solicitó de esa forma Pedro Hernandez 
+		 * Se comenta validacion de RFC repetidos, puesto que El usuario lo solicitï¿½ de esa forma Pedro Hernandez 
 		 *
 		if(exito&&StringUtils.isBlank(cdperson))
 		{
@@ -736,6 +744,143 @@ public class PersonasManagerImpl implements PersonasManager
 		return personasDAO.obtieneAccionistas(params);
 	}
 	
+	@Override
+	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				));
+		
+		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
+		resp.setImap(new HashMap<String,Item>());
+		
+		try
+		{
+			setCheckpoint("Validando suplemento permitido");
+			try
+			{
+				Map<String,String>permiso=endososDAO.obtenerParametrosEndoso(
+						ParametroEndoso.ENDOSO_PERMITIDO
+						,cdramo
+						,"x"
+						,cdtipsup
+						,null);
+				if(!permiso.get("P1VALOR").equals("SI"))
+				{
+					throw new ApplicationException("No esta permitido");
+				}
+			}
+			catch(Exception ex)
+			{
+				throw new ApplicationException("Suplemento no aplicable al producto");
+			}
+			
+			setCheckpoint("Recuperando componentes relacion poliza-persona");
+			List<ComponenteVO>componentesMpoliper=pantallasDAO.obtenerComponentes(
+					null                     //cdtiptra
+					,cdunieco
+					,cdramo
+					,null                    //cdtipsit
+					,estado
+					,cdsisrol
+					,"PANTALLA_BENEFICIARIOS"//pantalla
+					,"MPOLIPER"              //seccion
+					,null                    //orden
+					);
+			
+			setCheckpoint("Recuperando componentes persona");
+			List<ComponenteVO>componentesMpersona=pantallasDAO.obtenerComponentes(
+					null                     //cdtiptra
+					,cdunieco
+					,cdramo
+					,null                    //cdtipsit
+					,estado
+					,cdsisrol
+					,"PANTALLA_BENEFICIARIOS"//pantalla
+					,"MPERSONA"              //seccion
+					,null                    //orden
+					);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			setCheckpoint("Construyendo componentes relacion poliza-persona");
+			gc.generaComponentes(componentesMpoliper
+					,true  //parcial
+					,true  //conField
+					,false //conItem
+					,true  //conColumn
+					,true  //conEditor
+					,false //conButton
+					);
+			resp.getImap().put("mpoliperFields"  , gc.getFields());
+			resp.getImap().put("mpoliperColumns" , gc.getColumns());
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ ",resp
+				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
+	/************************ BASE MANAGER **************************/
+	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
+	{
+		long timestamp = System.currentTimeMillis();
+		resp.setExito(false);
+		resp.setRespuestaOculta(ex.getMessage());
+		
+		if(ex.getClass().equals(ApplicationException.class))
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append(ex.getMessage())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		else
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error ")
+					.append(getCheckpoint().toLowerCase())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		
+		logger.error(resp.getRespuesta(),ex);
+		setCheckpoint("0");
+	}
+	
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	/************************ BASE MANAGER **************************/
+	
 	/*
 	 * Getters y setters
 	 */
@@ -745,6 +890,19 @@ public class PersonasManagerImpl implements PersonasManager
 
 	public void setPersonasDAO(PersonasDAO personasDAO) {
 		this.personasDAO = personasDAO;
+	}
+
+	public Map<String, Object> getSession() {
+		return session;
+	}
+
+	@Override
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+	}
+
+	public void setEndososDAO(EndososDAO endososDAO) {
+		this.endososDAO = endososDAO;
 	}
 	
 }

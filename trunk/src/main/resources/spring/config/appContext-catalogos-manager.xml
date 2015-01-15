@@ -20,7 +20,8 @@
     
     <bean id="personasManagerImpl" class="mx.com.gseguros.portal.catalogos.service.impl.PersonasManagerImpl">
         <property name="pantallasDAO" ref="pantallasDAOImpl" />
-        <property name="personasDAO"  ref="personasDAOImpl" />
+        <property name="personasDAO"  ref="personasDAOImpl"  />
+        <property name="endososDAO"   ref="endososDAOImpl"   />
     </bean>
     
 </beans>

@@ -120,6 +120,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		String llaveIcon        = "ICONO";
 		String llaveHandler     = "HANDLER";
 		String llaveSwNoLoad    = "SWNOLOAD";
+		String llaveWidth       = "WIDTH";
 		
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
@@ -250,6 +251,12 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					noLoad
 					);
 			
+			String width = rs.getString(llaveWidth);
+			if(StringUtils.isNotBlank(width))
+			{
+				comp.setWidth(Integer.parseInt(width));
+			}
+			
 			return comp;
 		}
 	}
@@ -320,7 +327,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					,"QUERYPARAM" , "VALUE"    , "SWOCULTO" , "PARAM1"        , "VALUE1"
 					,"PARAM2"     , "VALUE2"   , "PARAM3"   , "VALUE3"        , "PARAM4"
 					,"VALUE4"     , "PARAM5"   , "VALUE5"   , "SWFINAL"       , "SWCVACIO"
-					,"HANDLER"    , "ICONO"    , "SWNOLOAD"
+					,"HANDLER"    , "ICONO"    , "SWNOLOAD" , "WIDTH"
 			};
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
@@ -442,6 +449,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_ICONO_I"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_HANDLER_I"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWNOLOAD_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_WIDTH_I"         , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
