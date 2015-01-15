@@ -1442,7 +1442,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"NMRECLAMO",		"COMMENAR",			"COMMENME",			"AUTMEDIC"
 					,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
-					,"PTIMPCEDASEG",	"DEDUCIBLE"
+					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
