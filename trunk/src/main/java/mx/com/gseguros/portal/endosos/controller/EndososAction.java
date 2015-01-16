@@ -7592,6 +7592,7 @@ public class EndososAction extends PrincipalCoreAction
 					,cdelemen
 					,cdusuari
 					,cdtipsup
+					,ntramite
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
