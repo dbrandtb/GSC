@@ -63,7 +63,9 @@
             var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
             var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
             var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
-
+            var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
+            
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -85,6 +87,8 @@
 			var _11_textfieldNmSiniest;
 			var panelInicialPral;
 			var storeAseguradoFactura;
+			var storeProveedor;
+			var storeTipoAtencion;
 			var modPolizasAltaTramite;
 			//var storeFacturaDirectoNva;
 			var gridAutorizacion;
@@ -285,8 +289,47 @@
 			            ,"usuario_fin"
 			        ]
 			    });
+				
+				Ext.define('modelListadoProvMedico',{
+					extend: 'Ext.data.Model',
+						fields: [
+								{type:'string',		name:'cdpresta'},	{type:'string', name:'nombre'},		{type:'string', name:'cdespeci'},
+								{type:'string',		name:'descesp'}
+					]
+				});
 				/*############################		STORE		########################################*/
-//STORE DE LAS COBERTURAS X VALORES
+				storeTipoAtencion = Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:true,
+					proxy:
+					{
+						type: 'ajax',
+						url:_UR_TIPO_ATENCION,
+						reader:
+						{
+							type: 'json',
+							root: 'listaTipoAtencion'
+						}
+					}
+				});
+				
+				storeProveedor = Ext.create('Ext.data.Store', {
+					model:'modelListadoProvMedico',
+					autoLoad:false,
+					proxy: {
+						type: 'ajax',
+						url : _URL_CATALOGOS,
+						extraParams:{
+							catalogo         : _CATALOGO_PROVEEDORES,
+							catalogoGenerico : true
+						},
+						reader: {
+							type: 'json',
+							root: 'listaGenerica'
+						}
+					}
+				});
+			//STORE DE LAS COBERTURAS X VALORES
 				storeCobertura = Ext.create('Ext.data.Store', {
 					model:'Generic',
 					autoLoad:false,
@@ -670,6 +713,21 @@
 					}
 				});
 				/*############################		DECLARACION DE COMBOX Y LABEL		########################################*/
+				var comboTipoAte= Ext.create('Ext.form.ComboBox',
+				{
+					name:'params.cdtipser',			fieldLabel: 'Tipo atenci&oacute;n',		allowBlank : false,		editable:true,
+					displayField: 'value',			emptyText:'Seleccione...',				valueField: 'key',		forceSelection : true,
+					queryMode:'local',				store: storeTipoAtencion
+				});
+				
+				var cmbProveedor = Ext.create('Ext.form.field.ComboBox',
+				{
+					fieldLabel : 'PROVEEDOR',			displayField : 'nombre',			name:'params.cdpresta',
+					valueField   : 'cdpresta',			forceSelection : true,
+					matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
+					minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
+					hideTrigger:true,					allowBlank:false
+				});
 				var comboICDPrimario = Ext.create('Ext.form.field.ComboBox',
 				{
 					allowBlank: false,				displayField : 'value',		forceSelection : true,
@@ -823,7 +881,7 @@
 								url	 : _URL_MONTO_ARANCEL
 								,params:{
 									'params.tipoConcepto'   : _11_conceptoSeleccionado.get('IDCONCEP'),
-									'params.idProveedor'	: panelInicialPral.down('[name=params.cdpresta]').getValue(),
+									'params.idProveedor'	: panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
 									'params.idConceptoTipo' : e.getValue()
 								}
 								,success : function (response)
@@ -1631,17 +1689,13 @@
 							xtype		: 'textfield',			fieldLabel	: 'N0. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'PROVEEDOR',		name	: 'params.cdpresta',		hidden:true
-						},
-						{
-							xtype		: 'textfield',			fieldLabel	: 'TIP SERVICIO',		name	: 'params.cdtipser',		hidden:true
-						},
-						{
 							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura', readOnly   : true
 						},
 						{
 							xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
+						cmbProveedor,
+						comboTipoAte,
 						cobertura,
 						subCobertura,
 						cmbTipoMoneda,
@@ -1740,10 +1794,14 @@
 							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
 							handler:function()
 							{
-								panelInicialPral.getForm().reset();
-								storeAseguradoFactura.removeAll();
-								storeConceptos.removeAll();
-								modPolizasAltaTramite.close();
+								Ext.create('Ext.form.Panel').submit(
+								{
+									standardSubmit :true
+									,params		:
+									{
+										'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
+									}
+								});
 							}
 						}
 					]
@@ -2553,6 +2611,7 @@
 	function _11_editar(grid,rowindex)
 	{
 		_11_recordActivo = grid.getStore().getAt(rowindex);
+		debug("VALORES AL EDITAR",_11_recordActivo);
 		_11_llenaFormulario();
 		modPolizasAltaTramite.show();
 		centrarVentanaInterna(modPolizasAltaTramite);
@@ -2569,9 +2628,23 @@
 			}
 			,success : function (response)
 			{
+				storeProveedor.load();
+				panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+				
+				storeTipoAtencion.load({
+					params:{
+						'params.cdramo':_11_params.CDRAMO,
+						'params.tipoPago':_tipoPago
+					}
+				});
+				panelInicialPral.down('combo[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
+				
+				
 				panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));
-				panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
-				panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
+				//panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+				//panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
+				
+				//params.cdtipser
 				panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
 				panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));
 				
@@ -2803,8 +2876,8 @@
 					'params.tipoPago' : _tipoPago,
 					'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue(),
 					'params.fefactura': panelInicialPral.down('[name=params.fefactura]').getValue(),
-					'params.cdtipser' : panelInicialPral.down('[name=params.cdtipser]').getValue(),
-					'params.cdpresta' : panelInicialPral.down('[name=params.cdpresta]').getValue(),
+					'params.cdtipser' : panelInicialPral.down('combo[name=params.cdtipser]').getValue(),
+					'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
 					'params.ptimport' : panelInicialPral.down('[name=params.ptimport]').getValue(),
 					'params.descporc' : panelInicialPral.down('[name=params.descporc]').getValue(),
 					'params.descnume' : panelInicialPral.down('[name=params.descnume]').getValue(),

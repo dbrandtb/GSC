@@ -145,6 +145,6 @@ Ext.onReady(function() {
 			}
 		]
 	}); 
-	_fieldByName('OTVALOR11').forceSelection=true;
-	_fieldByName('OTVALOR11').setEditable(true);
+	/*_fieldByName('OTVALOR11').forceSelection=true;
+	_fieldByName('OTVALOR11').setEditable(true);*/
 	});
