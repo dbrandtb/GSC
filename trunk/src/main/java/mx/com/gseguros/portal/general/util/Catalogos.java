@@ -90,7 +90,8 @@ public enum Catalogos {
 	TFORMATOS("TFORMATOS"),
 	TCANALIN("TCANALIN"),
 	TEDOCIVIL("TEDOCIVIL"),
-	RAMOSALUD("");
+	RAMOSALUD(""),
+	STATUSINIESTROS("STATUSTRA");
 
 	private String cdTabla;
 

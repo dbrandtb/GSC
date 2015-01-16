@@ -147,6 +147,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TZONAS:
 				case TEDOCIVIL:
 				case TFORMATOS:
+				case STATUSINIESTROS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:

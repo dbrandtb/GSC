@@ -359,7 +359,7 @@ public interface SiniestrosManager {
 	
 	public Map<String, Object> actualizaDatosGeneralesSiniestro(String cdunieco, String cdramo, String estado, 
 			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, Date feocurre,
-			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval) throws Exception;
+			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval, String nmautser) throws Exception;
 	
 	public Map<String, Object> actualizaMsiniestroReferenciado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
 			String nmsituac, String aaapertu, String status, String nmsinies, String nmsinref) throws Exception;
