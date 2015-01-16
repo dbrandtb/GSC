@@ -945,7 +945,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public Map<String, Object> actualizaDatosGeneralesSiniestro(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsuplem, String aaapertu, String nmsinies, Date feocurre,
-			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval) throws Exception {
+			String nmreclamo, String cdicd, String cdicd2, String cdcausa,String cdgarant, String cdconval, String nmautser) throws Exception {
 
 		HashMap<String,Object> params=new HashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -962,6 +962,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_cdcausa_i",  cdcausa);
 		params.put("pv_cdgarant_i",  cdgarant);
 		params.put("pv_cdconval_i",  cdconval);
+		params.put("pv_nmautser_i", nmautser);
 		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
 		return siniestrosDAO.actualizaDatosGeneralesSiniestro(params);
 	}
