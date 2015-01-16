@@ -39,10 +39,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class EndososManagerImpl implements EndososManager
 {
     private static final Logger logger = Logger.getLogger(EndososManagerImpl.class);
+    
+    @Value("${ruta.servidor.reports}")
+	private String rutaServidorReportes;
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
+    @Value("${ruta.documentos.poliza}")
+    private String passwordServidorReportes;
     
     private Map<String,Object> session;
 	private EndososDAO      endososDAO;
@@ -1636,6 +1646,7 @@ public class EndososManagerImpl implements EndososManager
 			,String cdelemen
 			,String cdusuari
 			,String cdtipsup
+			,String ntramite
 			)
 	{
 		logger.info(Utilerias.join(
@@ -1837,6 +1848,46 @@ public class EndososManagerImpl implements EndososManager
 			
 			setCheckpoint("Confirmando endoso");
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,"");
+			
+			setCheckpoint("Reimprimiendo documentos");
+			List<Map<String,String>>listaDocu=null;
+			listaDocu=endososDAO.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);	
+			String rutaCarpeta=new StringBuilder(rutaDocumentosPoliza).append("/").append(ntramite).toString();
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu) {
+				logger.debug("docu iterado: "+docu);
+				String descripc  = docu.get("descripc");
+				String descripl  = docu.get("descripl");
+				//String nmsolici =  docu.get("nmsolici");
+				StringBuilder sb = new StringBuilder();
+				sb.append(rutaServidorReportes)
+				  .append("?destype=cache")
+				  .append("&paramform=no")
+				  .append("&ACCESSIBLE=YES")
+				  .append("&desformat=PDF")
+				  .append("&userid=")  .append(passwordServidorReportes)
+				  .append("&report=")  .append(descripl)
+				  .append("&p_unieco=").append(cdunieco)
+				  .append("&p_ramo=")  .append(cdramo)
+				  .append("&p_estado=").append(estado)
+				  .append("&p_poliza=").append(nmpoliza)
+				  .append("&p_suplem=").append(nmsuplem)
+				  .append("&desname=") .append(rutaCarpeta).append("/").append(descripc);
+				
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					sb.append("&p_cdperson=").append(descripc.substring(11, descripc.lastIndexOf("_")));
+				}
+				String url = sb.toString();
+				logger.debug(new StringBuilder()
+						.append("\n#################################").append("\n###### Se solicita reporte ######")
+						.append("\n###### a ").append(url).toString());
+				HttpUtil.generaArchivo(url,new StringBuilder(rutaCarpeta).append("/").append(descripc).toString());
+				logger.debug(new StringBuilder()
+						.append("\n###### a ").append(url).append("\n###### reporte solicitado ######")
+						.append("\n################################").toString());
+			}
 			
 			setCheckpoint("0");
 		}

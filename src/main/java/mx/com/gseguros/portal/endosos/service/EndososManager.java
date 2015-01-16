@@ -338,5 +338,6 @@ public interface EndososManager
 			,String cdelemen
 			,String cdusuari
 			,String cdtipsup
+			,String ntramite
 			);
 }
