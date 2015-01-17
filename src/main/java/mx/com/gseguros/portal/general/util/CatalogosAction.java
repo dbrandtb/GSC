@@ -239,6 +239,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case COBERTURAS:
 					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
 					break;
+				case COBERTURASTOTALES:
+					lista = siniestrosManager.obtieneListadoCoberturaTotales();
+					break;
 				case COBERTURASXVALORES:
 					try{
 						String tipoPago = params.get("tipopago").toString();
@@ -339,6 +342,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
 					break;
+					
+				case SUBCOBERTURASTOTALES:
+					lista = siniestrosManager.getConsultaListaSubcoberturaTotales();
+					break;
 				case MEDICOS:
 					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(
 							Rol.MEDICO.getCdrol(), params != null ? params.get("cdpresta") : null);
@@ -387,6 +394,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 						descripc = params.get("descripc");
 					}
 					lista = siniestrosManager.obtenerCodigosMedicos(idconcep, descripc);
+					break;
+				case CODIGOS_MEDICOS_TOTALES:
+					lista = siniestrosManager.obtenerCodigosMedicosTotales();
 					break;
 				case MOTIVOS_RECHAZO_SINIESTRO:
 					lista=new ArrayList<GenericVO>();

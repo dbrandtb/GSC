@@ -364,6 +364,25 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		}
 	}
 	
+	@Override
+	public List<GenericVO> obtieneListadoSubcoberturaTotales() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaTotales(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoSubcoberturaTotales extends StoredProcedure
+	{
+		protected ObtieneListadoSubcoberturaTotales(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_SUBCOBERTURA_TOTALES");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
     protected class DatosListaSubcobertura  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	GenericVO consulta = new GenericVO();
@@ -1192,7 +1211,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+	@Override
+	public List<GenericVO> obtieneListadoCoberturaTotales() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerListaCoberturasTotales(this.getDataSource()), params);
+		List<GenericVO> listaCoberturas = (List<GenericVO>)mapResult.get("pv_registro_o");
+		return listaCoberturas;
+	}
 	
+	protected class ObtenerListaCoberturasTotales extends StoredProcedure
+	{
+		protected ObtenerListaCoberturasTotales(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_COBERTURAS_TOTALES");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaCobertura()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	protected class DatosListaCobertura  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	GenericVO consulta = new GenericVO();
@@ -2235,6 +2273,38 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_SINIESTRO.P_LISTA_CODIGOS_MEDICOS");
 			declareParameter(new SqlParameter("pv_idconcep_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_descripc_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CLAVE" , "VALOR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>obtenerCodigosMedicosTotales() throws Exception
+	{
+		Map<String,String>p=new HashMap<String,String>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerCodigosMedicosTotales(this.getDataSource()), p);
+		List<Map<String,String>>lista=(List<Map<String,String>>) mapResult.get("pv_registro_o");
+		List<GenericVO>listaG=new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>cpt:lista)
+			{
+				listaG.add(new GenericVO(cpt.get("CLAVE"),cpt.get("VALOR")));
+			}
+		}
+		return listaG;
+	}
+	
+	protected class ObtenerCodigosMedicosTotales extends StoredProcedure
+	{
+		protected ObtenerCodigosMedicosTotales(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_CODIGOS_MED_TOTALES");
 			String[] cols = new String[]{
 					"CLAVE" , "VALOR"
 			};

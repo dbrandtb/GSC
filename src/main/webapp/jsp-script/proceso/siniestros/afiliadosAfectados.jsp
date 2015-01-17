@@ -10,6 +10,8 @@
 			var _URL_CATALOGOS						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 			var _UrlDocumentosPoliza				= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 			var _CATALOGO_TipoMoneda				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+			var _CATALOGO_COBERTURASTOTALES 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
+			var _CATALOGO_SUBCOBERTURASTOTALES 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _ROL_MEDICO							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _OPERADOR_REC						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
 			var _COORDINADOR_REC					= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_SINIESTROS.cdsisrol" />';
@@ -31,6 +33,7 @@
 			var _11_params							= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
 			var _CATALOGO_TipoConcepto				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 			var _CATALOGO_ConceptosMedicos			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+			var _CATALOGO_ConceptosMedicosTotales   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS_TOTALES"/>';
 			var _URL_MONTO_ARANCEL					= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
 			var _UrlAjustesMedicos					=  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
 			var _URL_GUARDA_CONCEPTO_TRAMITE		= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
@@ -95,8 +98,10 @@
 			var gridMsiniestMaestro;
 			var storeListadoAutorizacion;
 			var storeListadoSiniestMaestro;
+			var storeConceptosCatalogoRender;
 			var cmbCveTipoConcepto;
 			var cmbCveConcepto;
+			var cmbCveConceptoRender;
 			var _11_windowRechazoSiniestro;
 			var _11_formRechazo;
 			var _11_conceptoSeleccionado=null;
@@ -107,7 +112,9 @@
 			var storeCobertura;
 			var storeSubcobertura;
 			var storeCoberturaxAsegurado;
+			var storeCoberturaxAseguradoRender;
 			var storeSubcoberturaAsegurado;
+			var storeSubcoberturaAseguradoRender;
 			var storeRechazos;
 			var storeIncisosRechazos;
 			var storeDestinoPago;
@@ -385,31 +392,58 @@
 			        }
 			    });
 			    
-				var storeSubcoberturaAseguradoRender = Ext.create('Ext.data.Store',
+				storeCoberturaxAseguradoRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					//autoLoad:true,
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_COBERTURASTOTALES},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners:
+					{
+						load : function()
 						{
-							model:'Generic',
-							autoLoad:true,
-							cargado:false,
-							proxy: {
-								type: 'ajax',
-								url : _URL_LISTA_SUBCOBERTURA,
-								reader: {
-					                type: 'json',
-					                root: 'listaSubcobertura'
-					            }
-							}
-							,listeners:
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto))
 							{
-								load : function()
-								{
-									this.cargado=true;
-									if(!Ext.isEmpty(gridFacturaDirecto))
-									{
-										gridFacturaDirecto.getView().refresh();
-									}
-								}
+								gridFacturaDirecto.getView().refresh();
 							}
-						});
+						}
+					}
+				});
+				storeCoberturaxAseguradoRender.load();
+				
+				storeSubcoberturaAseguradoRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					//autoLoad:true,
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALES},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners:
+					{
+						load : function()
+						{
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto))
+							{
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				storeSubcoberturaAseguradoRender.load();
+				
 // STORE PARA EL LISTADO DE LAS AUTORIZACIONES DE SERVICIO
 				storeListadoAutorizacion = new Ext.data.Store(
 				{
@@ -590,14 +624,14 @@
 					}
 				});
 
-				var storeConceptosCatalogoRender = Ext.create('Ext.data.JsonStore', {
+				storeConceptosCatalogoRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
-					autoLoad:true,
+					//autoLoad:true,
 					cargado:false,
 					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+						extraParams : {catalogo:_CATALOGO_ConceptosMedicosTotales},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -614,7 +648,8 @@
 						}
 					}
 				});
-
+				storeConceptosCatalogoRender.load();
+				
 				storeConceptos=new Ext.data.Store(
 				{
 					autoDestroy: true,
@@ -914,7 +949,7 @@
 						}
 					}
 				});
-
+				
 				/////////////////////////////////////////////////////////////////////////////////////
 				Ext.define('EditorFacturaDirecto', {
 					extend: 'Ext.grid.Panel',
@@ -1035,16 +1070,25 @@
 								header: 'Cobertura',			dataIndex: 'CDGARANT',		allowBlank: false
 								,editor: coberturaxAsegurado
 								,renderer : function(v) {
-									var leyenda = v;
-									/*var leyenda = '';
-									if (typeof v == 'string')// tengo solo el indice
+									var leyenda = '';
+									if (typeof v == 'string')
 									{
-										storeCoberturaxAsegurado.each(function(rec) {
-											if (rec.data.key == v) {
-												leyenda = rec.data.value;
-											}
-										});
-									}else // tengo objeto que puede venir como Generic u otro mas complejo
+										if(storeCoberturaxAseguradoRender.cargado)
+										{
+											storeCoberturaxAseguradoRender.each(function(rec)
+										    {
+												debug("cat-->",rec.data);
+												if (rec.data.key == v)
+											    {
+													leyenda = rec.data.value;
+												}
+											});
+										}
+										else
+										{
+										    leyenda='Cargando...';
+										}
+									}else
 									{
 										if (v.key && v.value)
 										{
@@ -1052,17 +1096,51 @@
 										} else {
 											leyenda = v.data.value;
 										}
-									}*/
+										leyenda= v;
+									}
 									return leyenda;
-								}
+								}/*,renderer : function(v) {
+									var leyenda = v;
+									return leyenda;
+								}*/
 							},
 							{
 								header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
 								,editor: subCoberturaAsegurado
 								,renderer : function(v) {
+									var leyenda = '';
+									if (typeof v == 'string')
+									{
+										if(storeSubcoberturaAseguradoRender.cargado)
+										{
+											storeSubcoberturaAseguradoRender.each(function(rec)
+										    {
+												debug("cat-->",rec.data);
+												if (rec.data.key == v)
+											    {
+													leyenda = rec.data.value;
+												}
+											});
+										}
+										else
+										{
+										    leyenda='Cargando...';
+										}
+									}else
+									{
+										if (v.key && v.value)
+										{
+											leyenda = v.value;
+										} else {
+											leyenda = v.data.value;
+										}
+										leyenda= v;
+									}
+									return leyenda;
+								}/*,renderer : function(v) {
 									var leyenda = v;
 									return leyenda;
-								}
+								}*/
 							},
 							{
 								header: 'ICD<br/>Principal', 				dataIndex: 'CDICD'
@@ -1331,12 +1409,10 @@
 							{
 								header: 'Codigo Concepto', 				dataIndex: 'CDCONCEP',	width : 150		,  allowBlank: false
 								,editor : cmbCveConcepto
-								/*,renderer : function(v) {
+								,renderer : function(v) {
 									var leyenda = '';
 									if (typeof v == 'string')
 									{
-										debug("storeConceptosCatalogoRender -->",storeConceptosCatalogoRender.cargado);
-										debug("storeConceptosCatalogoRender.each",storeConceptosCatalogoRender);
 										if(storeConceptosCatalogoRender.cargado)
 										{
 											storeConceptosCatalogoRender.each(function(rec)
@@ -1362,9 +1438,6 @@
 										}
 										leyenda= v;
 									}
-									return leyenda;
-								}*/,renderer : function(v) {
-									var leyenda = v;
 									return leyenda;
 								}
 							},
@@ -1686,7 +1759,7 @@
 					,items	:
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'N0. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'NO. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true
 						},
 						{
 							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura', readOnly   : true
@@ -1695,6 +1768,7 @@
 							xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
 						cmbProveedor,
+						//cmbCveConceptoRender,
 						comboTipoAte,
 						cobertura,
 						subCobertura,
@@ -1823,10 +1897,26 @@
 					,closable	: true
 					,closeAction: 'hide'
 					,width		 : 900
+					,border	: 0
+					/*,layout	 :
+					{
+						type	 : 'table'
+						,columns : 2
+					}*/
+					,defaults 	:
+					{
+						style : 'margin:5px;'
+					}
 					,items	   : 
 					[
 						panelInicialPral
 						,gridFacturaDirecto
+						/*,{
+							xtype		: 'textfield',			fieldLabel	: 'Suma Asegurada',		name	: 'params.sumaAsegurada', readOnly   : true
+						},
+						{
+							xtype		: 'textfield',			fieldLabel	: 'Asegurado',		name	: 'params.nomAsegurado', readOnly   : true
+						}*/
 						,gridEditorConceptos
 					],
 					listeners:{
@@ -2629,6 +2719,9 @@
 			,success : function (response)
 			{
 				storeProveedor.load();
+				//storeSubcoberturaAseguradoRender().load()
+				
+				//storeConceptosCatalogoRender.load();
 				panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
 				
 				storeTipoAtencion.load({

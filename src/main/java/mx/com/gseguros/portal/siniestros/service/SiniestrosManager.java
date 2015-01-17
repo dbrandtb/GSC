@@ -69,6 +69,8 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob) throws Exception;
 	
+	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
+	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
 	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws Exception;
@@ -160,6 +162,8 @@ public interface SiniestrosManager {
 	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception;
 	
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception;
+	
+	public List<GenericVO> obtieneListadoCoberturaTotales() throws Exception;
 	
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception;
 	
@@ -351,6 +355,8 @@ public interface SiniestrosManager {
 	public List<Map<String,String>> cargaHistorialSiniestros(Map<String,String> params) throws Exception;
 
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
+	
+	public List<GenericVO>obtenerCodigosMedicosTotales() throws Exception;
 	
 	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
 	

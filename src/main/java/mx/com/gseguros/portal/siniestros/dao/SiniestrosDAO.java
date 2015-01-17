@@ -41,6 +41,8 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws Exception;
 	
+	public List<GenericVO> obtieneListadoSubcoberturaTotales() throws Exception;
+	
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws Exception;
 
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws Exception;
@@ -94,6 +96,8 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception;
 
+	public List<GenericVO> obtieneListadoCoberturaTotales() throws Exception;
+	
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception;
 	
 	/**
@@ -266,6 +270,8 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>>cargaHistorialSiniestros(Map<String,String> params) throws Exception;
 	
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
+	
+	public List<GenericVO>obtenerCodigosMedicosTotales() throws Exception;
 	
 	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
 	

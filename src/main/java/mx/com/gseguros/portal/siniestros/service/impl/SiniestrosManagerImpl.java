@@ -124,6 +124,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
+	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception {
+		try {
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcoberturaTotales();
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave)
 			throws Exception {
 		try {
@@ -479,6 +494,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoCobertura(cdramo,cdtipsit);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	public List<GenericVO> obtieneListadoCoberturaTotales() throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCoberturaTotales();
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -906,6 +929,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception
 	{
 		List<GenericVO>lista=siniestrosDAO.obtenerCodigosMedicos(idconcep,subcaden);
+		if(lista==null)
+		{
+			lista = new ArrayList<GenericVO>();
+		}
+		log.debug("obtenerCodigosMedicos lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO>obtenerCodigosMedicosTotales() throws Exception
+	{
+		List<GenericVO>lista=siniestrosDAO.obtenerCodigosMedicosTotales();
 		if(lista==null)
 		{
 			lista = new ArrayList<GenericVO>();
