@@ -265,10 +265,10 @@ public class Utilerias {
 		(
 				Utilerias.join
 				(
-				 "\n*******",StringUtils.leftPad("",len,"*"),"******"
+				 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				,"\n****** ",storedProcedureName," ******"
 				,"\n****** params=",params
-				,"\n*******",StringUtils.leftPad("",len,"*"),"******"
+				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				)
 		);
     }
@@ -280,11 +280,11 @@ public class Utilerias {
     	(
     			Utilerias.join
     			(
-    					 "\n*******",StringUtils.leftPad("",len,"*"),"******"
+    					 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
     					,"\n****** params=",params
     					,"\n****** registro=",lista!=null&&lista.size()<15?lista:(lista!=null?lista.size():lista)
     					,"\n****** ",storedProcedureName," ******"
-    					,"\n*******",StringUtils.leftPad("",len,"*"),"******"
+    					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
     	);
     }

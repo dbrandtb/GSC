@@ -1,5 +1,11 @@
 package mx.com.gseguros.portal.general.model;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import mx.com.gseguros.utils.Utilerias;
+
 public class ComponenteVO
 {
 	public final static int TIPO_GENERICO = 0;
@@ -75,7 +81,10 @@ public class ComponenteVO
 	
 	private boolean menorCero = false;
 	
-	private boolean sinCargar = false;
+	private boolean sinCargar       = false;
+	private boolean labelTop        = false;
+	private int     nmordenFlot     = 0;
+	private boolean obligatorioFlot = false;
 	
 	public ComponenteVO(){}
 	
@@ -146,6 +155,26 @@ public class ComponenteVO
 		this.icon          = icon;
 		this.handler       = handler;
 		this.sinCargar     = sinCargar;
+	}
+	
+	public static List<ComponenteVO> ordenarPorNmordenFlot(List<ComponenteVO>lista)
+	{
+		Collections.sort(lista,new Comparator(){
+			public int compare(Object a,Object b)
+			{
+				int comp=0;
+				if(((ComponenteVO)a).nmordenFlot<((ComponenteVO)b).nmordenFlot)
+				{
+					comp=-1;
+				}
+				else if(((ComponenteVO)a).nmordenFlot>((ComponenteVO)b).nmordenFlot)
+				{
+					comp=1;
+				}
+				return comp;
+			}
+		});
+		return lista;
 	}
 	
 	public String getLabel() {
@@ -399,10 +428,9 @@ public class ComponenteVO
 	@Override
 	public String toString()
 	{
-		return new StringBuilder("\nNAME/CDATRIBU=").append(this.nameCdatribu)
-				.append(",LABEL=").append(this.label)
-				.append(",swCompFlot=").append(this.swCompFlot)
-				.toString();
+		return Utilerias.join("NAME/CDATRIBU=",this.nameCdatribu
+				,",LABEL=",this.label
+				,",CATALOGO=",this.catalogo);
 	}
 
 	public boolean isComboVacio() {
@@ -555,5 +583,29 @@ public class ComponenteVO
 
 	public void setSinCargar(boolean sinCargar) {
 		this.sinCargar = sinCargar;
+	}
+
+	public boolean isLabelTop() {
+		return labelTop;
+	}
+
+	public void setLabelTop(boolean labelTop) {
+		this.labelTop = labelTop;
+	}
+
+	public int getNmordenFlot() {
+		return nmordenFlot;
+	}
+
+	public void setNmordenFlot(int nmordenFlot) {
+		this.nmordenFlot = nmordenFlot;
+	}
+
+	public boolean isObligatorioFlot() {
+		return obligatorioFlot;
+	}
+
+	public void setObligatorioFlot(boolean obligatorioFlot) {
+		this.obligatorioFlot = obligatorioFlot;
 	}
 }

@@ -1302,29 +1302,24 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			setCheckpoint("Recuperando atributos variables");//////
 			List<ComponenteVO>panel1   = new ArrayList<ComponenteVO>();
-			List<ComponenteVO>panel2   = new ArrayList<ComponenteVO>();
+			//List<ComponenteVO>panel2   = new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel3   = new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel5   = new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel6   = new ArrayList<ComponenteVO>();
-			List<ComponenteVO>gridCols = new ArrayList<ComponenteVO>();
-			
-			Map<String,String>mapPanel2 = new LinkedHashMap<String,String>();
 			
 			List<ComponenteVO>tatrisit = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-			
-			setCheckpoint("Recuperando editor de planes");
-			List<ComponenteVO>auxEditorPlan = pantallasDAO.obtenerComponentes(
-					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
-					, cdtipsit, null, cdsisrol
-					, "COTIZACION_FLOTILLA", "EDITOR_PLANES", null);
-			ComponenteVO editorPlan = auxEditorPlan.get(0);
 			
 			setCheckpoint("Recuperando editor de situacion");
 			List<ComponenteVO>auxEditorSit = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
 					, "COTIZACION_FLOTILLA", "EDITOR_SITUACION", null);
-			ComponenteVO editorSit = auxEditorSit.get(0);
+			
+			setCheckpoint("Recuperando columnas");
+			List<ComponenteVO>gridCols = pantallasDAO.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
+					, cdtipsit, null, cdsisrol
+					, "COTIZACION_FLOTILLA", "COLUMNAS_RENDER", null);
 			
 			setCheckpoint("Filtrando atributos");
 			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
@@ -1380,10 +1375,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			
 			setCheckpoint("Organizando atributos");
-			gridCols.add(editorSit);
+			/*gridCols.add(editorSit);*/
 			for(ComponenteVO tatri:tatrisit)
 			{
-				if(tatri.getColumna().equals("S")
+				/*if(tatri.getColumna().equals("S")
 						&&tatri.getSwpresenflot().equals("S")
 						)
 				{
@@ -1392,17 +1387,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					{
 						gridCols.add(tatri);
 					}
-				}
+				}*/
 				
 				if(tatri.getNmpanelflot().equals("1"))
 				{
 					panel1.add(tatri);
 				}
+				/*
 				else if(tatri.getNmpanelflot().equals("2"))
 				{
 					panel2.add(tatri);
-					mapPanel2.put(tatri.getNameCdatribu(),null);
 				}
+				*/
 				else if(tatri.getNmpanelflot().equals("3"))
 				{
 					panel3.add(tatri);
@@ -1416,7 +1412,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					panel6.add(tatri);
 				}
 			}
-			gridCols.add(editorPlan);
+			/*gridCols.add(editorPlan);*/
 			
 			setCheckpoint("Construyendo componentes");
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -1426,8 +1422,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.generaComponentes(panel1, true, false, true, false, false, false);
 			resp.getImap().put("panel1Items"  , gc.getItems());
 			
+			/*
 			gc.generaComponentes(panel2, true, false, true, false, false, false);
 			resp.getImap().put("panel2Items"  , gc.getItems());
+			*/
 			
 			gc.generaComponentes(panel3, true, false, true, false, false, false);
 			resp.getImap().put("panel3Items"  , gc.getItems());
@@ -1438,16 +1436,145 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.generaComponentes(panel6, true, false, true, false, false, false);
 			resp.getImap().put("panel6Items"  , gc.getItems());
 
-			for(ComponenteVO tatri:gridCols)
+			/*for(ComponenteVO tatri:gridCols)
 			{
 				if(StringUtils.isNotBlank(tatri.getNmpanelflot())&&tatri.getNmpanelflot().equals("2"))
 				{
 					tatri.setSoloLectura(true);
 					tatri.setObligatorio(false);
 				}
-			}
+			}*/
 			gc.generaComponentes(gridCols, true, false, true, true, true, false);
 			resp.getImap().put("gridCols" , gc.getColumns());
+			
+			gc.generaComponentes(
+					auxEditorSit
+					,true  //esParcial
+					,false //conField
+					,true  //conItem
+					,false //conColumn
+					,false //conEditor
+					,false //conButton
+					);
+			resp.getImap().put("cdtipsitItem" , gc.getItems());
+			
+			setCheckpoint("Recuperando situaciones");
+			List<Map<String,String>>situaciones=consultasDAO.cargarTiposSituacionPorRamo(cdramo);
+			String situacionesCSV = "";
+			for(Map<String,String>situacion:situaciones)
+			{
+				
+				setCheckpoint("Recuperando atributos de situaciones");
+				String cdtipsitIte = situacion.get("CDTIPSIT");
+				situacionesCSV=Utilerias.join(situacionesCSV,",",cdtipsitIte);
+				List<ComponenteVO>tatrisitSitIte        = cotizacionDAO.cargarTatrisit(cdtipsitIte, cdusuari);
+				List<ComponenteVO>tatrisitSitIteParcial = new ArrayList<ComponenteVO>();
+				List<ComponenteVO>tatrisitSitIteAuto    = new ArrayList<ComponenteVO>();
+				
+				setCheckpoint("Recuperando sustitutos de atributos de situaciones");
+				//sustitutos
+				List<ComponenteVO>sustitutosSituacion = pantallasDAO.obtenerComponentes(
+						TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,cdunieco
+						,cdramo
+						,cdtipsitIte
+						,"C"
+						,cdsisrol
+						,"COTIZACION_CUSTOM"
+						,"SUSTITUTOS"
+						,null
+						);
+				if(sustitutosSituacion.size()>0)
+				{
+					aux=new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatri : tatrisitSitIte)
+					{
+						String cdatribuTatri = tatri.getNameCdatribu();
+						boolean sustituido   = false;
+						for(ComponenteVO sustituto : sustitutosSituacion)
+						{
+							String cdatribuSustituto = sustituto.getNameCdatribu();
+							logger.debug(new StringBuilder("tatri=").append(cdatribuTatri).append(" vs susti=").append(cdatribuSustituto).toString());
+							if(cdatribuSustituto.equals(cdatribuTatri))
+							{
+								sustituto.setNmpanelflot(tatri.getNmpanelflot());
+								sustituto.setCotflotrol(tatri.getCotflotrol());
+								sustituto.setColumna(tatri.getColumna());
+								sustituto.setSwpresenflot(tatri.getSwpresenflot());
+								sustituto.setNmordenFlot(tatri.getNmordenFlot());
+								sustituido = true;
+								aux.add(sustituto);
+							}
+						}
+						if(!sustituido)
+						{
+							aux.add(tatri);
+						}
+					}
+					tatrisitSitIte = aux;
+				}
+				//sustitutos
+				
+				setCheckpoint("Aislando atributos de situaciones parciales");
+				for(ComponenteVO tatri:tatrisitSitIte)
+				{
+					if(tatri.getColumna().equals("S")
+							&&tatri.getSwpresenflot().equals("S"))
+					{
+						tatrisitSitIteParcial.add(tatri);
+					}
+				}
+				tatrisitSitIteParcial=ComponenteVO.ordenarPorNmordenFlot(tatrisitSitIteParcial);
+				
+				setCheckpoint("Aislando atributos de auto de situaciones");
+				for(ComponenteVO tatri:tatrisitSitIte)
+				{
+					if(tatri.getSwpresenflot().equals("S")
+							&&tatri.getNmpanelflot().equals("2")
+							)
+					{
+						tatrisitSitIteAuto.add(tatri);
+					}
+				}
+				tatrisitSitIteAuto=ComponenteVO.ordenarPorNmordenFlot(tatrisitSitIteAuto);
+				
+				setCheckpoint("Recuperando editor de planes de situacion");
+				List<ComponenteVO>auxEditorPlan = pantallasDAO.obtenerComponentes(
+						TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
+						,cdtipsitIte, null, cdsisrol
+						,"COTIZACION_FLOTILLA", "EDITOR_PLANES", null);
+				tatrisitSitIteParcial.add(auxEditorPlan.get(0));
+				
+				setCheckpoint("Construyendo componentes de situaciones");
+				GeneradorCampos gcIte = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcIte.setCdramo(cdramo);
+				gcIte.setCdtipsit(cdtipsitIte);
+				
+				gcIte.generaComponentes(tatrisitSitIte, true, false, true, false, false, false);
+				resp.getImap().put(Utilerias.join("tatrisit_full_items_",cdtipsitIte),gcIte.getItems());
+				
+				for(ComponenteVO tatri:tatrisitSitIteParcial)
+				{
+					tatri.setLabelTop(true);
+					tatri.setWidth(150);
+					tatri.setComboVacio(true);
+				}
+				
+				gcIte.generaComponentes(tatrisitSitIteParcial,true,false,true,false,false,false);
+				resp.getImap().put(Utilerias.join("tatrisit_parcial_items_",cdtipsitIte),gcIte.getItems());
+				
+				for(ComponenteVO tatri:tatrisitSitIteAuto)
+				{
+					tatri.setComboVacio(true);
+				}
+				
+				gcIte.generaComponentes(tatrisitSitIteAuto,true,false,true,false,false,false);
+				resp.getImap().put(Utilerias.join("tatrisit_auto_items_",cdtipsitIte),gcIte.getItems());
+				
+			}
+			situacionesCSV=situacionesCSV.substring(1);
+			logger.debug(Utilerias.join("situacionesCSV=",situacionesCSV));
+			resp.getSmap().put("situacionesCSV",situacionesCSV);
 			
 			setCheckpoint("Recuperando agrupacion de situaciones");
 			Map<String,String>agrupAux = cotizacionDAO.obtenerParametrosCotizacion(

@@ -294,7 +294,7 @@ public class GeneradorCampos
         item.setComposedNameClose("})");
         ////// Ext.create('Ext...',{}) //////
         
-        if(esMovil)
+        if(esMovil||comp.isLabelTop())
         {
         	item.add("labelAlign","top");
         }
@@ -337,13 +337,14 @@ public class GeneradorCampos
         
         String value=comp.getValue();
         
-        item.add("id"         , compId);
-        item.add("cdatribu"   , cdatribu);
-        item.add("fieldLabel" , fieldLabel);
-        item.add("label" , fieldLabel);
-        item.add("allowBlank" , !comp.isObligatorio());
-        item.add("name"       , name);
-        item.add("readOnly"   , comp.isSoloLectura());
+        item.add("id"           , compId);
+        item.add("cdatribu"     , cdatribu);
+        item.add("fieldLabel"   , fieldLabel);
+        item.add("label"        , fieldLabel);
+        item.add("allowBlank"   , !comp.isObligatorio());
+        item.add("name"         , name);
+        item.add("readOnly"     , comp.isSoloLectura());
+        item.add("swobligaflot" , comp.isObligatorioFlot());
         if(StringUtils.isNotBlank(value))
         {
         	item.add(Item.crear("value" , value).setQuotes(""));
@@ -352,6 +353,10 @@ public class GeneradorCampos
         if(!esMovil)
         {
         	item.add("style"      , "margin:5px");
+        }
+        if(comp.getWidth()>0)
+        {
+        	item.add("width" , comp.getWidth());
         }
         ////// id, cdatribu, fieldLabel, allowBlank, name, readOnly, value, hidden, style //////
         
@@ -506,7 +511,7 @@ public class GeneradorCampos
                 		+ "                }"
                 		+ "                if(icallback)"
                 		+ "                {"
-                		+ "                    icallback();"
+                		+ "                    icallback(thisCmp);"
                 		+ "                }"
                 		+ "            }"
                 		+ "        });"

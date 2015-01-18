@@ -34,17 +34,20 @@ var _p28_smap1 =
 };
 debug('_p28_smap1:',_p28_smap1);
 
-var _p30_windowAuto              = null;
 var _p30_store                   = null;
 var _p30_selectedRecord          = null;
 var _p30_recordClienteRecuperado = null;
 var _p30_selectedTarifa          = null;
+var _p30_ventanaCdtipsit         = null;
+var _p30_semaforoBorrar          = false;
 
+var _p30_storeCdtipsit       = null;
+var _p30_storeMarcasRamo5    = null;
 var _p30_storeSubmarcasRamo5 = null;
 var _p30_storeVersionesRamo5 = null;
 var _p30_storeUsosRamo5      = null;
-var _p30_storeMarcasRamo5    = null;
 var _p30_storePlanesRamo5    = null;
+var _p30_storeCargasRamo5    = null;
 ////// variables //////
 
 ////// dinamicos //////
@@ -57,13 +60,15 @@ var _p30_gridColsConf =
 var _p30_gridCols =
 [
     {
-        dataIndex : 'nmsituac'
-        ,width    : 30
+        dataIndex     : 'nmsituac'
+        ,width        : 30
+        ,menuDisabled : true
     }
     ,{
         sortable      : false
         ,menuDisabled : true
         ,dataIndex    : 'personalizado'
+        ,width        : 30
         ,renderer     : function(v)
         {
             var r='';
@@ -88,16 +93,13 @@ for(var i=0;i<_p30_gridCols.length;i++)
 }
 _p30_gridCols.push(
 {
-    xtype  : 'actioncolumn'
-    ,items :
+    xtype         : 'actioncolumn'
+    ,menuDisabled : true
+    ,sortable     : false
+    ,width        : 50
+    ,items        :
     [
         {
-            tooltip  : 'Seleccionar auto'
-            ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
-            ,iconBkp : '${ctx}/resources/fam3icons/icons/car.png'
-            ,handler : _p30_gridBotonAutoClic
-        }
-        ,{
             tooltip  : 'Configurar paquete'
             ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
             ,iconBkp : '${ctx}/resources/fam3icons/icons/cog.png'
@@ -117,13 +119,6 @@ var _p30_panel1ItemsConf =
 [
     <s:if test='%{getImap().get("panel1Items")!=null}'>
         <s:property value="imap.panel1Items" />
-    </s:if>
-];
-
-var _p30_panel2ItemsConf =
-[
-    <s:if test='%{getImap().get("panel2Items")!=null}'>
-        <s:property value="imap.panel2Items" />
     </s:if>
 ];
 
@@ -242,6 +237,86 @@ else if(_f1_botones.length==1)
 {
     _p30_gridTbarItems.push(_f1_botones[0]);
 }
+
+var _p30_editorCdtipsit=<s:property value="imap.cdtipsitItem" />;
+
+var _p30_situaciones    = _p30_smap1.situacionesCSV.split(',');
+debug('_p30_situaciones:',_p30_situaciones);
+
+var _p30_tatrisitFullForms    = [];
+var _p30_tatrisitParcialForms = [];
+var _p30_tatrisitAutoWindows  = [];
+<s:iterator value="imap">
+    <s:if test='%{key.substring(0,"tatrisit_full_items_".length()).equals("tatrisit_full_items_")}'>
+        _p30_tatrisitFullForms['<s:property value='%{key.substring("tatrisit_full_items_".length())}' />']=
+        Ext.create('Ext.form.Panel',
+        {
+            items : [ <s:property value="value" /> ]
+        });
+    </s:if>
+    <s:if test='%{key.substring(0,"tatrisit_parcial_items_".length()).equals("tatrisit_parcial_items_")}'>
+        _p30_tatrisitParcialForms['<s:property value='%{key.substring("tatrisit_parcial_items_".length())}' />']=
+        {
+            xtype        : 'form'
+            ,itemId      : '_p30_tatrisitParcialForm<s:property value='%{key.substring("tatrisit_parcial_items_".length())}' />'
+            ,layout      : 'hbox'
+            ,autoScroll  : true
+            ,border      : 0
+            ,hidden      : true
+            ,items       : [ <s:property value="value" /> ]
+            ,buttonAlign : 'center'
+            ,buttons     :
+            [
+                {
+                    text     : 'Aceptar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                    ,handler : function(bot) { _p30_editarAutoAceptar(bot); }
+                }
+                ,{
+                    text     : 'B&uacute;squeda de auto'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
+                    ,handler : function(bot) { _p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
+                }
+            ]
+        };
+    </s:if>
+    <s:if test='%{key.substring(0,"tatrisit_auto_items_".length()).equals("tatrisit_auto_items_")}'>
+        _p30_tatrisitAutoWindows['<s:property value='%{key.substring("tatrisit_auto_items_".length())}' />']=
+        Ext.create('Ext.window.Window',
+        {
+            modal        : true
+            ,itemId      : '_p30_tatrisitAutoWindow<s:property value='%{key.substring("tatrisit_auto_items_".length())}' />'
+            ,closeAction : 'hide'
+            ,title       : 'B&Uacute;SQUEDA VEH&Iacute;CULO'
+            ,items :
+            [
+                Ext.create('Ext.form.Panel',
+                {
+                    itemId      : '_p30_tatrisitAutoForm<s:property value='%{key.substring("tatrisit_auto_items_".length())}' />'
+                    ,defaults   : { style:'margin:5px;' }
+                    ,items      : [ <s:property value="value" /> ]
+                    ,border     : 0
+                    ,micallback : function(form)
+                    {
+                        mensajeWarning('Sin funci&oacute;n de retorno');
+                    }
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Aceptar'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                            ,handler : _p30_tatrisitWindowAutoAceptarClic
+                        }
+                    ]
+                })
+            ]
+        });
+    </s:if>
+</s:iterator>
+debug('_p30_tatrisitFullForms:'    , _p30_tatrisitFullForms);
+debug('_p30_tatrisitParcialForms:' , _p30_tatrisitParcialForms);
+debug('_p30_tatrisitAutoWindows:'  , _p30_tatrisitAutoWindows);
 ////// dinamicos //////
 
 Ext.onReady(function()
@@ -249,13 +324,13 @@ Ext.onReady(function()
 
     Ext.Ajax.timeout = 60000;
 
-	////// modelos //////
-	Ext.define('_p30_modelo',
-	{
-	    extend  : 'Ext.data.Model'
-	    ,fields :
-	    [
-	         'parametros.pv_otvalor01','parametros.pv_otvalor02','parametros.pv_otvalor03','parametros.pv_otvalor04','parametros.pv_otvalor05'
+    ////// modelos //////
+    Ext.define('_p30_modelo',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+             'parametros.pv_otvalor01','parametros.pv_otvalor02','parametros.pv_otvalor03','parametros.pv_otvalor04','parametros.pv_otvalor05'
             ,'parametros.pv_otvalor06','parametros.pv_otvalor07','parametros.pv_otvalor08','parametros.pv_otvalor09','parametros.pv_otvalor10'
             ,'parametros.pv_otvalor11','parametros.pv_otvalor12','parametros.pv_otvalor13','parametros.pv_otvalor14','parametros.pv_otvalor15'
             ,'parametros.pv_otvalor16','parametros.pv_otvalor17','parametros.pv_otvalor18','parametros.pv_otvalor19','parametros.pv_otvalor20'
@@ -277,9 +352,9 @@ Ext.onReady(function()
             ,'parametros.pv_otvalor96','parametros.pv_otvalor97','parametros.pv_otvalor98','parametros.pv_otvalor99'
             ,'cdplan','cdtipsit','personalizado',{name:'nmsituac',type:'int'}
         ]
-	});
-	
-	Ext.define('_p30_modeloRecuperado',
+    });
+    
+    Ext.define('_p30_modeloRecuperado',
     {
         extend  : 'Ext.data.Model'
         ,fields :
@@ -324,17 +399,18 @@ Ext.onReady(function()
             ,'TITULO'
         ]
     });
-	////// modelos //////
-	
-	////// stores //////
-	_p30_store = Ext.create('Ext.data.Store',
-	{
-	    model : '_p30_modelo'
-	});
-	
-	_p30_storeSubmarcasRamo5 = Ext.create('Ext.data.Store',
+    ////// modelos //////
+    
+    ////// stores //////
+    _p30_store = Ext.create('Ext.data.Store',
+    {
+        model : '_p30_modelo'
+    });
+    
+    _p30_storeSubmarcasRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
+        ,storeId  : '_p30_storeSubmarcasRamo5'
         ,cargado  : false
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
         ,proxy    :
@@ -365,6 +441,7 @@ Ext.onReady(function()
     _p30_storeVersionesRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
+        ,storeId  : '_p30_storeVersionesRamo5'
         ,cargado  : false
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
         ,proxy    :
@@ -395,6 +472,7 @@ Ext.onReady(function()
     _p30_storeUsosRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
+        ,storeId  : '_p30_storeUsosRamo5'
         ,cargado  : false
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
         ,proxy    :
@@ -425,6 +503,7 @@ Ext.onReady(function()
     _p30_storeMarcasRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
+        ,storeId  : '_p30_storeMarcasRamo5'
         ,cargado  : false
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
         ,proxy    :
@@ -455,8 +534,9 @@ Ext.onReady(function()
     _p30_storePlanesRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
-        ,cargado  : false
+        ,storeId  : '_p30_storePlanesRamo5'
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,cargado  : false
         ,proxy    :
         {
             type    : 'ajax'
@@ -465,7 +545,7 @@ Ext.onReady(function()
             {
                 'catalogo'         : 'PLANES_X_PRODUCTO'
                 ,'params.cdramo'   : '5'
-                ,'params.cdtipsit' : 'AR'
+                ,'params.cdtipsit' : ''
             }
             ,reader :
             {
@@ -483,17 +563,83 @@ Ext.onReady(function()
             }
         }
     });
-	////// stores //////
-	
-	////// componentes //////
-	var _p30_panel1Items =
-	[
-	    {
-	        xtype   : 'fieldset'
-	        ,border : 0
-	        ,items  :
-	        [
-	            {
+    
+    _p30_storeCargasRamo5 = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,storeId  : '_p30_storeCargasRamo5'
+        ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
+        ,cargado  : false
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo'         : 'RAMO_5_TIPOS_CARGA'
+                ,'params.cdramo'   : '5'
+                ,'params.cdtipsit' : 'AR'
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function()
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreCargas').destroy();
+            }
+        }
+    });
+    
+    _p30_storeCdtipsit = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,storeId  : '_p30_storeCdtipsit'
+        ,cargado  : false
+        ,autoLoad : true
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p30_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo'         : 'TIPSIT'
+                ,'params.idPadre'  : _p30_smap1.cdramo
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function(store,records)
+            {
+                this.cargado=true;
+                _fieldById('_p30_grid').getView().refresh();
+                _fieldById('_p30_panelStoreCdtipsit').destroy();
+                debug('### cdtipsit:',records);
+            }
+        }
+    });
+    ////// stores //////
+    
+    ////// componentes //////
+    var _p30_panel1Items =
+    [
+        {
+            xtype   : 'fieldset'
+            ,border : 0
+            ,items  :
+            [
+                {
                     layout  :
                     {
                         type     : 'table'
@@ -529,13 +675,13 @@ Ext.onReady(function()
             ,title  : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
             ,items  : _p30_panel3ItemsConf
         }
-	];
-	for(var i=0;i<_p30_panel1ItemsConf.length;i++)
-	{
-	    _p30_panel1Items[0].items.push(_p30_panel1ItemsConf[i]);
-	}
-	_p30_panel1Items[0].items.push(
-	{
+    ];
+    for(var i=0;i<_p30_panel1ItemsConf.length;i++)
+    {
+        _p30_panel1Items[0].items.push(_p30_panel1ItemsConf[i]);
+    }
+    _p30_panel1Items[0].items.push(
+    {
         xtype       : 'datefield'
         ,name       : 'feini'
         ,fieldLabel : 'INICIO DE VIGENCIA'
@@ -568,342 +714,220 @@ Ext.onReady(function()
         }
     </s:if>
     debug('_p30_formOcultoItems:',_p30_formOcultoItems);
-	////// componentes //////
-	
-	////// contenido //////
-	Ext.create('Ext.panel.Panel',
-	{
-	    renderTo  : '_p30_divpri'
-	    ,itemId   : '_p30_panelpri'
-	    ,border   : 0
-	    ,defaults : { style : 'margin:5px;' }
-	    ,items    :
-	    [
-	        Ext.create('Ext.form.Panel',
-	        {
-	            itemId      : '_p30_form'
-	            ,title      : 'DATOS GENERALES'
-	            ,formOculto : Ext.create('Ext.form.Panel',{ items : _p30_formOcultoItems })
-	            ,defaults   : { style : 'margin:5px;' }
-	            ,layout     :
-	            {
-	                type     : 'table'
-	                ,columns : 2
-	                ,tdAttrs : {valign:'top'}
-	            }
-	            ,items    : _p30_panel1Items
-	        })
-	        ,Ext.create('Ext.grid.Panel',
-	        {
-	            itemId      : '_p30_grid'
-	            ,title      : 'INCISOS'
-	            ,tbar       : _p30_gridTbarItems
-	            ,bbar       :
-	            [
-	                '->'
-	                ,{
-	                    xtype   : 'form'
-	                    ,layout : 'hbox'
-	                    ,items  :
-	                    [
-	                        {
-                                xtype       : 'checkbox'
-                                ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
-                                ,name       : 'smap1.tomarMasiva'
-                                ,inputValue : 'S'
-                                ,style      : 'background:#223772;'
+    ////// componentes //////
+    
+    ////// contenido //////
+    var itemspri=
+    [
+        Ext.create('Ext.form.Panel',
+        {
+            itemId      : '_p30_form'
+            ,title      : 'DATOS GENERALES'
+            ,formOculto : Ext.create('Ext.form.Panel',{ items : _p30_formOcultoItems })
+            ,defaults   : { style : 'margin:5px;' }
+            ,layout     :
+            {
+                type     : 'table'
+                ,columns : 2
+                ,tdAttrs : {valign:'top'}
+            }
+            ,items    : _p30_panel1Items
+        })
+        ,Ext.create('Ext.grid.Panel',
+        {
+            itemId      : '_p30_grid'
+            ,title      : 'INCISOS'
+            ,tbar       : _p30_gridTbarItems
+            ,bbar       :
+            [
+                '->'
+                ,{
+                    xtype   : 'form'
+                    ,layout : 'hbox'
+                    ,items  :
+                    [
+                        {
+                            xtype       : 'checkbox'
+                            ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
+                            ,name       : 'smap1.tomarMasiva'
+                            ,inputValue : 'S'
+                            ,style      : 'background:#223772;'
+                        }
+                        ,{
+                            xtype         : 'filefield'
+                            ,buttonOnly   : true
+                            ,style        : 'margin:0px;'
+                            ,name         : 'excel'
+                            ,style        : 'background:#223772;'
+                            ,buttonConfig :
+                            {
+                                text  : 'Carga masiva...'
+                                ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
                             }
-	                        ,{
-	                            xtype         : 'filefield'
-	                            ,buttonOnly   : true
-	                            ,style        : 'margin:0px;'
-	                            ,name         : 'excel'
-                                ,style        : 'background:#223772;'
-	                            ,buttonConfig :
-	                            {
-	                                text  : 'Carga masiva...'
-	                                ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
-	                            }
-	                            ,listeners :
-	                            {
-	                                change : function(me)
+                            ,listeners :
+                            {
+                                change : function(me)
+                                {
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    debug('uploadedExtension:',uploadedExtension);
+                                    var valido=Ext.Array.contains(['xls','xlsx'], uploadedExtension);
+                                    if(!valido)
                                     {
-                                        var indexofPeriod = me.getValue().lastIndexOf("."),
-                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                        debug('uploadedExtension:',uploadedExtension);
-                                        var valido=Ext.Array.contains(['xls','xlsx'], uploadedExtension);
+                                        mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
+                                        me.reset();
+                                    }
+                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
+                                    {
+                                        valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue());
                                         if(!valido)
                                         {
-                                            mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
+                                            mensajeWarning('Seleccione el negocio');
                                             me.reset();
                                         }
-                                        
-                                        if(valido&&_p30_smap1.cdramo+'x'=='5x')
-                                        {
-                                            valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue());
-                                            if(!valido)
-                                            {
-                                                mensajeWarning('Seleccione el negocio');
-                                                me.reset();
-                                            }
-                                        }
-                                        
-                                        if(valido)
-                                        {
-                                            var panelpri = _fieldById('_p30_panelpri');
-                                            panelpri.setLoading(true);
-                                            me.up('form').submit(
-                                            {
-                                                url     : _p30_urlCargaMasiva
-                                                ,params :
-                                                {
-                                                    'smap1.cdramo'    : _p30_smap1.cdramo
-                                                    ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
-                                                }
-                                                ,success : function(form,action)
-                                                {
-                                                    panelpri.setLoading(false);
-                                                    var json = Ext.decode(action.response.responseText);
-                                                    debug('### excel:',json);
-                                                    if(json.exito)
-                                                    {
-                                                        var mrecords = [];
-                                                        
-                                                        for(var i in json.slist1)
-                                                        {
-                                                            var record=new _p30_modelo(json.slist1[i]);
-                                                            _p30_store.add(record);
-                                                            mrecords.push(record);
-                                                            debug('record.data:',record.data);
-                                                        }
-                                                        
-                                                        //recuperar
-                                                        var len = json.slist1.length;
-                                                        panelpri.setLoading(true);
-                                                        var claveName    = _fieldById('_p30_grid').down('[text*=CLAVE GS]').dataIndex;
-                                                        var marcaName    = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
-                                                        var submarcaName = _fieldById('_p30_grid').down('[text=SUBMARCA]').dataIndex;
-                                                        var modeloName   = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
-                                                        var versionName  = _fieldById('_p30_grid').down('[text*=VERSI]').dataIndex;
-                                                        var recupera     = function(i)
-                                                        {
-                                                            _fieldLikeLabel('CLAVE GS').getStore().load(
-                                                            {
-                                                                params    :
-                                                                {
-                                                                    'params.cadena'    : mrecords[i].get(claveName)
-                                                                    ,'params.cdtipsit' : mrecords[i].get('cdtipsit')
-                                                                }
-                                                                ,callback : function(records)
-                                                                {
-                                                                    var index=_fieldLikeLabel('CLAVE GS').getStore().findBy(function(record)
-                                                                    {
-                                                                        var splited=record.get('value').split(' - ');
-                                                                        //debug('splited:'
-                                                                        //    ,splited[0]+','+splited[3]
-                                                                        //    ,mrecords[i].get(claveName)+','+mrecords[i].get(modeloName));
-                                                                        if(splited[0]==mrecords[i].get(claveName)
-                                                                            &&splited[3]==mrecords[i].get(modeloName)
-                                                                            )
-                                                                        {
-                                                                            return true;
-                                                                        }
-                                                                    });
-                                                                    var encontrado = _fieldLikeLabel('CLAVE GS').getStore().getAt(index);
-                                                                    var splited    = encontrado.get('value').split(' - ');
-                                                                    var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
-                                                                    var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
-                                                                    var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
-                                                                    mrecords[i].set(marcaName    , marca);
-                                                                    mrecords[i].set(submarcaName , submarca);
-                                                                    mrecords[i].set(versionName  , version);
-                                                                    i=i+1;
-                                                                    if(i<len)
-                                                                    {
-                                                                        recupera(i);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        panelpri.setLoading(false);
-                                                                    }
-                                                                }
-                                                            }); 
-                                                        };
-                                                        recupera(0);
-                                                    }
-                                                    else
-                                                    {
-                                                        mensajeError(json.respuesta);
-                                                    }
-                                                }
-                                                ,failure : function()
-                                                {
-                                                    panelpri.setLoading(false);
-                                                    errorComunicacion();
-                                                }
-                                            });
-                                        }
                                     }
-	                            }
-	                        }
-	                    ]
-	                }
-	            ]
-	            ,columns    : _p30_gridCols
-	            ,height     : 350
-	            ,viewConfig : viewConfigAutoSize
-	            ,store      : _p30_store
-	            ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
-	            {
-	                clicksToEdit  : 1
-	                ,errorSummary : false
-	                ,listeners    :
-	                {
-	                    beforeedit : function(editor,context)
-	                    {
-	                        if(_p30_smap1.cdramo+'x'=='5x')
-	                        {
-	                            var cdnegocio = _fieldByLabel('NEGOCIO').getValue();
-	                            if(!Ext.isEmpty(cdnegocio))
-	                            {
-	                                var tipoUsoName = _fieldById('_p30_grid').down('[text=TIPO USO]').dataIndex;
-	                                var tipoVehName = _fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex;
-	                                var tipoUsoComp = Ext.ComponentQuery.query('[id*=editor_][name='+tipoUsoName+']')[0];
-	                                var tipoVehComp = Ext.ComponentQuery.query('[id*=editor_][name='+tipoVehName+']')[0];
-	                                debug('tipoUsoComp:',tipoUsoComp,'tipoVehComp:',tipoVehComp);
-	                                tipoVehComp.on(
-	                                {
-	                                    select : function(me,rec)
-	                                    {
-	                                        debug('select:',rec[0].get('key'));
-	                                        tipoUsoComp.getStore().load(
-	                                        {
-	                                            params :
-	                                            {
-	                                                'params.cdtipsit'   : rec[0].get('key')
-	                                               ,'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
-	                                            } 
-	                                        });
-	                                    }
-	                                });
-	                                if(!Ext.isEmpty(context.record.get(tipoVehName)))
-	                                {
-	                                    tipoUsoComp.getStore().load(
+                                    
+                                    if(valido)
+                                    {
+                                        var panelpri = _fieldById('_p30_panelpri');
+                                        panelpri.setLoading(true);
+                                        me.up('form').submit(
                                         {
-                                            params :
+                                            url     : _p30_urlCargaMasiva
+                                            ,params :
                                             {
-                                                'params.cdtipsit'   : context.record.get(tipoVehName)
-                                                ,'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
-                                            } 
-                                        });
-	                                }
-	                                
-	                                var claveName = _fieldById('_p30_grid').down('[text*=CLAVE]').dataIndex;
-	                                var clavegs   = context.record.get(claveName);
-	                                
-	                                var modeloVal = context.record.get(_fieldById('_p30_grid').down('[text=MODELO]').dataIndex);
-
-                                    var planCmp  = Ext.ComponentQuery.query('[id*=_editor_][name=cdplan]')[0];
-	                                
-	                                if(Ext.isEmpty(clavegs))
-	                                {
-	                                    planCmp.allowBlank=true;
-	                                    planCmp.getStore().removeAll();
-	                                    planCmp.setFieldLabel('(Seleccionar veh&iacute;culo primero)');
-	                                }
-	                                else
-	                                {
-	                                    planCmp.allowBlank=false;
-	                                    planCmp.getStore().load(
-	                                    {
-	                                        params :
-	                                        {
-	                                            'params.cdtipsit' : context.record.get('cdtipsit')
-	                                            ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
-	                                            ,'params.modelo'  : modeloVal
-	                                            ,'params.clavegs' : clavegs
-	                                        }
-	                                        ,callback : function()
-	                                        {
-	                                            planCmp.setFieldLabel('');
-	                                        }
-	                                    });
-	                                    
-	                                    tipoVehComp.on(
-                                        {
-                                            select : function(me,rec)
+                                                'smap1.cdramo'    : _p30_smap1.cdramo
+                                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                            }
+                                            ,success : function(form,action)
                                             {
-                                                debug('select:',rec[0].get('key'));
-                                                planCmp.getStore().load(
+                                                panelpri.setLoading(false);
+                                                var json = Ext.decode(action.response.responseText);
+                                                debug('### excel:',json);
+                                                if(json.exito)
                                                 {
-                                                    params :
+                                                    var mrecords = [];
+                                                    
+                                                    for(var i in json.slist1)
                                                     {
-                                                        'params.cdtipsit' : rec[0].get('key')
-                                                        ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
-                                                        ,'params.modelo'  : modeloVal
-                                                        ,'params.clavegs' : clavegs
+                                                        var record=new _p30_modelo(json.slist1[i]);
+                                                        _p30_store.add(record);
+                                                        mrecords.push(record);
+                                                        debug('record.data:',record.data);
                                                     }
-                                                });
+                                                    
+                                                    //recuperar
+                                                    var len = json.slist1.length;
+                                                    panelpri.setLoading(true);
+                                                    var claveName    = _fieldById('_p30_grid').down('[text*=CLAVE GS]').dataIndex;
+                                                    var marcaName    = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
+                                                    var submarcaName = _fieldById('_p30_grid').down('[text=SUBMARCA]').dataIndex;
+                                                    var modeloName   = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
+                                                    var versionName  = _fieldById('_p30_grid').down('[text*=VERSI]').dataIndex;
+                                                    var recupera     = function(i)
+                                                    {
+                                                        _fieldLikeLabel('CLAVE GS').getStore().load(
+                                                        {
+                                                            params    :
+                                                            {
+                                                                'params.cadena'    : mrecords[i].get(claveName)
+                                                                ,'params.cdtipsit' : mrecords[i].get('cdtipsit')
+                                                            }
+                                                            ,callback : function(records)
+                                                            {
+                                                                var index=_fieldLikeLabel('CLAVE GS').getStore().findBy(function(record)
+                                                                {
+                                                                    var splited=record.get('value').split(' - ');
+                                                                    //debug('splited:'
+                                                                    //    ,splited[0]+','+splited[3]
+                                                                    //    ,mrecords[i].get(claveName)+','+mrecords[i].get(modeloName));
+                                                                    if(splited[0]==mrecords[i].get(claveName)
+                                                                        &&splited[3]==mrecords[i].get(modeloName)
+                                                                        )
+                                                                    {
+                                                                        return true;
+                                                                    }
+                                                                });
+                                                                var encontrado = _fieldLikeLabel('CLAVE GS').getStore().getAt(index);
+                                                                var splited    = encontrado.get('value').split(' - ');
+                                                                var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
+                                                                var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
+                                                                var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
+                                                                mrecords[i].set(marcaName    , marca);
+                                                                mrecords[i].set(submarcaName , submarca);
+                                                                mrecords[i].set(versionName  , version);
+                                                                i=i+1;
+                                                                if(i<len)
+                                                                {
+                                                                    recupera(i);
+                                                                }
+                                                                else
+                                                                {
+                                                                    panelpri.setLoading(false);
+                                                                }
+                                                            }
+                                                        }); 
+                                                    };
+                                                    recupera(0);
+                                                }
+                                                else
+                                                {
+                                                    mensajeError(json.respuesta);
+                                                }
+                                            }
+                                            ,failure : function()
+                                            {
+                                                panelpri.setLoading(false);
+                                                errorComunicacion();
                                             }
                                         });
-	                                }
-	                                
-	                                //serie opcional
-	                                var serieName = _fieldById('_p30_grid').down('[text*=SERIE]').dataIndex;
-	                                var serieCmp  = Ext.ComponentQuery.query('[id*=_editor_][name='+serieName+']')[0];
-	                                if(!Ext.isEmpty(context.record.get(tipoVehName)))
-	                                {
-	                                    serieCmp.allowBlank=context.record.get('cdtipsit')!='AF'&&context.record.get('cdtipsit')!='PU';
-	                                    serieCmp.isValid();
-	                                }
-	                                tipoVehComp.on(
-                                    {
-                                        select : function(me,rec)
-                                        {
-                                            serieCmp.allowBlank=tipoVehComp.getValue()!='AF'&&tipoVehComp.getValue()!='PU';
-                                            serieCmp.isValid();
-                                        }
-                                    });
-	                                //serie opcional
-	                            }
-	                            else
-	                            {
-	                                mensajeWarning('Seleccione el negocio');
-	                                return false;
-	                            }
-	                        }
-	                        
-	                        //no mostrar cols
-	                        for(i in _p30_gridCols[_p30_gridCols.length-1].items)
-	                        {
-	                            _p30_gridCols[_p30_gridCols.length-1].items[i].icon = '';;
-	                        }
-	                    }
-	                    ,afteredit : function()
-	                    {
-	                        //no mostrar cols
-                            for(i in _p30_gridCols[_p30_gridCols.length-1].items)
-                            {
-                                var item  = _p30_gridCols[_p30_gridCols.length-1].items[i];
-                                item.icon = item.iconBkp;
-                            }
-	                    }
-                        ,canceledit : function()
-                        {
-                            //no mostrar cols
-                            for(i in _p30_gridCols[_p30_gridCols.length-1].items)
-                            {
-                                var item  = _p30_gridCols[_p30_gridCols.length-1].items[i];
-                                item.icon = item.iconBkp;
+                                    }
+                                }
                             }
                         }
-	                }
-                })
-	        })
-	        ,Ext.create('Ext.panel.Panel',
-	        {
-	            itemId       : '_p30_botonera'
-	            ,buttonAlign : 'center'
+                    ]
+                }
+            ]
+            ,columns    : _p30_gridCols
+            ,height     : 300
+            ,store      : _p30_store
+            ,selModel   :
+            {
+                selType        : 'checkboxmodel'
+                ,allowDeselect : true
+                ,mode          : 'SINGLE'
+                ,listeners     :
+                {
+                    selectionchange : function(me,selected,eOpts)
+                    {
+                        if(selected.length==1)
+                        {
+                            _p30_selectedRecord=selected[0];
+                            _p30_editarAuto();
+                        }
+                        else
+                        {
+                            for(var i in _p30_situaciones)
+                            {
+                                _fieldById('_p30_tatrisitParcialForm'+_p30_situaciones[i]).hide();
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    ];
+        
+    for(var i in _p30_tatrisitParcialForms)
+    {
+        itemspri.push(_p30_tatrisitParcialForms[i]);
+    }
+        
+    itemspri.push(
+            Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p30_botonera'
+                ,buttonAlign : 'center'
                 ,border      : 0
                 ,buttons     :
                 [
@@ -920,45 +944,51 @@ Ext.onReady(function()
                         ,handler : function(){_p30_limpiar();}
                     }
                 ]
-	        })
-	    ]
-	});
-	
-	_p30_windowAuto = Ext.create('Ext.window.Window',
-	{
-	    title        : 'B&Uacute;SQUEDA DE VEH&Iacute;CULO'
-	    ,closeAction : 'hide'
-	    ,modal       : true
-	    ,items       :
-	    [
-	        Ext.create('Ext.form.Panel',
-	        {
-	            itemId    : '_p30_formAuto'
-	            ,border   : 0
-	            ,defaults : { style : 'margin:5px;' }
-	            ,items    : _p30_panel2ItemsConf
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
+            })
+    );
+    
+    Ext.create('Ext.panel.Panel',
+    {
+        renderTo  : '_p30_divpri'
+        ,itemId   : '_p30_panelpri'
+        ,border   : 0
+        ,defaults : { style : 'margin:5px;' }
+        ,items    : itemspri
+    });
+    
+    _p30_ventanaCdtipsit = Ext.create('Ext.window.Window',
+    {
+        title        : 'ELEGIR TIPO DE VEH&Iacute;CULO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       : _p30_editorCdtipsit
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Aceptar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function(bot)
+                {
+                    if(!Ext.isEmpty(_p30_editorCdtipsit.getValue()))
                     {
-                        text     : 'Aceptar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                        ,handler : _p30_windowAutoAceptarClic
+                        _p30_selectedRecord.set('cdtipsit',_p30_editorCdtipsit.getValue());
+                        bot.up('window').hide();
+                        _p30_editarAuto();
                     }
-                    ,{
-                        text     : 'Cancelar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                        ,handler : function(me){ me.up('window').hide();}
+                    else
+                    {
+                        mensajeWarning('Seleccione un tipo de veh&iacute;culo');
                     }
-                ]
-	        })
-	    ]
-	});
-	////// contenido //////
-	
-	////// custom //////
-	
-	//fechas
+                }
+            }
+        ]
+    });
+    ////// contenido //////
+    
+    ////// custom //////
+    
+    //fechas
     _fieldByName('feini').on(
     {
         change : function(me,val)
@@ -987,81 +1017,17 @@ Ext.onReady(function()
         
         _p30_calculaVigencia();
         
-        //clave gs
-        _fieldByName('parametros.pv_otvalor06',_p30_windowAuto).on(
-        {
-            select : function(combo,records){ _p30_herenciaDescendiente(records[0]); }
-        });
-        //clave gs
-        
-        //version
-        _fieldLikeLabel('VERSI',_p30_windowAuto).anidado = true;
-        _fieldLikeLabel('VERSI',_p30_windowAuto).heredar = function()
-        {
-            _fieldLikeLabel('VERSI',_p30_windowAuto).getStore().load(
-            {
-                params :
-                {
-                    'params.submarca' : _fieldByLabel('SUBMARCA' , _p30_windowAuto).getValue()
-                    ,'params.modelo'  : _fieldByLabel('MODELO'   , _p30_windowAuto).getValue()
-                }
-            });
-        };
-        _fieldLikeLabel('VERSI',_p30_windowAuto).on(
-        {
-            select : function(){_p30_herenciaAscendente();}
-        });
-        //version
-        
-        //modelo
-        _fieldByLabel('MODELO',_p30_windowAuto).on(
-        {
-            select : function()
-            {
-                var nameTipoValor = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
-                var tipovalor     = _p30_selectedRecord.get(nameTipoValor)-0;
-                var modeloVal     = _fieldByLabel('MODELO',_p30_windowAuto).getValue()-0;
-                var anioAc        = new Date().getFullYear()-0; 
-                if(tipovalor==3&&anioAc-modeloVal>1)
-                {
-                    mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
-                    _fieldByLabel('MODELO',_p30_windowAuto).setValue('');
-                }
-                else
-                {
-                    _fieldLikeLabel('VERSI',_p30_windowAuto).heredar();
-                    _p30_herenciaAscendente();
-                }
-            }
-            ,change : function(comb,nuevo)
-            {
-                if((nuevo+'x').length==5)
-                {
-                    var nameTipoValor = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
-                    var tipovalor     = _p30_selectedRecord.get(nameTipoValor)-0;
-                    var modeloVal     = _fieldByLabel('MODELO',_p30_windowAuto).getValue()-0;
-                    var anioAc        = new Date().getFullYear()-0;
-                    if(tipovalor==3&&anioAc-modeloVal>1)
-                    {
-                        mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
-                        _fieldByLabel('MODELO',_p30_windowAuto).setValue('');
-                    }
-                }
-            }
-        });
-        //modelo
-        
         //agente
         if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
         {
-            _fieldByLabel('AGENTE').setValue(_p30_smap1.cdagente);
-            _fieldByLabel('AGENTE').setReadOnly(true);
-            _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE'),_p30_smap1.cdagente);
+            _fieldByLabel('AGENTE',_fieldById('_p30_form')).setValue(_p30_smap1.cdagente);
+            _fieldByLabel('AGENTE',_fieldById('_p30_form')).setReadOnly(true);
+            _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE',_fieldById('_p30_form')),_p30_smap1.cdagente);
         }
         else if(_p30_smap1.cdsisrol=='PROMOTORAUTO'
             ||_p30_smap1.cdsisrol=='SUSCRIAUTO')
         {
-            _fieldByLabel('AGENTE').on(
+            _fieldByLabel('AGENTE',_fieldById('_p30_form')).on(
             {
                 'select' : _p30_ramo5AgenteSelect
             });
@@ -1071,7 +1037,7 @@ Ext.onReady(function()
         //negocio
         if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
         {
-            _fieldByLabel('NEGOCIO').getStore().load(
+            _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getStore().load(
             {
                 params :
                 {
@@ -1081,349 +1047,110 @@ Ext.onReady(function()
         }
         else
         {
-            _fieldByLabel('AGENTE').on(
+            debug('@CUSTOM negocio:',_fieldByLabel('NEGOCIO',_fieldById('_p30_form')),'.');
+            _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).anidado = true;
+            _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).heredar = function()
             {
-                select : function()
+                _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getStore().load(
                 {
-                    _fieldByLabel('NEGOCIO').getStore().load(
+                    params :
                     {
-                        params :
-                        {
-                            'params.cdagente' : _fieldByLabel('AGENTE').getValue()
-                        }
-                    });
-                }
+                        'params.cdagente' : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                    }
+                });
+            }
+            _fieldByLabel('AGENTE',_fieldById('_p30_form')).on(
+            {
+                select : function(){ _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).heredar(); }
             });
         }
         //negocio
         
-        //tipo valor
-        var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
-        for(var i=0;i<_p30_gridCols.length;i++)
+        //grid
+        debug('@CUSTOM grid:_p30_grid removeall on negocio selecet');
+        _fieldById('_p30_grid').heredar = function()
         {
-            debug('buscando editor tipo valor');
-            if(!Ext.isEmpty(_p30_gridCols[i].editor)
-                &&_p30_gridCols[i].editor.name==tipovalorName)
+            _fieldById('_p30_grid').getStore().removeAll();
+        }
+        
+        _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).on(
+        {
+            select : function(){ _fieldById('_p30_grid').heredar(); }
+        });
+        //grid
+        
+        //paneles tconvalsit
+        debug('@CUSTOM tconvalsit:tconvalsit load on negocio select');
+        _fieldById('_p30_grid').heredarPanelesTconvalsit = function()
+        {
+            for(var cdtipsit in _p30_paneles)
             {
-                debug('tipo valor es:',_p30_gridCols[i].editor);
-                _p30_gridCols[i].editor.on(
+                Ext.Ajax.request(
                 {
-                    change : function(comb,nuevo)
+                    url     : _p30_urlRecuperacionSimpleLista
+                    ,params :
                     {
-                        var record = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
-                        debug('record sel:',record);
-                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
-                        if(record.get(valorName)+'x'!='x')
+                        'smap1.procedimiento' : 'RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS'
+                        ,'smap1.cdramo'       : _p30_smap1.cdramo
+                        ,'smap1.cdtipsit'     : cdtipsit
+                        ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### config:',json);
+                        if(json.exito)
                         {
-                            mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
-                            record.set(valorName,'');
-                            debug('cambiado:',valorName,record);
+                            _p30_paneles[json.smap1.cdtipsit].valores    = {};
+                            _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
+                            for(var i in json.slist1)
+                            {
+                                _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))]    = json.slist1[i].VALOR;
+                                _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))] = json.slist1[i].VALOR;
+                            }
+                            debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
                         }
-                        var modeloName = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
-                        var modelo     = record.get(modeloName)-0;
-                        var anioAc     = new Date().getFullYear()-0;
-                        if(nuevo-0==3&&anioAc-modelo>1&&modelo!=0)
+                        else
                         {
-                            mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
-                            comb.setValue('');
+                            mensajeError(json.respuesta);
                         }
                     }
+                    ,failure : errorComunicacion
                 });
-            }
-            else
-            {
-                debug('tipo valor no es:',_p30_gridCols[i].editor);
             }
         }
-        //tipo valor
         
-        //tipo vehiculo
-        var tipoVehiName   = _fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex;
-        var editorTipoVehi = Ext.ComponentQuery.query('[id*=_editor_][name='+tipoVehiName+']')[0];
-        debug('editorTipoVehi:',editorTipoVehi);
-        editorTipoVehi.on(
+        _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).on(
         {
-            change : function()
-            {
-                var record    = _fieldById('_p30_grid').getSelectionModel().getSelection()[0];
-                var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
-                var personalizado = false;
-                var conValor      = false;
-                if(record.get('personalizado')+'x'=='six')
-                {
-                    personalizado = true;
-                }
-                if(record.get(valorName)+'x'!='x')
-                {
-                    conValor = true;
-                }
-                record.set('personalizado' , '');
-                record.set(valorName       , '');
-                if(personalizado&&conValor)
-                {
-                    mensajeWarning('Debe actualizar la configuraci&oacute;n del paquete y el valor del veh&iacute;culo');
-                }
-                else if(conValor)
-                {
-                    mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
-                }
-                else if(personalizado)
-                {
-                    mensajeWarning('Debe actualizar la configuraci&oacute;n del paquete');
-                }
-                
-                var tipoServName   = _fieldById('_p30_grid').down('[text=TIPO SERVICIO]').dataIndex;
-                var editorTipoServ = Ext.ComponentQuery.query('[id*=_editor_][name='+tipoServName+']')[0];
-                debug('editorTipoServ:',editorTipoServ);
-                editorTipoServ.getStore().load(
-                {
-                    params :
-                    {
-                        'params.cdtipsit' : editorTipoVehi.getValue()
-                    }
-                });
-            }
+            select : function(){ _fieldById('_p30_grid').heredarPanelesTconvalsit(); }
         });
-        //tipo vehiculo
+        //paneles tconvalsit
         
         //cliente nuevo
-        _fieldLikeLabel('CLIENTE NUEVO').on(
+        _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form')).on(
         {
             change : _p30_ramo5ClienteChange
         });
+        _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form')).select('S');
         
-        _fieldLikeLabel('CLIENTE NUEVO').getStore().on('load',function()
+        //tipo situacion
+        debug('@CUSTOM cdtipsit:',_p30_editorCdtipsit,'.');
+        _p30_editorCdtipsit.anidado = true;
+        _p30_editorCdtipsit.heredar = function()
         {
-            debug('combo cliente nuevo store load');
-            _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
+            _p30_editorCdtipsit.getStore().load(
+            {
+                params :
+                {
+                    'params.negocio' : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                }
+            });
+        };
+        _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).on(
+        {
+            select : function(){ _p30_editorCdtipsit.heredar(); }
         });
-        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');
-        //cliente nuevo
-        
-        //renderers
-        _fieldById('_p30_grid').down('[text=SUBMARCA]').renderer=function(v)
-        {
-            if(_p30_storeSubmarcasRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p30_storeSubmarcasRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p30_storeSubmarcasRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        _fieldById('_p30_grid').down('[text*=VERSI]').renderer=function(v)
-        {
-            if(_p30_storeVersionesRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p30_storeVersionesRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p30_storeVersionesRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        _fieldById('_p30_grid').down('[text=TIPO USO]').renderer=function(v)
-        {
-            if(_p30_storeUsosRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p30_storeUsosRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p30_storeUsosRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        _fieldById('_p30_grid').down('[text=MARCA]').renderer=function(v)
-        {
-            if(_p30_storeMarcasRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p30_storeMarcasRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p30_storeMarcasRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        _fieldById('_p30_grid').down('[text=PAQUETE]').renderer=function(v)
-        {
-            if(_p30_storePlanesRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p30_storePlanesRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p30_storePlanesRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        //renderers
-        
-        //negocio
-        _fieldByLabel('NEGOCIO').on(
-        {
-            change : function(me,val)
-            {
-                if(me.findRecord('key',val)!=false)
-                {
-                    var tipoUsoName = _fieldById('_p30_grid').down('[text=TIPO USO]').dataIndex;
-                    var marcaName   = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
-                    _p30_store.each(function(record)
-                    {
-                        record.set(tipoUsoName , '');
-                        record.set(marcaName   , '');
-                    });
-                    
-                    for(var cdtipsit in _p30_paneles)
-                    {
-                        Ext.Ajax.request(
-                        {
-                            url     : _p30_urlRecuperacionSimpleLista
-                            ,params :
-                            {
-                                'smap1.procedimiento' : 'RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS'
-                                ,'smap1.cdramo'       : _p30_smap1.cdramo
-                                ,'smap1.cdtipsit'     : cdtipsit
-                                ,'smap1.negocio'      : val
-                            }
-                            ,success : function(response)
-                            {
-                                var json=Ext.decode(response.responseText);
-                                debug('### config:',json);
-                                if(json.exito)
-                                {
-                                    _p30_paneles[json.smap1.cdtipsit].valores    = {};
-                                    _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
-                                    for(var i in json.slist1)
-                                    {
-                                        _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))]    = json.slist1[i].VALOR;
-                                        _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))] = json.slist1[i].VALOR;
-                                    }
-                                    debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
-                                }
-                                else
-                                {
-                                    mensajeError(json.respuesta);
-                                }
-                            }
-                            ,failure : errorComunicacion
-                        });
-                    }
-                    
-                    var tipoSitCmp = Ext.ComponentQuery.query('[id*=editor_][name='
-                    +_fieldById('_p30_grid').down('[text*=TIPO VEH]').dataIndex+
-                    ']')[0];
-                    tipoSitCmp.getStore().load(
-                    {
-                        params :
-                        {
-                            'params.negocio' : val
-                        }
-                    });
-                    
-                }
-            }
-            ,select : function()
-            {
-                if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA'||_p30_smap1.cdsisrol=='PROMOTORAUTO')
-                {
-                    var negoCmp = _fieldByLabel('NEGOCIO');
-                    var negoVal = negoCmp.getValue();
-                    negoCmp.setLoading(true);
-                    Ext.Ajax.request(
-                    {
-                        url     : _p30_urlCargarDetalleNegocioRamo5
-                        ,params :
-                        {
-                            'smap1.negocio' : negoVal
-                        }
-                        ,success : function(response)
-                        {
-                            negoCmp.setLoading(false);
-                            var json = Ext.decode(response.responseText);
-                            debug('### detalle negocio:',json);
-                            _fieldByName('fefin').validator=function(val)
-                            {
-                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
-                                debug('feiniVal:',feiniVal);
-                                var fefinVal=[];
-                                for(var i=1;i<=json.smap1.MULTIANUAL-0;i++)
-                                {
-                                    debug('mas anios:',i);
-                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
-                                }
-                                debug('validar contra:',fefinVal);
-                                var valido = true;
-                                if(!Ext.Array.contains(fefinVal,val))
-                                {
-                                    valido = 'Solo se permite:';
-                                    for(var i in fefinVal)
-                                    {
-                                        valido = valido + ' ' + fefinVal[i];
-                                        if(fefinVal.length>1&&i<fefinVal.length-1)
-                                        {
-                                            valido = valido + ',';
-                                        }
-                                    }
-                                }
-                                return valido;
-                            }
-                            _fieldByName('fefin').isValid();
-                        }
-                        ,failure : function()
-                        {
-                            negoCmp.setLoading(false);
-                            errorComunicacion();
-                        }
-                    });
-                }
-            }
-        });
-        //negocio
+        //tipo situacion
         
         //loaders panels
         Ext.create('Ext.panel.Panel',
@@ -1475,14 +1202,706 @@ Ext.onReady(function()
             ,height   : 30
             ,frame    : true
         }).showAt(770,210);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreCdtipsit'
+            ,floating : true
+            ,html     : 'Cargando situaciones...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,250);
+        
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId    : '_p30_panelStoreCargas'
+            ,floating : true
+            ,html     : 'Cargando tipos de carga...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,290);
         //loaders panels
+        
+        //herencia situaciones
+        for(var i in _p30_situaciones)
+        {
+            var cdtipsit = _p30_situaciones[i];
+            
+            //uso
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var tipoUsoCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]');
+                debug('@CUSTOM tipouso:',tipoUsoCmp,'.');
+                tipoUsoCmp.anidado = true;
+                tipoUsoCmp.heredar = function(remoto,callback)
+                {
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var me         = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]');
+                    var negocioVal = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    if(!Ext.isEmpty(negocioVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params :
+                            {
+                                'params.cdtipsit'   : cdtipsit
+                                ,'params.cdnegocio' : negocioVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback
+                                    (
+                                        _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel=TIPO USO]')
+                                    );
+                                }
+                            } 
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+            }
+            //uso
+            
+            //plan
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var planCmp=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
+                debug('@CUSTOM plan:',planCmp,'.');
+                planCmp.anidado = true;
+                planCmp.heredar = function(remoto,callback)
+                {
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var me         = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
+                    if(Ext.isEmpty(me))
+                    {
+                        me = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=(Seleccionar veh&iacute;culo primero)]');
+                    }
+                    var modeloName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=MODELO]').getName();
+                    var claveName  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=CLAVE]').getName();
+                    debug('heredar:'    , me);
+                    debug('modeloName:' , modeloName);
+                    debug('claveName:'  , claveName);
+                    
+                    var modeloVal  = record.get(modeloName);
+                    var claveVal   = record.get(claveName);
+                    var negocioVal = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    debug('modeloVal:'  , modeloVal);
+                    debug('claveVal:'   , claveVal);
+                    debug('negocioVal:' , negocioVal);
+                    
+                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(claveVal)||Ext.isEmpty(negocioVal))
+                    {
+                        me.allowBlank=true;
+                        me.setFieldLabel('(Seleccionar veh&iacute;culo primero)');
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                    else
+                    {
+                        me.allowBlank=false;
+                        me.setFieldLabel('PAQUETE');
+                        me.getStore().load(
+                        {
+                            params :
+                            {
+                                'params.cdtipsit' : cdtipsit
+                                ,'params.negocio' : negocioVal
+                                ,'params.modelo'  : modeloVal
+                                ,'params.clavegs' : claveVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    var me = _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
+                                        .down('[fieldLabel=PAQUETE]');
+                                    if(Ext.isEmpty(me))
+                                    {
+                                        me = _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel=(Seleccionar veh&iacute;culo primero)]');
+                                    } 
+                                    callback(me);
+                                }
+                            } 
+                        });
+                    }
+                }
+            }
+            //plan
+            
+            //marca
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var marcaCmp=_fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MARCA]');
+                debug('@CUSTOM marca:',marcaCmp,'.');
+                marcaCmp.anidado = true;
+                marcaCmp.heredar = function(remoto,callback)
+                {
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var me         = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MARCA]');
+                    var negocioVal = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    if(!Ext.isEmpty(negocioVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params    :
+                            {
+                                'params.cdtipsit'   : cdtipsit
+                                ,'params.cdnegocio' : negocioVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback
+                                    (
+                                        _fieldById('_p30_tatrisitAutoForm'+cdtipsit)
+                                            .down('[fieldLabel=MARCA]')
+                                    );
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+            }
+            //marca
+            
+            //modelo
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var modeloCmp=_fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]');
+                debug('@CUSTOM modelo:',modeloCmp,'.');
+                modeloCmp.anidado = true;
+                modeloCmp.heredar = function(remoto,callback)
+                {
+                    var record      = _p30_selectedRecord;
+                    var cdtipsit    = record.get('cdtipsit');
+                    var me          = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]');
+                    var submarcaVal = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUBMARCA]').getValue();
+                    if(!Ext.isEmpty(submarcaVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params    :
+                            {
+                                'params.cdtipsit' : cdtipsit
+                                ,'params.idPadre' : submarcaVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback
+                                    (
+                                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel=MODELO]')
+                                    );
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+                
+                modeloCmp.on(
+                {
+                    select : function(me)
+                    {
+                        var record   = _p30_selectedRecord;
+                        var cdtipsit = record.get('cdtipsit');
+                        
+                        var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=TIPO VALOR]').name;
+                        var tipovalorVal  = record.get(tipovalorName)-0;
+                        var anioAc        = new Date().getFullYear()-0;
+                        var modeloVal     = me.getValue()-0;
+                        
+                        debug('tipovalorVal:' , tipovalorVal);
+                        debug('modeloVal:'    , modeloVal);
+                        
+                        if(tipovalorVal==3&&anioAc-modeloVal>1)
+                        {
+                            mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
+                            me.setValue('');
+                        }
+                    }
+                });
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUBMARCA]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel=MODELO]').heredar(true);
+                    }
+                });
+            }
+            //modelo
+            
+            //version
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var versionCmp=_fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VERSI]');
+                debug('@CUSTOM version:',versionCmp,'.');
+                versionCmp.anidado = true;
+                versionCmp.heredar = function(remoto,callback)
+                {
+                    var record      = _p30_selectedRecord;
+                    var cdtipsit    = record.get('cdtipsit');
+                    var me          = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VERSI]');
+                    var submarcaVal = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUBMARCA]').getValue();
+                    var modeloVal   = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').getValue();
+                    if(!Ext.isEmpty(submarcaVal)
+                        &&!Ext.isEmpty(modeloVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params    :
+                            {
+                                'params.cdtipsit'  : cdtipsit
+                                ,'params.submarca' : submarcaVal
+                                ,'params.modelo'   : modeloVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback
+                                    (
+                                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel*=VERSI]')
+                                    );
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUBMARCA]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=VERSI]').heredar(true);
+                    }
+                });
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=VERSI]').heredar(true);
+                    }
+                });
+            }
+            //version
+            
+            //clave
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var claveCmp=_fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=CLAVE]');
+                debug('@CUSTOM clave:',claveCmp,'.');
+                
+                claveCmp.getStore().getProxy().extraParams['params.cdtipsit']=cdtipsit;
+                
+                claveCmp.anidado = true;
+                claveCmp.heredar = function(remoto,callback)
+                {
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var me         = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=CLAVE]');
+                    var modeloVal  = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').getValue();
+                    var versionVal = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VERSI]').getValue();
+                    if(!Ext.isEmpty(modeloVal)
+                        &&!Ext.isEmpty(versionVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params    :
+                            {
+                                'params.cadena'    : versionVal
+                                ,'params.cdtipsit' : cdtipsit
+                            }
+                            ,callback : function()
+                            {
+                                var record      = _p30_selectedRecord;
+                                var cdtipsit    = record.get('cdtipsit');
+                                var form        = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                                var me          = form.down('[fieldLabel*=CLAVE]');
+                                var marcaCmp    = form.down('[fieldLabel=MARCA]');
+                                var submarcaCmp = form.down('[fieldLabel=SUBMARCA]');
+                                var modeloCmp   = form.down('[fieldLabel=MODELO]');
+                                var versionCmp  = form.down('[fieldLabel*=VERSI]');
+                                
+                                var marcaDisplay    = marcaCmp.findRecord('key'    , marcaCmp.getValue()).get('value');
+                                var submarcaDisplay = submarcaCmp.findRecord('key' , submarcaCmp.getValue()).get('value');
+                                var modeloDisplay   = modeloCmp.findRecord('key'   , modeloCmp.getValue()).get('value');
+                                var versionDisplay  = versionCmp.findRecord('key'  , versionCmp.getValue()).get('value');
+                                
+                                var meDisplay = versionCmp.getValue()+' - '+marcaDisplay+' - '+submarcaDisplay+' - '
+                                    +modeloDisplay+' - '+versionDisplay;
+                                debug('meDisplay:',meDisplay);
+                                me.setValue(me.findRecordByDisplay(meDisplay));
+                                
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback(me);
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=CLAVE]').heredar(true);
+                    }
+                });
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VERSI]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=CLAVE]').heredar(true);
+                    }
+                });
+            }
+            //clave
+            
+            //valor
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var valorCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VALOR VEH]');
+                debug('@CUSTOM valor:',valorCmp);
+                valorCmp.heredar = function(conservar)
+                {
+                    debug('>recuperar conservar:',conservar,'.');
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var form       = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                    var me         = form.down('[fieldLabel*=VALOR VEH]');
+                    var versionVal = form.down('[fieldLabel*=VERSI]').getValue();
+                    var modeloVal  = form.down('[fieldLabel=MODELO]').getValue();
+                    
+                    var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=TIPO VALOR]').name;
+                    var tipovalorVal  = record.get(tipovalorName);
+                    
+                    debug('versionVal:'    , versionVal);
+                    debug('modeloVal:'     , modeloVal);
+                    debug('tipovalorName:' , tipovalorName);
+                    debug('tipovalorVal:'  , tipovalorVal);
+                    
+                    if(!Ext.isEmpty(versionVal)&&!Ext.isEmpty(modeloVal)&&!Ext.isEmpty(tipovalorVal))
+                    {
+                        me.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p30_urlCargarSumaAseguradaRamo5
+                            ,params  :
+                            {
+                                'smap1.cdtipsit'  : cdtipsit
+                                ,'smap1.clave'    : versionVal
+                                ,'smap1.modelo'   : modeloVal
+                                ,'smap1.cdsisrol' : _p30_smap1.cdsisrol
+                            }
+                            ,success : function(response)
+                            {
+                                me.setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### cargar suma asegurada:',json);
+                                if(json.exito)
+                                {
+                                    if(!Ext.isEmpty(json.respuesta))
+                                    {
+                                        mensajeWarning(json.respuesta);
+                                    }
+                                    if(!conservar||Ext.isEmpty(me.getValue()))
+                                    {
+                                        me.setValue(json.smap1.sumaseg);
+                                    }
+                                    me.valorCargado=json.smap1.sumaseg;
+                                    
+                                    me.setLoading(true);
+                                    Ext.Ajax.request(
+                                    {
+                                        url      : _p30_urlCargarParametros
+                                        ,params  :
+                                        {
+                                            'smap1.parametro' : 'RANGO_VALOR'
+                                            ,'smap1.cdramo'   : _p30_smap1.cdramo
+                                            ,'smap1.cdtipsit' : cdtipsit
+                                            ,'smap1.clave4'   : tipovalorVal
+                                            ,'smap1.clave5'   : _p30_smap1.cdsisrol
+                                        }
+                                        ,success : function(response)
+                                        {
+                                            me.setLoading(false);
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### obtener rango valor:',json);
+                                            if(json.exito)
+                                            {
+                                                var valormin = me.valorCargado-0*(1+(json.smap1.P1VALOR-0));
+                                                var valormax = me.valorCargado-0*(1+(json.smap1.P2VALOR-0));
+                                                me.setMinValue(valormin);
+                                                me.setMaxValue(valormax);
+                                                me.isValid();
+                                                debug('valor:',me.valorCargado);
+                                                debug('valormin:',valormin);
+                                                debug('valormax:',valormax);
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.respuesta);
+                                            }
+                                        }
+                                        ,failure : function()
+                                        {
+                                            me.setLoading(false);
+                                            errorComunicacion();
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                me.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                };
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=VALOR VEH]').heredar(false);
+                    }
+                });
+                
+                _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VERSI]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=VALOR VEH]').heredar(false);
+                    }
+                });
+            }
+            //valor
+            
+            //seleccionar auto
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var form = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                debug('@CUSTOM form buscarAutoDesc:',form);
+                
+                form.buscarAutoDesc = function()
+                {
+                    debug('>buscarAutoDesc');
+                    
+                    var record   = _p30_selectedRecord;
+                    var cdtipsit = record.get('cdtipsit');
+                    var form     = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                    
+                    var claveCmp    = form.down('[fieldLabel*=CLAVE]');
+                    var marcaCmp    = form.down('[fieldLabel=MARCA]');
+                    var submarcaCmp = form.down('[fieldLabel=SUBMARCA]');
+                    var modeloCmp   = form.down('[fieldLabel=MODELO]');
+                    var versionCmp  = form.down('[fieldLabel*=VERSI]');
+                    debug('form:'        , form);
+                    debug('claveCmp:'    , claveCmp);
+                    debug('marcaCmp:'    , marcaCmp);
+                    debug('submarcaCmp:' , submarcaCmp);
+                    debug('modeloCmp:'   , modeloCmp);
+                    debug('versionCmp:'  , versionCmp);
+                    
+                    var claveVal = claveCmp.getValue();
+                    if(!Ext.isEmpty(claveVal))
+                    {
+                        var record=claveCmp.findRecord('key',claveVal);
+                        if(record!=false)
+                        {
+                            var claveDisplay      = record.get('value');
+                            var claveDisplaySplit = claveDisplay.split(' - ');
+                            var marcaDisplay      = claveDisplaySplit[1];
+                            var submarcaDisplay   = claveDisplaySplit[2];
+                            var modeloDisplay     = claveDisplaySplit[3];
+                            var versionDisplay    = claveDisplaySplit[4];
+                            
+                            var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=TIPO VALOR]').name;
+                            var tipovalorVal  = _p30_selectedRecord.get(tipovalorName)-0;
+                            var anioAc        = new Date().getFullYear()-0;
+                            debug('tipovalorVal:'  , tipovalorVal);
+                            debug('modeloDisplay:' , modeloDisplay);
+                            
+                            if(tipovalorVal==3&&anioAc-(modeloDisplay-0)>1)
+                            {
+                                mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
+                            }
+                            else
+                            {
+                                form.setLoading(true);
+                            
+                                marcaCmp.setValue(marcaCmp.findRecordByDisplay(marcaDisplay));
+                            
+                                submarcaCmp.auxDisplay = submarcaDisplay;
+                                modeloCmp.auxDisplay   = modeloDisplay;
+                                versionCmp.auxDisplay  = versionDisplay;
+                            
+                                submarcaCmp.heredar(true,function(cmp)
+                                {
+                                    cmp.setValue(cmp.findRecordByDisplay(cmp.auxDisplay));
+                                    _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit'))
+                                        .down('[fieldLabel=MODELO]').heredar(true,function(cmp)
+                                    {
+                                        cmp.setValue(cmp.auxDisplay);
+                                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel*=VERSI]').heredar(true,function(cmp)
+                                        {
+                                            cmp.setValue(cmp.findRecordByDisplay(cmp.auxDisplay));
+                                            _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).setLoading(false);
+                                            _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit'))
+                                                .down('[fieldLabel*=VALOR VEH]').heredar(false);
+                                        });
+                                    });
+                                });
+                            }
+                        }
+                    }
+                };
+                
+                form.down('[fieldLabel*=CLAVE]').on(
+                {
+                    select : function()
+                    {
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).buscarAutoDesc();
+                    }
+                });
+            }
+            //seleccionar auto
+            
+            //tipo valor
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var tipovalorCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO VALOR]');
+                debug('@CUSTOM tipovalor:',tipovalorCmp);
+                tipovalorCmp.on(
+                {
+                    select : function(me)
+                    {
+                        var record   = _p30_selectedRecord;
+                        var cdtipsit = record.get('cdtipsit');
+                        var form     = _p30_tatrisitParcialForms[cdtipsit];
+                        var meVal    = me.getValue()-0;
+                        
+                        var modeloName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=MODELO]').name;
+                        var modeloVal  = record.get(modeloName);
+                        if(!Ext.isEmpty(modeloVal))
+                        {
+                            var valorName  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=VALOR VEH]').name;
+                            var valorVal   = record.get(valorName);
+                            var valorReset = false;
+                            if(!Ext.isEmpty(valorVal))
+                            {
+                                valorReset=true;
+                                record.set(valorName,'');
+                            }
+                            
+                            var anioAc      = new Date().getFullYear()-0;
+                            var modeloReset = false;
+                            
+                            debug('meVal'     , meVal);
+                            debug('anioAc'    , anioAc);
+                            debug('modeloVal' , modeloVal);
+                            
+                            if(meVal==3&&anioAc-(modeloVal-0)>1)
+                            {
+                                modeloReset=true;
+                                record.set(modeloName , '');
+                                record.set('cdplan'   , '');
+                                //form.down('[name=cdplan]').heredar();
+                            }
+                            
+                            if(valorReset&&modeloReset)
+                            {
+                                mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o '
+                                    +'actual o anterior, favor de actualizar el modelo y el valor del veh&iacute;culo');
+                            }
+                            else if(valorReset)
+                            {
+                                mensajeWarning('Debe actualizar el valor del veh&iacute;culo');
+                            }
+                            else if(modeloReset)
+                            {
+                                mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o '
+                                    +'actual o anterior, favor de actualizar el modelo');
+                            }
+                        }
+                    }
+                });
+            }
+            //tipo valor
+        }
+        //herencia situaciones
     }
     //ramo 5
-	
-	////// custom //////
-	
-	////// loaders //////
-	////// loaders //////
+    
+    ////// custom //////
+    
+    ////// loaders //////
+    ////// loaders //////
 });
 
 ////// funciones //////
@@ -1492,7 +1911,7 @@ function _p30_calculaVigencia()
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
     
-    var itemVigencia=_fieldByLabel('VIGENCIA');
+    var itemVigencia=_fieldByLabel('VIGENCIA',_fieldById('_p30_form'));
     itemVigencia.hide();
     
     if(feini.isValid()&&fefin.isValid())
@@ -1541,15 +1960,25 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
 function _p30_agregarAuto()
 {
     debug('>_p30_agregarAuto');
-    if(!Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue()))
+    
+    var valido=true;
+    if(valido&&_p30_smap1.cdramo+'x'=='5x')
     {
-        _p30_store.add(new _p30_modelo());
+        valido=!Ext.isEmpty(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue());
+        if(!valido)
+        {
+            mensajeWarning('Seleccione el negocio');
+        }
+    }
+    
+    if(valido)
+    {
+        var record=new _p30_modelo();
+        _p30_store.add(record);
         _p30_numerarIncisos();
+        _fieldById('_p30_grid').getSelectionModel().select(record);
     }
-    else
-    {
-        mensajeWarning('Seleccione el negocio');
-    }
+    
     debug('<_p30_agregarAuto');
 }
 
@@ -1593,7 +2022,6 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
             record.set('personalizado','si');
             debug('record:',record);
             panel.hide();
-            _fieldById('_p30_grid').editingPlugin.cancelEdit();
         }
         centrarVentanaInterna(panel.show());
     }
@@ -1605,344 +2033,8 @@ function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
     debug('>_p30_gridBotonEliminarClic:',record);
     _p30_store.remove(record);
     _p30_numerarIncisos();
+    _p30_semaforoBorrar=true;
     debug('<_p30_gridBotonEliminarClic');
-}
-
-function _p30_gridBotonAutoClic(grid,row,col,item,e,record)
-{
-    debug('>_p30_gridBotonAutoClic:',record);
-    var cdtipsit = record.get('cdtipsit');
-    
-    _p30_selectedRecord = record;
-    debug('_p30_selectedRecord:',_p30_selectedRecord);
-    
-    var valido = !Ext.isEmpty(cdtipsit);
-    if(!valido)
-    {
-        mensajeWarning('Debe seleccionar el tipo de veh&iacute;culo');
-    }
-    
-    if(valido)
-    {
-        valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO').getValue());
-        if(!valido)
-        {
-            mensajeWarning('Seleccione el negocio');
-        }
-    }
-    
-    if(valido)
-    {
-        _p30_selectAuto(record.data,function(datos)
-        {
-            grid.editingPlugin.cancelEdit();
-            debug('datos:',datos);
-            for(var i in datos)
-            {
-                _p30_selectedRecord.set(i,datos[i]);
-            }
-            var planVal = _p30_selectedRecord.get('cdplan');
-            var planCmp = Ext.ComponentQuery.query('[id*=_editor_][name=cdplan]')[0];
-            planCmp.getStore().load({
-                params :
-                {
-                    'params.cdtipsit' : _p30_selectedRecord.get('cdtipsit')
-                    ,'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
-                    ,'params.modelo'  : _p30_selectedRecord.get(_fieldById('_p30_grid').down('[text=MODELO]').dataIndex)
-                    ,'params.clavegs' : _p30_selectedRecord.get(_fieldById('_p30_grid').down('[text*=CLAVE]').dataIndex)
-                }
-                ,callback : function(records)
-                {
-                    var valido = false;
-                    for(var i in records)
-                    {
-                        var rplan = records[i];
-                        if(rplan.get('key')==planVal)
-                        {
-                            valido = true;
-                        }
-                    }
-                    if(!valido)
-                    {
-                        _p30_selectedRecord.set('cdplan','');
-                        mensajeWarning('Debe actualizar el paquete para el inciso');
-                    }
-                }
-            });
-            
-            debug('_p30_selectedRecord:',_p30_selectedRecord);
-        });
-    }
-    
-    debug('<_p30_gridBotonAutoClic');
-}
-
-function _p30_selectAuto(datos,callback)
-{
-    debug('>_p30_selectAuto:',datos);
-    _p30_windowAuto.miCallback=callback;
-    centrarVentanaInterna(_p30_windowAuto.show());
-    var nameModelo = _fieldByLabel('MODELO',_p30_windowAuto).name;
-    
-    var formItems = Ext.ComponentQuery.query('[fieldLabel]',_p30_windowAuto.down('form'));
-    for(var i=0;i<formItems.length;i++)
-    {
-        var item=formItems[i];
-        debug('item:',item);
-        if(!Ext.isEmpty(item)
-            &&!Ext.isEmpty(item.store)
-            &&!Ext.isEmpty(item.store.proxy)
-            &&!Ext.isEmpty(item.store.proxy.extraParams)
-            &&!Ext.isEmpty(item.store.proxy.extraParams['params.cdtipsit'])
-        )
-        {
-            item.store.proxy.extraParams['params.cdtipsit']=datos.cdtipsit;
-            debug('item.store.proxy.extraParams:',item.store.proxy.extraParams);
-        }
-    }
-    _fieldByLabel('MARCA',_p30_windowAuto).getStore().load(
-    {
-        params :
-        {
-            'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
-        }
-    });
-    
-    debug('datos[nameModelo]:',datos[nameModelo]);
-    if(Ext.isEmpty(datos[nameModelo]))
-    {
-        _fieldById('_p30_formAuto').getForm().reset();
-    }
-    else
-    {
-        var numBlurs  = 0;
-        for(var i=0;i<formItems.length;i++)
-        {
-            var item=formItems[i];
-            if(item.anidado == true)
-            {
-                var numBlursSeguidos = 1;
-                debug('contando blur:',item);
-                for(var j=i+1;j<formItems.length;j++)
-                {
-                    if(formItems[j].anidado == true)
-                    {
-                        numBlursSeguidos=numBlursSeguidos+1;
-                    }
-                }
-                if(numBlursSeguidos>numBlurs)
-                {
-                    numBlurs=numBlursSeguidos;
-                }
-            }
-        }
-        debug('numBlurs:',numBlurs);
-        var i      = 0;
-        var form   = _fieldById('_p30_formAuto');
-        var record = new _p30_modelo(datos);
-    
-        var renderiza=function()
-        {
-            debug('renderiza',i);
-            form.loadRecord(record);
-            if(i<numBlurs)
-            {
-                i=i+1;
-                for(var j=0;j<formItems.length;j++)
-                {
-                    var iItem  = formItems[j];
-                    var iItem2 = formItems[j+1];
-                    debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
-                    if(iItem2&&iItem2.anidado==true)
-                    {
-                        debug('tiene blur y lo hacemos heredar',formItems[j]);
-                        iItem2.heredar(true);
-                    }
-                }
-                setTimeout(renderiza,1000);
-            }
-            else
-            {
-                _p30_windowAuto.setLoading(false);
-                if(_p30_smap1.cdramo=='5')
-                {
-                    _p30_herenciaAscendente(function()
-                    {
-                        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
-                        if(record.get(valorName)+'x'!='x')
-                        {
-                            form.loadRecord(record);
-                        }
-                    });
-                }
-            }
-        }
-        _p30_windowAuto.setLoading(true);
-        renderiza();
-    }
-    debug('<_p30_selectAuto');
-}
-
-function _p30_herenciaDescendiente(record)
-{
-    var marca    = _fieldByLabel('MARCA'    , _p30_windowAuto);
-    var submarca = _fieldByLabel('SUBMARCA' , _p30_windowAuto);
-    var modelo   = _fieldByLabel('MODELO'   , _p30_windowAuto);
-    var version  = _fieldLikeLabel('VERSI'  , _p30_windowAuto);
-    debug('>_p30_herenciaDescendiente');
-    //var record = clave.findRecord('key',clave.getValue());
-    debug('record:',record);
-    var splitted=record.get('value').split(' - ');
-    debug('splitted:',splitted);
-    var clavev    = splitted[0];
-    var marcav    = splitted[1];
-    var submarcav = splitted[2];
-    var modelov   = splitted[3];
-    var versionv  = splitted[4];
-    
-    //modelo
-    var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
-    var tipovalorval  = _p30_selectedRecord.get(tipovalorName);
-    var anioAc        = new Date().getFullYear()-0;
-    var valido        = true;
-    if(tipovalorval-0==3&&anioAc-modelov>1)
-    {
-        mensajeWarning('Para valor de factura solo se permiten modelos del a&ntilde;o actual o anterior');
-        valido = false;
-    }
-    //modelo
-    
-    if(valido)
-    {
-        marca.setValue(marca.findRecord('value',marcav));
-        submarca.heredar(true,function()
-        {
-            submarca.setValue(submarca.findRecord('value',submarcav));
-            modelo.heredar(true,function()
-            {
-                modelo.setValue(modelo.findRecord('value',modelov));
-                version.getStore().load(
-                {
-                    params :
-                    {
-                        'params.submarca' : submarca.getValue()
-                        ,'params.modelo'  : modelo.getValue()
-                    }
-                    ,callback : function()
-                    {
-                        version.setValue(version.findRecord('value',versionv));
-                        _p30_cargarSumaAseguradaRamo5();
-                    }
-                });
-            });
-        });
-    }
-    
-    debug('<_p30_herenciaDescendiente');
-}
-
-function _p30_cargarSumaAseguradaRamo5(callback)
-{
-    debug('>_p30_cargarSumaAseguradaRamo5');
-    _p30_windowAuto.setLoading(true);
-    Ext.Ajax.request(
-    {
-        url      : _p30_urlCargarSumaAseguradaRamo5
-        ,params  :
-        {
-            'smap1.cdtipsit'  : _p30_selectedRecord.get('cdtipsit')
-            ,'smap1.clave'    : _fieldLikeLabel('VERSI',_p30_windowAuto).getValue()
-            ,'smap1.modelo'   : _fieldByLabel('MODELO',_p30_windowAuto).getValue()
-            ,'smap1.cdsisrol' : _p30_smap1.cdsisrol
-        }
-        ,success : function(response)
-        {
-            _p30_windowAuto.setLoading(false);
-            var json = Ext.decode(response.responseText);
-            debug('### cargar suma asegurada:',json);
-            if(json.exito)
-            {
-                if(!Ext.isEmpty(json.respuesta))
-                {
-                    mensajeWarning(json.respuesta);
-                }
-                var sumaseg = _fieldByName('parametros.pv_otvalor13',_p30_windowAuto);
-                sumaseg.setValue(json.smap1.sumaseg);
-                sumaseg.valorCargado=json.smap1.sumaseg;
-                _p30_cargarRangoValorRamo5(callback);
-            }
-            else
-            {
-                mensajeError(json.respuesta);
-            }           
-        }
-        ,failure : function()
-        {
-            _p30_windowAuto.setLoading(false);
-            errorComunicacion();
-        }
-    });
-    debug('<_p30_cargarSumaAseguradaRamo5');
-}
-
-function _p30_windowAutoAceptarClic(me)
-{
-    debug('>_p30_windowAutoAceptarClic');
-    var form   = _fieldById('_p30_formAuto');
-    var valido = form.isValid();
-    if(!valido)
-    {
-        datosIncompletos();
-    }
-    
-    if(valido)
-    {
-        _p30_windowAuto.hide();
-        _p30_windowAuto.miCallback(form.getValues());
-    }
-    
-    debug('<_p30_windowAutoAceptarClic');
-}
-
-function _p30_herenciaAscendente(callback)
-{
-    debug('>_p30_herenciaAscendente');
-    var clave      = _fieldLikeLabel('CLAVE'  , _p30_windowAuto);
-    var marca      = _fieldByLabel('MARCA'    , _p30_windowAuto);
-    var submarca   = _fieldByLabel('SUBMARCA' , _p30_windowAuto);
-    var modelo     = _fieldByLabel('MODELO'   , _p30_windowAuto);
-    var version    = _fieldLikeLabel('VERSI'  , _p30_windowAuto);
-    
-    var versionval = version.getValue();
-    
-    if(!Ext.isEmpty(versionval))
-    {
-        var versiondes = version.findRecord('key',versionval).get('value');
-        clave.getStore().load(
-        {
-            params :
-            {
-                'params.cadena' : versiondes
-            }
-            ,callback : function()
-            {
-                var valor = versionval
-                            +' - '
-                            +marca.findRecord('key',marca.getValue()).get('value')
-                            +' - '
-                            +submarca.findRecord('key',submarca.getValue()).get('value')
-                            +' - '
-                            +modelo.findRecord('key',modelo.getValue()).get('value')
-                            +' - '
-                            +version.findRecord('key',versionval).get('value');
-                debug('>valor:',valor);
-                clave.setValue(clave.findRecord('value',valor));
-                _p30_cargarSumaAseguradaRamo5(callback);
-            }
-        });
-    }
-    
-    debug('<_p30_herenciaAscendente');
 }
 
 function _p30_ramo5AgenteSelect(comp,records)
@@ -2006,78 +2098,15 @@ function _p30_ramo5AgenteSelect(comp,records)
     debug('<_p30_ramo5AgenteSelect');
 }
 
-function _p30_cargarRangoValorRamo5(callback)
-{
-    debug('>_p30_cargarRangoValorRamo5');
-    var tipovalorName = _fieldById('_p30_grid').down('[text=TIPO VALOR]').dataIndex;
-    debug('tipovalorName:',tipovalorName);
-    var valor         = _fieldLikeLabel('VALOR VEH',_p30_windowAuto);
-    debug('_p30_selectedRecord:',_p30_selectedRecord);
-    var tipovalorval = _p30_selectedRecord.get(tipovalorName);
-    var valorval     = valor.getValue();
-    var valorCargado = valor.valorCargado;
-    
-    var valido = !Ext.isEmpty(tipovalorval)&&!Ext.isEmpty(valorval)&&!Ext.isEmpty(valorCargado);
-    
-    if(valido)
-    {
-        _p30_windowAuto.setLoading(true);
-        Ext.Ajax.request(
-        {
-            url      : _p30_urlCargarParametros
-            ,params  :
-            {
-                'smap1.parametro' : 'RANGO_VALOR'
-                ,'smap1.cdramo'   : _p30_smap1.cdramo
-                ,'smap1.cdtipsit' : _p30_selectedRecord.get('cdtipsit')
-                ,'smap1.clave4'   : tipovalorval
-                ,'smap1.clave5'   : _p30_smap1.cdsisrol
-            }
-            ,success : function(response)
-            {
-                _p30_windowAuto.setLoading(false);
-                var json = Ext.decode(response.responseText);
-                debug('### obtener rango valor:',json);
-                if(json.exito)
-                {
-                    valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
-                    valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
-                    valor.setMinValue(valormin);
-                    valor.setMaxValue(valormax);
-                    valor.isValid();
-                    debug('valor:',valorCargado);
-                    debug('valormin:',valormin);
-                    debug('valormax:',valormax);
-                    
-                    if(!Ext.isEmpty(callback))
-                    {
-                        callback();
-                    }
-                }
-                else
-                {
-                    mensajeError(json.respuesta);
-                }
-            } 
-            ,failure : function()
-            {
-                _p30_windowAuto.setLoading(false);
-                errorComunicacion();
-            }
-        });
-    }
-    debug('<_p30_cargarRangoValorRamo5');
-}
-
 function _p30_ramo5ClienteChange()
 {
-    var combcl  = _fieldLikeLabel('CLIENTE NUEVO');
+    var combcl  = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form'));
     
     debug('>_p30_ramo5ClienteChange value:',combcl.getValue());
     
-    var nombre  = _fieldLikeLabel('NOMBRE CLIENTE');
-    var tipoper = _fieldByLabel('TIPO PERSONA');
-    var codpos  = _fieldLikeLabel('CP CIRCULACI');
+    var nombre  = _fieldLikeLabel('NOMBRE CLIENTE' , _fieldById('_p30_form'));
+    var tipoper = _fieldByLabel('TIPO PERSONA'     , _fieldById('_p30_form'));
+    var codpos  = _fieldLikeLabel('CP CIRCULACI'   , _fieldById('_p30_form'));
     
     //cliente nuevo
     if(combcl.getValue()=='S')
@@ -2155,7 +2184,7 @@ function _p30_ramo5ClienteChange()
                                             ,'map1.pv_cdunieco_i' : _p30_smap1.cdunieco
                                             ,'map1.pv_cdramo_i'   : _p30_smap1.cdramo
                                             ,'map1.pv_estado_i'   : 'W'
-                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
                                         }
                                     });
                                 }
@@ -2225,7 +2254,7 @@ function _p30_ramo5ClienteChange()
 
 function _p30_cotizar(sinTarificar)
 {
-    debug('>_p30_cotizar sinTarificar:',sinTarificar,'DUMMY');
+    debug('>_p30_cotizar sinTarificar:',sinTarificar,'.');
     
     var valido = _fieldById('_p30_form').isValid();
     if(!valido)
@@ -2276,19 +2305,35 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        var valorName = _fieldById('_p30_grid').down('[text*=VALOR VEH]').dataIndex;
-        var error     = '';
+        var error        = '';
+        var agregarError = function(cadena,nmsituac)
+        {
+            valido = false;
+            error  = error + cadena +' para el inciso '+nmsituac+'</br>';
+        };
         _p30_store.each(function(record)
         {
-            if(record.get(valorName)+'x'=='x')
+            var cdtipsit = record.get('cdtipsit');
+            var nmsituac = record.get('nmsituac');
+            
+            if(!Ext.isEmpty(cdtipsit))
             {
-                error  = error + 'Debe actualizar el valor del veh&iacute;culo '+(_p30_store.indexOf(record)+1)+'</br>';
-                valido = false;
+                if(Ext.isEmpty(record.get('cdplan')))
+                {
+                    agregarError('Debe seleccionar el paquete',nmsituac);
+                }
+                var itemsObliga = Ext.ComponentQuery.query('[swobligaflot=true]',_p30_tatrisitFullForms[cdtipsit]);
+                for(var i in itemsObliga)
+                {
+                    if(Ext.isEmpty(record.get(itemsObliga[i].getName())))
+                    {
+                        agregarError('Falta definir "'+itemsObliga[i].getFieldLabel()+'"',nmsituac);
+                    }
+                }
             }
-            if(record.get('cdplan')+'x'=='x')
+            else
             {
-                error  = error + 'Debe seleccionar el paquete para el inciso '+(_p30_store.indexOf(record)+1)+'</br>';
-                valido = false;
+                agregarError('Debe seleccionar el tipo de veh&iacute;culo',nmsituac);
             }
         });
         if(!valido)
@@ -2299,12 +2344,12 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        valido = _fieldByName('nmpoliza').sucio==false;
+        valido = _fieldByName('nmpoliza',_fieldById('_p30_form')).sucio==false;
         if(!valido)
         {
-            _fieldByName('nmpoliza').semaforo = true;
-            _fieldByName('nmpoliza').setValue('');
-            _fieldByName('nmpoliza').semaforo = false;
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = true;
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = false;
             valido = true;
         }
     }
@@ -2394,13 +2439,13 @@ function _p30_cotizar(sinTarificar)
                 cdunieco     : _p30_smap1.cdunieco
                 ,cdramo      : _p30_smap1.cdramo
                 ,estado      : 'W'
-                ,nmpoliza    : _fieldByName('nmpoliza').getValue()
+                ,nmpoliza    : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
                 ,cdtipsit    : _p30_smap1.cdtipsit
                 ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
                 ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
                 ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-                ,cdagente    : _fieldByLabel('AGENTE').getValue()
+                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                 ,notarificar : sinTarificar ? 'si' : ''
                 ,tipoflot    : _p30_smap1.tipoflot
             }
@@ -2442,9 +2487,9 @@ function _p30_cotizar(sinTarificar)
                 debug('### cotizar:',json);
                 if(json.exito)
                 {
-                    _fieldByName('nmpoliza').semaforo=true;
-                    _fieldByName('nmpoliza').setValue(json.smap1.nmpoliza);
-                    _fieldByName('nmpoliza').semaforo=false;
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
                     
                     var itemsDescuento =
                     [
@@ -2710,8 +2755,8 @@ function _p30_cotizar(sinTarificar)
                             {
                                 'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
                                 ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
-                                ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
-                                ,'smap1.negocio'      : _fieldByLabel('NEGOCIO').getValue()
+                                ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                                ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
                             }
                             ,success : function(response)
                             {
@@ -2781,9 +2826,9 @@ function _p30_nmpolizaChange(me)
 function _p30_limpiar()
 {
     debug('>_p30_limpiar');
-    _fieldByName('nmpoliza').semaforo=true;
+    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
     _fieldById('_p30_form').getForm().reset();
-    _fieldByName('nmpoliza').semaforo=false;
+    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
     
     _p30_store.removeAll();
     
@@ -2795,11 +2840,11 @@ function _p30_limpiar()
     if(_p30_smap1.cdramo+'x'=='5x')
     {
         _p30_calculaVigencia();
-        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');    
+        _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form')).setValue('S');    
         
         if(_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
         {
-            var agente = _fieldByLabel('AGENTE');
+            var agente = _fieldByLabel('AGENTE',_fieldById('_p30_form'));
             agente.setValue(_p30_smap1.cdagente);
             agente.setReadOnly(true);
             _p30_ramo5AgenteSelect(agente,_p30_smap1.cdagente);
@@ -2818,7 +2863,7 @@ function _p30_cargarClic()
     try
     {
         ck='Validando folio';
-        var nmpoliza = _fieldByName('nmpoliza').getValue();
+        var nmpoliza = _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue();
         checkEmpty(nmpoliza,'Introduce un n&uacute;mero v&aacute;lido');
         
         ck='Invocando servicio de recuperacion de cotizacion';
@@ -2847,14 +2892,14 @@ function _p30_cargarClic()
                         _p30_limpiar();
                         if(maestra)
                         {
-                            _fieldByName('nmpoliza').setValue('');
+                            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
                             mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.smap1.NMPOLIZA);
                         }
                         else
                         {
-                            _fieldByName('nmpoliza').semaforo=true;
-                            _fieldByName('nmpoliza').setValue(nmpoliza);
-                            _fieldByName('nmpoliza').semaforo=false;
+                            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
+                            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(nmpoliza);
+                            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
                         }
                         var datosGenerales=new _p30_modelo(json.smap1);
                         if(_p30_smap1.cdramo=='5')
@@ -2880,7 +2925,7 @@ function _p30_cargarClic()
                                 
                                 debug('_p30_recordClienteRecuperado:',_p30_recordClienteRecuperado);
                                 
-                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
+                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form'));
                                 combcl.semaforo = true;
                                 combcl.setValue('N');
                                 combcl.semaforo = false;
@@ -3019,7 +3064,7 @@ function _p30_bloquear(b)
     else
     {
         try {
-            _fieldByName('nmpoliza').focus();
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).focus();
         } catch(e) {
             debug(e);
         }
@@ -3027,7 +3072,7 @@ function _p30_bloquear(b)
     
     if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol=='EJECUTIVOCUENTA')
     {
-        var agente = _fieldByLabel('AGENTE');
+        var agente = _fieldByLabel('AGENTE',_fieldById('_p30_form'));
         agente.setValue(_p30_smap1.cdagente);
         agente.setReadOnly(true);
         _p30_ramo5AgenteSelect(agente,_p30_smap1.cdagente);
@@ -3040,7 +3085,7 @@ function _p30_clonar()
     debug('>_p30_clonar');
     _fieldById('_p30_form').formOculto.getForm().reset();
     _p30_editar();
-    _fieldByName('nmpoliza').setValue('');
+    _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
     debug('<_p30_clonar');
 }
 
@@ -3066,7 +3111,7 @@ function _p30_detalles()
             ,'smap1.cdunieco'     : _p30_smap1.cdunieco
             ,'smap1.cdramo'       : _p30_smap1.cdramo
             ,'smap1.estado'       : 'W'
-            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza').getValue()
+            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
             ,'smap1.cdperpag'     : _p30_selectedTarifa.get('CDPERPAG')
         }
         ,success : function(response)
@@ -3204,7 +3249,7 @@ function _p30_coberturas()
             ,'smap1.cdunieco'     : _p30_smap1.cdunieco
             ,'smap1.cdramo'       : _p30_smap1.cdramo
             ,'smap1.estado'       : 'W'
-            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza').getValue()
+            ,'smap1.nmpoliza'     : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
             ,'smap1.cdperpag'     : _p30_selectedTarifa.get('CDPERPAG')
         }
         ,success : function(response)
@@ -3310,7 +3355,7 @@ function _p30_comprar()
         url      : _p30_urlComprar
         ,params  :
         {
-            comprarNmpoliza        : _fieldByName('nmpoliza').getValue()
+            comprarNmpoliza        : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
             ,comprarCdplan         : '*'
             ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
             ,comprarCdramo         : _p30_smap1.cdramo
@@ -3322,7 +3367,7 @@ function _p30_comprar()
             ,'smap1.ntramite'      : _p30_smap1.ntramite
             ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
             ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
-            ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
+            ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
             ,'smap1.flotilla'      : 'si'
         }
         ,success : function(response,opts)
@@ -3352,7 +3397,7 @@ function _p30_comprar()
                                ,'smap1.cdramo'   : _p30_smap1.cdramo
                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
                                ,'smap1.estado'   : 'W'
-                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
+                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
                                ,'smap1.ntramite' : json.smap1.ntramite
                                ,'smap1.swexiper' : swExiper
                                ,'smap1.tipoflot' : _p30_smap1.tipoflot
@@ -3381,6 +3426,254 @@ function _p30_numerarIncisos()
     {
         record.set('nmsituac',i++);
     });
+}
+
+function _p30_editarAuto()
+{
+    debug('>_p30_editarAuto');
+    var record = _p30_selectedRecord;
+    debug('_p30_editarAuto:',record.data);
+    if(Ext.isEmpty(record.get('cdtipsit')))
+    {
+        _p30_pedirCdtipsit();
+    }
+    else
+    {
+        for(var i in _p30_situaciones)
+        {
+            _fieldById('_p30_tatrisitParcialForm'+_p30_situaciones[i]).hide();
+        }
+        if(!_p30_semaforoBorrar)
+        {
+            var cdtipsit = record.get('cdtipsit');
+            var form     = _fieldById('_p30_tatrisitParcialForm'+cdtipsit);
+            form.show();
+            var combos=Ext.ComponentQuery.query('combo[heredar]',form);
+            debug('combos anidados:',combos);
+            for(var i in combos)
+            {
+                combos[i].forceSelection=false;
+            }
+            form.loadRecord(record);
+            heredarPanel(form,true);
+            form.items.items[0].focus();
+        }
+        else
+        {
+            _p30_semaforoBorrar=false;
+        }
+    }
+}
+
+function _p30_pedirCdtipsit()
+{
+    debug('>_p30_pedirCdtipsit');
+    _p30_editorCdtipsit.reset();
+    centrarVentanaInterna(_p30_ventanaCdtipsit.show());
+}
+
+function _p30_editarAutoAceptar(bot,callback)
+{
+    debug('>_p30_editarAutoAceptar');
+    var form   = bot.up('form');
+    var record = _p30_selectedRecord;
+    
+    var valido=true;
+    
+    if(valido)
+    {
+        valido=form.isValid();
+        if(!valido)
+        {
+            datosIncompletos();
+        }
+    }
+    
+    if(valido)
+    {
+        var values=form.getValues();
+        for(var prop in values)
+        {
+            record.set(prop,values[prop]);
+        }
+        _fieldById('_p30_grid').getSelectionModel().deselectAll();
+        
+        if(!Ext.isEmpty(callback))
+        {
+            callback();
+        }
+    }
+    debug('<_p30_editarAutoAceptar');
+}
+
+function _p30_renderer(record,mapeo)
+{
+    debug('>_p30_renderer',mapeo,record.data);
+    
+    var label='-situacion-';
+    
+    if(!Ext.isEmpty(record.get('cdtipsit')))
+    {
+        label='N/A';
+        
+        var cdtipsit = record.get('cdtipsit');
+        var mapeos   = mapeo.split('#');
+        for(var i in mapeos)
+        {
+            var mapeoIte  = mapeos[i];
+            var cdtipsits = mapeoIte.split('|')[0];
+            
+            if((','+cdtipsits+',').lastIndexOf(','+cdtipsit+',')!=-1)//mapeo correcto
+            {
+                var name      = mapeoIte.split('|')[1];
+                if(!isNaN(name))
+                {
+                    name='parametros.pv_otvalor'+(('x00'+name).slice(-2));
+                }
+                var origen = mapeoIte.split('|')[2];
+                var valor  = record.get(name);
+                debug('name:'   , name   , '.');
+                debug('origen:' , origen , '.');
+                debug('valor:'  , valor  , '.');
+                
+                label='-vacio-';
+                if(!Ext.isEmpty(valor))
+                {
+                    if(origen+'x'=='valorx')
+                    {
+                        label=valor;
+                    }
+                    else if(origen+'x'=='atributox')
+                    {
+                        label='-atributo-';
+                        var store=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[name='+name+']').getStore();
+                        if(Ext.isEmpty(store))
+                        {
+                            debugError('No hay store de atributo:',cdtipsit,name,'.');
+                            mensajeError('El atributo mapeado no contiene lista de valores');
+                        }
+                        else
+                        {
+                            var index = store.find('key',valor);
+                            if(index==-1)
+                            {
+                                label='No encontrado...';
+                            }
+                            else
+                            {
+                                label=store.getAt(index).get('value');
+                            }
+                        }
+                    }
+                    else
+                    {
+                        label='-sin store-';
+                        var store=Ext.getStore(origen);
+                        if(Ext.isEmpty(store))
+                        {
+                            debugError('No hay store:',origen);
+                            mensajeError('No se encuentra la colecci&oacute;n con id "'+origen+'"');
+                        }
+                        if(!Ext.isEmpty(store)&&store.cargado)
+                        {
+                            var index = store.find('key',valor);
+                            if(index==-1)
+                            {
+                                label='No encontrado...';
+                            }
+                            else
+                            {
+                                label=store.getAt(index).get('value');
+                            }
+                        }
+                        else
+                        {
+                            label = 'Cargando...';
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return label;
+}
+
+function _p30_editarAutoBuscar()
+{
+    debug('>_p30_editarAutoBuscar');
+    var cdtipsit = _p30_selectedRecord.get('cdtipsit');
+    var window   = _p30_tatrisitAutoWindows[cdtipsit];
+    var form     = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+    var record   = _p30_selectedRecord;
+    var combos   = Ext.ComponentQuery.query('combo[heredar]',form);
+    debug('combos con herencia:',combos);
+    for(var i in combos)
+    {
+        combos[i].forceSelection=false;
+    }
+    form.loadRecord(record);
+    heredarPanel(form,true);
+    form.micallback = function(me)
+    {
+        var record   = _p30_selectedRecord;
+        var cdtipsit = record.get('cdtipsit');
+        var data     = me.getValues();
+        for(var prop in data)
+        {
+            record.set(prop,data[prop]);
+        }
+        
+        if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+        {
+            var planVal = record.get('cdplan');
+            if(!Ext.isEmpty(planVal))
+            {
+                var planCmp=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
+                planCmp.heredar(true,function(planCmp)
+                {
+                    var valido = false;
+                    planCmp.getStore().each(function(plan)
+                    {
+                        if(plan.get('key')==planVal)
+                        {
+                            valido = true;
+                        }
+                    });
+                    if(!valido)
+                    {
+                        record.set('cdplan','');
+                        mensajeWarning('Debe actualizar el paquete para el inciso');
+                        _fieldById('_p30_grid').getSelectionModel().select(record);
+                    }
+                });
+            }
+        }
+        
+        me.up('window').hide();
+    };
+    centrarVentanaInterna(window.show());
+    debug('<_p30_editarAutoBuscar');
+}
+
+function _p30_tatrisitWindowAutoAceptarClic(bot)
+{
+    var form = bot.up('form');
+    debug('>_p30_tatrisitWindowAutoAceptarClic:',form);
+    
+    var ck='Validando registro';
+    try
+    {
+        if(!form.isValid())
+        {
+            throw 'Favor de verificar los datos';
+        }
+        
+        form.micallback(form);
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
 }
 ////// funciones //////
 </script>

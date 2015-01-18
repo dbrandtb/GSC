@@ -724,4 +724,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public List<Map<String,String>>cargarTiposSituacionPorRamo(String cdramo)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo" , cdramo);
+    	Utilerias.debugPrecedure(logger, "PKG_CONSULTA.P_OBTIENE_SITUACION", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorRamo(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugPrecedure(logger, "PKG_CONSULTA.P_OBTIENE_SITUACION", params, lista);
+    	return lista;
+    }
+    
+    protected class CargarTiposSituacionPorRamo extends StoredProcedure
+    {
+    	protected CargarTiposSituacionPorRamo(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_OBTIENE_SITUACION");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            String[] cols=new String[]{"CDTIPSIT","DSTIPSIT"};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
