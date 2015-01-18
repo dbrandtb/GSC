@@ -277,15 +277,23 @@ function mensajeCorrecto(titulo,mensaje,funcion)
  * Busca todos los combos anidados que tengan la funcion heredar() y los carga
  * @param formPanel
  */
-function heredarPanel(formPanel)
+function heredarPanel(formPanel,ponerForceSelection)
 {
-	debug('>heredarPanel:',formPanel.items.items);
-	for(var i=0;i<formPanel.items.items.length;i++)
+	var cmps = Ext.ComponentQuery.query('[heredar]',formPanel);
+	debug('>heredarPanel:',cmps,'.');
+	for(var i in cmps)
 	{
-		if(formPanel.items.items[i].heredar)
+	    if(!Ext.isEmpty(ponerForceSelection)&&ponerForceSelection==true)
+	    {
+	        cmps[i].heredar(true,function(comp)
+			{
+			    comp.forceSelection=true;
+			    debug('forceSelection de:',comp.getFieldLabel());
+			});
+		}
+		else
 		{
-			debug('heredarPanel>heredar');
-			formPanel.items.items[i].heredar(true);
+		    formPanel.items.items[i].heredar(true);
 		}
 	}
 	debug('<heredarPanel');
@@ -384,6 +392,7 @@ function _fieldById(id)
     var arr = Ext.ComponentQuery.query('#'+id);
     if(arr.length==0)
     {
+        debugError('No se encuentra el campo con id "'+id+'"');
         mensajeError('No se encuentra el campo con id "'+id+'"');
     }
     else
