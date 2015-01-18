@@ -90,4 +90,6 @@ public interface ConsultasDAO
 			,String nmsuplem
 			,String nmsituac
 			,String rolesPipes)throws Exception;
+	
+	public List<Map<String,String>>cargarTiposSituacionPorRamo(String cdramo)throws Exception;
 }

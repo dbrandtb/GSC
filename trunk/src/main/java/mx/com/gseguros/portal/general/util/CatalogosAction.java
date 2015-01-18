@@ -498,6 +498,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case RAMO_5_SUBMARCAS:
 				case RAMO_5_TIPOS_USO:
 				case RAMO_5_VERSIONES:
+				case RAMO_5_TIPOS_CARGA:
 					lista = catalogosManager.cargarTtapvat1(cat.getCdTabla());
 					break;
 				case RAMO_5_NEGOCIO_X_CDTIPSIT:

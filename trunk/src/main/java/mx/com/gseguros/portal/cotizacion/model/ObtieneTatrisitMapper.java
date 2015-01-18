@@ -152,6 +152,23 @@ public class ObtieneTatrisitMapper implements RowMapper
 			swCompFlot="N";
 		}
 		result.setSwCompFlot(swCompFlot);
+		
+		String sNmordenFlot = rs.getString("NMORDENFLOT");
+		int nmordenFlot     = 0;
+		if(StringUtils.isNotBlank(sNmordenFlot))
+		{
+			nmordenFlot=Integer.parseInt(sNmordenFlot);
+		}
+		result.setNmordenFlot(nmordenFlot);
+		
+		String sObligaFlot = rs.getString("SWOBLIGAFLOT");
+		boolean isObligaFlot = false;
+		if (StringUtils.isNotBlank(sObligaFlot)
+				&& sObligaFlot.equalsIgnoreCase(Constantes.SI))
+		{
+			isObligaFlot = true;
+		}
+		result.setObligatorioFlot(isObligaFlot);
 
 		return result;
 	}
