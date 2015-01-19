@@ -81,10 +81,11 @@ public class ComponenteVO
 	
 	private boolean menorCero = false;
 	
-	private boolean sinCargar       = false;
-	private boolean labelTop        = false;
-	private int     nmordenFlot     = 0;
-	private boolean obligatorioFlot = false;
+	private boolean sinCargar          = false;
+	private boolean labelTop           = false;
+	private int     nmordenFlot        = 0;
+	private boolean obligatorioFlot    = false;
+	private boolean obligatorioEmiFlot = false;
 	
 	public ComponenteVO(){}
 	
@@ -607,5 +608,13 @@ public class ComponenteVO
 
 	public void setObligatorioFlot(boolean obligatorioFlot) {
 		this.obligatorioFlot = obligatorioFlot;
+	}
+
+	public boolean isObligatorioEmiFlot() {
+		return obligatorioEmiFlot;
+	}
+
+	public void setObligatorioEmiFlot(boolean obligatorioEmiFlot) {
+		this.obligatorioEmiFlot = obligatorioEmiFlot;
 	}
 }

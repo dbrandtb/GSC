@@ -337,14 +337,15 @@ public class GeneradorCampos
         
         String value=comp.getValue();
         
-        item.add("id"           , compId);
-        item.add("cdatribu"     , cdatribu);
-        item.add("fieldLabel"   , fieldLabel);
-        item.add("label"        , fieldLabel);
-        item.add("allowBlank"   , !comp.isObligatorio());
-        item.add("name"         , name);
-        item.add("readOnly"     , comp.isSoloLectura());
-        item.add("swobligaflot" , comp.isObligatorioFlot());
+        item.add("id"              , compId);
+        item.add("cdatribu"        , cdatribu);
+        item.add("fieldLabel"      , fieldLabel);
+        item.add("label"           , fieldLabel);
+        item.add("allowBlank"      , !comp.isObligatorio());
+        item.add("name"            , name);
+        item.add("readOnly"        , comp.isSoloLectura());
+        item.add("swobligaflot"    , comp.isObligatorioFlot());
+        item.add("swobligaemiflot" , comp.isObligatorioEmiFlot());
         if(StringUtils.isNotBlank(value))
         {
         	item.add(Item.crear("value" , value).setQuotes(""));

@@ -6,20 +6,20 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';
-var _p31_urlCotizacionAutoFlotilla         = '<s:url namespace="/emision"    action="cotizacionAutoFlotilla"               />';
-var _p31_urlCargarDatosComplementarios     = '<s:url namespace="/emision"    action="cargarDatosComplementariosAutoInd"    />';
-var _p31_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    action="cargarRetroactividadSuplemento"       />';
-var _p31_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                   />';
-var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoFlotilla"   />';
-var _p31_urlRecotizar                      = '<s:url namespace="/emision"    action="recotizarAutoFlotilla"                />';
-var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
-var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
-var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
-var _p31_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
-var urlReintentarWS                        = '<s:url namespace="/"           action="reintentaWSautos"                     />';
-var _urlEnviarCorreo                       = '<s:url namespace="/general"    action="enviaCorreo"                          />';
-var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  action="obtieneCatalogo"                      />';
+var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"            />';
+var _p31_urlCotizacionAutoFlotilla         = '<s:url namespace="/emision"    action="cotizacionAutoFlotilla"             />';
+var _p31_urlCargarDatosComplementarios     = '<s:url namespace="/emision"    action="cargarDatosComplementariosAutoInd"  />';
+var _p31_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    action="cargarRetroactividadSuplemento"     />';
+var _p31_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                 />';
+var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoFlotilla" />';
+var _p31_urlRecotizar                      = '<s:url namespace="/emision"    action="recotizarAutoFlotilla"              />';
+var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                             />';
+var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"            />';
+var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                 />';
+var _p31_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"    action="recuperacionSimpleLista"            />';
+var urlReintentarWS                        = '<s:url namespace="/"           action="reintentaWSautos"                   />';
+var _urlEnviarCorreo                       = '<s:url namespace="/general"    action="enviaCorreo"                        />';
+var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  action="obtieneCatalogo"                    />';
 ////// urls //////
 
 ////// variables //////
@@ -30,14 +30,50 @@ var _p31_polizaAdicionalesItems = null;
 var _p22_parentCallback         = false;
 var _p31_incisoColumns          = null;
 var _p31_storeIncisos           = null;
-var _p31_storeVersionesRamo5    = null;
-var _p31_incisoColumnsConf      = null;
+var _p31_selectedRecord         = null;
 
 var _SWexiper = _p31_smap1.swexiper;
 var _paramsRetryWS;
 var _mensajeEmail;
-            
+
+var _p31_storeCdtipsit       = null;
+var _p31_storeVersionesRamo5 = null;
 ////// variables //////
+
+////// dinamicos //////
+var _p31_tatrisitFullForms    = [];
+var _p31_tatrisitParcialForms = [];
+<s:iterator value="imap">
+    <s:if test='%{key.substring(0,"tatrisit_full_items_".length()).equals("tatrisit_full_items_")}'>
+        _p31_tatrisitFullForms['<s:property value='%{key.substring("tatrisit_full_items_".length())}' />']=
+        Ext.create('Ext.form.Panel',
+        {
+            items : [ <s:property value="value" /> ]
+        });
+    </s:if>
+    <s:if test='%{key.substring(0,"tatrisit_parcial_items_".length()).equals("tatrisit_parcial_items_")}'>
+        _p31_tatrisitParcialForms['<s:property value='%{key.substring("tatrisit_parcial_items_".length())}' />']=
+        Ext.create('Ext.form.Panel',
+        {
+            itemId       : '_p31_tatrisitParcialForm<s:property value='%{key.substring("tatrisit_parcial_items_".length())}' />'
+            ,layout      : 'hbox'
+            ,autoScroll  : true
+            ,border      : 0
+            ,hidden      : true
+            ,items       : [ <s:property value="value" /> ]
+            ,buttonAlign : 'center'
+            ,buttons     :
+            [
+                {
+                    text     : 'Aceptar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                    ,handler : function(bot) { _p31_editarAutoAceptar(bot); }
+                }
+            ]
+        });
+    </s:if>
+</s:iterator>
+////// dinamicos //////
 
 Ext.onReady(function()
 {
@@ -115,9 +151,43 @@ Ext.onReady(function()
         model : '_p31_modelo'
     });
     
+    _p31_storeCdtipsit = Ext.create('Ext.data.Store',
+    {
+        model     : 'Generic'
+        ,storeId  : '_p31_storeCdtipsit'
+        ,cargado  : false
+        ,autoLoad : true
+        ,proxy    :
+        {
+            type    : 'ajax'
+            ,url    : _p31_urlCargarCatalogo
+            ,extraParams :
+            {
+                'catalogo'         : 'TIPSIT'
+                ,'params.idPadre'  : _p31_smap1.cdramo
+            }
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        }
+        ,listeners :
+        {
+            load : function(store,records)
+            {
+                this.cargado=true;
+                _fieldById('_p31_gridIncisos').getView().refresh();
+                _fieldById('_p31_panelStoreCdtipsit').destroy();
+                debug('### cdtipsit:',records);
+            }
+        }
+    });
+    
     _p31_storeVersionesRamo5 = Ext.create('Ext.data.Store',
     {
         model     : 'Generic'
+        ,storeId  : '_p31_storeVersionesRamo5'
         ,cargado  : false
         ,autoLoad : _p31_smap1.cdramo+'x'=='5x'
         ,proxy    :
@@ -185,28 +255,18 @@ Ext.onReady(function()
     _p31_incisoColumns =
     [
         {
-            dataIndex : 'nmsituac'
-            ,width    : 30
+            dataIndex     : 'nmsituac'
+            ,menuDisabled : true
+            ,sortable     : false
+            ,width        : 30
         }
     ];
-    _p31_incisoColumnsConf = [];
-    <s:if test='%{getImap().get("incisoColumns")!=null}'>
-        _p31_incisoColumnsConf = [<s:property value="imap.incisoColumns" />];
+    var _p31_incisoColumnsConf = [];
+    <s:if test='%{getImap().get("gridColumns")!=null}'>
+        _p31_incisoColumnsConf = [<s:property value="imap.gridColumns" />];
     </s:if>
     for(var i in _p31_incisoColumnsConf)
     {
-        if(_p31_smap1.cdramo+'x'=='5x')
-        {
-            if(
-                _p31_incisoColumnsConf[i].editor.name=='cdtipsit'
-                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor06'
-                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor09'
-                ||_p31_incisoColumnsConf[i].editor.name=='parametros.pv_otvalor10'
-            )
-            {
-                _p31_incisoColumnsConf[i].editor='';
-            }
-        }
         _p31_incisoColumns.push(_p31_incisoColumnsConf[i]);
     }
     
@@ -215,17 +275,9 @@ Ext.onReady(function()
     {
         _p31_datosGeneralesItems[i].labelWidth=295;
     }
-    ////// componentes //////
     
-    ////// contenido //////
-    Ext.create('Ext.panel.Panel',
-    {
-        itemId    : '_p31_panelpri'
-        ,renderTo : '_p31_divpri'
-        ,border   : 0
-        ,defaults : { style : 'margin:5px;' }
-        ,items    :
-        [
+    var panelesPrincipales =
+    [
             Ext.create('Ext.form.Panel',
             {
                 itemId    : '_p31_polizaForm'
@@ -253,59 +305,96 @@ Ext.onReady(function()
             })
             ,Ext.create('Ext.grid.Panel',
             {
-                itemId      : '_p31_gridIncisos'
-                ,title      : 'DATOS ADICIONALES DE INCISO'
-                ,columns    : _p31_incisoColumns
-                ,store      : _p31_storeIncisos
-                ,minHeight  : 150
-                ,maxHeight  : 300
-                ,viewConfig : viewConfigAutoSize
-                ,plugins    : Ext.create('Ext.grid.plugin.RowEditing',
+                itemId    : '_p31_gridIncisos'
+                ,title    : 'DATOS ADICIONALES DE INCISO'
+                ,columns  : _p31_incisoColumns
+                ,store    : _p31_storeIncisos
+                ,height   : 200
+                ,selModel :
                 {
-                    clicksToEdit  : 1
-                    ,errorSummary : false
-                })
-            })
-            ,Ext.create('Ext.panel.Panel',
-            {
-                itemId      : '_p31_clientePanel'
-                ,title      : 'CLIENTE'
-                ,height     : 400
-                ,autoScroll : true
-                ,loader     :
-                {
-                    url       : _p31_urlPantallaCliente
-                    ,scripts  : true
-                    ,autoLoad : false
+                    selType        : 'checkboxmodel'
+                    ,allowDeselect : true
+                    ,mode          : 'SINGLE'
+                    ,listeners     :
+                    {
+                        selectionchange : function(me,selected,eOpts)
+                        {
+                            debug('selectionchange:',selected,_p31_tatrisitParcialForms);
+                            for(var i in _p31_tatrisitParcialForms)
+                            {
+                                _p31_tatrisitParcialForms[i].hide();
+                            }
+                            if(selected.length==1)
+                            {
+                                _p31_selectedRecord = selected[0];
+                                var cdtipsit = _p31_selectedRecord.get('cdtipsit');
+                                _p31_tatrisitParcialForms[cdtipsit].getForm().loadRecord(_p31_selectedRecord);
+                                _p31_tatrisitParcialForms[cdtipsit].show();
+                                _p31_tatrisitParcialForms[cdtipsit].items.items[0].focus();
+                            }
+                        }
+                    }
                 }
             })
-            ,Ext.create('Ext.panel.Panel',
+    ];
+    
+    for(var i in _p31_tatrisitParcialForms)
+    {
+        panelesPrincipales.push(_p31_tatrisitParcialForms[i]);
+    }
+    
+    panelesPrincipales.push
+    (
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId      : '_p31_clientePanel'
+            ,title      : 'CLIENTE'
+            ,height     : 400
+            ,autoScroll : true
+            ,loader     :
             {
-                itemId       : '_p31_panelBotones'
-                ,border      : 0
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        itemId   : '_p31_botonEmitir'
-                        ,text    : 'Emitir'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                        ,handler : _p31_emitirClic
-                    }
-                    ,{
-                        itemId   : '_p31_botonGuardar'
-                        ,text    : 'Guardar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                        ,handler : function(){ _p31_guardar(); }
-                    }
-                    ,{
-                        text     : 'Nueva'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                        ,handler : _p31_nuevaClic
-                    }
-                ]
-            })
-        ]
+                url       : _p31_urlPantallaCliente
+                ,scripts  : true
+                ,autoLoad : false
+            }
+        })
+        ,Ext.create('Ext.panel.Panel',
+        {
+            itemId       : '_p31_panelBotones'
+            ,border      : 0
+            ,buttonAlign : 'center'
+            ,buttons     :
+            [
+                {
+                    itemId   : '_p31_botonEmitir'
+                    ,text    : 'Emitir'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                    ,handler : _p31_emitirClic
+                }
+                ,{
+                    itemId   : '_p31_botonGuardar'
+                    ,text    : 'Guardar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                    ,handler : function(){ _p31_guardar(); }
+                }
+                ,{
+                    text     : 'Nueva'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                    ,handler : _p31_nuevaClic
+                }
+            ]
+        })
+    );
+    ////// componentes //////
+    
+    ////// contenido //////
+    Ext.create('Ext.panel.Panel',
+    {
+        itemId    : '_p31_panelpri'
+        ,renderTo : '_p31_divpri'
+        ,border   : 0
+        ,defaults : { style : 'margin:5px;' }
+        ,items    : panelesPrincipales
     });
     ////// contenido //////
     
@@ -316,28 +405,16 @@ Ext.onReady(function()
     //ramo 5
     if(_p31_smap1.cdramo+'x'=='5x')
     {
-        //renderers
-        _fieldById('_p31_gridIncisos').down('[text*=VERSI]').renderer=function(v)
+        Ext.create('Ext.panel.Panel',
         {
-            if(_p31_storeVersionesRamo5.cargado&&v+'x'!='x')
-            {
-                var index = _p31_storeVersionesRamo5.find('key',v);
-                if(index==-1)
-                {
-                    v='...';
-                }
-                else
-                {
-                    v=_p31_storeVersionesRamo5.getAt(index).get('value');
-                }
-            }
-            else
-            {
-                v='';
-            }
-            return v;
-        };
-        
+            itemId    : '_p31_panelStoreCdtipsit'
+            ,floating : true
+            ,html     : 'Cargando situaciones...'
+            ,width    : 200
+            ,height   : 30
+            ,frame    : true
+        }).showAt(770,330);
+    
         Ext.create('Ext.panel.Panel',
         {
             itemId    : '_p31_panelStoreVersiones'
@@ -346,8 +423,7 @@ Ext.onReady(function()
             ,width    : 200
             ,height   : 30
             ,frame    : true
-        }).showAt(770,330);
-        //renderers
+        }).showAt(770,370);
         
         //pai
         if(_p31_smap1.tipoflot+'x'!='Fx')
@@ -585,36 +661,33 @@ function _p31_guardar(callback)
     
     if(valido)
     {
-        var editables = [];
-        for(var i in _p31_incisoColumnsConf)
+        var error        = '';
+        var agregarError = function(cadena,nmsituac)
         {
-            if(!Ext.isEmpty(_p31_incisoColumnsConf[i].editor))
-            {
-                editables[_p31_incisoColumnsConf[i].text]=_p31_incisoColumnsConf[i].editor.name;
-            }
-        }
-        debug('editables:',editables);
-        
-        var error='';
+            valido = false;
+            error  = error + 'Inciso ' + nmsituac + ': ' + cadena +'</br>';
+        };
         _p31_storeIncisos.each(function(record)
         {
-            debug('iterando:',record.data);
-            var faltan = '';
-            for(var i in editables)
+            var cdtipsit = record.get('cdtipsit');
+            var nmsituac = record.get('nmsituac');
+            
+            if(!Ext.isEmpty(cdtipsit))
             {
-                if(Ext.isEmpty(record.get(editables[i])))
+                var itemsObliga = Ext.ComponentQuery.query('[swobligaemiflot=true]',_p31_tatrisitFullForms[cdtipsit]);
+                for(var i in itemsObliga)
                 {
-                    faltan = faltan + i +','; 
+                    if(Ext.isEmpty(record.get(itemsObliga[i].getName())))
+                    {
+                        agregarError('Falta definir "'+itemsObliga[i].getFieldLabel()+'"',nmsituac);
+                    }
                 }
             }
-            debug('faltan:',faltan);
-            if(!Ext.isEmpty(faltan))
+            else
             {
-                error = error + 'Para el inciso '+(_p31_storeIncisos.indexOf(record)+1)+' falta: '+faltan+'<br/>';
+                agregarError('Debe seleccionar el tipo de veh&iacute;culo',nmsituac);
             }
-            debug('error:',error);
         });
-        valido = Ext.isEmpty(error);
         if(!valido)
         {
             mensajeWarning(error);
@@ -1190,6 +1263,125 @@ function _p31_feiniChange(comp,val)
     var fefin = _fieldByName('fefin');
     fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
     fefin.isValid();
+}
+
+function _p31_renderer(record,mapeo)
+{
+    debug('>_p31_renderer',mapeo,record.data);
+    
+    var label='-situacion-';
+    
+    if(!Ext.isEmpty(record.get('cdtipsit')))
+    {
+        label='N/A';
+        
+        var cdtipsit = record.get('cdtipsit');
+        var mapeos   = mapeo.split('#');
+        for(var i in mapeos)
+        {
+            var mapeoIte  = mapeos[i];
+            var cdtipsits = mapeoIte.split('|')[0];
+            
+            if((','+cdtipsits+',').lastIndexOf(','+cdtipsit+',')!=-1)//mapeo correcto
+            {
+                var name      = mapeoIte.split('|')[1];
+                if(!isNaN(name))
+                {
+                    name='parametros.pv_otvalor'+(('x00'+name).slice(-2));
+                }
+                var origen = mapeoIte.split('|')[2];
+                var valor  = record.get(name);
+                debug('name:'   , name   , '.');
+                debug('origen:' , origen , '.');
+                debug('valor:'  , valor  , '.');
+                
+                label='';//'-vacio-';
+                if(!Ext.isEmpty(valor))
+                {
+                    if(origen+'x'=='valorx')
+                    {
+                        label=valor;
+                    }
+                    else if(origen+'x'=='atributox')
+                    {
+                        label='';//'-atributo-';
+                        var store=_fieldById('_p31_tatrisitParcialForm'+cdtipsit).down('[name='+name+']').getStore();
+                        if(Ext.isEmpty(store))
+                        {
+                            debugError('No hay store de atributo:',cdtipsit,name,'.');
+                            mensajeError('El atributo mapeado no contiene lista de valores');
+                        }
+                        else
+                        {
+                            var index = store.find('key',valor);
+                            if(index==-1)
+                            {
+                                label='No encontrado...';
+                            }
+                            else
+                            {
+                                label=store.getAt(index).get('value');
+                            }
+                        }
+                    }
+                    else
+                    {
+                        label='Error...';//'-sin store-';
+                        var store=Ext.getStore(origen);
+                        if(Ext.isEmpty(store))
+                        {
+                            debugError('No hay store:',origen);
+                            mensajeError('No se encuentra la colecci&oacute;n con id "'+origen+'"');
+                        }
+                        if(!Ext.isEmpty(store)&&store.cargado)
+                        {
+                            var index = store.find('key',valor);
+                            if(index==-1)
+                            {
+                                label='No encontrado...';
+                            }
+                            else
+                            {
+                                label=store.getAt(index).get('value');
+                            }
+                        }
+                        else
+                        {
+                            label = 'Cargando...';
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return label;
+}
+
+function _p31_editarAutoAceptar(bot)
+{
+    debug('>_p31_editarAutoAceptar');
+    var form = bot.up('form');
+    
+    var valido = true;
+    
+    if(valido)
+    {
+        valido = form.isValid();
+        if(!valido)
+        {
+            datosIncompletos();
+        }
+    }
+    
+    if(valido)
+    {
+        var record = _p31_selectedRecord;
+        for(var prop in form.getValues())
+        {
+            record.set(prop,form.getValues()[prop]);
+        }
+        _fieldById('_p31_gridIncisos').getSelectionModel().deselectAll();
+    }
 }
 ////// funciones //////
 </script>

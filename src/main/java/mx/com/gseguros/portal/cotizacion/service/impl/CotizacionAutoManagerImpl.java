@@ -1444,7 +1444,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					tatri.setObligatorio(false);
 				}
 			}*/
-			gc.generaComponentes(gridCols, true, false, true, true, true, false);
+			gc.generaComponentes(gridCols, true, false, false, true, false, false);
 			resp.getImap().put("gridCols" , gc.getColumns());
 			
 			gc.generaComponentes(
@@ -2587,32 +2587,52 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			setCheckpoint("Recuperando atributos variables de poliza");
 			List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
 			
-			setCheckpoint("Recuperando atributos variables de situacion");
-			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-			
-			setCheckpoint("Recuperando editor de situacion");
-			List<ComponenteVO>auxEditorSit = pantallasDAO.obtenerComponentes(
-					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
-					, cdtipsit, null, null
-					, "EMISION_AUTO_FLOT", "EDITOR_SITUACION", null);
-			ComponenteVO editorSit = auxEditorSit.get(0);
-			editorSit.setSoloLectura(true);
-			
-			setCheckpoint("Filtrando atributos de datos complementarios");
-			List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
-			aux.add(editorSit);
-			for(ComponenteVO tatri:tatrisit)
+			setCheckpoint("Recuperando situaciones");
+			List<Map<String,String>>situaciones=consultasDAO.cargarTiposSituacionPorRamo(cdramo);
+			for(Map<String,String>situacionIte:situaciones)
 			{
-				if(tatri.getSwCompFlot().equals("S"))
+				setCheckpoint("Recuperando atributos de situaciones");
+				String cdtipsitIte             = situacionIte.get("CDTIPSIT");
+				List<ComponenteVO>tatrisitIte  = cotizacionDAO.cargarTatrisit(cdtipsitIte, cdusuari);
+				List<ComponenteVO>editablesIte = new ArrayList<ComponenteVO>();
+				
+				setCheckpoint("Filtrando atributos editables de situacion");
+				for(ComponenteVO tatri:tatrisitIte)
 				{
-					aux.add(tatri);
+					if(StringUtils.isNotBlank(tatri.getSwCompFlot())
+							&&tatri.getSwCompFlot().equals("S"))
+					{
+						editablesIte.add(tatri);
+					}
 				}
+				editablesIte = ComponenteVO.ordenarPorNmordenFlot(editablesIte);
+				
+				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdramo(cdramo);
+				gc.setCdtipsit(cdtipsitIte);
+				
+				gc.generaComponentes(tatrisitIte, true, false, true, false, false, false);
+				resp.getImap().put(Utilerias.join("tatrisit_full_items_",cdtipsitIte),gc.getItems());
+				
+				for(ComponenteVO comp:editablesIte)
+				{
+					comp.setLabelTop(true);
+					comp.setWidth(150);
+					comp.setComboVacio(true);
+					comp.setObligatorio(comp.isObligatorioEmiFlot());
+				}
+				
+				gc.generaComponentes(editablesIte, true, false, true, false, false, false);
+				resp.getImap().put(Utilerias.join("tatrisit_parcial_items_",cdtipsitIte),gc.getItems());
 			}
-			tatrisit=aux;
 			
 			setCheckpoint("Recuperando componentes de pantalla");
-			List<ComponenteVO>polizaComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_FLOT", "POLIZA", null);
-			List<ComponenteVO>agenteComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_FLOT", "AGENTE", null);
+			List<ComponenteVO>polizaComp  = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
+					,"EMISION_AUTO_FLOT", "POLIZA", null);
+			List<ComponenteVO>agenteComp  = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
+					,"EMISION_AUTO_FLOT", "AGENTE", null);
+			List<ComponenteVO>gridColumns = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
+					,"EMISION_AUTO_FLOT", "COLUMNAS_RENDER", null);
 			
 			setCheckpoint("Generando componentes");
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -2623,8 +2643,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("polizaAdicionalesFields" , gc.getFields());
 			resp.getImap().put("polizaAdicionalesItems"  , gc.getItems());
 			
-			gc.generaComponentes(tatrisit, true, false, false, true, true, false);
-			resp.getImap().put("incisoColumns" , gc.getColumns());
+			gc.generaComponentes(gridColumns, true, false, false, true, false, false);
+			resp.getImap().put("gridColumns" , gc.getColumns());
 			
 			gc.generaComponentes(polizaComp, true, true, true, false, false, false);
 			resp.getImap().put("polizaFields" , gc.getFields());
