@@ -51,7 +51,7 @@ public class EndososManagerImpl implements EndososManager
     @Value("${ruta.documentos.poliza}")
     private String rutaDocumentosPoliza;
     
-    @Value("${ruta.documentos.poliza}")
+    @Value("${pass.servidor.reports}")
     private String passwordServidorReportes;
     
     private Map<String,Object> session;
