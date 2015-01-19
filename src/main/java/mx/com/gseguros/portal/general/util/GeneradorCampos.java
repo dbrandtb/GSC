@@ -604,7 +604,7 @@ public class GeneradorCampos
 	            	proxy.add(
 	                        Item.crear("extraParams" , null, Item.OBJ)
 	                        .add("'params.cdatribu'" , cdatribu)
-	                        .add("'params.cdramo'"   , Ramo.SALUD_VITAL.getCdramo())
+	                        .add("'params.cdramo'"   , StringUtils.isBlank(cdramo)?Ramo.SALUD_VITAL.getCdramo():cdramo)
 	                        .add("catalogo"          , Catalogos.TATRIPOL.getCdTabla())
 	                        );
 	            }
