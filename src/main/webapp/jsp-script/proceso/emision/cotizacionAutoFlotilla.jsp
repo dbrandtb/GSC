@@ -2698,7 +2698,7 @@ function _p30_cotizar(sinTarificar)
         }
         else
         {
-            valido = _p30_store.getCount()>=5||true;
+            valido = _p30_store.getCount()>=5;
             if(!valido)
             {
                 mensajeWarning('Debe capturar al menos cinco incisos');
