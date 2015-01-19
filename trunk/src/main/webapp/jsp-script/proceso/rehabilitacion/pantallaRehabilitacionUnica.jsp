@@ -139,7 +139,7 @@ Ext.onReady(function(){
     	]
     	,listeners :
         {
-            afterrender : heredarPanel
+            afterrender : function(me){heredarPanel(me);}
         }
     });
     debug('fecha:',Ext.ComponentQuery.query('[name="smap1.pv_fereinst_i"]'));

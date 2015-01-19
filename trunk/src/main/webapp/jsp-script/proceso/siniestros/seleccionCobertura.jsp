@@ -65,7 +65,7 @@
                     //,
                     buttonAlign : 'center'
                     ,items       : [ <s:property value="imap.item" /> ]
-                    ,listeners   : { afterrender : heredarPanel }
+                    ,listeners   : { afterrender : function(me){heredarPanel(me);} }
                     ,buttons     :
                         [
                             {
