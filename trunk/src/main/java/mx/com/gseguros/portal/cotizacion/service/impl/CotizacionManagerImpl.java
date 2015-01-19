@@ -1762,6 +1762,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				//factores
 				
 				gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcGral.setCdramo(cdramo);
 				
 				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
 				if(tatripol!=null&&tatripol.size()>0)
@@ -1773,6 +1774,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				{
 					resp.getImap().put("itemsRiesgo" , null);
 				}
+				gcGral.setCdramo(null);
 				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
 						null, null, "|"+status+"|",
