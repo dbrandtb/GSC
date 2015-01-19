@@ -169,6 +169,15 @@ public class ObtieneTatrisitMapper implements RowMapper
 			isObligaFlot = true;
 		}
 		result.setObligatorioFlot(isObligaFlot);
+		
+		String sObligaEmiFlot = rs.getString("SWOBLIGAEMIFLOT");
+		boolean isObligaEmiFlot = false;
+		if (StringUtils.isNotBlank(sObligaEmiFlot)
+				&& sObligaEmiFlot.equalsIgnoreCase(Constantes.SI))
+		{
+			isObligaEmiFlot = true;
+		}
+		result.setObligatorioEmiFlot(isObligaEmiFlot);
 
 		return result;
 	}
