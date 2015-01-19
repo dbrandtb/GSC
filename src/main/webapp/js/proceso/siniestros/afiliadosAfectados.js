@@ -95,7 +95,13 @@ Ext.onReady(function() {
 		{
 			style : 'margin:5px;'
 		}
-		,listeners : { afterrender : heredarPanel }
+		,listeners :
+		{
+			afterrender : function(form)
+			{
+			    heredarPanel(form);
+			}
+		}
 		,items    : _11_itemsForm
 		,buttonAlign:'center'
 		,buttons:[

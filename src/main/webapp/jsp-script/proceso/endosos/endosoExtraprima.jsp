@@ -582,7 +582,7 @@ Ext.onReady(function()
                 }
                 ,listeners :
                 {
-                    afterrender : heredarPanel
+                    afterrender : function(me){heredarPanel(me);}
                 }
                 ,items     : [ <s:property value="imap1.itemsLectura" /> ]
             });

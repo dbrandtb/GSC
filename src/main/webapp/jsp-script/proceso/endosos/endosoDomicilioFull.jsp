@@ -149,7 +149,7 @@ Ext.onReady(function()
 				,items     : [ <s:property value="imap1.itemsLectura" /> ]
 				,listeners :
 				{
-					afterrender : heredarPanel
+					afterrender : function(me){heredarPanel(me);}
 				}
 			});
 			this.callParent();
