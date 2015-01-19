@@ -293,7 +293,7 @@ function heredarPanel(formPanel,ponerForceSelection)
 		}
 		else
 		{
-		    formPanel.items.items[i].heredar(true);
+		    cmps[i].heredar(true);
 		}
 	}
 	debug('<heredarPanel');
