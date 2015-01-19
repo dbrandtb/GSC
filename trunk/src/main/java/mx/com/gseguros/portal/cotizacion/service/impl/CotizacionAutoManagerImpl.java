@@ -1634,6 +1634,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getImap().put(new StringBuilder("paneldin_").append(situacionPanel).toString(),gcPanel.getItems());
 			}
 			
+			setCheckpoint("Recuperando mapeos de situaciones");
+			try
+			{
+				Map<String,String>mapeo= cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.MAPEO_TVALOSIT_FORMS_FLOTILLAS, cdramo, cdtipsit, null, null);
+				resp.getSmap().put("mapeo" , mapeo.get("P1VALOR"));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("mapeo" , "DIRECTO");
+			}
+			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -2058,8 +2070,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						String valor = cell.getStringCellValue();
 						for(int i=0;i<splited.length/2;i++)
 						{
-							logger.debug(new StringBuilder("[splited=").append(splited[i*2]).append("]").toString());
-							if(valor.equals(splited[(i*2)]))
+							String splitedUsado=splited[i*2];
+							logger.debug(new StringBuilder("[splited=").append(splitedUsado).append("]").toString());
+							if(valor.lastIndexOf(splitedUsado)!=-1)
 							{
 								valor=splited[(i*2)+1];
 							}

@@ -369,6 +369,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="cargarTipoCambioWS" class="CotizacionAction" method="cargarTipoCambioWS">
+            <result type="json" />
+        </action>
        
     </package>
     
