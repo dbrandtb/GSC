@@ -23,6 +23,8 @@ var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"       
 var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"            />';
 var _p30_urlCargarDetalleNegocioRamo5      = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
+var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"             />';
+var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                 />';
 ////// urls //////
 
 ////// variables //////
@@ -40,6 +42,7 @@ var _p30_recordClienteRecuperado = null;
 var _p30_selectedTarifa          = null;
 var _p30_ventanaCdtipsit         = null;
 var _p30_semaforoBorrar          = false;
+var _p30_precioDolarDia          = null;
 
 var _p30_storeCdtipsit       = null;
 var _p30_storeMarcasRamo5    = null;
@@ -273,7 +276,7 @@ var _p30_tatrisitAutoWindows  = [];
                     ,handler : function(bot) { _p30_editarAutoAceptar(bot); }
                 }
                 ,{
-                    text     : 'B&uacute;squeda de auto'
+                    text     : 'B&uacute;squeda de veh&iacute;culo'
                     ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
                     ,handler : function(bot) { _p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
                 }
@@ -287,6 +290,7 @@ var _p30_tatrisitAutoWindows  = [];
             modal        : true
             ,itemId      : '_p30_tatrisitAutoWindow<s:property value='%{key.substring("tatrisit_auto_items_".length())}' />'
             ,closeAction : 'hide'
+            ,noMostrar   : false
             ,title       : 'B&Uacute;SQUEDA VEH&Iacute;CULO'
             ,items :
             [
@@ -816,46 +820,71 @@ Ext.onReady(function()
                                                         debug('record.data:',record.data);
                                                     }
                                                     
-                                                    //recuperar
-                                                    var len = json.slist1.length;
-                                                    panelpri.setLoading(true);
-                                                    var claveName    = _fieldById('_p30_grid').down('[text*=CLAVE GS]').dataIndex;
-                                                    var marcaName    = _fieldById('_p30_grid').down('[text=MARCA]').dataIndex;
-                                                    var submarcaName = _fieldById('_p30_grid').down('[text=SUBMARCA]').dataIndex;
-                                                    var modeloName   = _fieldById('_p30_grid').down('[text=MODELO]').dataIndex;
-                                                    var versionName  = _fieldById('_p30_grid').down('[text*=VERSI]').dataIndex;
-                                                    var recupera     = function(i)
+                                                    if(_p30_smap1.cdramo+'x'=='5x')
                                                     {
-                                                        _fieldLikeLabel('CLAVE GS').getStore().load(
+                                                        //recuperar
+                                                        var len = json.slist1.length;
+                                                        panelpri.setLoading(true);
+                                                        var recupera = function(i)
                                                         {
-                                                            params    :
+                                                            var record       = mrecords[i];
+                                                            var cdtipsit     = record.get('cdtipsit');
+                                                            if(cdtipsit+'x'=='ARx'
+                                                                ||cdtipsit+'x'=='CRx'
+                                                                ||cdtipsit+'x'=='PCx'
+                                                                ||cdtipsit+'x'=='PPx'
+                                                            )
                                                             {
-                                                                'params.cadena'    : mrecords[i].get(claveName)
-                                                                ,'params.cdtipsit' : mrecords[i].get('cdtipsit')
-                                                            }
-                                                            ,callback : function(records)
-                                                            {
-                                                                var index=_fieldLikeLabel('CLAVE GS').getStore().findBy(function(record)
+                                                                var form         = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                                                                var claveCmp     = form.down('[fieldLabel*=CLAVE]');
+                                                                var claveName    = claveCmp.name;
+                                                                var marcaName    = form.down('[fieldLabel=MARCA]').name;
+                                                                var submarcaName = form.down('[fieldLabel=SUBMARCA]').name;
+                                                                var modeloName   = form.down('[fieldLabel=MODELO]').name;
+                                                                var versionName  = form.down('[fieldLabel*=VERSI]').name;
+                                                                
+                                                                claveCmp.getStore().load(
                                                                 {
-                                                                    var splited=record.get('value').split(' - ');
-                                                                    //debug('splited:'
-                                                                    //    ,splited[0]+','+splited[3]
-                                                                    //    ,mrecords[i].get(claveName)+','+mrecords[i].get(modeloName));
-                                                                    if(splited[0]==mrecords[i].get(claveName)
-                                                                        &&splited[3]==mrecords[i].get(modeloName)
-                                                                        )
+                                                                    params    :
                                                                     {
-                                                                        return true;
+                                                                        'params.cadena'    : record.get(claveName)
+                                                                        ,'params.cdtipsit' : cdtipsit
+                                                                    }
+                                                                    ,callback : function(records,op)
+                                                                    {
+                                                                        var index=claveCmp.getStore().findBy(function(irecord)
+                                                                        {
+                                                                            var splited=irecord.get('value').split(' - ');
+                                                                            if(splited[0]==record.get(claveName)
+                                                                                &&splited[3]==record.get(modeloName)
+                                                                                )
+                                                                            {
+                                                                                return true;
+                                                                            }
+                                                                        });
+                                                                        var encontrado = claveCmp.getStore().getAt(index);
+                                                                        var splited    = encontrado.get('value').split(' - ');
+                                                                        var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
+                                                                        var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
+                                                                        var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
+                                                                        record.set(marcaName    , marca);
+                                                                        record.set(submarcaName , submarca);
+                                                                        record.set(versionName  , version);
+                                                                        i=i+1;
+                                                                        if(i<len)
+                                                                        {
+                                                                            recupera(i);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            panelpri.setLoading(false);
+                                                                            _p30_numerarIncisos();
+                                                                        }
                                                                     }
                                                                 });
-                                                                var encontrado = _fieldLikeLabel('CLAVE GS').getStore().getAt(index);
-                                                                var splited    = encontrado.get('value').split(' - ');
-                                                                var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
-                                                                var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
-                                                                var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
-                                                                mrecords[i].set(marcaName    , marca);
-                                                                mrecords[i].set(submarcaName , submarca);
-                                                                mrecords[i].set(versionName  , version);
+                                                            }
+                                                            else
+                                                            {
                                                                 i=i+1;
                                                                 if(i<len)
                                                                 {
@@ -864,11 +893,12 @@ Ext.onReady(function()
                                                                 else
                                                                 {
                                                                     panelpri.setLoading(false);
+                                                                    _p30_numerarIncisos();
                                                                 }
                                                             }
-                                                        }); 
-                                                    };
-                                                    recupera(0);
+                                                        };
+                                                        recupera(0);
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -1148,7 +1178,13 @@ Ext.onReady(function()
         };
         _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).on(
         {
-            select : function(){ _p30_editorCdtipsit.heredar(); }
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    _p30_editorCdtipsit.heredar();
+                }
+            }
         });
         //tipo situacion
         
@@ -1467,6 +1503,59 @@ Ext.onReady(function()
                     }
                 });
             }
+            else if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                Ext.Ajax.request(
+                {
+                    url : _p30_urlCargarParametros
+                    ,params  :
+                    {
+                        'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                        ,'smap1.cdramo'   : _p30_smap1.cdramo
+                        ,'smap1.cdtipsit' : cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### obtener rango años response:',json);
+                        if(json.exito)
+                        {
+                            var modeloCmp = _fieldById('_p30_tatrisitAutoForm'+json.smap1.cdtipsit).down('[fieldLabel=MODELO]');
+                            modeloCmp.limiteInferior = json.smap1.P1VALOR-0;
+                            modeloCmp.limiteSuperior = json.smap1.P2VALOR-0;
+                            
+                            modeloCmp.validator=function(value)
+                            {
+                                var record   = _p30_selectedRecord;
+                                var cdtipsit = record.get('cdtipsit');
+                                var me       = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]');
+                                
+                                var r = true;
+                                var anioActual = new Date().getFullYear()-0;
+                                var max = anioActual+me.limiteSuperior;
+                                var min = anioActual+me.limiteInferior;
+                                debug('anioActual:',anioActual);
+                                debug('max:',max);
+                                debug('min:',min);
+                                debug('value:',value);
+                                if(value<min||value>max)
+                                {
+                                    r='El modelo debe estar en el rango '+min+'-'+max;
+                                }
+                                return r;
+                           };
+                       }
+                       else
+                       {
+                           mensajeError(json.respuesta);
+                       }
+                    }
+                    ,failure : function()
+                    {                    
+                        errorComunicacion();
+                    }
+                });
+            }
             //modelo
             
             //version
@@ -1739,6 +1828,108 @@ Ext.onReady(function()
                     }
                 });
             }
+            else if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var sumaCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUMA ASEGURADA]');
+                debug('@CUSTOM suma asegurada front.:',sumaCmp);
+                sumaCmp.anidado = true;
+                sumaCmp.heredar = function()
+                {
+                    var record        = _p30_selectedRecord;
+                    var cdtipsit      = record.get('cdtipsit');
+                    var me            = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUMA ASEGURADA]');
+                    var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=VALOR A COTIZAR]').name;
+                    var tipovalorVal  = record.get(tipovalorName)-0;
+                    
+                    debug('tipovalorName:' , tipovalorName,record.data);
+                    debug('tipovalorVal:'  , tipovalorVal);
+                    
+                    me.setReadOnly(tipovalorVal==2);
+                }
+                
+                //trigger tipo valor
+                var tipovalorCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel*=VALOR A COTIZAR]');
+                debug('@CUSTOM valor a cotizar front. trigger suma aseg.:',tipovalorCmp);
+                tipovalorCmp.on(
+                {
+                    select : function(me)
+                    {
+                        var record   = _p30_selectedRecord;
+                        var cdtipsit = record.get('cdtipsit');
+                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=SUMA ASEGURADA]').name;
+                        var sumaVal  = record.get(sumaName);
+                        
+                        debug('sumaName:',sumaName,record.data); 
+                        debug('sumaVal:',sumaVal);
+                        
+                        if(!Ext.isEmpty(sumaVal))
+                        {
+                            record.set(sumaName,'');
+                            mensajeWarning('Debe actualizar la suma asegurada del veh&iacute;culo');
+                        }
+                    }
+                });
+                //trigger tipo valor
+                
+                //trigger tipo vehiculo
+                var tipovehCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel*=TIPO VEH]');
+                debug('@CUSTOM tipo veh. front. trigger suma aseg.:',tipovehCmp);
+                tipovehCmp.on(
+                {
+                    select : function(me)
+                    {
+                        var record   = _p30_selectedRecord;
+                        var cdtipsit = record.get('cdtipsit');
+                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=SUMA ASEGURADA]').name;
+                        var sumaVal  = record.get(sumaName);
+                        
+                        debug('sumaName:',sumaName,record.data); 
+                        debug('sumaVal:',sumaVal);
+                        
+                        if(!Ext.isEmpty(sumaVal))
+                        {
+                            record.set(sumaName,'');
+                            mensajeWarning('Debe actualizar la suma asegurada del veh&iacute;culo');
+                        }
+                    }
+                });
+                //trigger tipo vehiculo
+                
+                //trigger cd postal
+                var postalCmp = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form'));
+                if(Ext.isEmpty(postalCmp.triggerSumaAseg)||postalCmp.triggerSumaAseg!=true)
+                {
+                    debug('@CUSTOM cd postal trigger suma aseg.:',postalCmp);
+                    postalCmp.triggerSumaAseg=true;
+                    postalCmp.on(
+                    {
+                        change : function()
+                        {
+                            var sumas = [];
+                            var sumaName = _p30_tatrisitFullForms['AF'].down('[fieldLabel=SUMA ASEGURADA]').name;
+                            debug('sumaName:',sumaName);
+                            _p30_store.each(function(record)
+                            {
+                                var cdtipsit=record.get('cdtipsit');
+                                if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+                                {
+                                    if(!Ext.isEmpty(record.get(sumaName)))
+                                    {
+                                        record.set(sumaName,'');
+                                        sumas.push(record.get('nmsituac'));
+                                    }
+                                }
+                            });
+                            if(sumas.length>0)
+                            {
+                                mensajeWarning('Debe actualizar la suma asegurada de los '
+                                    +'veh&iacute;culos fronterizos en los siguientes incisos: '+sumas.join(','));
+                            }
+                        }
+                    });
+                }
+                //trigger cd postal
+            }
             //valor
             
             //seleccionar auto
@@ -1893,6 +2084,218 @@ Ext.onReady(function()
                 });
             }
             //tipo valor
+            
+            //tipo cambio
+            if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var dolarCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=TIPO DE CAMBIO]');
+                debug('@CUSTOM dolarCmp:',dolarCmp,'.');
+                dolarCmp.anidado = true;
+                dolarCmp.heredar = function(remoto,callback)
+                {
+                    var record   = _p30_selectedRecord;
+                    var cdtipsit = record.get('cdtipsit');
+                    var form     = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                    var me       = form.down('[fieldLabel*=TIPO DE CAMBIO]');
+                    var serieCmp = form.down('[fieldLabel*=MERO DE SERIE]');
+                    
+                    me.hide();
+                    
+                    if(Ext.isEmpty(_p30_precioDolarDia))
+                    {
+                        serieCmp.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p30_urlCargarTipoCambioWS
+                            ,success : function(response)
+                            {
+                                serieCmp.setLoading(false);
+                                var json=Ext.decode(response.responseText);
+                                debug('### dolar:',json);
+                                _p30_precioDolarDia=json.smap1.dolar;
+                                me.setValue(_p30_precioDolarDia);
+                            }
+                            ,failure : function()
+                            {
+                                serieCmp.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        me.setValue(_p30_precioDolarDia);
+                    }
+                };
+            }
+            //tipo cambio
+            
+            //serie
+            if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var serieCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=MERO DE SERIE]');
+                debug('@CUSTOM serie:',serieCmp);
+                serieCmp.anidado = true;
+                serieCmp.heredar = function()
+                {
+                    var record    = _p30_selectedRecord;
+                    var cdtipsit  = record.get('cdtipsit');
+                    var window    = _p30_tatrisitAutoWindows[cdtipsit];
+                    var postalCmp = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form'));
+                    
+                    if(!postalCmp.isValid())
+                    {
+                        window.noMostrar=true;
+                        mensajeWarning('Debe seleccionar el c&oacute;digo postal primero',function()
+                        {
+                            _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form')).focus();
+                        });
+                    }
+                };
+                
+                serieCmp.recuperar = function()
+                {
+                    var record     = _p30_selectedRecord;
+                    var cdtipsit   = record.get('cdtipsit');
+                    var form       = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                    var me         = form.down('[fieldLabel*=MERO DE SERIE]');
+                    var meVal      = me.getValue();
+                    var marcaCmp   = form.down('[fieldLabel=MARCA]');
+                    var modeloCmp  = form.down('[fieldLabel=MODELO]');
+                    var versionCmp = form.down('[fieldLabel*=DESCRIPCI]');
+                    var sumaCmp    = form.down('[fieldLabel=SUMA ASEGURADA]');
+                    var suma2Cmp   = form.down('[fieldLabel=RESPALDO VALOR NADA]');
+                    
+                    var precioDolar = form.down('[fieldLabel*=TIPO DE CAMBIO]').getValue()-0;
+                    var postalVal   = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form')).getValue();
+                    
+                    var tipovehName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=TIPO VEH]').name;
+                    var tipovehVal  = record.get(tipovehName);
+                    debug('tipovehName:' , tipovehName,record.data);
+                    debug('tipovehVal:'  , tipovehVal);
+                    
+                    if(!Ext.isEmpty(meVal)&&meVal.length==17)
+                    {
+                        me.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url : _p30_urlNada
+                            ,params :
+                            {
+                                'smap1.vim'       : meVal
+                                ,'smap1.cdramo'   : _p30_smap1.cdramo
+                                ,'smap1.cdtipsit' : cdtipsit
+                                ,'smap1.tipoveh'  : tipovehVal
+                                ,'smap1.codpos'   : postalVal
+                            }
+                            ,success : function(response)
+                            {
+                                me.setLoading(false);
+                                var json=Ext.decode(response.responseText);
+                                debug('### nada:',json);
+                                if(json.success)
+                                {
+                                    marcaCmp.setValue(json.smap1.AUTO_MARCA);
+                                    modeloCmp.setValue(json.smap1.AUTO_ANIO);
+                                    versionCmp.setValue(json.smap1.AUTO_DESCRIPCION);
+                                    sumaCmp.setMinValue
+                                    (
+                                        (
+                                            (
+                                                (
+                                                    json.smap1.AUTO_PRECIO-0
+                                                )*precioDolar
+                                            )
+                                            *
+                                            (
+                                                1-
+                                                (
+                                                    json.smap1.FACTOR_MIN-0
+                                                )
+                                            )
+                                        ).toFixed(2)
+                                    );
+                                    sumaCmp.setMaxValue
+                                    (
+                                        (
+                                            (
+                                                (
+                                                    json.smap1.AUTO_PRECIO-0
+                                                )*precioDolar
+                                            )
+                                            *
+                                            (
+                                                1+
+                                                (
+                                                    json.smap1.FACTOR_MAX-0
+                                                )
+                                            )
+                                        ).toFixed(2)
+                                    );
+                                    sumaCmp.setValue
+                                    (
+                                        (
+                                            (
+                                                json.smap1.AUTO_PRECIO-0
+                                            )*precioDolar
+                                        ).toFixed(2)
+                                    );
+                                    suma2Cmp.setValue
+                                    (
+                                        (
+                                            (
+                                                json.smap1.AUTO_PRECIO-0
+                                            )*precioDolar
+                                        ).toFixed(2)
+                                    );
+                                }
+                                else
+                                {
+                                    mensajeError(json.error);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                me.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        marcaCmp.setValue('');
+                        modeloCmp.setValue('');
+                        versionCmp.setValue('');
+                        sumaCmp.setValue('');
+                        suma2Cmp.setValue('');
+                    }
+                };
+                
+                serieCmp.on(
+                {
+                    change : function(me)
+                    {
+                        me.recuperar();
+                    }
+                });
+            }
+            //serie
+            
+            //respaldo nada
+            if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var respNadaCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=RESPALDO VALOR NADA]');
+                debug('@CUSTOM respaldo nada:',respNadaCmp);
+                respNadaCmp.anidado = true;
+                respNadaCmp.heredar = function()
+                {
+                    var record    = _p30_selectedRecord;
+                    var cdtipsit  = record.get('cdtipsit');
+                    var me        = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=RESPALDO VALOR NADA]');
+                    me.hide();
+                };
+            }
+            //respaldo nada
         }
         //herencia situaciones
     }
@@ -2295,7 +2698,7 @@ function _p30_cotizar(sinTarificar)
         }
         else
         {
-            valido = _p30_store.getCount()>=5;
+            valido = _p30_store.getCount()>=5||true;
             if(!valido)
             {
                 mensajeWarning('Debe capturar al menos cinco incisos');
@@ -2309,7 +2712,7 @@ function _p30_cotizar(sinTarificar)
         var agregarError = function(cadena,nmsituac)
         {
             valido = false;
-            error  = error + cadena +' para el inciso '+nmsituac+'</br>';
+            error  = error + 'Inciso ' + nmsituac + ': ' + cadena +'</br>';
         };
         _p30_store.each(function(record)
         {
@@ -2418,14 +2821,75 @@ function _p30_cotizar(sinTarificar)
                     recordTvalosit.set(prop,base);
                 }
             }
-            for(var prop in formValues)
+            
+            if(_p30_smap1.mapeo=='DIRECTO')
             {
-                recordTvalosit.set(prop,formValues[prop]);
+                for(var prop in formValues)
+                {
+                    recordTvalosit.set(prop,formValues[prop]);
+                }
+                for(var att in valuesFormOculto)
+                {
+                    recordTvalosit.set(att,valuesFormOculto[att]);
+                }
             }
-            for(var att in valuesFormOculto)
+            else
             {
-                recordTvalosit.set(att,valuesFormOculto[att]);
+                var mapeos = _p30_smap1.mapeo.split('#');
+                debug('mapeos:',mapeos);
+                for(var i in mapeos)
+                {
+                    var cdtipsitsMapeo = mapeos[i].split('|')[0];
+                    var mapeo          = mapeos[i].split('|')[1];
+                    debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
+                    if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsit+',')!=-1)
+                    {
+                        debug('coincidente:',cdtipsitsMapeo,'cdtipsit:',cdtipsit)
+                        debug('mapeo:',mapeo);
+                        if(mapeo=='DIRECTO')
+                        {
+                            debug('directo');
+                            for(var prop in formValues)
+                            {
+                                recordTvalosit.set(prop,formValues[prop]);
+                            }
+                            for(var att in valuesFormOculto)
+                            {
+                                recordTvalosit.set(att,valuesFormOculto[att]);
+                            }
+                        }
+                        else
+                        {
+                            var atributos = mapeo.split('@');
+                            debug('atributos:',atributos);
+                            for(var i in atributos)
+                            {
+                                var atributoIte = atributos[i];
+                                var modelo      = atributoIte.split(',')[0];
+                                var origen      = atributoIte.split(',')[1];
+                                var pantalla    = atributoIte.split(',')[2];
+                                
+                                modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
+                                pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
+                                
+                                debug('modelo:'   , modelo   , '.');
+                                debug('origen:'   , origen   , '.');
+                                debug('pantalla:' , pantalla , '.');
+                                
+                                if(origen=='F')
+                                {
+                                    recordTvalosit.set(modelo,formValues[pantalla]);
+                                }
+                                else if(origen=='O')
+                                {
+                                    recordTvalosit.set(modelo,valuesFormOculto[pantalla]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
+            
             storeTvalosit.add(recordTvalosit);
             debug('record:',record.data,'tvalosit:',recordTvalosit.data);
         });
@@ -2826,11 +3290,12 @@ function _p30_nmpolizaChange(me)
 function _p30_limpiar()
 {
     debug('>_p30_limpiar');
+    
+    _p30_store.removeAll();
+    
     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
     _fieldById('_p30_form').getForm().reset();
     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
-    
-    _p30_store.removeAll();
     
     for(var i in _p30_paneles)
     {
@@ -2901,15 +3366,79 @@ function _p30_cargarClic()
                             _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(nmpoliza);
                             _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
                         }
-                        var datosGenerales=new _p30_modelo(json.smap1);
-                        if(_p30_smap1.cdramo=='5')
+                        var datosGenerales = new _p30_modelo(json.smap1);
+                        var cdtipsitDatos  = datosGenerales.raw['parametros.pv_cdtipsit'];
+                        debug('cdtipsitDatos:',cdtipsitDatos);
+                        
+                        if(_p30_smap1.cdramo+'x'=='5x')
                         {
-                            datosGenerales.set('parametros.pv_otvalor14','S');
+                            var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                            debug('clienteNuevoName:',clienteNuevoName);
+                            datosGenerales.set(clienteNuevoName,'S');
                         }
                         
                         ck='Recuperando datos generales';
-                        _fieldById('_p30_form').loadRecord(datosGenerales);
-                        _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                        if(_p30_smap1.mapeo=='DIRECTO')
+                        {
+                            _fieldById('_p30_form').loadRecord(datosGenerales);
+                            _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                        }
+                        else
+                        {                            
+                            var mapeos = _p30_smap1.mapeo.split('#');
+                            debug('mapeos:',mapeos);
+                            for(var i in mapeos)
+                            {
+                                var cdtipsitsMapeo = mapeos[i].split('|')[0];
+                                var mapeo          = mapeos[i].split('|')[1];
+                                debug('cdtipsitDatos:',cdtipsitDatos,'cdtipsitsMapeo:',cdtipsitsMapeo);
+                                if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsitDatos+',')!=-1)
+                                {
+                                    debug('coincidente:',cdtipsitsMapeo,'cdtipsitDatos:',cdtipsitDatos)
+                                    debug('mapeo:',mapeo);
+                                    if(mapeo=='DIRECTO')
+                                    {
+                                        debug('directo');
+                                        _fieldById('_p30_form').loadRecord(datosGenerales);
+                                        _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                                    }
+                                    else
+                                    {
+                                        var atributos = mapeo.split('@');
+                                        debug('atributos:',atributos);
+                                        
+                                        var recordMapeado = new _p30_modelo();
+                                        if(_p30_smap1.cdramo=='5')
+                                        {
+                                            var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                                            debug('clienteNuevoName:',clienteNuevoName);
+                                            datosGenerales.set(clienteNuevoName,'S');
+                                        }
+                                        
+                                        for(var i in atributos)
+                                        {
+                                            var atributoIte = atributos[i];
+                                            var modelo      = atributoIte.split(',')[0];
+                                            var origen      = atributoIte.split(',')[1];
+                                            var pantalla    = atributoIte.split(',')[2];
+                                            
+                                            modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
+                                            pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
+                                            
+                                            debug('modelo:'   , modelo   , '.');
+                                            debug('origen:'   , origen   , '.');
+                                            debug('pantalla:' , pantalla , '.');
+                                            
+                                            recordMapeado.set(pantalla,datosGenerales.get(modelo));
+                                        }
+                                        
+                                        debug('recordMapeado:',recordMapeado.data);
+                                        _fieldById('_p30_form').loadRecord(recordMapeado);
+                                        _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
+                                    }
+                                }
+                            }
+                        }
                         
                         if(!Ext.isEmpty(json.smap1.CDPERSON))
                         {
@@ -3536,7 +4065,7 @@ function _p30_renderer(record,mapeo)
                 debug('origen:' , origen , '.');
                 debug('valor:'  , valor  , '.');
                 
-                label='-vacio-';
+                label='';//'-vacio-';
                 if(!Ext.isEmpty(valor))
                 {
                     if(origen+'x'=='valorx')
@@ -3545,7 +4074,7 @@ function _p30_renderer(record,mapeo)
                     }
                     else if(origen+'x'=='atributox')
                     {
-                        label='-atributo-';
+                        label='';//'-atributo-';
                         var store=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[name='+name+']').getStore();
                         if(Ext.isEmpty(store))
                         {
@@ -3567,7 +4096,7 @@ function _p30_renderer(record,mapeo)
                     }
                     else
                     {
-                        label='-sin store-';
+                        label='Error...';//'-sin store-';
                         var store=Ext.getStore(origen);
                         if(Ext.isEmpty(store))
                         {
@@ -3651,7 +4180,14 @@ function _p30_editarAutoBuscar()
         
         me.up('window').hide();
     };
-    centrarVentanaInterna(window.show());
+    if(window.noMostrar==false)
+    {
+        centrarVentanaInterna(window.show());
+    }
+    else
+    {
+        window.noMostrar=false;
+    }
     debug('<_p30_editarAutoBuscar');
 }
 
