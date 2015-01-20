@@ -1273,11 +1273,12 @@ Ext.onReady(function()
                 tipoUsoCmp.anidado = true;
                 tipoUsoCmp.heredar = function(remoto,callback)
                 {
-                    var record     = _p30_selectedRecord;
-                    var cdtipsit   = record.get('cdtipsit');
-                    var me         = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]');
-                    var negocioVal = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
-                    if(!Ext.isEmpty(negocioVal))
+                    var record      = _p30_selectedRecord;
+                    var cdtipsit    = record.get('cdtipsit');
+                    var me          = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]');
+                    var servicioVal = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').getValue();
+                    var negocioVal  = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    if(!Ext.isEmpty(negocioVal)&&!Ext.isEmpty(servicioVal))
                     {
                         me.getStore().load(
                         {
@@ -1285,6 +1286,7 @@ Ext.onReady(function()
                             {
                                 'params.cdtipsit'   : cdtipsit
                                 ,'params.cdnegocio' : negocioVal
+                                ,'params.servicio'  : servicioVal
                             }
                             ,callback : function()
                             {
@@ -1308,6 +1310,16 @@ Ext.onReady(function()
                         }
                     }
                 };
+                
+                _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').on(
+                {
+                    select : function()
+                    {
+                        var record      = _p30_selectedRecord;
+                        var cdtipsit    = record.get('cdtipsit');
+                        _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]').heredar(true);
+                    }
+                });
             }
             //uso
             

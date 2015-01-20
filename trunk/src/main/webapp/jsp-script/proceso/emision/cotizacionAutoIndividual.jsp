@@ -576,7 +576,26 @@ Ext.onReady(function()
         });
         _fieldByLabel('TIPO SERVICIO').on(
         {
-            change : function(){ _p28_cargarParametrizacionCoberturas(); }
+            change : function()
+            {
+                _p28_cargarParametrizacionCoberturas();
+            }
+            ,select : function()
+            {
+                _fieldByLabel('TIPO USO').forceSelection=false;
+                _fieldByLabel('TIPO USO').getStore().load(
+                {
+                    params :
+                    {
+                        'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
+                        ,'params.servicio' : _fieldByLabel('TIPO SERVICIO').getValue()
+                    }
+                    ,callback : function()
+                    {
+                        _fieldByLabel('TIPO USO').forceSelection=true;
+                    }
+                });
+            }
         });
 	    //parametrizacion coberturas
 	    
@@ -654,6 +673,7 @@ Ext.onReady(function()
 	                    params :
 	                    {
 	                        'params.cdnegocio' : val
+	                        ,'params.servicio' : _fieldByLabel('TIPO SERVICIO').getValue()
 	                    }
 	                    ,callback : function()
 	                    {

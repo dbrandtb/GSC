@@ -1034,11 +1034,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception
+	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdnegocio" , cdnegocio);
 		params.put("cdtipsit"  , cdtipsit);
+		params.put("servicio"  , servicio);
 		logger.debug(
 				new StringBuilder()
 				.append("\n***********************************************")
@@ -1068,6 +1069,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			super(dataSource,"PKG_CONSULTA.P_GET_USOS_X_NEGOCIO");
 			declareParameter(new SqlParameter("cdnegocio" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("servicio"  , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "clave" , "valor" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

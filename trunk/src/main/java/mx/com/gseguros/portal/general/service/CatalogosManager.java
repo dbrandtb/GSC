@@ -96,7 +96,7 @@ public interface CatalogosManager {
     public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit);
     public List<GenericVO>cargarTtapvat1(String cdtabla);
     public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit);
-    public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit);
+    public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio);
     public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit);
     public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception;
     public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception;
