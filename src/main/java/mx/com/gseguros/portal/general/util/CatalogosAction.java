@@ -513,7 +513,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String, String>();
 					}
-					lista = catalogosManager.cargarUsosPorNegocioRamo5(params.get("cdnegocio"),params.get("cdtipsit"));
+					lista = catalogosManager.cargarUsosPorNegocioRamo5(
+							params.get("cdnegocio")
+							,params.get("cdtipsit")
+							,params.get("servicio")
+							);
 					break;
 				case RAMO_5_MARCAS_X_NEGOCIO:
 					if(params==null)
