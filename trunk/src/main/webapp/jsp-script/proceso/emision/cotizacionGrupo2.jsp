@@ -168,7 +168,7 @@ debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 Ext.onReady(function()
 {
 
-    Ext.Ajax.timeout = 1200000;
+    Ext.Ajax.timeout = 1800000;
 
     ////// modelos //////
     var _p25_colsBaseFields =
