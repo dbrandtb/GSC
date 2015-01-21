@@ -1867,7 +1867,7 @@ function _datComTurnarSuscripcion()
                             	}
                             }
 		                })
-                    /**/
+                        /*
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAgentes'
@@ -1877,24 +1877,11 @@ function _datComTurnarSuscripcion()
                             ,loader:
                             {
                                 url       : urlPantallaAgentes
-                                /*,params   :
-                                {
-                                    'smap1.cdunieco'  : inputCdunieco
-                                    ,'smap1.cdramo'   : inputCdramo
-                                    ,'smap1.estado'   : inputEstado
-                                    ,'smap1.nmpoliza' : inputNmpoliza
-                                    ,'smap1.cdtipsit' : inputCdtipsit
-                                    ,'smap1.agrupado' : 'si'
-                                }*/
                                 ,scripts  : true
                                 ,autoLoad : true
                             }
                             ,listeners:
                             {
-                                /*expand:function( p, eOpts )
-                                {
-                                    window.parent.scrollTo(0,150+p.y);
-                                }*/
                                 afterrender:function(tab)
                                 {
                                     debug('afterrender tabPanelAgentes');
@@ -1902,6 +1889,7 @@ function _datComTurnarSuscripcion()
                                 }
                             }
                         })
+                        */
                     ]
                     ,listeners:
                     {
