@@ -1771,7 +1771,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,null     //ttipcamv
 			            ,null     //swpatent
 			            ,"100"    //pcpgocte
-			            ,null     //tipoflot
+			            ,"F"     //tipoflot
 			            ,"U"      //accion
 						);
 				
