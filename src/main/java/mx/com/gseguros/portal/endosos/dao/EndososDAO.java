@@ -7,6 +7,7 @@ import java.util.Map;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public interface EndososDAO
 {
@@ -55,7 +56,7 @@ public interface EndososDAO
 	public void                     insertarTworksupEnd(Map<String, String> params)            throws Exception;
 	public void                     insertarTworksupSitTodas(Map<String, String> params)       throws Exception;
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
-	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol)                      throws Exception;
+	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
 	public void                     actualizarFenacimi(Map<String, String> params)             throws Exception;
 	public void                     actualizarSexo(Map<String, String> params)                 throws Exception;
 	public List<Map<String,String>> obtenerCdpersonMpoliper(Map<String, String> params)        throws Exception;
@@ -211,4 +212,15 @@ public interface EndososDAO
 			,String cdparent
 			,String porbenef
 			,String accion)throws Exception;
+	
+	
+	/**
+	 * Obtiene la lista de documentos de endosos de una poliza
+	 * @param poliza poliza a la que pertenecen los endosos
+	 * @return listado de documentos de endosos
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
+	
+	
 }

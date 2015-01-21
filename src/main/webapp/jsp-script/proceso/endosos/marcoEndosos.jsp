@@ -1223,6 +1223,50 @@
     		Ext.getCmp('marendLoaderFrame').update('');
     	}
     }
+    
+    
+    /**
+     * Filtra los endosos disponibles segun el producto
+     * 
+     * @cdramo String cdramo del producto
+     * @cdtipsit String cdtipsit del producto
+     */
+    function filtrarListaEndosos(cdramo, cdtipsit) {
+    	
+        Ext.Ajax.request({
+            url    : marendurlcata,
+            params : {
+                catalogo : 'ENDOSOS',
+                'params.cdramo': cdramo,
+                'params.cdtipsit': cdtipsit
+            },
+            success : function(response) {
+            	
+                var json = Ext.decode(response.responseText);
+                marendStoreLigas.clearFilter();
+
+                // Se genera una expresion regular para hacer el filtro de lista de endosos:
+                var strEndososRegex = '^(';
+                Ext.Array.each(json.lista, function(item, index, allItems) {
+                	strEndososRegex += item.key;
+                	if(index < allItems.length-1) {
+                	    strEndososRegex += '|';
+                	}
+                	//Se asigna descripcion del endoso:
+                	if(item.key != -1) {
+                		marendStoreLigas.findRecord("cdtipsup", item.key).set('texto', item.value);
+                	}
+                });
+                strEndososRegex += ')$';
+                debug('strEndososRegex=', strEndososRegex);
+                
+                marendStoreLigas.filter("cdtipsup", new RegExp(strEndososRegex));
+                debug('marendStoreLigas modificado:', marendStoreLigas);
+            }
+        });
+        
+    }
+    
     /*///////////////////*/
     ////// funciones //////
     ///////////////////////
@@ -1284,7 +1328,8 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            "texto"
+            "cdtipsup"
+            ,"texto"
             ,"liga"
             ,"funcion"
         ]
@@ -1379,219 +1424,171 @@ Ext.onReady(function()
             ,data         :
             [
 				{
-				    texto    : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
+					cdtipsup : -1
+				    ,texto   : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
 				    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombresSimple" />'
 				    ,funcion : 'endosonombressimple'
-				}
-				,{
-                    texto    : 'CAMBIO DE DOMICILIO *'//domicilio
+				},{
+					cdtipsup : -1
+                    ,texto   : 'CAMBIO DE DOMICILIO *'//domicilio
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilioSimple" />'
                     ,funcion : 'endosodomiciliosimple'
-                }
-				,{
-                    texto    : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
+                },{
+					cdtipsup : -1
+                    ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
-                }
-                ,{
-                	texto    : '2'//nombres
+                },{
+                	cdtipsup : 2
+                    ,texto   : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'
-                }
-                ,{
-                	texto    : '3'//domicilio
+                },{
+                	cdtipsup : 3
+                    ,texto   : '3'//domicilio
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
                 	,funcion : 'endosodomicilio'
-                }
-                ,{
-                    texto    : '4'//valosit
+                },{
+                    cdtipsup : 4
+                    ,texto   : '4'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasico" />'
                     ,funcion : 'endosovalositbasico'
-                }
-                ,{
-                    texto    : '6'//alta coberturas
+                },{
+                    cdtipsup : 6
+                    ,texto   : '6'//alta coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasalta'
-                }
-                ,{
-                    texto    : '7'//baja coberturas
+                },{
+                    cdtipsup : 7
+                    ,texto   : '7'//baja coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasbaja'
-                }
-                ,{
-                    texto    : '8'//clausulas
+                },{
+                    cdtipsup : 8
+                    ,texto   : '8'//clausulas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoClausulas" />'
                     ,funcion : 'endosoclausulas'
-                }
-                ,{
-                    texto    : '9'//alta asegurado
+                },{
+                    cdtipsup : 9
+                    ,texto   : '9'//alta asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosoaltaasegurado'
-                }
-                ,{
-                    texto    : '10'//baja asegurado
+                },{
+                    cdtipsup : 10
+                    ,texto   : '10'//baja asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosobajaasegurado'
-                }
-                ,{
-                    texto    : '15'//mas edad
+                },{
+                    cdtipsup : 15
+                    ,texto   : '15'//mas edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomasedad'
-                }
-                ,{
-                    texto    : '16'//menos edad
+                },{
+                    cdtipsup : 16
+                    ,texto   : '16'//menos edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomenosedad'
-                }
-                ,{
-                    texto    : '20'//hombre -> mujer
+                },{
+                    cdtipsup : 20
+                    ,texto   : '20'//hombre -> mujer
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosohombremujer'
-                }
-                ,{
-                    texto    : '21'//mujer -> hombre
+                },{
+                	cdtipsup : 21
+                    ,texto   : '21'//mujer -> hombre
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosomujerhombre'
-                }
-                ,{
-                    texto    : '31'//domicilio full
+                },{
+                    cdtipsup : 31
+                    ,texto   : '31'//domicilio full
                     ,liga    : '<s:url namespace="/endosos" action="endosoDomicilioFull" />'
                     ,funcion : 'endosodomiciliofull'
-                }
-                ,{
-                    texto    : '17'
+                },{
+                    cdtipsup : 17
+                    ,texto   : '17'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'masdeducible'
-                }
-                ,{
-                    texto    : '18'
+                },{
+                    cdtipsup : 18
+                    ,texto   : '18'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'menosdeducible'
-                }
-                ,{
-                    texto    : '11'
+                },{
+                	cdtipsup : 11
+                    ,texto   : '11'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'mascopago'
-                }
-                ,{
-                    texto    : '12'
+                },{
+                    cdtipsup : 12
+                    ,texto   : '12'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'menoscopago'
-                }
-                ,{
-                    texto    : '24'
+                },{
+                    cdtipsup : 24
+                    ,texto   : '24'
                     ,liga    : '<s:url namespace="/endosos" action="endosoReexpedicion" />'
                     ,funcion : 'reexpedicion'
-                }
-                ,{
-                    texto    : '13'
+                },{
+                    cdtipsup : 13
+                    ,texto   : '13'
                     ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
                     ,funcion : 'masextraprima'
-                }
-                ,{
-                    texto    : '14'
+                },{
+                    cdtipsup : 14
+                    ,texto   : '14'
                     ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
                     ,funcion : 'menosextraprima'
-                }
-                ,{
-                    texto    : '26'
+                },{
+                    cdtipsup : 26
+                    ,texto   : '26'
                     ,liga    : '<s:url namespace="/endosos" action="endosoFormaPago" />'
                     ,funcion : 'formapago'
-                }
-                ,{
-                    texto    : '19'
+                },{
+                    cdtipsup : 19
+                    ,texto   : '19'
                     ,liga    : '<s:url namespace="/endosos" action="endosoAgente" />'
                     ,funcion : 'endosoagente'
-                }
-                ,{
-                    texto    : '34'
+                },{
+                    cdtipsup : 34
+                    ,texto   : '34'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endososumaasegmas'
-                }
-                ,{
-                    texto    : '35'
+                },{
+                    cdtipsup : 35
+                    ,texto   : '35'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endososumaasegmenos'
-                }
-                ,{
-                    texto    : '36'
+                },{
+                    cdtipsup : 36
+                    ,texto   : '36'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosocoasegmas'
-                }
-                ,{
-                    texto    : '37'
+                },{
+                    cdtipsup : 37
+                    ,texto   : '37'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosocoasegmenos'
-                }
-                ,{
-                    texto    : '38'
+                },{
+                    cdtipsup : 38
+                    ,texto   : '38'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosotopemas'
-                }
-                ,{
-                    texto    : '39'
+                },{
+                    cdtipsup : 39
+                    ,texto   : '39'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosotopemenos'
-                }
-                ,{
-                    texto    : '27'
+                },{
+                    cdtipsup : 27
+                    ,texto   : '27'
                     ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiariosSMD" />'
                     ,funcion : 'endosobeneficiarios'
                 }
             ]
         }
-        ,listeners : 
-        {
-        	load : function()
-        	{
-
-        	    Ext.Ajax.request(
-        	    {
-        	        url      : marendurlcata
-        	        ,params  :
-        	        {
-        	            catalogo : 'ENDOSOS'
-        	        }
-        	        ,success : function(response)
-        	        {
-        	        	debug('storeligas:',marendStoreLigas);
-        	            var json=Ext.decode(response.responseText);
-        	            debug(json);
-        	            var ligasSinAcceso = [];
-        	            for(var i=0;i<marendStoreLigas.data.items.length;i++)
-        	            {
-        	            	debug('Se busca el nombre de:',marendStoreLigas.data.items[i].get('texto')-0);
-        	            	var acceso = false;
-        	            	for(var j=0;j<json.lista.length;j++)
-        	            	{
-        	            		var cdtipsup = json.lista[j].key-0;
-        	            		var dstipsup = json.lista[j].value;
-        	            		//debug('en:',cdtipsup,dstipsup);
-        	            		if(marendStoreLigas.data.items[i].get('texto')==cdtipsup)
-        	            		{
-        	            			acceso = true;
-        	            			marendStoreLigas.data.items[i].set('texto',dstipsup);
-        	            			debug('Encontrado',cdtipsup,dstipsup);
-        	            		}
-        	            	}
-        	            	if(!acceso
-        	            			&&(marendStoreLigas.data.items[i].get('texto')+'').lastIndexOf('*')<0)
-        	            	{
-        	            	    debug('no encontrado!');
-        	            		ligasSinAcceso.push(i-0);
-        	            	}
-        	            }
-        	            debug('ligas sin acceso:',ligasSinAcceso);
-        	            for(var i=ligasSinAcceso.length-1;i>=0;i--)
-        	            {
-        	            	marendStoreLigas.removeAt(ligasSinAcceso[i]);
-        	            }
-        	        }
-        	        
-        	    });
-        	}
-        }
     });
+    //Filtramos la lista de endosos desde el inicio:
+    marendStoreLigas.filter("cdtipsup", null);
     
     /*////////////////*/
     ////// stores //////
@@ -1945,6 +1942,7 @@ Ext.onReady(function()
                 {
                 	'cellclick' : function(grid, td, cellIndex, record)
                     {
+                    	filtrarListaEndosos(record.get('CDRAMO'), record.get('CDTIPSIT'));
                 		marendNavegacion(3);
                         debug(record);
                         marendStoreAsegurados.load(

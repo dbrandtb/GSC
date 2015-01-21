@@ -9,25 +9,32 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
-import mx.com.gseguros.portal.reexpedicionDocumentos.service.ReexpedicionDocumentosManager;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 {
+	private static final long serialVersionUID = 5205183585188359309L;
+
 	private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ReexpedicionDocumentosAction.class);
 	
 	private ConsultasManager              consultasManager;
+	private PantallasManager              pantallasManager;
+	@Autowired
+	private EndososManager                endososManager;
+	
 	private Map<String,Item>              itemMap;
 	private LinkedHashMap<String,Object>  linkedObjectMap;
 	private String                        mensaje;
-	private PantallasManager              pantallasManager;
-	private ReexpedicionDocumentosManager reexpedicionDocumentosManager;
 	private List<Map<String,String>>      stringList;
 	private Map<String,String>            stringMap;
 	private boolean                       success;
@@ -84,38 +91,44 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String cdramo   = stringMap.get("CDRAMO");
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
-			String nmsuplem = stringMap.get("NMSUPLEM");
-			String reportePagina1 = "P_1_INDIS.rdf";
-			String reportePagina2 = "P_2_INDIS.rdf";
-			String pdfPagina1 = "P_1_INDIS.pdf";
-			String pdfPagina2 = "P_2_INDIS.pdf";
+			//String nmsuplem = stringMap.get("NMSUPLEM");
+
+			// Reimprimimos todos los Documentos de Endosos de Medicina preventiva de una poliza:
+			String [] paginas = {"P_1_INDIS", "P_2_INDIS"};
+			List<Map<String, String>> listaDocsEndosos = endososManager.obtenerListaDocumentosEndosos(
+					new PolizaVO(cdunieco,cdramo, estado, nmpoliza));
+			logger.debug("listaDocsEndosos=" + listaDocsEndosos);
+			for(Map<String,String> sMapDoc : listaDocsEndosos) {
+				
+				String nmsuplem = sMapDoc.get("NMSUPLEM");
+				String cdtipsup = sMapDoc.get("CDTIPSUP");
+				
+				for (String pag : paginas) {
+					String nombrePDF = pag;
+					// Si el documento no es un endoso de EMISION, agregamos el nmsumplem al nombre:
+					if( cdtipsup != null && Integer.parseInt(cdtipsup) == TipoEndoso.EMISION_POLIZA.getCdTipSup()) {
+						nombrePDF = nombrePDF += "_"+ nmsuplem;
+					}
+					String url = new StringBuilder()
+						.append(this.getText("ruta.servidor.reports"))
+						.append("?destype=cache")
+						.append("&desformat=PDF")
+						.append("&userid=").append(this.getText("pass.servidor.reports"))
+						.append("&report=").append(pag).append(".rdf")
+						.append("&paramform=no")
+						.append("&ACCESSIBLE=YES")
+						.append("&p_unieco=").append(cdunieco)
+						.append("&p_ramo=").append(cdramo)
+						.append("&p_estado='M'")
+						.append("&p_poliza=").append(nmpoliza)
+						.append("&p_suplem=").append(nmsuplem)
+						.toString();
+					HttpUtil.generaArchivo(url, new StringBuilder()
+							.append(this.getText("ruta.documentos.poliza")).append("/").append(ntramite).append("/")
+							.append(nombrePDF).append(".pdf").toString());
+				}
+			}
 			
-			String url=this.getText("ruta.servidor.reports")
-					+ "?destype=cache"
-					+ "&desformat=PDF"
-					+ "&userid="+this.getText("pass.servidor.reports")
-					+ "&report="+reportePagina1
-					+ "&paramform=no"
-					+ "&ACCESSIBLE=YES"
-					+ "&p_unieco="+cdunieco
-					+ "&p_ramo="+cdramo
-					+ "&p_estado='M'"
-					+ "&p_poliza="+nmpoliza
-					+ "&p_suplem="+nmsuplem;
-			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina1);
-			url=this.getText("ruta.servidor.reports")
-					+ "?destype=cache"
-					+ "&desformat=PDF"
-					+ "&userid="+this.getText("pass.servidor.reports")
-					+ "&report="+reportePagina2
-					+ "&paramform=no"
-					+ "&ACCESSIBLE=YES"
-					+ "&p_unieco="+cdunieco
-					+ "&p_ramo="+cdramo
-					+ "&p_estado='M'"
-					+ "&p_poliza="+nmpoliza
-					+ "&p_suplem="+nmsuplem;
-			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina2);
 			mensaje = "Documento de medicina preventiva reexpedido";
 			success = true;
 		}
@@ -146,38 +159,43 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String cdramo   = stringMap.get("CDRAMO");
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
-			String nmsuplem = stringMap.get("NMSUPLEM");
-			String reportePagina1 = "P_1_ESPE.rdf";
-			String reportePagina2 = "P_2_ESPE.rdf";
-			String pdfPagina1 = "P_1_ESPE.pdf";
-			String pdfPagina2 = "P_2_ESPE.pdf";
 			
-			String url=this.getText("ruta.servidor.reports")
-					+ "?destype=cache"
-					+ "&desformat=PDF"
-					+ "&userid="+this.getText("pass.servidor.reports")
-					+ "&report="+reportePagina1
-					+ "&paramform=no"
-					+ "&ACCESSIBLE=YES"
-					+ "&p_unieco="+cdunieco
-					+ "&p_ramo="+cdramo
-					+ "&p_estado='M'"
-					+ "&p_poliza="+nmpoliza
-					+ "&p_suplem="+nmsuplem;
-			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina1);
-			url=this.getText("ruta.servidor.reports")
-					+ "?destype=cache"
-					+ "&desformat=PDF"
-					+ "&userid="+this.getText("pass.servidor.reports")
-					+ "&report="+reportePagina2
-					+ "&paramform=no"
-					+ "&ACCESSIBLE=YES"
-					+ "&p_unieco="+cdunieco
-					+ "&p_ramo="+cdramo
-					+ "&p_estado='M'"
-					+ "&p_poliza="+nmpoliza
-					+ "&p_suplem="+nmsuplem;
-			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina2);
+			// Reimprimimos todos los Documentos de Endosos de Medicina preventiva de Especialista de una poliza:
+			String [] paginas = {"P_1_ESPE", "P_2_ESPE"};
+			List<Map<String, String>> listaDocsEndosos = endososManager.obtenerListaDocumentosEndosos(
+					new PolizaVO(cdunieco,cdramo, estado, nmpoliza));
+			logger.debug("listaDocsEndosos=" + listaDocsEndosos);
+			for(Map<String,String> sMapDoc : listaDocsEndosos) {
+				
+				String nmsuplem = sMapDoc.get("NMSUPLEM");
+				String cdtipsup = sMapDoc.get("CDTIPSUP");
+				
+				for (String pag : paginas) {
+					String nombrePDF = pag;
+					// Si el documento no es un endoso de EMISION, agregamos el nmsumplem al nombre:
+					if( cdtipsup != null && Integer.parseInt(cdtipsup) == TipoEndoso.EMISION_POLIZA.getCdTipSup()) {
+						nombrePDF = nombrePDF += "_"+ nmsuplem;
+					}
+					String url = new StringBuilder()
+						.append(this.getText("ruta.servidor.reports"))
+						.append("?destype=cache")
+						.append("&desformat=PDF")
+						.append("&userid=").append(this.getText("pass.servidor.reports"))
+						.append("&report=").append(pag).append(".rdf")
+						.append("&paramform=no")
+						.append("&ACCESSIBLE=YES")
+						.append("&p_unieco=").append(cdunieco)
+						.append("&p_ramo=").append(cdramo)
+						.append("&p_estado='M'")
+						.append("&p_poliza=").append(nmpoliza)
+						.append("&p_suplem=").append(nmsuplem)
+						.toString();
+					HttpUtil.generaArchivo(url, new StringBuilder()
+							.append(this.getText("ruta.documentos.poliza")).append("/").append(ntramite).append("/")
+							.append(nombrePDF).append(".pdf").toString());
+				}
+			}
+			
 			mensaje = "Documento de medicina preventiva expecialista reexpedido";
 			success = true;
 		}
@@ -246,11 +264,6 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 				+ "\n###############################"
 				);
 		return SUCCESS;
-	}
-	
-	public void setReexpedicionDocumentosManager(
-			ReexpedicionDocumentosManager reexpedicionDocumentosManager) {
-		this.reexpedicionDocumentosManager = reexpedicionDocumentosManager;
 	}
 
 	public Map<String, Item> getItemMap() {

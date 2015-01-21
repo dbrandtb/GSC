@@ -3607,7 +3607,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String dssuplem="";
 					// Obtenemos TODOS los nombres de los endosos:
-					List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos("");
+					List<Map<String,String>> endosos = endososManager.obtenerNombreEndosos(null, Integer.parseInt(cdramo), cdtipsit);
 					for(Map<String,String>endoso:endosos)
 					{
 						if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
@@ -4545,10 +4545,10 @@ public class EndososAction extends PrincipalCoreAction
 		
 		// Asignamos el valor a dssuplem:
 		String dssuplem = "";
-		List<Map<String,String>> endosos = endososManager.obtenerNombreEndosos("");
+		List<Map<String,String>> endosos = endososManager.obtenerNombreEndosos(null, Integer.parseInt(cdramo), cdtipsit);
 		for(Map<String,String>endoso:endosos) {
 			if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup)) {
-				dssuplem=endoso.get("DSTIPSUP");
+				dssuplem = endoso.get("DSTIPSUP");
 			}
 		}
 		

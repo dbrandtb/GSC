@@ -8,6 +8,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface EndososManager
@@ -105,7 +106,7 @@ public interface EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza)         throws Exception;
-	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol)                    throws Exception;
+	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
 	public void                      actualizarFenacimi(Map<String, String> params)           throws Exception;
 	public void                      actualizarSexo(Map<String, String> params)               throws Exception;
 	public List<Map<String, String>> obtenerCdpersonMpoliper(Map<String, String> params)      throws Exception;
@@ -340,4 +341,13 @@ public interface EndososManager
 			,String cdtipsup
 			,String ntramite
 			);
+	
+	/**
+	 * 
+	 * @param poliza
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
+	
 }

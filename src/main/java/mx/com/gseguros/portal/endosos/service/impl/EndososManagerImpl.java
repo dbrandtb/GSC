@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -341,10 +342,10 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol) throws Exception
+	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception
 	{
 		logger.debug("EndososManager obtenerNombreEndosos");
-		List<Map<String,String>> lista=endososDAO.obtenerNombreEndosos(cdsisrol);
+		List<Map<String,String>> lista=endososDAO.obtenerNombreEndosos(cdsisrol, cdramo, cdtipsit);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
 		logger.debug("EndososManager obtenerNombreEndosos lista size: "+lista.size());
 		return lista;
@@ -1364,7 +1365,7 @@ public class EndososManagerImpl implements EndososManager
 			try
 			{
 				dssuplem = "";
-				List<Map<String,String>>endosos=endososDAO.obtenerNombreEndosos("");
+				List<Map<String,String>>endosos = endososDAO.obtenerNombreEndosos("", Integer.parseInt(cdramo), cdtipsit);
 				for(Map<String,String>endoso:endosos)
 				{
 					if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
@@ -1902,6 +1903,11 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return resp;
+	}
+	
+	
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
+		return endososDAO.obtenerListaDocumentosEndosos(poliza);
 	}
 	
 	/********************** BASE MANAGER ***********************/
