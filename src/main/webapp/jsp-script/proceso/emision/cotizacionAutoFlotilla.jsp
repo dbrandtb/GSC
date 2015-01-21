@@ -2359,6 +2359,12 @@ Ext.onReady(function()
     }
     //ramo 5
     
+    var autocompleters = Ext.ComponentQuery.query('[queryParam]');
+    for(var i in autocompleters)
+    {
+        debug('quitando query caching:',autocompleters[i]);
+        autocompleters[i].queryCaching = false;
+    }
     ////// custom //////
     
     ////// loaders //////
