@@ -747,6 +747,7 @@ Ext.onReady(function()
                 '->'
                 ,{
                     xtype   : 'form'
+                    ,hidden : _p30_smap1.tipoflot+'x'!='Fx'
                     ,layout : 'hbox'
                     ,items  :
                     [
