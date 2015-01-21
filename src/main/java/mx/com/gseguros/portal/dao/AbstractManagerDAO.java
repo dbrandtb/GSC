@@ -50,6 +50,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     	
     	String msgId    = mapResult.get("pv_msg_id_o") != null ? mapResult.get("pv_msg_id_o").toString() : "";  
         String msgTitle = mapResult.get("pv_title_o")  != null ? mapResult.get("pv_title_o").toString()  : "";
+        String msgText  = mapResult.get("pv_msg_text_o")  != null ? mapResult.get("pv_msg_text_o").toString()  : "";
         
         if(StringUtils.isBlank(msgId)){
         	msgId = mapResult.get("PV_MSG_ID_O") != null ? mapResult.get("PV_MSG_ID_O").toString() : "";  
@@ -61,8 +62,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle).toString());
         
         // Obtenemos el msgText a partir del msgId:
-        String msgText = "";
-        if(StringUtils.isNotBlank(msgId) ) {
+        if(StringUtils.isBlank(msgText) && StringUtils.isNotBlank(msgId) ) {
         	// Buscamos el msgText en properties, sino lo buscamos en BD:
         	ActionSupport actionSupport = new ActionSupport();
             if (!actionSupport.getText(msgId).equals(msgId)) {
