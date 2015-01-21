@@ -576,28 +576,72 @@ Ext.onReady(function()
         });
         _fieldByLabel('TIPO SERVICIO').on(
         {
-            change : function()
+            change : function(me,val)
             {
-                _p28_cargarParametrizacionCoberturas();
-            }
-            ,select : function()
-            {
-                _fieldByLabel('TIPO USO').forceSelection=false;
-                _fieldByLabel('TIPO USO').getStore().load(
+                if(me.findRecord('key',val)!=false)
                 {
-                    params :
-                    {
-                        'params.cdnegocio' : _fieldByLabel('NEGOCIO').getValue()
-                        ,'params.servicio' : _fieldByLabel('TIPO SERVICIO').getValue()
-                    }
-                    ,callback : function()
-                    {
-                        _fieldByLabel('TIPO USO').forceSelection=true;
-                    }
-                });
+                    _p28_cargarParametrizacionCoberturas();
+                }
             }
         });
 	    //parametrizacion coberturas
+	    
+	    //uso
+	    var usoCmp = _fieldByLabel('TIPO USO');
+	    debug('@CUSTOM uso:',usoCmp);
+	    usoCmp.anidado = true;
+	    usoCmp.heredar = function(remoto,micallback)
+	    {
+	        var negocioCmp  = _fieldByLabel('NEGOCIO');
+	        var servicioCmp = _fieldByLabel('TIPO SERVICIO');
+	        var negocioVal  = negocioCmp.getValue();
+	        var servicioVal = servicioCmp.getValue();
+	        debug('negocioVal:'  , negocioVal);
+	        debug('servicioVal:' , servicioVal);
+	        if(!Ext.isEmpty(negocioVal)
+	            &&!Ext.isEmpty(servicioVal)
+	            )
+	        {
+	            _fieldByLabel('TIPO USO').getStore().load(
+	            {
+	                params :
+	                {
+	                    'params.cdnegocio' : negocioVal
+	                    ,'params.servicio' : servicioVal
+	                }
+	                ,callback : function()
+	                {
+	                    if(!Ext.isEmpty(micallback))
+	                    {
+	                        micallback(_fieldByLabel('TIPO USO'));
+	                    }
+	                }
+	            });
+	        }
+	    };
+	    
+	    _fieldByLabel('NEGOCIO').on(
+	    {
+	        change : function(me,val)
+	        {
+	            if(me.findRecord('key',val)!=false)
+	            {
+	                _fieldByLabel('TIPO USO').heredar(true);
+	            }
+	        }
+	    });
+	    
+	    _fieldByLabel('TIPO SERVICIO').on(
+        {
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    _fieldByLabel('TIPO USO').heredar(true);
+                }
+            }
+        });
+	    //uso
 	    
 	    //camion
 	    if(_p28_smap1.cdtipsit+'x'=='CRx')
@@ -667,19 +711,6 @@ Ext.onReady(function()
 	        {
 	            if(me.findRecord('key',val)!=false)
 	            {
-	                _fieldByLabel('TIPO USO').forceSelection=false;
-	                _fieldByLabel('TIPO USO').getStore().load(
-	                {
-	                    params :
-	                    {
-	                        'params.cdnegocio' : val
-	                        ,'params.servicio' : _fieldByLabel('TIPO SERVICIO').getValue()
-	                    }
-	                    ,callback : function()
-	                    {
-	                        _fieldByLabel('TIPO USO').forceSelection=true;
-	                    }
-	                });
 	                marca.getStore().load(
                     {
                         params :
@@ -1423,6 +1454,7 @@ function _p28_limpiar()
     debug('>_p28_limpiar');
     _fieldByName('nmpoliza').semaforo=true;
     _fieldById('_p28_form').getForm().reset();
+    _fieldById('_p28_form').formOculto.getForm().reset();
     _fieldByName('nmpoliza').semaforo=false;
     
     _p28_cargarConfig();
@@ -2617,7 +2649,23 @@ function _p28_cargarConfig()
             {
                 for(var prop in json.smap1)
                 {
-                    _fieldByName(prop).setValue(json.smap1[prop]);
+                    var cmp = _fieldByName(prop);
+                    if(!Ext.isEmpty(cmp.heredar))
+                    {
+                        cmp.forceSelection=false;
+                    }
+                    cmp.setValue(json.smap1[prop]);
+                    if(!Ext.isEmpty(cmp.heredar))
+                    {
+                        cmp.heredar(true,function(me)
+                        {
+                            me.forceSelection=true;
+                            if(me.findRecord('key',me.getValue())==false)
+                            {
+                                me.reset();
+                            }
+                        });
+                    }
                 }
             }
             else

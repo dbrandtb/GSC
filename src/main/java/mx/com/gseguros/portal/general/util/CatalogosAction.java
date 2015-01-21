@@ -517,6 +517,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							params.get("cdnegocio")
 							,params.get("cdtipsit")
 							,params.get("servicio")
+							,params.get("tipocot")
 							);
 					break;
 				case RAMO_5_MARCAS_X_NEGOCIO:
