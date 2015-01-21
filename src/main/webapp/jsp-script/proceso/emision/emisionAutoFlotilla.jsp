@@ -1313,7 +1313,7 @@ function _p31_renderer(record,mapeo)
                         }
                         else
                         {
-                            var index = store.find('key',valor);
+                            var index = store.find('key',valor,0,false,false,true);
                             if(index==-1)
                             {
                                 label='No encontrado...';
@@ -1335,7 +1335,7 @@ function _p31_renderer(record,mapeo)
                         }
                         if(!Ext.isEmpty(store)&&store.cargado)
                         {
-                            var index = store.find('key',valor);
+                            var index = store.find('key',valor,0,false,false,true);
                             if(index==-1)
                             {
                                 label='No encontrado...';

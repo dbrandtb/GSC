@@ -864,9 +864,9 @@ Ext.onReady(function()
                                                                         });
                                                                         var encontrado = claveCmp.getStore().getAt(index);
                                                                         var splited    = encontrado.get('value').split(' - ');
-                                                                        var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1])).get('key');
-                                                                        var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2])).get('key');
-                                                                        var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4])).get('key');
+                                                                        var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
+                                                                        var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2],0,false,false,true)).get('key');
+                                                                        var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
                                                                         record.set(marcaName    , marca);
                                                                         record.set(submarcaName , submarca);
                                                                         record.set(versionName  , version);
@@ -2308,6 +2308,51 @@ Ext.onReady(function()
                 };
             }
             //respaldo nada
+            
+            //carga
+            if('|CR|PC|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var cargaCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=CARGA]');
+                debug('@CUSTOM carga:',cargaCmp,'.');
+                cargaCmp.anidado = true;
+                cargaCmp.heredar = function(remoto,callback)
+                {
+                    var record      = _p30_selectedRecord;
+                    var cdtipsit    = record.get('cdtipsit');
+                    var me          = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=CARGA]');
+                    var negocioVal  = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    if(!Ext.isEmpty(negocioVal))
+                    {
+                        me.getStore().load(
+                        {
+                            params :
+                            {
+                                'params.negocio' : negocioVal
+                            }
+                            ,callback : function()
+                            {
+                                if(!Ext.isEmpty(callback))
+                                {
+                                    callback
+                                    (
+                                        _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
+                                            .down('[fieldLabel=CARGA]')
+                                    );
+                                }
+                            } 
+                        });
+                    }
+                    else
+                    {
+                        me.getStore().removeAll();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(me);
+                        }
+                    }
+                };
+            }
+            //carga
         }
         //herencia situaciones
     }
@@ -4118,7 +4163,7 @@ function _p30_renderer(record,mapeo)
                         }
                         else
                         {
-                            var index = store.find('key',valor);
+                            var index = store.find('key',valor,0,false,false,true);
                             if(index==-1)
                             {
                                 label='No encontrado...';
@@ -4140,7 +4185,7 @@ function _p30_renderer(record,mapeo)
                         }
                         if(!Ext.isEmpty(store)&&store.cargado)
                         {
-                            var index = store.find('key',valor);
+                            var index = store.find('key',valor,0,false,false,true);
                             if(index==-1)
                             {
                                 label='No encontrado...';
