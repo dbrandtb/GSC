@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.endosos.dao.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,6 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.dao.WrapperResultadosGeneric;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
@@ -19,6 +18,7 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
@@ -443,12 +443,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -771,10 +765,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol) throws Exception
+	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception
 	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cdsisrol",cdsisrol);
+		Map<String, Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdrol_i", cdsisrol);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_cdtipsit_i", cdtipsit);
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************")
@@ -792,10 +788,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ObtenerNombreEndosos(DataSource dataSource)
 		{
 			super(dataSource, "PKG_LISTAS.P_GET_TTIPSUPL");
-			declareParameter(new SqlParameter("cdsisrol"         , OracleTypes.VARCHAR));
-			String[] cols = new String[]{
-					"CDTIPSUP" , "DSTIPSUP"
-			};
+			declareParameter(new SqlParameter("pv_cdrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{"CDTIPSUP", "DSTIPSUP"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -891,15 +887,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -961,15 +950,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -1428,15 +1410,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	/**
@@ -1513,15 +1488,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	public String obtieneFechaInicioVigenciaPoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
@@ -1562,15 +1530,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_fecha_o"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 
 	@Override
@@ -1617,15 +1578,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_valido_o" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -1651,21 +1605,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ValidaNuevaCobertura(DataSource dataSource)
 		{
 			super(dataSource, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO");
-
 			declareParameter(new SqlParameter("fenacimi" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
-
 	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -1709,15 +1654,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
-			
 			compile();
 		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -1774,11 +1712,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	@Override
@@ -2185,4 +2118,39 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	
+	
+	@Override
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
+		
+		logger.debug(new StringBuilder().append("PKG_CONSULTA.P_GET_SUPL_TDOCUPOL params=").append(poliza).toString());
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i",   poliza.getCdramo());
+		params.put("pv_estado_i",   poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		Map<String,Object> resultadoMap = this.ejecutaSP(new ObtenerListaDocumentosEndososSP(this.getDataSource()), params);
+		logger.debug("resultado map= "+ resultadoMap);
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerListaDocumentosEndososSP extends StoredProcedure {
+
+		protected ObtenerListaDocumentosEndososSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_GET_SUPL_TDOCUPOL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+			String[] cols = new String[]{"NMSUPLEM", "CDTIPSUP"};
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	
 }

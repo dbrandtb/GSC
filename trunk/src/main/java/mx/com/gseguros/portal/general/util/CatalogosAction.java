@@ -213,7 +213,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case ENDOSOS:
 					UserVO usuario = (UserVO)session.get("USUARIO");
-					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos(usuario.getRolActivo().getClave());
+					List<Map<String, String>> nombresEndosos = endososManager.obtenerNombreEndosos(
+								usuario.getRolActivo().getClave(),
+								Integer.parseInt(params.get("cdramo")), 
+								params.get("cdtipsit"));
 					lista=new ArrayList<GenericVO>(0);
 					for(Map<String,String> nombre:nombresEndosos) {
 						lista.add(new GenericVO(nombre.get("CDTIPSUP"), nombre.get("DSTIPSUP")));
