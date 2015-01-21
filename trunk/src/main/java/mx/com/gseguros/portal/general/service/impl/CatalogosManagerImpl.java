@@ -627,7 +627,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio)
+	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio,String tipocot)
 	{
 		logger.info(
 				new StringBuilder()
@@ -636,6 +636,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				.append("\n@@@@@@ cdnegocio=").append(cdnegocio)
 				.append("\n@@@@@@ cdtipsit=") .append(cdtipsit)
 				.append("\n@@@@@@ servicio=") .append(servicio)
+				.append("\n@@@@@@ tipocot=")  .append(tipocot)
 				.toString()
 				);
 		
@@ -643,7 +644,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		try
 		{
-			lista = catalogosDAO.cargarUsosPorNegocioRamo5(cdnegocio,cdtipsit,servicio);
+			lista = catalogosDAO.cargarUsosPorNegocioRamo5(cdnegocio,cdtipsit,servicio,tipocot);
 		}
 		catch(Exception ex)
 		{

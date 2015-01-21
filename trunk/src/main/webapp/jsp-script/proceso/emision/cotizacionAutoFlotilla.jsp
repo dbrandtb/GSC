@@ -3307,6 +3307,7 @@ function _p30_limpiar()
     
     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
     _fieldById('_p30_form').getForm().reset();
+    _fieldById('_p30_form').formOculto.getForm().reset();
     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
     
     for(var i in _p30_paneles)
