@@ -555,6 +555,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("modelo")
 							,params.get("negocio")
 							,params.get("clavegs")
+							,params.get("servicio")
 							);
 					break;
 				case RAMO_5_NEGOCIO_X_CDTIPSIT_AGENTE:

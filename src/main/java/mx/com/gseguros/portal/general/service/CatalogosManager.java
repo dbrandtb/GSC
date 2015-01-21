@@ -104,7 +104,9 @@ public interface CatalogosManager {
     		String cdtipsit
     		,String modelo
     		,String negocio
-    		,String clavegs)throws Exception;
+    		,String clavegs
+    		,String servicio
+    		)throws Exception;
     public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(String cdtipsit,String cdagente)throws Exception;
     public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio)throws Exception;
 }

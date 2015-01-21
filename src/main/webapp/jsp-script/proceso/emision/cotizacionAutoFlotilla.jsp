@@ -1345,14 +1345,16 @@ Ext.onReady(function()
                     debug('modeloName:' , modeloName);
                     debug('claveName:'  , claveName);
                     
-                    var modeloVal  = record.get(modeloName);
-                    var claveVal   = record.get(claveName);
-                    var negocioVal = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
-                    debug('modeloVal:'  , modeloVal);
-                    debug('claveVal:'   , claveVal);
-                    debug('negocioVal:' , negocioVal);
+                    var modeloVal   = record.get(modeloName);
+                    var claveVal    = record.get(claveName);
+                    var negocioVal  = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
+                    var servicioVal = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').getValue();
+                    debug('modeloVal:'   , modeloVal);
+                    debug('claveVal:'    , claveVal);
+                    debug('negocioVal:'  , negocioVal);
+                    debug('servicioVal:' , servicioVal);
                     
-                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(claveVal)||Ext.isEmpty(negocioVal))
+                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(claveVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal))
                     {
                         me.allowBlank=true;
                         me.setFieldLabel('PAQUETE (Seleccionar veh&iacute;culo primero)');
@@ -1370,10 +1372,11 @@ Ext.onReady(function()
                         {
                             params :
                             {
-                                'params.cdtipsit' : cdtipsit
-                                ,'params.negocio' : negocioVal
-                                ,'params.modelo'  : modeloVal
-                                ,'params.clavegs' : claveVal
+                                'params.cdtipsit'  : cdtipsit
+                                ,'params.negocio'  : negocioVal
+                                ,'params.modelo'   : modeloVal
+                                ,'params.clavegs'  : claveVal
+                                ,'params.servicio' : servicioVal
                             }
                             ,callback : function()
                             {
@@ -1385,13 +1388,30 @@ Ext.onReady(function()
                                     {
                                         me = _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
                                             .down('[fieldLabel=PAQUETE (Seleccionar veh&iacute;culo primero)]');
-                                    } 
+                                    }
                                     callback(me);
                                 }
                             } 
                         });
                     }
                 }
+                
+                _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').on(
+                {
+                    select : function(me)
+                    {
+                        var record   = _p30_selectedRecord;
+                        var cdtipsit = record.get('cdtipsit');
+                        
+                        var planCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
+                        if(Ext.isEmpty(planCmp))
+                        {
+                            planCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit)
+                                .down('[fieldLabel=PAQUETE (Seleccionar veh&iacute;culo primero)]');
+                        }
+                        planCmp.heredar(true);
+                    }
+                });
             }
             //plan
             
