@@ -1336,7 +1336,7 @@ Ext.onReady(function()
                     var me         = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
                     if(Ext.isEmpty(me))
                     {
-                        me = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=(Seleccionar veh&iacute;culo primero)]');
+                        me = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE (Seleccionar veh&iacute;culo primero)]');
                     }
                     var modeloName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=MODELO]').getName();
                     var claveName  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=CLAVE]').getName();
@@ -1354,7 +1354,7 @@ Ext.onReady(function()
                     if(Ext.isEmpty(modeloVal)||Ext.isEmpty(claveVal)||Ext.isEmpty(negocioVal))
                     {
                         me.allowBlank=true;
-                        me.setFieldLabel('(Seleccionar veh&iacute;culo primero)');
+                        me.setFieldLabel('PAQUETE (Seleccionar veh&iacute;culo primero)');
                         me.getStore().removeAll();
                         if(!Ext.isEmpty(callback))
                         {
@@ -1383,7 +1383,7 @@ Ext.onReady(function()
                                     if(Ext.isEmpty(me))
                                     {
                                         me = _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
-                                            .down('[fieldLabel=(Seleccionar veh&iacute;culo primero)]');
+                                            .down('[fieldLabel=PAQUETE (Seleccionar veh&iacute;culo primero)]');
                                     } 
                                     callback(me);
                                 }
