@@ -24,6 +24,7 @@
 			var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
 			var _TIPO_PAGO_DIRECTO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
 			var _TIPO_PAGO_REEMBOLSO				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+			var _TIPO_PAGO_INDEMNIZACION			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo"/>';
 			var _URL_GUARDA_CAMBIOS_FACTURA			= '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
 			var _URL_LISTA_AUTSERVICIO				= '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"		 />';
 			var _URL_LISTA_MSINIESTRO				= '<s:url namespace="/siniestros" action="consultaSiniestroMaestro"		 />';
@@ -1577,7 +1578,7 @@
 								dataIndex : 'SUBTAJUSTADO',
 								width : 150,
 								renderer : Ext.util.Format.usMoney
-							},{
+							}/*,{
 								header : 'Cobertura',
 								dataIndex : 'CDGARANT',
 								width : 150
@@ -1585,7 +1586,7 @@
 								header : 'Subobertura',
 								dataIndex : 'CDCONVAL',
 								width : 150
-							}
+							}*/
 						],
 						selModel: {
 							selType: 'cellmodel'
@@ -2718,6 +2719,15 @@
 			}
 			,success : function (response)
 			{
+				debug("TIPO DE PAGO -->",_tipoPago);
+				if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
+					gridEditorConceptos.hide();
+					panelInicialPral.down('combo[name=params.cdpresta]').hide();
+				}else{
+					gridEditorConceptos.show();
+					panelInicialPral.down('combo[name=params.cdpresta]').show();
+				}
+				
 				storeProveedor.load();
 				//storeSubcoberturaAseguradoRender().load()
 				
@@ -3297,7 +3307,7 @@
 	function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
-		if ( _CDROL == _ROL_MEDICO){
+		//if ( _CDROL == _ROL_MEDICO){
 			windowLoader = Ext.create('Ext.window.Window',{
 				modal	   : true,
 				buttonAlign : 'center',
@@ -3350,7 +3360,7 @@
 				}
 			}).show();
 			centrarVentanaInterna(windowLoader);
-		}
+		//}
 	}
 	
 	function _guardarConceptosxFactura(){
