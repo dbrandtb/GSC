@@ -1154,16 +1154,33 @@ function _p28_cotizar(sinTarificar)
                                         arrDesc[i].isValid();
                                         debug('min:',arrDesc[i].minValue);
                                         debug('max:',arrDesc[i].maxValue);
+                                        arrDesc[i].setReadOnly(false);
                                     }
                                 }
                                 else
                                 {
+                                    for(var i=0;i<arrDesc.length;i++)
+                                    {
+                                        arrDesc[i].minValue=0;
+                                        arrDesc[i].maxValue=0;
+                                        arrDesc[i].setValue(0);
+                                        arrDesc[i].isValid();
+                                        arrDesc[i].setReadOnly(true);
+                                    }
                                     mensajeError(json.respuesta);
                                 }
                             }
                             ,failure : function()
                             {
                                 _p28_formDescuento.setLoading(false);
+                                for(var i=0;i<arrDesc.length;i++)
+                                {
+                                    arrDesc[i].minValue=0;
+                                    arrDesc[i].maxValue=0;
+                                    arrDesc[i].setValue(0);
+                                    arrDesc[i].isValid();
+                                    arrDesc[i].setReadOnly(true);
+                                }
                                 errorComunicacion();
                             }
                         });
@@ -1280,10 +1297,15 @@ function _p28_ramo5AgenteSelect(comp,records)
             }
             else
             {
+                _fieldByLabel('AGENTE').reset();
                 mensajeError(json.respuesta);
             }
         }
-        ,failure : errorComunicacion
+        ,failure : function()
+        {
+            _fieldByLabel('AGENTE').reset();
+            errorComunicacion();
+        }
     });
     
     _fieldByLabel('NEGOCIO').getStore().load(
