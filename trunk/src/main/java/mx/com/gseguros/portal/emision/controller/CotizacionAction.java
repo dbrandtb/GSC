@@ -3638,7 +3638,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaMpolizas.put("pv_ttipcamv"  , null);
 	            mapaMpolizas.put("pv_swpatent"  , null);
 	            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
-	            mapaMpolizas.put("pv_tipoflot"  , null);
+	            mapaMpolizas.put("pv_tipoflot"  , "F");
 	            mapaMpolizas.put("pv_accion"    , "U");
 	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 			}
@@ -4524,7 +4524,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_ttipcamv"  , null);
 		            mapaMpolizas.put("pv_swpatent"  , null);
 		            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
-		            mapaMpolizas.put("pv_tipoflot"  , null);
+		            mapaMpolizas.put("pv_tipoflot"  , "F");
 		            mapaMpolizas.put("pv_accion"    , "U");
 		            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 				}
