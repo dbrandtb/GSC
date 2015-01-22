@@ -143,7 +143,9 @@
 					,descMoneda:	'<s:property value='%{getSlist2().get(#contadorFactura).get("DESTIPOMONEDA")}'		escapeHtml="false" />'
 					,tasaCambio:	'<s:property value='%{getSlist2().get(#contadorFactura).get("TASACAMB")}'			escapeHtml="false" />'
 					,ptimporta:		'<s:property value='%{getSlist2().get(#contadorFactura).get("PTIMPORTA")}'			escapeHtml="false" />'
-					,dctoNuex:'		<s:property value='%{getSlist2().get(#contadorFactura).get("DCTONUEX")}'			escapeHtml="false" />'
+					,dctoNuex:		'<s:property value='%{getSlist2().get(#contadorFactura).get("DCTONUEX")}'			escapeHtml="false" />'
+					,feegreso:		'<s:property value='%{getSlist2().get(#contadorFactura).get("FEEGRESO")}'			escapeHtml="false" />'
+					,diasdedu:		'<s:property value='%{getSlist2().get(#contadorFactura).get("DIASDEDU")}'			escapeHtml="false" />'
 				});
 				<s:set name="contadorFactura" value="#contadorFactura+1" />
 			</s:iterator>
@@ -186,6 +188,10 @@
 					text	:'tasaCambio',				dataIndex	:'tasaCambio',		renderer: Ext.util.Format.usMoney
 				},{
 					text	:'Importe Factura',			dataIndex	:'ptimporta',		renderer: Ext.util.Format.usMoney
+				},{
+					text	:'Fecha Egreso',			dataIndex	:'feegreso'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
+				},{
+					text	:'Dias Deducible',			dataIndex	:'diasdedu'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
 				}
 			];
 
@@ -1100,10 +1106,7 @@
 										leyenda= v;
 									}
 									return leyenda;
-								}/*,renderer : function(v) {
-									var leyenda = v;
-									return leyenda;
-								}*/
+								}
 							},
 							{
 								header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
@@ -1138,10 +1141,7 @@
 										leyenda= v;
 									}
 									return leyenda;
-								}/*,renderer : function(v) {
-									var leyenda = v;
-									return leyenda;
-								}*/
+								}
 							},
 							{
 								header: 'ICD<br/>Principal', 				dataIndex: 'CDICD'
@@ -1768,8 +1768,14 @@
 						{
 							xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
+						{
+							xtype		: 'datefield',			fieldLabel	: 'FECHA EGRESO',			name	: 'params.feegreso',	format	: 'd/m/Y'
+						},
+						{
+							xtype		: 'numberfield',		fieldLabel 	: 'DEDUCIBLE (D&Iacute;AS)',		name	: 'params.diasdedu',
+							allowBlank	: false
+						},
 						cmbProveedor,
-						//cmbCveConceptoRender,
 						comboTipoAte,
 						cobertura,
 						subCobertura,
@@ -2719,19 +2725,35 @@
 			}
 			,success : function (response)
 			{
-				debug("TIPO DE PAGO -->",_tipoPago);
+				panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));
+				panelInicialPral.down('[name=params.feegreso]').setValue(_11_recordActivo.get('feegreso')); 
+				panelInicialPral.down('[name=params.diasdedu]').setValue(_11_recordActivo.get('diasdedu'));
+
 				if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
 					gridEditorConceptos.hide();
-					panelInicialPral.down('combo[name=params.cdpresta]').hide();
+					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
+					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
+					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
+					panelInicialPral.down('[name=params.feegreso]').show(); 
+					panelInicialPral.down('[name=params.diasdedu]').show();
+				}else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
+					gridEditorConceptos.show();
+					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
+					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
+					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
+					panelInicialPral.down('[name=params.feegreso]').hide(); 
+					panelInicialPral.down('[name=params.diasdedu]').hide();
 				}else{
 					gridEditorConceptos.show();
-					panelInicialPral.down('combo[name=params.cdpresta]').show();
+					panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();
+					panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();
+					panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();
+					panelInicialPral.down('[name=params.feegreso]').hide(); 
+					panelInicialPral.down('[name=params.diasdedu]').hide();
 				}
 				
 				storeProveedor.load();
-				//storeSubcoberturaAseguradoRender().load()
 				
-				//storeConceptosCatalogoRender.load();
 				panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
 				
 				storeTipoAtencion.load({
@@ -2744,12 +2766,9 @@
 				
 				
 				panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));
-				//panelInicialPral.down('[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
-				//panelInicialPral.down('[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
 				
 				//params.cdtipser
 				panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
-				panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));
 				
 				if(_11_recordActivo.get('desctoNum').length == 0){
 					panelInicialPral.down('[name=params.descnume]').setValue("0.00");
@@ -2839,16 +2858,20 @@
 					panelInicialPral.down('[name="params.autrecla"]').setValue("S");
 					panelInicialPral.down('[name="params.autrecla"]').hide();
 					if(aplicaIVA == null){
-						panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
+						if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION || _tipoPago == _TIPO_PAGO_REEMBOLSO){
+							panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("N");
+						}else{
+							panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
+						}
 					}else{
 						panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue(aplicaIVA);
 					}
-					if(aplicaIVA == null){
+					if(ivaAntesDespues == null){
 						panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue("D");
 					}else{
 						panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue(ivaAntesDespues);
 					}
-					if(aplicaIVA == null){
+					if(ivaRetenido == null){
 						panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
 					}else{
 						panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
@@ -2987,6 +3010,8 @@
 					'params.tipoMoneda' : panelInicialPral.down('combo[name=params.tipoMoneda]').getValue(),
 					'params.tasacamb' : panelInicialPral.down('[name=params.tasacamb]').getValue(),
 					'params.ptimporta' : panelInicialPral.down('[name=params.ptimporta]').getValue(),
+					'params.feegreso' : panelInicialPral.down('[name=params.feegreso]').getValue(),
+					'params.diasdedu' : panelInicialPral.down('[name=params.diasdedu]').getValue(),
 					'params.dctonuex' : null				
 				}
 				,success : function (response)
