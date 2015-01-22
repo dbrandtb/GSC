@@ -128,20 +128,23 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 
 				datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
 				
-				datosCotizacionAuto.setContarPAI(Boolean.valueOf(m.get("contarPAI")));
-				datosCotizacionAuto.setNombreAlterno(m.get("nombreAlterno"));
+				datosCotizacionAuto.setContarPAI(Boolean.valueOf(m.get("CONTARPAI")));
+				datosCotizacionAuto.setNombreAlterno(m.get("NOMBREALTERNO"));
 				
 				CotizacionNegocio cotNeg =  new CotizacionNegocio();
 				
-				cotNeg.setIdTarifa(Integer.valueOf(m.get("idTarifa")));
-				cotNeg.setUdi(Double.valueOf(m.get("udi")));
-				cotNeg.setMultianual(Integer.valueOf(m.get("multianual")));
-				cotNeg.setPeriodoGracia(Integer.valueOf(m.get("periodoGracia")));
-				cotNeg.setFondoEspecial(Double.valueOf(m.get("fondoEspecial")));
-				cotNeg.setF1(Double.valueOf(m.get("f1")));
-				cotNeg.setF2(Double.valueOf(m.get("f2")));
-				cotNeg.setF3(Double.valueOf(m.get("f3")));
-				cotNeg.setPorcentajeBono(Double.valueOf(m.get("porcentajeBono")));
+				cotNeg.setIdTarifa(Integer.valueOf(m.get("IDTARIFA")));
+				cotNeg.setUdi(Double.valueOf(m.get("UDI")));
+				cotNeg.setMultianual(Integer.valueOf(m.get("MULTIANUAL")));
+				cotNeg.setPeriodoGracia(Integer.valueOf(m.get("PERIODOGRACIA")));
+				cotNeg.setFondoEspecial(Double.valueOf(m.get("FONDOESPECIAL")));
+				cotNeg.setF1(Double.valueOf(m.get("F1")));
+				cotNeg.setF2(Double.valueOf(m.get("F2")));
+				cotNeg.setF3(Double.valueOf(m.get("F3")));
+				cotNeg.setPorcentajeBono(Double.valueOf(m.get("PORCENTAJEBONO")));
+				cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
+				
+				datosCotizacionAuto.setCotizacionNegocio(cotNeg);
 				
 				//idagente y sucursal
 				Agente agente=new Agente();
@@ -407,6 +410,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
 					incisoIterado.setConfiguracionPaquete(confPaq);
+					
+					
+					incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
 					
 					//versionTarifa
 					confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));

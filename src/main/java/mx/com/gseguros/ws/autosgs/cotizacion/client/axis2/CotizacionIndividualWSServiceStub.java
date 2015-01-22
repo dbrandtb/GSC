@@ -37721,6 +37721,36 @@
                             
 
                         /**
+                        * field for IdProveedorUdi
+                        */
+
+                        
+                                    protected int localIdProveedorUdi ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdProveedorUdi(){
+                               return localIdProveedorUdi;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdProveedorUdi
+                               */
+                               public void setIdProveedorUdi(int param){
+                            
+                                            this.localIdProveedorUdi=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for IdTarifa
                         */
 
@@ -38148,6 +38178,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"idProveedorUdi", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idProveedorUdi");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idProveedorUdi");
+                                    }
+                                
+                                               if (localIdProveedorUdi==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idProveedorUdi cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdProveedorUdi));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"idTarifa", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -38485,6 +38544,12 @@
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdNegocio));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idProveedorUdi"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdProveedorUdi));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "idTarifa"));
                                  
                                 elementList.add(
@@ -38692,6 +38757,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setIdNegocio(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idProveedorUdi").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdProveedorUdi(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -62222,6 +62306,50 @@
                             
 
                         /**
+                        * field for Rfc
+                        */
+
+                        
+                                    protected java.lang.String localRfc ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localRfcTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getRfc(){
+                               return localRfc;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Rfc
+                               */
+                               public void setRfc(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localRfcTracker = true;
+                                       } else {
+                                          localRfcTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localRfc=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Sucursal
                         */
 
@@ -62507,6 +62635,40 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localRfcTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"rfc", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"rfc");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("rfc");
+                                    }
+                                
+
+                                          if (localRfc==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("rfc cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localRfc);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              }
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -62737,6 +62899,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("nombre cannot be null!!");
                                         }
+                                    } if (localRfcTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "rfc"));
+                                 
+                                        if (localRfc != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRfc));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("rfc cannot be null!!");
+                                        }
                                     }
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "sucursal"));
@@ -62901,6 +63072,24 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setNombre(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","rfc").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setRfc(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

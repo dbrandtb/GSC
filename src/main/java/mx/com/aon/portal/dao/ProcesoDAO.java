@@ -1791,6 +1791,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		r.put("nacional",           cdnacion);
     		r.put("swexiper",           rs.getString("swexiper"));
     		r.put("cdideper",           rs.getString("cdideper"));
+    		r.put("cdideext",           rs.getString("cdideext"));
     		r.put("CANALING"          , rs.getString("CANALING"));
     		r.put("CONDUCTO"          , rs.getString("CONDUCTO"));
     		r.put("PTCUMUPR"          , rs.getString("PTCUMUPR"));
