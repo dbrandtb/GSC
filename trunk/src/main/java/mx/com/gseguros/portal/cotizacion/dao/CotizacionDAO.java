@@ -549,4 +549,5 @@ public interface CotizacionDAO
 			,String cdtipsit
 			,String negocio
 			)throws Exception;
+	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)throws Exception;
 }

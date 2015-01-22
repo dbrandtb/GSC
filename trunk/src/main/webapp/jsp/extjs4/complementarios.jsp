@@ -22,50 +22,53 @@
         /////////////////////////////////////-->
         <!--<script src="${ctx}/resources/jsp-script/extjs4/complementarios.js"></script>-->
         <script>
+            var contexto='${ctx}';
+            
             var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
             debug('panDatComMap1:',panDatComMap1);
-            var urlGuardar='<s:url namespace="/" action="guardarDatosComplementarios" />';
-            var urlCargar='<s:url namespace="/" action="cargarDatosComplementarios" />';
-            //var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
-            var urlCargarCatalogos='<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-            var inputCdunieco='<s:property value="cdunieco" />';
-            var inputCdramo='<s:property value="cdramo" />';
-            var inputEstado='<s:property value="estado" />';
-            var inputNmpoliza='<s:property value="nmpoliza" />';
-            var inputNtramite='<s:property value='map1.ntramite' />';
-            var inputCdtipsit='<s:property value='cdtipsit' />';
+            
+            var inputCdunieco = '<s:property value="cdunieco"         />';
+            var inputCdramo   = '<s:property value="cdramo"           />';
+            var inputEstado   = '<s:property value="estado"           />';
+            var inputNmpoliza = '<s:property value="nmpoliza"         />';
+            var inputNtramite = '<s:property value='map1.ntramite'    />';
+            var inputCdtipsit = '<s:property value='cdtipsit'         />';
+            var sesionDsrol   = '<s:property value="map1.sesiondsrol" />';
             debug("inputNtramite",inputNtramite);
-            var urlEditarAsegurados='${ctx}<s:property value="map1.urlAsegurados" />';
-            var contexto='${ctx}';
-            var urlRecotizar='<s:url namespace="/" action="recotizar" />';
+            
+            //var urlCargarCatalogos         = '<s:url namespace="/flujocotizacion" action="cargarCatalogos"             />';
+            var urlGuardar                   = '<s:url namespace="/"                action="guardarDatosComplementarios" />';
+            var urlCargar                    = '<s:url namespace="/"                action="cargarDatosComplementarios"  />';
+            var urlCargarCatalogos           = '<s:url namespace="/catalogos"       action="obtieneCatalogo"             />';
+            var urlRecotizar                 = '<s:url namespace="/"                action="recotizar"                   />';
+            var urlEmitir                    = '<s:url namespace="/"                action="emitir"                      />';
+            var urlReintentarWS              = '<s:url namespace="/"                action="reintentaWSautos"            />';
+            var panDatComUrlDoc              = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"     />';
+            var panDatComUrlDoc2             = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon" />';
+            var panDatComUrlCotiza           = '<s:url namespace="/"                action="cotizacionVital"             />';
+            var datComUrlMCUpdateStatus      = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"     />';
+            var datComUrlMC                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                  />';
+            var urlPantallaValosit           = '<s:url namespace="/"                action="pantallaValosit"             />';
+            var urlPantallaAgentes           = '<s:url namespace="/flujocotizacion" action="principal"                   />';
+            var compleUrlViewDoc             = '<s:url namespace ="/documentos"     action="descargaDocInline"           />';
+            var compleUrlGuardarCartoRechazo = '<s:url namespace="/"                action="guardarCartaRechazo"         />';
+            var compleUrlCotizacion          = '<s:url namespace="/emision"         action="cotizacion"                  />';
+            var _urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
+            var _URL_CONSULTA_CLAUSU_DETALLE = '<s:url namespace="/catalogos"       action="consultaClausulaDetalle"     />';
+            var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
+            
+            var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
+            
+            var _panDatCom_numPestaniasIniciales=3;
             var accordion;
-            var urlEmitir='<s:url namespace="/" action="emitir" />';
-            var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
-            var panDatComUrlDoc= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-            var panDatComUrlDoc2='<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
-            var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             var datComPolizaMaestra;
-            var sesionDsrol='<s:property value="map1.sesiondsrol" />';
-            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="mcdinamica" />';
-            var urlPantallaValosit     = '<s:url namespace="/"                action="pantallaValosit" />';
-            var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
-            var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
             if(panDatComMap1.SITUACION=='AUTO')
             {
                 _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
             }
-            
-            var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
-            var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
-            var compleUrlGuardarCartoRechazo = '<s:url namespace="/" action="guardarCartaRechazo" />';
-            var compleUrlCotizacion = '<s:url namespace="/emision" action="cotizacion" />';
-           
-            var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
-            
-            var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-            var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
             
             var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
             var fechaMaxEmi = Ext.Date.parse('<s:property value="map1.fechamax" />','d/m/Y');
@@ -602,9 +605,45 @@ function _datComTurnarSuscripcion()
                                             fieldLabel:'Plan',
                                             style:'margin:5px;'
                                         }
+                                        ,{
+                                            xtype           : 'combo'
+                                            ,itemId         : '_panDatCom_nmcuadroCmp'
+                                            ,fieldLabel     : 'Cuadro de comisiones'
+                                            ,name           : 'panel2.nmcuadro'
+                                            ,style          : 'margin:5px;'
+                                            ,forceSelection : true
+                                            ,valueField     : 'key'
+                                            ,displayField   : 'value'       
+                                            ,editable       : true
+                                            ,queryMode      : 'local'
+                                            ,disabled       : panDatComMap1.cambioCuadro!='S'
+                                            ,hidden         : panDatComMap1.cambioCuadro!='S'
+                                            ,allowBlank     : false
+                                            ,store          :
+                                            Ext.create('Ext.data.Store',
+                                            {
+                                                model     : 'Generic'
+                                                ,autoLoad : true
+                                                ,proxy    :
+                                                {
+                                                   type         : 'ajax'
+                                                   ,url         : urlCargarCatalogos
+                                                   ,extraParams :
+                                                   {
+                                                       catalogo           : 'CUADROS_POR_SITUACION'
+                                                       ,'params.cdtipsit' : inputCdtipsit
+                                                   }
+                                                   ,reader      :
+                                                   {
+                                                       type  : 'json'
+                                                       ,root : 'lista'
+                                                   }
+                                                }
+                                            })
+                                        }
 		                            ]
-		                        }),
-		                        Ext.create('Ext.panel.Panel',{
+		                        })
+		                        ,Ext.create('Ext.panel.Panel',{
 		                            id:'panelDatosAdicionales',//id16
 		                            title:'Datos adicionales',
 		                            style:'margin:5px',
@@ -1896,7 +1935,7 @@ function _datComTurnarSuscripcion()
                         add :function(panel,tab,pos)
                         {
                             debug('>accordion add pos:',pos);
-                            if(pos>3)
+                            if(pos>_panDatCom_numPestaniasIniciales-1)
                             {
                                 tab.border=0;
                                 panel.setActiveTab(tab);

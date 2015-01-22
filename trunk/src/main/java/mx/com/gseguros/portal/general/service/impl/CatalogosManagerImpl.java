@@ -822,4 +822,27 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarCuadrosPorSituacion @@@@@@"
+				,"\n@@@@@@ cdtipsit=",cdtipsit
+				));
+		
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(cdtipsit))
+		{
+			lista=catalogosDAO.cargarCuadrosPorSituacion(cdtipsit);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ cargarCuadrosPorSituacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

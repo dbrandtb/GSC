@@ -1325,4 +1325,41 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		Utilerias.debugPrecedure(logger, "PKG_LISTAS.P_RECUPERA_CUADROS_COM_X_PROD", params);
+		Map<String,Object>procResult  = ejecutaSP(new CargarCuadrosPorSituacion(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("NMCUADRO"),tiposit.get("PORC_COMISION")));
+			}
+		}
+		Utilerias.debugPrecedure(logger, "PKG_LISTAS.P_RECUPERA_CUADROS_COM_X_PROD", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class CargarCuadrosPorSituacion extends StoredProcedure
+	{
+		protected CargarCuadrosPorSituacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_RECUPERA_CUADROS_COM_X_PROD");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"NMCUADRO"
+					,"PORC_COMISION"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

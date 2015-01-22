@@ -4976,6 +4976,35 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 	
+    @Override
+    public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)
+    {
+    	logger.info(Utilerias.join(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
+    			,"\n@@@@@@ cdramo=",cdramo
+    			));
+    	
+    	boolean bandera=false;
+    	
+    	try
+    	{
+    		bandera=cotizacionDAO.cargarBanderaCambioCuadroPorProducto(cdramo);
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("Error al obtener bandera de cambio de cuadro por producto",ex);
+    		bandera=false;
+    	}
+    	
+    	logger.info(Utilerias.join(
+    		 "\n@@@@@@ bandera=",bandera
+   			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
+   			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+   			));
+    	return bandera;
+    }
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

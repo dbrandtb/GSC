@@ -52,11 +52,13 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
+import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -240,6 +242,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.dsplan"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmcuadro"));
 			}
 			catch(Exception ex)
 			{
@@ -332,6 +335,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
+		if(exito)
+		{
+			try
+			{
+				map1.put("cambioCuadro",cotizacionManager.cargarBanderaCambioCuadroPorProducto(cdramo)?"S":"N");
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar parametrizacion de cuadro de comisiones pantalla #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
 		if(!exito)
 		{
 			result = ERROR;
@@ -398,6 +417,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			panel2.put("cdtipopol", (String) select.get("ottempot"));
 			panel2.put("cdperpag", (String) select.get("cdperpag"));
 			panel2.put("dsplan", (String) select.get("dsplan"));
+			panel2.put("nmcuadro" , (String) select.get("nmcuadro"));
 			/*/////////////////////////////////*/
 			////// Cargar info de mpolizas //////
 			/////////////////////////////////////
@@ -508,7 +528,9 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_feemisio",     anterior.get("feemisio")!=null?renderFechas.format(anterior.get("feemisio")):null);
             nuevo.put("pv_cdperpag",     panel2.get("cdperpag"));
             nuevo.put("pv_nmpoliex",     (String)anterior.get("nmpoliex"));
-            nuevo.put("pv_nmcuadro",     (String)anterior.get("nmcuadro"));
+            nuevo.put("pv_nmcuadro",     StringUtils.isNotBlank(panel2.get("nmcuadro"))?
+            		panel2.get("nmcuadro")
+            		:(String)anterior.get("nmcuadro"));
             nuevo.put("pv_porredau",     (String)anterior.get("porredau"));
             nuevo.put("pv_swconsol",     (String)anterior.get("swconsol"));
             nuevo.put("pv_nmpolant",     (String)anterior.get("nmpolant"));
@@ -527,6 +549,26 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_tipoflot",     null);
             nuevo.put("pv_accion",       "U");
             kernelManager.insertaMaestroPolizas(nuevo);
+            
+            if(StringUtils.isNotBlank(panel2.get("nmcuadro")))
+            {
+	            Map<String,Object>paramsPoliage=new LinkedHashMap<String,Object>();
+	            paramsPoliage.put("pv_cdunieco_i" , map1.get("pv_cdunieco"));
+	            paramsPoliage.put("pv_cdramo_i"   , map1.get("pv_cdramo"));
+	            paramsPoliage.put("pv_estado_i"   , panel2.get("estado"));
+	            paramsPoliage.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
+	            paramsPoliage.put("pv_cdagente_i" , (String)anterior.get("cdagente"));
+	            paramsPoliage.put("pv_nmsuplem_i" , "0");
+	            paramsPoliage.put("pv_status_i"   , "V");
+	            paramsPoliage.put("pv_cdtipoag_i" , "1");
+	            paramsPoliage.put("pv_porredau_i" , "0");
+	            paramsPoliage.put("pv_nmcuadro_i" , panel2.get("nmcuadro"));
+	            paramsPoliage.put("pv_cdsucurs_i" , null);
+	            paramsPoliage.put("pv_accion_i"   , "I");
+	            paramsPoliage.put("pv_ntramite_i" , null);
+	            paramsPoliage.put("pv_porparti_i" , "100");
+	            kernelManager.movMPoliage(paramsPoliage);
+            }
             
             if(parametros==null){
             	parametros = new HashMap<String, String>();

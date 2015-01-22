@@ -1837,7 +1837,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     				"swautori","cdmoneda","feinisus","fefinsus",
     	            "ottempot","feefecto","hhefecto","feproren","fevencim","nmrenova","ferecibo","feultsin","nmnumsin","cdtipcoa",
     	            "swtarifi","swabrido","feemisio","cdperpag","nmpoliex","nmcuadro","porredau","swconsol","nmpolant","nmpolnva",
-    	            "fesolici","cdramant","cdmejred","nmpoldoc","nmpoliza2","nmrenove","nmsuplee","ttipcamc","ttipcamv","swpatent"};
+    	            "fesolici","cdramant","cdmejred","nmpoldoc","nmpoliza2","nmrenove","nmsuplee","ttipcamc","ttipcamv","swpatent",
+    	            "cdagente"};
     		for(String columna:columnas)
     		{
     			if(columna.substring(0,2).equals("fe"))
