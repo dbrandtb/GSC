@@ -276,7 +276,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		logger.debug("parametros de entrada PARAMETROS : "+ parametros);
 	   	try {
 	   		
-	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),null);
+	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),params.get("feegreso"),params.get("diasdedu"),null);
 	   		
 	   		List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
 	   		logger.debug("#####VALOR DE LOS ASEGURADOS######");
@@ -552,14 +552,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 					params.get("nmsinies"), params.get("ntramite"));
 			success = true;
 		}catch(Exception e){
-	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+	   		logger.error("Error en obtieneDatosGeneralesSiniestro", e);
 	   	}
 		return SUCCESS;
 	}
 	
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
 		try {
-				//if(params.get("tipoPago").toString().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo().toString())){
 					Date dFeocurre = renderFechas.parse(params.get("feocurre"));
 					String valor = null;
 					if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
@@ -576,12 +575,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 						valor);
 					String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
 					
-					siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), formatoFechaFactura, params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),null);
-			/*}else{
-				String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
-				siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), formatoFechaFactura, params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),null);
-			}*/
-
+					siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), formatoFechaFactura, params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),params.get("feegreso"), params.get("diasdedu"),null);
+			
 			success = true;
 		}catch(Exception e){
 	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
@@ -610,7 +605,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		try {
 			// Dummy data:
 			
-			// TODO: Terminar cuando este listo el SP
 			historialSiniestro = siniestrosManager.obtieneHistorialReclamaciones(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),

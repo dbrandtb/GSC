@@ -990,6 +990,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_tasacamb_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ptimporta_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_dctonuex_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_diasdedu_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
@@ -1576,6 +1578,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDPRESTA"      , "NOMBREPROVEEDOR" , "PTIMPORT"  , "CDGARANT" , "DSGARANT"
 					,"DESCPORC"      , "DESCNUME"        , "CDCONVAL"  , "DSSUBGAR" , "CDMONEDA"
 					,"DESTIPOMONEDA" , "TASACAMB"        , "PTIMPORTA" , "DCTONUEX" , "CODRECLAM"
+					,"FEEGRESO" 	 , "DIASDEDU"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

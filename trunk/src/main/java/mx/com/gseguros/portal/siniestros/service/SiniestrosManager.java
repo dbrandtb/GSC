@@ -125,6 +125,8 @@ public interface SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex,
+			String feegreso,
+			String diasdedu,
 			String tipoAccion
 			) throws Exception;
 

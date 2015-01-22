@@ -339,6 +339,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex,
+			String feegreso,
+			String diasdedu,
 			String tipoAccion) throws Exception {
 		// TODO Auto-generated method stub
 		try {
@@ -365,6 +367,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
 			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
 			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
+			paramsFacMesaCtrl.put("pv_feegreso_i",feegreso);
+			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (ParseException parseExc) {

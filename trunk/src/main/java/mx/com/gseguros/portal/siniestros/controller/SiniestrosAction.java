@@ -521,6 +521,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				if(params.get("cmbProveedor").toString().length() > 0){
 					parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 				}
+				
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+					parMesCon.put("pv_otvalor12","7RDH");
+					parMesCon.put("pv_otvalor14","7RDH001");
+				}
+				
 				//Si el tr&aacute;mite es nuevo
 				if(params.get("idNumTramite").toString().length() <= 0){
 				    WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
@@ -573,6 +579,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
 					modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
 					modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
+				
+					if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+						modMesaControl.put("pv_otvalor12","7RDH");
+						modMesaControl.put("pv_otvalor14","7RDH001");
+					}
 					siniestrosManager.actualizaValorMC(modMesaControl);
 					
 					//2.- Verificamos Si el tipo de pago es 
@@ -1742,8 +1753,11 @@ public String consultaListaPlazas(){
 	    		String                   tasacamb  = factura.get("TASACAMB");
 	    		String                   ptimporta = factura.get("PTIMPORTA");
 	    		String                   dctonuex = factura.get("DCTONUEX");
+	    		String                   feegreso = factura.get("FEEGRESO");
+	    		String                   diasdedu = factura.get("DIASDEDU");
 	    		
-	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null);
+	    		
+	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,feegreso,diasdedu,null);
     		}
     		
     		success = true;
@@ -1883,7 +1897,7 @@ public String consultaListaPlazas(){
     		String                   cdconval =  params.get("cdconval");
     		String                   tipoAccion =  params.get("tipoAccion");
     		
-    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,tipoAccion);
+    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null,null,tipoAccion);
     		
     		success = true;
     		mensaje = "Cobertura y subcobertura modificada";
@@ -1897,7 +1911,7 @@ public String consultaListaPlazas(){
     	
     	logger.debug(""
     			+ "\n######                           ######"
-    			+ "\n###### guardarSeleccionCobertura ######"
+    			+ "\n###### guardarCoberturaxFactura  ######"
     			+ "\n#######################################"
     			+ "\n#######################################"
     			);
@@ -2074,6 +2088,8 @@ public String consultaListaPlazas(){
     				"0",
     				"0",
     				"0",
+    				null,
+    				null,
     				null);
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
@@ -5565,6 +5581,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                     datosTablas.get(i).get("tasacamb"),
                     datosTablas.get(i).get("ptimporta"),
                     null,
+                    null,
+                    null,
                     null
                 );
             }
@@ -5578,6 +5596,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 					logger.error("error al eliminar en TfacMesCtrl ",e);
 				}
         	}
+        	
+        	String cobertura = null;
+        	String subcobertura = null;
+        	if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+				cobertura = "7RDH";
+				subcobertura = "7RDH001";
+			}
         	
         	for(int i=0;i<datosTablas.size();i++)
             {
@@ -5594,13 +5619,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                     datosTablas.get(i).get("cdtipser"),
                     datosTablas.get(i).get("cdpresta"),
                     datosTablas.get(i).get("ptimport"),
-                    null,
-                    null,
+                    cobertura,
+                    subcobertura,
                     null,
                     null,
                     datosTablas.get(i).get("cdmoneda"),
                     datosTablas.get(i).get("tasacamb"),
                     datosTablas.get(i).get("ptimporta"),
+                    null,
+                    null,
                     null,
                     null
                 );
@@ -5911,6 +5938,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	                    datosTablas.get(i).get("cdmoneda"),
 	                    datosTablas.get(i).get("tasacamb"),
 	                    datosTablas.get(i).get("ptimporta"),
+	                    null,
+	                    null,
 	                    null,
 	                    null
 	                );
@@ -6235,7 +6264,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		datosPenalizacion       = new ArrayList<Map<String,String>>();
     		datosCoberturaxCal      = new ArrayList<Map<String,String>>();
     		listaImportesWS         = new ArrayList<Map<String,String>>(); 
-    		if(esPagoDirecto)
+    		if(TipoPago.DIRECTO.getCodigo().equals(tramite.get("OTVALOR02")))//if(esPagoDirecto)
     		{
     			//Verificamos la informacion del proveedor
     			smap.put("PAGODIRECTO","S");
@@ -6965,7 +6994,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			}
     			//logger.debug("VALOR TOTAL DE FACTURAS --->"+factura);
     		}
-    		else//REEMBOLSO
+    		else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02")))//REEMBOLSO
     		{
     			
     			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null,null);
@@ -7380,7 +7409,11 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
     			logger.debug("<<WS del siniestro unico");
     			
+    		}else{
+    			//PAGO X INDEMNIZACION
+    			
     		}
+			
     		
     		if(conceptos!=null&&conceptos.size()>0)
     		{
@@ -7469,7 +7502,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
- 
     public String consultaCirculoHospitalario(){
 		logger.debug(" **** Entrando a consultaCirculoHospitalario **");
 		logger.debug(params);
