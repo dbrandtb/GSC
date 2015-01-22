@@ -4750,4 +4750,28 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		compile();
     	}
     }
+    
+    @Override
+    public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo" , cdramo);
+    	Utilerias.debugPrecedure(logger, "PKG_CONSULTA.P_GET_BANDERA_CAMBIO_CUACOM", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarBanderaCambioCuadroPorProducto(getDataSource()),params);
+    	String bandera                = (String)procResult.get("pv_bandera_o");
+    	return StringUtils.isNotBlank(bandera)&&bandera.equals("S");
+    }
+    
+    protected class CargarBanderaCambioCuadroPorProducto extends StoredProcedure
+    {
+    	protected CargarBanderaCambioCuadroPorProducto(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_CONSULTA.P_GET_BANDERA_CAMBIO_CUACOM");
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_bandera_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

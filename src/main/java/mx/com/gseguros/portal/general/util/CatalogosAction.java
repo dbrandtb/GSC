@@ -572,6 +572,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista=catalogosManager.cargarTiposSituacionPorNegocioRamo5(params.get("negocio"));
 					break;
+				case CUADROS_POR_SITUACION:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista=catalogosManager.cargarCuadrosPorSituacion(params.get("cdtipsit"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

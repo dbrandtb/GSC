@@ -410,4 +410,5 @@ public interface CotizacionManager
 	
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
 	
+	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo);
 }
