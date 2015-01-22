@@ -83,6 +83,7 @@ var coloniaImportarTMP;
 
 
 var _esCargaClienteNvo = false;
+var _ocultaBusqueda    = false;
 var _cargaCompania;
 var _cargaCdPerson;
 var _cargaCP;
@@ -93,6 +94,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaCdPerson = _p22_smap1.cdperson;
 	
 	_esCargaClienteNvo = !Ext.isEmpty(_p22_smap1.esCargaClienteNvo) && _p22_smap1.esCargaClienteNvo == "S" ? true : false ;
+	_ocultaBusqueda = !Ext.isEmpty(_p22_smap1.ocultaBusqueda) && _p22_smap1.ocultaBusqueda == "S" ? true : false ;
 	_cargaCompania = _p22_smap1.esSaludDanios;	
 	_cargaCP = _p22_smap1.cargaCP;	
 	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
@@ -209,13 +211,13 @@ Ext.onReady(function()
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
 					            		_RFCsel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val){
 						    				try{
@@ -312,13 +314,13 @@ Ext.onReady(function()
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function(){
 					            		_RFCnomSel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val){
 						    				try{
@@ -392,7 +394,7 @@ Ext.onReady(function()
 	        	 ,buttons     :
 	        	 [
 	        	     {
-                         text     : _esCargaClienteNvo?'Continuar':'Agregar Cliente'
+                         text     : _esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente'
                          ,xtype   : 'button'
                          ,itemId  : 'btnContinuarId'
                          ,disabled: !_esCargaClienteNvo
@@ -763,6 +765,9 @@ Ext.onReady(function()
 							heredarPanel(_p22_formDomicilio());
 							_p22_heredarColonia();
 						}
+						if(_ocultaBusqueda){
+							_p22_formBusqueda().hide();
+						}
 		                
 		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
 		            }
@@ -789,6 +794,9 @@ Ext.onReady(function()
 			_p22_formDomicilio().show();
 		    _p22_principalDatosAdicionales().show();
 
+		    if(_ocultaBusqueda){
+				_p22_formBusqueda().hide();
+			}
 		    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
 		    
 		}else{
@@ -922,6 +930,20 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			
 		},1000);
 	    
+    }else if(!Ext.isEmpty(_cargaCompania)){
+    	setTimeout(function(){
+			Ext.ComponentQuery.query('#companiaId')[0].setValue(_cargaCompania);
+			
+			if('D' == _cargaCompania){
+				_fieldByName('DSL_CDIDEEXT').hide();
+				_fieldByName('CDSUCEMI').hide();				
+			}else if('S' == _cargaCompania){
+				_fieldByName('DSL_CDIDEPER').hide();
+			}
+			
+			Ext.ComponentQuery.query('#companiaGroupId')[0].hide();
+			
+		},1000);
     }
     
     
@@ -2424,6 +2446,50 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 			
 }
 
+destruirContLoaderPersona = function(){
+	
+	debug("DESTRUYENDO!!!");
+	
+	_p22_PanelPrincipal().query().forEach(function(element){
+		try{
+			element.destroy();
+		}catch(e){
+			debug('Error al destruir en Pantalla de Clientes',e);
+		}
+	});
+	
+	try{
+		_p22_PanelPrincipal().destroy();	
+	}catch(e){
+		debug('Error al destruir Panel Principal en Pantalla de Clientes',e);
+	}
+	
+	try{
+		windowAccionistas.destroy();	
+	}catch(e){
+		debug('Error al destruir Window accionistas en Pantalla de Clientes',e);
+	}
+};
+
+obtieneDatosClienteContratante = function(){
+	var datosPersona = {
+		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
+		fenacimi: _fieldByName('FENACIMI').getValue(),
+		sexo:     _p22_fieldSexo().getValue(),
+		tipoper:  _p22_fieldTipoPersona().getValue(),
+		naciona:  _p22_fielCdNacion().getValue(),
+		nombre:   _fieldByName('DSNOMBRE').getValue(),
+		snombre:  _p22_fieldSegundoNombre().getValue(),
+		appat:    _p22_fieldApat().getValue(),
+		apmat:    _p22_fieldAmat().getValue(),
+		rfc:      _p22_fieldRFC().getValue(),
+		cdideper: _fieldByName('CDIDEPER').getValue(),
+		cdideext: _fieldByName('CDIDEEXT').getValue()
+		
+	}
+	
+	return datosPersona;
+};
 
 ////// funciones //////
 </script>

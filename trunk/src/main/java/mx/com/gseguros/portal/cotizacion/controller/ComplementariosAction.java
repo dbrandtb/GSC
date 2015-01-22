@@ -648,6 +648,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "swexiper")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdideper")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdideext")));
 			logger.debug("Modelo armado para persona: "+item1.toString());
 			/*
 			nmsituac
@@ -777,6 +778,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdideext"))
+					.add(new Item("dataIndex", "cdideext"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
 			
 			item2 = new Item("columns", null, Item.ARR);// para las columnas del grid
 			/*item2.add(Item.crear(null, null, Item.OBJ)
@@ -885,24 +892,28 @@ public class ComplementariosAction extends PrincipalCoreAction
 								.add("tooltip","Editar coberturas")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onEditarClick").setQuotes(""))
+//								.add(Item.crear("isDisabled ","function(view,rowIndex,colIndex,item,record){if(record.get('estomador'))return true;}").setQuotes(""))
 								)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/report_key.png")
 								.add("tooltip","Editar domicilios")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onDomiciliosClick").setQuotes(""))
+								.add(Item.crear("isDisabled ","function(view,rowIndex,colIndex,item,record){if(record.get('estomador'))return true;}").setQuotes(""))
 								)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/lock.png")
 								.add("tooltip","Editar exclusiones")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onExclusionClick").setQuotes(""))
+//								.add(Item.crear("isDisabled ","function(view,rowIndex,colIndex,item,record){if(record.get('estomador'))return true;}").setQuotes(""))
 								)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/user_edit.png")
 								.add("tooltip","Datos de situaci&oacute;n asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onValositClick").setQuotes(""))
+//								.add(Item.crear("isDisabled ","function(view,rowIndex,colIndex,item,record){if(record.get('estomador'))return true;}").setQuotes(""))
 								)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/money.png")
@@ -956,6 +967,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "cdideper"))
 					.add(new Item("dataIndex", "cdideper"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdideext"))
+					.add(new Item("dataIndex", "cdideext"))
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
@@ -1074,24 +1091,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 		logger.debug("cargarPantallaAsegurados map1: "+map1);
 		try
 		{
-			list1=kernelManager.obtenerAsegurados(map1);/*
-			Iterator it=list1.iterator();
+			list1=kernelManager.obtenerAsegurados(map1);
+			/*Iterator it=list1.iterator();
 			while(it.hasNext())
 			{
 				Map<String,Object>aseg=(Map<String, Object>) it.next();
-				if(aseg.containsKey("fenacimi")&&aseg.get("fenacimi")!=null)
-				{
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
-					logger.debug(aseg.get("fenacimi"));
-					Date fenacimi=(Date)aseg.get("fenacimi");
-					aseg.remove("fenacimi");
-					aseg.put("fenacimi",(String)renderFechas.format(fenacimi));
+				if(aseg!=null && aseg.get("Parentesco")!= null && StringUtils.isNotBlank((String)aseg.get("Parentesco"))){
+					String cdperson = (String) aseg.get("cdperson");
+					if(StringUtils.isBlank(cdperson)){
+						Map<String,Object>cdpersonRes=storedProceduresManager.procedureParamsCall(
+								ObjetoBD.GENERAR_CDPERSON.getNombre(),
+								new LinkedHashMap<String,Object>(),
+								null,
+								new String[]{"pv_cdperson_o"},
+								null);
+						aseg.put("cdperson",(String)cdpersonRes.get("pv_cdperson_o"));
+					}
+					
 				}
 			}*/
 			success=true;
@@ -1136,6 +1152,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String cdIdeperAseg = (String) aseg.get("cdideper");
+				String cdIdeExtAseg = (String) aseg.get("cdideext");
 				parametros.put("pv_cdperson_i"    , (String)aseg.get("cdperson"));
 				parametros.put("pv_cdtipide_i"    , "1");
 				parametros.put("pv_cdideper_i"    , cdIdeperAseg);
@@ -1156,7 +1173,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_ptcumupr_i"    , null);
 				parametros.put("pv_residencia_i"  , null);
 				parametros.put("pv_nongrata_i"    , null);
-				parametros.put("pv_cdideext_i"    , null);
+				parametros.put("pv_cdideext_i"    , cdIdeExtAseg);
 				parametros.put("pv_cdestciv_i"    , null);
 				parametros.put("pv_cdsucemi_i"    , null);
 				parametros.put("pv_accion_i"      , "I");
@@ -1989,7 +2006,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
-		if(success&&!esFlotilla)
+		if(success)
 		{
 					String _cdunieco = cdunieco;
 					String _cdramo   = cdramo;
