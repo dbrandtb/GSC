@@ -24,9 +24,9 @@ Ext.onReady(function() {
     ///// NUEVOS
 	Ext.define('DatosFacturaxTramite',{
 		extend: 'Ext.data.Model',
-		fields: [
+		fields: [ 
 				{type:'string',    name:'reclamacion'		},				{type:'string',    name:'ntramite'			},
-				{type:'string',    name:'factura'			},				{type:'string',    name:'fechaFactura'		},
+				{type:'string',    name:'factura'			},				{type:'date',      name:'fechaFactura',	dateFormat : 'd/m/Y'},
 				{type:'string',    name:'cdtipser'			},				{type:'string',    name:'descServicio'		},
 				{type:'string',    name:'cdpresta'			},				{type:'string',    name:'nomProveedor'		},
 				{type:'string',    name:'ptimport'			},				{type:'string',    name:'cdgarant'			},

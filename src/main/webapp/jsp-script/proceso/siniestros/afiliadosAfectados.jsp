@@ -856,7 +856,7 @@
 			    {
 			    	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
 			    	valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
-			    	queryMode :'remote',				store : storeCoberturaxAsegurado,		triggerAction: 'all',			editable:false,
+			    	queryMode :'remote',				store : storeCoberturaxAsegurado,		triggerAction: 'all',			editable:true,
 			    	listeners : {
 						'select' : function(combo, record) {
 							banderaAsegurado = 1;
@@ -873,10 +873,10 @@
 			    });
 				
 				var subCoberturaAsegurado = Ext.create('Ext.form.field.ComboBox',
-					    {
+				{
 			    	allowBlank: false,				displayField : 'value',			id:'idSubcobertura1',		name:'cdconval',
 			    	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
-			    	queryMode :'remote',			store : storeSubcoberturaAsegurado,		triggerAction: 'all',			editable:false,
+			    	queryMode :'local',			store : storeSubcoberturaAsegurado,		triggerAction: 'all',			editable:true,
 			    	listeners : {
 						'select' : function(combo, record) {
 							_11_aseguradoSeleccionado.set('CDCONVAL',this.getValue());
@@ -893,6 +893,7 @@
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 				});
 						
+				
 				
 				cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox',
 				{
@@ -977,24 +978,33 @@
 								{
 									beforeedit : function()
 									{
-										_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-										storeCoberturaxAsegurado.proxy.extraParams=
-										{
-											'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
-							            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
-							            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
-							            	'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
-							            	'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC')
-										};
 										
-										storeSubcoberturaAsegurado.load({
-											params:{
-												'params.cdgarant' :_11_aseguradoSeleccionado.get('CDGARANT')
-											}
-										});
-										
-										
-										
+										if (banderaConcepto == "1"){
+											debug("Guardamos los conceptos ");
+											//Mandamos a guardar los conceptos
+											_guardarConceptosxFactura();
+										}else if(banderaAsegurado == "1"){
+											debug("VALOR SELECCIONADO :)-->",_11_aseguradoSeleccionado);
+											guardaDatosComplementariosAsegurado(_11_aseguradoSeleccionado);
+											storeConceptos.removeAll();
+										}else{
+											_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+											debug("VALOR SELECCIONADO -->",_11_aseguradoSeleccionado);
+											storeCoberturaxAsegurado.proxy.extraParams=
+											{
+												'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+								            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+								            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+								            	'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+								            	'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC')
+											};
+											
+											storeSubcoberturaAsegurado.load({
+												params:{
+													'params.cdgarant' :_11_aseguradoSeleccionado.get('CDGARANT')
+												}
+											});
+										}
 									}
 								}
 							})
@@ -1084,7 +1094,6 @@
 										{
 											storeCoberturaxAseguradoRender.each(function(rec)
 										    {
-												debug("cat-->",rec.data);
 												if (rec.data.key == v)
 											    {
 													leyenda = rec.data.value;
@@ -1119,7 +1128,6 @@
 										{
 											storeSubcoberturaAseguradoRender.each(function(rec)
 										    {
-												debug("cat-->",rec.data);
 												if (rec.data.key == v)
 											    {
 													leyenda = rec.data.value;
@@ -1284,11 +1292,16 @@
 						listeners: {
 							select: function (grid, record, index, opts){
 								debug("VALOR DEL RECORD SELECCIONADO", record);
-								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto);
+								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto,"<--VALOR DE LA BANDERA DEL ASEGURADO-->",banderaAsegurado);
 								if (banderaConcepto == "1"){
 									debug("Guardamos los conceptos ");
 									//Mandamos a guardar los conceptos
 									_guardarConceptosxFactura();
+									storeConceptos.removeAll();
+								}else if(banderaAsegurado == "1"){
+									debug("VALOR SELECCIONADO :)-->",_11_aseguradoSeleccionado);
+									guardaDatosComplementariosAsegurado(_11_aseguradoSeleccionado);
+									storeConceptos.removeAll();
 								}else{
 									var numSiniestro = record.get('NMSINIES');
 									if(numSiniestro.length == "0"){
@@ -1418,7 +1431,6 @@
 										{
 											storeConceptosCatalogoRender.each(function(rec)
 										    {
-												debug("cat-->",rec.data);
 												if (rec.data.key == v)
 											    {
 													leyenda = rec.data.value;
@@ -1695,7 +1707,7 @@
 							 header	 : 'Causa Siniestro'
 							 ,dataIndex : 'CDCAUSA'
 							 ,width	 : 100
-							 ,hidden : true
+							 //,hidden : true
 						 }
 						 ,
 						 {
@@ -2974,6 +2986,10 @@
 	
 	function guardarDatosComplementarios(grid,rowIndex){
 		var record = grid.getStore().getAt(rowIndex);
+		guardaDatosComplementariosAsegurado(record);
+	}
+	
+	function guardaDatosComplementariosAsegurado(record){
 		var idICD = record.data.CDICD;
 		var idCdgarant = record.data.CDGARANT;
 		var idConval = record.data.CDCONVAL;
@@ -3016,6 +3032,7 @@
 				}
 				,success : function (response)
 				{
+					banderaAsegurado = 0;
 					storeAseguradoFactura.load({
 						params: {
 							'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
