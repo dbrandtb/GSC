@@ -32,7 +32,13 @@
     </bean>
     
     <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/> -->
-
+    
+    <bean id="dataSourceSIGS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.informix.jdbc.IfxDriver"/>
+        <property name="url" value="jdbc:informix-sqli://10.1.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
+        <property name="username" value="sadgdl"/>
+        <property name="password" value="1salud"/>
+    </bean>
     
     <!-- Manejo de transacciones para Spring JDBC: -->
     <!-- Enable Annotation based Declarative Transaction Management -->
@@ -83,6 +89,15 @@
     <!-- <bean id="procesoResultadoDAOSISA" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/> -->
     
     <bean id="abstractManagerDAOSISA" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSISA">
+        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
+    </bean>
+    
+    <!-- Para SIGS: -->
+    <bean id="abstractJdbcDAOSIGS" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
+        <property name="dataSource" ref="dataSourceSIGS"/>
+    </bean>
+    
+    <bean id="abstractManagerDAOSIGS" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSIGS">
         <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
     </bean>
     

@@ -8,6 +8,14 @@
     <name>gseguros</name>
     <url>http://maven.apache.org</url>
     
+    <repositories>
+	    <repository>
+	        <id>com.springsource.repository.bundles.external</id>
+	        <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+	        <url>http://repository.springsource.com/maven/bundles/external</url>
+	    </repository>
+   </repositories>
+    
     <dependencies>
     
         <dependency>
@@ -295,6 +303,13 @@
 		    <version>4.0</version>
 		    <!-- <scope>provided</scope> -->
 		</dependency>
+		
+		<!-- Informix Driver -->
+		<dependency>
+            <groupId>com.informix.jdbc</groupId>
+            <artifactId>com.springsource.com.informix.jdbc</artifactId>
+            <version>3.0.0.JC3</version>
+        </dependency>
 
 
         <!-- PARA AXIS2 -->

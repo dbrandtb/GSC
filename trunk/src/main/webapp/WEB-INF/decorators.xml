@@ -139,6 +139,9 @@
         <pattern>/consultasSiniestro/*.action</pattern>
         <pattern>/jsp/consultas/siniestros/*.jsp</pattern>
         
+        <pattern>/reclamoExpress/*.action</pattern>
+        <pattern>/jsp/reclamoExpress/*.jsp</pattern>
+        
         <pattern>/reportes/*.action</pattern>
         <pattern>/jsp-script/reportes/*.jsp</pattern>
 
