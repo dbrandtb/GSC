@@ -1244,6 +1244,7 @@
             	
                 var json = Ext.decode(response.responseText);
                 marendStoreLigas.clearFilter();
+                debug('marendStoreLigas sin filtros:', marendStoreLigas);
 
                 // Se genera una expresion regular para hacer el filtro de lista de endosos:
                 var strEndososRegex = '^(';
@@ -1253,7 +1254,7 @@
                 	    strEndososRegex += '|';
                 	}
                 	//Se asigna descripcion del endoso:
-                	if(item.key != -1) {
+                	if(item.key != -1 && marendStoreLigas.findRecord("cdtipsup", item.key) != null) {
                 		marendStoreLigas.findRecord("cdtipsup", item.key).set('texto', item.value);
                 	}
                 });
@@ -1587,8 +1588,10 @@ Ext.onReady(function()
             ]
         }
     });
+    debug('marendStoreLigas=', marendStoreLigas);
     //Filtramos la lista de endosos desde el inicio:
-    marendStoreLigas.filter("cdtipsup", null);
+    //marendStoreLigas.filter("cdtipsup", null);
+    //debug('marendStoreLigas despues de filtrar todos=', marendStoreLigas);
     
     /*////////////////*/
     ////// stores //////
