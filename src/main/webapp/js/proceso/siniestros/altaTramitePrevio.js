@@ -753,7 +753,13 @@ Ext.onReady(function() {
 				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
 				 	},
 				 	{
-				 		header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
+				 		header: 'Fecha de Ingreso',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
+				 		,editor : {
+							xtype : 'datefield',
+							format : 'd/m/Y',
+							editable : true,
+							allowBlank: false
+						}
 				 	},
 				 	{
 						header: 'Proveedor', 				dataIndex: 'proveedorName',	flex:2

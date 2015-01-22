@@ -26,7 +26,7 @@ Ext.onReady(function() {
 		extend: 'Ext.data.Model',
 		fields: [
 				{type:'string',    name:'reclamacion'		},				{type:'string',    name:'ntramite'			},
-				{type:'string',    name:'factura'			},				{type:'date',      name:'fechaFactura',	dateFormat : 'd/m/Y'},
+				{type:'string',    name:'factura'			},				{type:'string',    name:'fechaFactura'		},
 				{type:'string',    name:'cdtipser'			},				{type:'string',    name:'descServicio'		},
 				{type:'string',    name:'cdpresta'			},				{type:'string',    name:'nomProveedor'		},
 				{type:'string',    name:'ptimport'			},				{type:'string',    name:'cdgarant'			},
@@ -34,7 +34,8 @@ Ext.onReady(function() {
 				{type:'string',    name:'desctoNum'			},				{type:'string',    name:'cdconval'			},
 				{type:'string',    name:'dssubgar'			},				{type:'string',    name:'cdmoneda'			},
 				{type:'string',    name:'descMoneda'		},				{type:'string',    name:'tasaCambio'		},
-				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			}
+				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			},
+				{type:'string',    name:'feegreso'          },				{type:'string',    name:'diasdedu'			}
 		]
     });
     
