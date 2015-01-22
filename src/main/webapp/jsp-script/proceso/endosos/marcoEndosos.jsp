@@ -1590,7 +1590,7 @@ Ext.onReady(function()
     });
     debug('marendStoreLigas=', marendStoreLigas);
     //Filtramos la lista de endosos desde el inicio:
-    marendStoreLigas.filter("cdtipsup", null);
+    marendStoreLigas.filter("cdtipsup", -1);
     debug('marendStoreLigas despues de filtrar todos=', marendStoreLigas);
     
     /*////////////////*/
