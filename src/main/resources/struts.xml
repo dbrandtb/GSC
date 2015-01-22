@@ -46,6 +46,7 @@
     <include file="struts/config/struts-general.xml"/>
     <include file="struts/config/struts-mesacontrol.xml"/>
     <include file="struts/config/struts-portal.xml"/>
+    <include file="struts/config/struts-reclamoexpress.xml"/>
     <include file="struts/config/struts-reportes.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
     
