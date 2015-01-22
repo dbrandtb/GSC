@@ -167,16 +167,7 @@ Ext.onReady(function() {
     storeReclamos.load();
     
     //Lista de secuenciales
-    /*var storeSecuencias = Ext.create('Ext.data.Store', {
-        model      : 'Generic',
-        data : [
-            {"key":"1", "value":"1"},{"key":"2", "value":"2"},{"key":"3", "value":"3"},
-            {"key":"4", "value":"4"},{"key":"5", "value":"5"},{"key":"6", "value":"6"},
-            {"key":"7", "value":"7"},{"key":"8", "value":"8"},{"key":"9", "value":"9"},
-            {"key":"10", "value":"10"},{"key":"11", "value":"11"},{"key":"12", "value":"12"},
-            {"key":"13", "value":"13"},{"key":"14", "value":"14"},{"key":"15", "value":"15"}            
-        ]
-    });*/
+    
     var storeSecuencias = Ext.create('Ext.data.Store', {
     	model      : 'Generic',
     	autoLoad: false,
@@ -350,21 +341,7 @@ Ext.onReady(function() {
     	   {"key":"3", "value":"HCPC"}
     	]    	
     });
-   /* 
-    var storeTipoConcepto = Ext.create('Ext.data.JsonStore', {
-    	model:'Generic',
-    	proxy: {
-    		type: 'ajax',
-    		url: _URL_CATALOGOS,
-    		extraParams : {catalogo:_CATALOGO_TipoConcepto},
-    		reader: {
-                type: 'json',
-                root: 'lista'
-            }
-    	}
-    });
-    storeTipoConcepto.load();
-    */
+   
     //Conceptos Catálogo
     var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
     	model:'Generic',
@@ -400,53 +377,7 @@ Ext.onReady(function() {
             }
     	}
     });
-   /* 
-    var storeCobertura2 = Ext.create('Ext.data.Store', {
-        model:'ListadoCoberturaModel',
-        autoLoad:false,
-        proxy: {
-            type: 'ajax',
-            url : _URL_LISTA_COBERTURA,
-            //Parametros iniciales. Después se actualizan con los de la póliza
-            extraParams: {
-                'params.cdunieco' : '1013',
-                'params.cdramo'   : '2',
-                'params.estado'   : 'M',
-                'params.nmpoliza' : '6',
-                'params.nmsituac' : '1'
-            },
-            reader: {
-                type: 'json',
-                root: 'listaCoberturaPoliza'
-            }
-        }
-    });
-    */
-    /*var storeCoberturaxAseguradoRender = Ext.create('Ext.data.JsonStore', {
-        model:'Generic',
-        //autoLoad:true,
-        cargado:false,
-        proxy: {
-            type: 'ajax',
-            url: _URL_CATALOGOS,
-            extraParams : {catalogo:_CATALOGO_COBERTURASTOTALES},
-            reader: {
-                type: 'json',
-                root: 'lista'
-            }
-        },listeners:
-        {
-            load : function()
-            {
-                this.cargado=true;
-                if(!Ext.isEmpty(gridFacturaDirecto))
-                {
-                    gridFacturaDirecto.getView().refresh();
-                }
-            }
-        }
-    });
-    storeCoberturaxAseguradoRender.load();*/
+   
     
     //Store subcobertura
     var storeSubcobertura= Ext.create('Ext.data.Store', {
@@ -463,20 +394,7 @@ Ext.onReady(function() {
     });
     
     
-    /*
-    var storeSubcobertura2= Ext.create('Ext.data.Store', {
-        model:'Generic',
-        autoLoad:false,
-         proxy: {
-            type: 'ajax',
-            url : _URL_LISTA_SUBCOBERTURA,
-            reader: {
-                type: 'json',
-                root: 'listaSubcobertura'
-            }
-        }
-    });
-    */
+    
     /***Fin STORES***/
     
     
@@ -657,16 +575,7 @@ Ext.onReady(function() {
                     {xtype: 'tbspacer', width:25},
                    {xtype: 'textfield', name: 'idTipoServicio',   fieldLabel: 'Tipo Servicio',      readOnly: true, labelWidth: 120,  width: 220, labelAlign: 'left'},
                    {xtype: 'textfield', name: 'tipoServicio',   fieldLabel: '',      readOnly: true, width: 400, labelAlign: 'right'}
-                   /*{xtype: 'tbspacer', width:20}*/
-                   /*{                    
-                        xtype:'combobox',
-                        fieldLabel: 'Atención',
-                        labelAlign: 'right',
-                        labelWidth: 60, 
-                        width: 240,
-                        disabled:true,
-                        queryMode : 'remote'
-                   }*/
+                   
                 ]
             },
             {
@@ -704,22 +613,7 @@ Ext.onReady(function() {
                         allowBlank:false,
                         forceSelection:true
                                        
-                   }/*,
-                   {xtype: 'tbspacer', width:20},
-                   {                    
-                        xtype:'combobox',
-                        name:'atencionHosp',
-                        fieldLabel: 'Atención',
-                        labelAlign: 'right',
-                        labelWidth: 60, 
-                        width: 240,
-                        disabled:false,
-                        queryMode : 'local',
-                        store:storeAtencionHosp,
-                        valueField:'key',
-                        displayField:'value',
-                        typeAhead:true                        
-                   }*/
+                   }
                                                        
                 ]
             },
@@ -822,12 +716,7 @@ Ext.onReady(function() {
                         triggerAction: 'all',
                         hideTrigger:true                      
                                          
-                   }/*,
-                   {xtype: 'tbspacer', width:10},
-                   {xtype: 'datefield', name: 'fecing', fieldLabel: 'Fecha Ingreso',    format: 'd/m/Y', readOnly: true, labelWidth: 100, labelAlign:'right', width: 200},
-                   {xtype: 'tbspacer', width:10},
-                   {xtype: 'datefield', name: 'fechaAlta', fieldLabel: 'Fecha Alta',    format: 'd/m/Y', labelWidth: 100, labelAlign:'right', width: 250}*/
-                   
+                   }
                 ]
             },
             {
@@ -855,22 +744,7 @@ Ext.onReady(function() {
                         triggerAction: 'all',
                         hideTrigger:true                      
                                          
-                   }/*,
-                   {xtype: 'tbspacer', width:10},
-                   {                    
-                        xtype:'combobox',
-                        name: 'motivoEgreso', 
-                        fieldLabel: 'Motivo Egreso',                        
-                        labelWidth: 100, 
-                        width: 250,                 
-                        labelAlign: 'left',
-                        queryMode : 'local',                        
-                        store:storeMotivoEgreso, 
-                        valueField:'key',
-                        displayField:'value',
-                        
-                        forceSelection: true                
-                   }*/
+                   }
                 ]
             },
             {
@@ -909,24 +783,10 @@ Ext.onReady(function() {
                 		xtype:'button',
                 		text: 'Guardar',
                 		handler: function(btn, e) {
-                			//tabDatosGenerales.child('#tabDetalle').tab.enable(true);
-                			//tabDatosGenerales.child('#tabDetalle').tab.setActive(true);                			
-                			//tabDatosGenerales.child('#tabDetalle').tab.show();
+                			
                 			var formBusqueda = this.up('form').getForm();
                 			panelDatos.setLoading(true);
-                			/*
-                			if(!formBusqueda.findField('tipadm').isValid()){
-                                showMessage('', _MSG_DATO_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
-                                panelDatos.setLoading(false);
-                                return;
-                            }
-                            if(!formBusqueda.findField('causaReclamo').isValid()){
-                                showMessage('', _MSG_DATO_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
-                                panelDatos.setLoading(false);
-                                return;
-                            }*/
-                            //guardaReclamoExpress(panelDatos, btn);
-                            //showMessage('', formBusqueda.findField('idIcd').getRawValue(), Ext.Msg.OK, Ext.Msg.INFO);
+                			
                             panelDatos.setLoading(false);                            
                             formBusqueda.submit(
                                 {
@@ -1011,12 +871,7 @@ Ext.onReady(function() {
     	queryParam: 'params.descripc',
     	hideTrigger: true,
     	minChars: 3
-    	/*Faltan listeners*/
-    	/*listeners : {
-            'select' : function(combo, record) {
-            	storeConceptos[0].dsconcep = record[0].get('value');
-            }
-    	}*/
+    	
     });
     
     //Combo para cobertura afectada
@@ -1042,10 +897,7 @@ Ext.onReady(function() {
             'select' : function(combo, record) {
                 Ext.getCmp('idSubcobertura').reset();
                 Ext.getCmp('idSubcobertura').setValue('');
-                /*Ext.getCmp('idDeducible').setValue('');
-                Ext.getCmp('idTipoCopago').setValue('');
-                Ext.getCmp('idCopago').setValue('');*/
-                //Ext.getCmp('idDsGarant').setValue(this.getRawValue());
+                
                 conceptoSeleccionado.set('dsgarant',this.getRawValue());
                 
                 storeSubcobertura.removeAll();
@@ -1055,18 +907,7 @@ Ext.onReady(function() {
                         
                     }
                 });
-                /*
-                storeCobertura2.proxy.extraParams=
-                {
-                    'params.cdunieco' : panelDatos.getForm().findField('sucursal').getValue(),
-                    'params.cdramo'   : '2',
-                    'params.estado'   : 'M',
-                    'params.nmpoliza' : panelDatos.getForm().findField('poliza').getValue(),
-                    'params.nmsituac' : '1',
-                    'params.cdgarant' : this.getValue()
-                };
-                storeCobertura2.load();
-                */
+                
                 
             }
         }
@@ -1108,38 +949,11 @@ Ext.onReady(function() {
         listeners : {
             'select':function(e){
             	conceptoSeleccionado.set('dsconval',this.getRawValue());
-                //obtieneInformacion();
-                /*if(Ext.getCmp('cveTipoAutorizaG').getValue()=="3" && (Ext.getCmp('claveTipoAutoriza').getValue()=="2" ||Ext.getCmp('claveTipoAutoriza').getValue()=="3" )){
-                    Ext.getCmp('cveTipoAutorizaG').setValue("2");
-                }
-                validarDatosProveedor();*/
-            	/*
-            	storeSubcobertura2.proxy.extraParams=
-                {           	
-                    'params.cdgarant' :Ext.getCmp('idCobAfectada').getValue()
-                    'params.cdconval' :this.geValue()                
-                }
-                storeSubcobertura2.load();*/
+                
             }
         }
     });
-    /*
-    subCoberturaDescripcion = Ext.create('Ext.form.field.ComboBox',
-    {
-        
-        allowBlank: false,              
-        displayField : 'value',
-        name:'dsconval',
-        labelWidth: 170,                
-        valueField   : 'value',           
-        forceSelection : true,          
-        matchFieldWidth: false,
-        queryMode :'remote',            
-        store : storeSubcobertura2,      
-        triggerAction: 'all',          
-        editable:false
-    });
-    */
+    
     var gridDetalle = Ext.create('Ext.grid.Panel', {
     	name:'editorConceptos',
         title: 'Capture los conceptos para llegar al importe.',
@@ -1180,14 +994,7 @@ Ext.onReady(function() {
                                 leyenda = rec.data.value;
                             }
                         });
-                	/*} else { // tengo objeto que puede venir como Generic u otro mas complejo
-                		if (v.key && v.value){
-                            leyenda = v.value;
-                        } else {
-                            leyenda = v.data.value;
-                        }
-                        return leyenda;
-                	}*/
+                	
                         return leyenda;
                 },
                 summaryType:'count',
@@ -1202,10 +1009,7 @@ Ext.onReady(function() {
                 dataIndex: 'dsconcep',
                 width : 200,
                 allowBlank: false,
-                /*editor: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                },*/
+                
                 editor: cmbCveConcepto,
                 renderer : function(v) {
                 	var leyenda = v;
@@ -1219,37 +1023,7 @@ Ext.onReady(function() {
                 width:70,
                 allowBlank: false,
                 editor: coberturaAfectada
-                /*renderer : function(v) {
-                    var leyenda = '';
-                    if (typeof v == 'string')
-                    {
-                        if(storeCoberturaxAseguradoRender.cargado)
-                        {
-                            storeCoberturaxAseguradoRender.each(function(rec)
-                            {
-                                debug("cat-->",rec.data);
-                                if (rec.data.key == v)
-                                {
-                                    leyenda = rec.data.value;
-                                }
-                            });
-                        }
-                        else
-                        {
-                            leyenda='Cargando...';
-                        }
-                    }else
-                    {
-                        if (v.key && v.value)
-                        {
-                            leyenda = v.value;
-                        } else {
-                            leyenda = v.data.value;
-                        }
-                        leyenda= v;
-                    }
-                    return leyenda;
-                }*/
+                
             },
             {
                 header: 'Nombre Cobertura',                
@@ -1310,13 +1084,7 @@ Ext.onReady(function() {
                 listeners : {
                     beforeedit : function(){                    	
                     	conceptoSeleccionado = gridDetalle.getView().getSelectionModel().getSelection()[0];
-                    	//showMessage('', conceptoSeleccionado.get('idconcep'), Ext.Msg.OK, Ext.Msg.INFO);
-                        /*var conceptoSeleccionado = gridEditorConceptos.getView().getSelectionModel().getSelection()[0];
-                        debug('conceptoSeleccionado:',conceptoSeleccionado);
-                        storeConceptosCatalogo.proxy.extraParams={
-                                'params.idPadre' :  conceptoSeleccionado.get('IDCONCEP'),
-                                catalogo        : _CATALOGO_ConceptosMedicos
-                        };*/
+                    	
                     }
                 }
             })
@@ -1332,131 +1100,8 @@ Ext.onReady(function() {
         
         
     });
-    /*
-    Ext.define('EditorConceptos', {
-    	extend: 'Ext.grid.Panel',
-    	name:'editorConceptos',
-    	title: 'Conceptos',
-    	icon        : '${ctx}/resources/fam3icons/icons/paste_plain.png',
-    	frame: true,
-    	selType  : 'rowmodel',
-    	initComponent: function(){
-    		Ext.apply(this, {
-    			height: 250,
-    			
-    			plugins  :[
-    			     Ext.create('Ext.grid.plugin.CellEditing',
-    			         {
-    			         	clicksToEdit: 1,
-    			         	listeners : {
-    			         		beforeedit : function(){
-    			         			var conceptoSeleccionado = gridEditorConceptos.getView().getSelectionModel().getSelection()[0];
-    			         			debug('conceptoSeleccionado:',conceptoSeleccionado);
-    			         			storeConceptosCatalogo.proxy.extraParams={
-    			         			     	'params.idPadre' :  conceptoSeleccionado.get('IDCONCEP'),
-    			         			     	catalogo        : _CATALOGO_ConceptosMedicos
-    			         			};
-    			         		}
-    			         	}
-    			         }
-    			     )
-    			],
-    			store: storeConceptos,    			
-    			columns: [
-        			{
-        			     	header: 'Tipo Concepto',               
-        			     	dataIndex: 'IDCONCEP',  
-        			     	width : 150,
-        			     	allowBlank: false,
-        			     	editor : cmbCveTipoConcepto,        			     	
-        			     	renderer : function(v) {    			     		      
-                                var leyenda = '';
-                                if (typeof v == 'string')// tengo solo el indice
-                                {
-                                    storeTipoConcepto.each(function(rec) {
-                                        if (rec.data.key == v) {
-                                            leyenda = rec.data.value;
-                                        }
-                                    });
-                                }else // tengo objeto que puede venir como Generic u otro mas complejo
-                                {
-                                    if (v.key && v.value)
-                                    {
-                                        leyenda = v.value;
-                                    } else {
-                                        leyenda = v.data.value;
-                                    }
-                                }
-                                return leyenda;
-                            }
-        			}
-    			],
-    			selModel: {
-                    selType: 'cellmodel'
-                },
-                tbar:[
-                    { 
-                        xtype: 'button', 
-                        text: 'Agregar renglón',
-                        handler : agregaRegistroDetalle
-                    }
-                ]    			
-    		});
-    		this.callParent();
-    	},
-    	onRemoveClick: function(grid, rowIndex){
-    		
-    	}
-    });
-    var gridEditorConceptos = new EditorConceptos();*/
-    /*        
-    var gridDetalle = Ext.create('Ext.grid.Panel', {
-        title: 'Reclamacion',
-        height: 400,
-        width: 870,
-        store: storeRegistroDetalle,
-        columns: [
-            {header: 'Tipo Procedimiento',  dataIndex: 'tipprc', editor: 'textfield', flex: 1},
-            {header: 'Nombre Procedimiento', dataIndex: 'nomprc', flex: 1,
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                }
-            },
-            {header: 'Cobertura', dataIndex: 'nomcob', flex: 1},
-            {header: 'Subcobertura', dataIndex: 'nomsub', flex: 1},
-            {header: 'Importe', dataIndex: 'imppag', flex: 1},
-            {
-                xtype: 'actioncolumn',
-                width: 40,
-                sortable: false,
-                menuDisabled: true,
-                items: [{
-                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-                    tooltip: 'Eliminar Renglón',
-                    scope: this,
-                    handler: onRemoveClick
-                }]
-            }
-        ],
-        selType: 'cellmodel',
-        plugins: [
-            Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
-            })
-        ],
-        tbar:[
-            { 
-                xtype: 'button', 
-                text: 'Agregar renglón',
-                handler : agregaRegistroDetalle
-            }
-        ]
-        
-        
-        
-    });
-    */
+    
+    
     
     /***FIN DE COMPONENTES PARA GRID***/
      
@@ -1554,10 +1199,7 @@ Ext.onReady(function() {
                     	var fechaProcesamiento = panelDatos.getForm().findField('fechaProcesamiento').getValue();
                     	var clavePoliza = panelDatos.getForm().findField('clavePoliza').getValue();
                     	var claveReclamo = panelDatos.getForm().findField('claveReclamo').getValue();
-                    	/*
-                    	var idCliente = panelDatos.getForm().findField('idCliente').getValue();
-                    	var cliente = panelDatos.getForm().findField('cliente').getValue();
-                    	*/
+                    	
                     	var idAsegurado = panelDatos.getForm().findField('idAsegurado').getValue();
                         var asegurado = panelDatos.getForm().findField('asegurado').getValue();
                         var importe = panelDatos.getForm().findField('importe').getValue();
@@ -1570,11 +1212,7 @@ Ext.onReady(function() {
                     	panelDetalle.getForm().findField('idAsegurado').setValue(idAsegurado);
                         panelDetalle.getForm().findField('asegurado').setValue(asegurado);
                         panelDetalle.getForm().findField('importe').setValue(importe);
-                    	/*
-                    	panelDetalle.getForm().findField('idCliente').setValue(idCliente);
-                    	panelDetalle.getForm().findField('cliente').setValue(cliente);
-                    	*/
-                    	//panelDetalle.getForm().findField('idSesas').setValue(idSesas);
+                    	
                     }
                 	
                 }
@@ -1601,8 +1239,7 @@ Ext.onReady(function() {
                 items:[
                 	{                
                         xtype: 'form',
-                        /* A esta url se envia el formulario
-                         * url: _URL_CONSULTA_POLIZA_ACTUAL,*/
+                        
                         border: false,
                         layout: {
                             type:'hbox'
@@ -1615,12 +1252,12 @@ Ext.onReady(function() {
                                 fieldLabel: 'No. de Reclamo',      
                                 labelWidth: 120, 
                                 width: 300, 
-                                queryMode : 'remote', 
+                                queryMode : 'local', 
                                 queryParam : 'params.reclamo', 
                                 store:storeReclamos, 
                                 valueField:'key',
                                 displayField:'value',
-                                typeAhead: true,
+                                anyMatch: true,
                                 allowBlank:false,
                                 forceSelection:true,
                                 listeners:{
@@ -1662,11 +1299,10 @@ Ext.onReady(function() {
                                                 fieldLabel: 'Secuencial',      
                                                 labelWidth: 120, 
                                                 width: 200, 
-                                                queryMode : 'remote',                                                 
+                                                queryMode : 'local',                                                 
                                                 store:storeSecuencias, 
                                                 valueField:'key',
                                                 displayField:'value',
-                                                typeAhead: true,
                                                 allowBlank: false,
                                                 forceSelection: true
                                             }
@@ -1799,25 +1435,14 @@ Ext.onReady(function() {
     function agregaRegistroDetalle()
     {
         storeConceptos.add(new ConceptosModel());
-    	//storeRegistroDetalle.add(new RegistroDetalleModel());    	
-        /*if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-            storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
-        }else{
-            storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
-        }*/
+    	
     }
     
     function onRemoveClick (grid, rowIndex){    	
         var record = storeConceptos.getAt(rowIndex);
         storeConceptos.removeAt(rowIndex);
     }    
-    /*
-    function guardaReclamoExpress(panelDatos, btn){
-    	//showMessage('', "GUARDAR RECLAMO " + panelDatos.getForm().findField("claveReclamo").getValue(), Ext.Msg.OK, Ext.Msg.INFO);
-    	//var formBusqueda = panelDatos.up('form').getForm();
-    	//panelDatos.setLoading(false);                            
-        //formBusqueda.submit();
-    }*/
+    
     function guardarDetalle(){
     	//showMessage('', "GUARDAR DETALLE ", Ext.Msg.OK, Ext.Msg.INFO);
     	var obtener = [];
