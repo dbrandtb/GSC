@@ -505,7 +505,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
 			
 			setCheckpoint("Recuperando atributos variables de poliza");
-			List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
+			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
+			List<ComponenteVO>auxpol   = new ArrayList<ComponenteVO>();
+			for(ComponenteVO tatri:tatripol)
+			{
+				if(tatri.getCdcondicvis().equals("I"))
+				{
+					auxpol.add(tatri);
+				}
+			}
+			tatripol=auxpol;
 			
 			setCheckpoint("Recuperando atributos variables de situacion");
 			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);

@@ -74,6 +74,13 @@ public class ObtieneTatripolMapper implements RowMapper
         	isDepend = true;
         }
         result.setDependiente(isDepend);
+        
+        String cdcondicvis = rs.getString("CDCONDICVIS");
+        if(StringUtils.isBlank(cdcondicvis))
+        {
+        	cdcondicvis="I";
+        }
+        result.setCdcondicvis(cdcondicvis);
 		
 		return result;
 	}

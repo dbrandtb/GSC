@@ -86,6 +86,7 @@ public class ComponenteVO
 	private int     nmordenFlot        = 0;
 	private boolean obligatorioFlot    = false;
 	private boolean obligatorioEmiFlot = false;
+	private String  cdcondicvis        = null;
 	
 	public ComponenteVO(){}
 	
@@ -616,5 +617,13 @@ public class ComponenteVO
 
 	public void setObligatorioEmiFlot(boolean obligatorioEmiFlot) {
 		this.obligatorioEmiFlot = obligatorioEmiFlot;
+	}
+
+	public String getCdcondicvis() {
+		return cdcondicvis;
+	}
+
+	public void setCdcondicvis(String cdcondicvis) {
+		this.cdcondicvis = cdcondicvis;
 	}
 }
