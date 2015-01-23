@@ -1221,6 +1221,7 @@ function _p28_cotizar(sinTarificar)
                                 ,'smap1.cdtipsit'     : _p28_smap1.cdtipsit
                                 ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
                                 ,'smap1.negocio'      : _fieldByLabel('NEGOCIO').getValue()
+                                ,'smap1.tipocot'      : 'I'
                             }
                             ,success : function(response)
                             {
@@ -1355,6 +1356,7 @@ function _p28_ramo5AgenteSelect(comp,records)
                         ,'smap1.cdtipsup' : 1
                         ,'smap1.cdusuari' : _p28_smap1.cdusuari
                         ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                        ,'smap1.tipocot'  : 'I'
                     }
                     ,success : function(response)
                     {
