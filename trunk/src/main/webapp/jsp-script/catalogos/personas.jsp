@@ -1347,7 +1347,7 @@ function _p22_guardarClic(callback, autosave)
                         mensajeCorrecto('Datos guardados',json.respuesta);
                     }
                     try{
-                    	if(_p22_cdperson!=false&&_p22_parentCallback){
+                    	if(_p22_cdperson!=false && !autosave && _p22_parentCallback){
                         	_p22_parentCallback(json);
                     	}
                     }catch(e){

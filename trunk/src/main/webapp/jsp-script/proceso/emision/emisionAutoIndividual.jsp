@@ -785,6 +785,7 @@ function _p29_mostrarVistaPrevia()
                                 		    			    				title : 'Correo enviado'
                                 		    			    				,msg : 'El correo ha sido enviado'
                                 		    			    				,buttons : Ext.Msg.OK
+                                		    			    				,icon: 'x-message-box-ok'
                                 		    			    			});
                                 		    			    		}
                                 		    			    		else
