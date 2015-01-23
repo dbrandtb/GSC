@@ -839,7 +839,7 @@ Ext.onReady(function()
                                     }
                                     else
                                     {
-                                        item.hide();
+                                        me.hide();
                                     }
 	                            }
 	                        }
