@@ -785,6 +785,88 @@ Ext.onReady(function()
 	        }
 	    });
 	    //negocio
+	    
+	    //asistencia eua y canada
+	    if(_p28_smap1.cdtipsit+'x'=='ARx'||_p28_smap1.cdtipsit+'x'=='PPx')
+        {
+	        var canadaCmp = _fieldLikeLabel('CANAD');
+	        debug('@CUSTOM canada:',canadaCmp);
+	        canadaCmp.anidado = true;
+	        canadaCmp.heredar = function()
+	        {
+    	        var me        = _fieldLikeLabel('CANAD');
+	            var postalCmp = _fieldLikeLabel('CIRCULACI');
+	            var postalVal = postalCmp.getValue();
+	            if((postalVal+'x').length==6)
+	            {
+    	            me.setLoading(true);
+	                Ext.Ajax.request(
+	                {
+    	                url     : _p28_urlRecuperacionSimple
+	                    ,params :
+	                    {
+    	                    'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
+	                        ,'smap1.cdpostal'     : postalVal
+	                    }
+	                    ,success : function(response)
+	                    {
+    	                    me.setLoading(false);
+	                        var json=Ext.decode(response.responseText);
+	                        debug('### canada:',json);
+	                        if(json.exito)
+	                        {
+	                            if(json.smap1.fronterizo+'x'=='Sx')
+	                            {
+	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                                    {
+                                        me.setReadOnly(false);
+                                        me.addCls('green');
+                                        me.removeCls('red');
+                                    }
+                                    else
+                                    {
+                                        me.show();
+                                    }
+	                            }
+	                            else
+	                            {
+	                                me.setValue('N');
+	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                                    {
+                                        me.setReadOnly(true);
+                                        me.addCls('red');
+                                        me.removeCls('green');
+                                    }
+                                    else
+                                    {
+                                        item.hide();
+                                    }
+	                            }
+	                        }
+	                        else
+	                        {
+    	                        mensajeError(json.respuesta);
+	                        }
+	                    }
+	                    ,failure : function()
+    	                {
+	                        me.setLoading(false);
+	                        errorComunicacion();
+	                    }
+	                });
+	            }
+	        }
+	    
+	        var postalCmp = _fieldLikeLabel('CIRCULACI');
+	        postalCmp.on(
+	        {
+    	        change : function()
+	            {
+    	            _fieldLikeLabel('CANAD').heredar();
+	            }
+	        });
+	    }
+	    //asistencia eua y canada
 	}
 	//ramo 5
 	
@@ -2633,6 +2715,11 @@ function _p28_cargarParametrizacionCoberturas(callback)
                     if(!Ext.isEmpty(callback))
                     {
                         callback();
+                    }
+                    
+                    if(_p28_smap1.cdtipsit+'x'=='ARx'||_p28_smap1.cdtipsit+'x'=='PPx')
+                    {
+                        _fieldLikeLabel('CANAD').heredar();
                     }
                 }
                 else

@@ -754,4 +754,29 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public boolean verificarCodigoPostalFronterizo(String cdpostal)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdpostal" , cdpostal);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_VERIFICA_CDPOSTAL_FRONTER", params);
+    	Map<String,Object>procResult = ejecutaSP(new VerificarCodigoPostalFronterizo(getDataSource()),params);
+    	boolean esFront = ((String)procResult.get("pv_fronterizo_o")).equals("S");
+    	logger.debug(Utilerias.join("verificarCodigoPostalFronterizo=",esFront));
+    	return esFront;
+    }
+    
+    protected class VerificarCodigoPostalFronterizo extends StoredProcedure
+    {
+    	protected VerificarCodigoPostalFronterizo(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_DESARROLLO.P_VERIFICA_CDPOSTAL_FRONTER");
+            declareParameter(new SqlParameter("cdpostal"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fronterizo_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
