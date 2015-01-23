@@ -1425,162 +1425,162 @@ Ext.onReady(function()
             ,data         :
             [
 				{
-					cdtipsup : -1
+					cdtipsup : '-1'
 				    ,texto   : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
 				    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombresSimple" />'
 				    ,funcion : 'endosonombressimple'
 				},{
-					cdtipsup : -1
+					cdtipsup : '-1'
                     ,texto   : 'CAMBIO DE DOMICILIO *'//domicilio
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilioSimple" />'
                     ,funcion : 'endosodomiciliosimple'
                 },{
-					cdtipsup : -1
+					cdtipsup : '-1'
                     ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
                 },{
-                	cdtipsup : 2
+                	cdtipsup : '2'
                     ,texto   : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'
                 },{
-                	cdtipsup : 3
+                	cdtipsup : '3'
                     ,texto   : '3'//domicilio
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
                 	,funcion : 'endosodomicilio'
                 },{
-                    cdtipsup : 4
+                    cdtipsup : '4'
                     ,texto   : '4'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasico" />'
                     ,funcion : 'endosovalositbasico'
                 },{
-                    cdtipsup : 6
+                    cdtipsup : '6'
                     ,texto   : '6'//alta coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasalta'
                 },{
-                    cdtipsup : 7
+                    cdtipsup : '7'
                     ,texto   : '7'//baja coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasbaja'
                 },{
-                    cdtipsup : 8
+                    cdtipsup : '8'
                     ,texto   : '8'//clausulas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoClausulas" />'
                     ,funcion : 'endosoclausulas'
                 },{
-                    cdtipsup : 9
+                    cdtipsup : '9'
                     ,texto   : '9'//alta asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosoaltaasegurado'
                 },{
-                    cdtipsup : 10
+                    cdtipsup : '10'
                     ,texto   : '10'//baja asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosobajaasegurado'
                 },{
-                    cdtipsup : 15
+                    cdtipsup : '15'
                     ,texto   : '15'//mas edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomasedad'
                 },{
-                    cdtipsup : 16
+                    cdtipsup : '16'
                     ,texto   : '16'//menos edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomenosedad'
                 },{
-                    cdtipsup : 20
+                    cdtipsup : '20'
                     ,texto   : '20'//hombre -> mujer
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosohombremujer'
                 },{
-                	cdtipsup : 21
+                	cdtipsup : '21'
                     ,texto   : '21'//mujer -> hombre
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosomujerhombre'
                 },{
-                    cdtipsup : 31
+                    cdtipsup : '31'
                     ,texto   : '31'//domicilio full
                     ,liga    : '<s:url namespace="/endosos" action="endosoDomicilioFull" />'
                     ,funcion : 'endosodomiciliofull'
                 },{
-                    cdtipsup : 17
+                    cdtipsup : '17'
                     ,texto   : '17'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'masdeducible'
                 },{
-                    cdtipsup : 18
+                    cdtipsup : '18'
                     ,texto   : '18'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'menosdeducible'
                 },{
-                	cdtipsup : 11
+                	cdtipsup : '11'
                     ,texto   : '11'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'mascopago'
                 },{
-                    cdtipsup : 12
+                    cdtipsup : '12'
                     ,texto   : '12'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'menoscopago'
                 },{
-                    cdtipsup : 24
+                    cdtipsup : '24'
                     ,texto   : '24'
                     ,liga    : '<s:url namespace="/endosos" action="endosoReexpedicion" />'
                     ,funcion : 'reexpedicion'
                 },{
-                    cdtipsup : 13
+                    cdtipsup : '13'
                     ,texto   : '13'
                     ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
                     ,funcion : 'masextraprima'
                 },{
-                    cdtipsup : 14
+                    cdtipsup : '14'
                     ,texto   : '14'
                     ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
                     ,funcion : 'menosextraprima'
                 },{
-                    cdtipsup : 26
+                    cdtipsup : '26'
                     ,texto   : '26'
                     ,liga    : '<s:url namespace="/endosos" action="endosoFormaPago" />'
                     ,funcion : 'formapago'
                 },{
-                    cdtipsup : 19
+                    cdtipsup : '19'
                     ,texto   : '19'
                     ,liga    : '<s:url namespace="/endosos" action="endosoAgente" />'
                     ,funcion : 'endosoagente'
                 },{
-                    cdtipsup : 34
+                    cdtipsup : '34'
                     ,texto   : '34'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endososumaasegmas'
                 },{
-                    cdtipsup : 35
+                    cdtipsup : '35'
                     ,texto   : '35'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endososumaasegmenos'
                 },{
-                    cdtipsup : 36
+                    cdtipsup : '36'
                     ,texto   : '36'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosocoasegmas'
                 },{
-                    cdtipsup : 37
+                    cdtipsup : '37'
                     ,texto   : '37'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosocoasegmenos'
                 },{
-                    cdtipsup : 38
+                    cdtipsup : '38'
                     ,texto   : '38'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosotopemas'
                 },{
-                    cdtipsup : 39
+                    cdtipsup : '39'
                     ,texto   : '39'
                     ,liga    : '<s:url namespace="/endosos" action="includes/endosoAtributosSituacionGeneral" />'
                     ,funcion : 'endosotopemenos'
                 },{
-                    cdtipsup : 27
+                    cdtipsup : '27'
                     ,texto   : '27'
                     ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiariosSMD" />'
                     ,funcion : 'endosobeneficiarios'
@@ -1590,7 +1590,7 @@ Ext.onReady(function()
     });
     debug('marendStoreLigas=', marendStoreLigas);
     //Filtramos la lista de endosos desde el inicio:
-    marendStoreLigas.filter("cdtipsup", -1);
+    marendStoreLigas.filter("cdtipsup", '-1');
     debug('marendStoreLigas despues de filtrar todos=', marendStoreLigas);
     
     /*////////////////*/
