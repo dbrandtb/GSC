@@ -670,9 +670,10 @@ public class GeneradorCampos
             ////// autocompleter //////
             if(esAutocompleter)
             {
-            	item.add("hideTrigger" , true);
-            	item.add("minChars"    , 3);
-            	item.add("queryParam"  , comp.getQueryParam());
+            	item.add("hideTrigger"  , true);
+            	item.add("minChars"     , 3);
+            	item.add("queryParam"   , comp.getQueryParam());
+            	item.add("queryCaching" , false);
             }
             ////// autocompleter //////
         }

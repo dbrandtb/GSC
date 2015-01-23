@@ -1080,13 +1080,20 @@ Ext.onReady(function()
         {
             debug('@CUSTOM negocio:',_fieldByLabel('NEGOCIO',_fieldById('_p30_form')),'.');
             _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).anidado = true;
-            _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).heredar = function()
+            _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).heredar = function(remoto,callback)
             {
                 _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getStore().load(
                 {
                     params :
                     {
                         'params.cdagente' : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                    }
+                    ,callback : function()
+                    {
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')));
+                        }
                     }
                 });
             }
@@ -2378,13 +2385,6 @@ Ext.onReady(function()
         //herencia situaciones
     }
     //ramo 5
-    
-    var autocompleters = Ext.ComponentQuery.query('[queryParam]');
-    for(var i in autocompleters)
-    {
-        debug('quitando query caching:',autocompleters[i]);
-        autocompleters[i].queryCaching = false;
-    }
     ////// custom //////
     
     ////// loaders //////
@@ -3507,8 +3507,50 @@ function _p30_cargarClic()
                                     if(mapeo=='DIRECTO')
                                     {
                                         debug('directo');
+                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                        {
+                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            agenteCmp.forceSelection=false;
+                                            negocioCmp.forceSelection=false;
+                                        }
+                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                        {
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            negocioCmp.forceSelection=false;
+                                        }
                                         _fieldById('_p30_form').loadRecord(datosGenerales);
                                         _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                        {
+                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                            agenteCmp.getStore().load(
+                                            {
+                                                params :
+                                                {
+                                                    'params.agente' : agenteCmp.getValue()
+                                                }
+                                                ,callback : function()
+                                                {
+                                                     var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                                     //agenteCmp.select(agenteCmp.getValue());
+                                                     agenteCmp.forceSelection=true;
+                                                     var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                                     negocioCmp.heredar(true,function(cmp)
+                                                     {
+                                                         cmp.forceSelection=true;
+                                                     });
+                                                }
+                                            });
+                                        }
+                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                        {
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            negocioCmp.heredar(true,function(cmp)
+                                            {
+                                                cmp.forceSelection=true;
+                                            });
+                                        }
                                     }
                                     else
                                     {
@@ -3541,8 +3583,50 @@ function _p30_cargarClic()
                                         }
                                         
                                         debug('recordMapeado:',recordMapeado.data);
+                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                        {
+                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            agenteCmp.forceSelection=false;
+                                            negocioCmp.forceSelection=false;
+                                        }
+                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                        {
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            negocioCmp.forceSelection=false;
+                                        }
                                         _fieldById('_p30_form').loadRecord(recordMapeado);
                                         _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
+                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                        {
+                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                            agenteCmp.getStore().load(
+                                            {
+                                                params :
+                                                {
+                                                    'params.agente' : agenteCmp.getValue()
+                                                }
+                                                ,callback : function()
+                                                {
+                                                     var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                                     //agenteCmp.select(agenteCmp.getValue());
+                                                     agenteCmp.forceSelection=true;
+                                                     var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                                     negocioCmp.heredar(true,function(cmp)
+                                                     {
+                                                         cmp.forceSelection=true;
+                                                     });
+                                                }
+                                            });
+                                        }
+                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                        {
+                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                            negocioCmp.heredar(true,function(cmp)
+                                            {
+                                                cmp.forceSelection=true;
+                                            });
+                                        }
                                     }
                                 }
                             }
