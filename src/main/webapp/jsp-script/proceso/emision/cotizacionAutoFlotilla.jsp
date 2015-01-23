@@ -3310,6 +3310,7 @@ function _p30_cotizar(sinTarificar)
                                 ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
                                 ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                                 ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                                ,'smap1.tipocot'      : _p30_smap1.tipoflot
                             }
                             ,success : function(response)
                             {

@@ -4774,4 +4774,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		compile();
     	}
     }
+    
+    @Override
+    public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(String cdagente,String negocio)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdagente" , cdagente);
+    	params.put("negocio"  , negocio);
+    	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS",params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarRangoDescuentoRamo5TodasSituaciones(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No hay descuento/recargo para el agente");
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Descuento/recargo para el agente duplicado");
+		}
+		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS",params,lista);
+		return lista.get(0);
+    }
+	
+	protected class CargarRangoDescuentoRamo5TodasSituaciones extends StoredProcedure
+	{
+		protected CargarRangoDescuentoRamo5TodasSituaciones(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS");
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "min" , "max" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

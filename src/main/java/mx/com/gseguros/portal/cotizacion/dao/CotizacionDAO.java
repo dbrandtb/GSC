@@ -550,4 +550,5 @@ public interface CotizacionDAO
 			,String negocio
 			)throws Exception;
 	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)throws Exception;
+	public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(String cdagente,String negocio)throws Exception;
 }
