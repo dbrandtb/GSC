@@ -1422,6 +1422,8 @@ Ext.onReady(function() {
 
             }
         });
+        //Limpiamos los conceptos
+        storeConceptos.removeAll()
     }
     
     //Función para limpiar formulario y stores
