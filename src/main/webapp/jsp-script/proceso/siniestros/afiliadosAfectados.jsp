@@ -1784,8 +1784,8 @@
 							xtype		: 'datefield',			fieldLabel	: 'FECHA EGRESO',			name	: 'params.feegreso',	format	: 'd/m/Y'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'DEDUCIBLE (D&Iacute;AS)',		name	: 'params.diasdedu',
-							allowBlank	: false
+							xtype		: 'numberfield',		fieldLabel 	: 'DEDUCIBLE (D&Iacute;AS)',		name	: 'params.diasdedu'//,
+							//allowBlank	: false
 						},
 						cmbProveedor,
 						comboTipoAte,

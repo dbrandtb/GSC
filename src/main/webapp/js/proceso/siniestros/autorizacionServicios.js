@@ -578,6 +578,10 @@ Ext.onReady(function() {
 		listeners : {
 			change:function(e){
 				obtieneInformacion();
+	        	if(Ext.getCmp('idcdRamo').getValue() =="4")
+				{
+					obtieneCirHospitalarioMultisalud();
+				}
     		}
         }
     });
@@ -3275,44 +3279,7 @@ Ext.onReady(function() {
 				Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				Ext.getCmp('idPenalCambioZona').setValue("0");
 				debug("VALOR DEL CDPRESTA --> ", Ext.getCmp('idProveedor').getValue(),Ext.getCmp('fechaAutorizacion').getValue());
-				Ext.Ajax.request(
-					{
-						url     : _URL_CIRCULO_HOSPITALARIO
-						,params : 
-						{
-							'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
-							'params.cdramo': Ext.getCmp('idcdRamo').getValue(),
-							'params.feautori': Ext.getCmp('fechaAutorizacion').getValue()
-						}
-						,success : function (response)
-						{
-							var datosExtras = Ext.decode(response.responseText);
-							debug("VALOR DE DATOS EXTRAS -->",datosExtras);
-							
-							if(Ext.decode(response.responseText).datosInformacionAdicional != null)
-							{
-								var copagoOrig = Ext.getCmp('idCopago').getValue() ;
-								var sumatoria = 0;
-								var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
-								Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
-								Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
-								Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
-								validacionCopagoTotal();
-							}
-						},
-						failure : function ()
-						{
-							me.up().up().setLoading(false);
-							centrarVentanaInterna(Ext.Msg.show({
-								title:'Error',
-								msg: 'Error de comunicaci&oacute;n',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							}));
-						}
-					});
-				
-				
+				obtieneCirHospitalarioMultisalud();
 			}
 		}
 	return true;
@@ -3497,6 +3464,46 @@ Ext.onReady(function() {
 					buttons: Ext.Msg.OK,
 					icon: Ext.Msg.ERROR
 				});
+			}
+		});
+		return true;
+	}
+	
+	function obtieneCirHospitalarioMultisalud(){
+		Ext.Ajax.request(
+		{
+			url     : _URL_CIRCULO_HOSPITALARIO
+			,params : 
+			{
+				'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
+				'params.cdramo': Ext.getCmp('idcdRamo').getValue(),
+				'params.feautori': Ext.getCmp('fechaAutorizacion').getValue()
+			}
+			,success : function (response)
+			{
+				var datosExtras = Ext.decode(response.responseText);
+				debug("VALOR DE DATOS EXTRAS -->",datosExtras);
+				
+				if(Ext.decode(response.responseText).datosInformacionAdicional != null)
+				{
+					var copagoOrig = Ext.getCmp('idCopago').getValue() ;
+					var sumatoria = 0;
+					var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+					Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
+					Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
+					Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
+					validacionCopagoTotal();
+				}
+			},
+			failure : function ()
+			{
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
 			}
 		});
 		return true;
