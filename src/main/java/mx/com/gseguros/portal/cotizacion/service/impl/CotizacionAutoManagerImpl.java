@@ -64,6 +64,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
 	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
 	    ,RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             = "RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC" 
+	    ,VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      = "VERIFICAR_CODIGO_POSTAL_FRONTERIZO"
 	    ;
 	
 	private CotizacionDAO  cotizacionDAO;
@@ -988,6 +989,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS               , null);
 		procedimientos.put(RECUPERAR_ULTIMO_NMSUPLEM                               , null);
 		procedimientos.put(RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             , null);
+		procedimientos.put(VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      , null);
 		return procedimientos;
 	}
 	
@@ -1034,6 +1036,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String estado   = parametros.get("estado");
 				String nmpoliza = parametros.get("nmpoliza");
 				resp.setSmap(consultasDAO.cargarUltimoNmsuplemPoliza(cdunieco,cdramo,estado,nmpoliza));
+			}
+			else if(procedimiento.equals(VERIFICAR_CODIGO_POSTAL_FRONTERIZO))
+			{
+				String cdpostal = parametros.get("cdpostal");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("fronterizo",consultasDAO.verificarCodigoPostalFronterizo(cdpostal)?"S":"N");
 			}
 			
 			setCheckpoint("0");
