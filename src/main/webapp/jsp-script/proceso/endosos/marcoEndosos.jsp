@@ -1254,7 +1254,7 @@
                 	    strEndososRegex += '|';
                 	}
                 	//Se asigna descripcion del endoso:
-                	if(item.key != -1 && marendStoreLigas.findRecord("cdtipsup", item.key) != null) {
+                	if(item.key != '0' && marendStoreLigas.findRecord("cdtipsup", item.key) != null) {
                 		marendStoreLigas.findRecord("cdtipsup", item.key).set('texto', item.value);
                 	}
                 });
@@ -1425,17 +1425,17 @@ Ext.onReady(function()
             ,data         :
             [
 				{
-					cdtipsup : '-1'
+					cdtipsup : '0'
 				    ,texto   : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
 				    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombresSimple" />'
 				    ,funcion : 'endosonombressimple'
 				},{
-					cdtipsup : '-1'
+					cdtipsup : '0'
                     ,texto   : 'CAMBIO DE DOMICILIO *'//domicilio
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilioSimple" />'
                     ,funcion : 'endosodomiciliosimple'
                 },{
-					cdtipsup : '-1'
+					cdtipsup : '0'
                     ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
