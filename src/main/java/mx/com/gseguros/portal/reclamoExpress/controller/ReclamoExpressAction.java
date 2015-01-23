@@ -268,12 +268,12 @@ public class ReclamoExpressAction extends PrincipalCoreAction {
     			switch(Integer.parseInt(datosTablas.get(i).get("idconcep"))){
     				case 1:
     					tipoProcAux = "CPT";
-    					break;
+    					break;    				
     				case 2:
-    					tipoProcAux = "UB";
+    					tipoProcAux = "HCPC";
     					break;
     				case 3:
-    					tipoProcAux = "HCPC";
+    					tipoProcAux = "UB";
     					break;
 					default:
 						tipoProcAux = "CPT";

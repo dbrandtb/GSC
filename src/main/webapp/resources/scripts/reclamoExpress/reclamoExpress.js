@@ -337,8 +337,9 @@ Ext.onReady(function() {
     	model:'Generic',
     	data:[
     	   {"key":"1", "value":"CPT"},
-    	   {"key":"2", "value":"UB"},
-    	   {"key":"3", "value":"HCPC"}
+    	   {"key":"2", "value":"HCPC"},
+    	   {"key":"3", "value":"UB"}
+    	   
     	]    	
     });
    
@@ -642,11 +643,7 @@ Ext.onReady(function() {
                         triggerAction: 'all',
                         hideTrigger:true                      
                                                      
-                   }/*,
-                   {xtype: 'tbspacer', width:10},
-                   {xtype: 'datefield', name: 'fechaIngreso', fieldLabel: 'Fecha Ingreso',    format: 'd/m/Y', labelWidth: 100, labelAlign:'right', width: 250}
-                   ,                   
-                   {xtype: 'textfield', name: 'nomdia',   fieldLabel: '',      readOnly: true, width: 100, labelAlign: 'right'}*/ 
+                   }
                 ]
             },
             {
@@ -844,6 +841,9 @@ Ext.onReady(function() {
                         'params.idPadre' : cdTipo,
                         catalogo        : _CATALOGO_ConceptosMedicos
                     };
+                    //Se agrega removeAll para que limpie el store antes de volverlo a cargar
+                    storeConceptosCatalogo.removeAll();
+                    storeConceptosCatalogo.load();
                     storeCobertura.proxy.extraParams=
                     {
                     	'params.cdunieco' : panelDatos.getForm().findField('sucursal').getValue(),
