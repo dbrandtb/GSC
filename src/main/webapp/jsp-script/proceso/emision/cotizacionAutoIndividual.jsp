@@ -817,6 +817,8 @@ Ext.onReady(function()
 	                        {
 	                            if(json.smap1.fronterizo+'x'=='Sx')
 	                            {
+	                                me.setValue('S');
+	                                /*
 	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
                                     {
                                         me.setReadOnly(false);
@@ -827,10 +829,12 @@ Ext.onReady(function()
                                     {
                                         me.show();
                                     }
+                                    */
 	                            }
 	                            else
 	                            {
 	                                me.setValue('N');
+	                                /*
 	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
                                     {
                                         me.setReadOnly(true);
@@ -840,7 +844,7 @@ Ext.onReady(function()
                                     else
                                     {
                                         me.hide();
-                                    }
+                                    }*/
 	                            }
 	                        }
 	                        else
