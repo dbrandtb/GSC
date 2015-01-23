@@ -32,10 +32,10 @@
 	var editorRolesp2;
 	var editorGenerosp2;
 	var editorNacionesp2;
-	var editorNombreContratantep2;
+//	var editorNombreContratantep2;
 	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
-	var urlCargarCatalogosp2='<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
+	var urlCargarCatalogosp2      ='<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+	var urlDatosComplementariosp2 ='<s:url namespace="/" action="datosComplementarios.action" />';
 	var urlGuardarAseguradosp2='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
 	var urlCoberturasAseguradop2='<s:url namespace="/" action="editarCoberturas" />';
 	var urlGenerarCdPersonp2='<s:url namespace="/" action="generarCdperson" />';
@@ -43,7 +43,9 @@
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
 	var urlValositp2        ='<s:url namespace="/" action="pantallaValosit" />';
-	var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
+	var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';	
+		var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
+	
 	var editorFechap2;
 	var contextop2='${ctx}';
 	var gridTomadorp2;
@@ -55,6 +57,9 @@
 	var editorRFCAp2;
 	var editorRFCBp2;
 	var timeoutBuscarRFCBp2;
+	
+	var destruirContLoaderPersona;
+	var obtieneDatosClienteContratante;
 	
 	Ext.define('RFCPersona',
 	{
@@ -281,7 +286,7 @@
     
     //guardador
     function validarYGuardar()
-{
+	{
     debug("validarYGuardar flag:1");
     timeoutflagp2=1;
     if(Ext.getCmp('form1p2').getForm().isValid())
@@ -294,6 +299,13 @@
                                 var storeSinCdperson=Ext.create('Ext.data.Store',{model:'Modelo1p2'});
                                 var sinCdpersonlen=0;
                                 var contratanteCumpleMaxLen = true;
+                                
+                                
+                                var datosContr = obtieneDatosClienteContratante();
+			            		if(Ext.isEmpty(datosContr.nombre)){
+			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			            			completos=false;
+			            		}
                                 
                                 //ver si el contratante es aparte
                                 var hayContApart=true;
@@ -309,7 +321,7 @@
                                 //para cuando el contratante es aparte
                                 if(hayContApart)
                                 {
-                                    var recordContApart=storeTomadorp2.getAt(0);
+                                    /*var recordContApart=storeTomadorp2.getAt(0);
                                    	if(
                                         !recordContApart.get("nombre")
                                         ||recordContApart.get("nombre").length==0
@@ -344,30 +356,33 @@
                                     {
                                         contratanteCumpleMaxLen = false;
                                     }
+                                    */
+                                	
                                     incisosJson.push({
                                         nmsituac:'0',
                                         cdrol:'1',
-                                        fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
-                                        sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
-                                        cdperson:recordContApart.get('cdperson'),
-                                        swexiper:recordContApart.get('swexiper'),
-                                        cdideper:recordContApart.get('cdideper'),
-                                        nombre: recordContApart.get('nombre'),
-                                        segundo_nombre: recordContApart.get('segundo_nombre'),
-                                        Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
-                                        Apellido_Materno: recordContApart.get('Apellido_Materno'),
-                                        cdrfc:recordContApart.get('cdrfc'),
-                                        tpersona : typeof recordContApart.get('tpersona')=='string'?recordContApart.get('tpersona'):recordContApart.get('tpersona').get('key'),
-                                        nacional : typeof recordContApart.get('nacional')=='string'?recordContApart.get('nacional'):recordContApart.get('nacional').get('key')
+                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+                                        sexo:     datosContr.sexo,
+                                        cdperson: datosContr.cdperson,
+                                        swexiper: 'S',
+                                        cdideper: datosContr.cdideper,
+                                        cdideext: datosContr.cdideext,
+                                        nombre:   datosContr.nombre,
+                                        segundo_nombre: datosContr.snombre,
+                                        Apellido_Paterno: datosContr.appat,
+                                        Apellido_Materno: datosContr.apmat,
+                                        cdrfc:datosContr.rfc,
+                                        tpersona : datosContr.tipoper,
+                                        nacional : datosContr.naciona
                                     });
-                                    if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
+                                    /*if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
                                         var recordSinCdperson=recordContApart.copy();
                                         recordSinCdperson.set('Parentesco','tomador');
                                         storeSinCdperson.add(recordSinCdperson);
                                         sinCdpersonlen++;
                                         //storeTomadorp2.removeAll();
-                                    }
+                                    }*/
                                 }
                                 debug('f2');
                                 //!para cuando el contratante es aparte
@@ -406,21 +421,22 @@
                                     {
                                         debug('se manda como contratante',recordAsegu);
                                         incisosJson.push({
-                                            nmsituac:'0',
-                                            cdrol:'1',
-                                            fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
-                                            sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
-                                            cdperson:recordAsegu.get('cdperson'),
-                                            swexiper:recordAsegu.get('swexiper'),
-                                            cdideper:recordAsegu.get('cdideper'),
-                                            nombre: recordAsegu.get('nombre'),
-                                            segundo_nombre: recordAsegu.get('segundo_nombre'),
-                                            Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
-                                            Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-                                            cdrfc:recordAsegu.get('cdrfc'),
-                                            tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
-                                            nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
-                                        });
+	                                        nmsituac:'0',
+	                                        cdrol:'1',
+	                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+	                                        sexo:     datosContr.sexo,
+	                                        cdperson: datosContr.cdperson,
+	                                        swexiper: 'S',
+	                                        cdideper: datosContr.cdideper,
+	                                        cdideext: datosContr.cdideext,
+	                                        nombre:   datosContr.nombre,
+	                                        segundo_nombre: datosContr.snombre,
+	                                        Apellido_Paterno: datosContr.appat,
+	                                        Apellido_Materno: datosContr.apmat,
+	                                        cdrfc:datosContr.rfc,
+	                                        tpersona : datosContr.tipoper,
+	                                        nacional : datosContr.naciona
+	                                    });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
                                         var lenTmp = 0;
@@ -497,6 +513,7 @@
                                                                         debug('resultado iterando',recordIteConCdperson);
                                                                         if(recordIteConCdperson.get('Parentesco')=='tomador')
                                                                         {
+                                                                        	//ya no aplica
                                                                             storeTomadorp2.getAt(0).set('cdperson',recordIteConCdperson.get('cdperson'));
                                                                         }
                                                                         else
@@ -512,23 +529,23 @@
                                                                     incisosJson=[];
                                                                     if(hayContApart)
                                                                     {
-                                                                        var recordContApar2=storeTomadorp2.getAt(0);
                                                                         incisosJson.push({
-                                                                            nmsituac:'0',
-                                                                            cdrol:'1',
-                                                                            fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
-                                                                            sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
-                                                                            cdperson: recordContApar2.get('cdperson'),
-                                                                            swexiper: recordContApar2.get('swexiper'),
-                                                                            cdideper: recordContApar2.get('cdideper'),
-                                                                            nombre: recordContApar2.get('nombre'),
-                                                                            segundo_nombre: recordContApar2.get('segundo_nombre'),
-                                                                            Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
-                                                                            Apellido_Materno: recordContApar2.get('Apellido_Materno'),
-                                                                            cdrfc: recordContApar2.get('cdrfc'),
-                                                                            tpersona : typeof recordContApar2.get('tpersona')=='string'?recordContApar2.get('tpersona'):recordContApar2.get('tpersona').get('key'),
-                                                                            nacional : typeof recordContApar2.get('nacional')=='string'?recordContApar2.get('nacional'):recordContApar2.get('nacional').get('key')
-                                                                        });
+									                                        nmsituac:'0',
+									                                        cdrol:'1',
+									                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+									                                        sexo:     datosContr.sexo,
+									                                        cdperson: datosContr.cdperson,
+									                                        swexiper: 'S',
+									                                        cdideper: datosContr.cdideper,
+									                                        cdideext: datosContr.cdideext,
+									                                        nombre:   datosContr.nombre,
+									                                        segundo_nombre: datosContr.snombre,
+									                                        Apellido_Paterno: datosContr.appat,
+									                                        Apellido_Materno: datosContr.apmat,
+									                                        cdrfc:datosContr.rfc,
+									                                        tpersona : datosContr.tipoper,
+									                                        nacional : datosContr.naciona
+									                                    });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
                                                                     {
@@ -536,21 +553,22 @@
                                                                         {
                                                                             debug('se manda como contratante',recordAsegu2);
                                                                             incisosJson.push({
-                                                                                nmsituac:'0',
-                                                                                cdrol:'1',
-                                                                                fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
-                                                                                sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
-                                                                                cdperson: recordAsegu2.get('cdperson'),
-                                                                                swexiper: recordAsegu2.get('swexiper'),
-                                                                                cdideper: recordAsegu2.get('cdideper'),
-                                                                                nombre: recordAsegu2.get('nombre'),
-                                                                                segundo_nombre: recordAsegu2.get('segundo_nombre'),
-                                                                                Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
-                                                                                Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                                cdrfc: recordAsegu2.get('cdrfc'),
-                                                                                tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
-                                                                                nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
-                                                                            });
+										                                        nmsituac:'0',
+										                                        cdrol:'1',
+										                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+										                                        sexo:     datosContr.sexo,
+										                                        cdperson: datosContr.cdperson,
+										                                        swexiper: 'S',
+										                                        cdideper: datosContr.cdideper,
+										                                        cdideext: datosContr.cdideext,
+										                                        nombre:   datosContr.nombre,
+										                                        segundo_nombre: datosContr.snombre,
+										                                        Apellido_Paterno: datosContr.appat,
+										                                        Apellido_Materno: datosContr.apmat,
+										                                        cdrfc:datosContr.rfc,
+										                                        tpersona : datosContr.tipoper,
+										                                        nacional : datosContr.naciona
+										                                    });
                                                                         }
                                                                         incisosJson.push({
                                                                             nmsituac: recordAsegu2.get('nmsituac'),
@@ -618,7 +636,7 @@ debug("validarYGuardar flag:2");
                                 {
                                     centrarVentanaInterna(Ext.Msg.show({
                                         title:'Datos incompletos',
-                                        msg: 'El nombre, apellidos y RFC son requeridos',
+                                        msg: 'El nombre, apellidos y RFC son requeridos. Verificar Contratante y Asegurados.',
                                         buttons: Ext.Msg.OK,
                                         icon: Ext.Msg.WARNING
                                     }));
@@ -767,6 +785,7 @@ debug("validarYGuardar flag:2");
    	        		var recordContra=store.getAt(indexTomador);
    	        		storeTomadorp2.add(recordContra);
                     storePersonasp2.remove(recordContra);
+                    
    	        		debug('checar cual si un asegurado es el contratante');
    	        		if(recordContra.get('cdperson')&&recordContra.get('cdperson').length>0)
    	        		{
@@ -782,7 +801,7 @@ debug("validarYGuardar flag:2");
                                 recordTomadorp2=record.copy();
                                 recordTomadorp2.set('cdrol','1');
                                 recordTomadorp2.set('nmsituac','0');
-                                gridTomadorp2.setDisabled(true);
+//                                gridTomadorp2.setDisabled(true);
                                 isCopiadop2=true;
                                 debug('se puso en sesion recordTomadorp2',recordTomadorp2);
                                 //gridTomadorp2.setDisabled(true);
@@ -792,10 +811,68 @@ debug("validarYGuardar flag:2");
                                 debug('no es el tomador');
                             }
                         });
+                        
+                        if(!Ext.isEmpty(destruirContLoaderPersona)){
+							destruirContLoaderPersona();	                                
+	                    }
+	                    
+	                    gridTomadorp2.getLoader().destroy();
+	                    
+	                    gridTomadorp2.loader = new Ext.ComponentLoader({
+		                    url       : _p31_urlPantallaCliente
+		                    ,scripts  : true
+		                    ,autoLoad : false
+		                    ,ajaxOptions: {
+		                            method: 'POST'
+		                     }
+		                });
+	                    
+	                    
+	                    gridTomadorp2.getLoader().load({
+					            params: {
+					                'smap1.cdperson' : cdpersonTomador,
+					                'smap1.cdideper' : recordContra.get('cdideper'),
+					                'smap1.cdideext' : recordContra.get('cdideext'),
+					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esCargaClienteNvo' : 'N' ,
+					                'smap1.ocultaBusqueda' : 'S' ,
+					                'smap1.cargaCP' : '',
+					                'smap1.cargaTipoPersona' : ''
+					            }
+					     });
    	        		}
    	        		else
    	        		{
    	        			debug('el contratante no tiene cdperson, no se busca en los asegurados');
+   	        			
+   	        			if(!Ext.isEmpty(destruirContLoaderPersona)){
+							destruirContLoaderPersona();	                                
+	                    }
+	                    
+	                    gridTomadorp2.getLoader().destroy();
+	                    
+	                    gridTomadorp2.loader = new Ext.ComponentLoader({
+		                    url       : _p31_urlPantallaCliente
+		                    ,scripts  : true
+		                    ,autoLoad : false
+		                    ,ajaxOptions: {
+		                            method: 'POST'
+		                     }
+		                });
+	                    
+	                    
+	                    gridTomadorp2.getLoader().load({
+					            params: {
+					                'smap1.cdperson' : '',
+					                'smap1.cdideper' : '',
+					                'smap1.cdideext' : '',
+					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esCargaClienteNvo' : 'N' ,
+					                'smap1.ocultaBusqueda' : 'S' ,
+					                'smap1.cargaCP' : '',
+					                'smap1.cargaTipoPersona' : ''
+					            }
+					     });
    	        		}
                     debug("load isCopiadop2:"+(isCopiadop2?'true':'false'));
 	   	        }
@@ -807,31 +884,31 @@ debug("validarYGuardar flag:2");
             model     : 'Modelo1p2'
         });
 	    
-	    editorNombreContratantep2=Ext.create('Ext.form.field.Text',
-	    {
-	    	allowBlank  : false
-	    	,fieldWidth : 300
-	    });
+//	    editorNombreContratantep2=Ext.create('Ext.form.field.Text',
+//	    {
+//	    	allowBlank  : false
+//	    	,fieldWidth : 300
+//	    });
 	    
-	    editorNombreContratantep2.on('focus',function()
-        {
-            debug('focus en contratante');
-            $('.grid_tomador_p2_id_help').remove();
-            $('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
-        });
-	    
-	    editorNombreContratantep2.on('change',function()
-	    {
-	    	debug('cambio en contratante');
-	    	$('.grid_tomador_p2_id_help').remove();
-	    	$('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
-	    });
-	    
-	    editorNombreContratantep2.on('blur',function()
-        {
-            debug('blur en contratante');
-            $('.grid_tomador_p2_id_help').remove();
-        });
+//	    editorNombreContratantep2.on('focus',function()
+//        {
+//            debug('focus en contratante');
+//            $('.grid_tomador_p2_id_help').remove();
+//            $('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
+//        });
+//	    
+//	    editorNombreContratantep2.on('change',function()
+//	    {
+//	    	debug('cambio en contratante');
+//	    	$('.grid_tomador_p2_id_help').remove();
+//	    	$('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
+//	    });
+//	    
+//	    editorNombreContratantep2.on('blur',function()
+//        {
+//            debug('blur en contratante');
+//            $('.grid_tomador_p2_id_help').remove();
+//        });
 	    
 	    editorRolesp2=Ext.create('Ext.form.ComboBox',
    	    {
@@ -916,15 +993,15 @@ debug("validarYGuardar flag:2");
             {
                 'blur' : function( field )
                 {
-                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
-                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
-                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
+//                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
+//                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
+//                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
                     if(field.getValue().length>8)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
                         timeoutBuscarRFCBp2=setTimeout(function()
                         {
-                        	gridTomadorp2.setLoading(true);
+//                        	gridTomadorp2.setLoading(true);
                             Ext.Ajax.request
                             ({
                                 url     : urlAutoRFCp2
@@ -940,7 +1017,7 @@ debug("validarYGuardar flag:2");
                                 }
                                 ,success:function(response)
                                 {
-                                	gridTomadorp2.setLoading(false);
+//                                	gridTomadorp2.setLoading(false);
                                     var json=Ext.decode(response.responseText);
                                     debug(json);
                                     if(json&&json.slist1&&json.slist1.length>0)
@@ -982,16 +1059,16 @@ debug("validarYGuardar flag:2");
                                                                                    
                                                                                    debug('cliente obtenido de WS? ', json.clienteWS);
                                                                                    
-                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+//                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                                                    
-                                                                                   if(json.clienteWS){
-                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
-                                                                                   }else{
-                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
-                                                                                       gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
-                                                                                   }
-                                                                                   
+//                                                                                   if(json.clienteWS){
+//                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+//                                                                                   }else{
+//                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+//                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+//                                                                                       gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+//                                                                                   }
+//                                                                                   
                                                                                    grid.up().up().destroy();
                                                                                }
                                                                            }
@@ -1027,7 +1104,7 @@ debug("validarYGuardar flag:2");
                                 }
                                 ,failure:function()
                                 {
-                                	gridTomadorp2.setLoading(false);
+//                                	gridTomadorp2.setLoading(false);
                                     Ext.Msg.show({
                                         title:'Error',
                                         msg: 'Error de comunicaci&oacute;n',
@@ -1180,148 +1257,148 @@ debug("validarYGuardar flag:2");
             }
         });
 	    
-	    Ext.define('GridTomadorP2',
-   	    {
-	    	extend         : 'Ext.grid.Panel'
-	    	,id            : 'grid_tomador_p2_id'
-	    	,title         : 'Contratante'
-	    	,store         : storeTomadorp2
-	        ,frame         : false
-	        ,style         : 'margin:5px'
-        	,selModel      :
-        	{
-                selType: 'cellmodel'
-            }
-        	,requires      :
-       		[
-                'Ext.selection.CellModel',
-                'Ext.grid.*',
-                'Ext.data.*',
-                'Ext.util.*',
-                'Ext.form.*'
-            ]
-	        ,xtype         : 'cell-editing'
-	        ,initComponent : function()
-	        {
-	        	debug('initComponent');
-	        	this.cellEditing = new Ext.grid.plugin.CellEditing({
-                    clicksToEdit: 1
-                });
-	        	Ext.apply(this,
-       			{
-	        	    plugins : [this.cellEditing]
-	                ,<s:property value="item3" />
-	        	    ,listeners:
-                    {
-                        // add the validation after render so that validation is not triggered when the record is loaded.
-                        afterrender: function (grid)
-                        {
-                            var view = grid.getView();
-                         // validation on record level through "itemupdate" event
-                            view.on('itemupdate', function (record, y, node, options) {
-                                this.validateRow(this.getColumnIndexes(), record, y, true);
-                            }, grid);
-                        }
-                    }
-       			});
-	        	this.callParent();
-	        }
-        	,getColumnIndexes: function () {
-                var me, columnIndexes;
-                me = this;
-                columnIndexes = [];
-                Ext.Array.each(me.columns, function (column)
-                {
-                    // only validate column with editor
-                    if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
-                        columnIndexes.push(column.dataIndex);
-                    } else {
-                        columnIndexes.push(undefined);
-                    }
-                });
-                //console.log(columnIndexes);
-                return columnIndexes;
-            }
-            ,validateRow: function (columnIndexes,record, y)
-            //hace que una celda de columna con allowblank=false tenga el estilo rojito
-            {
-                var view = this.getView();
-                Ext.each(columnIndexes, function (columnIndex, x)
-                {
-                    if(columnIndex)
-                    {
-                        var cell=view.getCellByPosition({row: y, column: x});
-                        cellValue=record.get(columnIndex);
-                        if((cell.addCls)&&((!cellValue)||(cellValue.lenght==0)))
-                        {
-                            //cell.addCls("custom-x-form-invalid-field");
-                        }
-                    }
-                });
-                return false;
-            }
-            ,onDomiciliosClick:function(grid,rowIndex)
-            {
-                var me=this;
-                debug("domicilios.click");
-                debug("validarYGuardar");
-                validarYGuardar();
-                setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
-            }
-            ,onDomiciliosInter:function(grid,rowIndex)
-            {
-                var me=this;
-                debug("interval called");
-                if(timeoutflagp2==1)
-                {
-                    debug("interval: 1");
-                    setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
-                }
-                else if(timeoutflagp2==3)
-                {
-                    debug("interval: 3 proceder");
-                    me.onDomiciliosSave(grid,rowIndex);
-                }
-                else
-                {
-                    debug("finish: "+timeoutflagp2)
-                }
-            }
-            ,onDomiciliosSave:function(grid,rowIndex)
-            {
-                var record=this.getStore().getAt(rowIndex);
-                if(Ext.getCmp('domicilioAccordionEl'))
-                {
-                    Ext.getCmp('domicilioAccordionEl').destroy();
-                }
-                accordion.add(
-                {
-                    id:'domicilioAccordionEl'
-                    ,title:'Editar domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
-                    ,cls:'claseTitulo'
-                    ,loader:
-                    {
-                        url : urlDomiciliop2
-                        ,params:
-                        {
-                            'smap1.pv_cdunieco'     : inputCduniecop2,
-                            'smap1.pv_cdramo'       : inputCdramop2,
-                            'smap1.pv_estado'       : inputEstadop2,
-                            'smap1.pv_nmpoliza'     : inputNmpolizap2,
-                            'smap1.pv_nmsituac'     : '0',
-                            'smap1.pv_cdperson'     : record.get('cdperson'),
-                            'smap1.pv_cdrol'        : '1',
-                            'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-                            'smap1.cdrfc'           : record.get('cdrfc'),
-                            'smap1.botonCopiar'     : '0',
-                            'smap1.cdtipsit'        : inputCdtipsitp2
-                        }
-                        ,autoLoad:true
-                        ,scripts:true
-                    }
-                });
-            }
-   	    });
+//	    Ext.define('GridTomadorP2',
+//   	    {
+//	    	extend         : 'Ext.grid.Panel'
+//	    	,id            : 'grid_tomador_p2_id'
+//	    	,title         : 'Contratante'
+//	    	,store         : storeTomadorp2
+//	        ,frame         : false
+//	        ,style         : 'margin:5px'
+//        	,selModel      :
+//        	{
+//                selType: 'cellmodel'
+//            }
+//        	,requires      :
+//       		[
+//                'Ext.selection.CellModel',
+//                'Ext.grid.*',
+//                'Ext.data.*',
+//                'Ext.util.*',
+//                'Ext.form.*'
+//            ]
+//	        ,xtype         : 'cell-editing'
+//	        ,initComponent : function()
+//	        {
+//	        	debug('initComponent');
+//	        	this.cellEditing = new Ext.grid.plugin.CellEditing({
+//                    clicksToEdit: 1
+//                });
+//	        	Ext.apply(this,
+//       			{
+//	        	    plugins : [this.cellEditing]
+//	                ,s:property value="item3"
+//	        	    ,listeners:
+//                    {
+//                        // add the validation after render so that validation is not triggered when the record is loaded.
+//                        afterrender: function (grid)
+//                        {
+//                            var view = grid.getView();
+//                         // validation on record level through "itemupdate" event
+//                            view.on('itemupdate', function (record, y, node, options) {
+//                                this.validateRow(this.getColumnIndexes(), record, y, true);
+//                            }, grid);
+//                        }
+//                    }
+//       			});
+//	        	this.callParent();
+//	        }
+//        	,getColumnIndexes: function () {
+//                var me, columnIndexes;
+//                me = this;
+//                columnIndexes = [];
+//                Ext.Array.each(me.columns, function (column)
+//                {
+//                    // only validate column with editor
+//                    if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
+//                        columnIndexes.push(column.dataIndex);
+//                    } else {
+//                        columnIndexes.push(undefined);
+//                    }
+//                });
+//                //console.log(columnIndexes);
+//                return columnIndexes;
+//            }
+//            ,validateRow: function (columnIndexes,record, y)
+//            //hace que una celda de columna con allowblank=false tenga el estilo rojito
+//            {
+//                var view = this.getView();
+//                Ext.each(columnIndexes, function (columnIndex, x)
+//                {
+//                    if(columnIndex)
+//                    {
+//                        var cell=view.getCellByPosition({row: y, column: x});
+//                        cellValue=record.get(columnIndex);
+//                        if((cell.addCls)&&((!cellValue)||(cellValue.lenght==0)))
+//                        {
+//                            //cell.addCls("custom-x-form-invalid-field");
+//                        }
+//                    }
+//                });
+//                return false;
+//            }
+//            ,onDomiciliosClick:function(grid,rowIndex)
+//            {
+//                var me=this;
+//                debug("domicilios.click");
+//                debug("validarYGuardar");
+//                validarYGuardar();
+//                setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+//            }
+//            ,onDomiciliosInter:function(grid,rowIndex)
+//            {
+//                var me=this;
+//                debug("interval called");
+//                if(timeoutflagp2==1)
+//                {
+//                    debug("interval: 1");
+//                    setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+//                }
+//                else if(timeoutflagp2==3)
+//                {
+//                    debug("interval: 3 proceder");
+//                    me.onDomiciliosSave(grid,rowIndex);
+//                }
+//                else
+//                {
+//                    debug("finish: "+timeoutflagp2)
+//                }
+//            }
+//            ,onDomiciliosSave:function(grid,rowIndex)
+//            {
+//                var record=this.getStore().getAt(rowIndex);
+//                if(Ext.getCmp('domicilioAccordionEl'))
+//                {
+//                    Ext.getCmp('domicilioAccordionEl').destroy();
+//                }
+//                accordion.add(
+//                {
+//                    id:'domicilioAccordionEl'
+//                    ,title:'Editar domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+//                    ,cls:'claseTitulo'
+//                    ,loader:
+//                    {
+//                        url : urlDomiciliop2
+//                        ,params:
+//                        {
+//                            'smap1.pv_cdunieco'     : inputCduniecop2,
+//                            'smap1.pv_cdramo'       : inputCdramop2,
+//                            'smap1.pv_estado'       : inputEstadop2,
+//                            'smap1.pv_nmpoliza'     : inputNmpolizap2,
+//                            'smap1.pv_nmsituac'     : '0',
+//                            'smap1.pv_cdperson'     : record.get('cdperson'),
+//                            'smap1.pv_cdrol'        : '1',
+//                            'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+//                            'smap1.cdrfc'           : record.get('cdrfc'),
+//                            'smap1.botonCopiar'     : '0',
+//                            'smap1.cdtipsit'        : inputCdtipsitp2
+//                        }
+//                        ,autoLoad:true
+//                        ,scripts:true
+//                    }
+//                });
+//            }
+//   	    });
 	    
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    ////// Inicio de declaracion de grid                                                                             //////
@@ -1360,6 +1437,59 @@ debug("validarYGuardar flag:2");
 	                selModel: {
 	                    selType: 'cellmodel'
 	                },
+	                tbar: [{
+			            icon    : '${ctx}/resources/fam3icons/icons/user_delete.png',
+			            text    : 'Quitar/Cambiar Contratante',
+			            handler : function(){
+							destruirContLoaderPersona();	 
+							
+                            gridTomadorp2.getLoader().destroy();
+                            
+                            gridTomadorp2.loader = new Ext.ComponentLoader({
+			                    url       : _p31_urlPantallaCliente
+			                    ,scripts  : true
+			                    ,autoLoad : false
+			                    ,ajaxOptions: {
+			                            method: 'POST'
+			                     }
+			                });
+			                
+                            gridTomadorp2.getLoader().load({
+						            params: {
+						                'smap1.cdperson' : '',
+						                'smap1.cdideper' : '',
+						                'smap1.cdideext' : '',
+						                'smap1.esSaludDanios' : 'S',
+						                'smap1.esCargaClienteNvo' : 'N' ,
+						                'smap1.ocultaBusqueda' : 'S' ,
+						                'smap1.cargaCP' : '',
+						                'smap1.cargaTipoPersona' : ''
+						            }
+						     });
+						     storePersonasp2.each(function(recordI,index)
+                                {
+	                        		if(recordI.get('estomador'))
+	                        		{
+	                        			recordI.set('estomador',false);
+	                        			recordI.set('fenacimi' ,Ext.Date.format(new Date(), 'd/m/Y'));
+	                        			recordI.set('tpersona' ,'F');
+	                        			recordI.set('cdperson' ,'');
+	                        			recordI.set('nombre'   ,'');
+	                        			recordI.set('segundo_nombre'  ,'');
+	                        			recordI.set('Apellido_Paterno','');
+	                        			recordI.set('Apellido_Materno','');
+	                        			recordI.set('cdrfc'   ,'');
+	                        			recordI.set('cdideper','');
+	                        			recordI.set('cdideext','');
+	                        			recordI.set('swexiper','N');
+	                        		}
+	                        		
+                              });
+                              
+                              gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").enable();
+			            	
+			            }
+			        }],
 	                /*tbar: [{
 	                    icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 	                    text: 'Agregar',
@@ -1376,15 +1506,18 @@ debug("validarYGuardar flag:2");
 	                        var view = grid.getView();
 	                     // validation on record level through "itemupdate" event
 	                        view.on('itemupdate', function (record, y, node, options) {
+	                        	
 	                        	var hayTomador=false;
 	                        	storePersonasp2.each(function(recordI,index)
                                 {
 	                        		if(recordI.get('estomador'))
 	                        		{
 	                        			hayTomador=true;
+	                        			gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").disable();
 	                        		}
                                 });
 	                        	debug('hay tomador '+(hayTomador?'true':'false'));
+	                        	
 	                        	if(!hayTomador)
 	                        	{
 	                        		if(isCopiadop2)
@@ -1403,9 +1536,43 @@ debug("validarYGuardar flag:2");
                                         recordCont.set('swexiper','N');
                                         recordCont.set('cdideper','');
                                         debug('se reinicia',recordCont);
+                                        
+//                                        gridTomadorp2.update('');
+//                                        if(!Ext.isEmpty(destruirContLoaderPersona)){
+//											destruirContLoaderPersona();	                                
+//	                                	}
 	                        		}
+	                        		
+                        			/*if(!Ext.isEmpty(destruirContLoaderPersona)){
+										destruirContLoaderPersona();	                                
+	                                }
+	                                
+	                                gridTomadorp2.getLoader().destroy();
+	                                
+	                                gridTomadorp2.loader = new Ext.ComponentLoader({
+					                    url       : _p31_urlPantallaCliente
+					                    ,scripts  : true
+					                    ,autoLoad : false
+					                    ,ajaxOptions: {
+					                            method: 'POST'
+					                     }
+					                });
+	                                
+	                                
+	                                gridTomadorp2.getLoader().load({
+								            params: {
+								                'smap1.cdperson' : '',
+								                'smap1.cdideper' : '',
+								                'smap1.cdideext' : '',
+								                'smap1.esSaludDanios' : 'S',
+								                'smap1.esCargaClienteNvo' : 'N' ,
+								                'smap1.ocultaBusqueda' : 'S' ,
+								                'smap1.cargaCP' : '',
+								                'smap1.cargaTipoPersona' : ''
+								            }
+								     });*/
 	                        	}
-	                            gridTomadorp2.setDisabled(hayTomador);
+//	                            gridTomadorp2.setDisabled(hayTomador);
 	                        	if(record.get('estomador'))
 	                            {
 	                        		if(!isCopiadop2)
@@ -1424,6 +1591,36 @@ debug("validarYGuardar flag:2");
 	                                debug('se puso en sesion recordTomadorp2',recordTomadorp2);
 	                                storeTomadorp2.removeAll();
 	                                storeTomadorp2.add(recordTomadorp2);
+	                            
+	                                /*if(!Ext.isEmpty(destruirContLoaderPersona)){
+										destruirContLoaderPersona();	                                
+	                                }
+	                                
+	                                gridTomadorp2.getLoader().destroy();
+	                                
+	                                gridTomadorp2.loader = new Ext.ComponentLoader({
+					                    url       : _p31_urlPantallaCliente
+					                    ,scripts  : true
+					                    ,autoLoad : false
+					                    ,ajaxOptions: {
+					                            method: 'POST'
+					                     }
+					                });
+	                                
+	                                
+	                                gridTomadorp2.getLoader().load({
+								            params: {
+								                'smap1.cdperson' : record.get('cdperson'),
+								                'smap1.cdideper' : record.get('cdideper'),
+								                'smap1.cdideext' : record.get('cdideext'),
+								                'smap1.esSaludDanios' : 'S',
+								                'smap1.esCargaClienteNvo' : 'N' ,
+								                'smap1.ocultaBusqueda' : 'S' ,
+								                'smap1.cargaCP' : '',
+								                'smap1.cargaTipoPersona' : ''
+								            }
+								     });*/
+	                            
 	                            }
                         	    this.validateRow(this.getColumnIndexes(), record, y, true);
 	                        }, grid);
@@ -1434,6 +1631,10 @@ debug("validarYGuardar flag:2");
 	                    	//console.log("beforeedit");
 	                    	//console.log("e.column.xtype",e.column.xtype);
 	                        return e.column.xtype !== 'actioncolumn';//para que no edite sobre actioncolumn
+	                    },
+	                    beforecellclick: function( vwTable, td, cellIndex, record, tr, rowIndex, e, eOpts ){
+	                    	if(record.get("estomador"))return false;
+	                    	
 	                    }
 	                }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 
@@ -1708,7 +1909,7 @@ debug("validarYGuardar flag:2");
 	        }
 	        ,onTomadorClick : function(grid,rowIndex)
 	        {
-	            var record=grid.getStore().getAt(rowIndex);
+	            /*var record=grid.getStore().getAt(rowIndex);
 	            debug('es tomador',record);
 	            //gridTomadorp2.setDisabled(true);
 	            grid.getStore().each(function(rec,idx)
@@ -1719,7 +1920,7 @@ debug("validarYGuardar flag:2");
 	            recordTomadorp2=record.copy();
 	            debug('se puso en sesion recordTomadorp2',recordTomadorp2);
                 storeTomadorp2.removeAll();
-                storeTomadorp2.add(recordTomadorp2);
+                storeTomadorp2.add(recordTomadorp2);*/
 	        }
 	        ,onBeneficiariosClick : function(grid,row)
 	        {
@@ -1790,7 +1991,59 @@ debug("validarYGuardar flag:2");
 	    ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    gridPersonasp2=new EditorIncisosp2();
-	    gridTomadorp2=new GridTomadorP2();
+	    
+	    gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").on({
+			beforecheckchange: function(chkCol, rowIndex, checked, eOpts){
+				if(checked){
+					var datosContr = obtieneDatosClienteContratante();
+            		if(Ext.isEmpty(datosContr.cdperson)){
+            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+            			return false;
+            		}
+				}
+			},
+			checkchange: function(chkCol, rowIndex, checked, eOpts){
+				if(checked){
+					chkCol.disable();
+					var datosContr = obtieneDatosClienteContratante();
+					debug('Datos de Contratante para row: ' + datosContr);
+					recordContr = gridPersonasp2.getStore().getAt(rowIndex);
+//					recordContr.set('nmsituac','0');
+//					recordContr.set('cdrol'   ,'1');
+					recordContr.set('fenacimi', datosContr.fenacimi);
+					recordContr.set('sexo'    , datosContr.sexo);
+					recordContr.set('tpersona', datosContr.tipoper);
+					recordContr.set('nacional', datosContr.naciona);
+					recordContr.set('cdperson', datosContr.cdperson);
+					recordContr.set('nombre'  , datosContr.nombre);
+					recordContr.set('segundo_nombre'  , datosContr.snombre);
+					recordContr.set('Apellido_Paterno', datosContr.appat);
+					recordContr.set('Apellido_Materno', datosContr.apmat);
+					recordContr.set('cdrfc'   , datosContr.rfc);
+					recordContr.set('cdideper', datosContr.cdideper);
+					recordContr.set('cdideext', datosContr.cdideext);
+				}
+			}
+	    });
+	    
+	    
+	    
+	    gridTomadorp2= Ext.create('Ext.panel.Panel',
+            {
+                itemId      : '_p31_clientePanel'
+                ,title      : 'Contratante'
+                ,height     : 400
+                ,autoScroll : true
+                ,loader     :
+                {
+                    url       : _p31_urlPantallaCliente
+                    ,scripts  : true
+                    ,autoLoad : false
+                    ,ajaxOptions: {
+                            method: 'POST'
+                     }
+                }
+            });
 		
 		Ext.create('Ext.form.Panel',{
 			id:'form1p2',
@@ -1840,6 +2093,12 @@ debug("validarYGuardar flag:2");
 	                            var sinCdpersonlen=0;
 	                            var contratanteCumpleMaxLen = true;
 	                            
+	                            var datosContr = obtieneDatosClienteContratante();
+			            		if(Ext.isEmpty(datosContr.nombre)){
+			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			            			completos=false;
+			            		}
+			            		
 	                            //ver si el contratante es aparte
 	                            var hayContApart=true;
 	                            storePersonasp2.each(function(record,index)
@@ -1854,7 +2113,7 @@ debug("validarYGuardar flag:2");
 	                            //para cuando el contratante es aparte
 	                            if(hayContApart)
 	                            {
-	                            	var recordContApart=storeTomadorp2.getAt(0);
+	                            	/*var recordContApart=storeTomadorp2.getAt(0);
 	                            	if(
                                         !recordContApart.get("nombre")
                                         ||recordContApart.get("nombre").length==0
@@ -1888,31 +2147,34 @@ debug("validarYGuardar flag:2");
 	                            	if(lenTmp>inputMaxLenContratante)
 	                            	{
 	                            		contratanteCumpleMaxLen = false;
-	                            	}
+	                            	}*/
+	                            	
+	                            	
 	                            	incisosJson.push({
                                         nmsituac:'0',
                                         cdrol:'1',
-                                        fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
-                                        sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
-                                        cdperson:recordContApart.get('cdperson'),
-                                        swexiper:recordContApart.get('swexiper'),
-                                        cdideper:recordContApart.get('cdideper'),
-                                        nombre: recordContApart.get('nombre'),
-                                        segundo_nombre: recordContApart.get('segundo_nombre'),
-                                        Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
-                                        Apellido_Materno: recordContApart.get('Apellido_Materno'),
-                                        cdrfc:recordContApart.get('cdrfc'),
-                                        tpersona : typeof recordContApart.get('tpersona')=='string'?recordContApart.get('tpersona'):recordContApart.get('tpersona').get('key'),
-                                        nacional : typeof recordContApart.get('nacional')=='string'?recordContApart.get('nacional'):recordContApart.get('nacional').get('key')
+                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+                                        sexo:     datosContr.sexo,
+                                        cdperson: datosContr.cdperson,
+                                        swexiper: 'S',
+                                        cdideper: datosContr.cdideper,
+                                        cdideext: datosContr.cdideext,
+                                        nombre:   datosContr.nombre,
+                                        segundo_nombre: datosContr.snombre,
+                                        Apellido_Paterno: datosContr.appat,
+                                        Apellido_Materno: datosContr.apmat,
+                                        cdrfc:datosContr.rfc,
+                                        tpersona : datosContr.tipoper,
+                                        nacional : datosContr.naciona
                                     });
-	                            	if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
+	                            	/*if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
 	                            		var recordSinCdperson=recordContApart.copy();
 	                            		recordSinCdperson.set('Parentesco','tomador');
                                         storeSinCdperson.add(recordSinCdperson);
                                         sinCdpersonlen++;
                                         //storeTomadorp2.removeAll();
-                                    }
+                                    }*/
 	                            }
 	                            debug('f2');
 	                            //!para cuando el contratante es aparte
@@ -1950,22 +2212,23 @@ debug("validarYGuardar flag:2");
 	                                if((!hayContApart)&&recordAsegu.get('estomador'))
                                 	{
 	                                	debug('se manda como contratante',recordAsegu);
-	                                	incisosJson.push({
-		                                	nmsituac:'0',
+                                        incisosJson.push({
+	                                        nmsituac:'0',
 	                                        cdrol:'1',
-	                                        fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
-	                                        sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
-	                                        cdperson:recordAsegu.get('cdperson'),
-	                                        swexiper:recordAsegu.get('swexiper'),
-	                                        cdideper:recordAsegu.get('cdideper'),
-	                                        nombre: recordAsegu.get('nombre'),
-	                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
-	                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
-	                                        Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-	                                        cdrfc:recordAsegu.get('cdrfc'),
-	                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
-	                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
-	                                	});
+	                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+	                                        sexo:     datosContr.sexo,
+	                                        cdperson: datosContr.cdperson,
+	                                        swexiper: 'S',
+	                                        cdideper: datosContr.cdideper,
+	                                        cdideext: datosContr.cdideext,
+	                                        nombre:   datosContr.nombre,
+	                                        segundo_nombre: datosContr.snombre,
+	                                        Apellido_Paterno: datosContr.appat,
+	                                        Apellido_Materno: datosContr.apmat,
+	                                        cdrfc:datosContr.rfc,
+	                                        tpersona : datosContr.tipoper,
+	                                        nacional : datosContr.naciona
+	                                    });
 	                                	debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
 	                                	var recordTmp = recordAsegu;
 	                                    var lenTmp = 0;
@@ -2042,6 +2305,7 @@ debug("validarYGuardar flag:2");
                                                                 		debug('resultado iterando',recordIteConCdperson);
                                                                 		if(recordIteConCdperson.get('Parentesco')=='tomador')
                                                                 		{
+                                                                			//ya no aplica
                                                                 			storeTomadorp2.getAt(0).set('cdperson',recordIteConCdperson.get('cdperson'));
                                                                 		}
                                                                 		else
@@ -2057,23 +2321,23 @@ debug("validarYGuardar flag:2");
                                                                     incisosJson=[];
                                                                     if(hayContApart)
                                                                     {
-                                                                    	var recordContApar2=storeTomadorp2.getAt(0);
                                                                     	incisosJson.push({
-                                                                            nmsituac:'0',
-                                                                            cdrol:'1',
-                                                                            fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
-                                                                            sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
-                                                                            cdperson: recordContApar2.get('cdperson'),
-                                                                            swexiper: recordContApar2.get('swexiper'),
-                                                                            cdideper: recordContApar2.get('cdideper'),
-                                                                            nombre: recordContApar2.get('nombre'),
-                                                                            segundo_nombre: recordContApar2.get('segundo_nombre'),
-                                                                            Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
-                                                                            Apellido_Materno: recordContApar2.get('Apellido_Materno'),
-                                                                            cdrfc: recordContApar2.get('cdrfc'),
-                                                                            tpersona : typeof recordContApar2.get('tpersona')=='string'?recordContApar2.get('tpersona'):recordContApar2.get('tpersona').get('key'),
-                                                                            nacional : typeof recordContApar2.get('nacional')=='string'?recordContApar2.get('nacional'):recordContApar2.get('nacional').get('key')
-                                                                        });
+									                                        nmsituac:'0',
+									                                        cdrol:'1',
+									                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+									                                        sexo:     datosContr.sexo,
+									                                        cdperson: datosContr.cdperson,
+									                                        swexiper: 'S',
+									                                        cdideper: datosContr.cdideper,
+									                                        cdideext: datosContr.cdideext,
+									                                        nombre:   datosContr.nombre,
+									                                        segundo_nombre: datosContr.snombre,
+									                                        Apellido_Paterno: datosContr.appat,
+									                                        Apellido_Materno: datosContr.apmat,
+									                                        cdrfc:datosContr.rfc,
+									                                        tpersona : datosContr.tipoper,
+									                                        nacional : datosContr.naciona
+									                                    });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
                                                                     {
@@ -2081,21 +2345,22 @@ debug("validarYGuardar flag:2");
                                                                         {
                                                                     		debug('se manda como contratante',recordAsegu2);
                                                                             incisosJson.push({
-                                                                                nmsituac:'0',
-                                                                                cdrol:'1',
-                                                                                fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
-                                                                                sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
-                                                                                cdperson: recordAsegu2.get('cdperson'),
-                                                                                swexiper: recordAsegu2.get('swexiper'),
-                                                                                cdideper: recordAsegu2.get('cdideper'),
-                                                                                nombre: recordAsegu2.get('nombre'),
-                                                                                segundo_nombre: recordAsegu2.get('segundo_nombre'),
-                                                                                Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
-                                                                                Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                                cdrfc: recordAsegu2.get('cdrfc'),
-                                                                                tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
-                                                                                nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
-                                                                            });
+										                                        nmsituac:'0',
+										                                        cdrol:'1',
+										                                        fenacimi: typeof datosContr.fenacimi=='string'?datosContr.fenacimi:Ext.Date.format(datosContr.fenacimi, 'd/m/Y'),
+										                                        sexo:     datosContr.sexo,
+										                                        cdperson: datosContr.cdperson,
+										                                        swexiper: 'S',
+										                                        cdideper: datosContr.cdideper,
+										                                        cdideext: datosContr.cdideext,
+										                                        nombre:   datosContr.nombre,
+										                                        segundo_nombre: datosContr.snombre,
+										                                        Apellido_Paterno: datosContr.appat,
+										                                        Apellido_Materno: datosContr.apmat,
+										                                        cdrfc:datosContr.rfc,
+										                                        tpersona : datosContr.tipoper,
+										                                        nacional : datosContr.naciona
+										                                    });
                                                                         }
                                                                         incisosJson.push({
                                                                             nmsituac: recordAsegu2.get('nmsituac'),
@@ -2157,7 +2422,7 @@ debug("validarYGuardar flag:2");
                             	{
 	                            	centrarVentanaInterna(Ext.Msg.show({
 	                                    title:'Datos incompletos',
-	                                    msg: 'El nombre, apellidos y RFC son requeridos',
+	                                    msg: 'El nombre, apellidos y RFC son requeridos. Verificar Contratante y Asegurados.',
 	                                    buttons: Ext.Msg.OK,
 	                                    icon: Ext.Msg.WARNING
 	                                }));
@@ -2199,6 +2464,20 @@ debug("validarYGuardar flag:2");
             ]
 		});
 		
+//		_fieldById('_p31_clientePanel').loader.load(
+//	        {
+//	            params:
+//	            {
+//	                'smap1.cdperson' : '',
+//	                'smap1.cdideper' : '',
+//	                'smap1.cdideext' : '',
+//	                'smap1.esSaludDanios' : 'S',
+//	                'smap1.esCargaClienteNvo' : 'N' ,
+//	                'smap1.cargaCP' : '',
+//	                'smap1.cargaTipoPersona' : ''
+//	            }
+//	     });
+		
 	});
 	
 </script>
@@ -2206,7 +2485,7 @@ debug("validarYGuardar flag:2");
 </head>
 <body>
 --%>
-<div id="maindivasegurados" style="height:500px;"></div>
+<div id="maindivasegurados" style="height:800px;"></div>
 <%--
 </body>
 </html>
