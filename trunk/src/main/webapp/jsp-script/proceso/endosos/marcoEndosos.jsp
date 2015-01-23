@@ -1243,7 +1243,7 @@
             success : function(response) {
             	
                 var json = Ext.decode(response.responseText);
-                marendStoreLigas.clearFilter();
+                marendStoreLigas.clearFilter(false);
                 debug('marendStoreLigas sin filtros:', marendStoreLigas);
 
                 // Se genera una expresion regular para hacer el filtro de lista de endosos:
@@ -1588,10 +1588,6 @@ Ext.onReady(function()
             ]
         }
     });
-    debug('marendStoreLigas=', marendStoreLigas);
-    //Filtramos la lista de endosos desde el inicio:
-    marendStoreLigas.filter("cdtipsup", '-1');
-    debug('marendStoreLigas despues de filtrar todos=', marendStoreLigas);
     
     /*////////////////*/
     ////// stores //////
