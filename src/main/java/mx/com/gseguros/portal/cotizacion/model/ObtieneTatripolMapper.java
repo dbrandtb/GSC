@@ -81,6 +81,20 @@ public class ObtieneTatripolMapper implements RowMapper
         	cdcondicvis="I";
         }
         result.setCdcondicvis(cdcondicvis);
+        
+        String swpresemi = rs.getString("SWPRESEMI");
+        if(StringUtils.isBlank(swpresemi))
+        {
+        	swpresemi="N";
+        }
+        result.setSwpresemi(swpresemi);
+        
+        String swpresemiflot = rs.getString("SWPRESEMIFLOT");
+        if(StringUtils.isBlank(swpresemiflot))
+        {
+        	swpresemiflot="N";
+        }
+        result.setSwpresemiflot(swpresemiflot);
 		
 		return result;
 	}

@@ -87,6 +87,8 @@ public class ComponenteVO
 	private boolean obligatorioFlot    = false;
 	private boolean obligatorioEmiFlot = false;
 	private String  cdcondicvis        = null;
+	private String  swpresemi          = null;
+	private String  swpresemiflot      = null;
 	
 	public ComponenteVO(){}
 	
@@ -625,5 +627,21 @@ public class ComponenteVO
 
 	public void setCdcondicvis(String cdcondicvis) {
 		this.cdcondicvis = cdcondicvis;
+	}
+
+	public String getSwpresemi() {
+		return swpresemi;
+	}
+
+	public void setSwpresemi(String swpresemi) {
+		this.swpresemi = swpresemi;
+	}
+
+	public String getSwpresemiflot() {
+		return swpresemiflot;
+	}
+
+	public void setSwpresemiflot(String swpresemiflot) {
+		this.swpresemiflot = swpresemiflot;
 	}
 }
