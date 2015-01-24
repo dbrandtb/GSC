@@ -515,7 +515,7 @@ Ext.onReady(function()
                 , target         : '_blank'
                 , params         :
                 {
-                    idPoliza  : record.get('ntramite')
+                	subfolder  : record.get('ntramite')
                     ,filename : record.get('cddocume') 
                 }
             });
@@ -532,7 +532,7 @@ Ext.onReady(function()
         		,collapsible   : true
         		,titleCollapse : true
         		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-        		                 +'src="'+panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume')+'">'
+        		                 +'src="'+panDocUrlViewDoc+'?subfolder='+record.get('ntramite')+'&filename='+record.get('cddocume')+'">'
         		                 +'</iframe>'
         		,listeners     :
         		{

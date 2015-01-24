@@ -8,8 +8,10 @@ debug('_p23_smap1:',_p23_smap1);
 var _p23_urlSubirArchivo = '<s:url namespace="/"            action="subirArchivoPersona"      />';
 var _p23_UrlUploadPro    = '<s:url namespace="/"            action="subirArchivoMostrarBarra" />';
 var _p23_UrlCargar       = '<s:url namespace="/catalogos"   action="cargarDocumentosPersona"  />';
-var _p23_urlViewDoc      = '<s:url namespace ="/documentos" action="descargaDocInlinePersona" />';
-var _p23_urlDownload     = '<s:url namespace ="/documentos" action="descargaDocPersona"       />';
+var _p23_urlViewDoc      = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+var _p23_urlDownload     = '<s:url namespace ="/documentos" action="descargaDoc"       />';
+
+var _RUTA_DOCUMENTOS_PERSONA = '<s:text name="ruta.documentos.persona" />';
 
 var _p23_StoreDoc;
 ////// variables //////
@@ -349,7 +351,7 @@ function _p23_onViewClick(record)
         ,collapsible   : true
         ,titleCollapse : true
         ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                +'src="'+_p23_urlViewDoc+'?idPoliza='+record.get('cdperson')+'&filename='+record.get('cddocume')+'">'
+                +'src="'+_p23_urlViewDoc+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+record.get('cdperson')+'&filename='+record.get('cddocume')+'">'
                 +'</iframe>'
         ,listeners     :
         {
@@ -371,7 +373,8 @@ function _p23_onDownloadClick(record)
         , target         : '_blank'
         , params         :
         {
-            idPoliza  : record.get('cdperson')
+        	path      : _RUTA_DOCUMENTOS_PERSONA
+            ,subfolder: record.get('cdperson')
             ,filename : record.get('cddocume')
         }
     });

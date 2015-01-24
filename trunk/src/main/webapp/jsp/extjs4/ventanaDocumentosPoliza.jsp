@@ -372,7 +372,7 @@ Ext.onReady(function()
         	                ,collapsible   : true
         	                ,titleCollapse : true
         	                ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-        	                                 +'src="'+panDocUrlViewDoc+'?idPoliza='+panDocInputNtramite+'&filename='+json.uploadKey+'">'
+        	                                 +'src="'+panDocUrlViewDoc+'?subfolder='+panDocInputNtramite+'&filename='+json.uploadKey+'">'
         	                                 +'</iframe>'
         	                ,listeners     :
         	                {
@@ -1003,7 +1003,7 @@ Ext.onReady(function()
                 , target         : '_blank'
                 , params         :
                 {
-                    idPoliza  : record.get('ntramite')
+                    subfolder  : record.get('ntramite')
                     ,filename : record.get('cddocume') 
                 }
             });
@@ -1013,7 +1013,7 @@ Ext.onReady(function()
         	var numRand=Math.floor((Math.random()*100000)+1);
             debug('numRand a: ',numRand);
         	
-        	var urlImg = panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume');
+        	var urlImg = panDocUrlViewDoc+'?subfolder='+record.get('ntramite')+'&filename='+record.get('cddocume');
         	
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{

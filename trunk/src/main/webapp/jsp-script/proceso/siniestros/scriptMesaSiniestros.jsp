@@ -243,7 +243,7 @@ var msgWindow;
 		        		,collapsible   : true
 		        		,titleCollapse : true
 		        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-		        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.contrarecibo.nombre"/>' +'">'
+		        		                 +'src="'+panDocUrlViewDoc+'?subfolder=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.contrarecibo.nombre"/>' +'">'
 		        		                 +'</iframe>'
 		        		,listeners     :
 		        		{
