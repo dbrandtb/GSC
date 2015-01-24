@@ -1709,7 +1709,7 @@ Ext.onReady(function() {
 								,collapsible   : true
 								,titleCollapse : true
 								,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-													+'src="'+panDocUrlViewDoc+'?idPoliza=' + panelInicialPral.down('[name="idNumTramite"]').getValue() + '&filename=' + 'Contra_Recibo_Siniestro.pdf' +'">'
+													+'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name="idNumTramite"]').getValue() + '&filename=' + 'Contra_Recibo_Siniestro.pdf' +'">'
 													+'</iframe>'
 								,listeners     :
 								{
@@ -1842,7 +1842,7 @@ Ext.onReady(function() {
 															,collapsible   : true
 															,titleCollapse : true
 															,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-																				+'src="'+panDocUrlViewDoc+'?idPoliza=' + panelInicialPral.down('[name=idNumTramite]').getValue() + '&filename=' + nombreReporteRechazo +'">'
+																				+'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name=idNumTramite]').getValue() + '&filename=' + nombreReporteRechazo +'">'
 																				+'</iframe>'
 															,listeners     :
 															{

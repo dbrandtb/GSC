@@ -24,7 +24,7 @@ var _p22_urlGuadarTvaloper      = '<s:url namespace="/catalogos"  action="guarda
 var _p22_urlPantallaDocumentos  = '<s:url namespace="/catalogos"  action="pantallaDocumentosPersona"          />';
 var _p22_urlSubirArchivo        = '<s:url namespace="/"           action="subirArchivoPersona"                />';
 var _p22_UrlUploadPro           = '<s:url namespace="/"           action="subirArchivoMostrarBarra"           />';
-var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInlinePersona"           />';
+var _p22_urlViewDoc             = '<s:url namespace="/documentos" action="descargaDocInline"           />';
 var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargarNombreDocumentoPersona"       />';
 
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
@@ -40,6 +40,8 @@ var _UrlImportaPersonaWS = '<s:url namespace="/catalogos" action="importaPersona
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
 /* PARA EL LOADER */
+
+var _RUTA_DOCUMENTOS_PERSONA = '<s:text name="ruta.documentos.persona" />';
 
 var _p22_windowAgregarDocu;
 
@@ -2223,7 +2225,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
                     ,collapsible   : true
                     ,titleCollapse : true
                     ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                                     +'src="'+_p22_urlViewDoc+'?idPoliza='+cdperson+'&filename='+json.smap1.cddocume+'">'
+                                     +'src="'+_p22_urlViewDoc+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+cdperson+'&filename='+json.smap1.cddocume+'">'
                                      +'</iframe>'
                     ,listeners     :
                     {

@@ -19,12 +19,16 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private static final long serialVersionUID = 5866297387639852014L;
 
 	private static final Logger logger = Logger.getLogger(DocumentosPolizaAction.class);
+	
+	private static final String SEPARADOR_ARCHIVO = "/";//File.separator;
 
 	// private transient ArchivosManager archivosManagerJdbcTemplate;
 
 	private InputStream fileInputStream;
+	private String path;
+	private String subfolder;
 	private String filename;
-	private String idPoliza;
+	
 	private Map<String,String>smap1;
 	private List<Map<String,String>>slist1;
 
@@ -36,7 +40,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private String  respuesta       = null;
 	private String  respuestaOculta = null;
 	private boolean exito           = false;
-
+	
+	
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
 	 * de BO
@@ -46,75 +51,55 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public String descargaDocumento() {
 		
 		logger.debug("Parametros de entrada para la descarga del archivo");
-		logger.debug("ntramite: " + idPoliza);
+		logger.debug("path: " + path);
+		logger.debug("subfolder: " + subfolder);
 		logger.debug("filename: " + filename);
-		logger.debug("url: " + url);
 		logger.debug("contentType: " + contentType);
-		logger.debug("Ruta: " + this.getText("ruta.documentos.poliza"));
+		logger.debug("url: " + url);
 		
 		try {
-		
 			if(StringUtils.isNotBlank(url) && StringUtils.isNotBlank(contentType)) {
 				fileInputStream = HttpUtil.obtenInputStream(url);
 			} else {
-				logger.debug(this.getText("ruta.documentos.poliza")+"/"+idPoliza+"/"+filename);
-				fileInputStream = new FileInputStream(new File(this.getText("ruta.documentos.poliza")+"/"+idPoliza+"/"+filename));
-	
-				String fileType = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
-				fileType = fileType.trim();
+				// Se asigna el fileInputStream:
+				String rutaArchivo = generaRutaArchivo(path, subfolder, filename);
+				logger.info("Se va a descargar el archivo: " + rutaArchivo);
+				fileInputStream = new FileInputStream(new File(rutaArchivo));
 				
-				// Se asigna el contentType asociado al tipo de archivo, si no existe le asignamos uno por default:
-				for (TipoArchivo tipoArch : TipoArchivo.values()) {
-					if(tipoArch.toString().equalsIgnoreCase(fileType)) {
-						contentType = tipoArch.getContentType();
-						break;
-					}
-			    }
-				if(contentType == null) {
-					contentType = TipoArchivo.DEFAULT.getContentType();
-				}
-				
+				// Se asigna el contentType:
+				contentType = obtieneContentType(filename);
 			}
-
 		} catch (Exception e) {
 			addActionError(e.getMessage());
 		}
-
 		success = true;
 		return SUCCESS;
 	}
 	
+	
+	/*
 	public String descargaDocumentoPersona() {
 		
 		logger.debug("Parametros de entrada para la descarga del archivo");
-		logger.debug("cdperson: " + idPoliza);
+		logger.debug("Ruta: " + path);
+		logger.debug("Ruta default: " + this.getText("ruta.documentos.persona"));
 		logger.debug("filename: " + filename);
-		logger.debug("url: " + url);
 		logger.debug("contentType: " + contentType);
-		logger.debug("Ruta: " + this.getText("ruta.documentos.persona"));
+		logger.debug("url: " + url);
+		logger.debug("subfolder: " + subfolder);
 		
 		try {
 		
 			if(StringUtils.isNotBlank(url) && StringUtils.isNotBlank(contentType)) {
 				fileInputStream = HttpUtil.obtenInputStream(url);
 			} else {
-				logger.debug(this.getText("ruta.documentos.persona")+"/"+idPoliza+"/"+filename);
-				fileInputStream = new FileInputStream(new File(this.getText("ruta.documentos.persona")+"/"+idPoliza+"/"+filename));
-	
-				String fileType = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
-				fileType = fileType.trim();
+				// Se asigna el fileInputStream:
+				String rutaArchivo = generaRutaArchivo(path, subfolder, filename);
+				fileInputStream = new FileInputStream(new File(rutaArchivo));
 				
-				// Se asigna el contentType asociado al tipo de archivo, si no existe le asignamos uno por default:
-				for (TipoArchivo tipoArch : TipoArchivo.values()) {
-					if(tipoArch.toString().equalsIgnoreCase(fileType)) {
-						contentType = tipoArch.getContentType();
-						break;
-					}
-			    }
-				if(contentType == null) {
-					contentType = TipoArchivo.DEFAULT.getContentType();
-				}
-				
+				// Se asigna el contentType:
+				contentType = obtieneContentType(filename);
+				logger.info("Se va a descargar el archivo: " + rutaArchivo + " contentType:" + contentType);
 			}
 
 		} catch (Exception e) {
@@ -124,7 +109,9 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
-
+	*/
+	
+	
 	public String ventanaDocumentosPoliza()
 	{
 		logger.debug(""
@@ -148,6 +135,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				);
 		return SUCCESS;
 	}
+	
 	
 	public String fusionarDocumentos()
 	{
@@ -199,8 +187,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 					File file = new File(
 							new StringBuilder().
 							append(this.getText("ruta.documentos.poliza"))
-							.append("/").append(ntramite)
-							.append("/").append(iArchivo)
+							.append(SEPARADOR_ARCHIVO).append(ntramite)
+							.append(SEPARADOR_ARCHIVO).append(iArchivo)
 							.toString()
 							);
 					logger.debug(new StringBuilder().append("archivo iterado=").append(file).toString());
@@ -209,7 +197,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 				File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(
 						new StringBuilder()
-						.append(this.getText("ruta.documentos.temporal")).append("/")
+						.append(this.getText("ruta.documentos.temporal")).append(SEPARADOR_ARCHIVO)
 						.append(System.currentTimeMillis()).append("_fusion_").append(ntramite).append(".pdf")
 						.toString()
 						));
@@ -244,6 +232,59 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		}
 		return result;
 	}
+
+	
+	/**
+	 * Genera la ruta del archivo a descargar en base a los parametros recibidos
+	 * 
+	 * @param ruta Ruta a utilizar, si es null se usará una ruta default
+	 * @param subcarpeta Subcarpeta del archivo, si es null se omite
+	 * @param filename Nombre del archivo a descargar
+	 * @return Ruta absoluta del archivo a descargar 
+	 */
+	private String generaRutaArchivo(String ruta, String subcarpeta, String filename) {
+		
+		StringBuilder sbRutaArchivo = new StringBuilder();
+		// Agregamos la ruta:
+		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.getText("ruta.documentos.poliza"));
+		sbRutaArchivo.append(SEPARADOR_ARCHIVO);
+		// Agregamos la subcarpeta si existe:
+		if(StringUtils.isNotBlank(subcarpeta)) {
+			sbRutaArchivo.append(subcarpeta).append(SEPARADOR_ARCHIVO);
+		}
+		sbRutaArchivo.append(filename);
+		
+		return sbRutaArchivo.toString();
+	}
+	
+	
+	/**
+	 * Obtiene el contentType a partir del nombre de un archivo
+	 * @param filename Nombre del archivo
+	 * @return contentType del archivo, o uno contentType por default
+	 */
+	private String obtieneContentType(String filename) {
+
+		String contentType = null;
+		String fileType = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
+		fileType = fileType.trim();
+		
+		// Se asigna el contentType asociado al tipo de archivo, si no existe le asignamos uno por default:
+		for (TipoArchivo tipoArch : TipoArchivo.values()) {
+			if(tipoArch.toString().equalsIgnoreCase(fileType)) {
+				contentType = tipoArch.getContentType();
+				break;
+			}
+	    }
+		if(contentType == null) {
+			contentType = TipoArchivo.DEFAULT.getContentType();
+		}
+		return contentType;
+	}
+	
+	
+	
+	//Getters and setters:
 	
 	public InputStream getFileInputStream() {
 		return fileInputStream;
@@ -252,6 +293,23 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public void setFileInputStream(InputStream fileInputStream) {
 		this.fileInputStream = fileInputStream;
 	}
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getSubfolder() {
+		return subfolder;
+	}
+
+	public void setSubfolder(String subfolder) {
+		this.subfolder = subfolder;
+	}
+
 
 	public String getFilename() {
 		return filename;
@@ -275,14 +333,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
-	}
-
-	public String getIdPoliza() {
-		return idPoliza;
-	}
-
-	public void setIdPoliza(String idPoliza) {
-		this.idPoliza = idPoliza;
 	}
 
 	public Map<String, String> getSmap1() {
