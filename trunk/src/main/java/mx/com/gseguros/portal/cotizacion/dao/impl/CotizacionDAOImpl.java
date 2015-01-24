@@ -4426,21 +4426,22 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
              declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
              String[] cols=new String[]{
-            		 "CDUNIECO"
+            		  "CDUNIECO"
             		 ,"CDRAMO"
             		 ,"ESTADO"
             		 ,"NMPOLIZA"
             		 ,"NMSITUAC"
+            		 /*
             		 ,"NMSUPLEM"
             		 ,"STATUS"
             		 ,"CDGARANT"
             		 ,"CDTIPCON"
-            		 ,"CDCONTAR"
-            		 ,"PRIMA"
+            		 ,"CDCONTAR"*/
+            		 ,"PRIMA"/*
             		 ,"CDAGRUPA"
             		 ,"ORDEN"
             		 ,"CDPERPAG"
-            		 ,"CDPLAN"
+            		 ,"CDPLAN"*/
             		 ,"COBERTURA"
             		 ,"TITULO"
             		 };
