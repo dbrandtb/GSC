@@ -28,6 +28,7 @@ debug('_p31_smap1:',_p31_smap1);
 
 var _p31_polizaAdicionalesItems = null;
 var _p22_parentCallback         = false;
+var _p22_parentCallbackCallback = false;
 var _p31_incisoColumns          = null;
 var _p31_storeIncisos           = null;
 var _p31_selectedRecord         = null;
@@ -629,6 +630,11 @@ function _p31_personaSaved()
             if(json.exito)
             {
                 _p22_fieldCdperson().mpoliper=true;
+                if(!Ext.isEmpty(_p22_parentCallbackCallback))
+                {
+                    _p22_parentCallbackCallback();
+                    _p22_parentCallbackCallback=null;
+                }
             }
             else
             {
@@ -652,6 +658,7 @@ function _p31_emitirClic()
 function _p31_guardar(callback)
 {
     debug('>_p31_guardar');
+    _p22_parentCallbackCallback = null;
     var form1  = _fieldById('_p31_polizaForm');
     var valido = form1.isValid();
     if(!valido)
@@ -696,66 +703,70 @@ function _p31_guardar(callback)
     
     if(valido)
     {
-        valido = _p22_fieldCdperson().mpoliper==true&&_p22_fieldCdperson().validado==true;
+        valido = _fieldById('_p22_formBusqueda').hidden;
         if(!valido)
         {
-            mensajeWarning('Debe guardar el cliente');
+            mensajeWarning('Falta registrar un cliente');
         }
     }
     
     if(valido)
     {
-        var json =
+        _p22_parentCallbackCallback = function()
         {
-            smap1   : form1.getValues()
-            ,slist1 : []
-        };
-        
-        json.smap1['cdunieco'] = _p31_smap1.cdunieco;
-        json.smap1['cdramo']   = _p31_smap1.cdramo;
-        json.smap1['estado']   = _p31_smap1.estado;
-        json.smap1['ntramite'] = _p31_smap1.ntramite;
-        
-        _p31_storeIncisos.each(function(record)
-        {
-            json.slist1.push(record.data);
-        });
-        
-        debug('json para guardar:',json);
-        var panelPri = _fieldById('_p31_panelpri');
-
-        panelPri.setLoading(true);
-        Ext.Ajax.request(
-        {
-            url       : _p31_urlGuardar
-            ,jsonData : json
-            ,success  : function(response)
+            var json =
             {
-                panelPri.setLoading(false);
-                var json = Ext.decode(response.responseText);
-                debug('### guardar:',json);
-                if(json.exito)
+                smap1   : form1.getValues()
+                ,slist1 : []
+            };
+        
+            json.smap1['cdunieco'] = _p31_smap1.cdunieco;
+            json.smap1['cdramo']   = _p31_smap1.cdramo;
+            json.smap1['estado']   = _p31_smap1.estado;
+            json.smap1['ntramite'] = _p31_smap1.ntramite;
+            
+            _p31_storeIncisos.each(function(record)
+            {
+                json.slist1.push(record.data);
+            });
+            
+            debug('json para guardar:',json);
+            var panelPri = _fieldById('_p31_panelpri');
+    
+            panelPri.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url       : _p31_urlGuardar
+                ,jsonData : json
+                ,success  : function(response)
                 {
-                    if(callback)
+                    panelPri.setLoading(false);
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar:',json);
+                    if(json.exito)
                     {
-                        callback();
+                        if(callback)
+                        {
+                            callback();
+                        }
+                        else
+                        {
+                            mensajeCorrecto('Datos guardados',json.respuesta);
+                        }
                     }
                     else
                     {
-                        mensajeCorrecto('Datos guardados',json.respuesta);
+                        mensajeError(json.respuesta);
                     }
                 }
-                else
+                ,failure  : function()
                 {
-                    mensajeError(json.respuesta);
+                    panelPri.setLoading(false);
+                    errorComunicacion();
                 }
-            }
-            ,failure  : function()
-            {
-                panelPri.setLoading(false);
-                errorComunicacion();
-            }
-        });
+            });
+        };
+        _fieldById('_p22_botonGuardar').handler();
     }
     
     debug('<_p31_guardar');

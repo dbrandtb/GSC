@@ -222,11 +222,11 @@ Ext.onReady(function()
                         ,text : 'Suma asegurada'
                         ,flex : 1
                     }
-                    ,{
+                    /*,{
                         dataIndex : 'deducible'
                         ,text : 'Deducible'
                         ,flex : 1
-                    }
+                    }*/
                 ]
             })
         ] 

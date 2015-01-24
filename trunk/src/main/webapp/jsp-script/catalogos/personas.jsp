@@ -566,6 +566,7 @@ Ext.onReady(function()
                         ,buttons    :
 	                    [{
 	                            text     : 'Guardar datos de Persona'
+	                            ,itemId  : '_p22_botonGuardar'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function(){
 	                            			if(!Ext.isEmpty(municipioImportarTMP)){
