@@ -232,6 +232,10 @@ public class Utilerias {
 		{
 			String key = en.getKey();
 			String val = en.getValue();
+			if(StringUtils.isBlank(val))
+			{
+				val="";
+			}
 			if(StringUtils.isNotBlank(key)
 					&&key.length()>"otvalor".length()
 					&&key.substring(0,"otvalor".length()).equalsIgnoreCase("otvalor")
