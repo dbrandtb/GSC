@@ -5,6 +5,7 @@ public interface Constantes {
 	public static final String USER = "USUARIO";
 	public static final String CDUNIECO = "1";
 	public static final String FORMATO_FECHA = "dd/MM/yyyy";
+	public static final String SEPARADOR_ARCHIVO = "/";//File.separator;
 	
 	public static final String MSG_ID_ERROR      = "100000";
 	public static final String MSG_ID_OK         = "200000";
