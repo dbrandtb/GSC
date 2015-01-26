@@ -6381,15 +6381,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                 				paramCobertura.put("pv_cdgarant_i",null);
                 				
                 				List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramCobertura);
-                    			logger.debug("VALOR DE LAS COBERTURAS P DIRECTO--->"+listaCobertura);
+                    			//logger.debug("VALOR DE LAS COBERTURAS P DIRECTO--->"+listaCobertura);
                     			
                     			for(int j1 = 0 ;j1 < listaCobertura.size();j1++){
-                    				logger.debug("VALRO DE LA COBERTURA --->"+listaCobertura.get(j1).getCdgarant()+" DESC: "+listaCobertura.get(j1).getDsgarant());
+                    				//logger.debug("VALRO DE LA COBERTURA --->"+listaCobertura.get(j1).getCdgarant()+" DESC: "+listaCobertura.get(j1).getDsgarant());
                     				if(listaCobertura.get(j1).getCdgarant().toString().equalsIgnoreCase("7EDA")){
                     					existeCobertura = true;
                     				}
                     			}
-                    			logger.debug("existeCobertura -->"+existeCobertura);
+                    			//logger.debug("existeCobertura -->"+existeCobertura);
         					}
         				}else{
         					aseguradoObj.put("CAUSASINIESTRO", CausaSiniestro.ENFERMEDAD.getCodigo());
@@ -7054,7 +7054,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 				paramCobertura.put("pv_cdgarant_i",null);
 				
 				List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
-    			logger.debug("VALOR DE LAS COBERTURAS --->"+listaCobertura);
+    			//logger.debug("VALOR DE LAS COBERTURAS --->"+listaCobertura);
     			
     			//hospitalizacion
     			Map<String,String> hosp = new HashMap<String,String>();
@@ -7185,7 +7185,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 							paramDatosCo.put("pv_cdgarant_i",null);
 							
 							List<CoberturaPolizaVO> listadoCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramDatosCo);
-							logger.debug("VALOR DE LAS COBERTURAS  P. REEMBOLSO--->"+listaCobertura);
+							//logger.debug("VALOR DE LAS COBERTURAS  P. REEMBOLSO--->"+listaCobertura);
 							
 							for(int j2 = 0 ;j2 < listadoCobertura.size();j2++){
 								if(listadoCobertura.get(j2).getCdgarant().toString().equalsIgnoreCase("7EDA")){
@@ -7418,7 +7418,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					}
     				}
     				totalFactura -= copagoAplicadoFacturaIte;
-    				logger.debug("total copago (final): "+totalFactura);
+    				facturaObj.put("TOTALFACTURAIND",totalFactura+"");
+    				logger.debug("total copago (final) -->: "+totalFactura);
     				logger.debug("<<Calculando total factura iterada para WS");
     				
     				importeSiniestroUnico += totalFactura;
@@ -7493,13 +7494,21 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         					,cedularIte
         					,false);
         		}
+        		logger.debug("VALORES DE LAS FACTURAS---->");
+        		logger.debug(facturasxSiniestro.size());
+        		logger.debug(facturasxSiniestro);
         		
         		for(Map<String, Object> totalFacturaIte : facturasxSiniestro)
         		{
         			logger.debug("VALOR DE LAS FACTURAS -->"+totalFacturaIte);
         			String ntramiteA     = (String) totalFacturaIte.get("NTRAMITE");
         			String nfacturaA     = (String) totalFacturaIte.get("NFACTURA");
-        			String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURA"); 
+        			String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURAIND"); 
+        			
+        			/*logger.debug("VALOR DE TOTAL DE FACTURA --->"+totalFacturaA);
+        			if(Double.parseDouble(totalFacturaA) < 0){
+        				totalFacturaA = "0";
+        			}*/
         			siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA);
         		}
         		success = true; 
