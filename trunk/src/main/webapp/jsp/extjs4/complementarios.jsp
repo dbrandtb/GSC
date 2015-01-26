@@ -1906,7 +1906,6 @@ function _datComTurnarSuscripcion()
                             	}
                             }
 		                })
-                        /*
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAgentes'
@@ -1928,7 +1927,6 @@ function _datComTurnarSuscripcion()
                                 }
                             }
                         })
-                        */
                     ]
                     ,listeners:
                     {
