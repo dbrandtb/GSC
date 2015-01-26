@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
 
@@ -20,10 +21,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	private static final Logger logger = Logger.getLogger(DocumentosPolizaAction.class);
 	
-	private static final String SEPARADOR_ARCHIVO = "/";//File.separator;
-
-	// private transient ArchivosManager archivosManagerJdbcTemplate;
-
 	private InputStream fileInputStream;
 	private String path;
 	private String subfolder;
@@ -75,41 +72,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
-	
-	
-	/*
-	public String descargaDocumentoPersona() {
-		
-		logger.debug("Parametros de entrada para la descarga del archivo");
-		logger.debug("Ruta: " + path);
-		logger.debug("Ruta default: " + this.getText("ruta.documentos.persona"));
-		logger.debug("filename: " + filename);
-		logger.debug("contentType: " + contentType);
-		logger.debug("url: " + url);
-		logger.debug("subfolder: " + subfolder);
-		
-		try {
-		
-			if(StringUtils.isNotBlank(url) && StringUtils.isNotBlank(contentType)) {
-				fileInputStream = HttpUtil.obtenInputStream(url);
-			} else {
-				// Se asigna el fileInputStream:
-				String rutaArchivo = generaRutaArchivo(path, subfolder, filename);
-				fileInputStream = new FileInputStream(new File(rutaArchivo));
-				
-				// Se asigna el contentType:
-				contentType = obtieneContentType(filename);
-				logger.info("Se va a descargar el archivo: " + rutaArchivo + " contentType:" + contentType);
-			}
-
-		} catch (Exception e) {
-			addActionError(e.getMessage());
-		}
-
-		success = true;
-		return SUCCESS;
-	}
-	*/
 	
 	
 	public String ventanaDocumentosPoliza()
@@ -187,8 +149,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 					File file = new File(
 							new StringBuilder().
 							append(this.getText("ruta.documentos.poliza"))
-							.append(SEPARADOR_ARCHIVO).append(ntramite)
-							.append(SEPARADOR_ARCHIVO).append(iArchivo)
+							.append(Constantes.SEPARADOR_ARCHIVO).append(ntramite)
+							.append(Constantes.SEPARADOR_ARCHIVO).append(iArchivo)
 							.toString()
 							);
 					logger.debug(new StringBuilder().append("archivo iterado=").append(file).toString());
@@ -197,7 +159,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 				File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(
 						new StringBuilder()
-						.append(this.getText("ruta.documentos.temporal")).append(SEPARADOR_ARCHIVO)
+						.append(this.getText("ruta.documentos.temporal")).append(Constantes.SEPARADOR_ARCHIVO)
 						.append(System.currentTimeMillis()).append("_fusion_").append(ntramite).append(".pdf")
 						.toString()
 						));
@@ -247,10 +209,10 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		StringBuilder sbRutaArchivo = new StringBuilder();
 		// Agregamos la ruta:
 		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.getText("ruta.documentos.poliza"));
-		sbRutaArchivo.append(SEPARADOR_ARCHIVO);
+		sbRutaArchivo.append(Constantes.SEPARADOR_ARCHIVO);
 		// Agregamos la subcarpeta si existe:
 		if(StringUtils.isNotBlank(subcarpeta)) {
-			sbRutaArchivo.append(subcarpeta).append(SEPARADOR_ARCHIVO);
+			sbRutaArchivo.append(subcarpeta).append(Constantes.SEPARADOR_ARCHIVO);
 		}
 		sbRutaArchivo.append(filename);
 		
