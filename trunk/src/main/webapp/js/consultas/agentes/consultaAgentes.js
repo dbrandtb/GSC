@@ -55,6 +55,7 @@ Ext.onReady(function() {
             }
         }
     });
+    storeDatosAgente.load();
     
     var storeTiposAgente = Ext.create('Ext.data.Store', {
         model:'Generic',
@@ -328,6 +329,7 @@ Ext.onReady(function() {
                     text: 'Agregar agente',
                     id:'btnAgregarAgente',
                     disabled:true,
+                    hidden : true,
                     scope: this,
                     handler: function() {
                         bandera= 0;
@@ -479,7 +481,7 @@ Ext.onReady(function() {
                         'params.cdunieco' : Ext.getCmp('unieco').getValue(),
                         'params.cdramo' : Ext.getCmp('ramo').getValue(),
                         'params.estado' : Ext.getCmp('estado').getValue(),
-                        'params.nmpoliza' : Ext.getCmp('poliza').getValue(),
+                        'params.nmpoliza' : Ext.getCmp('poliza').getValue()
                     };
                     contadorGral=0;
                     datosInternos = [];
@@ -560,7 +562,7 @@ Ext.onReady(function() {
         'params.cdunieco' : Ext.getCmp('unieco').getValue(),
         'params.cdramo' : Ext.getCmp('ramo').getValue(),
         'params.estado' : Ext.getCmp('estado').getValue(),
-        'params.nmpoliza' : Ext.getCmp('poliza').getValue(),
+        'params.nmpoliza' : Ext.getCmp('poliza').getValue()
     };
     
     storGridClau.load({
