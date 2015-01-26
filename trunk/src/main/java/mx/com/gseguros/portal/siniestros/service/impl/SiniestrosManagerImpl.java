@@ -1516,6 +1516,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return siniestrosDAO.obtieneListaDatosValidacionSiniestro(params);
 	}
 	
+	/*params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
+	params.get("nmpoliza"),params.get("cdperson"),params.get("nmsinref")*/
+	@Override
+	public List<Map<String, String>> getConsultaDatosSumaAsegurada(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_nmsinref_i", nmsinref);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaDatosSumaAsegurada(params);
+	}
+	
 	@Override
 	public List<Map<String, String>> getConsultaDatosValidacionAjustadorMed(String ntramite) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();

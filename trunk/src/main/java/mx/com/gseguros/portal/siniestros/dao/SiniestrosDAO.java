@@ -418,4 +418,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaDatosValidacionAjustadorMed(HashMap<String, Object> params) throws Exception;
 	
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
+
+	List<Map<String, String>> obtieneListaDatosSumaAsegurada(HashMap<String, Object> params) throws Exception;
 }

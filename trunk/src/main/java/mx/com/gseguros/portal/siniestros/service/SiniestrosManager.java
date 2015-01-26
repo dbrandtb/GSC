@@ -513,4 +513,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getConsultaDatosValidacionAjustadorMed(String ntramite)throws Exception;
 	
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
+
+	List<Map<String, String>> getConsultaDatosSumaAsegurada(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
 }
