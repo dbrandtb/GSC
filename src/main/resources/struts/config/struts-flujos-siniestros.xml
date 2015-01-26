@@ -874,6 +874,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaDatosSumaAsegurada" class="siniestrosAction"
+			method="consultaDatosSumaAsegurada">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="consultaDatosValidacionAjustadorMed" class="siniestrosAction"
 			method="consultaDatosValidacionAjustadorMed">
 			<result type="json">

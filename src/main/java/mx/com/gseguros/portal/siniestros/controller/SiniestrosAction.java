@@ -299,7 +299,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	 */
 	public String guardaAutorizacionServicio(){
 			logger.debug(" **** Entrando a guardado de Autorizaci�n de Servicio ****");
-			
+			logger.debug("VALORES DE ENTRADA PARAMS"+params);
+			logger.debug("VALORES DE ENTRADA datostabla"+datosTablas);
 			try {
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
@@ -3765,28 +3766,34 @@ public String consultaListaPlazas(){
     			}else{ // DIFERENTE DE SALUD VITAL
     				try {
 						datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(proveedor,ramo,fechaOcurrencia);
-						logger.debug(datosInformacionAdicional.get(0).get("MULTINCREMENTO"));
-	    				logger.debug(datosInformacionAdicional.get(0).get("HOSPITALPLUS"));
-	    				logger.debug(datosInformacionAdicional.get(0).get("PORCINCREMENTO"));
-	    				if(datosInformacionAdicional.get(0).get("HOSPITALPLUS").toString().equalsIgnoreCase("0")){
-	    					copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
-	    				}else{
-	    					if(tipoCopago.equalsIgnoreCase("%")){
-	                			copagoPenaPorcentaje =  Double.parseDouble(""+copagoOriginalPoliza) + Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
-	                			if(copagoPenaPorcentaje <= 0){
-	                				copagoPenaPorcentaje= 0d;
-	                			}
-	                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
-	                		}else{
-	                			copagoPenaPorcentaje = Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
-	                			if(copagoPenaPorcentaje <= 0){
-	                				copagoPenaPorcentaje= 0d;
-	                			}
-	                			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
-	                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
-	                		}
-	    				}
-	    				
+						logger.debug("VALORES -->"+datosInformacionAdicional.size());
+						if(datosInformacionAdicional.size() > 0){
+							logger.debug(datosInformacionAdicional.get(0).get("MULTINCREMENTO"));
+		    				logger.debug(datosInformacionAdicional.get(0).get("HOSPITALPLUS"));
+		    				logger.debug(datosInformacionAdicional.get(0).get("PORCINCREMENTO"));
+		    				
+		    				if(datosInformacionAdicional.get(0).get("HOSPITALPLUS").toString().equalsIgnoreCase("0")){
+		    					copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+		    				}else{
+		    					if(tipoCopago.equalsIgnoreCase("%")){
+		                			copagoPenaPorcentaje =  Double.parseDouble(""+copagoOriginalPoliza) + Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
+		                			if(copagoPenaPorcentaje <= 0){
+		                				copagoPenaPorcentaje= 0d;
+		                			}
+		                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+		                		}else{
+		                			copagoPenaPorcentaje = Double.parseDouble(""+datosInformacionAdicional.get(0).get("PORCINCREMENTO").toString());
+		                			if(copagoPenaPorcentaje <= 0){
+		                				copagoPenaPorcentaje= 0d;
+		                			}
+		                			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
+		                			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+		                		}
+		    				}							
+						}else{
+							copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+						}
+						
     				} catch (Exception e) {
     					logger.error("error al obtener los datos del proveedor",e);
     				}
@@ -6164,6 +6171,23 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	logger.debug(params);
     	try {
     		datosValidacion = siniestrosManager.getConsultaDatosValidacionSiniestro(params.get("ntramite"),params.get("nfactura"),params.get("tipoPago"));
+    			logger.debug("###VALOR DE RESPUESTA ###");
+    			logger.debug(datosValidacion);
+ 			}catch( Exception e){
+ 				logger.error("Error al obtener las autorizaciones",e);
+ 				return SUCCESS;
+ 			}
+ 	   	success = true;
+ 	   	return SUCCESS;
+    }
+    
+    
+    public String consultaDatosSumaAsegurada(){
+    	logger.debug(" **** Validando la suma Asegurada GMMI****");
+    	logger.debug(params);
+    	try {
+    		datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
+    											params.get("nmpoliza"),params.get("cdperson"),params.get("nmsinref"));
     			logger.debug("###VALOR DE RESPUESTA ###");
     			logger.debug(datosValidacion);
  			}catch( Exception e){

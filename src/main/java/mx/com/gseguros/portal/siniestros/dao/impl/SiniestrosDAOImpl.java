@@ -3989,6 +3989,34 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
+	public List<Map<String, String>> obtieneListaDatosSumaAsegurada(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaDatosSumaAsegurada(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaDatosSumaAsegurada extends StoredProcedure {
+		protected ObtieneListaDatosSumaAsegurada(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_OBTINE_IMP_PAGADOXPERSONA");
+			declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinref_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"OTVALOR01","OTVALOR02"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	
+	@Override
 	public List<Map<String, String>> obtieneListaDatosValidacionAjustadorMed(HashMap<String, Object> params) throws Exception {
 		Map<String, Object> result = ejecutaSP(new ObtieneListaDatosValidacionAjustadorMed(this.getDataSource()), params);
 		return (List<Map<String,String>>)result.get("pv_registro_o");
