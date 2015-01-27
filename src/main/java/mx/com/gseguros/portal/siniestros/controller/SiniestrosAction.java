@@ -5617,7 +5617,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())){
             		nfactura = datosTablas.get(i).get("nfactura");
         		}else{
-        			nfactura= msgResult;
+        			nfactura= msgResult+""+i;
         		}
         		siniestrosManager.guardaListaFacMesaControl(
                     msgResult, 
