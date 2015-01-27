@@ -768,6 +768,7 @@ Ext.onReady(function() {
 		loadMaskTabla.show();
 		
 		cargaStorePaginadoLocal(_TIPO_1CLAVE?storeTablaUnaClave:storeTablaCincoClaves, _TIPO_1CLAVE?_URL_CONSULTA_VALORES_TABLA_UNA_CLAVE :_URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES, 'loadList', panelValoresTablaApoyo.getValues(), function (options, success, response){
+    		loadMaskTabla.hide();
     		if(success){
                 var jsonResponse = Ext.decode(response.responseText);
                 
@@ -795,6 +796,8 @@ Ext.onReady(function() {
      * @param grid grid al que se le cambiaran los encabezados
      */
     function cambiarEncabezados(grid) {
+    	
+    	loadMaskTabla.show();
     	
     	storeCabecerasClaves.load({
             params : {
