@@ -44,7 +44,7 @@
 	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
 	var urlValositp2        ='<s:url namespace="/" action="pantallaValosit" />';
 	var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';	
-		var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
+	var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
 	
 	var editorFechap2;
 	var contextop2='${ctx}';
@@ -61,10 +61,13 @@
 	var destruirContLoaderPersona;
 	var obtieneDatosClienteContratante;
 	
+	var _p22_parentCallback         = false;
+	var _contratanteSaved = false;
+	
 	Ext.define('RFCPersona',
 	{
 		extend  : 'Ext.data.Model'
-		,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"]
+		,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER", "CDIDEEXT"]
 	});
 	
     function rendererRolp2(v)
@@ -305,6 +308,9 @@
 			            		if(Ext.isEmpty(datosContr.nombre)){
 			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
 			            			completos=false;
+			            		}else if(!Ext.isEmpty(datosContr.cdperson) && !_contratanteSaved){
+			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			            			return false;
 			            		}
                                 
                                 //ver si el contratante es aparte
@@ -459,6 +465,7 @@
                                         cdperson: recordAsegu.get('cdperson'),
                                         swexiper: recordAsegu.get('swexiper'),
                                         cdideper: recordAsegu.get('cdideper'),
+                                        cdideext: recordAsegu.get('cdideext'),
                                         nombre: recordAsegu.get('nombre'),
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -578,6 +585,7 @@
                                                                             cdperson: recordAsegu2.get('cdperson'),
                                                                             swexiper: recordAsegu2.get('swexiper'),
                                                                             cdideper: recordAsegu2.get('cdideper'),
+                                                                            cdideext: recordAsegu2.get('cdideext'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -840,6 +848,8 @@ debug("validarYGuardar flag:2");
 					                'smap1.cargaTipoPersona' : ''
 					            }
 					     });
+					     _p22_parentCallback = _p29_personaSaved;
+					     _contratanteSaved = true;
    	        		}
    	        		else
    	        		{
@@ -873,6 +883,8 @@ debug("validarYGuardar flag:2");
 					                'smap1.cargaTipoPersona' : ''
 					            }
 					     });
+					     _p22_parentCallback = _p29_personaSaved;
+					     _contratanteSaved = false;
    	        		}
                     debug("load isCopiadop2:"+(isCopiadop2?'true':'false'));
 	   	        }
@@ -1128,6 +1140,7 @@ debug("validarYGuardar flag:2");
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
+            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",'');
 
             		var esContratante = gridPersonasp2.getSelectionModel().getLastSelected().get('estomador');
             		
@@ -1201,9 +1214,11 @@ debug("validarYGuardar flag:2");
 			            		    		    	                               
 			            		    		    	                               if(json.clienteWS){
 			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",record.get("CDIDEEXT"));
 			            		    		    	                               }else{
 			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
 			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",record.get("CDIDEEXT"));
 				            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
 			            		    		    	                               }
 			            		    		    	                               
@@ -1466,6 +1481,9 @@ debug("validarYGuardar flag:2");
 						                'smap1.cargaTipoPersona' : ''
 						            }
 						     });
+						     _p22_parentCallback = _p29_personaSaved;
+						     _contratanteSaved = false;
+						     
 						     storePersonasp2.each(function(recordI,index)
                                 {
 	                        		if(recordI.get('estomador'))
@@ -1535,6 +1553,7 @@ debug("validarYGuardar flag:2");
                                         recordCont.set('cdperson','');
                                         recordCont.set('swexiper','N');
                                         recordCont.set('cdideper','');
+                                        recordCont.set('cdideext','');
                                         debug('se reinicia',recordCont);
                                         
 //                                        gridTomadorp2.update('');
@@ -1570,7 +1589,10 @@ debug("validarYGuardar flag:2");
 								                'smap1.cargaCP' : '',
 								                'smap1.cargaTipoPersona' : ''
 								            }
-								     });*/
+								     });
+								     _p22_parentCallback = _p29_personaSaved;
+					     			 _contratanteSaved = false;
+								     */
 	                        	}
 //	                            gridTomadorp2.setDisabled(hayTomador);
 	                        	if(record.get('estomador'))
@@ -1619,7 +1641,10 @@ debug("validarYGuardar flag:2");
 								                'smap1.cargaCP' : '',
 								                'smap1.cargaTipoPersona' : ''
 								            }
-								     });*/
+								     });
+								     _p22_parentCallback = _p29_personaSaved;
+					     			 _contratanteSaved = false;
+								     */
 	                            
 	                            }
                         	    this.validateRow(this.getColumnIndexes(), record, y, true);
@@ -1999,6 +2024,9 @@ debug("validarYGuardar flag:2");
             		if(Ext.isEmpty(datosContr.cdperson)){
             			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
             			return false;
+            		}else if(!Ext.isEmpty(datosContr.cdperson) && !_contratanteSaved){
+            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+            			return false;
             		}
 				}
 			},
@@ -2022,6 +2050,7 @@ debug("validarYGuardar flag:2");
 					recordContr.set('cdrfc'   , datosContr.rfc);
 					recordContr.set('cdideper', datosContr.cdideper);
 					recordContr.set('cdideext', datosContr.cdideext);
+					recordContr.set('swexiper', 'S');
 				}
 			}
 	    });
@@ -2097,6 +2126,9 @@ debug("validarYGuardar flag:2");
 			            		if(Ext.isEmpty(datosContr.nombre)){
 			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
 			            			completos=false;
+			            		}else if(!Ext.isEmpty(datosContr.cdperson) && !_contratanteSaved){
+			            			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			            			return false;
 			            		}
 			            		
 	                            //ver si el contratante es aparte
@@ -2251,6 +2283,7 @@ debug("validarYGuardar flag:2");
 	                                    cdperson: recordAsegu.get('cdperson'),
 	                                    swexiper: recordAsegu.get('swexiper'),
 	                                    cdideper: recordAsegu.get('cdideper'),
+	                                    cdideext: recordAsegu.get('cdideext'),
 	                                    nombre: recordAsegu.get('nombre'),
 	                                    segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                    Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -2370,6 +2403,7 @@ debug("validarYGuardar flag:2");
                                                                             cdperson: recordAsegu2.get('cdperson'),
                                                                             swexiper: recordAsegu2.get('swexiper'),
                                                                             cdideper: recordAsegu2.get('cdideper'),
+                                                                            cdideext: recordAsegu2.get('cdideext'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -2463,6 +2497,171 @@ debug("validarYGuardar flag:2");
                 }
             ]
 		});
+		
+		function _p29_loadCallback()
+{
+    var vigen = _fieldByLabel('VIGENCIA');
+    vigen.hide();
+    var feini = _fieldByName('feini');
+    var fefin = _fieldByName('fefin');
+    feini.on(
+    {
+        change : function(me,val)
+        {
+            try
+            {
+                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
+            }
+            catch(e)
+            {
+                debug(e);
+            }
+        }
+    });
+    
+    Ext.Ajax.request(
+    {
+        url     : _p29_urlCargarRetroactividadSuplemento
+        ,params :
+        {
+            'smap1.cdunieco'  : _p29_smap1.cdunieco
+            ,'smap1.cdramo'   : _p29_smap1.cdramo
+            ,'smap1.cdtipsup' : 1
+            ,'smap1.cdusuari' : _p29_smap1.cdusuari
+            ,'smap1.cdtipsit' : _p29_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### obtener retroactividad:',json);
+            if(json.exito)
+            {
+                feini.setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,(json.smap1.retroac-0)*-1));
+                feini.setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi-0));
+                feini.isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : errorComunicacion
+    });
+    
+    if(_p29_smap1.cdramo+'x'=='5x')
+    {
+        Ext.Ajax.request(
+        {
+            url     : _p29_urlRecuperacionSimple
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_DATOS_VEHICULO_RAMO_5'
+                ,'smap1.cdunieco'     : _p29_smap1.cdunieco
+                ,'smap1.cdramo'       : _p29_smap1.cdramo
+                ,'smap1.estado'       : _p29_smap1.estado
+                ,'smap1.nmpoliza'     : _p29_smap1.nmpoliza 
+            }
+            ,success : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### recuperar datos vehiculo ramo 5:',json);
+                if(json.exito)
+                {
+                    var _f1_aux=
+                    [
+                        {
+                            xtype       : 'displayfield'
+                            ,fieldLabel : 'VEH&Iacute;CULO'
+                            ,value      : json.smap1.datos
+                        }
+                    ];
+                    var form=_fieldById('_p29_adicionalesForm');
+                    var anteriores=form.removeAll(false);
+                    form.add(
+                    {
+                        xtype       : 'displayfield'
+                        ,fieldLabel : 'VEH&Iacute;CULO'
+                        ,value      : json.smap1.datos
+                    });
+                    for(var i=0;i<anteriores.length;i++)
+                    {
+                        form.add(anteriores[i]);
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function(){ errorComunicacion(); }
+        });
+    }
+}
+
+function _p29_personaSaved()
+{
+    debug('>_p29_personaSaved');
+    /*Ext.Ajax.request(
+    {
+        url     : _p29_urlMovimientoMpoliper
+        ,params :
+        {
+            'smap1.cdunieco'  : _p29_smap1.cdunieco
+            ,'smap1.cdramo'   : _p29_smap1.cdramo
+            ,'smap1.estado'   : _p29_smap1.estado
+            ,'smap1.nmpoliza' : _p29_smap1.nmpoliza
+            ,'smap1.nmsituac' : '1'
+            ,'smap1.cdrol'    : '1'
+            ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
+            ,'smap1.nmsuplem' : '0'
+            ,'smap1.status'   : 'V'
+            ,'smap1.nmorddom' : '1'
+            ,'smap1.accion'   : 'I'
+            ,'smap1.swexiper' : _SWexiper
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('### mpoliper:',json);
+            if(json.exito)
+            {
+                _p22_fieldCdperson().mpoliper=true;
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : errorComunicacion
+    });*/
+    
+    _contratanteSaved = true;
+    
+    var datosContr = obtieneDatosClienteContratante();
+    storePersonasp2.each(function(recordContr,index){
+        if(recordContr.get('estomador')==true){
+
+		//	recordContr.set('nmsituac','0');
+		//	recordContr.set('cdrol'   ,'1');
+			recordContr.set('fenacimi', datosContr.fenacimi);
+			recordContr.set('sexo'    , datosContr.sexo);
+			recordContr.set('tpersona', datosContr.tipoper);
+			recordContr.set('nacional', datosContr.naciona);
+			recordContr.set('cdperson', datosContr.cdperson);
+			recordContr.set('nombre'  , datosContr.nombre);
+			recordContr.set('segundo_nombre'  , datosContr.snombre);
+			recordContr.set('Apellido_Paterno', datosContr.appat);
+			recordContr.set('Apellido_Materno', datosContr.apmat);
+			recordContr.set('cdrfc'   , datosContr.rfc);
+			recordContr.set('cdideper', datosContr.cdideper);
+			recordContr.set('cdideext', datosContr.cdideext);
+			recordContr.set('swexiper', 'S');
+            
+        }
+	});
+	    
+    debug('<_p29_personaSaved');
+}
 		
 //		_fieldById('_p31_clientePanel').loader.load(
 //	        {

@@ -1151,34 +1151,40 @@ public class ComplementariosAction extends PrincipalCoreAction
 			for(Map<String,Object>aseg:list1)
 			{
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-				String cdIdeperAseg = (String) aseg.get("cdideper");
-				String cdIdeExtAseg = (String) aseg.get("cdideext");
-				parametros.put("pv_cdperson_i"    , (String)aseg.get("cdperson"));
-				parametros.put("pv_cdtipide_i"    , "1");
-				parametros.put("pv_cdideper_i"    , cdIdeperAseg);
-				parametros.put("pv_dsnombre_i"    , (String)aseg.get("nombre"));
-				parametros.put("pv_cdtipper_i"    , "1");
-				parametros.put("pv_otfisjur_i"    , (String)aseg.get("tpersona"));
-				parametros.put("pv_otsexo_i"      , (String)aseg.get("sexo"));
-				parametros.put("pv_fenacimi_i"    , renderFechas.parse((String)aseg.get("fenacimi")));
-				parametros.put("pv_cdrfc_i"       , (String)aseg.get("cdrfc"));
-				parametros.put("pv_dsemail_i"     , "");
-				parametros.put("pv_dsnombre1_i"   , (String)aseg.get("segundo_nombre"));
-				parametros.put("pv_dsapellido_i"  , (String)aseg.get("Apellido_Paterno"));
-				parametros.put("pv_dsapellido1_i" , (String)aseg.get("Apellido_Materno"));
-				parametros.put("pv_feingreso_i"   , calendarHoy.getTime());
-				parametros.put("pv_cdnacion_i"    , (String)aseg.get("nacional"));
-				parametros.put("pv_canaling_i"    , null);
-				parametros.put("pv_conducto_i"    , null);
-				parametros.put("pv_ptcumupr_i"    , null);
-				parametros.put("pv_residencia_i"  , null);
-				parametros.put("pv_nongrata_i"    , null);
-				parametros.put("pv_cdideext_i"    , cdIdeExtAseg);
-				parametros.put("pv_cdestciv_i"    , null);
-				parametros.put("pv_cdsucemi_i"    , null);
-				parametros.put("pv_accion_i"      , "I");
-				logger.debug("#iteracion mov mpersonas "+i);
-				kernelManager.movMpersona(parametros);
+				String swExiper = (String)aseg.get("swexiper");
+		
+				if(StringUtils.isBlank(swExiper) || swExiper.equalsIgnoreCase("N")){
+				
+					String cdIdeperAseg = (String) aseg.get("cdideper");
+					String cdIdeExtAseg = (String) aseg.get("cdideext");
+					parametros.put("pv_cdperson_i"    , (String)aseg.get("cdperson"));
+					parametros.put("pv_cdtipide_i"    , "1");
+					parametros.put("pv_cdideper_i"    , cdIdeperAseg);
+					parametros.put("pv_dsnombre_i"    , (String)aseg.get("nombre"));
+					parametros.put("pv_cdtipper_i"    , "1");
+					parametros.put("pv_otfisjur_i"    , (String)aseg.get("tpersona"));
+					parametros.put("pv_otsexo_i"      , (String)aseg.get("sexo"));
+					parametros.put("pv_fenacimi_i"    , renderFechas.parse((String)aseg.get("fenacimi")));
+					parametros.put("pv_cdrfc_i"       , (String)aseg.get("cdrfc"));
+					parametros.put("pv_dsemail_i"     , "");
+					parametros.put("pv_dsnombre1_i"   , (String)aseg.get("segundo_nombre"));
+					parametros.put("pv_dsapellido_i"  , (String)aseg.get("Apellido_Paterno"));
+					parametros.put("pv_dsapellido1_i" , (String)aseg.get("Apellido_Materno"));
+					parametros.put("pv_feingreso_i"   , calendarHoy.getTime());
+					parametros.put("pv_cdnacion_i"    , (String)aseg.get("nacional"));
+					parametros.put("pv_canaling_i"    , null);
+					parametros.put("pv_conducto_i"    , null);
+					parametros.put("pv_ptcumupr_i"    , null);
+					parametros.put("pv_residencia_i"  , null);
+					parametros.put("pv_nongrata_i"    , null);
+					parametros.put("pv_cdideext_i"    , cdIdeExtAseg);
+					parametros.put("pv_cdestciv_i"    , null);
+					parametros.put("pv_cdsucemi_i"    , null);
+					parametros.put("pv_accion_i"      , "I");
+					logger.debug("#iteracion mov mpersonas "+i);
+					kernelManager.movMpersona(parametros);
+				}
+				
 				
 				parametros=new LinkedHashMap<String,Object>(0);
 				parametros.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
