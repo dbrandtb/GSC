@@ -4090,7 +4090,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		{
 			String cols[]=new String[]{
 					"RFCCLI","NOMBRECLI","FENACIMICLI",
-					"DIRECCIONCLI","CLAVECLI","CDIDEPER",
+					"DIRECCIONCLI","CLAVECLI","CDIDEPER", "CDIDEEXT",
 					"SEXO", "TIPOPERSONA", "NACIONALIDAD",
 					"NOMBRE", "SNOMBRE", "APPAT",
 					"APMAT","CODPOSTAL","CDEDO","CDMUNICI","DSDOMICIL",

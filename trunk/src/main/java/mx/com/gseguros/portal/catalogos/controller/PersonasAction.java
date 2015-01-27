@@ -756,8 +756,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontr� ninguna persona al Guardar. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontr� ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontr&oacute; ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuestaOculta = "No se encontr&oacute; ninguna persona al Guardar. Consulte a soporte, ext. 8050";
 					slist1          = null;
 					
 		    		return SUCCESS;
