@@ -1629,7 +1629,7 @@ Ext.onReady(function() {
 			text: 'Guardar cambios',
 			handler: function() {
 				var form = this.up('form').getForm();
-				verificarFacturaAsegurado(); //Guardar cambios
+				//verificarFacturaAsegurado(); //Guardar cambios
 				
 				if (form.isValid()){
 					retornaMC = "1";
@@ -2682,10 +2682,15 @@ Ext.onReady(function() {
 			banderaFactura = "1";
 			storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 		}else{
+			if(banderaFactura =="1"){
+				retornaMC = "0";
+				guardarInformacionAdicional();
+			}
 			var fechaOcurrencia = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
 			if(fechaOcurrencia == null){
 				mensajeError('Para agregar un documento se requiere la fecha de ocurrencia');
 			}else{
+				banderaFactura = "1";
 				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'500',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
 		}
@@ -2784,8 +2789,10 @@ Ext.onReady(function() {
 			}
 		}else{
 			//Pago Reembolso e indemnizacion
-			retornaMC = "0";
-			guardarInformacionAdicional();
+			if(banderaFactura =="1"){
+				retornaMC = "0";
+				guardarInformacionAdicional();
+			}
 		}
 	}
 	
