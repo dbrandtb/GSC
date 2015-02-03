@@ -825,7 +825,7 @@ Ext.onReady(function() {
                      
                     
                     if(tipoFormato == 'A'){
-                    	regexFormato = new RegExp("^[a-zA-Z0-9]+$");
+                    	regexFormato = new RegExp("^[a-zA-Z0-9\s]+$");
                     	dsFormato = 'Alfanum&eacute;rico';
                     }else if(tipoFormato == 'N'){
                     	regexFormato = new RegExp("^([0-9])+$");
@@ -897,7 +897,7 @@ Ext.onReady(function() {
 		                     
 		                    
 		                    if(tipoFormato == 'A'){
-		                    	regexFormato = new RegExp("^[a-zA-Z0-9]+$");
+		                    	regexFormato = new RegExp("^[a-zA-Z0-9\s]+$");
 		                    	dsFormato = 'Alfanum&eacute;rico';
 		                    }else if(tipoFormato == 'N'){
 		                    	regexFormato = new RegExp("^([0-9])+$");
