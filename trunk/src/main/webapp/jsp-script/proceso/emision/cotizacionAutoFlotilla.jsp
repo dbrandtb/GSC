@@ -3311,6 +3311,8 @@ function _p30_cotizar(sinTarificar)
                                 ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                                 ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
                                 ,'smap1.tipocot'      : _p30_smap1.tipoflot
+                                ,'smap1.cdsisrol'     : _p30_smap1.cdsisrol
+                                ,'smap1.cdusuari'     : _p30_smap1.cdusuari
                             }
                             ,success : function(response)
                             {

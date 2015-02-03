@@ -393,7 +393,10 @@ public interface CotizacionDAO
 	public Map<String,String>cargarRangoDescuentoRamo5(
 			String cdtipsit
 			,String cdagente
-			,String negocio)throws ApplicationException,Exception;
+			,String negocio
+			,String cdsisrol
+			,String cdusuari
+			)throws ApplicationException,Exception;
 	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturas(
 			String cdtipsit
 			,String cdsisrol
@@ -550,5 +553,10 @@ public interface CotizacionDAO
 			,String negocio
 			)throws Exception;
 	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)throws Exception;
-	public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(String cdagente,String negocio)throws Exception;
+	public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(
+			String cdagente
+			,String negocio
+			,String cdsisrol
+			,String cdusuari
+			)throws Exception;
 }
