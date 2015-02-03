@@ -61,7 +61,7 @@
             var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
             var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             
-            var _panDatCom_numPestaniasIniciales=3;
+            var _panDatCom_numPestaniasIniciales=4;
             var accordion;
             var datComPolizaMaestra;
             var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
@@ -1906,7 +1906,6 @@ function _datComTurnarSuscripcion()
                             	}
                             }
 		                })
-                        /*
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAgentes'
@@ -1928,7 +1927,6 @@ function _datComTurnarSuscripcion()
                                 }
                             }
                         })
-                        */
                     ]
                     ,listeners:
                     {
