@@ -2883,19 +2883,43 @@ Ext.onReady(function() {
 																						,'smap1.usuario_destino' : ''
 																				},
 																				success:function(response,opts){
-																					mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
-																						windowLoader.close();
-																						Ext.create('Ext.form.Panel').submit(
-																						{
-																							url		: _p12_urlMesaControl
-																							,standardSubmit : true
-																							,params         :
-																							{
-																								'smap1.gridTitle'      : 'Siniestros en espera'
-																								,'smap2.pv_cdtiptra_i' : 16
-																							}
-																						});
-																					});
+																					Ext.Ajax.request(
+																	    	        {
+																	    	            url     : _URL_NOMBRE_TURNADO
+																	    	            ,params : 
+																	    	            {           
+																	    	                'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
+																	    	                'params.rolDestino':'operadorsini'
+																	    	            }
+																	    	            ,success : function (response)
+																	    	            {
+																	    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																							debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+																							mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+																								windowLoader.close();
+																								Ext.create('Ext.form.Panel').submit(
+																								{
+																									url		: _p12_urlMesaControl
+																									,standardSubmit : true
+																									,params         :
+																									{
+																										'smap1.gridTitle'      : 'Siniestros en espera'
+																										,'smap2.pv_cdtiptra_i' : 16
+																									}
+																								});
+																							});
+																	    	            },
+																	    	            failure : function ()
+																	    	            {
+																	    	                me.up().up().setLoading(false);
+																	    	                centrarVentanaInterna(Ext.Msg.show({
+																	    	                    title:'Error',
+																	    	                    msg: 'Error de comunicaci&oacute;n',
+																	    	                    buttons: Ext.Msg.OK,
+																	    	                    icon: Ext.Msg.ERROR
+																	    	                }));
+																	    	            }
+																	    	        });
 																				},
 																				failure:function(response,opts)
 																				{
@@ -2945,19 +2969,43 @@ Ext.onReady(function() {
 																			,'smap1.usuario_destino' : ''
 																	},
 																	success:function(response,opts){
-																		mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.',function(){
-																			windowLoader.close();
-																			Ext.create('Ext.form.Panel').submit(
-																			{
-																				url		: _p12_urlMesaControl
-																				,standardSubmit : true
-																				,params         :
-																				{
-																					'smap1.gridTitle'      : 'Siniestros en espera'
-																					,'smap2.pv_cdtiptra_i' : 16
-																				}
-																			});
-																		});
+																		Ext.Ajax.request(
+														    	        {
+														    	            url     : _URL_NOMBRE_TURNADO
+														    	            ,params : 
+														    	            {           
+														    	                'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
+														    	                'params.rolDestino':'operadorsini'
+														    	            }
+														    	            ,success : function (response)
+														    	            {
+														    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+																				mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+																					windowLoader.close();
+																					Ext.create('Ext.form.Panel').submit(
+																					{
+																						url		: _p12_urlMesaControl
+																						,standardSubmit : true
+																						,params         :
+																						{
+																							'smap1.gridTitle'      : 'Siniestros en espera'
+																							,'smap2.pv_cdtiptra_i' : 16
+																						}
+																					});
+																				});
+														    	            },
+														    	            failure : function ()
+														    	            {
+														    	                me.up().up().setLoading(false);
+														    	                centrarVentanaInterna(Ext.Msg.show({
+														    	                    title:'Error',
+														    	                    msg: 'Error de comunicaci&oacute;n',
+														    	                    buttons: Ext.Msg.OK,
+														    	                    icon: Ext.Msg.ERROR
+														    	                }));
+														    	            }
+														    	        });
 																	},
 																	failure:function(response,opts)
 																	{

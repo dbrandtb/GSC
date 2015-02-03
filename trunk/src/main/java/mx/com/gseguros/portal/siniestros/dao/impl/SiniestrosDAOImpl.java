@@ -3624,6 +3624,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+    @Override
+	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_roldestino_i", rolDestino);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneUsuarioTurnadoSiniestro(getDataSource()), params);
+		logger.debug("VALOR DE RESPUESTA -->"+(String) resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneUsuarioTurnadoSiniestro extends StoredProcedure {
+    	
+    	protected ObtieneUsuarioTurnadoSiniestro(DataSource dataSource) {
+    		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_USUARIO_TURNADO");
+    		declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_roldestino_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 
 	@Override
 	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception {
