@@ -3461,234 +3461,261 @@ function _p30_cargarClic()
                     var json = Ext.decode(response.responseText);
                     debug('### cargar:',json);
                     checkBool(json.exito,json.respuesta);
-                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                    
+                    var maestra=json.smap1.ESTADO=='M';
+                    _p30_limpiar();
+                    if(maestra)
                     {
-                        var maestra=json.smap1.ESTADO=='M';
-                        _p30_limpiar();
-                        if(maestra)
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                        mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.smap1.NMPOLIZA);
+                    }
+                    else
+                    {
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(nmpoliza);
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
+                    }
+                    var datosGenerales = new _p30_modelo(json.smap1);
+                    var cdtipsitDatos  = datosGenerales.raw['parametros.pv_cdtipsit'];
+                    debug('cdtipsitDatos:',cdtipsitDatos);
+                    
+                    if(_p30_smap1.cdramo+'x'=='5x')
+                    {
+                        var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                        debug('clienteNuevoName:',clienteNuevoName);
+                        datosGenerales.set(clienteNuevoName,'S');
+                    }
+                    
+                    ck='Recuperando datos generales';
+                    if(_p30_smap1.mapeo=='DIRECTO')
+                    {
+                        _fieldById('_p30_form').loadRecord(datosGenerales);
+                        _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                    }
+                    else
+                    {                            
+                        var mapeos = _p30_smap1.mapeo.split('#');
+                        debug('mapeos:',mapeos);
+                        for(var i in mapeos)
                         {
-                            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
-                            mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.smap1.NMPOLIZA);
-                        }
-                        else
-                        {
-                            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
-                            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(nmpoliza);
-                            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
-                        }
-                        var datosGenerales = new _p30_modelo(json.smap1);
-                        var cdtipsitDatos  = datosGenerales.raw['parametros.pv_cdtipsit'];
-                        debug('cdtipsitDatos:',cdtipsitDatos);
-                        
-                        if(_p30_smap1.cdramo+'x'=='5x')
-                        {
-                            var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
-                            debug('clienteNuevoName:',clienteNuevoName);
-                            datosGenerales.set(clienteNuevoName,'S');
-                        }
-                        
-                        ck='Recuperando datos generales';
-                        if(_p30_smap1.mapeo=='DIRECTO')
-                        {
-                            _fieldById('_p30_form').loadRecord(datosGenerales);
-                            _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
-                        }
-                        else
-                        {                            
-                            var mapeos = _p30_smap1.mapeo.split('#');
-                            debug('mapeos:',mapeos);
-                            for(var i in mapeos)
+                            var cdtipsitsMapeo = mapeos[i].split('|')[0];
+                            var mapeo          = mapeos[i].split('|')[1];
+                            debug('cdtipsitDatos:',cdtipsitDatos,'cdtipsitsMapeo:',cdtipsitsMapeo);
+                            if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsitDatos+',')!=-1)
                             {
-                                var cdtipsitsMapeo = mapeos[i].split('|')[0];
-                                var mapeo          = mapeos[i].split('|')[1];
-                                debug('cdtipsitDatos:',cdtipsitDatos,'cdtipsitsMapeo:',cdtipsitsMapeo);
-                                if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsitDatos+',')!=-1)
+                                debug('coincidente:',cdtipsitsMapeo,'cdtipsitDatos:',cdtipsitDatos)
+                                debug('mapeo:',mapeo);
+                                if(mapeo=='DIRECTO')
                                 {
-                                    debug('coincidente:',cdtipsitsMapeo,'cdtipsitDatos:',cdtipsitDatos)
-                                    debug('mapeo:',mapeo);
-                                    if(mapeo=='DIRECTO')
+                                    debug('directo');
+                                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
                                     {
-                                        debug('directo');
-                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
-                                        {
-                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            agenteCmp.forceSelection=false;
-                                            negocioCmp.forceSelection=false;
-                                        }
-                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-                                        {
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            negocioCmp.forceSelection=false;
-                                        }
-                                        _fieldById('_p30_form').loadRecord(datosGenerales);
-                                        _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
-                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
-                                        {
-                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
-                                            agenteCmp.getStore().load(
-                                            {
-                                                params :
-                                                {
-                                                    'params.agente' : agenteCmp.getValue()
-                                                }
-                                                ,callback : function()
-                                                {
-                                                     var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
-                                                     //agenteCmp.select(agenteCmp.getValue());
-                                                     agenteCmp.forceSelection=true;
-                                                     var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                                     negocioCmp.heredar(true,function(cmp)
-                                                     {
-                                                         cmp.forceSelection=true;
-                                                     });
-                                                }
-                                            });
-                                        }
-                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-                                        {
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            negocioCmp.heredar(true,function(cmp)
-                                            {
-                                                cmp.forceSelection=true;
-                                            });
-                                        }
+                                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        agenteCmp.forceSelection=false;
+                                        negocioCmp.forceSelection=false;
                                     }
-                                    else
+                                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
                                     {
-                                        var atributos = mapeo.split('@');
-                                        debug('atributos:',atributos);
-                                        
-                                        var recordMapeado = new _p30_modelo();
-                                        if(_p30_smap1.cdramo=='5')
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        negocioCmp.forceSelection=false;
+                                    }
+                                    _fieldById('_p30_form').loadRecord(datosGenerales);
+                                    _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                    {
+                                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                        agenteCmp.getStore().load(
                                         {
-                                            var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
-                                            debug('clienteNuevoName:',clienteNuevoName);
-                                            datosGenerales.set(clienteNuevoName,'S');
-                                        }
-                                        
-                                        for(var i in atributos)
-                                        {
-                                            var atributoIte = atributos[i];
-                                            var modelo      = atributoIte.split(',')[0];
-                                            var origen      = atributoIte.split(',')[1];
-                                            var pantalla    = atributoIte.split(',')[2];
-                                            
-                                            modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
-                                            pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
-                                            
-                                            debug('modelo:'   , modelo   , '.');
-                                            debug('origen:'   , origen   , '.');
-                                            debug('pantalla:' , pantalla , '.');
-                                            
-                                            recordMapeado.set(pantalla,datosGenerales.get(modelo));
-                                        }
-                                        
-                                        debug('recordMapeado:',recordMapeado.data);
-                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
-                                        {
-                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            agenteCmp.forceSelection=false;
-                                            negocioCmp.forceSelection=false;
-                                        }
-                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-                                        {
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            negocioCmp.forceSelection=false;
-                                        }
-                                        _fieldById('_p30_form').loadRecord(recordMapeado);
-                                        _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
-                                        if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
-                                        {
-                                            var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
-                                            agenteCmp.getStore().load(
+                                            params :
                                             {
-                                                params :
-                                                {
-                                                    'params.agente' : agenteCmp.getValue()
-                                                }
-                                                ,callback : function()
-                                                {
-                                                     var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
-                                                     //agenteCmp.select(agenteCmp.getValue());
-                                                     agenteCmp.forceSelection=true;
-                                                     var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                                     negocioCmp.heredar(true,function(cmp)
-                                                     {
-                                                         cmp.forceSelection=true;
-                                                     });
-                                                }
-                                            });
-                                        }
-                                        else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-                                        {
-                                            var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                            negocioCmp.heredar(true,function(cmp)
+                                                'params.agente' : agenteCmp.getValue()
+                                            }
+                                            ,callback : function()
                                             {
-                                                cmp.forceSelection=true;
-                                            });
-                                        }
+                                                 var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                                 //agenteCmp.select(agenteCmp.getValue());
+                                                 agenteCmp.forceSelection=true;
+                                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                                 negocioCmp.heredar(true,function(cmp)
+                                                 {
+                                                     cmp.forceSelection=true;
+                                                 });
+                                            }
+                                        });
+                                    }
+                                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                    {
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        negocioCmp.heredar(true,function(cmp)
+                                        {
+                                            cmp.forceSelection=true;
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    var atributos = mapeo.split('@');
+                                    debug('atributos:',atributos);
+                                    
+                                    var recordMapeado = new _p30_modelo();
+                                    if(_p30_smap1.cdramo=='5')
+                                    {
+                                        var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                                        debug('clienteNuevoName:',clienteNuevoName);
+                                        datosGenerales.set(clienteNuevoName,'S');
+                                    }
+                                    
+                                    for(var i in atributos)
+                                    {
+                                        var atributoIte = atributos[i];
+                                        var modelo      = atributoIte.split(',')[0];
+                                        var origen      = atributoIte.split(',')[1];
+                                        var pantalla    = atributoIte.split(',')[2];
+                                        
+                                        modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
+                                        pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
+                                        
+                                        debug('modelo:'   , modelo   , '.');
+                                        debug('origen:'   , origen   , '.');
+                                        debug('pantalla:' , pantalla , '.');
+                                        
+                                        recordMapeado.set(pantalla,datosGenerales.get(modelo));
+                                    }
+                                    
+                                    debug('recordMapeado:',recordMapeado.data);
+                                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                    {
+                                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        agenteCmp.forceSelection=false;
+                                        negocioCmp.forceSelection=false;
+                                    }
+                                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                    {
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        negocioCmp.forceSelection=false;
+                                    }
+                                    _fieldById('_p30_form').loadRecord(recordMapeado);
+                                    _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
+                                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                                    {
+                                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                                        agenteCmp.getStore().load(
+                                        {
+                                            params :
+                                            {
+                                                'params.agente' : agenteCmp.getValue()
+                                            }
+                                            ,callback : function()
+                                            {
+                                                 var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                                 //agenteCmp.select(agenteCmp.getValue());
+                                                 agenteCmp.forceSelection=true;
+                                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                                 negocioCmp.heredar(true,function(cmp)
+                                                 {
+                                                     cmp.forceSelection=true;
+                                                 });
+                                            }
+                                        });
+                                    }
+                                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                    {
+                                        var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
+                                        negocioCmp.heredar(true,function(cmp)
+                                        {
+                                            cmp.forceSelection=true;
+                                        });
                                     }
                                 }
                             }
                         }
+                    }
                         
-                        if(!Ext.isEmpty(json.smap1.CDPERSON))
+                    if(!Ext.isEmpty(json.smap1.CDPERSON))
+                    {
+                        ck='Recuperando cliente';
+                        if(maestra)
                         {
-                            ck='Recuperando cliente';
-                            if(maestra)
-                            {
-                                _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
-                            }
-                            else
-                            {
-                                json.smap1['CLAVECLI']       = json.smap1.CDPERSON;
-                                _p30_recordClienteRecuperado = new _p30_modeloRecuperado(json.smap1);
-                                
-                                debug('_p30_recordClienteRecuperado:',_p30_recordClienteRecuperado);
-                                
-                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form'));
-                                combcl.semaforo = true;
-                                combcl.setValue('N');
-                                combcl.semaforo = false;
-                            }
+                            _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
                         }
-                        
-                        ck='Recuperando configuracion de incisos';
-                        for(var i in json.slist1)
+                        else
                         {
-                            var tconvalsit = json.slist1[i];
-                            var cdtipsit   = tconvalsit.CDTIPSIT;
-                            _p30_paneles[cdtipsit].valores=tconvalsit;
+                            json.smap1['CLAVECLI']       = json.smap1.CDPERSON;
+                            _p30_recordClienteRecuperado = new _p30_modeloRecuperado(json.smap1);
+                            
+                            debug('_p30_recordClienteRecuperado:',_p30_recordClienteRecuperado);
+                            
+                            var combcl      = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_form'));
+                            combcl.semaforo = true;
+                            combcl.setValue('N');
+                            combcl.semaforo = false;
                         }
-                        ck='Recuperando incisos base';
-                        for(var i in json.slist2)
-                        {
-                            _p30_store.add(new _p30_modelo(json.slist2[i]));
-                        }
-                        
+                    }
+                    
+                    ck='Recuperando configuracion de incisos';
+                    for(var i in json.slist1)
+                    {
+                        var tconvalsit = json.slist1[i];
+                        var cdtipsit   = tconvalsit.CDTIPSIT;
+                        _p30_paneles[cdtipsit].valores=tconvalsit;
+                    }
+                    ck='Recuperando incisos base';
+                    for(var i in json.slist2)
+                    {
+                        _p30_store.add(new _p30_modelo(json.slist2[i]));
+                    }
+           
+                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                    {
                         _p30_cotizar(!maestra);
                     }
                     else
                     {
-                        var swExiper = (Ext.isEmpty(json.smap1.CDPERSON) && !Ext.isEmpty(json.smap1.CDIDEPER))? 'N' : 'S' ;
-                        Ext.create('Ext.form.Panel').submit(
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
                         {
-                            url             : _p30_urlDatosComplementarios
-                            ,standardSubmit : true
-                            ,params         :
-                            {
-                                'smap1.cdunieco'  : json.smap1.CDUNIECO
-                                ,'smap1.cdramo'   : json.smap1.cdramo
-                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
-                                ,'smap1.estado'   : 'W'
-                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
-                                ,'smap1.ntramite' : json.smap1.NTRAMITE
-                                ,'smap1.swexiper' : swExiper
-                                ,'smap1.tipoflot' : json.smap1.TIPOFLOT
-                            }
-                        });
+                            title      : 'P&oacute;liza en emisi&oacute;n'
+                            ,modal     : true
+                            ,bodyStyle : 'padding:5px;'
+                            ,closable  : false
+                            ,html      : 'La cotizaci&oacute;n se encuentra en proceso de emisi&oacute;n'
+                            ,buttonAlign : 'center'
+                            ,buttons   :
+                            [
+                                {
+                                    text     : 'Complementar'
+                                    ,handler : function()
+                                    {
+                                        var swExiper = (Ext.isEmpty(json.smap1.CDPERSON) && !Ext.isEmpty(json.smap1.CDIDEPER))? 'N' : 'S' ;
+                                        Ext.create('Ext.form.Panel').submit(
+                                        {
+                                            url             : _p30_urlDatosComplementarios
+                                            ,standardSubmit : true
+                                            ,params         :
+                                            {
+                                                'smap1.cdunieco'  : json.smap1.CDUNIECO
+                                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                                ,'smap1.estado'   : 'W'
+                                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                                ,'smap1.ntramite' : json.smap1.NTRAMITE
+                                                ,'smap1.swexiper' : swExiper
+                                                ,'smap1.tipoflot' : json.smap1.TIPOFLOT
+                                            }
+                                        });
+                                    }
+                                }
+                                ,{
+                                    text     : 'Duplicar'
+                                    ,handler : function(bot)
+                                    {
+                                        bot.up('window').destroy();
+                                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                                    }
+                                }
+                            ]
+                        }).show());
                     }
                 }
                 catch(e)
