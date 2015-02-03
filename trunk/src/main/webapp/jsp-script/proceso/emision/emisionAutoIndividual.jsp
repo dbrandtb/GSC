@@ -17,6 +17,7 @@ var _p29_urlRecotizar                      = '<s:url namespace="/"           act
 var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
+var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
 
 var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
 var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
@@ -641,7 +642,7 @@ function _p29_mostrarVistaPrevia()
                     ,width         : 660
                     ,height        : 400
                     ,defaults      : { width: 650 }
-                    ,modal         : false
+                    ,modal         : true
                     ,closable      : false
                     ,collapsible   : true
                     ,titleCollapse : true
@@ -876,6 +877,26 @@ function _p29_mostrarVistaPrevia()
                                         me.up().up().destroy();
                                     }
                                 }
+                                ,{
+                                    xtype     : 'button'
+                                    ,itemId   : '_p29_botonNueva'
+                                    ,disabled : true
+                                    ,text     : 'Nueva'
+                                    ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                    ,handler  : function()
+                                    {
+                                        Ext.create('Ext.form.Panel').submit(
+                                        {
+                                            url             : _p29_urlCotizacionAutoIndividual
+                                            ,standardSubmit : true
+                                            ,params         :
+                                            {
+                                                'smap1.cdramo'    : _p29_smap1.cdramo
+                                                ,'smap1.cdtipsit' : _p29_smap1.cdtipsit
+                                            }
+                                        });
+                                    }
+                                }
                             ]
                         })
                     ]
@@ -951,6 +972,7 @@ function _p29_emitirFinal(me)
                 */
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
+                _fieldById('_p29_botonNueva').setDisabled(false);
                 if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
                 {
                     var ventanaTmp = Ext.Msg.show(
@@ -991,6 +1013,7 @@ function _p29_emitirFinal(me)
 //                        _fieldById('venDocVenEmiBotNueCotiza').show();
 //                    }
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
+                    _fieldById('_p29_botonNueva').setDisabled(false);
                 }
                 Ext.Msg.show(
                 {
