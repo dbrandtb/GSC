@@ -69,6 +69,7 @@
             var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
             var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
+            var _URL_NOMBRE_TURNADO   		= '<s:url namespace="/siniestros" action="obtieneUsuarioTurnado" />';
             
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -90,6 +91,7 @@
 			var _11_textfieldAseguradoMsiniest;
 			var _11_textfieldNmSiniest;
 			var panelInicialPral;
+			var panelComplementos;
 			var storeAseguradoFactura;
 			var storeProveedor;
 			var storeTipoAtencion;
@@ -764,7 +766,7 @@
 				
 				var cmbProveedor = Ext.create('Ext.form.field.ComboBox',
 				{
-					fieldLabel : 'PROVEEDOR',			displayField : 'nombre',			name:'params.cdpresta',
+					fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'params.cdpresta',
 					valueField   : 'cdpresta',			forceSelection : true,
 					matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 					minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
@@ -814,7 +816,7 @@
 
 				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
 				{
-					name:'params.tipoMoneda',		fieldLabel	: 'MONEDA',		store: storeTipoMoneda,			queryMode:'local',  
+					name:'params.tipoMoneda',		fieldLabel	: 'Moneda',		store: storeTipoMoneda,			queryMode:'local',  
 					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false,
 					listeners : {
 						select:function(e){
@@ -837,7 +839,7 @@
 				var cobertura = Ext.create('Ext.form.field.ComboBox',
 				{
 					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	/*allowBlank: false,*/				displayField : 'value',
-					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,		hidden: true,
+					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,//		hidden: true,
 					queryMode :'remote',			store : storeCobertura,		editable:false,
 					listeners : {
 						'change' : function(combo, record) {
@@ -889,7 +891,7 @@
 				var subCobertura = Ext.create('Ext.form.field.ComboBox',
 				{
 					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	/*allowBlank: false,*/				displayField : 'value',			id:'idSubcobertura',
-					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,		hidden: true,
+					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,//		hidden: true,
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 				});
 						
@@ -1757,6 +1759,85 @@
 						property	: 'nmautser',			direction   : 'DESC'
 					}
 				]);
+				panelComplementos = Ext.create('Ext.form.Panel',
+				{
+					border	: 0
+					,layout	 :
+					{
+						type	 : 'table'
+						,columns : 2
+					}
+					,defaults 	:
+					{
+						style : 'margin:5px;'
+					}
+					,items	:
+					[
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00',
+    	    	    		valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Consumida',			name	: 'params.sumaGastada', value : '0.00',
+    	    	    		valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+    	    	    		xtype       : 'displayfield',		fieldLabel : 'Subtotal Factura',		name	: 'params.subtotalFac', value : '0.00',
+    	    	    		valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+	    	    	    },
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'IVA Factura',			name	: 'params.ivaFac',	 value : '0.00',
+							valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'IVA Ret. Factura',		name	: 'params.ivaRetFac', value : '0.00',
+							valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'ISR Factura',			name	: 'params.isrFac', value : '0.00',
+							valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'Imp. Cedular Factura',		name	: 'params.impCedularFac', value : '0.00',
+							valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						},
+						{
+							xtype		: 'displayfield',			fieldLabel	: 'Importe Pagar Factura',			name	: 'params.impPagarFac', value : '0.00',
+							valueToRaw : function(value)
+	    	                {
+	    	                    return Ext.util.Format.usMoney(value);
+	    	                }
+						}
+					]
+				});
+				
+				for(var i=0;i<panelComplementos.items.items.length;i++)
+				{
+					panelComplementos.items.items[i].labelWidth =200;
+					panelComplementos.items.items[i].style	  = 'margin-right:100px;';
+				}
+				
 				panelInicialPral= Ext.create('Ext.form.Panel',
 				{
 					border	: 0
@@ -1772,19 +1853,19 @@
 					,items	:
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'NO. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'params.nfactura', readOnly   : true
 						},
 						{
-							xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
+							xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
 						{
-							xtype		: 'datefield',			fieldLabel	: 'FECHA EGRESO',			name	: 'params.feegreso',	format	: 'd/m/Y'
+							xtype		: 'datefield',			fieldLabel	: 'Fecha Egreso',			name	: 'params.feegreso',	format	: 'd/m/Y'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'DEDUCIBLE (D&Iacute;AS)',		name	: 'params.diasdedu'//,
+							xtype		: 'numberfield',		fieldLabel 	: 'Deducible (D&iacute;as)',		name	: 'params.diasdedu'//,
 							//allowBlank	: false
 						},
 						cmbProveedor,
@@ -1793,7 +1874,7 @@
 						subCobertura,
 						cmbTipoMoneda,
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'TASA CAMBIO',			name	: 'params.tasacamb',
+							xtype		: 'numberfield',		fieldLabel 	: 'Tasa Cambio',			name	: 'params.tasacamb',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
 							listeners : {
 								'change':function(e){
@@ -1808,7 +1889,7 @@
 							}
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE FACTURA',		name	: 'params.ptimporta',
+							xtype		: 'numberfield',		fieldLabel 	: 'Importe Factura',		name	: 'params.ptimporta',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
 							listeners : {
 								'change':function(e){
@@ -1823,15 +1904,15 @@
 							}
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE MXN',			name	: 'params.ptimport',
+							xtype		: 'numberfield',		fieldLabel 	: 'Importe Mxn',			name	: 'params.ptimport',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO %',			name	: 'params.descporc',
+							xtype		: 'numberfield',		fieldLabel 	: 'Descuento %',			name	: 'params.descporc',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO $',			name	: 'params.descnume',
+							xtype		: 'numberfield',		fieldLabel 	: 'Descuento $',			name	: 'params.descnume',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						}
 						<s:property value='%{"," + imap.tatrisinItems}' />
@@ -1930,6 +2011,7 @@
 					[
 						panelInicialPral
 						,gridFacturaDirecto
+						,panelComplementos
 						/*,{
 							xtype		: 'textfield',			fieldLabel	: 'Suma Asegurada',		name	: 'params.sumaAsegurada', readOnly   : true
 						},
@@ -2840,6 +2922,8 @@
 						'smap.nfactura'   : _11_recordActivo.get('factura')
 					}
 				});
+				//Llenamos los campos que requeriremos
+				obtenerTotalPagos(storeAseguradoFactura);
 				if(Ext.decode(response.responseText).datosValidacion != null){
 					var aplicaIVA = null;
 					var ivaRetenido = null;
@@ -3506,6 +3590,39 @@
 		ventanaAgregarAsegurado.show();
 	}
 	
+	function obtenerTotalPagos(storeAseguradoFactura)
+	{
+		var arr = [];
+    	var subtotalFactura=0;
+    	var ivaFactura=0;
+    	var ivaRetFactura=0;
+    	var isrFactura=0;
+    	var impCedFactura=0;
+    	var imporTotalFactura=0;
+    	storeAseguradoFactura.each(function(record) {
+    	    arr.push(record.data);
+    	});
+
+    	for(var i = 0; i < arr.length; i++)
+    	{
+    	    //valorBase=parseFloat(valorBase) + parseFloat(arr[i].ptimport);
+    	    subtotalFactura = parseFloat(subtotalFactura) + parseFloat(arr[i].IMPORTEASEG);
+	    	ivaFactura = parseFloat(ivaFactura) + parseFloat(arr[i].PTIVAASEG);
+	    	ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(arr[i].PTIVARETASEG);
+	    	isrFactura = parseFloat(isrFactura) + parseFloat(arr[i].PTISRASEG);
+	    	impCedFactura = parseFloat(impCedFactura) + parseFloat(arr[i].PTIMPCEDASEG);
+	    	imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(arr[i].IMPORTETOTALPAGO);
+    	    
+    	}
+    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
+    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
+    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
+    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
+    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
+    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
+    	return true;
+	}
+	
 	function _p21_generarCalculo(){
 		// Se manda a llamar al procedimiento y se guarda
 		Ext.Ajax.request(
@@ -3522,6 +3639,9 @@
 						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
 					}
 				});
+				
+				obtenerTotalPagos(storeAseguradoFactura);
+				//debug("VALOR DEL STORE -->",storeAseguradoFactura);
 			},
 			failure : function ()
 			{
@@ -3692,20 +3812,47 @@
 												});
         	            					},
         	            					success: function(form, action) {
-        	            						mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente.',function(){
-													windowLoader.close();
-													Ext.create('Ext.form.Panel').submit(
-													{
-														url		: _11_urlMesaControl
-														,standardSubmit : true
-														,params         :
-														{
-															'smap1.gridTitle'      : 'Siniestros en espera'
-															,'smap2.pv_cdtiptra_i' : 16
-														}
-													});
-												});
-        	            						
+        	            						//Se realiza el llamado por el numero de trámite
+        	            						Ext.Ajax.request(
+								    	        {
+								    	            url     : _URL_NOMBRE_TURNADO
+								    	            ,params : 
+								    	            {           
+								    	                'params.ntramite': _11_params.NTRAMITE,
+								    	                'params.rolDestino': 'medajustador'
+								    	            }
+								    	            ,success : function (response)
+								    	            {
+								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+														debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+														mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+															windowLoader.close();
+															Ext.create('Ext.form.Panel').submit(
+															{
+																url		: _11_urlMesaControl
+																,standardSubmit : true
+																,params         :
+																{
+																	'smap1.gridTitle'      : 'Siniestros en espera'
+																	,'smap2.pv_cdtiptra_i' : 16
+																}
+															});
+														});
+														
+														
+														
+								    	            },
+								    	            failure : function ()
+								    	            {
+								    	                me.up().up().setLoading(false);
+								    	                centrarVentanaInterna(Ext.Msg.show({
+								    	                    title:'Error',
+								    	                    msg: 'Error de comunicaci&oacute;n',
+								    	                    buttons: Ext.Msg.OK,
+								    	                    icon: Ext.Msg.ERROR
+								    	                }));
+								    	            }
+								    	        });
         	            					}
         	            				});
         	            			} else {
@@ -3982,7 +4129,47 @@
 							        	            		        		mensajeError('Error al turnar al operador de reclamaciones');
 							        	            					},
 							        	            					success: function(form, action) {
-							        	            						centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se ha turnado &eacute;xito.',function(){
+							        	            						Ext.Ajax.request(
+															    	        {
+															    	            url     : _URL_NOMBRE_TURNADO
+															    	            ,params : 
+															    	            {           
+															    	                'params.ntramite': _11_params.NTRAMITE,
+															    	                'params.rolDestino': 'operadorsini'
+															    	            }
+															    	            ,success : function (response)
+															    	            {
+															    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																					debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+																					mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+																						windowLoader.close();
+																						Ext.create('Ext.form.Panel').submit(
+																						{
+																							url		: _11_urlMesaControl
+																							,standardSubmit : true
+																							,params         :
+																							{
+																								'smap1.gridTitle'      : 'Siniestros en espera'
+																								,'smap2.pv_cdtiptra_i' : 16
+																							}
+																						});
+																					});
+																					
+																					
+																					
+															    	            },
+															    	            failure : function ()
+															    	            {
+															    	                me.up().up().setLoading(false);
+															    	                centrarVentanaInterna(Ext.Msg.show({
+															    	                    title:'Error',
+															    	                    msg: 'Error de comunicaci&oacute;n',
+															    	                    buttons: Ext.Msg.OK,
+															    	                    icon: Ext.Msg.ERROR
+															    	                }));
+															    	            }
+															    	        });
+							        	            						/*centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se ha turnado &eacute;xito.',function(){
 							        											windowLoader.close();
 							        											Ext.create('Ext.form.Panel').submit(
 							        											{
@@ -3994,7 +4181,7 @@
 							        													,'smap2.pv_cdtiptra_i' : 16
 							        												}
 							        											});
-							        										}));
+							        										}));*/
 							        	            					}
 						        	            					});
 			        	            			} else {

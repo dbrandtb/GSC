@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String montoArancel;
     private String requiereAutServ;
     private String mesesTiempoEspera;
+    private String usuarioTurnadoSiniestro;
     private String existeDocAutServicio;
     private String autorizarProceso;
     private String porcentajePenalizacion;
@@ -5804,7 +5806,19 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	   	}
 	   	success = true;
 	   	return SUCCESS;
- }
+    }
+    
+    public String obtieneUsuarioTurnado(){
+	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
+	   	try {
+	   			usuarioTurnadoSiniestro = siniestrosManager.obtieneUsuarioTurnadoSiniestro(params.get("ntramite"),params.get("rolDestino"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el periodo de espera en meses",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+    }
     /**
      * Funci�n que obtiene la lista del asegurado
      * @param void sin parametros de entrada
@@ -7436,6 +7450,105 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			
     		}else{
     			//PAGO X INDEMNIZACION
+    			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null,null);
+    			//List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null);
+        		logger.debug("VALOR DEL listaSiniestrosMsiniesTramite -->"+siniestros);
+    			siniestro  = siniestros.get(0);
+    			siniestros = null;
+    			smap2      = siniestro;
+    			smap3      = new HashMap<String,String>();
+    			smap3.put("a","a");
+    			smap.put("PAGODIRECTO","N");
+    			slist1     = facturasAux;
+    			logger.debug("FACTURAS -->"+slist1);
+    			
+    			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+				paramCobertura.put("pv_cdunieco_i",siniestro.get("CDUNIECO"));
+				paramCobertura.put("pv_estado_i",siniestro.get("ESTADO"));
+				paramCobertura.put("pv_cdramo_i",siniestro.get("CDRAMO"));
+				paramCobertura.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
+				paramCobertura.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
+				paramCobertura.put("pv_cdgarant_i",null);
+				
+				List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
+				logger.debug("<-- VALORES listaCobertura -->"+listaCobertura);
+				
+				//hospitalizacion
+    			Map<String,String> hosp = new HashMap<String,String>();
+    			lhosp.add(hosp);
+    			hosp.put("PTIMPORT" , "0");
+    			hosp.put("DESTO"    , "0");
+    			hosp.put("IVA"      , "0");
+    			//hospitalizacion
+    			
+    			//directo
+    			Map<String,String>mpdir=new HashMap<String,String>();
+    			mpdir.put("dummy","dummy");
+    			lpdir.add(mpdir);
+    			//directo
+    			
+    			Map<String,String>importesWSSiniestroUnico=new HashMap<String,String>();
+    			importesWSSiniestroUnico.put("cdunieco" , siniestro.get("CDUNIECO"));
+    			importesWSSiniestroUnico.put("cdramo"   , siniestro.get("CDRAMO"));
+    			importesWSSiniestroUnico.put("estado"   , siniestro.get("ESTADO"));
+    			importesWSSiniestroUnico.put("nmpoliza" , siniestro.get("NMPOLIZA"));
+    			importesWSSiniestroUnico.put("nmsuplem" , siniestro.get("NMSUPLEM"));
+    			importesWSSiniestroUnico.put("nmsituac" , siniestro.get("NMSITUAC"));
+    			importesWSSiniestroUnico.put("aaapertu" , siniestro.get("AAAPERTU"));
+    			importesWSSiniestroUnico.put("status"   , siniestro.get("STATUS"));
+    			importesWSSiniestroUnico.put("nmsinies" , siniestro.get("NMSINIES"));
+    			importesWSSiniestroUnico.put("ntramite" , ntramite);
+    			listaImportesWS.add(importesWSSiniestroUnico);
+    			double importeSiniestroUnico = 0d;
+    			double ivaSiniestroUnico     = 0d;
+    			double ivrSiniestroUnico     = 0d;
+    			double isrSiniestroUnico     = 0d;
+    			double cedularSiniestroUnico = 0d;
+    			
+    			Map<String,String> facturaIte        = null;
+    			//for(Map<String,String>facturaIte:facturasAux)
+    			double sumaAsegurada = Double.valueOf("250000");
+    			logger.debug("SUMA ASEGURADA -->"+sumaAsegurada);
+    			for(int i = 0; i < facturasAux.size(); i++)
+    			{
+    				facturaIte = facturasAux.get(i);
+    				Map<String,Object>facturaObj=new HashMap<String,Object>();
+            			facturaObj.putAll(facturaIte);
+            			this.facturasxSiniestro.add(facturaObj);
+            			//reembolso
+        				Map<String,String>mprem=new HashMap<String,String>(0);
+        				mprem.put("TOTALNETO" , "0");
+        				mprem.put("SUBTOTAL"  , "0");
+        				lprem.add(mprem);
+        				
+    					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
+        						siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"),
+        						siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"));
+        				logger.debug("<-- copagoDeducibleFacturaIte -->"+copagoDeducibleFacturaIte);
+        				
+        				//OBTENEMOS EL VALOR Y SE REALIZA UN REEMPLA
+        				Calendar fechas = Calendar.getInstance();        				 
+        				//fecha inicio        				 
+        				Calendar fechaInicio = new GregorianCalendar();
+        				fechaInicio.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
+        				Calendar fechaFin = new GregorianCalendar();
+        				fechaFin.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
+        				fechas.setTimeInMillis(fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());
+        				int totalDias = fechas.get(Calendar.DAY_OF_YEAR);
+        				
+        				double totalFactura = sumaAsegurada * (200/100d) * totalDias;
+        				facturaObj.put("TOTALFACTURAIND",totalFactura+"");
+        				importeSiniestroUnico += totalFactura;
+    			}
+    			
+    			logger.debug(">>WS del siniestro unico");
+    			importesWSSiniestroUnico.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroUnico)).toString());
+    			importesWSSiniestroUnico.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroUnico)    ).toString());
+    			importesWSSiniestroUnico.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroUnico)    ).toString());
+    			importesWSSiniestroUnico.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroUnico)    ).toString());
+    			importesWSSiniestroUnico.put(IMPORTE_WS_CEDULAR , (new Double(cedularSiniestroUnico)).toString());
+    			logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
+    			logger.debug("<<WS del siniestro unico");
     			
     		}
 			
@@ -7503,12 +7616,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         			logger.debug("VALOR DE LAS FACTURAS -->"+totalFacturaIte);
         			String ntramiteA     = (String) totalFacturaIte.get("NTRAMITE");
         			String nfacturaA     = (String) totalFacturaIte.get("NFACTURA");
-        			String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURAIND"); 
-        			
-        			/*logger.debug("VALOR DE TOTAL DE FACTURA --->"+totalFacturaA);
-        			if(Double.parseDouble(totalFacturaA) < 0){
-        				totalFacturaA = "0";
-        			}*/
+        			String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURAIND");
         			siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA);
         		}
         		success = true; 
@@ -8327,4 +8435,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		}
 		return r;
 	}
+
+
+	public String getUsuarioTurnadoSiniestro() {
+		return usuarioTurnadoSiniestro;
+	}
+
+
+	public void setUsuarioTurnadoSiniestro(String usuarioTurnadoSiniestro) {
+		this.usuarioTurnadoSiniestro = usuarioTurnadoSiniestro;
+	}
+	
+	
 }

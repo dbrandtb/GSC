@@ -1374,6 +1374,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 	
+	@Override
+	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.obtieneUsuarioTurnadoSiniestro(ntramite,rolDestino);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
 	/*@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
 	public String requiereAutorizacionServ(String cobertura, String subcobertura) throws Exception {

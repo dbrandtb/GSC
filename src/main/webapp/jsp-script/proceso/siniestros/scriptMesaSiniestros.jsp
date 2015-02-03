@@ -56,7 +56,7 @@ var _URL_VAL_AJUSTADOR_MEDICO		= '<s:url namespace="/siniestros" action="consult
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
 var _selCobUrlAvanza              = '<s:url namespace="/siniestros" action="afiliadosAfectados"/>';
-
+var _URL_NOMBRE_TURNADO   		= '<s:url namespace="/siniestros" action="obtieneUsuarioTurnado" />';
 
 var windowLoader;
 var msgWindow;
@@ -359,9 +359,32 @@ var msgWindow;
 																									,'smap1.usuario_destino' : ''
 																							},
 																							success:function(response,opts){
-																								mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-																								loadMcdinStore();
-																								windowLoader.close();
+																								Ext.Ajax.request(
+																				    	        {
+																				    	            url     : _URL_NOMBRE_TURNADO
+																				    	            ,params : 
+																				    	            {           
+																				    	                'params.ntramite': record.get('ntramite'),
+																				    	                'params.rolDestino': 'operadorsini'
+																				    	            }
+																				    	            ,success : function (response)
+																				    	            {
+																				    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+														        	            						loadMcdinStore();
+														        	            						windowLoader.close();
+																				    	            },
+																				    	            failure : function ()
+																				    	            {
+																				    	                me.up().up().setLoading(false);
+																				    	                centrarVentanaInterna(Ext.Msg.show({
+																				    	                    title:'Error',
+																				    	                    msg: 'Error de comunicaci&oacute;n',
+																				    	                    buttons: Ext.Msg.OK,
+																				    	                    icon: Ext.Msg.ERROR
+																				    	                }));
+																				    	            }
+																				    	        });
 																							},
 																							failure:function(response,opts)
 																							{
@@ -414,9 +437,32 @@ var msgWindow;
 																						,'smap1.usuario_destino' : ''
 																				},
 																				success:function(response,opts){
-																					mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-																					loadMcdinStore();
-																					windowLoader.close();
+																					Ext.Ajax.request(
+																	    	        {
+																	    	            url     : _URL_NOMBRE_TURNADO
+																	    	            ,params : 
+																	    	            {           
+																	    	                'params.ntramite': record.get('ntramite'),
+																	    	                'params.rolDestino': 'operadorsini'
+																	    	            }
+																	    	            ,success : function (response)
+																	    	            {
+																	    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																	    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+											        	            						loadMcdinStore();
+											        	            						windowLoader.close();
+																	    	            },
+																	    	            failure : function ()
+																	    	            {
+																	    	                me.up().up().setLoading(false);
+																	    	                centrarVentanaInterna(Ext.Msg.show({
+																	    	                    title:'Error',
+																	    	                    msg: 'Error de comunicaci&oacute;n',
+																	    	                    buttons: Ext.Msg.OK,
+																	    	                    icon: Ext.Msg.ERROR
+																	    	                }));
+																	    	            }
+																	    	        });
 																				},
 																				failure:function(response,opts)
 																				{
@@ -627,10 +673,32 @@ var msgWindow;
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
-        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-        	            						loadMcdinStore();
-        	            						windowLoader.close();
-        	            						
+        	            						Ext.Ajax.request(
+								    	        {
+								    	            url     : _URL_NOMBRE_TURNADO
+								    	            ,params : 
+								    	            {           
+								    	                'params.ntramite': record.get('ntramite'),
+								    	                'params.rolDestino': 'medajustador'
+								    	            }
+								    	            ,success : function (response)
+								    	            {
+								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+								    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+		        	            						loadMcdinStore();
+		        	            						windowLoader.close();
+								    	            },
+								    	            failure : function ()
+								    	            {
+								    	                me.up().up().setLoading(false);
+								    	                centrarVentanaInterna(Ext.Msg.show({
+								    	                    title:'Error',
+								    	                    msg: 'Error de comunicaci&oacute;n',
+								    	                    buttons: Ext.Msg.OK,
+								    	                    icon: Ext.Msg.ERROR
+								    	                }));
+								    	            }
+								    	        });
         	            					}
         	            				});
         	            			} else {
@@ -817,9 +885,32 @@ var msgWindow;
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
-        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-        	            						loadMcdinStore();
-        	            						windowLoader.close();
+        	            						Ext.Ajax.request(
+   								    	        {
+   								    	            url     : _URL_NOMBRE_TURNADO
+   								    	            ,params : 
+   								    	            {           
+   								    	                'params.ntramite': record.get('ntramite'),
+   								    	                'params.rolDestino': 'operadorsini'
+   								    	            }
+   								    	            ,success : function (response)
+   								    	            {
+   								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+   								    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+   		        	            						loadMcdinStore();
+   		        	            						windowLoader.close();
+   								    	            },
+   								    	            failure : function ()
+   								    	            {
+   								    	                me.up().up().setLoading(false);
+   								    	                centrarVentanaInterna(Ext.Msg.show({
+   								    	                    title:'Error',
+   								    	                    msg: 'Error de comunicaci&oacute;n',
+   								    	                    buttons: Ext.Msg.OK,
+   								    	                    icon: Ext.Msg.ERROR
+   								    	                }));
+   								    	            }
+   								    	        });
         	            						
         	            					}
         	            				});

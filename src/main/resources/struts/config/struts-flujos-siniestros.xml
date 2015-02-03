@@ -601,6 +601,17 @@
 			</result>
 		</action>
 		
+		<action name="obtieneUsuarioTurnado" class="siniestrosAction"
+			method="obtieneUsuarioTurnado">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					usuarioTurnadoSiniestro
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaExclusionPenalizacion" class="siniestrosAction"
 			method="validaExclusionPenalizacion">
 			<result type="json">

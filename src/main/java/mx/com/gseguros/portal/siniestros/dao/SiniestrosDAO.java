@@ -388,6 +388,8 @@ public interface SiniestrosDAO {
 	public void eliminacionDocumentosxTramite(String ntramite) throws Exception;
 	
 	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
+	
+	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 
 	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception;
 	

@@ -57,6 +57,7 @@
             var _URL_ListaIncisosRechazos			= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
             var _UrlGeneraCartaRechazo				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
             var _URL_VALOR_CDTIPSIT					= '<s:url namespace="/siniestros"		action="validaCdTipsitTramite"/>';
+            var _URL_NOMBRE_TURNADO   				= '<s:url namespace="/siniestros" 		action="obtieneUsuarioTurnado" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>
