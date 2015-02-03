@@ -1028,14 +1028,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String cdagente = parametros.get("cdagente");
 				String negocio  = parametros.get("negocio");
 				String tipocot  = parametros.get("tipocot");
+				String cdsisrol = parametros.get("cdsisrol");
+				String cdusuari = parametros.get("cdusuari");
 				
 				if(tipocot.equals("I"))
 				{
-				    resp.setSmap(cotizacionDAO.cargarRangoDescuentoRamo5(cdtipsit,cdagente,negocio));
+				    resp.setSmap(cotizacionDAO.cargarRangoDescuentoRamo5(cdtipsit,cdagente,negocio,cdsisrol,cdusuari));
 				}
 				else if(tipocot.equals("P")||tipocot.equals("F"))
 				{
-					resp.setSmap(cotizacionDAO.cargarRangoDescuentoRamo5TodasSituaciones(cdagente,negocio));
+					resp.setSmap(cotizacionDAO.cargarRangoDescuentoRamo5TodasSituaciones(cdagente,negocio,cdsisrol,cdusuari));
 				}
 			}
 			else if(procedimiento.equals(RECUPERAR_DATOS_VEHICULO_RAMO_5))

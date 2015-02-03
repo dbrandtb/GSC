@@ -1226,6 +1226,8 @@ function _p28_cotizar(sinTarificar)
                                 ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
                                 ,'smap1.negocio'      : _fieldByLabel('NEGOCIO').getValue()
                                 ,'smap1.tipocot'      : 'I'
+                                ,'smap1.cdsisrol'     : _p28_smap1.cdsisrol
+                                ,'smap1.cdusuari'     : _p28_smap1.cdusuari
                             }
                             ,success : function(response)
                             {

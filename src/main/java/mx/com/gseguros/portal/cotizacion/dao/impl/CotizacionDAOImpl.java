@@ -3542,12 +3542,17 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	public Map<String,String>cargarRangoDescuentoRamo5(
 			String cdtipsit
 			,String cdagente
-			,String negocio)throws ApplicationException,Exception
+			,String negocio
+			,String cdsisrol
+			,String cdusuari
+			)throws ApplicationException,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdagente" , cdagente);
 		params.put("negocio"  , negocio);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdusuari" , cdusuari);
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************************")
@@ -3586,6 +3591,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "min" , "max" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4777,11 +4784,18 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
-    public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(String cdagente,String negocio)throws Exception
+    public Map<String,String>cargarRangoDescuentoRamo5TodasSituaciones(
+    		String cdagente
+    		,String negocio
+    		,String cdsisrol
+    		,String cdusuari
+    		)throws Exception
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdagente" , cdagente);
     	params.put("negocio"  , negocio);
+    	params.put("cdsisrol" , cdsisrol);
+    	params.put("cdusuari" , cdusuari);
     	Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS",params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarRangoDescuentoRamo5TodasSituaciones(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -4804,6 +4818,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS");
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "min" , "max" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
