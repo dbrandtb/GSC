@@ -87,7 +87,11 @@ public interface CatalogosDAO {
 			,String clavegs
 			,String servicio
 			)throws Exception;
-	public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(String cdtipsit,String cdagente)throws Exception;
-	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio)throws Exception;
+	public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(
+			String cdtipsit
+			,String cdagente
+			,String producto
+			)throws Exception;
+	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio,String producto)throws Exception;
 	public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception;
 }

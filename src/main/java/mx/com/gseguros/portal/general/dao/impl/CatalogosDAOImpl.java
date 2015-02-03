@@ -1251,11 +1251,16 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(String cdtipsit,String cdagente)throws Exception
+	public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(
+			String cdtipsit
+			,String cdagente
+			,String producto
+			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdagente" , cdagente);
+		params.put("producto" , producto);
 		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorTipoSituacionAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1278,6 +1283,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			super(dataSource,"PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT");
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("producto" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
 					"OTCLAVE"
 					,"OTVALOR"
@@ -1290,10 +1296,11 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio)throws Exception
+	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio,String producto)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("negocio" , negocio);
+		params.put("negocio"  , negocio);
+		params.put("producto" , producto);
 		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1314,7 +1321,8 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		protected CargarTiposSituacionPorNegocioRamo5(DataSource dataSource)
 		{
 			super(dataSource,"PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5");
-			declareParameter(new SqlParameter("negocio" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("producto" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
 					"CDTIPSIT"
 					,"DSTIPSIT"
