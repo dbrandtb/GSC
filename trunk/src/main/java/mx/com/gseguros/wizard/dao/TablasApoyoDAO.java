@@ -12,7 +12,7 @@ public interface TablasApoyoDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> obtieneValoresTablaApoyo5claves(Map<String,String> params) throws Exception;
+	public Map<String, Object> obtieneValoresTablaApoyo5claves(Map<String,String> params) throws Exception;
 
 	
 	/**
@@ -21,7 +21,7 @@ public interface TablasApoyoDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception;
+	public Map<String, Object> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception;
 	
 	
 	/**

@@ -775,6 +775,10 @@ Ext.onReady(function() {
                 if(!jsonResponse.success) {
                     mensajeError(jsonResponse.msgRespuesta);
                 }else{
+                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
+                		mensajeWarning(jsonResponse.msgRespuesta);
+                	}
+                	
                 	//Agregamos 10 rows vacios por defecto:
 		        	for(var count=0 ;count<10; count++){
 		        		if(_TIPO_1CLAVE){
