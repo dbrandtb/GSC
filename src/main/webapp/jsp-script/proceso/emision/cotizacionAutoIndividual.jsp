@@ -1781,148 +1781,175 @@ function _p28_cargar(boton)
                 debug('### cargar cotizacion:',json);
                 if(json.success)
                 {
-                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                    var maestra = json.slist1[0].ESTADO=='M';
+                    _p28_limpiar();
+                    if(maestra)
                     {
-                        var maestra = json.slist1[0].ESTADO=='M';
-                        _p28_limpiar();
-                        if(maestra)
-                        {
-                            _fieldByName('nmpoliza').setValue('');
-                            mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
-                        }
-                        else
-                        {
-                            _fieldByName('nmpoliza').semaforo=true;
-                            _fieldByName('nmpoliza').setValue(nmpoliza);
-                            _fieldByName('nmpoliza').semaforo=false;
-                        }
-                        var primerInciso = new _p28_formModel(json.slist1[0]);
-                        if(_p28_smap1.cdramo=='5')
-                        {
-                            primerInciso.set('parametros.pv_otvalor14','S');
-                        }
-                        debug('primerInciso:',primerInciso);
-                        //leer elementos anidados
-                        var form      = _fieldById('_p28_form');
-                        var formItems = Ext.ComponentQuery.query('[fieldLabel]',form);
-                        debug('formItems:' , formItems);
-                        var numBlurs  = 0;
-                        for(var i=0;i<formItems.length;i++)
-                        {
-                            var item=formItems[i];
-                            if(item.anidado == true)
-                            {
-                                var numBlursSeguidos = 1;
-                                debug('contando blur:',item);
-                                for(var j=i+1;j<formItems.length;j++)
-                                {
-                                    if(formItems[j].anidado == true)
-                                    {
-                                        numBlursSeguidos=numBlursSeguidos+1;
-                                    }
-                                }
-                                if(numBlursSeguidos>numBlurs)
-                                {
-                                    numBlurs=numBlursSeguidos;
-                                }
-                            }
-                        }
-                        debug('numBlurs:',numBlurs);
-                        var i=0;
-                        var renderiza=function()
-                        {
-                            debug('renderiza',i);
-                            form.loadRecord(primerInciso);
-                            form.formOculto.loadRecord(primerInciso);
-                            debug('form oculto values:',form.formOculto.getValues());
-                            if(i<numBlurs)
-                            {
-                                i=i+1;
-                                for(var j=0;j<formItems.length;j++)
-                                {
-                                    var iItem  = formItems[j]; 
-                                    var iItem2 = formItems[j+1];
-                                    debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
-                                    if(iItem2&&iItem2.anidado==true)
-                                    {
-                                        debug('tiene blur y lo hacemos heredar',formItems[j]);
-                                        iItem2.heredar(true);
-                                    }
-                                }
-                                setTimeout(renderiza,1000);
-                            }
-                            else
-                            {
-                                panelpri.setLoading(false);
-                                if(_p28_smap1.cdramo=='5')
-                                {
-                                    var clave    = _fieldByName('parametros.pv_otvalor06');
-                                    var marca    = _fieldByName('parametros.pv_otvalor07');
-                                    var submarca = _fieldByName('parametros.pv_otvalor08');
-                                    var modelo   = _fieldByName('parametros.pv_otvalor09');
-                                    var version  = _fieldByName('parametros.pv_otvalor10');
-                                    
-                                    _p28_herenciaAscendente(clave,marca,submarca,modelo,version,function()
-                                    {
-                                        form.loadRecord(primerInciso);
-                                        if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
-                                        {
-                                            if(maestra)
-                                            {
-                                                _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
-                                            }
-                                            else
-                                            {
-                                                _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
-                                                debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
-                                            
-                                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
-                                                combcl.semaforo = true;
-                                                combcl.setValue('N');
-                                                combcl.semaforo = false;
-                                            }
-                                        }
-                                        _p28_cotizar(!maestra);
-                                    });
-                                    
-                                    if(_p28_smap1.cdsisrol=='SUSCRIAUTO')
-                                    {
-                                        var agente = _fieldByName('parametros.pv_otvalor01');
-                                        agente.getStore().load(
-                                        {
-                                            params :
-                                            {
-                                                'params.agente' : primerInciso.get('parametros.pv_otvalor01')
-                                            }
-                                            ,callback : function()
-                                            {
-                                                agente.setValue(agente.findRecord('key',primerInciso.get('parametros.pv_otvalor01')));
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        };
-                        panelpri.setLoading(true);
-                        renderiza();
+                        _fieldByName('nmpoliza').setValue('');
+                        mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
                     }
                     else
                     {
-                        Ext.create('Ext.form.Panel').submit(
-                        {
-                            url             : _p28_urlDatosComplementarios
-                            ,standardSubmit : true
-                            ,params         :
-                            {
-                                'smap1.cdunieco'  : json.smap1.CDUNIECO
-                                ,'smap1.cdramo'   : json.smap1.cdramo
-                                ,'smap1.cdtipsit' : json.smap1.cdtipsit
-                                ,'smap1.estado'   : 'W'
-                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
-                                ,'smap1.ntramite' : json.smap1.NTRAMITE
-                            }
-                        });
+                        _fieldByName('nmpoliza').semaforo=true;
+                        _fieldByName('nmpoliza').setValue(nmpoliza);
+                        _fieldByName('nmpoliza').semaforo=false;
                     }
+                    var primerInciso = new _p28_formModel(json.slist1[0]);
+                    if(_p28_smap1.cdramo=='5')
+                    {
+                        primerInciso.set('parametros.pv_otvalor14','S');
+                    }
+                    debug('primerInciso:',primerInciso);
+                    //leer elementos anidados
+                    var form      = _fieldById('_p28_form');
+                    var formItems = Ext.ComponentQuery.query('[fieldLabel]',form);
+                    debug('formItems:' , formItems);
+                    var numBlurs  = 0;
+                    for(var i=0;i<formItems.length;i++)
+                    {
+                        var item=formItems[i];
+                        if(item.anidado == true)
+                        {
+                            var numBlursSeguidos = 1;
+                            debug('contando blur:',item);
+                            for(var j=i+1;j<formItems.length;j++)
+                            {
+                                if(formItems[j].anidado == true)
+                                {
+                                    numBlursSeguidos=numBlursSeguidos+1;
+                                }
+                            }
+                            if(numBlursSeguidos>numBlurs)
+                            {
+                                numBlurs=numBlursSeguidos;
+                            }
+                        }
+                    }
+                    debug('numBlurs:',numBlurs);
+                    var i=0;
+                    var renderiza=function()
+                    {
+                        debug('renderiza',i);
+                        form.loadRecord(primerInciso);
+                        form.formOculto.loadRecord(primerInciso);
+                        debug('form oculto values:',form.formOculto.getValues());
+                        if(i<numBlurs)
+                        {
+                            i=i+1;
+                            for(var j=0;j<formItems.length;j++)
+                            {
+                                var iItem  = formItems[j]; 
+                                var iItem2 = formItems[j+1];
+                                debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                                if(iItem2&&iItem2.anidado==true)
+                                {
+                                    debug('tiene blur y lo hacemos heredar',formItems[j]);
+                                    iItem2.heredar(true);
+                                }
+                            }
+                            setTimeout(renderiza,1000);
+                        }
+                        else
+                        {
+                            panelpri.setLoading(false);
+                            if(_p28_smap1.cdramo=='5')
+                            {
+                                var clave    = _fieldByName('parametros.pv_otvalor06');
+                                var marca    = _fieldByName('parametros.pv_otvalor07');
+                                var submarca = _fieldByName('parametros.pv_otvalor08');
+                                var modelo   = _fieldByName('parametros.pv_otvalor09');
+                                var version  = _fieldByName('parametros.pv_otvalor10');
+                                
+                                _p28_herenciaAscendente(clave,marca,submarca,modelo,version,function()
+                                {
+                                    form.loadRecord(primerInciso);
+                                    if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                                    {
+                                        if(maestra)
+                                        {
+                                            _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
+                                        }
+                                        else
+                                        {
+                                            _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
+                                            debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
+                                        
+                                            var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
+                                            combcl.semaforo = true;
+                                            combcl.setValue('N');
+                                            combcl.semaforo = false;
+                                        }
+                                    }
+                                    
+                                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                                    {
+                                        _p28_cotizar(!maestra);
+                                    }
+                                    else
+                                    {
+                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                        {
+                                            title      : 'P&oacute;liza en emisi&oacute;n'
+                                            ,modal     : true
+                                            ,bodyStyle : 'padding:5px;'
+                                            ,closable  : false
+                                            ,html      : 'La cotizaci&oacute;n se encuentra en proceso de emisi&oacute;n'
+                                            ,buttonAlign : 'center'
+                                            ,buttons   :
+                                            [
+                                                {
+                                                    text     : 'Complementar'
+                                                    ,handler : function()
+                                                    {
+                                                        Ext.create('Ext.form.Panel').submit(
+                                                        {
+                                                            url             : _p28_urlDatosComplementarios
+                                                            ,standardSubmit : true
+                                                            ,params         :
+                                                            {
+                                                                'smap1.cdunieco'  : json.smap1.CDUNIECO
+                                                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                                                ,'smap1.cdtipsit' : json.smap1.cdtipsit
+                                                                ,'smap1.estado'   : 'W'
+                                                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                                                ,'smap1.ntramite' : json.smap1.NTRAMITE
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                                ,{
+                                                    text     : 'Duplicar'
+                                                    ,handler : function(bot)
+                                                    {
+                                                        bot.up('window').destroy();
+                                                        _fieldByName('nmpoliza').setValue('');
+                                                    }
+                                                }
+                                            ]
+                                        }).show());
+                                    }
+                                });
+                                
+                                if(_p28_smap1.cdsisrol=='SUSCRIAUTO')
+                                {
+                                    var agente = _fieldByName('parametros.pv_otvalor01');
+                                    agente.getStore().load(
+                                    {
+                                        params :
+                                        {
+                                            'params.agente' : primerInciso.get('parametros.pv_otvalor01')
+                                        }
+                                        ,callback : function()
+                                        {
+                                            agente.setValue(agente.findRecord('key',primerInciso.get('parametros.pv_otvalor01')));
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    };
+                    panelpri.setLoading(true);
+                    renderiza();
                 }
                 else
                 {
