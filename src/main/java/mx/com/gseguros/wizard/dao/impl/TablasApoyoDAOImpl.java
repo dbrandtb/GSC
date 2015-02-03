@@ -19,9 +19,8 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	
 	@Override
-	public List<Map<String, String>> obtieneValoresTablaApoyo5claves(Map<String,String> params) throws Exception {
-		Map<String, Object> resultado = ejecutaSP(new ObtieneValoresTablaApoyo5claves(getDataSource()), params);
-		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	public Map<String, Object> obtieneValoresTablaApoyo5claves(Map<String,String> params) throws Exception {
+		return ejecutaSP(new ObtieneValoresTablaApoyo5claves(getDataSource()), params);
 	}
 	
 	protected class ObtieneValoresTablaApoyo5claves extends StoredProcedure {
@@ -75,14 +74,14 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_TEXT_O" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception {
-		Map<String, Object> resultado = ejecutaSP(new ObtieneValoresTablaApoyo1clave(getDataSource()), params);
-		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	public Map<String, Object> obtieneValoresTablaApoyo1clave(Map<String,String> params) throws Exception {
+		return ejecutaSP(new ObtieneValoresTablaApoyo1clave(getDataSource()), params);
 	}
 	
 	protected class ObtieneValoresTablaApoyo1clave extends StoredProcedure {
@@ -97,6 +96,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_TEXT_O" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

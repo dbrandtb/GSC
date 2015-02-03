@@ -8,6 +8,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.service.TablasApoyoManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -65,8 +66,12 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     	try{
     		
     		logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
+
+    		Map<String, Object> resultado = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
+    		loadList = (List<Map<String, String>>) resultado.get("PV_REGISTRO_O"); 
     		
-    		loadList = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
+   			msgRespuesta = (String)resultado.get("PV_MSG_TEXT_O");
+   			
 //    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
     	}catch(ApplicationException ae){
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ae);
@@ -91,7 +96,10 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 			
 			logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
 			
-			loadList = tablasApoyoManager.obtieneValoresTablaApoyo1clave(params);
+			Map<String, Object> resultado = tablasApoyoManager.obtieneValoresTablaApoyo1clave(params);
+    		loadList = (List<Map<String, String>>) resultado.get("PV_REGISTRO_O"); 
+   			msgRespuesta = (String)resultado.get("PV_MSG_TEXT_O");
+   			
     		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
 		}catch(ApplicationException ae){
 			logger.error("Error al obtieneValoresTablaApoyo1clave",ae);
