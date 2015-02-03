@@ -1036,6 +1036,14 @@ function _p31_mostrarVistaPrevia()
                                         me.up().up().destroy();
                                     }
                                 }
+                                ,{
+                                    xtype     : 'button'
+                                    ,itemId   : '_p31_botonNueva'
+                                    ,text     : 'Nueva'
+                                    ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                    ,disabled : true
+                                    ,handler  : function(){ _p31_nuevaClic(); }
+                                }
                             ]
                         })
                     ]
@@ -1117,6 +1125,8 @@ function _p31_emitirFinal(me)
                 */
                 
                 _fieldById('_p31_botonCancelarEmision').setDisabled(true);
+                _fieldById('_p31_botonNueva').setDisabled(false);
+                
                 if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
                 {
                     var ventanaTmp = Ext.Msg.show(
@@ -1157,6 +1167,7 @@ function _p31_emitirFinal(me)
 //                        _fieldById('venDocVenEmiBotNueCotiza').show();
 //                    }
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
+                    _fieldById('_p31_botonNueva').setDisabled(false);
                 }
                 Ext.Msg.show(
                 {
