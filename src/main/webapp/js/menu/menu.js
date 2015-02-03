@@ -43,7 +43,7 @@ Ext.onReady(function() {
             var tagUL = document.createElement("ul");
             //Se crean elementos para el nodo (li con links):
             var items = Ext.JSON.decode(resp.responseText);
-            console.log('items=', items);
+            //console.log('items=', items);
             Ext.each(items, function(item) {
                 if(!Ext.isEmpty(item.text)){
                     var nuevoTagLI = document.createElement("li");
