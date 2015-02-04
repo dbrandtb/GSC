@@ -329,7 +329,7 @@ Ext.onReady(function() {
                     text: 'Agregar agente',
                     id:'btnAgregarAgente',
                     disabled:true,
-                    hidden : true,
+                    //hidden : true,
                     scope: this,
                     handler: function() {
                         bandera= 0;
