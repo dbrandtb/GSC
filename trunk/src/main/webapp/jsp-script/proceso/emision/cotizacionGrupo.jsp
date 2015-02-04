@@ -1057,7 +1057,27 @@ Ext.onReady(function()
                             }
                             else
                             {
-                                _fieldByName(prop).setValue(json.params[prop]);
+                                var item=_fieldByName(prop);
+                                if(Ext.isEmpty(item.store))
+                                {
+                                    item.setValue(json.params[prop]);
+                                }
+                                else
+                                {
+                                    if(item.store.getCount()==0)
+                                    {
+                                        item.store.comboName = prop+'';
+                                        item.forceSelection  = false;
+                                        item.store.on(
+                                        {
+                                            load : function(store)
+                                            {
+                                                _fieldByName(store.comboName).forceSelection=true;
+                                            }
+                                        });
+                                    }
+                                    item.setValue(json.params[prop]);
+                                }
                             }
                         }
                     }
