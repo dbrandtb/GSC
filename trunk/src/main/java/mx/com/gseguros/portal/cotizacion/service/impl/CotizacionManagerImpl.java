@@ -2498,19 +2498,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                				:"|"
 				                		);
 				                
-				                auxDate=row.getCell(4).getDateCellValue();
-				                logger.debug(
-				                		new StringBuilder("FENACIMI: ")
-				                		.append(
-				                				auxDate!=null?
-				                						new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-				                						:"|"
-				                		).toString());
-				                output.print(
-				                		auxDate!=null?
-				                				new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-				                				:"|"
-				                		);
+				                if(row.getCell(4)!=null) {
+					                auxDate=row.getCell(4).getDateCellValue();
+					                logger.debug(new StringBuilder("FENACIMI: ").append(
+					                		auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|").toString());
+					                output.print(
+					                	auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|");
+				                } else {
+				                	logger.debug(new StringBuilder("FENACIMI: ").append("|").toString());
+				                	output.print("|");
+				                }
 			                }
 			                catch(Exception ex)
 			                {

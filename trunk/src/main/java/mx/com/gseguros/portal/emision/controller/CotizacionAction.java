@@ -4670,9 +4670,14 @@ public class CotizacionAction extends PrincipalCoreAction
 					                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
 					                output.print(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
 					                
-					                auxDate=row.getCell(4).getDateCellValue();
-					                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-					                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+					                if(row.getCell(4)!=null) {
+						                auxDate=row.getCell(4).getDateCellValue();
+						                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+						                output.print(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+					                } else {
+					                	logger.info("FENACIMI: "+"|");
+					                	output.print("|");
+					                }
 				                }
 				                catch(Exception ex)
 				                {
