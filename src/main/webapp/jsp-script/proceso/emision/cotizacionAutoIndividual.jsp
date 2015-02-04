@@ -1901,6 +1901,9 @@ function _p28_cargar(boton)
                                                     text     : 'Complementar'
                                                     ,handler : function()
                                                     {
+                                                        var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado)
+                                                            && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI
+                                                            && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
                                                         Ext.create('Ext.form.Panel').submit(
                                                         {
                                                             url             : _p28_urlDatosComplementarios
@@ -1913,6 +1916,7 @@ function _p28_cargar(boton)
                                                                 ,'smap1.estado'   : 'W'
                                                                 ,'smap1.nmpoliza' : json.smap1.nmpoliza
                                                                 ,'smap1.ntramite' : json.smap1.NTRAMITE
+                                                                ,'smap1.swexiper' : swExiper 
                                                             }
                                                         });
                                                     }
