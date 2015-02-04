@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 public class RespuestaVO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5174703012933088228L;
 
 	/**
@@ -18,6 +15,17 @@ public class RespuestaVO implements Serializable {
 	 * Mensaje de respuesta de la operacion
 	 */
 	private String mensaje;
+	
+	
+	public RespuestaVO() {
+		super();
+	}
+	
+	public RespuestaVO(boolean success, String mensaje) {
+		super();
+		this.success = success;
+		this.mensaje = mensaje;
+	}
 	
 	
 	public boolean isSuccess() {
