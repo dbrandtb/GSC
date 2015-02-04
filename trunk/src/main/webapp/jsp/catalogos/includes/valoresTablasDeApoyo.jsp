@@ -135,7 +135,8 @@ Ext.onReady(function() {
             name       : 'rowsToCreate',
             minValue   : 0,
             maxValue   : 100,
-            width      : 100
+            value      : 0,
+            width      : 55
         },{
         	icon: _CONTEXT + '/resources/fam3icons/icons/table_add.png',
             text: 'Agregar Filas',
@@ -268,7 +269,7 @@ Ext.onReady(function() {
 		    			return position.record.get('FEDESDE');
 		    		}
 		    		
-		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/(([2-3][0-9][0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
 		    		if(regexFormato.test(newValue)){
                 		return newValue;
                 	}else{
@@ -292,7 +293,7 @@ Ext.onReady(function() {
 		    			return position.record.get('FEHASTA');
 		    		}
 		    		
-		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/((20[0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
+		    		var regexFormato = /^(((((0[1-9])|(1\d)|(2[0-9]))\/((0[1-9])|(1[0-2])))|((31\/((0[13578])|(1[02])))|((29|30)\/((0[1,3-9])|(1[0-2])))))\/(([2-3][0-9][0-9][0-9])|(19[0-9][0-9])))|((29\/02\/(19|20)(([02468][048])|([13579][26]))))$/;
 		    		if(regexFormato.test(newValue)){
                 		return newValue;
                 	}else{
@@ -897,7 +898,7 @@ Ext.onReady(function() {
 		                     
 		                    
 		                    if(tipoFormato == 'A'){
-		                    	regexFormato = new RegExp("^[a-zA-Z0-9\s]+$");
+		                    	regexFormato = new RegExp("^[a-zA-Z0-9\\s]+$");
 		                    	dsFormato = 'Alfanum&eacute;rico';
 		                    }else if(tipoFormato == 'N'){
 		                    	regexFormato = new RegExp("^([0-9])+$");
