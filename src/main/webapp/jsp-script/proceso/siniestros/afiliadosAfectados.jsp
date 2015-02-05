@@ -6,71 +6,76 @@
 		<title>Afiliados Afectados</title>
 		<script type="text/javascript">
 		/*LLAMADO Y ASIGNACION DE LAS VARIABLES*/
-			var _CONTEXT 							= '${ctx}';
-			var _URL_CATALOGOS						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-			var _UrlDocumentosPoliza				= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
-			var _CATALOGO_TipoMoneda				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
-			var _CATALOGO_COBERTURASTOTALES 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALES 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
-			var _ROL_MEDICO							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
-			var _OPERADOR_REC						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
-			var _COORDINADOR_REC					= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_SINIESTROS.cdsisrol" />';
-			var _CATALOGO_COB_X_VALORES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
-			var _11_url_RequiereAutServ				= '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"		 />';
-			var _11_urlIniciarSiniestroSinAutServ	= '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"	/>';
-			var _11_urlIniciarSiniestroTworksin		= '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"	  />';
-			var _p12_urlObtenerSiniestrosTramite	= '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
-			var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
-			var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
-			var _TIPO_PAGO_DIRECTO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
-			var _TIPO_PAGO_REEMBOLSO				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
-			var _TIPO_PAGO_INDEMNIZACION			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo"/>';
-			var _URL_GUARDA_CAMBIOS_FACTURA			= '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
-			var _URL_LISTA_AUTSERVICIO				= '<s:url namespace="/siniestros" action="consultaAutServicioSiniestro"		 />';
-			var _URL_LISTA_MSINIESTRO				= '<s:url namespace="/siniestros" action="consultaSiniestroMaestro"		 />';
-			var _URL_DATOS_VALIDACION				= '<s:url namespace="/siniestros" action="consultaDatosValidacionSiniestro"		 />';
-			var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" action="consultaDatosValidacionAjustadorMed"		 />';
-			var _URL_LoadConceptos					= '<s:url namespace="/siniestros" action="obtenerMsinival" />';
-			var _11_params							= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
-			var _CATALOGO_TipoConcepto				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
-			var _CATALOGO_ConceptosMedicos			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
-			var _CATALOGO_ConceptosMedicosTotales   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS_TOTALES"/>';
-			var _URL_MONTO_ARANCEL					= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
-			var _UrlAjustesMedicos					=  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
-			var _URL_GUARDA_CONCEPTO_TRAMITE		= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
-			var _CDROL								= '<s:property value="params.cdrol" />';
-			var _11_urlTabbedPanel					= '<s:url namespace="/siniestros"  action="includes/detalleSiniestro"/>';
-			var _11_urlMesaControl					= '<s:url namespace="/mesacontrol" action="mcdinamica"					/>';
-			var _CAT_CAUSASINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
-			var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
-			var _URL_ACTUALIZA_INFO_GRAL_SIN        = '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
-			var _URL_ASOCIA_MSINEST_REFERENCIADO    = '<s:url namespace="/siniestros"      action="asociaMsiniestroReferenciado" />';
-			var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
-			var _URL_GUARDA_ASEGURADO				= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
-			var _URL_GENERAR_CALCULO				= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
-			var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
-			var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
-			var _URL_ListaRechazos					= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
-            var _URL_ListaIncisosRechazos			= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
-            var _UrlGeneraCartaRechazo				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
-            var _STATUS_TRAMITE_EN_REVISION_MEDICA  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
-            var mesConUrlDetMC        				= '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
-            var mesConUrlFinDetalleMC 				= '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
-            var _STATUS_DEVOLVER_TRAMITE			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
-            var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros" action="validaDocumentosCargados"        />';
-            var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
+			var _CONTEXT 								= '${ctx}';
+			var _CATALOGO_TIPOMONEDA					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+			var _CATALOGO_COBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
+			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
+			var _ROL_MEDICO								= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
+			var _OPERADOR_REC							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
+			var _COORDINADOR_REC						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_SINIESTROS.cdsisrol" />';
+			var _CATALOGO_COB_X_VALORES 				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
+			var _TIPO_PAGO_DIRECTO						= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
+			var _TIPO_PAGO_REEMBOLSO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+			var _TIPO_PAGO_INDEMNIZACION				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo"/>';
+			var _CATALOGO_TIPOCONCEPTO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
+			var _CATALOGO_CONCEPTOSMEDICOS				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+			var _CATALOGO_CONCEPTOSMEDICOSTOTALES   	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS_TOTALES"/>';
+			var _11_params								= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+			var _CDROL									= '<s:property value="params.cdrol" />';
+			var _CAT_CAUSASINIESTRO						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
+			var _STATUS_TRAMITE_EN_REVISION_MEDICA  	= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
+            var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
             var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
             var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
             var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
-            var _URL_CONSULTA_TRAMITE       = '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
-            var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
-            var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
             var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
-            var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
-            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
-            var _URL_NOMBRE_TURNADO   		= '<s:url namespace="/siniestros" action="obtieneUsuarioTurnado" />';
-            
+            var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+            var _URL_CATALOGOS							= '<s:url namespace="/catalogos" 		action="obtieneCatalogo"/>';
+			var _URL_DOCUMENTOSPOLIZA					= '<s:url namespace="/documentos" 		action="ventanaDocumentosPoliza" />';
+			var _11_URL_REQUIEREAUTSERV					= '<s:url namespace="/siniestros" 		action="obtieneRequiereAutServ" />';
+			var _11_URL_INICIARSINIESTROSINAUTSERV		= '<s:url namespace="/siniestros"  		action="generarSiniestrosinAutServ" />';
+			var _11_URL_INICIARSINIESTROTWORKSIN		= '<s:url namespace="/siniestros"  		action="iniciarSiniestroTworksin" />';
+			var _URL_LISTA_COBERTURA 					= '<s:url namespace="/siniestros"  		action="consultaListaCoberturaPoliza" />';
+			var _URL_LISTA_SUBCOBERTURA					= '<s:url namespace="/siniestros"  		action="consultaListaSubcobertura" />';
+			var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
+            var _URL_SOLICITARPAGO           			= '<s:url namespace="/siniestros" 		action="solicitarPago" />';
+            var _URL_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion" />';
+            var _URL_NOMBRE_TURNADO   					= '<s:url namespace="/siniestros" 		action="obtieneUsuarioTurnado" />';
+            var _URL_CONSULTA_TRAMITE       			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
+          	var _URL_REVISIONDOCSINIESTRO   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos" />';
+            var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
+            var _URL_FINDETALLEMC 						= '<s:url namespace="/mesacontrol" 		action="finalizarDetalleTramiteMC" />';
+            var _URL_DETALLEMC        					= '<s:url namespace="/mesacontrol" 		action="obtenerDetallesTramite" />';
+            var _URL_GENERARCARTARECHAZO				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
+            var _URL_LISTARECHAZOS						= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
+            var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
+            var _URL_AJUSTESMEDICOS						= '<s:url namespace="/siniestros" 		action="includes/ajustesMedicos" />';
+			var _URL_MESACONTROL						= '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+			var _URL_LISTA_CPTICD						= '<s:url namespace="/siniestros"  		action="consultaListaCPTICD" />';
+			var _URL_RECHAZOTRAMITE  					= '<s:url namespace="/siniestros" 		action="includes/rechazoReclamaciones" />';
+			var _URL_ACTSTATUS_TRAMITE 					= '<s:url namespace="/mesacontrol" 		action="actualizarStatusTramite" />';
+			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
+			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
+			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
+			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+			var _URL_ASOCIA_MSINEST_REFERENCIADO    	= '<s:url namespace="/siniestros"      	action="asociaMsiniestroReferenciado" />';
+			var _URL_ACTUALIZA_INFO_GRAL_SIN       		= '<s:url namespace="/siniestros"      	action="actualizaDatosGeneralesSiniestro" />';
+			var _URL_GUARDA_CONCEPTO_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
+			var _URL_MONTO_ARANCEL						= '<s:url namespace="/siniestros"		action="obtieneMontoArancel"/>';
+			var _URL_LISTA_AUTSERVICIO					= '<s:url namespace="/siniestros" 		action="consultaAutServicioSiniestro"/>';
+			var _URL_LISTA_MSINIESTRO					= '<s:url namespace="/siniestros" 		action="consultaSiniestroMaestro" />';
+			var _URL_DATOS_VALIDACION					= '<s:url namespace="/siniestros" 		action="consultaDatosValidacionSiniestro" />';
+			var _URL_GUARDA_CAMBIOS_FACTURA				= '<s:url namespace="/siniestros" 		action="guardaFacturaTramite" />';
+			var _URL_VAL_AJUSTADOR_MEDICO				= '<s:url namespace="/siniestros" 		action="consultaDatosValidacionAjustadorMed" />';
+			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
+			
+			var _URL_GUARDA_ASEGURADO					= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
+			var _URL_OBTENERSINIESTROSTRAMITE			= '<s:url namespace="/siniestros"  		action="obtenerSiniestrosTramite" />';
+					
+			
+			
+			
+			
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -320,7 +325,7 @@
 					proxy:
 					{
 						type: 'ajax',
-						url:_UR_TIPO_ATENCION,
+						url:_URL_TIPO_ATENCION,
 						reader:
 						{
 							type: 'json',
@@ -580,7 +585,7 @@
 					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_TipoMoneda},
+						extraParams : {catalogo:_CATALOGO_TIPOMONEDA},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -601,7 +606,7 @@
 							,root : 'slist1'
 						}
 						,type  : 'ajax'
-						,url   : _p12_urlObtenerSiniestrosTramite
+						,url   : _URL_OBTENERSINIESTROSTRAMITE
 					}
 				});
 //STORE PARA EL TIPO DE CONCEPTO
@@ -611,7 +616,7 @@
 					{
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_TipoConcepto},
+						extraParams : {catalogo:_CATALOGO_TIPOCONCEPTO},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -625,7 +630,7 @@
 					proxy: {
 						type: 'ajax',
 						url:_URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+						extraParams : {catalogo:_CATALOGO_CONCEPTOSMEDICOS},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -640,7 +645,7 @@
 					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_ConceptosMedicosTotales},
+						extraParams : {catalogo:_CATALOGO_CONCEPTOSMEDICOSTOTALES},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -665,7 +670,7 @@
 					model: 'modelConceptos',
 					proxy: {
 						type: 'ajax',
-						url: _URL_LoadConceptos,
+						url: _URL_CONCEPTOSASEG,
 						reader: {
 							type: 'json',
 							root: 'loadList'
@@ -704,7 +709,7 @@
 					model:'modeloRechazos',
 					proxy: {
 						type: 'ajax',
-						url: _URL_ListaRechazos,
+						url: _URL_LISTARECHAZOS,
 						reader: {
 							type: 'json',
 							root: 'loadList'
@@ -717,7 +722,7 @@
 					model:'modeloIncisosRechazos',
 					proxy: {
 						type: 'ajax',
-						url: _URL_ListaIncisosRechazos,
+						url: _URL_LISTAINCISOSRECHAZOS,
 						reader: {
 							type: 'json',
 							root: 'loadList'
@@ -839,7 +844,7 @@
 				var cobertura = Ext.create('Ext.form.field.ComboBox',
 				{
 					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	/*allowBlank: false,*/				displayField : 'value',
-					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,//		hidden: true,
+					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeCobertura,		editable:false,
 					listeners : {
 						'change' : function(combo, record) {
@@ -891,7 +896,7 @@
 				var subCobertura = Ext.create('Ext.form.field.ComboBox',
 				{
 					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	/*allowBlank: false,*/				displayField : 'value',			id:'idSubcobertura',
-					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,//		hidden: true,
+					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 				});
 						
@@ -908,7 +913,7 @@
 							storeConceptosCatalogo.proxy.extraParams=
 							{
 								'params.idPadre' : cdTipo
-								,catalogo		: _CATALOGO_ConceptosMedicos
+								,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
 							};
 						}
 					}
@@ -1289,6 +1294,12 @@
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
 								}
+								,{
+									text	: 'Generar Calculo2'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,handler : _p21_generarCalculo2
+								}
+								
 							],
 							
 						listeners: {
@@ -1364,7 +1375,7 @@
 										storeConceptosCatalogo.proxy.extraParams=
 										{
 											'params.idPadre' :  _11_conceptoSeleccionado.get('IDCONCEP')
-											,catalogo		: _CATALOGO_ConceptosMedicos
+											,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
 										};
 									}
 								}
@@ -1774,14 +1785,14 @@
 					,items	:
 					[
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00',
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Consumida',			name	: 'params.sumaGastada', value : '0.00',
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Consumida',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);
@@ -2537,7 +2548,7 @@
 						{
 							scripts   : true
 							,autoLoad : true
-							,url	  : _UrlDocumentosPoliza
+							,url	  : _URL_DOCUMENTOSPOLIZA
 							,params   :
 							{
 								'smap1.ntramite'   : _11_params.NTRAMITE
@@ -2640,7 +2651,7 @@
 		var panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
 			id: 'panelRechazarReclamaciones',
 			width: 650,
-			url: _URL_ActualizaStatusTramite,
+			url: _URL_ACTSTATUS_TRAMITE,
 			bodyPadding: 5,
 			items: [
 				motivoRechazo,incisosRechazo,textoRechazo
@@ -2672,7 +2683,7 @@
 									windowLoader.close();
 									/*Se cierra y se tiene que mandar a la  MC*/
 									Ext.Ajax.request({
-										url: _UrlGeneraCartaRechazo,
+										url: _URL_GENERARCARTARECHAZO,
 										params: {
 											'paramsO.pv_cdunieco_i' : null,
 											'paramsO.pv_cdramo_i'   : _11_params.CDRAMO,
@@ -2717,7 +2728,7 @@
 										windowLoader.close();
 										Ext.create('Ext.form.Panel').submit(
 										{
-											url		: _11_urlMesaControl
+											url		: _URL_MESACONTROL
 											,standardSubmit : true
 											,params         :
 											{
@@ -2775,7 +2786,7 @@
 	{
 		debug('_11_regresarMC');
 		Ext.create('Ext.form.Panel').submit({
-			url				: _11_urlMesaControl
+			url				: _URL_MESACONTROL
 			,standardSubmit	:true
 			,params			:
 			{
@@ -2923,7 +2934,8 @@
 					}
 				});
 				//Llenamos los campos que requeriremos
-				obtenerTotalPagos(storeAseguradoFactura);
+				debug("VALORES A---> ",storeAseguradoFactura);//,storeAseguradoFactura);
+				//obtenerTotalPagos(storeAseguradoFactura);
 				if(Ext.decode(response.responseText).datosValidacion != null){
 					var aplicaIVA = null;
 					var ivaRetenido = null;
@@ -3222,7 +3234,7 @@
 		var valido = true;
 		Ext.Ajax.request(
 		{
-			url	: _11_url_RequiereAutServ
+			url	: _11_URL_REQUIEREAUTSERV
 			,params:{
 				'params.cobertura': panelInicialPral.down('[name=params.cdgarant]').getValue(),
 				'params.subcobertura': panelInicialPral.down('[name=params.cdconval]').getValue()
@@ -3275,7 +3287,7 @@
 									};
 									Ext.Ajax.request(
 									{
-										url	  : _11_urlIniciarSiniestroSinAutServ
+										url	  : _11_URL_INICIARSINIESTROSINAUTSERV
 										,params  : json
 										,success : function(response)
 										{
@@ -3335,7 +3347,7 @@
 						height	  : 450,
 						autoScroll  : true,
 						loader	  : {
-							url	 : _11_urlTabbedPanel
+							url	 : _URL_TABBEDPANEL
 							,params		 :
 							{
 								'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
@@ -3442,7 +3454,7 @@
 				height	  : 450,
 				//autoScroll  : true,
 				loader	  : {
-					url	 : _UrlAjustesMedicos,
+					url	 : _URL_AJUSTESMEDICOS,
 					params		 :
 					{
 						'params.ntramite'		: panelInicialPral.down('[name=params.ntramite]').getValue()
@@ -3599,20 +3611,60 @@
     	var isrFactura=0;
     	var impCedFactura=0;
     	var imporTotalFactura=0;
+    	
     	storeAseguradoFactura.each(function(record) {
+    	    debug("VALOR DEL record.data -->",record.data);
+    	    debug("VALOR DEL record.raw -->",record.raw);
     	    arr.push(record.data);
     	});
 
+     	debug("Total de asegurados ---> ",arr.length);
+     	var totalPago = 0;
     	for(var i = 0; i < arr.length; i++)
     	{
-    	    //valorBase=parseFloat(valorBase) + parseFloat(arr[i].ptimport);
-    	    subtotalFactura = parseFloat(subtotalFactura) + parseFloat(arr[i].IMPORTEASEG);
-	    	ivaFactura = parseFloat(ivaFactura) + parseFloat(arr[i].PTIVAASEG);
-	    	ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(arr[i].PTIVARETASEG);
-	    	isrFactura = parseFloat(isrFactura) + parseFloat(arr[i].PTISRASEG);
-	    	impCedFactura = parseFloat(impCedFactura) + parseFloat(arr[i].PTIMPCEDASEG);
-	    	imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(arr[i].IMPORTETOTALPAGO);
+    	    totalPago = 0;
+    	   	var importeAseg = arr[i].IMPORTEASEG;
+    	   	var ivaAseg     = arr[i].PTIVAASEG;
+    	   	var ivaRete     = arr[i].PTIVARETASEG;
+	    	var isrAse      = arr[i].PTISRASEG;
+	    	var impCedul    = arr[i].PTIMPCEDASEG;
+	    	var totalPagoVa = arr[i].IMPORTETOTALPAGO;
+	    	
+	    	if(importeAseg.length > 0){
+    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(importeAseg);
+    	   	}else{
+    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(totalPago);
+    	   	}
     	    
+    	   	if(ivaAseg.length > 0){
+    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(ivaAseg);
+    	   	}else{
+    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(totalPago);
+    	   	}
+	    	
+	    	if(ivaRete.length > 0){
+	    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(ivaRete);
+	    	}else{
+	    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(totalPago);
+	    	}
+	    	
+	    	if(isrAse.length > 0){
+	    		isrFactura = parseFloat(isrFactura) + parseFloat(isrAse);
+	    	}else{
+	    		isrFactura = parseFloat(isrFactura) + parseFloat(totalPago);
+	    	}
+	    	
+	    	if(impCedul.length > 0){
+	    		impCedFactura = parseFloat(impCedFactura) + parseFloat(impCedul);
+	    	}else{
+	    		impCedFactura = parseFloat(impCedFactura) + parseFloat(totalPago);
+	    	}
+	    	
+	    	if(totalPagoVa.length > 0){
+	    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPagoVa);
+	    	}else{
+	    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
+	    	}
     	}
     	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
     	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
@@ -3622,7 +3674,17 @@
     	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
     	return true;
 	}
-	
+	function _p21_generarCalculo2(){
+		// Se manda a llamar al procedimiento y se guarda
+		storeAseguradoFactura.load({
+					params: {
+						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
+						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+					}
+				});
+				
+				obtenerTotalPagos(storeAseguradoFactura);
+	}	
 	function _p21_generarCalculo(){
 		// Se manda a llamar al procedimiento y se guarda
 		Ext.Ajax.request(
@@ -3633,15 +3695,15 @@
 			}
 			,success : function (response)
 			{
+				
 				storeAseguradoFactura.load({
 					params: {
-						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
 						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
 					}
 				});
 				
-				obtenerTotalPagos(storeAseguradoFactura);
-				//debug("VALOR DEL STORE -->",storeAseguradoFactura);
+				//obtenerTotalPagos(storeAseguradoFactura);
 			},
 			failure : function ()
 			{
@@ -3732,7 +3794,7 @@
 			_11_windowPedirAut.close();
 			Ext.Ajax.request(
 			{
-				url	  : _11_urlIniciarSiniestroTworksin
+				url	  : _11_URL_INICIARSINIESTROTWORKSIN
 				,params  : json
 				,success : function(response)
 				{
@@ -3785,7 +3847,7 @@
         	        		Ext.create('Ext.form.Panel', {
         	                title: 'Turnar al Area M&eacute;dica',
         	                width: 650,
-        	                url: _URL_ActualizaStatusTramite,
+        	                url: _URL_ACTSTATUS_TRAMITE,
         	                bodyPadding: 5,
         	                items: [comentariosText],
         	        	    buttonAlign:'center',
@@ -3829,7 +3891,7 @@
 															windowLoader.close();
 															Ext.create('Ext.form.Panel').submit(
 															{
-																url		: _11_urlMesaControl
+																url		: _URL_MESACONTROL
 																,standardSubmit : true
 																,params         :
 																{
@@ -3902,7 +3964,7 @@
 	                    ,proxy    :
 	                    {
 	                        type         : 'ajax'
-	                        ,url         : mesConUrlDetMC
+	                        ,url         : _URL_DETALLEMC
 	                        ,extraParams :
 	                        {
 	                            'smap1.pv_ntramite_i' : _11_params.NTRAMITE
@@ -4015,7 +4077,7 @@
 				Ext.create('Ext.form.Panel', {
 					title: 'Devolver Tr&aacute;mite',
 					width: 650,
-					url: _URL_ActualizaStatusTramite,
+					url: _URL_ACTSTATUS_TRAMITE,
 					bodyPadding: 5,
 					items: [comentariosText],
 					buttonAlign:'center',
@@ -4041,7 +4103,7 @@
 											windowLoader.close();
 											Ext.create('Ext.form.Panel').submit(
 											{
-												url		: _11_urlMesaControl
+												url		: _URL_MESACONTROL
 												,standardSubmit : true
 												,params         :
 												{
@@ -4078,7 +4140,7 @@
 	}
 	function _11_retornarMedAjustadorAOperador(grid,rowIndex,colIndex){
 		Ext.Ajax.request({
-			url: _UrlValidaDocumentosCargados,
+			url: _URL_VALIDADOCCARGADOS,
 			params: {
 				'params.PV_NTRAMITE_I' : _11_params.NTRAMITE,
 				'params.PV_CDRAMO_I'   : _11_params.CDRAMO,
@@ -4107,7 +4169,7 @@
 			        	        		Ext.create('Ext.form.Panel', {
 			        	                title: 'Turnar a Coordinador de Reclamaciones',
 			        	                width: 650,
-			        	                url: _URL_ActualizaStatusTramite,
+			        	                url: _URL_ACTSTATUS_TRAMITE,
 			        	                bodyPadding: 5,
 			        	                items: [comentariosText],
 			        	        	    buttonAlign:'center',
@@ -4145,7 +4207,7 @@
 																						windowLoader.close();
 																						Ext.create('Ext.form.Panel').submit(
 																						{
-																							url		: _11_urlMesaControl
+																							url		: _URL_MESACONTROL
 																							,standardSubmit : true
 																							,params         :
 																							{
@@ -4173,7 +4235,7 @@
 							        											windowLoader.close();
 							        											Ext.create('Ext.form.Panel').submit(
 							        											{
-							        												url		: _11_urlMesaControl
+							        												url		: _URL_MESACONTROL
 							        												,standardSubmit : true
 							        												,params         :
 							        												{
@@ -4224,7 +4286,7 @@
 			height      : 400,
 			autoScroll  : true,
 			loader      : {
-				url     : _UrlRevisionDocsSiniestro,
+				url     : _URL_REVISIONDOCSINIESTRO,
 				params  : {
 					'params.nmTramite'  :  _11_params.NTRAMITE,
 					'params.cdTipoPago' : _11_params.OTVALOR02,
@@ -4396,7 +4458,7 @@
 														windowCvePago.close();
 														//5.- Solicitamos el pago le mandamos el tramite y el tipo de pago
 														Ext.Ajax.request({
-															url: _UrlSolicitarPago,
+															url: _URL_SOLICITARPAGO,
 															params: {
 																'params.pv_ntramite_i' : _11_params.NTRAMITE,
 																'params.pv_tipmov_i'   : _11_params.OTVALOR02
@@ -4407,7 +4469,7 @@
 																	centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
 																		Ext.create('Ext.form.Panel').submit(
 																		{
-																			url		: _11_urlMesaControl
+																			url		: _URL_MESACONTROL
 																			,standardSubmit : true
 																			,params         :
 																			{
