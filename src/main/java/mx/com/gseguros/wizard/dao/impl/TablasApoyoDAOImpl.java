@@ -1,7 +1,6 @@
 package mx.com.gseguros.wizard.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -175,23 +174,24 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	@Override
 	public String cargaMasiva(Integer nmtabla, Integer tipoTabla, String nombreArchivo, String separador) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("PV_TIPOTABLA_I", tipoTabla);
-		params.put("PV_NMTABLA_I", nmtabla);
-		params.put("PV_FILENAME_I", nombreArchivo);
-		params.put("PV_SEPARADOR_I", separador);
+		params.put("pv_tipotabla_i", tipoTabla);
+		params.put("pv_nmtabla_i", nmtabla);
+		params.put("pv_filename_i", nombreArchivo);
+		params.put("pv_separador_i", separador);
 		Map<String, Object> resultado = ejecutaSP(new CargaMasivaTablaApoyoSP(getDataSource()), params);
-		return (String) resultado.get("PV_TITLE_O");
+		return (String) resultado.get("PV_MSG_TEXT_O");
 	}
 	
 	protected class CargaMasivaTablaApoyoSP extends StoredProcedure {
 		protected CargaMasivaTablaApoyoSP(DataSource dataSource) {
 			super(dataSource,"PKG_TABAPOYO.P_BULK_INSERT_TABLA_APOYO");
-			declareParameter(new SqlParameter("PV_TIPOTABLA_I" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("PV_FILENAME_I" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_SEPARADOR_I" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipotabla_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmtabla_i"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_filename_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_separador_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_text_o", OracleTypes.VARCHAR));
 		}
 	}
 
