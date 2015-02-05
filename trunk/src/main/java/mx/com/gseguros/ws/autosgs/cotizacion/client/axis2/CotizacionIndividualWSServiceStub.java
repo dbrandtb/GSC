@@ -37871,6 +37871,36 @@
                             
 
                         /**
+                        * field for TipoCambio
+                        */
+
+                        
+                                    protected double localTipoCambio ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return double
+                           */
+                           public  double getTipoCambio(){
+                               return localTipoCambio;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param TipoCambio
+                               */
+                               public void setTipoCambio(double param){
+                            
+                                            this.localTipoCambio=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Udi
                         */
 
@@ -38323,6 +38353,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"tipoCambio", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"tipoCambio");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("tipoCambio");
+                                    }
+                                
+                                               if (java.lang.Double.isNaN(localTipoCambio)) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("tipoCambio cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoCambio));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"udi", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -38572,6 +38631,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPorcentajeBono));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "tipoCambio"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoCambio));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "udi"));
@@ -38852,6 +38917,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setPorcentajeBono(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","tipoCambio").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setTipoCambio(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
                                               
                                         reader.next();
