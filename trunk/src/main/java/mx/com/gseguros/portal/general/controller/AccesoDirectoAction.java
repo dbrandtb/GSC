@@ -39,6 +39,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public static final String ACCESO_COTIZADOR = "cotizador";
     public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
     public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
+    public static final String ACCESO_CATALOGO_PERSONAS = "catalogoPersonas";
     
     
     /**
@@ -112,7 +113,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     	String acceso = (String)params.get("acceso");
     	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user));
     	
-    	if(ACCESO_COTIZADOR.equals(acceso) || ACCESO_CONSULTA_POLIZAS.equals(acceso) || ACCESO_CONSULTA_ASEGURADOS.equals(acceso)){
+		if (ACCESO_COTIZADOR.equals(acceso)
+				|| ACCESO_CONSULTA_POLIZAS.equals(acceso)
+				|| ACCESO_CONSULTA_ASEGURADOS.equals(acceso)
+				|| ACCESO_CATALOGO_PERSONAS.equals(acceso)) {
     		instanciaUsuarioLigaDirecta();
     		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
