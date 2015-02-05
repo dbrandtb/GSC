@@ -931,20 +931,6 @@ public void setMsgResult(String msgResult) {
 	   return SUCCESS;
 	}
    
-   /*public String generarSiniestroSinAutorizacion(){
-		logger.debug(" **** Entrando a generar el siniestro sin autorizacion de servicio ***");
-	try {
-			siniestrosManager.getAltaSiniestroSinAutorizacion(params.get("ntramite"));
-	}catch( Exception e){
-		logger.error("Error al obtener los datos de autorizacion del siniestro sin autorizacion de servicio ",e);
-		return SUCCESS;
-	}
-  success = true;
-  return SUCCESS;
-}*/
-   
-   
-   
 public String generarSiniestroSinAutorizacion()
 {
 	   	logger.debug(""

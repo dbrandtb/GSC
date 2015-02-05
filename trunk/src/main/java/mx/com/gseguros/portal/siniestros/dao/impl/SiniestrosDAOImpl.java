@@ -1042,7 +1042,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected GuardAltaSiniestroAutServicio(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIEST_AUT2");
+			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIEST_AUT");
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1628,7 +1628,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected ActualizarAutorizacionTworksin(DataSource dataSource)
 		{
-			super(dataSource, "PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN2");
+			super(dataSource, "PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN");
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
@@ -3536,7 +3536,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected GuardaAltaSiniestroSinAutorizacion(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIESTRO2");
+			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIESTRO");
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
