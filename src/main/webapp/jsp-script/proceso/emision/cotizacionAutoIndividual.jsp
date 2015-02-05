@@ -1902,7 +1902,7 @@ function _p28_cargar(boton)
                                                     ,handler : function()
                                                     {
                                                         var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado)
-                                                            && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI
+                                                            && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI)
                                                             && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
                                                         Ext.create('Ext.form.Panel').submit(
                                                         {
