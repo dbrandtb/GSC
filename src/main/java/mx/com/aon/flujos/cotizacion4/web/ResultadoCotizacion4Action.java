@@ -696,34 +696,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ////// coberturas //////
             ////////////////////////
             
-            //////////////////////////
-            ////// TARIFICACION //////
-            /*//////////////////////*/
-            Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
-            mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
-            mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-            //mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
-            //mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
-            mapaTarificacion.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
-            mapaTarificacion.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
-            mapaTarificacion.put("pv_estado_i",     "W");
-            mapaTarificacion.put("pv_nmpoliza_i",   numeroPoliza);
-            mapaTarificacion.put("pv_nmsituac_i",   "0");
-            mapaTarificacion.put("pv_nmsuplem_i",   "0");
-            //mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
-            mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
-            t1=System.currentTimeMillis();
-            logger.debug("######$ tiempo antes de asigsvalipol "+t1);
-            //WrapperResultados wr4=
-            kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
-            t2=System.currentTimeMillis();
-            logger.debug("######$ tiempo despues de asigsvalipol "+t2);
-            logger.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
-            logger.debug("######$ tiempo total consumido "+(t2-t));
-            /*//////////////////////*/
-            ////// TARIFICACION //////
-            //////////////////////////
-            
             ///////////////////////////////////
             ////// Generacion cotizacion //////
             /*///////////////////////////////*/

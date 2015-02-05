@@ -9,17 +9,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -29,6 +32,7 @@ import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
@@ -53,6 +57,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	private PantallasDAO   pantallasDAO;
 	private PersonasDAO    personasDAO;
 	private MesaControlDAO mesaControlDAO;
+	private ConsultasDAO   consultasDAO;
 	
 	private Map<String,Object> session;
 	
@@ -5001,6 +5006,681 @@ public class CotizacionManagerImpl implements CotizacionManager
    			));
     	return bandera;
     }
+    
+    @Override
+    public ManagerRespuestaSlistSmapVO cotizar(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,String cdelemen
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdpersonCli
+			,String cdideperCli
+			,boolean noTarificar
+			,boolean conIncisos
+			,List<Map<String,String>>incisos
+			,boolean flagMovil
+			)
+    {
+    	logger.info(Utilerias.join(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ cotizar @@@@@@"
+    			,"\n@@@@@@ cdunieco="    , cdunieco
+    			,"\n@@@@@@ cdramo="      , cdramo
+    			,"\n@@@@@@ cdtipsit="    , cdtipsit
+    			,"\n@@@@@@ cdusuari="    , cdusuari
+    			,"\n@@@@@@ cdelemen="    , cdelemen
+    			,"\n@@@@@@ nmpoliza="    , nmpoliza
+    			,"\n@@@@@@ feini="       , feini
+    			,"\n@@@@@@ fefin="       , fefin
+    			,"\n@@@@@@ cdpersonCli=" , cdpersonCli
+    			,"\n@@@@@@ cdideperCli=" , cdideperCli
+    			,"\n@@@@@@ noTarificar=" , noTarificar
+    			,"\n@@@@@@ conIncisos="  , conIncisos
+    			,"\n@@@@@@ incisos="     , incisos
+    			,"\n@@@@@@ flagMovil="   , flagMovil
+    			));
+    	
+    	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
+    	resp.setSmap(new HashMap<String,String>());
+    	resp.getSmap().put("nmpoliza" , nmpoliza);
+    	
+    	try
+    	{
+    		Date fechaHoy = new Date();
+    		
+    		if(noTarificar==false)
+			{
+				////////////////////////////////
+				////// si no hay nmpoliza //////
+				if(StringUtils.isBlank(nmpoliza))
+				{
+					try
+					{
+						nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco,cdramo,"W");
+						resp.getSmap().put("nmpoliza" , nmpoliza);
+					}
+					catch(Exception ex)
+					{
+						throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
+					}
+				}
+				////// si no hay nmpoliza //////
+				////////////////////////////////
+				
+				//////////////////////
+	            ////// mpolizas //////
+				cotizacionDAO.movimientoPoliza(
+						cdunieco
+						,cdramo
+						,"W"      //estado
+						,nmpoliza
+						,"0"      //nmsuplem
+						,"V"      //status
+						,"0"      //estado
+						,null     //nmsolici
+						,null     //feautori
+						,null     //cdmotanu
+						,null     //feanulac
+						,"N"      //swautori
+						,"001"    //cdmoneda
+						,null     //feinisus
+						,null     //fefinsus
+						,"R"      //ottempot
+						,feini    //feefecto
+						,"12:00"  //hhefecto
+						,fefin    //feproren
+						,null     //fevencim
+						,"0"      //nmrenova
+						,null     //ferecibo
+						,null     //feultsin
+						,"0"      //nmnumsin
+						,"N"      //cdtipcoa
+						,"A"      //swtarifi
+						,null     //swabrido
+						,renderFechas.format(fechaHoy) //feemisio
+						,"12"     //cdperpag
+						,cdideperCli //nmpoliex
+						,"P1"     //nmcuadro
+						,"100"    //porredau
+						,"S"      //swconsol
+						,null     //nmpolant
+						,null     //nmpolnva
+						,renderFechas.format(fechaHoy) //fesolici
+						,cdusuari //cdramant
+						,null     //cdmejred
+						,null     //nmpoldoc
+						,null     //nmpoliza2
+						,null     //nmrenove
+						,null     //nmsuplee
+						,null     //ttipcamc
+						,null     //ttipcamv
+						,null     //swpatent
+						,"100"    //pcpgocte
+						,null     //tipoflot
+						,"U"      //accion
+						);
+	            ////// mpolizas //////
+	            //////////////////////
+				
+	            String llaveRol       = "";
+	            String llaveSexo      = "";
+	            String llaveFenacimi  = "DATE";
+	            String llaveCodPostal = "";
+	            
+	            if(conIncisos)
+	            {
+		            ////////////////////////////////
+		            ////// ordenar al titular //////
+		            
+		            ////// 1. indicar para la situacion el indice //////
+		            try {
+		            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+		            	p.put("cdtipsit",cdtipsit);
+		            	Map<String,String>atributos=consultasDAO.cargarAtributosBaseCotizacion(cdtipsit);
+		            	if(atributos.get("PARENTESCO") != null) {
+		            		llaveRol=atributos.get("PARENTESCO");
+		                	if(llaveRol.length()==1) {
+		                		llaveRol="0"+llaveRol;
+		                	}
+		                	llaveRol="parametros.pv_otvalor"+llaveRol;
+		            	}
+		            	if(atributos.get("SEXO") != null) {
+		            		llaveSexo=atributos.get("SEXO");
+		            		if(llaveSexo.length()==1) {
+		                		llaveSexo="0"+llaveSexo;
+		                	}
+		                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
+		            	}
+		            	if(atributos.get("FENACIMI") != null) {
+		            		llaveFenacimi=atributos.get("FENACIMI");
+		                	if(llaveFenacimi.length()==1) {
+		                		llaveFenacimi="0"+llaveFenacimi;
+		                	}
+		                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+		            	}
+		            	if(atributos.get("CODPOSTAL") != null) {
+		            		llaveCodPostal=atributos.get("CODPOSTAL");
+		                	if(llaveCodPostal.length()==1) {
+		                		llaveCodPostal="0"+llaveCodPostal;
+		                	}
+		                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
+		            	}
+		            } catch(Exception ex){
+		            	logger.error("error al obtener atributos", ex);
+		            }
+		            ////// 1. indicar para la situacion el indice //////
+		            
+		            ////// parche. Validar codigo postal //////
+		            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(incisos.get(0).get(llaveCodPostal)))
+		            {
+		            	cotizacionDAO.validarCodpostalTarifa(incisos.get(0).get(llaveCodPostal),cdtipsit);
+		            }
+		            //// parche. Validar codigo postal //////
+		            
+		            ////// 2. ordenar //////
+		            int indiceTitular=-1;
+		            for(int i=0;i<incisos.size();i++)
+		            {
+		            	if(incisos.get(i).get(llaveRol).equalsIgnoreCase("T"))
+		            	{
+		            		indiceTitular=i;
+		            	}
+		            }
+		            List<Map<String,String>> temp    = new ArrayList<Map<String,String>>(0);
+		            Map<String,String>       titular = incisos.get(indiceTitular);
+		            temp.add(titular);
+		            incisos.remove(indiceTitular);
+		            temp.addAll(incisos);
+		            incisos=temp;
+		            ////// 2. ordenar //////
+		            
+		            ////// ordenar al titular //////
+		            ////////////////////////////////
+	            }
+	            
+	            //////////////////////////////////////////
+	            ////// mpolisit y tvalosit iterados //////
+	            int contador=1;
+	            for(Map<String,String>inciso:incisos)
+	            {
+	            	//////////////////////////////
+	            	////// mpolisit iterado //////
+	            	cotizacionDAO.movimientoMpolisit(
+	            			cdunieco
+	            			,cdramo
+	            			,"W"          //estado
+	            			,nmpoliza
+	            			,contador+"" //nmsituac
+	            			,"0"         //mnsuplem
+	            			,"V"         //status
+	            			,cdtipsit
+	            			,null        //swreduci
+	            			,"1"         //cdagrupa
+	            			,"0"         //cdestado
+	            			,renderFechas.parse(feini) //fefecsit
+	            			,renderFechas.parse(feini) //fecharef
+	            			,null        //cdgrupo
+	            			,null        //nmsituaext
+	            			,null        //nmsitaux
+	            			,null        //nmsbsitext
+	            			,"1"         //cdplan
+	            			,"30"        //cdasegur
+	            			,"I"         //accion
+	            			);
+	            	////// mpolisit iterado //////
+	            	//////////////////////////////
+	                
+	                //////////////////////////////
+	                ////// tvalosit iterado //////
+	                
+	                ////// 1. tvalosit base //////
+	                Map<String,String>mapaValositIterado=new HashMap<String,String>(0);
+	                ////// 1. tvalosit base //////
+	                
+	                ////// 2. tvalosit desde form //////
+	                for(Entry<String,String>en:inciso.entrySet())
+	                {
+	                	// p a r a m e t r o s . p v _ o t v a l o r 
+	                	//0 1 2 3 4 5 6 7 8 9 0 1
+	                	String key=en.getKey();
+	                	String value=en.getValue();
+	                	if(key.length()>"parametros.pv_".length()
+	                			&&key.substring(0,"parametros.pv_".length()).equalsIgnoreCase("parametros.pv_"))
+	                	{
+	                		mapaValositIterado.put(key.substring("parametros.pv_".length()),value);
+	                	}
+	                }
+	                ////// 2. tvalosit desde form //////
+	                
+	                ////// 3. completar faltantes //////
+	                for(int i=1;i<=99;i++)
+	                {
+	                	String key="otvalor"+i;
+	                	if(i<10)
+	                	{
+	                		key="otvalor0"+i;
+	                	}
+	                	if(!mapaValositIterado.containsKey(key))
+	                	{
+	                		mapaValositIterado.put(key,null);
+	                	}
+	                }
+	                ////// 3. completar faltantes //////
+	                
+	                ////// 4. custom //////
+                	try
+                	{
+                		Map<String,String>tvalositConst=cotizacionDAO.obtenerParametrosCotizacion(
+                			ParametroCotizacion.TVALOSIT_CONSTANTE
+                			,cdramo
+                			,cdtipsit
+                			,null
+                			,null);
+                		
+                		if(tvalositConst!=null)
+                    	{
+                    		for(int i=1;i<=13;i++)
+                    		{
+                    			String key = tvalositConst.get(Utilerias.join("P",i,"CLAVE"));
+                    			String val = tvalositConst.get(Utilerias.join("P",i,"VALOR"));
+                    			if(StringUtils.isNotBlank(key)&&StringUtils.isNotBlank(val))
+                    			{
+    	                			mapaValositIterado.put
+    	                			(
+    	                					Utilerias.join
+    	                					(
+    	                							"otvalor"
+    	                							,StringUtils.leftPad(key,2,"0")
+    	                					)
+    	                					,val
+    	                			);
+                    			}
+                    		}
+                    	}
+                	}
+                	catch(Exception ex)
+                	{
+                		logger.error("Error sin impacto funcional al cotizar",ex);
+                	}
+	                	
+                	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
+                	{
+                		mapaValositIterado.put("otvalor22",
+                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "22")
+                		);
+                		mapaValositIterado.put("otvalor23",
+                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "23")
+                		);
+                	}
+	                ////// 4. custom //////
+	                
+                	cotizacionDAO.movimientoTvalosit(
+                			cdunieco
+                			,cdramo
+                			,"W"
+                			,nmpoliza
+                			,contador+"" //nmsituac
+                			,"0"         //nmsuplem
+                			,"V"         //status
+                			,cdtipsit
+                			,mapaValositIterado
+                			,"I"         //accion
+                			);
+	                ////// tvalosit iterado //////
+	                //////////////////////////////
+	                
+	                contador++;
+	            }
+	            ////// mpolisit y tvalosit iterados //////
+	            //////////////////////////////////////////
+		        
+	            /////////////////////////////
+	            ////// clonar personas //////
+	            contador=1;
+	            for(Map<String,String> inciso : incisos)
+	            {
+	                cotizacionDAO.clonarPersonas(
+	                		cdelemen
+	                		,cdunieco
+	                		,cdramo
+	                		,"W"
+	                		,nmpoliza
+	                		,contador+""
+	                		,cdtipsit
+	                		,fechaHoy
+	                		,cdusuari
+	                		,inciso.get("nombre")
+	                		,inciso.get("nombre2")
+	                		,inciso.get("apat")
+	                		,inciso.get("amat")
+	                		,inciso.containsKey(llaveSexo)?inciso.get(llaveSexo):llaveSexo
+	                		,inciso.containsKey(llaveFenacimi)?
+	                		renderFechas.parse(inciso.get(llaveFenacimi)):(
+	                				llaveFenacimi.equalsIgnoreCase("DATE")?
+	                						fechaHoy :
+	                							renderFechas.parse(llaveFenacimi))
+	                		,inciso.containsKey(llaveRol)?inciso.get(llaveRol):llaveRol
+	                );
+	                contador++;
+	            }
+	            ////// clonar personas //////
+	            /////////////////////////////
+	
+	            ////// mpoliper contratante recuperado //////
+	            if(StringUtils.isNotBlank(cdpersonCli))
+	            {
+	            	cotizacionDAO.movimientoMpoliper(
+	            			cdunieco
+	            			,cdramo
+	            			,"W"
+	            			,nmpoliza
+	            			,"0"         //nmsuplem
+	            			,"1"         //cdrol
+	            			,cdpersonCli //cdperson
+	            			,"0"         //nmsuplem
+	            			,"V"         //status
+	            			,"1"         //nmorddom
+	            			,null        //swreclam
+	            			,"I"         //accion
+	            			,"S"         //swexiper
+	            			);
+	            }
+	            ////// mpoliper contratante recuperado //////
+	            
+	            ////////////////////////
+	            ////// coberturas //////
+	            /*////////////////////*/
+	            cotizacionDAO.valoresPorDefecto(
+	            		cdunieco
+	            		,cdramo
+	            		,"W"
+	            		,nmpoliza
+	            		,"0"
+	            		,"0"
+	            		,"TODO"
+	            		,"1"
+	            		);
+	            /*////////////////////*/
+	            ////// coberturas //////
+	            ////////////////////////
+		    }
+            
+            ///////////////////////////////////
+            ////// Generacion cotizacion //////
+            /*///////////////////////////////*/
+            List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
+            		cdusuari
+            		,cdunieco
+            		,cdramo
+            		,"W"
+            		,nmpoliza
+            		,cdelemen
+            		,cdtipsit
+            		);
+            logger.debug("listaResultados: "+listaResultados);
+            /*///////////////////////////////*/
+            ////// Generacion cotizacion //////
+            ///////////////////////////////////
+            
+            ////////////////////////////////
+            ////// Agrupar resultados //////
+            /*
+            NMSUPLEM=0,
+			FEFECSIT=13/01/2014,
+			NMPOLIZA=3853,
+			MNPRIMA=4571.92,           <--2
+			CDPERPAG=7,                <--1
+			DSPLAN=Plus 500,           <--3
+			FEVENCIM=13/01/2015,
+			STATUS=V,
+			NMSITUAC=3,
+			ESTADO=W,
+			DSPERPAG=DXN Catorcenal,   <--(1)
+			CDCIAASEG=20,
+			CDIDENTIFICA=2,
+			CDTIPSIT=SL,
+			FEEMISIO=13/01/2014,
+			CDUNIECO=1,
+			CDRAMO=2,
+			CDPLAN=M,                  <--(3)
+			DSUNIECO=PUEBLA
+             */
+            
+            ////// 1. encontrar planes, formas de pago y algun nmsituac//////
+            Map<String,String>formasPago = new LinkedHashMap<String,String>();
+            Map<String,String>planes     = new LinkedHashMap<String,String>();
+            String nmsituac="";
+            for(Map<String,String>res:listaResultados)
+            {
+            	String cdperpag = res.get("CDPERPAG");
+            	String dsperpag = res.get("DSPERPAG");
+            	String cdplan   = res.get("CDPLAN");
+            	String dsplan   = res.get("DSPLAN");
+            	if(!formasPago.containsKey(cdperpag))
+            	{
+            		formasPago.put(cdperpag,dsperpag);
+            	}
+            	if(!planes.containsKey(cdplan))
+            	{
+            		planes.put(cdplan,dsplan);
+            	}
+            	nmsituac=res.get("NMSITUAC");
+            }
+            logger.debug("formas de pago: "+formasPago);
+            logger.debug("planes: "+planes);
+            ////// 1. encontrar planes y formas de pago //////
+            
+            ////// 2. crear formas de pago //////
+            List<Map<String,String>>tarifas=new ArrayList<Map<String,String>>();
+            for(Entry<String,String>formaPago:formasPago.entrySet())
+            {
+            	Map<String,String>tarifa=new HashMap<String,String>();
+            	tarifa.put("CDPERPAG",formaPago.getKey());
+            	tarifa.put("DSPERPAG",formaPago.getValue());
+            	tarifa.put("NMSITUAC",nmsituac);
+            	tarifas.add(tarifa);
+            }
+            logger.debug("tarifas despues de formas de pago: "+tarifas);
+            ////// 2. crear formas de pago //////
+            
+            ////// 3. crear planes //////
+            for(Map<String,String>tarifa:tarifas)
+            {
+            	for(Entry<String,String>plan:planes.entrySet())
+                {
+                	tarifa.put("CDPLAN"+plan.getKey(),plan.getKey());
+                	tarifa.put("DSPLAN"+plan.getKey(),plan.getValue());
+                }
+            }
+            logger.debug("tarifas despues de planes: "+tarifas);
+            ////// 3. crear planes //////
+            
+            ////// 4. crear primas //////
+            for(Map<String,String>res:listaResultados)
+            {
+            	String cdperpag = res.get("CDPERPAG");
+            	String mnprima  = res.get("MNPRIMA");
+            	String cdplan   = res.get("CDPLAN");
+            	for(Map<String,String>tarifa:tarifas)
+                {
+            		if(tarifa.get("CDPERPAG").equals(cdperpag))
+            		{
+            			if(tarifa.containsKey("MNPRIMA"+cdplan))
+            			{
+            				logger.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
+            				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
+            				logger.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
+            			}
+            			else
+            			{
+            				logger.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
+            				tarifa.put("MNPRIMA"+cdplan,mnprima);
+            			}
+            		}
+                }
+            }
+            logger.debug("tarifas despues de primas: "+tarifas);
+            
+            resp.setSlist(tarifas);
+            ////// 4. crear primas //////
+            
+            ////// Agrupar resultados //////
+            ////////////////////////////////
+            
+            ///////////////////////////////////
+            ////// columnas para el grid //////
+            List<ComponenteVO>tatriPlanes=new ArrayList<ComponenteVO>();
+            
+            ////// 1. forma de pago //////
+            ComponenteVO tatriCdperpag=new ComponenteVO();
+        	tatriCdperpag.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriCdperpag.setLabel("CDPERPAG");
+        	tatriCdperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+        	tatriCdperpag.setNameCdatribu("CDPERPAG");
+        	
+        	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
+        	mapaCdperpag.put("OTVALOR10","CDPERPAG");
+        	tatriCdperpag.setMapa(mapaCdperpag);*/
+        	tatriPlanes.add(tatriCdperpag);
+        	
+        	ComponenteVO tatriDsperpag=new ComponenteVO();
+        	tatriDsperpag.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriDsperpag.setLabel("Forma de pago");
+        	tatriDsperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+        	tatriDsperpag.setNameCdatribu("DSPERPAG");
+        	tatriDsperpag.setColumna(Constantes.SI);
+        	
+        	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
+        	mapaDsperpag.put("OTVALOR08","S");
+        	mapaDsperpag.put("OTVALOR10","DSPERPAG");
+        	tatriDsperpag.setMapa(mapaDsperpag);*/
+        	tatriPlanes.add(tatriDsperpag);
+        	////// 1. forma de pago //////
+        	
+        	////// 2. nmsituac //////
+        	ComponenteVO tatriNmsituac=new ComponenteVO();
+        	tatriNmsituac.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriNmsituac.setLabel("NMSITUAC");
+        	tatriNmsituac.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+        	tatriNmsituac.setNameCdatribu("NMSITUAC");
+        	
+        	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
+        	mapaNmsituac.put("OTVALOR10","NMSITUAC");
+        	tatriNmsituac.setMapa(mapaNmsituac);*/
+        	tatriPlanes.add(tatriNmsituac);
+        	////// 2. nmsituac //////
+        	
+        	////// 2. planes //////
+            for(Entry<String,String>plan:planes.entrySet())
+            {
+            	////// prima
+            	ComponenteVO tatriPrima=new ComponenteVO();
+            	tatriPrima.setType(ComponenteVO.TIPO_GENERICO);
+            	tatriPrima.setLabel(plan.getValue());
+            	tatriPrima.setTipoCampo(ComponenteVO.TIPOCAMPO_PORCENTAJE);
+            	tatriPrima.setColumna(Constantes.SI);
+            	tatriPrima.setNameCdatribu("MNPRIMA"+plan.getKey());
+            	tatriPrima.setRenderer("function(v)"
+            			+ "{"
+            			+ "    debug('valor:',v);"
+            			+ "    v=v.toFixed(2);"
+            			+ "    debug('valor fixed:',v);"
+            			+ "    var v2='';"
+            			+ "    var ultimoPunto=-3;"
+            			+ "    for(var i=(v+'').length-1;i>=0;i--)"
+            			+ "    {"
+            			+ "        var digito=(v+'').charAt(i);"
+            			+ "        if(digito=='.')"
+            			+ "        {"
+            			+ "            ultimoPunto=-2;"
+            			+ "        }"
+            			+ "        if(ultimoPunto>-3)"
+            			+ "        {"
+            			+ "            ultimoPunto=ultimoPunto+1;"
+            			+ "        }"
+            			+ "        if(ultimoPunto%3==0&&ultimoPunto>0)"
+            			+ "        {"
+            			+ "            digito=digito+',';"
+            			+ "        }"
+            			+ "        v2=digito+v2;"
+            			+ "        if(i==0)"
+            			+ "        {"
+            			+ "            v2='$ '+v2;"
+            			+ "        }"
+            			+ "    }"
+            			+ "    return v2;"
+            			+ "}");
+            	
+            	/*Map<String,String>mapaPlan=new HashMap<String,String>();
+            	mapaPlan.put("OTVALOR08","S");
+            	mapaPlan.put("OTVALOR09","MONEY");
+            	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
+            	tatriPrima.setMapa(mapaPlan);*/
+            	tatriPlanes.add(tatriPrima);
+            	
+            	////// cdplan
+            	ComponenteVO tatriCdplan=new ComponenteVO();
+             	tatriCdplan.setType(ComponenteVO.TIPO_GENERICO);
+             	tatriCdplan.setLabel("CDPLAN"+plan.getKey());
+             	tatriCdplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+             	tatriCdplan.setNameCdatribu("CDPLAN"+plan.getKey());
+             	tatriCdplan.setColumna(ComponenteVO.COLUMNA_OCULTA);
+             	
+             	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
+             	//mapaCdplan.put("OTVALOR08","H");
+             	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
+             	tatriCdplan.setMapa(mapaCdplan);*/
+             	tatriPlanes.add(tatriCdplan);
+             	
+             	////// dsplan
+             	ComponenteVO tatriDsplan=new ComponenteVO();
+             	tatriDsplan.setType(ComponenteVO.TIPO_GENERICO);
+             	tatriDsplan.setLabel("DSPLAN"+plan.getKey());
+             	tatriDsplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+             	tatriDsplan.setNameCdatribu("DSPLAN"+plan.getKey());
+             	
+             	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
+             	//mapaDsplan.put("OTVALOR08","H");
+             	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
+             	tatriDsplan.setMapa(mapaDsplan);*/
+             	tatriPlanes.add(tatriDsplan);
+            }
+            ////// 2. planes //////
+            
+            GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+            gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+            if(!gc.isEsMovil()&&flagMovil)
+            {
+            	gc.setEsMovil(true);
+            }
+            gc.genera(tatriPlanes);
+            
+            String columnas = gc.getColumns().toString();
+            // c o l u m n s : [
+            //0 1 2 3 4 5 6 7 8
+            resp.getSmap().put("columnas",columnas.substring(8));
+            
+            String fields = gc.getFields().toString();
+            // f i e l d s : [
+            //0 1 2 3 4 5 6 7
+            resp.getSmap().put("fields",fields.substring(7));
+    	}
+    	catch(Exception ex)
+    	{
+    		manejaException(ex, resp);
+    	}
+    	
+    	logger.info(Utilerias.join(
+    		 "\n@@@@@@ ",resp
+    		,"\n@@@@@@ cotizar @@@@@@"
+   			,"\n@@@@@@@@@@@@@@@@@@@@@"
+   			));
+    	return resp;
+    }
 	
 	///////////////////////////////
 	////// getters y setters //////
@@ -5018,6 +5698,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
+	}
+
+	public void setConsultasDAO(ConsultasDAO consultasDAO) {
+		this.consultasDAO = consultasDAO;
 	}
 	
 }

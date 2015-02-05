@@ -4166,6 +4166,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("sexo"       , sexo);
 		params.put("fenacimi"   , fenacimi);
 		params.put("parentesco" , parentesco);
+		Utilerias.debugPrecedure(logger, "PKG_COTIZA.P_CLONAR_PERSONAS", params);
+		ejecutaSP(new ClonarPersonas(getDataSource()),params);
 	}
     
     protected class ClonarPersonas extends StoredProcedure
@@ -4181,7 +4183,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlParameter("nmsituac"   , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("fecha"      , OracleTypes.DATE));
-            declareParameter(new SqlParameter("cdusuario"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nombre1"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nombre2"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("apellido1"  , OracleTypes.VARCHAR));
@@ -4827,4 +4829,28 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void validarCodpostalTarifa(String codpostal,String cdtipsit)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("codpostal" , codpostal);
+		params.put("cdtipsit"  , cdtipsit);
+		Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_VALIDA_TARIFA",params);
+		ejecutaSP(new ValidarCodpostalTarifa(getDataSource()),params);
+	}
+	
+	protected class ValidarCodpostalTarifa extends StoredProcedure
+	{
+		protected ValidarCodpostalTarifa(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_VALIDA_TARIFA");
+			declareParameter(new SqlParameter("codpostal" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

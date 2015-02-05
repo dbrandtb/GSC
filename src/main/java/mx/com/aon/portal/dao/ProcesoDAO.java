@@ -54,7 +54,6 @@ public class ProcesoDAO extends AbstractDAO {
 
 	private static Logger logger = Logger.getLogger(ProcesoDAO.class);
 
-	public static final String EJECUTA_SIGSVALIPOL = "EJECUTA_SIGSVALIPOL";
 	public static final String EJECUTA_SIGSVALIPOL_EMI = "EJECUTA_SIGSVALIPOL_EMI";
 	public static final String CALCULA_NUMERO_POLIZA = "CALCULA_NUMERO_POLIZA";
 	public static final String GENERA_SUPLEMENTO_FISICO = "GENERA_SUPLEMENTO_FISICO";
@@ -167,7 +166,6 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String OBTIENE_REMESA_APLICADA = "OBTIENE_REMESA_APLICADA";
 
 	protected void initDao() throws Exception {
-		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
 		addStoredProcedure(EJECUTA_SIGSVALIPOL_EMI, new EjecutarSIGSVALIPOL_EMI(getDataSource()));
 		addStoredProcedure(CALCULA_NUMERO_POLIZA, new CalculaNumeroPoliza(getDataSource()));
 		addStoredProcedure(GENERA_SUPLEMENTO_FISICO, new GeneraSuplementoFisico(getDataSource()));
@@ -275,35 +273,6 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(CARGA_COBRANZA_MASIVA, new CargaCobranzaMasiva(getDataSource()));
 		addStoredProcedure(OBTIENE_COBRANZA_APLICADA, new ObtieneCobranzaAplicada(getDataSource()));
 		addStoredProcedure(OBTIENE_REMESA_APLICADA, new ObtieneRemesaAplicada(getDataSource()));
-	}
-	
-	
-	protected class EjecutarSIGSVALIPOL extends CustomStoredProcedure {
-
-		protected EjecutarSIGSVALIPOL(DataSource dataSource) {
-			super(dataSource, "PKG_COTIZA.P_EJECUTA_SIGSVALIPOL");
-
-			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-
-	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
-			compile();
-
-		}
-
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return mapper.build(map);
-        }
 	}
 	
 	protected class ActualizaCdIdeper extends CustomStoredProcedure {

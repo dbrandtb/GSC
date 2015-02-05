@@ -30,4 +30,7 @@ public interface ConsultasManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem)throws Exception;
+	
+	@Deprecated
+	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception;
 }

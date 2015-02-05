@@ -779,4 +779,38 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdtipsit" , cdtipsit);
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_OBT_ATRIBUTOS", params);
+    	Map<String,Object>procResult   = ejecutaSP(new CargarAtributosBaseCotizacion(getDataSource()),params);
+    	List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No hay atributos base de cotizacion para la modalidad");
+    	}
+    	if(lista.size()>1)
+    	{
+    		throw new ApplicationException("Atributos base de cotizacion duplicados para la modalidad");
+    	}
+    	Utilerias.debugPrecedure(logger, "PKG_SATELITES.P_OBT_ATRIBUTOS", params, lista);
+    	return lista.get(0);
+    }
+    
+    protected class CargarAtributosBaseCotizacion extends StoredProcedure
+    {
+    	protected CargarAtributosBaseCotizacion(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_SATELITES.P_OBT_ATRIBUTOS");
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{"SEXO","FENACIMI","PARENTESCO","CODPOSTAL"};
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

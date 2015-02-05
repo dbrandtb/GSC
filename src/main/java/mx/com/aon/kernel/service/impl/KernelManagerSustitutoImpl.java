@@ -203,15 +203,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException
-    {
-        log.debug("### kernel sustituto ejecuta asigsvalipol map: "+parameters);
-        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.EJECUTA_SIGSVALIPOL);
-        log.debug("### kernel sustituto ejecuta asigsvalipol id:"+res.getMsgId());
-        log.debug("### kernel sustituto ejecuta asigsvalipol mesage:"+res.getMsgText());
-        return res;
-    }
-    
     public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto ejecuta asigsvalipol_emi map: "+parameters);

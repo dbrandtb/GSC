@@ -3154,9 +3154,7 @@ public class EndososAction extends PrincipalCoreAction
                 /////////////////////
                 
                 //atributos
-                LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
-            	p.put("cdtipsit",cdtipsit);
-            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
+            	Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(cdtipsit);
             	
             	String llaveSexo = null;
             	if(atributos.get("SEXO") != null) {
@@ -3954,9 +3952,7 @@ public class EndososAction extends PrincipalCoreAction
                 ////// 3. copiar los otvalor del original a la base //////
                 
                 ////// 4. sustituir los otvalor por los nuevos del form //////
-                LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
-				parametrosAtributos.put("cdtipsit",cdtipsit);
-				Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
+				Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(cdtipsit);
 				String cdatribuFenacimi = StringUtils.leftPad(atributos.get("FENACIMI"),2,"0");
                 mapaValosit.put("pv_otvalor"+cdatribuFenacimi,fenacimiIte);
                 ////// 4. sustituir los otvalor por los nuevos del form //////
@@ -4312,9 +4308,7 @@ public class EndososAction extends PrincipalCoreAction
                 ////// 3. copiar los otvalor del original a la base //////
                 
                 ////// 4. sustituir los otvalor por los nuevos del form //////
-                LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
-				parametrosAtributos.put("cdtipsit",cdtipsit);
-				Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
+				Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(cdtipsit);
 				String cdatribuSexo = StringUtils.leftPad(atributos.get("SEXO"),2,"0");
                 mapaValosit.put("pv_otvalor"+cdatribuSexo,sexo);
                 ////// 4. sustituir los otvalor por los nuevos del form //////

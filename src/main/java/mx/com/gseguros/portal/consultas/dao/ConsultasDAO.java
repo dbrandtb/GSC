@@ -94,4 +94,6 @@ public interface ConsultasDAO
 	public List<Map<String,String>>cargarTiposSituacionPorRamo(String cdramo)throws Exception;
 	
 	public boolean verificarCodigoPostalFronterizo(String cdpostal)throws Exception;
+	
+	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception;
 }
