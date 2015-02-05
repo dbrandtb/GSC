@@ -101,6 +101,10 @@
             </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
 		    <result name="consultaAsegurados">/jsp/consultas/consultasAsegurados.jsp</result>
+		    <result name="catalogoPersonas" type="redirectAction">
+		        <param name="actionName">personas</param>
+                <param name="namespace">/catalogos</param>
+		    </result>
         </action>
         
 	</package>
