@@ -1,4 +1,4 @@
-package mx.com.gseguros.utils;
+package mx.com.gseguros.portal.general.validacionformato;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,7 +18,7 @@ public class CampoVO {
 	 */
 	public static final String PORCENTAJE = "P";
 	/**
-	 * 
+	 * Valor de fecha
 	 */
 	public static final String FECHA = "F";
 	
@@ -27,19 +27,20 @@ public class CampoVO {
 		super();
 	}
 	
-	public CampoVO(String type, Integer length, Integer minValue, Integer maxValue, boolean nullable) {
+	public CampoVO(String type, Integer minLength, Integer maxLength, boolean nullable) {
 		super();
 		this.type = type;
-		this.length = length;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
+		this.minLength = minLength;
+		this.maxLength = maxLength;
 		this.nullable = nullable;
 	}
 
 
 	private String type;
 	
-	private Integer length;
+	private Integer minLength;
+	
+	private Integer maxLength;
 	
 	private Integer minValue;
 	
@@ -51,7 +52,6 @@ public class CampoVO {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
-	
 
 	public String getType() {
 		return type;
@@ -61,12 +61,20 @@ public class CampoVO {
 		this.type = type;
 	}
 
-	public Integer getLength() {
-		return length;
+	public Integer getMinLength() {
+		return minLength;
 	}
 
-	public void setLength(Integer length) {
-		this.length = length;
+	public void setMinLength(Integer minLength) {
+		this.minLength = minLength;
+	}
+
+	public Integer getMaxLength() {
+		return maxLength;
+	}
+
+	public void setMaxLength(Integer maxLength) {
+		this.maxLength = maxLength;
 	}
 
 	public Integer getMinValue() {

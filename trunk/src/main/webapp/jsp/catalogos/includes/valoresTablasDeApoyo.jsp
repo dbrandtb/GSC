@@ -11,13 +11,18 @@ var _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES = '<s:url namespace="/catalogos" ac
 var _URL_GuardaValoresTablaApoyo = '<s:url namespace="/catalogos" action="guardaValoresTablaApoyo" />';
 var _URL_CONSULTA_VALORES_TABLA_UNA_CLAVE = '<s:url namespace="/catalogos" action="obtieneValoresTablaApoyo1clave" />';
 
-var _URL_Carga_Masiva = '<s:url namespace="/cargamasiva" action="invocaCargaMasiva" />';
+var _URL_Carga_Masiva = '<s:url namespace="/cargamasiva" action="cargaTablaApoyo" />';
 var _URL_Exporta_Tabla = '<s:url namespace="/reportes" action="exportaTablaApoyo" />';
+var _URL_DESCARGA_DOCUMENTOS = '<s:url namespace ="/documentos" action="descargaDoc"/>';
+
+var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 
 var _NMTABLA = '<s:property value="params.nmtabla" />';
 var _CDTABLA = '<s:property value="params.cdtabla" />';
 var _DSTABLA = '<s:property value="params.dstabla" />';
 var _TIPOTABLA = '<s:property value="params.tipotab" />';
+
+
 
 console.log('_NMTABLA:', _NMTABLA);
 console.log('_TIPOTABLA:', _TIPOTABLA);
@@ -97,7 +102,7 @@ Ext.onReady(function() {
         model: 'CincoClavesModel',
         proxy: {
             type         : 'memory'
-            ,enablePaging : true
+            //,enablePaging : true
             ,reader      : 'json'
             ,data        : []
         }
@@ -107,7 +112,7 @@ Ext.onReady(function() {
         model: 'UnaClaveModel',
         proxy: {
             type         : 'memory'
-            ,enablePaging : true
+            //,enablePaging : true
             ,reader      : 'json'
             ,data        : []
         }
@@ -583,9 +588,10 @@ Ext.onReady(function() {
 							                                            ,'params.tipotabla': _TIPOTABLA
 							                                        },
 							                                        waitMsg: 'Ejecutando Carga Masiva...',
-												                    success: function(fp, o) {
+												                    success: function(form, action) {
 												                    	_p22_windowAgregarDocu.destroy();
 												                        mensajeCorrecto('Exito', 'La carga masiva se ha ejecutado correctamente.');
+												                        recargagridTabla5Claves();
 												                    },
 												                    failure: function(form, action) {
 												                    	
@@ -598,8 +604,38 @@ Ext.onReady(function() {
 												                                break;
 												                            case Ext.form.action.Action.SERVER_INVALID:
 												                            case Ext.form.action.Action.LOAD_FAILURE:
-												                            	 var msgServer = Ext.isEmpty(action.result.mensaje) ? 'Error al realizar la carga masiva, consulte a soporte' : action.result.mensaje;
-												                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+												                                 
+												                                var msgServer = 'Error al realizar la carga masiva, consulte a soporte';
+												                                try {
+                                                                                    if(action.result.respuesta.key == 1) {
+                                                                                    	// Error en validacion de formato:
+                                                                                    	msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
+                                                                                        Ext.Msg.show({
+                                                                                            title: 'Error', 
+                                                                                            msg: msgServer, 
+                                                                                            buttons: Ext.Msg.YESNO, 
+                                                                                            icon: Ext.Msg.ERROR,
+                                                                                            fn: function(btn){
+                                                                                                if (btn == 'yes'){
+                                                                                                    Ext.create('Ext.form.Panel').submit({
+                                                                                                        url            : _URL_DESCARGA_DOCUMENTOS,
+                                                                                                        standardSubmit : true,
+                                                                                                        target         : '_blank',
+                                                                                                        params         : {
+                                                                                                            path     : _RUTA_DOCUMENTOS_TEMPORAL,
+                                                                                                            filename : action.result.fileFileName 
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            }
+                                                                                         });
+                                                                                    } else if (action.result.respuesta.key == 2) {
+                                                                                    	// Error en carga masiva:
+                                                                                    	Ext.Msg.show({title: 'Error', msg: action.result.respuesta.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                                                                                    }
+                                                                                } catch(err) {
+                                                                                    Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                                                                                }
 												                                break;
 												                        }
 												        			}
@@ -659,7 +695,7 @@ Ext.onReady(function() {
 						        	handler: function(btn, e) {
 
 						        		/**
-						        		 * PARA HACER QUE EL EDITOR DE LA TABLA FINALICE EL RECORD CON EL MISMO VALOR
+						        		 * Para forzar el fin de edición de la tabla y evitar perder valores: 
 						        		 */
 						        		var posActual = panelValoresTabCincoClaves.getSelectionModel().getCurrentFocusPosition();
 						        		panelValoresTabCincoClaves.getSelectionModel().setCurrentFocusPosition(posActual);
