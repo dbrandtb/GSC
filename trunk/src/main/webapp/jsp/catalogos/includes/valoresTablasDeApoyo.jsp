@@ -101,20 +101,24 @@ Ext.onReady(function() {
     var storeTablaCincoClaves = new Ext.data.Store({
         model: 'CincoClavesModel',
         proxy: {
-            type         : 'memory'
-            //,enablePaging : true
-            ,reader      : 'json'
-            ,data        : []
+            type: 'ajax',
+            url : _URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES,
+            reader: {
+                type: 'json',
+                root: 'loadList'
+            }
         }
     });
 
     var storeTablaUnaClave = new Ext.data.Store({
         model: 'UnaClaveModel',
         proxy: {
-            type         : 'memory'
-            //,enablePaging : true
-            ,reader      : 'json'
-            ,data        : []
+            type: 'ajax',
+            url : _URL_CONSULTA_VALORES_TABLA_UNA_CLAVE,
+            reader: {
+                type: 'json',
+                root: 'loadList'
+            }
         }
     });
     
@@ -804,31 +808,84 @@ Ext.onReady(function() {
 	recargagridTabla5Claves = function(){
 		loadMaskTabla.show();
 		
-		cargaStorePaginadoLocal(_TIPO_1CLAVE?storeTablaUnaClave:storeTablaCincoClaves, _TIPO_1CLAVE?_URL_CONSULTA_VALORES_TABLA_UNA_CLAVE :_URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES, 'loadList', panelValoresTablaApoyo.getValues(), function (options, success, response){
-    		loadMaskTabla.hide();
-    		if(success){
-                var jsonResponse = Ext.decode(response.responseText);
-                
-                if(!jsonResponse.success) {
-                    mensajeError(jsonResponse.msgRespuesta);
-                }else{
-                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
-                		mensajeWarning(jsonResponse.msgRespuesta);
-                	}
-                	
-                	//Agregamos 10 rows vacios por defecto:
-		        	for(var count=0 ;count<10; count++){
-		        		if(_TIPO_1CLAVE){
-	                		storeTablaUnaClave.insert(storeTablaUnaClave.getCount(),new UnaClaveModel());
-	                	}else{
-	                		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
-	                	}
-		        	}
-                }
-            }else{
-                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
-            }
-    	}, panelValoresTabCincoClaves);
+		
+		if(!_TIPO_1CLAVE){
+			storeTablaCincoClaves.load({
+				params: panelValoresTablaApoyo.getValues(),
+				callback: function(records, operation, success){
+					loadMaskTabla.hide();
+		    		if(success){
+		                var jsonResponse = Ext.decode(operation.response.responseText);
+		                
+		                if(!jsonResponse.success) {
+		                    mensajeError(jsonResponse.msgRespuesta);
+		                }else{
+		                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
+		                		mensajeWarning(jsonResponse.msgRespuesta);
+		                	}
+		                	
+		                	//Agregamos 10 rows vacios por defecto:
+				        	for(var count=0 ;count<10; count++){
+				        		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
+				        	}
+		                }
+		            }else{
+		                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		            }
+				}
+			});
+		}else {
+			storeTablaUnaClave.load({
+				params: panelValoresTablaApoyo.getValues(),
+				callback: function(records, operation, success){
+					loadMaskTabla.hide();
+		    		if(success){
+		                var jsonResponse = Ext.decode(operation.response.responseText);
+		                
+		                if(!jsonResponse.success) {
+		                    mensajeError(jsonResponse.msgRespuesta);
+		                }else{
+		                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
+		                		mensajeWarning(jsonResponse.msgRespuesta);
+		                	}
+		                	
+		                	//Agregamos 10 rows vacios por defecto:
+				        	for(var count=0 ;count<10; count++){
+		                		storeTablaUnaClave.insert(storeTablaUnaClave.getCount(),new UnaClaveModel());
+				        	}
+		                }
+		            }else{
+		                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		            }
+				}
+			});
+		}
+		
+//		cargaStorePaginadoLocal(_TIPO_1CLAVE?storeTablaUnaClave:storeTablaCincoClaves, _TIPO_1CLAVE?_URL_CONSULTA_VALORES_TABLA_UNA_CLAVE :_URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES, 'loadList', panelValoresTablaApoyo.getValues(), function (options, success, response){
+//    		loadMaskTabla.hide();
+//    		if(success){
+//                var jsonResponse = Ext.decode(response.responseText);
+//                
+//                if(!jsonResponse.success) {
+//                    mensajeError(jsonResponse.msgRespuesta);
+//                }else{
+//                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
+//                		mensajeWarning(jsonResponse.msgRespuesta);
+//                	}
+//                	
+//                	//Agregamos 10 rows vacios por defecto:
+//		        	for(var count=0 ;count<10; count++){
+//		        		if(_TIPO_1CLAVE){
+//	                		storeTablaUnaClave.insert(storeTablaUnaClave.getCount(),new UnaClaveModel());
+//	                	}else{
+//	                		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
+//	                	}
+//		        	}
+//                }
+//            }else{
+//                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+//            }
+//    	}, panelValoresTabCincoClaves);
 	};
 	
     
