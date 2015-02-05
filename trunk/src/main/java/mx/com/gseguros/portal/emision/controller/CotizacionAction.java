@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -1351,6 +1352,85 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////*/
 	public String cotizar()
 	{
+		logger.info(Utilerias.join(
+				 "\n#####################"
+				,"\n###### cotizar ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos para cotizar");
+			
+			checkNull(smap1, "No se recibieron datos para cotizar");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdusuari = usuario.getUser();
+			String cdelemen = usuario.getEmpresa().getElementoId();
+			
+			checkList(slist1, "No se recibieron datos de incisos");
+			String nmpoliza = slist1.get(0).get("nmpoliza");
+			String feini    = slist1.get(0).get("feini");
+			String fefin    = slist1.get(0).get("fefin");
+			
+			String cdpersonCli = smap1.get("cdpersonCli");
+			String cdideperCli = smap1.get("cdideperCli");
+			
+			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
+			
+			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
+			
+			ManagerRespuestaSlistSmapVO resp=cotizacionManager.cotizar(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,cdusuari
+					,cdelemen
+					,nmpoliza
+					,feini
+					,fefin
+					,cdpersonCli
+					,cdideperCli
+					,noTarificar
+					,conIncisos
+					,slist1
+					,smap1.containsKey("movil")
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				slist2=resp.getSlist();
+			}
+			
+			success = exito;
+			error   = respuesta;
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+			success = false;
+			error   = respuesta;
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### cotizar ######"
+				,"\n#####################"
+				));
+		return SUCCESS;
+	}
+	
+	/*
+	public String cotizarOld()
+	{
 		logger.debug("\n"
 				+ "\n###############################"
 				+ "\n###############################"
@@ -1655,27 +1735,6 @@ public class CotizacionAction extends PrincipalCoreAction
                 				cotizacionManager.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "23")
                 		);
                 	}
-                	/*
-	                if(cdtipsit.equals("SL"))
-	                {
-	                	mapaValositIterado.put("pv_otvalor11","S");
-	                	mapaValositIterado.put("pv_otvalor12","0");
-	                	mapaValositIterado.put("pv_otvalor13","21000");
-	                }
-	                else if(cdtipsit.equals("SN"))
-	                {
-	                	mapaValositIterado.put("pv_otvalor09","N");
-	                	mapaValositIterado.put("pv_otvalor10","N");
-	                	mapaValositIterado.put("pv_otvalor11","S");
-	                	mapaValositIterado.put("pv_otvalor12","0");
-	                	mapaValositIterado.put("pv_otvalor13","21000");
-	                	mapaValositIterado.put("pv_otvalor15","N");
-	                }
-	                else if(cdtipsit.equals("GB"))
-	                {
-	                	mapaValositIterado.put("pv_otvalor16",mapaValositIterado.get("pv_otvalor01"));
-	                }
-	                */
 	                ////// 4. custom //////
 	                
 	                kernelManager.insertaValoresSituaciones(mapaValositIterado);
@@ -1742,7 +1801,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 	            ////////////////////////
 	            ////// coberturas //////
-	            /*////////////////////*/
+	            /* ////////////////////* /
 	            Map<String,String> mapCoberturas=new HashMap<String,String>(0);
 	            mapCoberturas.put("pv_cdunieco_i" , cdunieco);
 	            mapCoberturas.put("pv_cdramo_i"   , cdramo);
@@ -1753,13 +1812,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapCoberturas.put("pv_cdgarant_i" , "TODO");
 	            mapCoberturas.put("pv_cdtipsup_i" , "1");
 	            kernelManager.coberturas(mapCoberturas);
-	            /*////////////////////*/
+	            /* ////////////////////* /
 	            ////// coberturas //////
 	            ////////////////////////
 	            
 	            //////////////////////////
 	            ////// TARIFICACION //////
-	            /*//////////////////////*/
+	            /* //////////////////////* /
 	            Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
 	            mapaTarificacion.put("pv_cdusuari_i" , user);
 	            mapaTarificacion.put("pv_cdelemen_i" , cdelemento);
@@ -1771,14 +1830,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaTarificacion.put("pv_nmsuplem_i" , "0");
 	            mapaTarificacion.put("pv_cdtipsit_i" , cdtipsit);
 	            kernelManager.ejecutaASIGSVALIPOL(mapaTarificacion);
-	            /*//////////////////////*/
+	            /* //////////////////////* /
 	            ////// TARIFICACION //////
 	            //////////////////////////
 		    }
             
             ///////////////////////////////////
             ////// Generacion cotizacion //////
-            /*///////////////////////////////*/
+            /* ///////////////////////////////* /
             Map<String,String> mapaDuroResultados=new HashMap<String,String>(0);
             mapaDuroResultados.put("pv_cdusuari_i" , user);
             mapaDuroResultados.put("pv_cdunieco_i" , cdunieco);
@@ -1789,7 +1848,7 @@ public class CotizacionAction extends PrincipalCoreAction
             mapaDuroResultados.put("pv_cdtipsit_i" , cdtipsit);
             List<Map<String,String>> listaResultados=kernelManager.obtenerResultadosCotizacion2(mapaDuroResultados);
             logger.debug("listaResultados: "+listaResultados);
-            /*///////////////////////////////*/
+            /* ///////////////////////////////* /
             ////// Generacion cotizacion //////
             ///////////////////////////////////
             
@@ -1815,7 +1874,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			CDRAMO=2,
 			CDPLAN=M,                  <--(3)
 			DSUNIECO=PUEBLA
-             */
+             * /
             
             ////// 1. encontrar planes, formas de pago y algun nmsituac//////
             Map<String,String>formasPago = new LinkedHashMap<String,String>();
@@ -1911,7 +1970,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	
         	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
         	mapaCdperpag.put("OTVALOR10","CDPERPAG");
-        	tatriCdperpag.setMapa(mapaCdperpag);*/
+        	tatriCdperpag.setMapa(mapaCdperpag);* /
         	tatriPlanes.add(tatriCdperpag);
         	
         	ComponenteVO tatriDsperpag=new ComponenteVO();
@@ -1924,7 +1983,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
         	mapaDsperpag.put("OTVALOR08","S");
         	mapaDsperpag.put("OTVALOR10","DSPERPAG");
-        	tatriDsperpag.setMapa(mapaDsperpag);*/
+        	tatriDsperpag.setMapa(mapaDsperpag);* /
         	tatriPlanes.add(tatriDsperpag);
         	////// 1. forma de pago //////
         	
@@ -1937,7 +1996,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	
         	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
         	mapaNmsituac.put("OTVALOR10","NMSITUAC");
-        	tatriNmsituac.setMapa(mapaNmsituac);*/
+        	tatriNmsituac.setMapa(mapaNmsituac);* /
         	tatriPlanes.add(tatriNmsituac);
         	////// 2. nmsituac //////
         	
@@ -1986,7 +2045,7 @@ public class CotizacionAction extends PrincipalCoreAction
             	mapaPlan.put("OTVALOR08","S");
             	mapaPlan.put("OTVALOR09","MONEY");
             	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
-            	tatriPrima.setMapa(mapaPlan);*/
+            	tatriPrima.setMapa(mapaPlan);* /
             	tatriPlanes.add(tatriPrima);
             	
             	////// cdplan
@@ -2000,7 +2059,7 @@ public class CotizacionAction extends PrincipalCoreAction
              	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
              	//mapaCdplan.put("OTVALOR08","H");
              	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
-             	tatriCdplan.setMapa(mapaCdplan);*/
+             	tatriCdplan.setMapa(mapaCdplan);* /
              	tatriPlanes.add(tatriCdplan);
              	
              	////// dsplan
@@ -2013,7 +2072,7 @@ public class CotizacionAction extends PrincipalCoreAction
              	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
              	//mapaDsplan.put("OTVALOR08","H");
              	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
-             	tatriDsplan.setMapa(mapaDsplan);*/
+             	tatriDsplan.setMapa(mapaDsplan);* /
              	tatriPlanes.add(tatriDsplan);
             }
             ////// 2. planes //////

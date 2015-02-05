@@ -559,4 +559,5 @@ public interface CotizacionDAO
 			,String cdsisrol
 			,String cdusuari
 			)throws Exception;
+	public void validarCodpostalTarifa(String codpostal,String cdtipsit)throws Exception;
 }

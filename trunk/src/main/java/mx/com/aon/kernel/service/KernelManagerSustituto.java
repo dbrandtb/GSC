@@ -64,7 +64,6 @@ public interface KernelManagerSustituto {
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturasEnd(Map<String,String> parameters) throws ApplicationException;
-    public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException;
     public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;

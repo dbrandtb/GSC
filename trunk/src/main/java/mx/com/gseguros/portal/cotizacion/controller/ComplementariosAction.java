@@ -52,13 +52,11 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -1377,11 +1375,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 					valositAsegurado=valositAseguradoIteradoTemp;
 					logger.debug("se puso pv_");
 					
-					LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
-					parametrosAtributos.put("cdtipsit",map1.get("cdtipsit"));
 					try
 					{
-						Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
+						Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(cdtipsit);
 					
 						String cdatribuFenacimi = atributos.get("FENACIMI");
 						if(cdatribuFenacimi.length()==1)

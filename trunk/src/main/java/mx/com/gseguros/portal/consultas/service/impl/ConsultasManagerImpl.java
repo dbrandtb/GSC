@@ -60,6 +60,13 @@ public class ConsultasManagerImpl implements ConsultasManager
 		consultasDAO.validarAtributosDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 	}
 	
+	@Override
+	@Deprecated
+	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception
+	{
+		return consultasDAO.cargarAtributosBaseCotizacion(cdtipsit);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

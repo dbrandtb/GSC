@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -411,4 +412,21 @@ public interface CotizacionManager
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
 	
 	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo);
+	
+	public ManagerRespuestaSlistSmapVO cotizar(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String cdusuari
+			,String cdelemen
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdpersonCli
+			,String cdideperCli
+			,boolean noTarificar
+			,boolean conIncisos
+			,List<Map<String,String>>incisos
+			,boolean flagMovil
+			);
 }
