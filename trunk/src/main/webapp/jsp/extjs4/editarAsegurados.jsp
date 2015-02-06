@@ -64,6 +64,8 @@
 	var _p22_parentCallback         = false;
 	var _contratanteSaved = false;
 	
+	var codposCotizacion = 56200;
+	
 	Ext.define('RFCPersona',
 	{
 		extend  : 'Ext.data.Model'
@@ -777,6 +779,7 @@ debug("validarYGuardar flag:2");
 	   	        {
 	   	        	debug('listener load');
 	   	        	var indexTomador=-1;
+	   	        	
    	        		store.each(function(record,index)
        			    {
    	        			debug('iterando',record);
@@ -790,12 +793,16 @@ debug("validarYGuardar flag:2");
         				    debug('no es tomador');
         				}
        			    });
-   	        		var recordContra=store.getAt(indexTomador);
-   	        		storeTomadorp2.add(recordContra);
-                    storePersonasp2.remove(recordContra);
+       			    
+       			    var recordContra = false;
+       			    if(indexTomador != -1){
+       			    	recordContra=store.getAt(indexTomador);
+   	        			storeTomadorp2.add(recordContra);
+                    	storePersonasp2.remove(recordContra);
+       			    }
                     
    	        		debug('checar cual si un asegurado es el contratante');
-   	        		if(recordContra.get('cdperson')&&recordContra.get('cdperson').length>0)
+   	        		if(recordContra && recordContra.get('cdperson')&&recordContra.get('cdperson').length>0)
    	        		{
    	        			debug('el contratante se busca en asegurados con cdperson '+recordContra.get('cdperson'));
    	        			var cdpersonTomador=recordContra.get('cdperson');
@@ -2635,9 +2642,24 @@ function _p29_personaSaved()
         ,failure : errorComunicacion
     });*/
     
+    var datosContr = obtieneDatosClienteContratante();
+    
+//    if(!Ext.isEmpty(codposCotizacion)){
+//    	if(!Ext.isEmpty(datosContr.codpos)){
+//    		if(codposCotizacion != datosContr.codpos){
+//    			mensajeWarning("El C&oacute;digo Postal de la cotizaci&oacute;n realizada debe coincidir con el domicilio del contratante");
+//				return;	
+//    		}
+//    	}else{
+//			mensajeWarning("El C&oacute;digo Postal de la cotizaci&oacute;n realizada debe coincidir con el domicilio del contratante");
+//			return;
+//    	}
+//    
+//    }
+    	
     _contratanteSaved = true;
     
-    var datosContr = obtieneDatosClienteContratante();
+    
     storePersonasp2.each(function(recordContr,index){
         if(recordContr.get('estomador')==true){
 
