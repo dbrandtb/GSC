@@ -14,6 +14,8 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSE;
@@ -24,6 +26,9 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSal
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGS;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE;
@@ -205,6 +210,57 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				resWS.setResultadoWS(resultado);
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado ejecucion de WS reciboGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
+		} catch (Exception re) {
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		}
+		
+		return resWS;
+	}
+	
+	private WrapperResultadosWS ejecutaComisionReciboAgenteGS(Operacion operacion,
+			Ccomision ccomision, HashMap<String, Object> params, boolean async) throws Exception {
+		
+		CcomisionRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
+		ServicioGSServiceStub stubGS = null;
+		
+		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
+			stubGS = new ServicioGSServiceStub(endpoint);
+		} catch (AxisFault e) {
+			logger.error(e);
+			throw new Exception("Error de preparacion de Axis2: "
+					+ e.getMessage());
+		}
+		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+		
+		ComisionReciboAgenteGSResponseE RespuestaGS = null;
+		
+		ComisionReciboAgenteGS comisionReciboAgenteGS = new ComisionReciboAgenteGS();
+		comisionReciboAgenteGS.setArg0(operacion.getCodigo());
+		comisionReciboAgenteGS.setArg1(ccomision);
+		
+		ComisionReciboAgenteGSE comisionReciboAgenteGSE = new ComisionReciboAgenteGSE();
+		comisionReciboAgenteGSE.setComisionReciboAgenteGS(comisionReciboAgenteGS);
+		
+		try {
+			if(async){
+				//TODO: RBS Cambiar params por PolizaVO
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
+				callback.setClientData(params);
+				
+				stubGS.startcomisionReciboAgenteGS(comisionReciboAgenteGSE, callback);
+			}else {
+				RespuestaGS = stubGS.comisionReciboAgenteGS(comisionReciboAgenteGSE);
+				resultado = RespuestaGS.getComisionReciboAgenteGSResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+				logger.debug("Resultado ejecucion de WS comision: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
@@ -465,6 +521,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		
 		WrapperResultados result = null;
 		WrapperResultadosWS resultWS = null;
+		
 		ArrayList<ReciboWrapper> recibos =  null;
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
@@ -488,9 +545,14 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		}
 		
 		Recibo recibo = null;
+		boolean comisionAgentes = false;
 		for(ReciboWrapper recVO: recibos){
 			recibo = recVO.getRecibo();
 			Operacion operacion = Operacion.valueOf(recVO.getOperacion());
+			
+			if(recibo.getNumAgt() == -2){
+				comisionAgentes = true;
+			}
 			
 			try{
 				
@@ -553,6 +615,84 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				logger.error("Error Excepcion al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite,e);
 			}
 		}
+		
+		if(comisionAgentes){
+			ArrayList<Ccomision> comisiones =  null;
+			try {
+				result = kernelManager.obtenDatosComisiones(params);
+				comisiones = (ArrayList<Ccomision>) result.getItemList();
+				
+			} catch (Exception e1) {
+				logger.error("Error en llamar al PL de obtencion de Comisiones",e1);
+				return false;
+			}
+	
+			Operacion operacion = Operacion.INSERTA;
+			for(Ccomision comision: comisiones){
+				
+				try{
+					//Se fija a que las comisiones sean hilos asyncronos.
+					boolean asyncComisiones = true;
+					if(asyncComisiones){
+						// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+						HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+						paramsBitacora.putAll(params);
+						paramsBitacora.put("NumRec", comision.getNumRecc());
+						paramsBitacora.put("NumAgt", comision.getNumAgtc());
+						
+						ejecutaComisionReciboAgenteGS(operacion, comision, paramsBitacora, async);
+					}else{
+						resultWS = ejecutaComisionReciboAgenteGS(operacion, comision, null, async);
+						CcomisionRespuesta respuesta = (CcomisionRespuesta) resultWS.getResultadoWS();
+						logger.debug("Resultado al ejecutar el WS Comisiones: " + comision.getNumRecc() + " Agente: "+ comision.getNumAgtc() + " >>>"
+								+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
+						logger.debug("XML de entrada: " + resultWS.getXmlIn());
+	
+						if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+							logger.error("Guardando en bitacora el estatus");
+	
+							try {
+								kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+										(String) params.get("pv_cdramo_i"),
+										(String) params.get("pv_estado_i"),
+										(String) params.get("pv_nmpoliza_i"),
+										(String) params.get("pv_nmsuplem_i"),
+										Ice2sigsService.TipoError.ErrWSrec.getCodigo(),
+										"Error Comision " + comision.getNumRecc() + " Agente: " + comision.getNumAgtc() 
+												+ " >>> " + respuesta.getCodigo() + " - "
+												+ respuesta.getMensaje(),
+										 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "comisionReciboAgenteGS",
+										 resultWS.getXmlIn(), Integer.toString(respuesta.getCodigo()));
+							} catch (Exception e1) {
+								logger.error("Error al insertar en Bitacora", e1);
+							}
+						}
+					}
+				}catch(WSException e){
+					logger.error("Error al insertar comision: "+ comision.getNumRecc() + " Agente: "+ comision.getNumAgtc() +" tramite: "+ntramite);
+					logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
+					try {
+						kernelManager.movBitacobro(
+								(String) params.get("pv_cdunieco_i"),
+								(String) params.get("pv_cdramo_i"),
+								(String) params.get("pv_estado_i"),
+								(String) params.get("pv_nmpoliza_i"),
+								(String) params.get("pv_nmsuplem_i"),
+								Ice2sigsService.TipoError.ErrWSrecCx.getCodigo(),
+								"Error Comision " + comision.getNumRecc() + " Agente: " + comision.getNumAgtc()
+										+ " Msg: " + e.getMessage() + " ***Cause: "
+										+ e.getCause(),
+								 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "comisionReciboAgenteGS",
+								 e.getPayload(), null);
+					} catch (Exception e1) {
+						logger.error("Error al insertar en Bitacora", e1);
+					}
+				}catch (Exception e){
+					logger.error("Error Excepcion al insertar comision: "+ comision.getNumRecc() + " Agente: " + comision.getNumAgtc()+" tramite: "+ntramite,e);
+				}
+			}
+		}
+		
 		
 		/**
 		 * PARA EL GUARDADO CADA PDF DE RECIBO

@@ -6,6 +6,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
@@ -249,6 +250,80 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
 						 usuario,(String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
+						 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
+			} catch (Exception e1) {
+				logger.error("Error al insertar en bitacora", e1);
+			}
+		}
+	}
+	
+	@Override
+	public void receiveErrorcomisionReciboAgenteGS(Exception e){
+		logger.error("Error en WS Comision: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
+		String usuario = (String) params.get("USUARIO");
+		
+		try {
+			kernelManager.movBitacobro(
+					(String) params.get("pv_cdunieco_i"),
+					(String) params.get("pv_cdramo_i"),
+					(String) params.get("pv_estado_i"),
+					(String) params.get("pv_nmpoliza_i"),
+					(String) params.get("pv_nmsuplem_i"),
+					Ice2sigsService.TipoError.ErrWSrecCx.getCodigo(),
+					"Error Comision " + params.get("NumRec") + " Agente: " + params.get("NumAgt") + " NumEnd: " + params.get("NumEnd")
+							+ " Msg: " + e.getMessage() + " ***Cause: "
+							+ e.getCause(),
+					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "comisionReciboAgenteGS",
+					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
+		} catch (Exception e1) {
+			logger.error("Error al insertar en Bitacora", e1);
+		}
+	}
+
+	@Override
+	public void receiveResultcomisionReciboAgenteGS(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE result){
+		logger.debug("Comunicacion exitosa WS Comision");
+		CcomisionRespuesta respuesta = result.getComisionReciboAgenteGSResponse().get_return();
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		logger.debug("Resultado al ejecutar el WS Comision: Recibo: " + params.get("NumRec") + " Agente: "+ params.get("NumAgt")+" >>>"
+				+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
+		
+		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+			logger.error("Guardando en bitacora el estatus..");
+
+			String usuario = (String) params.get("USUARIO");
+			
+			try {
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+						(String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"),
+						(String) params.get("pv_nmpoliza_i"),
+						(String) params.get("pv_nmsuplem_i"),
+						Ice2sigsService.TipoError.ErrWSrec.getCodigo(),
+						"Error Comision, Recibo " + params.get("NumRec") + " Agente: " + params.get("NumAgt")
+								+ " >>> " + respuesta.getCodigo() + " - "
+								+ respuesta.getMensaje(),
+						 usuario,(String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "comisionReciboAgenteGS",
 						 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en bitacora", e1);

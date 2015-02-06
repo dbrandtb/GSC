@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
@@ -128,6 +129,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_MOV_TVALOSIN="P_MOV_TVALOSIN";
     public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
+    public static final String OBTIENE_DATOS_COMISIONES="OBTIENE_DATOS_COMISIONES";
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
     public static final String OBTIENE_DATOS_CLIENTE_GENERAL="OBTIENE_DATOS_CLIENTE_GENERAL";
@@ -236,6 +238,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_EXISTE_DOMICILIO, new PExisteDomicilio(getDataSource()));
 
         addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
+        addStoredProcedure(OBTIENE_DATOS_COMISIONES, new ObtenDatosComisiones(getDataSource()));
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL, new ObtenDatosClienteGeneral(getDataSource()));
@@ -3523,6 +3526,56 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	
         	return recVO;
         }
+    }
+
+    protected class ObtenDatosComisiones extends CustomStoredProcedure {
+    	
+    	protected ObtenDatosComisiones(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_WS_COMISIONES_X_AGENTE");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosComisionesMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    
+    protected class DatosComisionesMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		Ccomision comision = new Ccomision();
+    		Calendar cal;
+    		
+    		comision.setComDpri(rs.getDouble("comdpri"));
+    		comision.setComDrec(rs.getDouble("comdrec"));
+    		comision.setComVpri(rs.getDouble("comvpri"));
+    		comision.setComVrec(rs.getDouble("comvrec"));
+    		comision.setNumAgtc(rs.getInt("numAgtc"));
+    		comision.setNumEndc(rs.getInt("numEndc"));
+    		comision.setNumPolc(rs.getInt("numPolc"));
+    		comision.setNumRamc(rs.getInt("numRamc"));
+    		comision.setNumRecc(rs.getInt("numRecc"));
+    		comision.setNumSucc(rs.getInt("numSucc"));
+    		comision.setRmdbRn(rs.getInt("rmdbRn"));
+    		
+    		comision.setTipEndc(StringUtils.isBlank(rs.getString("tipEndc"))?"":rs.getString("tipEndc"));
+    		
+    		return comision;
+    	}
     }
 
     protected class ObtenDatosRecibosDxN extends CustomStoredProcedure {
