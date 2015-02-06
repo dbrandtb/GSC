@@ -53,6 +53,7 @@ var _0_botAceptar;
 
 var _statusDataDocsPersona;
 
+var ultimoValorQueryRFC;
 
 
 var _DocASubir;
@@ -221,16 +222,42 @@ Ext.onReady(function()
 					            		form.down('[name=smap1.nombre]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
-					            	change: function(me, val){
+					            	change: function(me, val, oldVal, eopts){
 						    				try{
 							    				if('string' == typeof val){
-							    					debug('mayus de '+val);
+							    					//debug('mayus de '+val);
 							    					me.setValue(val.toUpperCase());
+							    					
+							    					ultimoValorQueryRFC = val.toUpperCase();
+							    					if(String(ultimoValorQueryRFC).indexOf(" -") != -1){
+							    						me.setValue(oldVal.toUpperCase());
+							    					}
+							    					debug("change!!",ultimoValorQueryRFC);
 							    				}
 						    				}
 						    				catch(e){
 						    					debug(e);
 						    				}
+									},
+									beforequery: function( queryPlan, eOpts ){
+									
+//										queryPlan.query = Ext.String.trim(queryPlan.query);
+//										if(String(queryPlan.query).indexOf(" -") != -1){
+//											queryPlan.combo.getStore().removeAll();
+//											queryPlan.query = ultimoValorQueryRFC;
+//											//queryPlan.cancel = true;
+//											//queryPlan.combo.doQuery(ultimoValorQueryRFC);
+//											
+//											
+//											//debug("haciendo query para: ", ultimoValorQueryRFC);
+//											//queryPlan.combo.doQuery(ultimoValorQueryRFC);
+////											queryPlan.combo.setValue(ultimoValorQueryRFC,false);
+//											
+//											
+//											queryPlan.combo.expand();
+//										}
+//										debug("queryPlan");
+//										debug(queryPlan);
 									}
 					            },
 					            store         : Ext.create('Ext.data.Store', {
@@ -2487,7 +2514,8 @@ obtieneDatosClienteContratante = function(){
 		apmat:    _p22_fieldAmat().getValue(),
 		rfc:      _p22_fieldRFC().getValue(),
 		cdideper: _fieldByName('CDIDEPER').getValue(),
-		cdideext: _fieldByName('CDIDEEXT').getValue()
+		cdideext: _fieldByName('CDIDEEXT').getValue(),
+		codpos:   _p22_comboCodPostal().getValue()
 		
 	}
 	
