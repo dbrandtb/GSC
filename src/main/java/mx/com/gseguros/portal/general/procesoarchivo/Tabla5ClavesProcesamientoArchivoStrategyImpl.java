@@ -32,7 +32,7 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 	
 	private final static String CARACTER_SEPARADOR_CAMPOS = "|";
 	
-	private final static String CARACTER_NUEVA_LINEA = "\n";
+	private static String NEW_LINE = System.getProperty("line.separator");
 	
 	@Autowired
 	@Value("${dominio.server.layouts}")
@@ -54,7 +54,6 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 	@Value("${directorio.server.layouts}")
 	private String remoteFilePath;
 	
-	//private Integer nmtabla;
 	
 	public enum TipoTabla {
 		
@@ -139,7 +138,7 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 	            
 	            //Se agrega caracter de nueva linea:
 	            if(rowIterator.hasNext()) {
-	            	writerCSV.write(CARACTER_NUEVA_LINEA);
+	            	writerCSV.write(NEW_LINE);
 	            }
 	        }
 	        writerCSV.close();
@@ -166,10 +165,10 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 		} finally {
 			// Borrar archivo CSV intermedio en servidor de aplicaciones:
 			if(fileCSVLocal != null) {
-				//fileCSVLocal.delete();
+				fileCSVLocal.delete();
 			}
 			// Borrar archivo CSV intermedio en servidor de BD:
-			//FTPSUtils.delete(hostName, username, password, remoteFilePath + Constantes.SEPARADOR_ARCHIVO + fileCSVLocal.getName());
+			FTPSUtils.delete(hostName, username, password, remoteFilePath + Constantes.SEPARADOR_ARCHIVO + fileCSVLocal.getName());
 		}
 		
 		return respVO;

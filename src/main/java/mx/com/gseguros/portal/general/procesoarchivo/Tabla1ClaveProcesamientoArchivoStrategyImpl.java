@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.general.procesoarchivo;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -18,8 +17,9 @@ import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -31,7 +31,7 @@ public class Tabla1ClaveProcesamientoArchivoStrategyImpl implements Procesamient
 	
 	private final static String CARACTER_SEPARADOR_CAMPOS = "|";
 	
-	private final static String CARACTER_NUEVA_LINEA = "\n";
+	private static String NEW_LINE = System.getProperty("line.separator");
 	
 	@Autowired
 	@Value("${dominio.server.layouts}")
@@ -96,9 +96,11 @@ public class Tabla1ClaveProcesamientoArchivoStrategyImpl implements Procesamient
 			logger.debug("Creando archivo fileCSV=" + temporalPath + " name=" + fileCSVLocal.getName());
 			
 			BufferedWriter writerCSV = new BufferedWriter( new FileWriter(fileCSVLocal));
-			FileInputStream input    = new FileInputStream(archivoOrigen);
-			XSSFWorkbook    workbook = new XSSFWorkbook(input);
-			XSSFSheet       sheet    = workbook.getSheetAt(0);
+			//FileInputStream input    = new FileInputStream(archivoOrigen);
+			//XSSFWorkbook workbook = new XSSFWorkbook(input);
+			//XSSFSheet       sheet    = workbook.getSheetAt(0);
+			Workbook workbook = WorkbookFactory.create(archivoOrigen);
+			Sheet sheet = workbook.getSheetAt(0);
 			
 			//Iterate through each rows one by one
 	        Iterator<Row> rowIterator = sheet.iterator();
@@ -134,19 +136,19 @@ public class Tabla1ClaveProcesamientoArchivoStrategyImpl implements Procesamient
 	            
 	            //Se agrega caracter de nueva linea:
 	            if(rowIterator.hasNext()) {
-	            	writerCSV.write(CARACTER_NUEVA_LINEA);            	
+	            	writerCSV.write(NEW_LINE);            	
 	            }
 	        }
 	        writerCSV.close();
 	        
 			
 			//Subir archivo CSV a servidor de BD via FTP
-	        boolean fileUploaded = FTPSUtils.upload(hostName, username, password, fileCSVLocal.getAbsolutePath(), remoteFilePath + Constantes.SEPARADOR_ARCHIVO/*File.separator*/ + fileCSVLocal.getName());
+	        boolean fileUploaded = FTPSUtils.upload(hostName, username, password, fileCSVLocal.getAbsolutePath(), remoteFilePath + Constantes.SEPARADOR_ARCHIVO + fileCSVLocal.getName());
 	        		
 			if(fileUploaded) {
 				
 				//Ejecutar SP que realice la carga del archivo CSV:
-				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, TipoTabla.UNA.getCodigo(), fileCSVLocal.getName(), Constantes.SEPARADOR_ARCHIVO);
+				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, TipoTabla.UNA.getCodigo(), fileCSVLocal.getName(), CARACTER_SEPARADOR_CAMPOS);
 				respVO = new RespuestaVO(true, resp);
 				
 			} else {
