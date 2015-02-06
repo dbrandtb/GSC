@@ -429,4 +429,12 @@ public interface CotizacionManager
 			,List<Map<String,String>>incisos
 			,boolean flagMovil
 			);
+	
+	@Deprecated
+	public boolean validarCuadroComisionNatural(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

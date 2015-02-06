@@ -4853,4 +4853,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	@Override
+	public boolean validarCuadroComisionNatural(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Utilerias.debugPrecedure(logger, "PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL",params);
+		Map<String,Object>procResult=ejecutaSP(new ValidarCuadroComisionNatural(getDataSource()),params);
+		String cuadroNatural=(String)procResult.get("pv_swcamcua_o");
+		boolean cuadroNaturalBol=StringUtils.isNotBlank(cuadroNatural)&&cuadroNatural.equalsIgnoreCase("S");
+		logger.debug(Utilerias.join("PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL result=",cuadroNatural));
+		return cuadroNaturalBol;
+	}
+	
+	protected class ValidarCuadroComisionNatural extends StoredProcedure
+	{
+		protected ValidarCuadroComisionNatural(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swcamcua_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
