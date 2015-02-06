@@ -59,6 +59,7 @@
         <property name="pantallasManager"        ref="pantallasManagerImpl"        />
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl" />
         <property name="cotizacionManager"       ref="cotizacionManagerImpl"       />
+        <property name="emisionManager"          ref="emisionManagerImpl"          />
     </bean>
     
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">

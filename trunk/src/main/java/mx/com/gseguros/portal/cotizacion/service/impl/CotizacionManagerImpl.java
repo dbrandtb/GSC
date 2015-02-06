@@ -5682,6 +5682,18 @@ public class CotizacionManagerImpl implements CotizacionManager
     	return resp;
     }
 	
+    @Deprecated
+    @Override
+    public boolean validarCuadroComisionNatural(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	return cotizacionDAO.validarCuadroComisionNatural(cdunieco,cdramo,estado,nmpoliza);
+	}
+    
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

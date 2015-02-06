@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -126,6 +127,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String respuesta;
 	private String respuestaOculta;
 	private CotizacionManager cotizacionManager;
+	private EmisionManager    emisionManager;
 
 	public String mostrarPantalla()
 	{
@@ -1861,6 +1863,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		
 		////// validar edad asegurados
+		boolean necesitaAutorizacion=false;
 		if(success)
 		{
 			try
@@ -1876,6 +1879,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				
 				if(listaAseguradosEdadInvalida.size()>0)
 				{
+					necesitaAutorizacion=true;
 					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
 					for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
 					{
@@ -1934,6 +1938,65 @@ public class ComplementariosAction extends PrincipalCoreAction
 			catch(Exception ex)
 			{
 				logger.error("error al validar la edad de los asegurados",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		if(success&&!necesitaAutorizacion)
+		{
+			try
+			{
+				boolean cuadroNatural=cotizacionManager.validarCuadroComisionNatural(cdunieco,cdramo,estado,nmpoliza);
+				if(!cuadroNatural)
+				{
+					necesitaAutorizacion=true;
+					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
+					
+					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
+					paramsMesaControl.put("pv_estado_i"     , estado);
+					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
+					paramsMesaControl.put("pv_nmsuplem_i"   , "0");
+					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
+					paramsMesaControl.put("pv_ferecepc_i"   , new Date());
+					paramsMesaControl.put("pv_cdagente_i"   , null);
+					paramsMesaControl.put("pv_referencia_i" , null);
+					paramsMesaControl.put("pv_nombre_i"     , null);
+					paramsMesaControl.put("pv_festatus_i"   , new Date());
+					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
+					paramsMesaControl.put("pv_nmsolici_i"   , null);
+					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
+					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
+					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
+					paramsMesaControl.put("pv_otvalor03"    , ntramite);
+					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
+					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
+					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
+					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
+					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					
+					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+		        	parDmesCon.put("pv_feinicio_i"   , new Date());
+		        	parDmesCon.put("pv_cdclausu_i"   , null);
+		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
+		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	kernelManager.movDmesacontrol(parDmesCon);
+					
+		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+		        	
+					success = false;
+				}
+			}
+			catch(Exception ex)
+			{
+				logger.error("error al validar cuadro de comision natural",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
 			}
@@ -4162,6 +4225,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setTipoGrupoInciso(String tipoGrupoInciso) {
 		this.tipoGrupoInciso = tipoGrupoInciso;
+	}
+
+	public void setEmisionManager(EmisionManager emisionManager) {
+		this.emisionManager = emisionManager;
 	}
 
 }
