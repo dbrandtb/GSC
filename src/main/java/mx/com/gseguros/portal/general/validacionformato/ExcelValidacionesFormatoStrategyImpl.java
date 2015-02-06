@@ -21,6 +21,8 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
 	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(ExcelValidacionesFormatoStrategyImpl.class);
 	
+	private static String NEW_LINE = System.getProperty("line.separator");
+	
 
 	@Override
 	public File ejecutaValidacionesFormato(File archivo, List<CampoVO> campos, String nombreArchivoErrores) throws Exception {
@@ -54,7 +56,8 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
 								new StringBuilder()
 									.append("fila ").append((celdaActual.getRowIndex()+1))
 									.append(", col ").append((celdaActual.getColumnIndex()+1))
-		        					.append("\tEl valor no corresponde al tipo de celda\n").toString());
+		        					.append("\tEl valor no corresponde al tipo de celda")
+		        					.append(NEW_LINE).toString());
 						
 						// Pasamos a validar el siguiente campo:
 						colIndex++;
@@ -67,7 +70,8 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                     			new StringBuilder()
                     				.append("fila ").append((celdaActual.getRowIndex()+1))	
                     				.append(", col ").append((celdaActual.getColumnIndex()+1))
-			    					.append("\tFormato inválido\n").toString());
+			    					.append("\tFormato inválido")
+			    					.append(NEW_LINE).toString());
             		}
             		
                 	// Validacion de nulos:
@@ -77,7 +81,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                 					.append("fila ").append((rowIndex+1))
     	            				.append(", col ").append((colIndex+1))
     								.append("\tValor no debe ser nulo, el valor leído es ").append(strValor)
-    								.append("\n").toString());
+    								.append(NEW_LINE).toString());
                 	}
             		
             		// Se valida longitud del valor:
@@ -89,7 +93,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
 		        					.append("\tLongitud debe ser entre ").append(campo.getMinLength())
 		        					.append("\ty ").append(campo.getMaxLength())
 		        					.append(", longitud leída: ").append(strValor.length())
-		                			.append("\n").toString());
+		        					.append(NEW_LINE).toString());
         			}
                     
             	}
