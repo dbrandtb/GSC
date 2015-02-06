@@ -186,14 +186,11 @@ Ext.onReady(function()
 								allQuery    : 'dummyForAllQuery',
             					minChars    : 9,
 								minLength   : 2,
-//								queryDelay  : 500,
+//								queryDelay  : 2000,
 								name          : 'smap1.rfc',
 					            valueField    : 'CDRFC',
 					            displayField  : 'NOMBRE_COMPLETO',
-					            forceSelection: false,
 					            autoSelect    : false,
-	                            typeAhead     : false,
-					            anyMatch      : false,
 					            hideTrigger   : true,
 					            tpl: Ext.create('Ext.XTemplate',
 					                    '<tpl for=".">',
@@ -220,19 +217,24 @@ Ext.onReady(function()
 					            		_RFCsel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
+					            		form.down('[name=smap1.rfc]').getStore().removeAll();
+					            		
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val, oldVal, eopts){
 						    				try{
 							    				if('string' == typeof val){
-							    					//debug('mayus de '+val);
-							    					me.setValue(val.toUpperCase());
+							    					debug('valor entrando Change:'+val);
 							    					
-							    					ultimoValorQueryRFC = val.toUpperCase();
-							    					if(String(ultimoValorQueryRFC).indexOf(" -") != -1){
-							    						me.setValue(oldVal.toUpperCase());
+							    					if(String(val.toUpperCase()).indexOf(" -") != -1){
+							    						me.setValue(ultimoValorQueryRFC);
+							    						debug("fijando valor en change a: " , ultimoValorQueryRFC)
+							    					}else {
+							    						ultimoValorQueryRFC = val.toUpperCase();
+							    						me.setValue(ultimoValorQueryRFC);
+							    						debug("fijando valor en change a: " , ultimoValorQueryRFC)
 							    					}
-							    					debug("change!!",ultimoValorQueryRFC);
+							    					
 							    				}
 						    				}
 						    				catch(e){
@@ -241,27 +243,23 @@ Ext.onReady(function()
 									},
 									beforequery: function( queryPlan, eOpts ){
 									
-//										queryPlan.query = Ext.String.trim(queryPlan.query);
-//										if(String(queryPlan.query).indexOf(" -") != -1){
+										queryPlan.query = Ext.String.trim(queryPlan.query);
+										if(String(queryPlan.query).indexOf(" -") != -1){
 //											queryPlan.combo.getStore().removeAll();
-//											queryPlan.query = ultimoValorQueryRFC;
-//											//queryPlan.cancel = true;
-//											//queryPlan.combo.doQuery(ultimoValorQueryRFC);
-//											
-//											
-//											//debug("haciendo query para: ", ultimoValorQueryRFC);
-//											//queryPlan.combo.doQuery(ultimoValorQueryRFC);
-////											queryPlan.combo.setValue(ultimoValorQueryRFC,false);
-//											
-//											
+											debug("Cambiando el QueryPlan a: ",ultimoValorQueryRFC);
+											queryPlan.query = ultimoValorQueryRFC;
+//											queryPlan.rawQuery=true;
+//											queryPlan.cancel = true;
+//											debug("CAncelado!");
+//											debug("haciendo query para: ", ultimoValorQueryRFC);
+//											queryPlan.combo.doQuery(ultimoValorQueryRFC);
+//											queryPlan.combo.setValue(ultimoValorQueryRFC,false);
 //											queryPlan.combo.expand();
-//										}
-//										debug("queryPlan");
-//										debug(queryPlan);
+										}
 									}
 					            },
 					            store         : Ext.create('Ext.data.Store', {
-					                model     : '_p22_modeloGrid',
+					                model     : '_p22_modeloGrid', 
 					                proxy     : {
 				                            type        : 'ajax'
 				                            ,url        : _p22_urlObtenerPersonas
@@ -290,12 +288,18 @@ Ext.onReady(function()
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].disable();
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
+				                        		var form=_p22_formBusqueda();
+				                        		debug("luego del Load");
+				                        		debug(form.down('[name=smap1.rfc]').getValue());
+				                        		debug(form.down('[name=smap1.rfc]').getRawValue());
+				                        		
+				                        		form.down('[name=smap1.rfc]').setRawValue(form.down('[name=smap1.rfc]').getValue())
+				                        		
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].enable();
 				                        		
 				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
 				                        			store.removeAll();
-				                        			var form=_p22_formBusqueda();
 				                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
 				                        			form.down('[name=smap1.rfc]').reset();
 				                        		}else if(_esCargaClienteNvo && successful){
@@ -349,6 +353,8 @@ Ext.onReady(function()
 					            		_RFCnomSel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
+					            		form.down('[name=smap1.nombre]').getStore().removeAll();
+					            		
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val){
@@ -640,7 +646,12 @@ Ext.onReady(function()
     	var windowTipo;
     	var panelTipoPer = Ext.create('Ext.form.Panel', {
 		    defaults : { style : 'margin:5px;' },
-		    items: [{	xtype: 'combobox',
+		    items: [	{
+		    				xtype: 'displayfield',
+		    				fieldLabel: 'RFC',
+		    				value: _p22_fieldRFC().getValue()
+		    			}
+		    			,{	xtype: 'combobox',
 						fieldLabel:'Tipo de persona',
 						itemId: 'tipoPerAgregarId',
 						allowBlank:false,
@@ -807,8 +818,8 @@ Ext.onReady(function()
 		
 		
 		windowTipo = Ext.create('Ext.window.Window', {
-			title: 'Elija el tipo de persona',
-		    height: 200,
+			title: 'Elija el tipo de persona a Agregar',
+		    height: 230,
 		    width: 300,
 		    closable: false,
 		    items: [panelTipoPer]
