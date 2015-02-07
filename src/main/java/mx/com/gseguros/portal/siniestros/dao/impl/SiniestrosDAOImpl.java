@@ -4029,7 +4029,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinref_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"OTVALOR01","OTVALOR02"
+					"SUMA_ASEGURADA","RESERVA_DISPONIBLE"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
