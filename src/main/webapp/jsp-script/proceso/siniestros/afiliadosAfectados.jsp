@@ -71,7 +71,7 @@
 			
 			var _URL_GUARDA_ASEGURADO					= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
 			var _URL_OBTENERSINIESTROSTRAMITE			= '<s:url namespace="/siniestros"  		action="obtenerSiniestrosTramite" />';
-					
+			var _URL_OBTENER_SUMAASEGURADA				= '<s:url namespace="/siniestros"  		action="consultaDatosSumaAsegurada" />';
 			
 			
 			
@@ -972,7 +972,8 @@
 					title: 'Asegurados',
 					icon		: '${ctx}/resources/fam3icons/icons/user.png',
 					frame: true,
-					selType  : 'rowmodel',
+					//selType  : 'rowmodel',
+					selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 					initComponent: function(){
 						Ext.apply(this, {
 						height: 300,
@@ -1294,12 +1295,6 @@
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
 								}
-								,{
-									text	: 'Generar Calculo2'
-									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-									,handler : _p21_generarCalculo2
-								}
-								
 							],
 							
 						listeners: {
@@ -1321,7 +1316,6 @@
 										revisarDocumento(grid,index)
 										
 									}else{
-										/*VERIFICAMOS LA INFORMACIÓN ANTES DE CARGA A OTRO*/
 										storeConceptos.load({
 											params: {
 												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
@@ -1336,6 +1330,46 @@
 												'params.nmsinies'  : record.get('NMSINIES')
 											}
 										});
+										
+										Ext.Ajax.request(
+										{
+											url	 : _URL_CONCEPTOSASEG
+											,params:{
+												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
+												'params.cdunieco'  : record.get('CDUNIECO'),
+												'params.cdramo'	: record.get('CDRAMO'),
+												'params.estado'	: record.get('ESTADO'),
+												'params.nmpoliza'  : record.get('NMPOLIZA'),
+												'params.nmsituac'  : record.get('NMSITUAC'),
+												'params.nmsuplem'  : record.get('NMSUPLEM'),
+												'params.status'	: record.get('STATUS'),
+												'params.aaapertu'  : record.get('AAAPERTU'),
+												'params.nmsinies'  : record.get('NMSINIES')
+											}
+											,success : function (response)
+											{
+												//Obtenemos los datos
+												var conceptos = Ext.decode(response.responseText).loadList;
+												var i = 0;
+												var totalConsumido = 0;
+												for(i = 0; i < conceptos.length; i++){
+													totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
+												}
+												
+												obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido);
+											},
+											failure : function ()
+											{
+												me.up().up().setLoading(false);
+												Ext.Msg.show({
+													title:'Error',
+													msg: 'Error de comunicaci&oacute;n',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
+												});
+											}
+										});
+										
 									}
 								}
 							}
@@ -1785,14 +1819,14 @@
 					,items	:
 					[
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00',// 	hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Consumida',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',//		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);
@@ -2023,12 +2057,6 @@
 						panelInicialPral
 						,gridFacturaDirecto
 						,panelComplementos
-						/*,{
-							xtype		: 'textfield',			fieldLabel	: 'Suma Asegurada',		name	: 'params.sumaAsegurada', readOnly   : true
-						},
-						{
-							xtype		: 'textfield',			fieldLabel	: 'Asegurado',		name	: 'params.nomAsegurado', readOnly   : true
-						}*/
 						,gridEditorConceptos
 					],
 					listeners:{
@@ -2935,7 +2963,7 @@
 				});
 				//Llenamos los campos que requeriremos
 				debug("VALORES A---> ",storeAseguradoFactura);//,storeAseguradoFactura);
-				//obtenerTotalPagos(storeAseguradoFactura);
+				obtenerTotalPagos(_11_recordActivo.get('ntramite'), _11_recordActivo.get('factura'));
 				if(Ext.decode(response.responseText).datosValidacion != null){
 					var aplicaIVA = null;
 					var ivaRetenido = null;
@@ -3044,6 +3072,8 @@
 				,success : function (response)
 				{
 					mensajeCorrecto('Asociar',"Se ha asociado el siniestro a uno existente",function(){
+						debug("VALOR DEL SINIESTRO SELECCIONADO -->",formulario.nmsiniestroRef);
+						//obtenerSumaAsegurada(_11_recordActivo.data.CDUNIECO, _11_recordActivo.data.CDRAMO, _11_recordActivo.data.ESTADO, _11_recordActivo.data.NMPOLIZA, _11_recordActivo.data.CDPERSON, formulario.nmsiniestroRef);
 						_11_WindowPedirMsiniest.close();
 						storeAseguradoFactura.removeAll();
 						storeAseguradoFactura.load({
@@ -3066,18 +3096,42 @@
 				}
 			});
 		}
-		
-		
-		//var record = grid.getStore().getAt(rowIndex);
-		//alert("Entra");
-		/*var valido = _11_formPedirMsiniest.isValid();
-		if(!valido)
+	}
+	
+	function obtenerSumaAsegurada (cdunieco, cdramo, estado, nmpoliza, cdperson, nmsinref, totalConsumido){
+		Ext.Ajax.request(
 		{
-			datosIncompletos();
-		}else{
-		
-		}*/
-
+			url	 : _URL_OBTENER_SUMAASEGURADA
+			,params:{
+				'params.cdunieco' 	: cdunieco
+				,'params.cdramo'  	: cdramo
+				,'params.estado'  	: estado
+				,'params.nmpoliza' 	: nmpoliza
+				,'params.cdperson' 	: cdperson
+				,'params.nmsinref' 	: nmsinref
+			}
+			,success : function (response)
+			{
+				var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
+				var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
+				var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
+				
+				var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
+				
+				panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
+				panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
+			},
+			failure : function ()
+			{
+				me.up().up().setLoading(false);
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			}
+		});
 	}
 	
 	function guardarDatosComplementarios(grid,rowIndex){
@@ -3602,89 +3656,93 @@
 		ventanaAgregarAsegurado.show();
 	}
 	
-	function obtenerTotalPagos(storeAseguradoFactura)
+	function obtenerTotalPagos(ntramite, nfactura)
 	{
-		var arr = [];
-    	var subtotalFactura=0;
-    	var ivaFactura=0;
-    	var ivaRetFactura=0;
-    	var isrFactura=0;
-    	var impCedFactura=0;
-    	var imporTotalFactura=0;
-    	
-    	storeAseguradoFactura.each(function(record) {
-    	    debug("VALOR DEL record.data -->",record.data);
-    	    debug("VALOR DEL record.raw -->",record.raw);
-    	    arr.push(record.data);
-    	});
-
-     	debug("Total de asegurados ---> ",arr.length);
-     	var totalPago = 0;
-    	for(var i = 0; i < arr.length; i++)
-    	{
-    	    totalPago = 0;
-    	   	var importeAseg = arr[i].IMPORTEASEG;
-    	   	var ivaAseg     = arr[i].PTIVAASEG;
-    	   	var ivaRete     = arr[i].PTIVARETASEG;
-	    	var isrAse      = arr[i].PTISRASEG;
-	    	var impCedul    = arr[i].PTIMPCEDASEG;
-	    	var totalPagoVa = arr[i].IMPORTETOTALPAGO;
-	    	
-	    	if(importeAseg.length > 0){
-    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(importeAseg);
-    	   	}else{
-    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(totalPago);
-    	   	}
-    	    
-    	   	if(ivaAseg.length > 0){
-    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(ivaAseg);
-    	   	}else{
-    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(totalPago);
-    	   	}
-	    	
-	    	if(ivaRete.length > 0){
-	    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(ivaRete);
-	    	}else{
-	    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(totalPago);
-	    	}
-	    	
-	    	if(isrAse.length > 0){
-	    		isrFactura = parseFloat(isrFactura) + parseFloat(isrAse);
-	    	}else{
-	    		isrFactura = parseFloat(isrFactura) + parseFloat(totalPago);
-	    	}
-	    	
-	    	if(impCedul.length > 0){
-	    		impCedFactura = parseFloat(impCedFactura) + parseFloat(impCedul);
-	    	}else{
-	    		impCedFactura = parseFloat(impCedFactura) + parseFloat(totalPago);
-	    	}
-	    	
-	    	if(totalPagoVa.length > 0){
-	    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPagoVa);
-	    	}else{
-	    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
-	    	}
-    	}
-    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
-    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
-    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
-    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
-    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
-    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
+		Ext.Ajax.request(
+		{
+			url	 : _URL_OBTENERSINIESTROSTRAMITE
+			,params:{
+				'smap.ntramite'   : ntramite ,
+				'smap.nfactura'   : nfactura
+			}
+			,success : function (response)
+			{
+				var aseguradosTotales = Ext.decode(response.responseText).slist1;
+				var totalPago = 0;
+				var subtotalFactura=0;
+		    	var ivaFactura=0;
+		    	var ivaRetFactura=0;
+		    	var isrFactura=0;
+		    	var impCedFactura=0;
+		    	var imporTotalFactura=0;
+		    	
+		    	for(var i = 0; i < aseguradosTotales.length; i++)
+		    	{
+		    	    totalPago = 0;
+		    	   	var importeAseg = aseguradosTotales[i].IMPORTEASEG;
+		    	   	var ivaAseg     = aseguradosTotales[i].PTIVAASEG;
+		    	   	var ivaRete     = aseguradosTotales[i].PTIVARETASEG;
+			    	var isrAse      = aseguradosTotales[i].PTISRASEG;
+			    	var impCedul    = aseguradosTotales[i].PTIMPCEDASEG;
+			    	var totalPagoVa = aseguradosTotales[i].IMPORTETOTALPAGO;
+			    	
+			    	if(importeAseg.length > 0){
+		    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(importeAseg);
+		    	   	}else{
+		    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(totalPago);
+		    	   	}
+		    	    
+		    	   	if(ivaAseg.length > 0){
+		    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(ivaAseg);
+		    	   	}else{
+		    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(totalPago);
+		    	   	}
+			    	
+			    	if(ivaRete.length > 0){
+			    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(ivaRete);
+			    	}else{
+			    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(totalPago);
+			    	}
+			    	
+			    	if(isrAse.length > 0){
+			    		isrFactura = parseFloat(isrFactura) + parseFloat(isrAse);
+			    	}else{
+			    		isrFactura = parseFloat(isrFactura) + parseFloat(totalPago);
+			    	}
+			    	
+			    	if(impCedul.length > 0){
+			    		impCedFactura = parseFloat(impCedFactura) + parseFloat(impCedul);
+			    	}else{
+			    		impCedFactura = parseFloat(impCedFactura) + parseFloat(totalPago);
+			    	}
+			    	
+			    	if(totalPagoVa.length > 0){
+			    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPagoVa);
+			    	}else{
+			    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
+			    	}
+		    	}
+		    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
+		    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
+		    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
+		    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
+		    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
+		    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
+			},
+			failure : function ()
+			{
+				me.up().up().setLoading(false);
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			}
+		});
     	return true;
 	}
-	function _p21_generarCalculo2(){
-		// Se manda a llamar al procedimiento y se guarda
-		storeAseguradoFactura.load({
-					params: {
-						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
-						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
-					}
-				});
-				
-				obtenerTotalPagos(storeAseguradoFactura);
-	}	
+	
 	function _p21_generarCalculo(){
 		// Se manda a llamar al procedimiento y se guarda
 		Ext.Ajax.request(
@@ -3703,7 +3761,9 @@
 					}
 				});
 				
-				//obtenerTotalPagos(storeAseguradoFactura);
+				panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+				panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+				obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
 			},
 			failure : function ()
 			{
