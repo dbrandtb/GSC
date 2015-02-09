@@ -4400,6 +4400,7 @@ function _p30_editarAutoBuscar()
         }
         
         me.up('window').hide();
+        _fieldById('_p30_grid').getSelectionModel().select(record);
     };
     if(window.noMostrar==false)
     {
