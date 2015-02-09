@@ -33,4 +33,24 @@ public interface ConsultasManager
 	
 	@Deprecated
 	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception;
+	
+	@Deprecated
+	public Map<String,String>cargarInformacionPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdusuari
+			)throws Exception;
+	
+	@Deprecated
+	public List<Map<String,String>>cargarMpolizasPorParametrosVariables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsolici
+			,String cdramant
+			)throws Exception;
 }

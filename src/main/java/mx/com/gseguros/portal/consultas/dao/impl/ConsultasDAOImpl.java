@@ -813,4 +813,60 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public Map<String,String>cargarInformacionPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdusuari
+			)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("cdusuari" , cdusuari);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES.P_GET_INFO_MPOLIZAS", params);
+    	Map<String,Object>procResult  = ejecutaSP(new CargarInformacionPoliza(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null||lista.size()==0)
+    	{
+    		throw new ApplicationException("No hay informacion de poliza");
+    	}
+    	if(lista.size()>1)
+    	{
+    		throw new ApplicationException("Informacion de poliza duplicada");
+    	}
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES.P_GET_INFO_MPOLIZAS", params, lista);
+    	return lista.get(0);
+	}
+    
+    protected class CargarInformacionPoliza extends StoredProcedure
+    {
+    	protected CargarInformacionPoliza(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		"status"    , "swestado" , "nmsolici" , "feautori" , "cdmotanu" , "feanulac" , "swautori"
+            		,"cdmoneda" , "feinisus" , "fefinsus" , "ottempot" , "feefecto" , "hhefecto" , "feproren"
+            		,"fevencim" , "nmrenova" , "ferecibo" , "feultsin" , "nmnumsin" , "cdtipcoa" , "swtarifi"
+            		,"swabrido" , "feemisio" , "cdperpag" , "nmpoliex" , "nmcuadro" , "porredau" , "swconsol"
+            		,"nmpolant" , "nmpolnva" , "fesolici" , "cdramant" , "cdmejred" , "nmpoldoc" , "nmpoliza2"
+            		,"nmrenove" , "nmsuplee" , "ttipcamc" , "ttipcamv" , "swpatent" , "cdagente"
+    	            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

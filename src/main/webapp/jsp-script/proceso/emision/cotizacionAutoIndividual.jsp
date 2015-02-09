@@ -1781,12 +1781,27 @@ function _p28_cargar(boton)
                 debug('### cargar cotizacion:',json);
                 if(json.success)
                 {
-                    var maestra = json.slist1[0].ESTADO=='M';
+                    var maestra  = json.slist1[0].ESTADO=='M';
+                    
+                    var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
+                    var fechaHoy    = Ext.Date.clearTime(new Date());
+                    var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
+                    var vencida     = fesolici<fechaLimite;
+                    debug('fesolici='    , fesolici);
+                    debug('fechaHoy='    , fechaHoy);
+                    debug('fechaLimite=' , fechaLimite);
+                    debug('vencida='     , vencida , '.');
+                    
                     _p28_limpiar();
                     if(maestra)
                     {
                         _fieldByName('nmpoliza').setValue('');
                         mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
+                    }
+                    else if(vencida)
+                    {
+                        _fieldByName('nmpoliza').setValue('');
+                        mensajeWarning('La cotizaci&oacute;n ha vencido y solo puede duplicarse');
                     }
                     else
                     {
@@ -1883,7 +1898,7 @@ function _p28_cargar(boton)
                                     
                                     if(Ext.isEmpty(json.smap1.NTRAMITE))
                                     {
-                                        _p28_cotizar(!maestra);
+                                        _p28_cotizar(!maestra&&!vencida);
                                     }
                                     else
                                     {

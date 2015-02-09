@@ -1011,7 +1011,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdramo
 			,String cdtipsit
 			,String clave4
-			,String clave5)throws Exception
+			,String clave5)
 	{
 		logger.info(
 				new StringBuilder()

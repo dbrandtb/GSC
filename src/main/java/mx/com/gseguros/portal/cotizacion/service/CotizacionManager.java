@@ -190,7 +190,7 @@ public interface CotizacionManager
 			,String cdramo
 			,String cdtipsit
 			,String clave4
-			,String clave5)throws Exception;
+			,String clave5);
 	
 	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol) throws Exception;
 	
