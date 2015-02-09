@@ -3636,7 +3636,7 @@ function _p30_cargarClic()
                     if(!Ext.isEmpty(json.smap1.CDPERSON))
                     {
                         ck='Recuperando cliente';
-                        if(maestra)
+                        if(maestra&&false)
                         {
                             _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
                         }

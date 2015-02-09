@@ -132,6 +132,7 @@ public interface CotizacionAutoManager
 			,List<Map<String,String>> baseTvalosit
 			,List<Map<String,String>> confTvalosit
 			,boolean noTarificar
+			,String tipoflot
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);

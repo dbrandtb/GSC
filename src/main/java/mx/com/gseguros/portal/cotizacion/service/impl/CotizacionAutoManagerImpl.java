@@ -1710,6 +1710,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,List<Map<String,String>> baseTvalosit
 			,List<Map<String,String>> confTvalosit
 			,boolean noTarificar
+			,String tipoflot
 			)
 	{
 		logger.info(
@@ -1731,6 +1732,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ tvalosit=")    .append(tvalosit)
 				.append("\n@@@@@@ baseTvalosit=").append(baseTvalosit)
 				.append("\n@@@@@@ confTvalosit=").append(confTvalosit)
+				.append("\n@@@@@@ noTarificar=") .append(noTarificar)
+				.append("\n@@@@@@ tipoflot=")    .append(tipoflot)
 				.toString()
 				);
 		
@@ -1799,7 +1802,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,null     //ttipcamv
 			            ,null     //swpatent
 			            ,"100"    //pcpgocte
-			            ,"F"     //tipoflot
+			            ,tipoflot
 			            ,"U"      //accion
 						);
 				
@@ -1918,6 +1921,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					aux=aux+1;
 				}
 				
+				/*
 				setCheckpoint("Clonando situaciones");
 				for(Map<String,String>tvalositIte:tvalosit)
 				{
@@ -1940,6 +1944,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,""                //parentesco
 							);
 				}
+				*/
 				
 				if(!isBlank(cdpersonCli))
 				{
@@ -1960,6 +1965,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,"S"  //swexiper
 							);
 				}
+				
+				setCheckpoint("Aplicando ajustes de cotizacion");
+				cotizacionDAO.aplicarAjustesCotizacionPorProducto(cdunieco, cdramo, estado, nmpoliza, cdtipsit, tipoflot);
 				
 				setCheckpoint("Generando valores por defecto");
 				cotizacionDAO.valoresPorDefecto(
@@ -2407,7 +2415,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String cdperson = "";
 			String cdideper = "";
 			String ntramite = "";
-			if(!maestra)
+			if(!maestra||true)
 			{
 				setCheckpoint("Recuperando relacion poliza-contratante");
 				Map<String,String>relContratante0=consultasDAO.cargarMpoliperSituac(

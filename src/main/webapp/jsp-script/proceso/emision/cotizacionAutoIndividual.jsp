@@ -1865,7 +1865,7 @@ function _p28_cargar(boton)
                                     form.loadRecord(primerInciso);
                                     if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
                                     {
-                                        if(maestra)
+                                        if(maestra&&false)
                                         {
                                             _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
                                         }
