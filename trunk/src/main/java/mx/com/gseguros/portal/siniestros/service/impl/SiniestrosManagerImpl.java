@@ -1118,6 +1118,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
+	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem) throws Exception
+	{
+		return siniestrosDAO.obtenerRentaDiariaxHospitalizacion(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem);
+	}
+	
+	@Override
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion,String cdRamo) throws Exception {
 		try {
 			return siniestrosDAO.validaPorcentajePenalizacion(zonaContratada,zonaAtencion,cdRamo);
