@@ -5391,6 +5391,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            }
 	            ////// mpoliper contratante recuperado //////
 	            
+	            cotizacionDAO.aplicarAjustesCotizacionPorProducto(
+	            		cdunieco
+	            		,cdramo
+	            		,"W"
+	            		,nmpoliza
+	            		,cdtipsit
+	            		,"I"
+	            		);
+	            
 	            ////////////////////////
 	            ////// coberturas //////
 	            /*////////////////////*/

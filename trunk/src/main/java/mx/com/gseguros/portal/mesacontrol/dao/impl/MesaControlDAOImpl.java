@@ -447,7 +447,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cdusuari" , cdusuari);
-		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO", params);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO", params);
 		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
 	}
 	
@@ -471,7 +471,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
 		params.put("nuevo"    , nuevo);
-		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME", params);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME", params);
 		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
 	}
 	
@@ -495,7 +495,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
-		Utilerias.debugPrecedure(logger, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL", params);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL", params);
 		ejecutaSP(new BorrarDocumento(getDataSource()),params);
 	}
 	

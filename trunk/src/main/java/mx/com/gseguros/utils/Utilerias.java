@@ -262,7 +262,7 @@ public class Utilerias {
 		return concat;
 	}
 	
-	public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params)
+	public static void debugProcedure(Logger logger,String storedProcedureName,Map<String,?>params)
     {
 		int len = storedProcedureName.length();
 		logger.debug
@@ -277,7 +277,7 @@ public class Utilerias {
 		);
     }
     
-    public static void debugPrecedure(Logger logger,String storedProcedureName,Map<String,?>params,List<?>lista)
+    public static void debugProcedure(Logger logger,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
     	int len = storedProcedureName.length();
     	logger.debug

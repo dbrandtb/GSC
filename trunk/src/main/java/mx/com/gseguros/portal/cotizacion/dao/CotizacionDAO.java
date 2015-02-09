@@ -566,4 +566,15 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	/**
+	 * Aplica los parches que se piden en cotizacion
+	 */
+	public void aplicarAjustesCotizacionPorProducto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsit
+			,String tipocot
+			)throws Exception;
 }

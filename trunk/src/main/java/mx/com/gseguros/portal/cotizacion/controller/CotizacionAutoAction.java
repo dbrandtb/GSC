@@ -902,6 +902,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdagente    = smap1.get("cdagente");
 			String cdpersonCli = smap1.get("cdpersonCli");
 			String cdideperCli = smap1.get("cdideperCli");
+			String tipoflot    = smap1.get("tipoflot");
 			checkBlank(cdunieco , "No se recibio la sucursal");
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
@@ -909,6 +910,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkBlank(feini    , "No se recibio el inicio de vigencia");
 			checkBlank(fefin    , "No se recibio el fin de vigencia");
 			checkBlank(cdagente , "No se recibio el agente");
+			checkBlank(tipoflot , "No se recibio el tipo de cotizacion");
 			
 			checkList(slist1, "No se recibieron las situaciones mixtas");
 			checkList(slist2, "No se recibieron las situaciones base");
@@ -934,6 +936,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,slist2
 					,slist3
 					,noTarificar
+					,tipoflot
 					);
 			
 			exito           = resp.isExito();

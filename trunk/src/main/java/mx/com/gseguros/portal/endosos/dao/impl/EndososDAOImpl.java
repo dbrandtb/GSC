@@ -2091,7 +2091,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdparent" , cdparent);
 		params.put("porbenef" , porbenef);
 		params.put("accion"   , accion);
-		Utilerias.debugPrecedure(logger, "PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC", params);
 		ejecutaSP(new MovimientoMpoliperBeneficiario(getDataSource()),params);
 	}
 	
