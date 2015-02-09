@@ -96,4 +96,12 @@ public interface ConsultasDAO
 	public boolean verificarCodigoPostalFronterizo(String cdpostal)throws Exception;
 	
 	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception;
+	
+	public Map<String,String>cargarInformacionPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdusuari
+			)throws Exception;
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.log4j.Logger;
 
@@ -65,6 +66,78 @@ public class ConsultasManagerImpl implements ConsultasManager
 	public Map<String,String>cargarAtributosBaseCotizacion(String cdtipsit)throws Exception
 	{
 		return consultasDAO.cargarAtributosBaseCotizacion(cdtipsit);
+	}
+	
+	@Override
+	@Deprecated
+	public Map<String,String>cargarInformacionPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdusuari
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				));
+		
+		Map<String,String>datos=consultasDAO.cargarInformacionPoliza(cdunieco,cdramo,estado,nmpoliza,cdusuari);
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , datos
+				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return datos;
+	}
+	
+	@Override
+	@Deprecated
+	public List<Map<String,String>>cargarMpolizasPorParametrosVariables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsolici
+			,String cdramant
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ nmsolici=" , nmsolici
+				,"\n@@@@@@ cdramant=" , cdramant
+				));
+
+		List<Map<String,String>>lista=consultasDAO.cargarMpolizasPorParametrosVariables(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,nmsolici
+				,cdramant
+				);
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
 	}
 	
 	///////////////////////////////

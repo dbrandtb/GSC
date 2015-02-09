@@ -2369,6 +2369,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String estado   = null;
 			String nmsuplem = null;
 			String tipoflot = null;
+			String fesolici = null;
+			String feini    = null;
+			String fefin    = null;
 			if(maestra)
 			{
 				cdunieco = listaEmisiones.get(0).get("CDUNIECO");
@@ -2376,6 +2379,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				nmpoliza = listaEmisiones.get(0).get("NMPOLIZA");
 				nmsuplem = listaEmisiones.get(0).get("NMSUPLEM");
 				tipoflot = listaEmisiones.get(0).get("TIPOFLOT");
+				fesolici = listaEmisiones.get(0).get("FESOLICI");
+				feini    = listaEmisiones.get(0).get("FEEFECTO");
+				fefin    = listaEmisiones.get(0).get("FEPROREN");
 			}
 			else
 			{
@@ -2383,6 +2389,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				estado   = listaCotizaciones.get(0).get("ESTADO");
 				nmsuplem = listaCotizaciones.get(0).get("NMSUPLEM");
 				tipoflot = listaCotizaciones.get(0).get("TIPOFLOT");
+				fesolici = listaCotizaciones.get(0).get("FESOLICI");
+				feini    = listaCotizaciones.get(0).get("FEEFECTO");
+				fefin    = listaCotizaciones.get(0).get("FEPROREN");
 			}
 			checkBlank(cdunieco , "No se recupero la sucursal de la cotizacion");
 			checkBlank(estado   , "No se recupero el estado de la cotizacion");
@@ -2393,6 +2402,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().put("ESTADO"   , estado);
 			resp.getSmap().put("NMPOLIZA" , nmpoliza);
 			resp.getSmap().put("TIPOFLOT" , tipoflot);
+			resp.getSmap().put("FESOLICI" , fesolici);
+			resp.getSmap().put("FEINI"    , feini);
+			resp.getSmap().put("FEFIN"    , fefin);
 			
 			setCheckpoint("Recuperando configuracion de incisos");
 			resp.setSlist1(Utilerias.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
@@ -2475,15 +2487,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().put("CDIDEPER" , cdideper);
 			resp.getSmap().put("NTRAMITE" , ntramite);
 			
-			if(maestra)
+			try
 			{
-				resp.getSmap().put("FEINI" , listaEmisiones.get(0).get("FEEFECTO"));
-				resp.getSmap().put("FEFIN" , listaEmisiones.get(0).get("FEPROREN"));
+				Map<String,String>dias=cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.DIAS_VALIDOS_COTIZACION
+						,cdramo
+						,"*"
+						,null
+						,null
+						);
+				resp.getSmap().put("diasValidos" , dias.get("P1VALOR"));
 			}
-			else
+			catch(Exception ex)
 			{
-				resp.getSmap().put("FEINI" , listaCotizaciones.get(0).get("FEEFECTO"));
-				resp.getSmap().put("FEFIN" , listaCotizaciones.get(0).get("FEPROREN"));
+				logger.error("error sin impacto funcional al recuperar dias validos de cotizacion, se cargan 15 dias",ex);
+				resp.getSmap().put("diasValidos" , "15");
 			}
 			
 			setCheckpoint("0");
