@@ -406,7 +406,15 @@ public interface SiniestrosManager {
 			String nmsinies,
 			String nfactura,
 			String tipoPago) throws Exception;
-
+	
+	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem) throws Exception;
+	
 	public String validaPorcentajePenalizacion(String zonaContratada, String zonaAtencion, String cdRamo) throws Exception;
 
 	public String validaAutorizacionProceso(String nmAutSer) throws Exception;

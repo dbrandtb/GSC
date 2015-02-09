@@ -115,6 +115,7 @@
 			var _11_conceptoSeleccionado=null;
 			var _11_aseguradoSeleccionado = null;
 			var _tipoPago = _11_params.OTVALOR02;
+			var _tipoProducto = _11_params.CDRAMO;
 			var banderaConcepto = "0";
 			var banderaAsegurado = "0";
 			var storeCobertura;
@@ -1819,14 +1820,14 @@
 					,items	:
 					[
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00',// 	hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoProducto != '7',
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',//		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION,
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoProducto != '7',
     	    	    		valueToRaw : function(value)
 	    	                {
 	    	                    return Ext.util.Format.usMoney(value);

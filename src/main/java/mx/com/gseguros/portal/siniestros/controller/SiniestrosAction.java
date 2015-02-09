@@ -7493,8 +7493,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			
     			Map<String,String> facturaIte        = null;
     			//for(Map<String,String>facturaIte:facturasAux)
-    			double sumaAsegurada = Double.valueOf("250000");
-    			logger.debug("SUMA ASEGURADA -->"+sumaAsegurada);
     			for(int i = 0; i < facturasAux.size(); i++)
     			{
     				facturaIte = facturasAux.get(i);
@@ -7512,17 +7510,24 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         						siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"));
         				logger.debug("<-- copagoDeducibleFacturaIte -->"+copagoDeducibleFacturaIte);
         				
+        				Map<String,String>rentaDiariaxHospitalizacion =siniestrosManager.obtenerRentaDiariaxHospitalizacion(
+        						siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"));
+        				double sumaAsegurada = Double.valueOf(rentaDiariaxHospitalizacion.get("OTVALOR"));
+            			double beneficioMax = Double.parseDouble(copagoDeducibleFacturaIte.get("BENEFMAX").replace("%",""));
         				//OBTENEMOS EL VALOR Y SE REALIZA UN REEMPLA
         				Calendar fechas = Calendar.getInstance();        				 
         				//fecha inicio        				 
         				Calendar fechaInicio = new GregorianCalendar();
         				fechaInicio.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
         				Calendar fechaFin = new GregorianCalendar();
-        				fechaFin.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
+        				fechaFin.set(Integer.parseInt(facturaIte.get("FEEGRESO").substring(6,10)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(3,5)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(0,2)));
         				fechas.setTimeInMillis(fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());
         				int totalDias = fechas.get(Calendar.DAY_OF_YEAR);
-        				
-        				double totalFactura = sumaAsegurada * (200/100d) * totalDias;
+        				int diasPantalla = 0;
+        				if(facturaIte.get("FEEGRESO").length() > 0){
+        					diasPantalla = Integer.parseInt(facturaIte.get("DIASDEDU"));
+        				}
+        				double totalFactura = sumaAsegurada * (beneficioMax/100d) * (totalDias - diasPantalla);
         				facturaObj.put("TOTALFACTURAIND",totalFactura+"");
         				importeSiniestroUnico += totalFactura;
     			}

@@ -309,6 +309,14 @@ public interface SiniestrosDAO {
 			String nfactura,
 			String tipopago) throws Exception;
 	
+	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem) throws Exception;
+	
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion, String cdRamo) throws Exception;
 
 	public String obtieneAutorizacionProceso(String nmAutSer) throws Exception;

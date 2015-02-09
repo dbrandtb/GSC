@@ -2683,6 +2683,60 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
+	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem
+			) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("cdunieco" , cdunieco);
+		p.put("cdramo"   , cdramo);
+		p.put("estado"   , estado);
+		p.put("nmpoliza" , nmpoliza);
+		p.put("nmsituac" , nmsituac);
+		p.put("nmsuplem" , nmsuplem);
+		logger.debug("obtenerRentaDiariaxHospitalizacion params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerRentaDiariaxHospitalizacion(this.getDataSource()), p);
+		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new Exception("No se encuentra la Renta Diaria x hospitalización ");
+		}
+		if(lista.size()>1)
+		{
+			throw new Exception("Renta Diaria x hospitalización duplicado");
+		}
+		Map<String,String>rentaDiaria = lista.get(0);
+		logger.debug("Renta Diaria x hospitalizacion: "+rentaDiaria);
+		return rentaDiaria;
+	}
+	
+	protected class ObtenerRentaDiariaxHospitalizacion extends StoredProcedure
+	{
+		protected ObtenerRentaDiariaxHospitalizacion(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_OBTINE_RENTA_DIARIA_X_HOSP");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"OTVALOR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion,String cdRamo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_zcontratada_i", zonaContratada);
