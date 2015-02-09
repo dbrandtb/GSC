@@ -5310,10 +5310,10 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
                 	{
                 		mapaValositIterado.put("otvalor22",
-                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "22")
+                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("otvalor16"), "22")
                 		);
                 		mapaValositIterado.put("otvalor23",
-                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("pv_otvalor16"), "23")
+                				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("otvalor16"), "23")
                 		);
                 	}
 	                ////// 4. custom //////
