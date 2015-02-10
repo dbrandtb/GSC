@@ -3275,6 +3275,89 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	@Override
+	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturasRol(
+			String cdtipsit
+			,String cdsisrol
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarParamerizacionConfiguracionCoberturasRol @@@@@@")
+				.append("\n@@@@@@ cdtipsit=")    .append(cdtipsit)
+				.append("\n@@@@@@ cdsisrol=")    .append(cdsisrol)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			setCheckpoint("Recuperando parametrizacion");
+			List<List<Map<String,String>>>listas = cotizacionDAO.cargarParamerizacionConfiguracionCoberturasRol(cdtipsit,cdsisrol);
+			
+			List<Map<String,String>>ltatrisit = listas.get(0);
+			List<Map<String,String>>latrixrol = listas.get(1);
+			
+			setCheckpoint("Inicializando atributos a procesar");
+			Map<String,Map<String,String>>atributos = new LinkedHashMap<String,Map<String,String>>();
+			for(Map<String,String>tatrisit:ltatrisit)
+			{
+				Map<String,String>mapa=new LinkedHashMap<String,String>();
+				mapa.put("aplica" , "1");
+				atributos.put(tatrisit.get("cdatribu"),mapa);
+			}
+			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			
+			setCheckpoint("Procesando parametrizacion por rol");
+			for(Map<String,String>atrixrol:latrixrol)
+			{
+				String cdatribu = atrixrol.get("cdatribu");
+				String aplica   = atrixrol.get("aplica");
+				String valor    = atrixrol.get("valor");
+				if(atributos.containsKey(cdatribu)&&aplica.equals("0"))
+				{
+					atributos.get(cdatribu).put("aplica" , aplica);
+					atributos.get(cdatribu).put("valor"  , valor);
+				}
+			}
+			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
+			
+			setCheckpoint("Transformando parametrizacion");
+			List<Map<String,String>>lista = new ArrayList<Map<String,String>>();
+			resp.setSlist(lista);
+			
+			for(Entry<String,Map<String,String>>atributo:atributos.entrySet())
+			{
+				Map<String,String>nuevo = new LinkedHashMap<String,String>();
+				lista.add(nuevo);
+				
+				String cdatribu = atributo.getKey();
+				nuevo.put("cdatribu" , cdatribu);
+				
+				Map<String,String>props = atributo.getValue();
+				nuevo.put("aplica" , props.get("aplica"));
+				nuevo.put("valor"  , props.get("valor"));
+			}
+			
+			setCheckpoint("0");
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex, resp);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarParamerizacionConfiguracionCoberturasRol @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

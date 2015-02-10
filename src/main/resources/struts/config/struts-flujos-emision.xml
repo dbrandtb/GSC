@@ -373,6 +373,12 @@
         <action name="cargarTipoCambioWS" class="CotizacionAction" method="cargarTipoCambioWS">
             <result type="json" />
         </action>
+        
+        <action name   = "cargarParamerizacionConfiguracionCoberturasRol"
+                class  = "cotizacionAutoAction"
+                method = "cargarParamerizacionConfiguracionCoberturasRol">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

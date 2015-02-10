@@ -4927,4 +4927,63 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturasRol(
+			String cdtipsit
+			,String cdsisrol)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit"     , cdtipsit);
+		params.put("cdsisrol"     , cdsisrol);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_PARAMS_CONFIG_AUTO_ROL ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult    = ejecutaSP(new CargarParamerizacionConfiguracionCoberturasRol(getDataSource()),params);
+		List<Map<String,String>>tatrist = (List<Map<String,String>>)procResult.get("pv_cur_tatrisit_o");
+		if(tatrist==null)
+		{
+			tatrist=new ArrayList<Map<String,String>>();
+		}
+		List<Map<String,String>>atrixrol = (List<Map<String,String>>)procResult.get("pv_cur_atrixrol_o");
+		if(atrixrol==null)
+		{
+			atrixrol=new ArrayList<Map<String,String>>();
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** params=")  .append(params)
+				.append("\n****** tatrist=") .append(tatrist)
+				.append("\n****** atrixrol=").append(atrixrol)
+				.append("\n****** PKG_CONSULTA.P_GET_PARAMS_CONFIG_AUTO_ROL ******")
+				.append("\n*******************************************************")
+				.toString()
+				);
+		List<List<Map<String,String>>>lista=new ArrayList<List<Map<String,String>>>();
+		lista.add(tatrist);
+		lista.add(atrixrol);
+		return lista;
+	}
+	
+	protected class CargarParamerizacionConfiguracionCoberturasRol extends StoredProcedure
+	{
+		protected CargarParamerizacionConfiguracionCoberturasRol(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PARAMS_CONFIG_AUTO_ROL");
+			declareParameter(new SqlParameter("cdtipsit"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"     , OracleTypes.VARCHAR));
+			String[] cols  = new String[]{ "cdatribu" , "aplica" , "valor" };
+			declareParameter(new SqlOutParameter("pv_cur_tatrisit_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_cur_atrixrol_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"       , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"        , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

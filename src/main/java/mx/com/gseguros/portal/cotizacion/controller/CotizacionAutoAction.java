@@ -1445,6 +1445,49 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarParamerizacionConfiguracionCoberturasRol()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n############################################################")
+				.append("\n###### cargarParamerizacionConfiguracionCoberturasRol ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos");
+			String cdtipsit     = smap1.get("cdtipsit");
+			String cdsisrol     = smap1.get("cdsisrol");
+			
+			checkBlank(cdtipsit     , "No se recibio la modalidad");
+			checkBlank(cdsisrol     , "No se recibio el rol");
+			
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.cargarParamerizacionConfiguracionCoberturasRol(cdtipsit,cdsisrol);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### cargarParamerizacionConfiguracionCoberturasRol ######")
+				.append("\n############################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
