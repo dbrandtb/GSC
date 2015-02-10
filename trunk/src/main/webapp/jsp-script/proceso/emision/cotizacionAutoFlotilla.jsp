@@ -22,7 +22,6 @@ var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"       
 var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"        />';
 var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"            />';
-var _p30_urlCargarDetalleNegocioRamo5      = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
 var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"             />';
 var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                 />';
 ////// urls //////

@@ -2709,6 +2709,30 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                         }
                                         return valido;
                                     }
+                                    debug('item=',item.fieldLabel);
+                                    debug('minimo=',minimo,'maximo=',maximo);
+                                    item.store.filterBy(function(record)
+                                    {
+                                        debug('filtrando record=',record);
+                                        var key=record.get('key')-0;
+                                        debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+                                        return key>=minimo&&key<=maximo;
+                                    });
+                                    item.on(
+                                    {
+                                        expand : function(me)
+                                        {
+                                            var minimo = me.minValue;
+                                            var maximo = me.maxValue;
+                                            me.store.filterBy(function(record)
+                                            {
+                                                debug('filtrando record=',record);
+                                                var key=record.get('key')-0;
+                                                debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+                                                return key>=minimo&&key<=maximo;
+                                            });
+                                        }
+                                    });
                                 }
                             }
                             item.isValid();
