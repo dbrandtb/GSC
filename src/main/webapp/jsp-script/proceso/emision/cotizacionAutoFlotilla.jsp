@@ -3681,7 +3681,7 @@ function _p30_cargarClic()
                         _p30_store.add(new _p30_modelo(json.slist2[i]));
                     }
            
-                    if(Ext.isEmpty(json.smap1.NTRAMITE))
+                    if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida)
                     {
                         _p30_cotizar(!maestra&&!vencida);
                     }
