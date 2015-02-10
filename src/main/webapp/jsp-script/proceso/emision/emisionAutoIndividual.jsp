@@ -241,14 +241,15 @@ Ext.onReady(function()
 	        ,url      : _p29_urlDocumentosPolizaClon
 	        ,params   :
 	        {
-	            'smap1.cdunieco'  : _p29_smap1.cdunieco
-	            ,'smap1.cdramo'   : _p29_smap1.cdramo
-	            ,'smap1.estado'   : _p29_smap1.estado
-	            ,'smap1.nmpoliza' : ''
-	            ,'smap1.nmsuplem' : '0'
-	            ,'smap1.nmsolici' : ''
-	            ,'smap1.ntramite' : _p29_smap1.ntramite
-	            ,'smap1.tipomov'  : '0'
+	            'smap1.cdunieco'       : _p29_smap1.cdunieco
+	            ,'smap1.cdramo'        : _p29_smap1.cdramo
+	            ,'smap1.estado'        : _p29_smap1.estado
+	            ,'smap1.nmpoliza'      : ''
+	            ,'smap1.nmsuplem'      : '0'
+	            ,'smap1.nmsolici'      : ''
+	            ,'smap1.ntramite'      : _p29_smap1.ntramite
+	            ,'smap1.tipomov'       : '0'
+	            ,'smap1.ocultarRecibo' : ''
 	        }
 	    }
 	}).showAt(500,0);
