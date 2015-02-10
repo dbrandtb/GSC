@@ -5352,7 +5352,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//tvalogar
-		if(resp.exito&&false)
+		if(resp.exito)
 		{
 			try
 			{
