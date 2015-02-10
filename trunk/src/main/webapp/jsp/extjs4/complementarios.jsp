@@ -649,6 +649,7 @@ function _datComTurnarSuscripcion()
 		                            style:'margin:5px',
 		                            collapsible:true,
 		                            titleCollapse:true,
+		                            autoScroll:true,
 		                            maxHeight:300,
 		                            layout:{
 		                                type: 'table',
