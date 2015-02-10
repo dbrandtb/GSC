@@ -850,10 +850,11 @@ Ext.onReady(function()
                             }
 			                </s:if>
 			                ,{
-			                    xtype : 'button'
-			                    ,text : 'Recibos...'
-			                    ,icon : '${ctx}/resources/fam3icons/icons/calendar_view_day.png'
-			                    ,menu :
+			                    xtype   : 'button'
+			                    ,text   : 'Recibos...'
+			                    ,icon   : '${ctx}/resources/fam3icons/icons/calendar_view_day.png'
+			                    ,hidden : <s:property value='%{smap1.containsKey("ocultarRecibo")}' />
+			                    ,menu   :
 			                    {
 			                        xtype  : 'menu'
 			                        ,items :
