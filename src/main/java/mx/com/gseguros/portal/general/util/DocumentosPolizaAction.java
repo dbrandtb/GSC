@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,10 +85,15 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				+ "\n######                         ######"
 				);
 		logger.debug("smap1: "+smap1);
-		if(smap1!=null && !smap1.containsKey("cdtiptra"))
+		if(smap1==null)
+		{
+			smap1=new HashMap<String,String>();
+		}
+		if(!smap1.containsKey("cdtiptra"))
 		{
 			smap1.put("cdtiptra","1");
 		}
+		
 		logger.debug(""
 				+ "\n######                         ######"
 				+ "\n######                         ######"
@@ -199,7 +205,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	/**
 	 * Genera la ruta del archivo a descargar en base a los parametros recibidos
 	 * 
-	 * @param ruta Ruta a utilizar, si es null se usará una ruta default
+	 * @param ruta Ruta a utilizar, si es null se usarï¿½ una ruta default
 	 * @param subcarpeta Subcarpeta del archivo, si es null se omite
 	 * @param filename Nombre del archivo a descargar
 	 * @return Ruta absoluta del archivo a descargar 
