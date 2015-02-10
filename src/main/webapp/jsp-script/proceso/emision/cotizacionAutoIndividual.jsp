@@ -117,6 +117,8 @@ var _p28_ramo5_CR_tracto_timeout = null;
 
 Ext.onReady(function()
 {
+    Ext.Ajax.timeout = 3*60*1000;
+
 	////// modelos //////
 	Ext.define('_p28_modeloRecuperado',
     {
