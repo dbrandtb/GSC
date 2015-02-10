@@ -68,26 +68,27 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// urls //////
-var _p28_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"                    />';
-var _p28_urlCotizar                        = '<s:url namespace="/emision"         action="cotizar"                                     />';
-var _p28_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"                     />';
-var _p28_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"              />';
-var _p28_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"                    />';
-var _p28_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacion"                            />';
-var _p28_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoIndividual"                       />';
-var _p28_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"                 />';
-var _p28_urlCoberturas                     = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                          />';
-var _p28_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                          />';
-var _p28_urlViewDoc                        = '<s:url namespace ="/documentos"     action="descargaDocInline"                           />';
-var _p28_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                                 />';
-var _p28_urlDetalleCotizacion              = '<s:url namespace="/"                action="detalleCotizacion"                           />';
-var _p28_urlGuardarConfig                  = '<s:url namespace="/emision"         action="guardarConfigCotizacion"                     />';
-var _p28_urlCargarConfig                   = '<s:url namespace="/emision"         action="cargarConfigCotizacion"                      />';
-var _p28_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                          />';
-var _p28_urlCargarParamerizacionCoberturas = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas" />';
-var _p28_urlValidarTractocamionRamo5       = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"           />';
-var _p28_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"          />';
-var _p28_urlCargarDetalleNegocioRamo5      = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                   />';
+var _p28_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"                       />';
+var _p28_urlCotizar                           = '<s:url namespace="/emision"         action="cotizar"                                        />';
+var _p28_urlRecuperarCliente                  = '<s:url namespace="/"                action="buscarPersonasRepetidas"                        />';
+var _p28_urlCargarRetroactividadSuplemento    = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"                 />';
+var _p28_urlCargarSumaAseguradaRamo5          = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"                       />';
+var _p28_urlCargar                            = '<s:url namespace="/emision"         action="cargarCotizacion"                               />';
+var _p28_urlDatosComplementarios              = '<s:url namespace="/emision"         action="emisionAutoIndividual"                          />';
+var _p28_urlCargarParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"                    />';
+var _p28_urlCoberturas                        = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                             />';
+var _p28_urlComprar                           = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                             />';
+var _p28_urlViewDoc                           = '<s:url namespace ="/documentos"     action="descargaDocInline"                              />';
+var _p28_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"                                    />';
+var _p28_urlDetalleCotizacion                 = '<s:url namespace="/"                action="detalleCotizacion"                              />';
+var _p28_urlGuardarConfig                     = '<s:url namespace="/emision"         action="guardarConfigCotizacion"                        />';
+var _p28_urlCargarConfig                      = '<s:url namespace="/emision"         action="cargarConfigCotizacion"                         />';
+var _p28_urlRecuperacionSimple                = '<s:url namespace="/emision"         action="recuperacionSimple"                             />';
+var _p28_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas"    />';
+var _p28_urlValidarTractocamionRamo5          = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"              />';
+var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"             />';
+var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                      />';
+var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturasRol" />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -2778,7 +2779,7 @@ function _p28_cargarParametrizacionCoberturas(callback)
                         }
                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                         {
-                            title   : 'DEBUG'
+                            title   : '[DEBUG] PARAMETRIZACION DE COBERTURAS'
                             ,items  :
                             [
                                 {
@@ -2860,6 +2861,7 @@ function _p28_cargarConfig()
                         });
                     }
                 }
+                _p28_cargarParamerizacionCoberturasRol();
             }
             else
             {
@@ -2900,6 +2902,105 @@ function _p28_recuperaObligatorioCamionRamo5()
         }
     });
     debug('<_p28_recuperaObligatorioCamionRamo5');
+}
+
+function _p28_cargarParamerizacionCoberturasRol()
+{
+    debug('>_p28_cargarParamerizacionCoberturasRol<');
+    var params=
+    {
+        'smap1.cdtipsit'  : _p28_smap1.cdtipsit
+        ,'smap1.cdsisrol' : _p28_smap1.cdsisrol
+    };
+    Ext.Ajax.request(
+    {
+        url      : _p28_urlCargarParamerizacionCoberturasRol
+        ,params  : params
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('### configuracion por rol:',json);
+            if(json.exito)
+            {
+                for(var i=0;i<json.slist1.length;i++)
+                {
+                    var item = _fieldByName('parametros.pv_otvalor'+(('00'+json.slist1[i].cdatribu).slice(-2)));
+                    if(json.slist1[i].aplica+'x'=='1x')
+                    {
+                        if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                        {
+                            item.setReadOnly(false);
+                            item.addCls('green');
+                            item.removeCls('red');
+                        }
+                        else
+                        {
+                            item.show();
+                        }
+                        item.isValid();
+                    }
+                    else
+                    {
+                        if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                        {
+                            item.setReadOnly(true);
+                            item.addCls('red');
+                            item.removeCls('green');
+                        }
+                        else
+                        {
+                            item.hide();
+                        }
+                        item.setValue(json.slist1[i].valor);
+                    }
+                }
+                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                {
+                    var aux1 = '';
+                    for(var i in params)
+                    {
+                        aux1 = aux1+i+':'+params[i]+'\n';
+                    }
+                    var aux2 = '';
+                    for(var i=0;i<json.slist1.length;i++)
+                    {
+                        aux2 = aux2
+                               +json.slist1[i].cdatribu+' - '
+                               +'aplica ('+json.slist1[i].aplica
+                               +') valor ('+json.slist1[i].valor
+                               +')\n';
+                    }
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    {
+                        title   : '[DEBUG] PARAMETRIZACION DE COBERTURAS POR ROL'
+                        ,items  :
+                        [
+                            {
+                                xtype   : 'textarea'
+                                ,width  : 400
+                                ,height : 70
+                                ,value  : aux1
+                            }
+                            ,{
+                                xtype   : 'textarea'
+                                ,width  : 400
+                                ,height : 450
+                                ,value  : aux2
+                            }
+                        ]
+                    }).show());
+                }
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
 }
 ////// funciones //////
 </script>

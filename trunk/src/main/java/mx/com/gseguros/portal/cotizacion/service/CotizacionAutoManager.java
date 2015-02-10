@@ -189,4 +189,9 @@ public interface CotizacionAutoManager
 			,String nmsuplem
 			,String nmsituac
 			,List<Map<String,String>>mpoliperMpersona);
+	
+	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturasRol(
+			String cdtipsit
+			,String cdsisrol
+			);
 }

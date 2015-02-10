@@ -577,4 +577,7 @@ public interface CotizacionDAO
 			,String cdtipsit
 			,String tipocot
 			)throws Exception;
+	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturasRol(
+			String cdtipsit
+			,String cdsisrol)throws Exception;
 }
