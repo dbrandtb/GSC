@@ -2711,6 +2711,10 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                         }
                                         return valido;
                                     }
+                                    if(!item.isValid())
+                                    {
+                                        item.reset();
+                                    }
                                     debug('item=',item.fieldLabel);
                                     debug('minimo=',minimo,'maximo=',maximo);
                                     item.store.filterBy(function(record)
