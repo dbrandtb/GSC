@@ -14,6 +14,8 @@
 }
 </style>
 <script>
+
+	var sucursalUsuarioSesion = '<s:property value="%{#session['USUARIO'].cdUnieco}" />';
 	var inputCduniecop2= '<s:property value="map1.cdunieco" />';
 	var inputCdramop2=   '<s:property value="map1.cdramo" />';
 	var inputEstadop2=   '<s:property value="map1.estado" />';
@@ -887,7 +889,8 @@ debug("validarYGuardar flag:2");
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
-					                'smap1.cargaTipoPersona' : ''
+					                'smap1.cargaTipoPersona' : '',
+					                'smap1.cargaSucursalEmi' : sucursalUsuarioSesion
 					            }
 					     });
 					     _p22_parentCallback = _p29_personaSaved;
@@ -1485,7 +1488,8 @@ debug("validarYGuardar flag:2");
 						                'smap1.esCargaClienteNvo' : 'N' ,
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
-						                'smap1.cargaTipoPersona' : ''
+						                'smap1.cargaTipoPersona' : '',
+						                'smap1.cargaSucursalEmi' : sucursalUsuarioSesion
 						            }
 						     });
 						     _p22_parentCallback = _p29_personaSaved;
@@ -1569,37 +1573,7 @@ debug("validarYGuardar flag:2");
 //	                                	}
 	                        		}
 	                        		
-                        			/*if(!Ext.isEmpty(destruirContLoaderPersona)){
-										destruirContLoaderPersona();	                                
-	                                }
-	                                
-	                                gridTomadorp2.getLoader().destroy();
-	                                
-	                                gridTomadorp2.loader = new Ext.ComponentLoader({
-					                    url       : _p31_urlPantallaCliente
-					                    ,scripts  : true
-					                    ,autoLoad : false
-					                    ,ajaxOptions: {
-					                            method: 'POST'
-					                     }
-					                });
-	                                
-	                                
-	                                gridTomadorp2.getLoader().load({
-								            params: {
-								                'smap1.cdperson' : '',
-								                'smap1.cdideper' : '',
-								                'smap1.cdideext' : '',
-								                'smap1.esSaludDanios' : 'S',
-								                'smap1.esCargaClienteNvo' : 'N' ,
-								                'smap1.ocultaBusqueda' : 'S' ,
-								                'smap1.cargaCP' : '',
-								                'smap1.cargaTipoPersona' : ''
-								            }
-								     });
-								     _p22_parentCallback = _p29_personaSaved;
-					     			 _contratanteSaved = false;
-								     */
+                        			
 	                        	}
 //	                            gridTomadorp2.setDisabled(hayTomador);
 	                        	if(record.get('estomador'))
@@ -1620,38 +1594,6 @@ debug("validarYGuardar flag:2");
 	                                debug('se puso en sesion recordTomadorp2',recordTomadorp2);
 	                                storeTomadorp2.removeAll();
 	                                storeTomadorp2.add(recordTomadorp2);
-	                            
-	                                /*if(!Ext.isEmpty(destruirContLoaderPersona)){
-										destruirContLoaderPersona();	                                
-	                                }
-	                                
-	                                gridTomadorp2.getLoader().destroy();
-	                                
-	                                gridTomadorp2.loader = new Ext.ComponentLoader({
-					                    url       : _p31_urlPantallaCliente
-					                    ,scripts  : true
-					                    ,autoLoad : false
-					                    ,ajaxOptions: {
-					                            method: 'POST'
-					                     }
-					                });
-	                                
-	                                
-	                                gridTomadorp2.getLoader().load({
-								            params: {
-								                'smap1.cdperson' : record.get('cdperson'),
-								                'smap1.cdideper' : record.get('cdideper'),
-								                'smap1.cdideext' : record.get('cdideext'),
-								                'smap1.esSaludDanios' : 'S',
-								                'smap1.esCargaClienteNvo' : 'N' ,
-								                'smap1.ocultaBusqueda' : 'S' ,
-								                'smap1.cargaCP' : '',
-								                'smap1.cargaTipoPersona' : ''
-								            }
-								     });
-								     _p22_parentCallback = _p29_personaSaved;
-					     			 _contratanteSaved = false;
-								     */
 	                            
 	                            }
                         	    this.validateRow(this.getColumnIndexes(), record, y, true);
@@ -2033,6 +1975,9 @@ debug("validarYGuardar flag:2");
             			return false;
             		}else if(!Ext.isEmpty(datosContr.cdperson) && !_contratanteSaved){
             			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+            			return false;
+            		}else if("F" != datosContr.tipoper){
+            			mensajeWarning('El Contratante como Asegurado no puede ser una persona Moral o R&eacute;gimen Simplificado');
             			return false;
             		}
 				}
@@ -2685,21 +2630,7 @@ function _p29_personaSaved()
     debug('<_p29_personaSaved');
 }
 		
-//		_fieldById('_p31_clientePanel').loader.load(
-//	        {
-//	            params:
-//	            {
-//	                'smap1.cdperson' : '',
-//	                'smap1.cdideper' : '',
-//	                'smap1.cdideext' : '',
-//	                'smap1.esSaludDanios' : 'S',
-//	                'smap1.esCargaClienteNvo' : 'N' ,
-//	                'smap1.cargaCP' : '',
-//	                'smap1.cargaTipoPersona' : ''
-//	            }
-//	     });
-		
-	});
+});
 	
 </script>
 <%--
