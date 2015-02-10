@@ -91,6 +91,7 @@ var _cargaCompania;
 var _cargaCdPerson;
 var _cargaCP;
 var _cargaTipoPersona;
+var _cargaSucursalEmi;
 
 if(!Ext.isEmpty(_p22_smap1)){
 	
@@ -101,6 +102,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaCompania = _p22_smap1.esSaludDanios;	
 	_cargaCP = _p22_smap1.cargaCP;	
 	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
+	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;	
 }
 
 ////// variables //////
@@ -224,17 +226,12 @@ Ext.onReady(function()
 					            	change: function(me, val, oldVal, eopts){
 						    				try{
 							    				if('string' == typeof val){
-							    					debug('valor entrando Change:'+val);
-							    					
 							    					if(String(val.toUpperCase()).indexOf(" -") != -1){
 							    						me.setValue(ultimoValorQueryRFC);
-							    						debug("fijando valor en change a: " , ultimoValorQueryRFC)
 							    					}else {
 							    						ultimoValorQueryRFC = val.toUpperCase();
 							    						me.setValue(ultimoValorQueryRFC);
-							    						debug("fijando valor en change a: " , ultimoValorQueryRFC)
 							    					}
-							    					
 							    				}
 						    				}
 						    				catch(e){
@@ -246,7 +243,7 @@ Ext.onReady(function()
 										queryPlan.query = Ext.String.trim(queryPlan.query);
 										if(String(queryPlan.query).indexOf(" -") != -1){
 //											queryPlan.combo.getStore().removeAll();
-											debug("Cambiando el QueryPlan a: ",ultimoValorQueryRFC);
+//											debug("Cambiando el QueryPlan a: ",ultimoValorQueryRFC);
 											queryPlan.query = ultimoValorQueryRFC;
 //											queryPlan.rawQuery=true;
 //											queryPlan.cancel = true;
@@ -289,9 +286,9 @@ Ext.onReady(function()
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
 				                        		var form=_p22_formBusqueda();
-				                        		debug("luego del Load");
-				                        		debug(form.down('[name=smap1.rfc]').getValue());
-				                        		debug(form.down('[name=smap1.rfc]').getRawValue());
+//				                        		debug("luego del Load");
+//				                        		debug(form.down('[name=smap1.rfc]').getValue());
+//				                        		debug(form.down('[name=smap1.rfc]').getRawValue());
 				                        		
 				                        		form.down('[name=smap1.rfc]').setRawValue(form.down('[name=smap1.rfc]').getValue())
 				                        		
@@ -360,7 +357,7 @@ Ext.onReady(function()
 					            	change: function(me, val){
 						    				try{
 							    				if('string' == typeof val){
-							    					debug('mayus de '+val);
+//							    					debug('mayus de '+val);
 							    					me.setValue(val.toUpperCase());
 							    				}
 						    				}
@@ -383,7 +380,7 @@ Ext.onReady(function()
 				                        ,listeners: {
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
-				                        			debug('op:',op);
+//				                        			debug('op:',op);
 				                        			var jsonResponse = Ext.decode(op.response.responseText);
 				                        			if(!jsonResponse.exito){
 				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
@@ -607,8 +604,6 @@ Ext.onReady(function()
 	                            				return;
 	                            			}
 	                            			
-	                            			_fieldByName('CDMUNICI').forceSelection = true;
-	                            			
 	                            			_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
 	                            }
 	                    }]
@@ -806,6 +801,12 @@ Ext.onReady(function()
 							heredarPanel(_p22_formDomicilio());
 							_p22_heredarColonia();
 						}
+
+						if(!Ext.isEmpty(_cargaSucursalEmi)){
+							_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
+						}
+						
+						
 						if(_ocultaBusqueda){
 							_p22_formBusqueda().hide();
 						}
@@ -891,13 +892,19 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     
     }
     
-    _fieldByName('CDMUNICI').forceSelection = false;
+    _fieldByName('CDSUCEMI').editable = true;
+    _fieldByName('CDSUCEMI').forceSelection = true;
+
+    _fieldByName('CDEDO').editable = true;
+    _fieldByName('CDEDO').forceSelection = false;
+    
+	_fieldByName('CDMUNICI').forceSelection = false;
 	_fieldByName('CDCOLONI').forceSelection = false;
 	_fieldByName('CDCOLONI').on({
 			change: function(me, val){
     				try{
 	    				if('string' == typeof val){
-	    					debug('mayus de '+val);
+//	    					debug('mayus de '+val);
 	    					me.setValue(val.toUpperCase());
 	    				}
     				}
@@ -1223,6 +1230,7 @@ function _p22_loadRecordCdperson(callbackload)
 			            	 */
 			            	var valorMun = _fieldByName('CDMUNICI').getValue();
 			                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
+			                
 							
 			                if(_esCargaClienteNvo && !Ext.isEmpty(_cargaCP)){
 								_p22_comboCodPostal().setValue(_cargaCP);
@@ -1231,6 +1239,7 @@ function _p22_loadRecordCdperson(callbackload)
 			                var valorCol = _fieldByName('CDCOLONI').getValue();
 			                
 			                heredarPanel(_p22_formDomicilio());
+			                
                     		_p22_heredarColonia(function(){
                     				_fieldByName('CDCOLONI').setValue(valorCol);
                     				
@@ -1251,7 +1260,13 @@ function _p22_loadRecordCdperson(callbackload)
 //										},500);
                     				}
                     			}
+                    			
+                    			
                     		);
+                    		_fieldByName('CDMUNICI').forceSelection = true;
+	                        _fieldByName('CDEDO').forceSelection = true;
+	                        _fieldByName('CDEDO').validate();
+	                        _fieldByName('CDMUNICI').validate();
 			                
 			                if(callbackload){
 			                	callbackload();
@@ -1707,6 +1722,12 @@ function _p22_datosAdicionalesClic()
 					_fieldByName('TELEFONO').allowBlank = _fieldByName('parametros.pv_otvalor38').allowBlank;	
 				}catch(e){
 					debug('No se encontro el elemento de telefono para fijar obligatoriedad', e);
+				}
+				
+				try{
+					_fieldByName('EMAIL').allowBlank = _fieldByName('parametros.pv_otvalor39').allowBlank;	
+				}catch(e){
+					debug('No se encontro el elemento de email para fijar obligatoriedad', e);
 				}
 				
 				
