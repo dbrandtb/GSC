@@ -18,11 +18,10 @@ var _p29_urlEmitir                         = '<s:url namespace="/"           act
 var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
+var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"          />';
 
-var urlReintentarWS ='<s:url namespace="/" action="reintentaWSautos" />';
-var _urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
-
-
+var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
+var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
 ////// urls //////
 
 ////// variables //////
@@ -33,12 +32,12 @@ var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = null;
+var _p29_ventanaDocs            = null;
 
 var _SWexiper = _p29_smap1.swexiper;
 
 var _paramsRetryWS;
 var _mensajeEmail;
-            
 ////// variables //////
 
 Ext.onReady(function()
@@ -223,6 +222,37 @@ Ext.onReady(function()
 	        })
 	    ]
 	});
+	
+	_p29_ventanaDocs=Ext.create('Ext.window.Window',
+	{
+	    title           : 'Documentaci&oacute;n'
+	    ,closable       : false
+	    ,width          : 500
+	    ,height         : 300
+	    ,autoScroll     : true
+	    ,collapsible    : true
+	    ,titleCollapse  : true
+	    ,startCollapsed : true
+	    ,resizable      : false
+	    ,loader         :
+	    {
+	        scripts   : true
+	        ,autoLoad : true
+	        ,url      : _p29_urlDocumentosPolizaClon
+	        ,params   :
+	        {
+	            'smap1.cdunieco'  : _p29_smap1.cdunieco
+	            ,'smap1.cdramo'   : _p29_smap1.cdramo
+	            ,'smap1.estado'   : _p29_smap1.estado
+	            ,'smap1.nmpoliza' : ''
+	            ,'smap1.nmsuplem' : '0'
+	            ,'smap1.nmsolici' : ''
+	            ,'smap1.ntramite' : _p29_smap1.ntramite
+	            ,'smap1.tipomov'  : '0'
+	        }
+	    }
+	}).showAt(500,0);
+	_p29_ventanaDocs.collapse();
 	////// contenido //////
 	
 	////// custom //////
@@ -944,7 +974,7 @@ function _p29_emitirFinal(me)
                 _fieldById('_p29_numerofinalpoliza').setValue(json.panel2.nmpoliex);
                 _fieldById('_p29_botonEmitirPolizaFinal').setDisabled(true);
                 _fieldById('_p29_botonDocumentosPolizaEmitida').setDisabled(false);
-                
+                _p29_ventanaDocs.destroy();
                 
                 _fieldById('botonReenvioWS').hide();
                 _mensajeEmail = json.mensajeEmail;
@@ -1082,6 +1112,7 @@ function reintentarWSAuto(loading, params){
                 	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
                 	    		_fieldById('_p29_numerofinalpoliza').setValue(json.nmpolAlt);
                 	    		_fieldById('_p29_botonDocumentosPolizaEmitida').setDisabled(false);
+                	    		_p29_ventanaDocs.destroy();
                 	    		_fieldById('botonReenvioWS').setDisabled(true);
                 	    		_fieldById('botonReenvioWS').hide();
                 	    		

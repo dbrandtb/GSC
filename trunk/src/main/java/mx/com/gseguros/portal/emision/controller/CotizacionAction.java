@@ -2245,6 +2245,40 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		//recupera tvalosit
 		
+		//recupera mpolizas
+		try
+		{
+			List<Map<String,String>>polizas=consultasManager.cargarMpolizasPorParametrosVariables(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,null
+					,null
+					,null);
+			smap1.put("FESOLICI" , polizas.get(0).get("FESOLICI"));
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al obtener datos de poliza",ex);
+			error   = ex.getMessage();
+			success = false;
+		}
+		//recupera mpolizas
+		
+		//recuperar dias validos cotizacion
+		ManagerRespuestaSmapVO dias=cotizacionManager.obtenerParametrosCotizacion(ParametroCotizacion.DIAS_VALIDOS_COTIZACION,cdramo,cdtipsit,null,null);
+		if(dias.isExito())
+		{
+			smap1.put("diasValidos" , dias.getSmap().get("P1VALOR"));
+		}
+		else
+		{
+			logger.error("error al obtener dias validos de cotizacion, se cargan 15 por defecto, no impacta el flujo: "+dias.getRespuestaOculta());
+			smap1.put("diasValidos" , "15");
+		}
+		//recuperar dias validos cotizacion
+		
 		logger.info(""
 				+ "\n###### cargarCotizacion ######"
 				+ "\n##############################"

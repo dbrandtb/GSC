@@ -84,7 +84,7 @@ var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocume
 //////////////////////////
 ////// funciones    //////
 /*//////////////////////*/
-function panDocSubido()
+function callbackDocumentoSubidoPoliza()
 {
     Ext.getCmp('panDocWinPopupAddDoc').destroy();
     panDocStoreDoc.load();
@@ -609,14 +609,15 @@ Ext.onReady(function()
                                         ,target        : 'panDocIframeUploadDoc'
                                         ,params        :
                                        	{
-                                        	'smap1.cdunieco'  : panDocInputCdunieco
-                                        	,'smap1.cdramo'   : panDocInputCdramo
-                                        	,'smap1.estado'   : panDocInputEstado
-                                        	,'smap1.nmsuplem' : panDocInputNmsuplem
-                                        	,'smap1.nmpoliza' : panDocInputNmpoliza
-                                        	,'smap1.nmsolici' : panDocInputNmsolici
-                                        	,'smap1.tipomov'  : panDocInputTipoMov
-                                        	,'smap1.cdtiptra' : panDocSmap1.cdtiptra
+                                        	'smap1.cdunieco'    : panDocInputCdunieco
+                                        	,'smap1.cdramo'     : panDocInputCdramo
+                                        	,'smap1.estado'     : panDocInputEstado
+                                        	,'smap1.nmsuplem'   : panDocInputNmsuplem
+                                        	,'smap1.nmpoliza'   : panDocInputNmpoliza
+                                        	,'smap1.nmsolici'   : panDocInputNmsolici
+                                        	,'smap1.tipomov'    : panDocInputTipoMov
+                                        	,'smap1.cdtiptra'   : panDocSmap1.cdtiptra
+                                        	,'smap1.callbackFn' : 'callbackDocumentoSubidoPoliza'
                                        	}
                                     });
                                 }

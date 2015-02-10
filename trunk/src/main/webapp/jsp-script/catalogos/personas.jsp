@@ -2212,8 +2212,9 @@ function _p22_subirArchivo(cdperson,codidocu,descrip)
                                         ,target        : '_p22_IframeUploadDoc'
                                         ,params        :
                                         {
-                                            'smap1.cdperson'  : cdperson
-                                            ,'smap1.codidocu' : codidocu
+                                            'smap1.cdperson'    : cdperson
+                                            ,'smap1.codidocu'   : codidocu
+                                            ,'smap1.callbackFn' : 'callbackDocumentoSubidoPersona'
                                         }
                                     });
                                 }
@@ -2291,7 +2292,7 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
     debug('<_p22_cargarArchivo');
 }
 
-function panDocSubido()
+function callbackDocumentoSubidoPersona()
 {
     _p22_windowAgregarDocu.destroy();
     

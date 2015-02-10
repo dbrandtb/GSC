@@ -15,6 +15,7 @@ var _p31_urlGuardar                        = '<s:url namespace="/emision"    act
 var _p31_urlRecotizar                      = '<s:url namespace="/emision"    action="recotizarAutoFlotilla"              />';
 var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                             />';
 var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"            />';
+var _p31_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"        />';
 var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                 />';
 var _p31_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"    action="recuperacionSimpleLista"            />';
 var urlReintentarWS                        = '<s:url namespace="/"           action="reintentaWSautos"                   />';
@@ -26,12 +27,14 @@ var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  act
 var _p31_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p31_smap1:',_p31_smap1);
 
-var _p31_polizaAdicionalesItems = null;
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = false;
+
+var _p31_polizaAdicionalesItems = null;
 var _p31_incisoColumns          = null;
 var _p31_storeIncisos           = null;
 var _p31_selectedRecord         = null;
+var _p31_ventanaDocs            = null;
 
 var _SWexiper = _p31_smap1.swexiper;
 var _paramsRetryWS;
@@ -397,6 +400,37 @@ Ext.onReady(function()
         ,defaults : { style : 'margin:5px;' }
         ,items    : panelesPrincipales
     });
+    
+    _p31_ventanaDocs=Ext.create('Ext.window.Window',
+    {
+        title           : 'Documentaci&oacute;n'
+        ,closable       : false
+        ,width          : 500
+        ,height         : 300
+        ,autoScroll     : true
+        ,collapsible    : true
+        ,titleCollapse  : true
+        ,startCollapsed : true
+        ,resizable      : false
+        ,loader         :
+        {
+            scripts   : true
+            ,autoLoad : true
+            ,url      : _p31_urlDocumentosPolizaClon
+            ,params   :
+            {
+                'smap1.cdunieco'  : _p31_smap1.cdunieco
+                ,'smap1.cdramo'   : _p31_smap1.cdramo
+                ,'smap1.estado'   : _p31_smap1.estado
+                ,'smap1.nmpoliza' : ''
+                ,'smap1.nmsuplem' : '0'
+                ,'smap1.nmsolici' : ''
+                ,'smap1.ntramite' : _p31_smap1.ntramite
+                ,'smap1.tipomov'  : '0'
+            }
+        }
+    }).showAt(500,0);
+    _p31_ventanaDocs.collapse();
     ////// contenido //////
     
     ////// custom //////
@@ -1097,7 +1131,7 @@ function _p31_emitirFinal(me)
                 _fieldById('_p31_numerofinalpoliza').setValue(json.panel2.nmpoliex);
                 _fieldById('_p31_botonEmitirPolizaFinal').setDisabled(true);
                 _fieldById('_p31_botonDocumentosPolizaEmitida').setDisabled(false);
-                
+                _p31_ventanaDocs.destroy();
                 
                 _fieldById('botonReenvioWS').hide();
                 _mensajeEmail = json.mensajeEmail;
@@ -1237,6 +1271,7 @@ function reintentarWSAuto(loading, params){
                                 mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
                                 _fieldById('_p31_numerofinalpoliza').setValue(json.nmpolAlt);
                                 _fieldById('_p31_botonDocumentosPolizaEmitida').setDisabled(false);
+                                _p31_ventanaDocs.destroy();
                                 _fieldById('botonReenvioWS').setDisabled(true);
                                 _fieldById('botonReenvioWS').hide();
                                 
