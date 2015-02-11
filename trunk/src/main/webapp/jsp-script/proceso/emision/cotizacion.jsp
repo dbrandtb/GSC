@@ -1545,7 +1545,7 @@ function agregaValidacionCPvsEstado() {
 Ext.onReady(function()
 {
     
-    Ext.Ajax.timeout = 60000;
+    Ext.Ajax.timeout = 5*60*1000;
     
     /////////////////////
     ////// modelos //////
