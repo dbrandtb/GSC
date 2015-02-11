@@ -1712,12 +1712,22 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : true
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'
                                                         ,disabled   : _p25_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
-                                                            change : function(checkbox,value)
+                                                            boxready : function(checkbox)
+                                                            {
+                                                                var value=checkbox.getValue();
+                                                                debug('checkbox boxready:',value);
+                                                                var form = checkbox.up().up();
+                                                                for(var l=0;l<form.items.items.length;l++)
+                                                                {
+                                                                    form.items.items[l].setDisabled(!value);
+                                                                }
+                                                            }
+                                                            ,change : function(checkbox,value)
                                                             {
                                                                 debug('checkbox change:',value);
                                                                 var form = checkbox.up().up();
