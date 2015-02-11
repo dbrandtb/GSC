@@ -368,6 +368,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"cdagente"
 			,"clasif"
 			,"pcpgocte"
+			,"tipoDerPol"
+			,"montoDerPol"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
