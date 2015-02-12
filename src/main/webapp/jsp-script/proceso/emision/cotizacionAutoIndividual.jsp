@@ -89,6 +89,7 @@ var _p28_urlValidarTractocamionRamo5          = '<s:url namespace="/emision"    
 var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"             />';
 var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                      />';
 var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturasRol" />';
+var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                             />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -114,6 +115,7 @@ var _p28_selectedCdplan          = null;
 var _p28_selectedDsplan          = null;
 var _p28_selectedNmsituac        = null;
 var _p28_ramo5_CR_tracto_timeout = null;
+var _p28_precioDolarDia          = null;
 ////// variables //////
 
 Ext.onReady(function()
@@ -315,6 +317,14 @@ Ext.onReady(function()
             _p28_panel1Items.push(aux[i]);
         }
     </s:if>
+    
+    var tatripolItems=
+    [
+        <s:if test='%{!"0".equals(getSmap1().get("tatripolItemsLength"))}' >
+            <s:property value="imap.tatripolItems" />
+        </s:if>
+    ];
+    
     _p28_panel1Items.push(
     {
         xtype  : 'fieldset'
@@ -327,6 +337,18 @@ Ext.onReady(function()
         ,width : 435
         ,title : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
         ,items : _p28_panel3Items
+    }
+    ,{
+        xtype   : 'fieldset'
+        ,itemId : '_p28_fieldsetTatripol'
+        ,width  : 435
+        ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
+        ,hidden : _p28_smap1.cdramo+'x'=='5x'
+                  ?(
+                      _p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
+                  )
+                  :false
+        ,items  : tatripolItems
     }
     ,{
         xtype       : 'datefield'
@@ -1870,6 +1892,15 @@ function _p28_cargar(boton)
                         else
                         {
                             panelpri.setLoading(false);
+                            
+                            var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p28_fieldsetTatripol'));
+                            debug('itemsTatripol:',itemsTatripol);
+                            for(var j in itemsTatripol)
+                            {
+                                var tatri=itemsTatripol[j];
+                                tatri.setValue(json.smap1[tatri.name]);
+                            }
+                            
                             if(_p28_smap1.cdramo=='5')
                             {
                                 var clave    = _fieldByName('parametros.pv_otvalor06');
@@ -2861,6 +2892,7 @@ function _p28_cargarConfig()
                         });
                     }
                 }
+                _p28_inicializarTatripol();
                 _p28_cargarParamerizacionCoberturasRol();
             }
             else
@@ -3001,6 +3033,56 @@ function _p28_cargarParamerizacionCoberturasRol()
             errorComunicacion();
         }
     });
+}
+
+function _p28_inicializarTatripol(itemsTatripol)
+{
+
+    if(Ext.isEmpty(itemsTatripol))
+    {
+        itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p28_fieldsetTatripol'));
+        debug('itemsTatripol:',itemsTatripol);
+    }
+
+    for(var i in itemsTatripol)
+    {
+        var tatriItem = itemsTatripol[i];
+        
+        if(_p28_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='TIPO CAMBIO')
+        {
+            if(Ext.isEmpty(_p28_precioDolarDia))
+            {
+                tatriItem.setLoading(true);
+                Ext.Ajax.request(
+                {
+                    url      : _p28_urlCargarTipoCambioWS
+                    ,success : function(response)
+                    {
+                        var me=_fieldByLabel('TIPO CAMBIO',_fieldById('_p28_fieldsetTatripol'));
+                        me.setLoading(false);
+                        var json=Ext.decode(response.responseText);
+                        debug('### dolar:',json);
+                        _p28_precioDolarDia=json.smap1.dolar;
+                        me.setValue(_p28_precioDolarDia);
+                    }
+                    ,failure : function()
+                    {
+                        _fieldByLabel('TIPO CAMBIO',_fieldById('_p28_fieldsetTatripol')).setLoading(false);
+                        errorComunicacion();
+                    }
+                });
+            }
+            else
+            {
+                tatriItem.setValue(_p28_precioDolarDia);
+            }
+            tatriItem.hide();
+        }
+        else if(_p28_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='MONEDA')
+        {
+            tatriItem.select('1');
+        }
+    }
 }
 ////// funciones //////
 </script>

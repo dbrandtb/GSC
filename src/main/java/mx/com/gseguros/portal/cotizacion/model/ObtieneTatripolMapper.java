@@ -95,6 +95,13 @@ public class ObtieneTatripolMapper implements RowMapper
         	swpresemiflot="N";
         }
         result.setSwpresemiflot(swpresemiflot);
+        
+        String swpresen = rs.getString("SWPRESEN");
+        if(StringUtils.isBlank(swpresen))
+        {
+        	swpresen="N";
+        }
+        result.setSwpresen(swpresen);
 		
 		return result;
 	}

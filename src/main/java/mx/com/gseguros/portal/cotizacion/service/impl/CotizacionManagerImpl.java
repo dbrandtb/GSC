@@ -1769,7 +1769,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gcGral.setCdramo(cdramo);
 				
-				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
+				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit,"C");
 				if(tatripol!=null&&tatripol.size()>0)
 				{
 					gcGral.generaComponentes(tatripol,true,false,true,false,false,false);
@@ -5023,6 +5023,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean conIncisos
 			,List<Map<String,String>>incisos
 			,boolean flagMovil
+			,Map<String,String>tvalopol
 			)
     {
     	logger.info(Utilerias.join(
@@ -5042,6 +5043,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ conIncisos="  , conIncisos
     			,"\n@@@@@@ incisos="     , incisos
     			,"\n@@@@@@ flagMovil="   , flagMovil
+    			,"\n@@@@@@ tvalopol="    , tvalopol
     			));
     	
     	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
@@ -5125,6 +5127,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 						);
 	            ////// mpolizas //////
 	            //////////////////////
+				
+				cotizacionDAO.movimientoTvalopol(
+						cdunieco
+						,cdramo
+						,"W"      //estado
+						,nmpoliza
+						,"0"      //nmsuplem
+						,"V"      //status
+						,tvalopol
+						);
 				
 	            String llaveRol       = "";
 	            String llaveSexo      = "";
@@ -5701,6 +5713,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
     	return cotizacionDAO.validarCuadroComisionNatural(cdunieco,cdramo,estado,nmpoliza);
+	}
+    
+    @Override
+    @Deprecated
+	public Map<String,String>cargarTvalopol(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	return cotizacionDAO.cargarTvalopol(cdunieco,cdramo,estado,nmpoliza);
 	}
     
 	///////////////////////////////

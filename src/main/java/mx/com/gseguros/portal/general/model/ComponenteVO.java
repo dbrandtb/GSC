@@ -434,7 +434,9 @@ public class ComponenteVO
 	{
 		return Utilerias.join("NAME/CDATRIBU=",this.nameCdatribu
 				,",LABEL=",this.label
-				,",CATALOGO=",this.catalogo);
+				,",CATALOGO=",this.catalogo
+				,",SWPRESEN=",this.swpresen
+				);
 	}
 
 	public boolean isComboVacio() {

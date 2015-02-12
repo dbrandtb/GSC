@@ -341,6 +341,24 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.generaComponentes(tatrisit, true, true, false, false, false, false);
 			resp.getImap().put("formFields" , gc.getFields());
 			
+			setCheckpoint("Recuperando atributos de poliza");
+			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo, null, null);
+			List<ComponenteVO>tatripolAux = new ArrayList<ComponenteVO>();
+			for(ComponenteVO tatri:tatripol)
+			{
+				if("S".equals(tatri.getSwpresen()))
+				{
+					tatripolAux.add(tatri);
+				}
+			}
+			tatripol=tatripolAux;
+			resp.getSmap().put("tatripolItemsLength",String.valueOf(tatripol.size()));
+			GeneradorCampos gcTatripol = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gcTatripol.setAuxiliar(true);
+			gcTatripol.setCdramo(cdramo);
+			gcTatripol.generaComponentes(tatripol, true, false, true, false, false, false);
+			resp.getImap().put("tatripolItems" , gcTatripol.getItems());
+			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -505,16 +523,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
 			
 			setCheckpoint("Recuperando atributos variables de poliza");
-			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
-			List<ComponenteVO>auxpol   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,null,null);
 			for(ComponenteVO tatri:tatripol)
 			{
-				if(tatri.getSwpresemi().equals("S"))
+				if(!"S".equals(tatri.getSwpresemi()))
 				{
-					auxpol.add(tatri);
+					tatri.setOculto(true);
 				}
 			}
-			tatripol=auxpol;
 			
 			setCheckpoint("Recuperando atributos variables de situacion");
 			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
@@ -1674,6 +1690,33 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("mapeo" , "DIRECTO");
 			}
 			
+			setCheckpoint("Recuperando atributos de poliza");
+			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo,null,null);
+			List<ComponenteVO>tatripolAux = new ArrayList<ComponenteVO>();
+			for(ComponenteVO tatri:tatripol)
+			{
+				if("S".equals(tatri.getSwpresen()))
+				{
+					tatripolAux.add(tatri);
+				}
+			}
+			tatripol=tatripolAux;
+			resp.getSmap().put("tatripolItemsLength" , String.valueOf(tatripol.size()));
+			logger.debug(Utilerias.join("tatripolItems=",tatripol));
+			
+			if(tatripol.size()>0)
+			{
+				GeneradorCampos gcTatripol = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gcTatripol.setCdramo(cdramo);
+				gcTatripol.setAuxiliar(true);
+				gcTatripol.generaComponentes(tatripol, true, false, true, false, false, false);
+				resp.getImap().put("tatripolItems" , gcTatripol.getItems());
+			}
+			else
+			{
+				resp.getImap().put("tatripolItems" , null);
+			}
+			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -1711,6 +1754,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,List<Map<String,String>> confTvalosit
 			,boolean noTarificar
 			,String tipoflot
+			,Map<String,String>tvalopol
 			)
 	{
 		logger.info(
@@ -1734,6 +1778,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ confTvalosit=").append(confTvalosit)
 				.append("\n@@@@@@ noTarificar=") .append(noTarificar)
 				.append("\n@@@@@@ tipoflot=")    .append(tipoflot)
+				.append("\n@@@@@@ tvalopol=")    .append(tvalopol)
 				.toString()
 				);
 		
@@ -1805,6 +1850,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,tipoflot
 			            ,"U"      //accion
 						);
+				
+				setCheckpoint("Insertando atributos adicionales de poliza");
+				cotizacionDAO.movimientoTvalopol(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsuplem
+						,"V" //status
+						,tvalopol);
 				
 				setCheckpoint("Insertando situaciones y maestro de situaciones");
 				for(Map<String,String>tvalositIte:tvalosit)
@@ -2504,6 +2559,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("diasValidos" , "15");
 			}
 			
+			setCheckpoint("Recuperando atributos adicionales de poliza");
+			Map<String,String>tvalopol=cotizacionDAO.cargarTvalopol(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					);
+			for(Entry<String,String>en:tvalopol.entrySet())
+			{
+				resp.getSmap().put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+			}
+			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -2639,16 +2706,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
 			
 			setCheckpoint("Recuperando atributos variables de poliza");
-			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,cdtipsit);
-			List<ComponenteVO>auxpol   = new ArrayList<ComponenteVO>();
+			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,null,null);
 			for(ComponenteVO tatri:tatripol)
 			{
-				if(tatri.getSwpresemiflot().equals("S"))
+				if(!tatri.getSwpresemiflot().equals("S"))
 				{
-					auxpol.add(tatri);
+					tatri.setOculto(true);
 				}
 			}
-			tatripol=auxpol;
 			
 			setCheckpoint("Recuperando situaciones");
 			List<Map<String,String>>situaciones=consultasDAO.cargarTiposSituacionPorRamo(cdramo);

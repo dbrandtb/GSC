@@ -2087,10 +2087,10 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                             var form = formsValidos[k];
                                             debug('intento cargar:',form,'con:',form.datosAnteriores);
                                             form.loadRecord(form.datosAnteriores);
-                                            if(form.datosAnteriores.raw.amparada=='N')
+                                            if(form.datosAnteriores.raw.amparada=='S')
                                             {
-                                                form.down('[name=amparada]').setValue(false);
-                                                debug('se "descheckeo" el box');
+                                                form.down('[name=amparada]').setValue(true);
+                                                debug('se "checkeo" el box');
                                             }
                                             debug('cargado:',form);
                                         }

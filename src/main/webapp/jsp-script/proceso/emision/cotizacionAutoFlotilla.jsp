@@ -655,7 +655,7 @@ Ext.onReady(function()
                             xtype        : 'numberfield'
                             ,fieldLabel  : 'FOLIO'
                             ,name        : 'nmpoliza'
-                            ,style       : 'margin:5px;'
+                            ,style       : 'margin:5px;margin-left:15px;'
                             ,listeners   :
                             {
                                 change : _p30_nmpolizaChange
@@ -681,6 +681,7 @@ Ext.onReady(function()
     ];
     for(var i=0;i<_p30_panel1ItemsConf.length;i++)
     {
+        _p30_panel1ItemsConf[i].style='margin:5px;margin-left:15px;';
         _p30_panel1Items[0].items.push(_p30_panel1ItemsConf[i]);
     }
     _p30_panel1Items[0].items.push(
@@ -689,7 +690,7 @@ Ext.onReady(function()
         ,name       : 'feini'
         ,fieldLabel : 'INICIO DE VIGENCIA'
         ,value      : new Date()
-        ,style      : 'margin:5px;'
+        ,style      : 'margin:5px;margin-left:15px;'
         ,readOnly   : _p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol!='SUSCRIAUTO'
     }
     ,{
@@ -698,8 +699,30 @@ Ext.onReady(function()
         ,fieldLabel : 'FIN DE VIGENCIA'
         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
         ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
-        ,style      : 'margin:5px;'
+        ,style      : 'margin:5px;margin-left:15px;'
     });
+    
+    var itemsTatripol=
+    [
+        <s:if test='%{!"0".equals(getSmap1().get("tatripolItemsLength"))}' >
+            <s:property value="imap.tatripolItems" />
+        </s:if>
+    ];
+    
+    _p30_inicializarTatripol(itemsTatripol);
+    
+    if(_p30_smap1.tatripolItemsLength-0>0)
+    {
+        _p30_panel1Items[0].items.push(
+        {
+            xtype   : 'fieldset'
+            ,itemId : '_p30_fieldsetTatripol'
+            ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
+            ,width  : 290
+            ,hidden : _p30_smap1.cdsisrol!='SUSCRIAUTO'
+            ,items  : itemsTatripol
+        });
+    }
     
     var _p30_formOcultoItems = [];
     <s:if test='%{getImap().get("panel5Items")!=null}'>
@@ -3011,6 +3034,14 @@ function _p30_cotizar(sinTarificar)
             json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
         }
         
+        var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+        debug('itemsTatripol:',itemsTatripol);
+        for(var i in itemsTatripol)
+        {
+            var tatri=itemsTatripol[i];
+            json.smap1['tvalopol_'+tatri.cdatribu]=tatri.getValue();
+        }
+        
         _p30_store.each(function(record)
         {
             json.slist2.push(record.data);
@@ -3425,6 +3456,8 @@ function _p30_limpiar()
         }
     }
     
+    _p30_inicializarTatripol();
+    
     debug('<_p30_limpiar');
 }
 
@@ -3505,9 +3538,17 @@ function _p30_cargarClic()
                     {
                         _fieldById('_p30_form').loadRecord(datosGenerales);
                         _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                        
+                        var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+                        debug('itemsTatripol:',itemsTatripol);
+                        for(var i in itemsTatripol)
+                        {
+                            var tatri=itemsTatripol[i];
+                            tatri.setValue(json.smap1[tatri.name]);
+                        }
                     }
                     else
-                    {                            
+                    {
                         var mapeos = _p30_smap1.mapeo.split('#');
                         debug('mapeos:',mapeos);
                         for(var i in mapeos)
@@ -3536,6 +3577,15 @@ function _p30_cargarClic()
                                     }
                                     _fieldById('_p30_form').loadRecord(datosGenerales);
                                     _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
+                                    
+                                    var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+                                    debug('itemsTatripol:',itemsTatripol);
+                                    for(var i in itemsTatripol)
+                                    {
+                                        var tatri=itemsTatripol[i];
+                                        tatri.setValue(json.smap1[tatri.name]);
+                                    }
+                                    
                                     if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
                                     {
                                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
@@ -3612,6 +3662,15 @@ function _p30_cargarClic()
                                     }
                                     _fieldById('_p30_form').loadRecord(recordMapeado);
                                     _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
+                                    
+                                    var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+                                    debug('itemsTatripol:',itemsTatripol);
+                                    for(var i in itemsTatripol)
+                                    {
+                                        var tatri=itemsTatripol[i];
+                                        tatri.setValue(json.smap1[tatri.name]);
+                                    }
+                                    
                                     if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
                                     {
                                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
@@ -4445,6 +4504,56 @@ function _p30_tatrisitWindowAutoAceptarClic(bot)
     catch(e)
     {
         manejaException(e,ck);
+    }
+}
+
+function _p30_inicializarTatripol(itemsTatripol)
+{
+
+    if(Ext.isEmpty(itemsTatripol))
+    {
+        itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+        debug('itemsTatripol:',itemsTatripol);
+    }
+
+    for(var i in itemsTatripol)
+    {
+        var tatriItem = itemsTatripol[i];
+        
+        if(_p30_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='TIPO CAMBIO')
+        {
+            if(Ext.isEmpty(_p30_precioDolarDia))
+            {
+                tatriItem.setLoading(true);
+                Ext.Ajax.request(
+                {
+                    url      : _p30_urlCargarTipoCambioWS
+                    ,success : function(response)
+                    {
+                        var me=_fieldByLabel('TIPO CAMBIO',_fieldById('_p30_fieldsetTatripol'));
+                        me.setLoading(false);
+                        var json=Ext.decode(response.responseText);
+                        debug('### dolar:',json);
+                        _p30_precioDolarDia=json.smap1.dolar;
+                        me.setValue(_p30_precioDolarDia);
+                    }
+                    ,failure : function()
+                    {
+                        _fieldByLabel('TIPO CAMBIO',_fieldById('_p30_fieldsetTatripol')).setLoading(false);
+                        errorComunicacion();
+                    }
+                });
+            }
+            else
+            {
+                tatriItem.setValue(_p30_precioDolarDia);
+            }
+            tatriItem.hide();
+        }
+        else if(_p30_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='MONEDA')
+        {
+            tatriItem.select('1');
+        }
     }
 }
 ////// funciones //////
