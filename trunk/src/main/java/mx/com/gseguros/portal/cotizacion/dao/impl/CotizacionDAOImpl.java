@@ -1450,11 +1450,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
 	
 	@Override
-	public List<ComponenteVO>cargarTatripol(String cdramo,String cdtipsit)throws Exception
+	public List<ComponenteVO>cargarTatripol(String cdramo,String cdtipsit,String cdtippol)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
+		params.put("cdtippol" , cdtippol);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
@@ -1484,6 +1485,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             super(dataSource,"PKG_LISTAS.P_GET_ATRI_POLIZA");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtippol" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatripolMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4216,6 +4218,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     			.toString()
     			);
     	Map<String,Object>procResult  = ejecutaSP(new CargarResultadosCotizacion(getDataSource()),params);
+    	logger.debug(procResult);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_record_o");
     	if(lista==null||lista.size()==0)
     	{

@@ -428,10 +428,19 @@ public interface CotizacionManager
 			,boolean conIncisos
 			,List<Map<String,String>>incisos
 			,boolean flagMovil
+			,Map<String,String>tvalopol
 			);
 	
 	@Deprecated
 	public boolean validarCuadroComisionNatural(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	@Deprecated
+	public Map<String,String>cargarTvalopol(
 			String cdunieco
 			,String cdramo
 			,String estado

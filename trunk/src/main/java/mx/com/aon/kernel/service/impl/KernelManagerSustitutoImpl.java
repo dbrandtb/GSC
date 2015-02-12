@@ -324,6 +324,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         Map<String,Object> parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdramo"   , args[0]);
         parameters.put("pv_cdtipsit" , args[1]);
+        parameters.put("pv_cdtippol" , args[2]);
         log.debug("### kernel sustituto obtenerTatripol map: "+parameters);
 		log.debug(
 				new StringBuilder()

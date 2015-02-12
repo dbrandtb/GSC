@@ -1386,6 +1386,18 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			
+			Map<String,String>tvalopol=new HashMap<String,String>();
+			for(Entry<String,String>en:slist1.get(0).entrySet())
+			{
+				String key=en.getKey();
+				if(key.length()>"aux.".length()
+						&&key.substring(0,"aux.".length()).equals("aux.")
+						)
+				{
+					tvalopol.put(key.substring("aux.".length()),en.getValue());
+				}
+			}
+			
 			ManagerRespuestaSlistSmapVO resp=cotizacionManager.cotizar(
 					cdunieco
 					,cdramo
@@ -1401,6 +1413,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,conIncisos
 					,slist1
 					,smap1.containsKey("movil")
+					,tvalopol
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -2278,6 +2291,28 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("diasValidos" , "15");
 		}
 		//recuperar dias validos cotizacion
+		
+		//recuperar tvalopol
+		try
+		{
+			Map<String,String>tvalopol=cotizacionManager.cargarTvalopol(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					);
+			for(Entry<String,String>en:tvalopol.entrySet())
+			{
+				smap1.put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al recuperar tvlopol",ex);
+			error   = ex.getMessage();
+			success = false;
+		}
+		//recuperar tvalopol
 		
 		logger.info(""
 				+ "\n###### cargarCotizacion ######"

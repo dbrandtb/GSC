@@ -1,8 +1,10 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -918,6 +920,18 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			
+			Map<String,String>tvalopol=new HashMap<String,String>();
+			for(Entry<String,String>en:smap1.entrySet())
+			{
+				String key=en.getKey();
+				if(key.length()>"tvalopol_".length()
+						&&key.substring(0,"tvalopol_".length()).equals("tvalopol_")
+						)
+				{
+					tvalopol.put(Utilerias.join("otvalor",StringUtils.leftPad(key.substring("tvalopol_".length()),2,"0")),en.getValue());
+				}
+			}
+			
 			ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
 					cdusuari
 					,cdsisrol
@@ -937,6 +951,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,slist3
 					,noTarificar
 					,tipoflot
+					,tvalopol
 					);
 			
 			exito           = resp.isExito();
