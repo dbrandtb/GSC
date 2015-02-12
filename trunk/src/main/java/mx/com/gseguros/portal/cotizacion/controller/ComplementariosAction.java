@@ -1210,144 +1210,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				{
 					kernelManager.borraMpoliper(parametros);
 					
-//					/**
-//					 * En caso  de que si tenga un cdIdeper y el domicilio aun no este guardado en BD, se buscan los datos en el WS y se insertan en BD
-//					 */
-//					if(StringUtils.isNotBlank(cdIdeperAseg) && !"0".equalsIgnoreCase(cdIdeperAseg) && !"0L".equalsIgnoreCase(cdIdeperAseg)){
-//						try{
-//							WrapperResultados result = kernelManager.existeDomicilioContratante(cdIdeperAseg);
-//							
-//							if(result != null && result.getItemMap() != null && result.getItemMap().containsKey("EXISTE_DOMICILIO")){
-//								if(StringUtils.isBlank((String)result.getItemMap().get("EXISTE_DOMICILIO")) || !Constantes.SI.equalsIgnoreCase((String)result.getItemMap().get("EXISTE_DOMICILIO"))){
-//									/**
-//									 *  Si no existe Domicilio, Se va al WS por la informacion del mismo
-//									 */
-//							    	String cdtipsitGS = kernelManager.obtenCdtipsitGS(parametros);
-//							    	
-//							    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-//							    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-//							    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-//							    	clienteGeneral.setNumeroExterno(cdIdeperAseg);
-//							    	
-//							    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
-//							    	
-//							    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-//							    		ClienteGeneral cliDom = null;
-//							    		
-//							    		if(clientesRes.getClientesGeneral().length == 1){
-//							    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-//							    			cliDom = clientesRes.getClientesGeneral()[0];
-//							    		}else {
-//							    			logger.error("Error, No se pudo obtener el domicilio del WS. Se ha encontrado mas de Un Domicilio!");
-//							    		}
-//							    		
-//							    		/*Cuando se encontraba el cliente de una lista
-//							    		 * for(ClienteGeneral cliIter : clientesRes.getClientesGeneral()){
-//							    			if(cdIdeperAseg.equalsIgnoreCase(cliIter.getNumeroExterno())){
-//							    				cliDom = cliIter;
-//							    			}
-//							    		}*/
-//							    		
-//							    		if(cliDom != null){
-//							    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
-//							    			paramDomicil.put("pv_cdperson_i", (String)aseg.get("cdperson"));
-//							    			paramDomicil.put("pv_nmorddom_i", "1");
-//							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() +" "+ cliDom.getNumeroCli());
-//							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
-//							    			paramDomicil.put("pv_cdpostal_i", Integer.toString(cliDom.getCodposCli()));
-//							    			paramDomicil.put("pv_cdedo_i",    null/*cliDom.getPoblacionCli()*/);
-//							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
-//							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
-//							    			paramDomicil.put("pv_nmnumero_i", null);
-//							    			paramDomicil.put("pv_nmnumint_i", null);
-//							    			paramDomicil.put("pv_accion_i", "I");
-//
-//							    			kernelManager.pMovMdomicil(paramDomicil);
-//							    			
-//							    			HashMap<String,String> paramValoper = new HashMap<String, String>();
-//							    			paramValoper.put("pv_cdunieco", "0");
-//							    			paramValoper.put("pv_cdramo",   "0");
-//							    			paramValoper.put("pv_estado",   null);
-//							    			paramValoper.put("pv_nmpoliza", "0");
-//							    			paramValoper.put("pv_nmsituac", null);
-//							    			paramValoper.put("pv_nmsuplem", null);
-//							    			paramValoper.put("pv_status",   null);
-//							    			paramValoper.put("pv_cdrol",    "1");
-//							    			paramValoper.put("pv_cdperson", (String)aseg.get("cdperson"));
-//							    			paramValoper.put("pv_cdatribu", null);
-//							    			paramValoper.put("pv_cdtipsit", null);
-//							    			
-//							    			paramValoper.put("pv_otvalor01", cliDom.getCveEle());
-//							    			paramValoper.put("pv_otvalor02", cliDom.getPasaporteCli());
-//							    			paramValoper.put("pv_otvalor03", null);
-//							    			paramValoper.put("pv_otvalor04", null);
-//							    			paramValoper.put("pv_otvalor05", null);
-//							    			paramValoper.put("pv_otvalor06", null);
-//							    			paramValoper.put("pv_otvalor07", null);
-//							    			paramValoper.put("pv_otvalor08", cliDom.getOrirecCli());
-//							    			paramValoper.put("pv_otvalor09", null);
-//							    			paramValoper.put("pv_otvalor10", null);
-//							    			paramValoper.put("pv_otvalor11", cliDom.getNacCli());
-//							    			paramValoper.put("pv_otvalor12", null);
-//							    			paramValoper.put("pv_otvalor13", null);
-//							    			paramValoper.put("pv_otvalor14", null);
-//							    			paramValoper.put("pv_otvalor15", null);
-//							    			paramValoper.put("pv_otvalor16", null);
-//							    			paramValoper.put("pv_otvalor17", null);
-//							    			paramValoper.put("pv_otvalor18", null);
-//							    			paramValoper.put("pv_otvalor19", null);
-//							    			paramValoper.put("pv_otvalor20", Integer.toString(cliDom.getOcuPro()));
-//							    			paramValoper.put("pv_otvalor21", null);
-//							    			paramValoper.put("pv_otvalor22", null);
-//							    			paramValoper.put("pv_otvalor23", null);
-//							    			paramValoper.put("pv_otvalor24", null);
-//							    			paramValoper.put("pv_otvalor25", cliDom.getCurpCli());
-//							    			paramValoper.put("pv_otvalor26", null);
-//							    			paramValoper.put("pv_otvalor27", null);
-//							    			paramValoper.put("pv_otvalor28", null);
-//							    			paramValoper.put("pv_otvalor29", null);
-//							    			paramValoper.put("pv_otvalor30", null);
-//							    			paramValoper.put("pv_otvalor31", null);
-//							    			paramValoper.put("pv_otvalor32", null);
-//							    			paramValoper.put("pv_otvalor33", null);
-//							    			paramValoper.put("pv_otvalor34", null);
-//							    			paramValoper.put("pv_otvalor35", null);
-//							    			paramValoper.put("pv_otvalor36", null);
-//							    			paramValoper.put("pv_otvalor37", null);
-//							    			paramValoper.put("pv_otvalor38", null);
-//							    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
-//							    			paramValoper.put("pv_otvalor40", null);
-//							    			paramValoper.put("pv_otvalor41", null);
-//							    			paramValoper.put("pv_otvalor42", null);
-//							    			paramValoper.put("pv_otvalor43", null);
-//							    			paramValoper.put("pv_otvalor44", null);
-//							    			paramValoper.put("pv_otvalor45", null);
-//							    			paramValoper.put("pv_otvalor46", null);
-//							    			paramValoper.put("pv_otvalor47", null);
-//							    			paramValoper.put("pv_otvalor48", null);
-//							    			paramValoper.put("pv_otvalor49", null);
-//							    			paramValoper.put("pv_otvalor50", null);
-//							    			
-//							    			kernelManager.pMovTvaloper(paramValoper);
-//							    			
-//							    		}else{
-//							    			logger.error("Error. Cliente no encontrado en WS !");
-//							    		}
-//							    	}else{
-//							    		logger.error("Error, No se pudo obtener el domicilio del WS.");
-//							    	}
-//							    	
-//								}else{
-//									logger.debug("Ya Existe el domicilio del cdiper.");
-//								}
-//							}else{
-//								logger.error("Error al verificar si hay datos en mdomicil!!");
-//							}
-//						}catch(Exception eWS){
-//							logger.error("Error en obtencion de Domicilio para contratante.",eWS);
-//						}
-//					}
-					
 				}
 				
 				kernelManager.movMpoliper(parametros);
@@ -2095,24 +1957,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					//ws cliente
 					
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
-							)
-					{
-						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null, Ice2sigsService.Operacion.INSERTA, null, us, true);
-					}
-					else if(
+					if(
 							cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							/*||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())*/
 							)
 					{
 						if(StringUtils.isBlank(cdIdeperRes)){
@@ -2345,9 +2198,16 @@ public class ComplementariosAction extends PrincipalCoreAction
 						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
+					if("C".equalsIgnoreCase(tipoGrupoInciso)){
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+					}
+					
 					String urlRecibo = this.getText("recibo.impresion.autos.url");
 					String urlCaic = this.getText("caic.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
 					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
@@ -2412,6 +2272,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsR.put("pv_dsdocume_i", "CAIC");
 					
 					kernelManager.guardarArchivo(paramsR);
+					
+					if("C".equalsIgnoreCase(tipoGrupoInciso)){
+						/**
+						 * Para Incisos Flotillas
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
+						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
+						
+						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para Tarjeta Identificacion
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
+						
+						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+					}
 					
 					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 										 "General de Seguros<br/>"+
@@ -2604,117 +2491,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					{
 						sucursal = "1000";
 					}
-					logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
-					logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
-					logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
-					logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
-					logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
-					logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
-					logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
-					logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
-					logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
 					
-					//ws cliente
-					
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
-							)
-					{
-						ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null,Ice2sigsService.Operacion.INSERTA, null, us, true);
-					}
-					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
-						)
-					{
-						if(StringUtils.isBlank(cdIdeperRes)){
-							
-							ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null,Ice2sigsService.Operacion.INSERTA, null, us, false);
-							if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
-								cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
-								if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
-								
-									HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
-									paramsIdeper.put("pv_cdunieco_i", _cdunieco);
-									paramsIdeper.put("pv_cdramo_i",   _cdramo);
-									paramsIdeper.put("pv_estado_i",   edoPoliza);
-									paramsIdeper.put("pv_nmpoliza_i", _nmpoliza);
-									paramsIdeper.put("pv_nmsuplem_i", _nmsuplem);
-									paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
-									
-									kernelManager.actualizaCdIdeper(paramsIdeper);
-									
-									this.cdIdeper = cdIdeperRes;
-											
-								}else {
-									success = false;
-									retryWS = true;
-									mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente";
-									logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
-								} 
-							}else{
-								success = false;
-								retryWS = true;
-								mensajeRespuesta = "Error al crear Cliente en WS.";
-								logger.error("Error al Crear el cliente en WS!, Datos Nulos");
-							}
-						}
-					}
-						
-					////// ws de cotizacion y emision para autos
-					if(success &&
-							(
-								cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
-							)
-						)
-					{
-						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-									edoPoliza, nmpolizaEmitida, "I", nmsuplemEmitida, ntramite,cdtipsit , us);
-						
-						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
-						retryWS = !success;
-						
-						if(!success)
-						{
-							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
-							this.nmpolAlt = aux.getNmpoliex();
-							this.sucursalGS = aux.getSucursal();
-							nmpoliexEmitida =  this.nmpolAlt;
-							cdRamoGS = aux.getSubramo();
-							
-							//Insetar Poliza Externa WS Auto
-							try{
-								HashMap<String, String> paramsInsertaPolAlt = new HashMap<String, String>();
-								paramsInsertaPolAlt.put("pv_cdunieco_i", cdunieco);
-								paramsInsertaPolAlt.put("pv_cdramo_i",   cdramo);
-								paramsInsertaPolAlt.put("pv_estado_i",   edoPoliza);
-								paramsInsertaPolAlt.put("pv_nmpoliza_i", nmpolizaEmitida);
-								paramsInsertaPolAlt.put("pv_nmsuplem_i", nmsuplemEmitida);
-								paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
-								kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
-								
-							}catch(Exception e){
-								logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
-								mensajeRespuesta = "Error al insertar Poliza Externa: " + this.nmpolAlt;
-								success = false;
-							}
-						}
-					}
 					
 					//ws recibos
 					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
@@ -2842,106 +2619,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 							+ "");
 				}
 				
-				/**
-				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
-				 */
-				if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-								|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-								||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
-				){
-					
-					String parametros = null;
-					
-					String urlCaratula = null;
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())		
-					){
-						urlCaratula = this.getText("caratula.impresion.autos.url");
-					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()) || cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
-					}
-					
-					String urlRecibo = this.getText("recibo.impresion.autos.url");
-					String urlCaic = this.getText("caic.impresion.autos.url");
-					String urlAp = this.getText("ap.impresion.autos.url");
-					
-					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
-							"<br>Estimado(a) cliente,<br/><br/>"+
-							"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
-							"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
-					
-					/**
-					 * Para Caratula
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
-					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
-					
-					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					paramsR.put("pv_cdunieco_i", cdunieco);
-					paramsR.put("pv_cdramo_i",   cdramo);
-					paramsR.put("pv_estado_i",   "M");
-					paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
-					paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
-					paramsR.put("pv_feinici_i",  new Date());
-					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-					paramsR.put("pv_nmsolici_i", nmpoliza);
-					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
-					paramsR.put("pv_swvisible_i", Constantes.SI);
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					/**
-					 * Para Recibo 1
-					 */
-					parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
-					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
-					
-					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo 1");
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					/**
-					 * Para AP inciso 1
-					 */
-					parametros = "?14,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
-					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
-					
-					paramsR.put("pv_cddocume_i", urlAp + parametros);
-					paramsR.put("pv_dsdocume_i", "AP");
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					/**
-					 * Para CAIC inciso 1
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
-					
-					paramsR.put("pv_cddocume_i", urlCaic + parametros);
-					paramsR.put("pv_dsdocume_i", "CAIC");
-					
-					kernelManager.guardarArchivo(paramsR);
-					
-					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
-							 "General de Seguros<br/>"+
-							 "</span>";
-					
-				}
 			}
 			catch(Exception ex)
 			{
@@ -3012,6 +2689,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
+		tipoGrupoInciso = "I";
+		if(StringUtils.isNotBlank(panel1.get("tipoGrupoInciso")) && panel1.get("tipoGrupoInciso").equals("C")){
+			tipoGrupoInciso = "C";
+		}
+		
+		
 		logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
 		logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
 		logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
@@ -3071,7 +2754,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				)
 		{
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza,"I", _nmsuplem, ntramite,cdtipsit , us);
+						edoPoliza, _nmpoliza,tipoGrupoInciso, _nmsuplem, ntramite,cdtipsit , us);
 			
 			success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
 			retryWS = !success;
@@ -3209,9 +2892,16 @@ public class ComplementariosAction extends PrincipalCoreAction
 							urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 						}
 						
+						if("C".equalsIgnoreCase(tipoGrupoInciso)){
+							urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+						}
+						
 						String urlRecibo = this.getText("recibo.impresion.autos.url");
 						String urlCaic = this.getText("caic.impresion.autos.url");
 						String urlAp = this.getText("ap.impresion.autos.url");
+						
+						String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+						String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
 						
 						this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 								"<br>Estimado(a) cliente,<br/><br/>"+
@@ -3277,6 +2967,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						kernelManager.guardarArchivo(paramsR);
 						
+						
+						if("C".equalsIgnoreCase(tipoGrupoInciso)){
+							/**
+							 * Para Incisos Flotillas
+							 */
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
+							logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
+							
+							paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+							paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+							
+							kernelManager.guardarArchivo(paramsR);
+							
+							/**
+							 * Para Tarjeta Identificacion
+							 */
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
+							
+							paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+							paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+							
+							kernelManager.guardarArchivo(paramsR);
+							
+						}
 
 						this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 								 "General de Seguros<br/>"+
