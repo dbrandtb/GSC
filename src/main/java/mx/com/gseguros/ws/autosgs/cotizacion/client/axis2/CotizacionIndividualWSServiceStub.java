@@ -37781,6 +37781,36 @@
                             
 
                         /**
+                        * field for MontoCedido
+                        */
+
+                        
+                                    protected double localMontoCedido ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return double
+                           */
+                           public  double getMontoCedido(){
+                               return localMontoCedido;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param MontoCedido
+                               */
+                               public void setMontoCedido(double param){
+                            
+                                            this.localMontoCedido=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Multianual
                         */
 
@@ -38266,6 +38296,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"montoCedido", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"montoCedido");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("montoCedido");
+                                    }
+                                
+                                               if (java.lang.Double.isNaN(localMontoCedido)) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("montoCedido cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMontoCedido));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"multianual", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -38615,6 +38674,12 @@
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTarifa));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "montoCedido"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMontoCedido));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "multianual"));
                                  
                                 elementList.add(
@@ -38861,6 +38926,25 @@
                                     
                                               object.setIdTarifa(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","montoCedido").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setMontoCedido(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
                                               
                                         reader.next();
                                     
