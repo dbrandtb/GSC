@@ -179,6 +179,7 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String cdgrupo)throws Exception;
 	
+	@Deprecated
 	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
 	
 	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception;
@@ -441,6 +442,14 @@ public interface CotizacionManager
 	
 	@Deprecated
 	public Map<String,String>cargarTvalopol(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	@Deprecated
+	public String cargarPorcentajeCesionComisionAutos(
 			String cdunieco
 			,String cdramo
 			,String estado
