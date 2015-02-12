@@ -4980,4 +4980,44 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public String cargarPorcentajeCesionComisionAutos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_PORC_CESION_COMISION", params);
+		Map<String,Object>procResult = ejecutaSP(new CargarPorcentajeCesionComisionAutos(getDataSource()),params);
+		String cesion                = (String)procResult.get("pv_porreadu_o");
+		if(StringUtils.isBlank(cesion))
+		{
+			throw new ApplicationException("No se recupero cesion de comision para la poliza");
+		}
+		logger.debug(Utilerias.join("****** PKG_CONSULTA.P_GET_PORC_CESION_COMISION recupera: ",cesion));
+		return cesion;
+	}
+	
+	protected class CargarPorcentajeCesionComisionAutos extends StoredProcedure
+	{
+		protected CargarPorcentajeCesionComisionAutos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PORC_CESION_COMISION");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_porreadu_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -580,4 +580,10 @@ public interface CotizacionDAO
 	public List<List<Map<String,String>>>cargarParamerizacionConfiguracionCoberturasRol(
 			String cdtipsit
 			,String cdsisrol)throws Exception;
+	public String cargarPorcentajeCesionComisionAutos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

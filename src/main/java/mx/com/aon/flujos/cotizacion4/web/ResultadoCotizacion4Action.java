@@ -1013,6 +1013,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	{
 	    	try
 	    	{
+	    		String cesionComision = "0";
+	    		
+	    		Map<String,String>tipoSituacion=cotizacionManager.cargarTipoSituacion(comprarCdramo, cdtipsit);
+	    		if(tipoSituacion.get("SITUACION").equals("AUTO"))
+	    		{
+	    			cesionComision=cotizacionManager.cargarPorcentajeCesionComisionAutos(comprarCdunieco,comprarCdramo,"W",comprarNmpoliza);
+	    		}
+	    		
 	            Map<String,Object>map3=new LinkedHashMap<String,Object>(0);
 	            map3.put("pv_cdunieco_i" , comprarCdunieco);
 	            map3.put("pv_cdramo_i"   , comprarCdramo);
@@ -1022,7 +1030,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            map3.put("pv_nmsuplem_i" , "0");
 	            map3.put("pv_status_i"   , "V");
 	            map3.put("pv_cdtipoag_i" , "1");
-	            map3.put("pv_porredau_i" , "0");
+	            map3.put("pv_porredau_i" , cesionComision);
 	            map3.put("pv_nmcuadro_i" , nmcuadro);
 	            map3.put("pv_cdsucurs_i" , null);
 	            map3.put("pv_accion_i"   , "I");

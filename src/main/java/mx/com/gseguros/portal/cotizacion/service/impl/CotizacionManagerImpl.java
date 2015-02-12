@@ -939,6 +939,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 	}
 	
+	@Deprecated
 	@Override
 	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception
 	{
@@ -948,10 +949,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\ncdramo "+cdramo
 				+ "\ncdtipsit "+cdtipsit
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdramo",cdramo);
-		params.put("cdtipsit",cdtipsit);
-		Map<String,String>respuesta=cotizacionDAO.cargarTipoSituacion(params);
+		Map<String,String>respuesta=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
 		logger.info(""
 				+ "\nrespuesta "+respuesta
 				+ "\n###### cargarTipoSituacion ######"
@@ -5725,6 +5723,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
     	return cotizacionDAO.cargarTvalopol(cdunieco,cdramo,estado,nmpoliza);
+	}
+    
+    @Deprecated
+    @Override
+    public String cargarPorcentajeCesionComisionAutos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	return cotizacionDAO.cargarPorcentajeCesionComisionAutos(cdunieco,cdramo,estado,nmpoliza);
 	}
     
 	///////////////////////////////
