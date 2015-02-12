@@ -1227,6 +1227,7 @@ function _p31_emitirFinal(me)
                                 ,'nmsuplem'           : json.nmsuplem                                                                       
                                 ,'cdIdeper'           : json.cdIdeper
                                 ,'panel1.flotilla'    : 'si'
+                                ,'panel1.tipoGrupoInciso' : 'C'
                             };
                             reintentarWSAuto(me.up().up(), paramsWS);
                         }

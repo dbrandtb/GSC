@@ -21,6 +21,8 @@ public class EmisionAutosVO implements Serializable {
     private String subramo;
     
     private String sucursal;
+    
+    private int numeroIncisos;
 	
 	@Override
 	public String toString()
@@ -50,5 +52,13 @@ public class EmisionAutosVO implements Serializable {
 
 	public void setSucursal(String sucursal) {
 		this.sucursal = sucursal;
+	}
+
+	public int getNumeroIncisos() {
+		return numeroIncisos;
+	}
+
+	public void setNumeroIncisos(int numeroIncisos) {
+		this.numeroIncisos = numeroIncisos;
 	}
 }
