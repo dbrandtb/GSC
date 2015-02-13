@@ -34,40 +34,41 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// variables //////
-var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
-var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
-var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                    />';
-var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"            />';
-var _p21_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo"           />';
-var _p21_urlObtenerDetalle               = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo" />';
-var _p21_urlComprar                      = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"            />';
-var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
-var _p21_urlVentanaDocumentosClon        = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"   />';
-var _p21_urlBuscarPersonas               = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p21_urlCargarDatosCotizacion        = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo"    />';
-var _p21_urlCargarGrupos                 = '<s:url namespace="/emision"         action="cargarGruposCotizacion"        />';
-var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         action="cargarDatosGrupoLinea"         />';
-var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"          />';
-var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"          />';
-var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
-var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
-var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
-var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"               />';
-var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"             />';
-var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"   />';
-var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"  />';
-var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"            />';
-var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"         />';
-var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="includes/personasLoader"       />';
-var _p21_urlEditarCoberturas             = '<s:url namespace="/"                action="editarCoberturas"              />';
-var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
-var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"             />';
-var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
-var _p21_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
-var _p21_urlCargarConceptosGlobales      = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"  />';
-var _p21_urlGuardarContratanteColectivo  = '<s:url namespace="/emision"         action="guardarContratanteColectivo"   />';
-var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         action="cargarTramite"                 />';
+var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
+var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
+var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
+var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"               />';
+var _p21_urlGenerarTramiteGrupo          = '<s:url namespace="/emision"         action="generarTramiteGrupo"              />';
+var _p21_urlObtenerDetalle               = '<s:url namespace="/emision"         action="obtenerDetalleCotizacionGrupo"    />';
+var _p21_urlComprar                      = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"               />';
+var _p21_urlVentanaDocumentos            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"          />';
+var _p21_urlVentanaDocumentosClon        = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"      />';
+var _p21_urlBuscarPersonas               = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
+var _p21_urlCargarDatosCotizacion        = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo"       />';
+var _p21_urlCargarGrupos                 = '<s:url namespace="/emision"         action="cargarGruposCotizacion"           />';
+var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         action="cargarDatosGrupoLinea"            />';
+var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"             />';
+var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
+var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
+var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                       />';
+var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
+var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
+var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
+var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"      />';
+var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"     />';
+var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"               />';
+var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
+var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
+var _p21_urlPantallaPersonas             = '<s:url namespace="/catalogos"       action="includes/personasLoader"          />';
+var _p21_urlEditarCoberturas             = '<s:url namespace="/"                action="editarCoberturas"                 />';
+var _p21_urlGuardarAsegurados            = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"      />';
+var _p21_urlEditarExclusiones            = '<s:url namespace="/"                action="pantallaExclusion"                />';
+var _p21_guardarReporteCotizacion        = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo"    />';
+var _p21_urlCargarParametros             = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"      />';
+var _p21_urlCargarConceptosGlobales      = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"     />';
+var _p21_urlGuardarContratanteColectivo  = '<s:url namespace="/emision"         action="guardarContratanteColectivo"      />';
+var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         action="cargarTramite"                    />';
+var _p21_urlPantallaClausulasPoliza      = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -689,6 +690,13 @@ Ext.onReady(function()
                                         ,fieldLabel : 'PORCENTAJE A CARGO DEL TITULAR'
                                         ,name       : 'pcpgotit'
                                         ,readOnly   : true
+                                    }
+                                    ,{
+                                        xtype    : 'button'
+                                        ,text    : 'Cl&aacute;usulas'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+                                        ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
+                                        ,handler : function(){ _p21_crearVentanaClausulas(); }
                                     }
                                 ]
                             }
@@ -4488,6 +4496,32 @@ function _p21_editarExclusiones(grid,row)
         }
     });
     debug('<_p21_editarExclusiones');
+}
+
+function _p21_crearVentanaClausulas()
+{
+    debug('>_p21_crearVentanaClausulas<');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title   : 'CL&Aacute;USULAS'
+        ,width  : 500
+        ,height : 350
+        ,modal  : true
+        ,loader :
+        {
+            scripts   : true
+            ,autoLoad : true
+            ,url      : _p21_urlPantallaClausulasPoliza
+            ,params   :
+            {
+                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                ,'smap1.estado'   : _p21_smap1.estado
+                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                ,'smap1.nmsuplem' : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
+            }
+        }
+    }).show());
 }
 ////// funciones //////
 </script>

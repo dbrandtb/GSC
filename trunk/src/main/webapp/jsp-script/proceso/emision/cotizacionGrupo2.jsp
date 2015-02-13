@@ -34,37 +34,38 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// variables //////
-var _p25_urlSubirCenso                  = '<s:url namespace="/emision"         action="subirCenso"                    />';
-var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
-var _p25_urlBuscarPersonas              = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p25_urlObtenerCoberturas           = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"         />';
-var _p25_urlObtenerHijosCobertura       = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"     />';
-var _p25_urlObtenerTarifaEdad           = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"          />';
-var _p25_urlObtenerTarifaCobertura      = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"     />';
-var _p25_urlGenerarTramiteGrupo         = '<s:url namespace="/emision"         action="generarTramiteGrupo2"          />';
-var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"       />';
-var _p25_guardarReporteCotizacion       = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo" />';
-var _p25_urlActualizarStatus            = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"       />';
-var _p25_urlCargarParametros            = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"   />';
-var _p25_urlMesaControl                 = '<s:url namespace="/mesacontrol"     action="mcdinamica"                    />';
-var _p25_urlViewDoc                     = '<s:url namespace="/documentos"      action="descargaDocInline"             />';
-var _p25_urlCargarDatosCotizacion       = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo2"   />';
-var _p25_urlCargarGrupos                = '<s:url namespace="/emision"         action="cargarGruposCotizacion2"       />';
-var _p25_urlObtenerTvalogarsGrupo       = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"          />';
-var _p25_urlCargarAseguradosExtraprimas = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas2"  />';
-var _p25_urlGuardarSituaciones          = '<s:url namespace="/emision"         action="guardarValoresSituaciones"     />';
-var _p25_urlSubirCensoCompleto          = '<s:url namespace="/emision"         action="subirCensoCompleto2"           />';
-var _p25_urlCargarAseguradosGrupo       = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"         />';
-var _p25_urlRecuperarPersona            = '<s:url namespace="/"                action="buscarPersonasRepetidas"       />';
-var _p25_urlPantallaPersonas            = '<s:url namespace="/catalogos"       action="includes/personasLoader"       />';
-var _p25_urlEditarCoberturas            = '<s:url namespace="/"                action="editarCoberturas"              />';
-var _p25_urlEditarExclusiones           = '<s:url namespace="/"                action="pantallaExclusion"             />';
-var _p25_urlGuardarAsegurados           = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"   />';
-var _p25_urlCargarConceptosGlobales     = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"  />';
-var _p25_urlEmitir                      = '<s:url namespace="/emision"         action="emitirColectivo"               />';
-var _p25_urlVentanaDocumentosClon       = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"   />';
-var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         action="guardarContratanteColectivo"   />';
-var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                 />';
+var _p25_urlSubirCenso                  = '<s:url namespace="/emision"         action="subirCenso"                       />';
+var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"          />';
+var _p25_urlBuscarPersonas              = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
+var _p25_urlObtenerCoberturas           = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
+var _p25_urlObtenerHijosCobertura       = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
+var _p25_urlObtenerTarifaEdad           = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
+var _p25_urlObtenerTarifaCobertura      = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
+var _p25_urlGenerarTramiteGrupo         = '<s:url namespace="/emision"         action="generarTramiteGrupo2"             />';
+var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"          />';
+var _p25_guardarReporteCotizacion       = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo"    />';
+var _p25_urlActualizarStatus            = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
+var _p25_urlCargarParametros            = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"      />';
+var _p25_urlMesaControl                 = '<s:url namespace="/mesacontrol"     action="mcdinamica"                       />';
+var _p25_urlViewDoc                     = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
+var _p25_urlCargarDatosCotizacion       = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo2"      />';
+var _p25_urlCargarGrupos                = '<s:url namespace="/emision"         action="cargarGruposCotizacion2"          />';
+var _p25_urlObtenerTvalogarsGrupo       = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"             />';
+var _p25_urlCargarAseguradosExtraprimas = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas2"     />';
+var _p25_urlGuardarSituaciones          = '<s:url namespace="/emision"         action="guardarValoresSituaciones"        />';
+var _p25_urlSubirCensoCompleto          = '<s:url namespace="/emision"         action="subirCensoCompleto2"              />';
+var _p25_urlCargarAseguradosGrupo       = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
+var _p25_urlRecuperarPersona            = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
+var _p25_urlPantallaPersonas            = '<s:url namespace="/catalogos"       action="includes/personasLoader"          />';
+var _p25_urlEditarCoberturas            = '<s:url namespace="/"                action="editarCoberturas"                 />';
+var _p25_urlEditarExclusiones           = '<s:url namespace="/"                action="pantallaExclusion"                />';
+var _p25_urlGuardarAsegurados           = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"      />';
+var _p25_urlCargarConceptosGlobales     = '<s:url namespace="/emision"         action="cargarConceptosGlobalesGrupo"     />';
+var _p25_urlEmitir                      = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
+var _p25_urlVentanaDocumentosClon       = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon"      />';
+var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         action="guardarContratanteColectivo"      />';
+var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                    />';
+var _p25_urlPantallaClausulasPoliza     = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -665,6 +666,13 @@ Ext.onReady(function()
                                         ,fieldLabel : 'PORCENTAJE A CARGO DEL TITULAR'
                                         ,name       : 'pcpgotit'
                                         ,readOnly   : true
+                                    }
+                                    ,{
+                                        xtype    : 'button'
+                                        ,text    : 'Cl&aacute;usulas'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+                                        ,hidden  : Ext.isEmpty(_p25_smap1.nmpoliza)
+                                        ,handler : function(){ _p25_crearVentanaClausulas(); }
                                     }
                                 ]
                             }
@@ -3875,8 +3883,33 @@ function _p25_emitir2(ventana,button)
         }
     });
 }
-////// funciones //////
 
+function _p25_crearVentanaClausulas()
+{
+    debug('>_p25_crearVentanaClausulas<');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title   : 'CL&Aacute;USULAS'
+        ,width  : 500
+        ,height : 350
+        ,modal  : true
+        ,loader :
+        {
+            scripts   : true
+            ,autoLoad : true
+            ,url      : _p25_urlPantallaClausulasPoliza
+            ,params   :
+            {
+                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                ,'smap1.estado'   : _p25_smap1.estado
+                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                ,'smap1.nmsuplem' : Ext.isEmpty(_p25_smap1.nmsuplem)?'0':_p25_smap1.nmsuplem
+            }
+        }
+    }).show());
+}
+////// funciones //////
 </script>
 </head>
 <body><div id="_p25_divpri" style="height:1400px;"></div></body>
