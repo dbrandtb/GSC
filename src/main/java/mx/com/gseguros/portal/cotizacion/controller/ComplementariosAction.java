@@ -2289,7 +2289,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para Tarjeta Identificacion
 						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 						
