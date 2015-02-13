@@ -41,7 +41,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	
 	private Map<String, String> params;
 	
-	private GenericVO respuesta;
+	private GenericVO resultado;
 	
 	private File file;
     private String fileFileName;
@@ -120,7 +120,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(file, campos, fullNameArchErrValida, mx.com.gseguros.portal.general.validacionformato.ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
 			if(archErrVal != null && archErrVal.length() > 0) {
 				String msjeError = "Archivo tiene errores de formato";
-				respuesta = new GenericVO("1", msjeError);
+				resultado = new GenericVO("1", msjeError);
 				fileFileName = archErrVal.getName();
 				throw new ApplicationException(msjeError);
 			}
@@ -142,7 +142,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 					estrategiaProcesaArchivo);
 			if(!resp.isSuccess()) {
 				String msjeError = "Error en el guardado";
-				respuesta = new GenericVO("2", resp.getMensaje());
+				resultado = new GenericVO("2", resp.getMensaje());
 				throw new ApplicationException(msjeError);
 			}
 			
@@ -200,12 +200,12 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 		this.success = success;
 	}
 
-	public GenericVO getRespuesta() {
-		return respuesta;
+	public GenericVO getResultado() {
+		return resultado;
 	}
 
-	public void setRespuesta(GenericVO respuesta) {
-		this.respuesta = respuesta;
+	public void setResultado(GenericVO resultado) {
+		this.resultado = resultado;
 	}
-	
+
 }
