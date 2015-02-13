@@ -56,11 +56,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private static final String
-		RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS                = "RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS"
+	    RECUPERAR_CLAUSULAS_POLIZA                               = "RECUPERAR_CLAUSULAS_POLIZA"
+		,RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS               = "RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS"
 	    ,RECUPERAR_DESCUENTO_RECARGO_RAMO_5                      = "RECUPERAR_DESCUENTO_RECARGO_RAMO_5"
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
 	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
+	    ,RECUPERAR_TEXTO_CLAUSULA_POLIZA                         = "RECUPERAR_TEXTO_CLAUSULA_POLIZA"
 	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
 	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
 	    ,RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             = "RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC" 
@@ -1015,6 +1017,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_ULTIMO_NMSUPLEM                               , null);
 		procedimientos.put(RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             , null);
 		procedimientos.put(VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      , null);
+		procedimientos.put(RECUPERAR_TEXTO_CLAUSULA_POLIZA                         , null);
+		procedimientos.put(RECUPERAR_CLAUSULAS_POLIZA                              , null);
 		return procedimientos;
 	}
 	
@@ -1078,6 +1082,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String cdpostal = parametros.get("cdpostal");
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("fronterizo",consultasDAO.verificarCodigoPostalFronterizo(cdpostal)?"S":"N");
+			}
+			else if(procedimiento.equals(RECUPERAR_TEXTO_CLAUSULA_POLIZA))
+			{
+				String cdclausu = parametros.get("cdclausu");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("dsclausu" , Utilerias.join("Texto de la clausula ",cdclausu));
 			}
 			
 			setCheckpoint("0");
@@ -2649,6 +2659,41 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String nmsituac = parametros.get("nmsituac");
 				String roles    = parametros.get("roles");
 				resp.setSlist(consultasDAO.cargarMpoliperOtrosRolesPorNmsituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, roles));
+			}
+			else if(procedimiento.equals(RECUPERAR_CLAUSULAS_POLIZA))
+			{
+				String cdunieco = parametros.get("cdunieco");
+				String cdramo   = parametros.get("cdramo");
+				String estado   = parametros.get("estado");
+				String nmpoliza = parametros.get("nmpoliza");
+				String nmsuplem = parametros.get("nmsuplem");
+				
+				List<Map<String,String>>lista=new ArrayList<Map<String,String>>();
+				resp.setSlist(lista);
+				
+				Map<String,String>cla1=new HashMap<String,String>();
+				lista.add(cla1);
+				cla1.put("cdunieco" , cdunieco);
+				cla1.put("cdramo"   , cdramo);
+				cla1.put("estado"   , estado);
+				cla1.put("nmpoliza" , nmpoliza);
+				cla1.put("nmsuplem" , nmsuplem);
+				cla1.put("status"   , "V");
+				cla1.put("cdclausu" , "1");
+				cla1.put("dsclausu" , "uno");
+				cla1.put("dslinea"  , "Texto de la primer clausula");
+				
+				Map<String,String>cla2=new HashMap<String,String>();
+				lista.add(cla2);
+				cla2.put("cdunieco" , cdunieco);
+				cla2.put("cdramo"   , cdramo);
+				cla2.put("estado"   , estado);
+				cla2.put("nmpoliza" , nmpoliza);
+				cla2.put("nmsuplem" , nmsuplem);
+				cla2.put("status"   , "V");
+				cla2.put("cdclausu" , "2");
+				cla2.put("dsclausu" , "dos");
+				cla2.put("dslinea"  , "Texto de la segunda clausula");
 			}
 			
 			setCheckpoint("0");

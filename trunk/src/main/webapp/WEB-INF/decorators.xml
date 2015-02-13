@@ -162,6 +162,8 @@
         
         <pattern>/renovacion/*.action</pattern>
         <pattern>/jsp-script/proceso/renovacion/*.jsp</pattern>
+        
+        <pattern>/emision/pantallaClausulasPoliza.action</pattern>
 
    	</decorator>
 	
