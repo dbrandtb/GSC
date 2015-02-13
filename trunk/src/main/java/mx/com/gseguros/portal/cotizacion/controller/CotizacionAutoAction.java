@@ -39,7 +39,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private List<Map<String,String>> slist1           = null;
 	private List<Map<String,String>> slist2           = null;
 	private List<Map<String,String>> slist3           = null;
-	private File                     excel            = null;;
+	private File                     excel            = null;
 	private String                   excelFileName    = null;
 	private String                   excelContentType = null;
 
