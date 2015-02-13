@@ -583,6 +583,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista=catalogosManager.cargarCuadrosPorSituacion(params.get("cdtipsit"));
 					break;
+				case CLAUSULAS_POLIZA:
+					lista=new ArrayList<GenericVO>();
+					lista.add(new GenericVO("1" , "uno"));
+					lista.add(new GenericVO("2" , "dos"));
+					lista.add(new GenericVO("3" , "tres"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
