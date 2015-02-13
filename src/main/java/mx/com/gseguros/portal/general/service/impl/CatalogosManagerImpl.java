@@ -697,20 +697,24 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception
+	public List<GenericVO>cargarNegociosPorAgenteRamo5(
+			String cdagente
+			,String cdsisrol
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ cargarNegociosPorAgenteRamo5 @@@@@@")
 				.append("\n@@@@@@ cdagente=").append(cdagente)
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
 				.toString()
 				);
 		
 		List<GenericVO>lista=new ArrayList<GenericVO>();
 		if(StringUtils.isNotBlank(cdagente))
 		{
-			lista=catalogosDAO.cargarNegociosPorAgenteRamo5(cdagente);
+			lista=catalogosDAO.cargarNegociosPorAgenteRamo5(cdagente,cdsisrol);
 		}
 		
 		logger.info(
@@ -781,6 +785,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			String cdtipsit
 			,String cdagente
 			,String producto
+			,String cdsisrol
 			) throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -789,12 +794,13 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				,"\n@@@@@@ cdtipsit" , cdtipsit
 				,"\n@@@@@@ cdagente" , cdagente
 				,"\n@@@@@@ producto" , producto
+				,"\n@@@@@@ cdsisrol" , cdsisrol
 				));
 		
 		List<GenericVO>lista=new ArrayList<GenericVO>();
 		if(StringUtils.isNotBlank(cdagente))
 		{
-			lista=catalogosDAO.cargarNegociosPorTipoSituacionAgenteRamo5(cdtipsit,cdagente,producto);
+			lista=catalogosDAO.cargarNegociosPorTipoSituacionAgenteRamo5(cdtipsit,cdagente,producto,cdsisrol);
 		}
 		
 		logger.info(Utilerias.join(
