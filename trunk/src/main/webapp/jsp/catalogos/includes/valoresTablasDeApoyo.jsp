@@ -611,7 +611,7 @@ Ext.onReady(function() {
 												                                 
 												                                var msgServer = 'Error al realizar la carga masiva, consulte a soporte';
 												                                try {
-                                                                                    if(action.result.respuesta.key == 1) {
+                                                                                    if(action.result.resultado.key == 1) {
                                                                                     	// Error en validacion de formato:
                                                                                     	msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
                                                                                         Ext.Msg.show({
@@ -633,9 +633,9 @@ Ext.onReady(function() {
                                                                                                 }
                                                                                             }
                                                                                          });
-                                                                                    } else if (action.result.respuesta.key == 2) {
+                                                                                    } else if (action.result.resultado.key == 2) {
                                                                                     	// Error en carga masiva:
-                                                                                    	Ext.Msg.show({title: 'Error', msg: action.result.respuesta.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                                                                                    	Ext.Msg.show({title: 'Error', msg: action.result.resultado.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
                                                                                     }
                                                                                 } catch(err) {
                                                                                     Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
