@@ -23,9 +23,6 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 	private TablasApoyoManager tablasApoyoManager;
 	
 	
-	private boolean success;
-	
-	
 	/**
      * Parametros enviados a los catalogos
      */
@@ -77,12 +74,10 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ae);
 //    		logger.debug("Tabla de Apoyo Lista Resultante: " + loadList);
     		msgRespuesta = ae.getMessage();
-    		success = false;
     		return SUCCESS;
     	}catch(Exception ex){
     		logger.error("Error al obtieneValoresTablaApoyo5claves",ex);
     		msgRespuesta = "Error al ejecutar la consulta. Consulte a Soporte.";
-    		success = false;
     		return SUCCESS;
     	}
     	
@@ -143,50 +138,33 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     }
 
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-
 	public Map<String, String> getParams() {
 		return params;
 	}
-
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
 
-
 	public List<Map<String, String>> getLoadList() {
 		return loadList;
 	}
-
 
 	public void setLoadList(List<Map<String, String>> loadList) {
 		this.loadList = loadList;
 	}
 
-
 	public List<Map<String, String>> getSaveList() {
 		return saveList;
 	}
-
 
 	public void setSaveList(List<Map<String, String>> saveList) {
 		this.saveList = saveList;
 	}
 
-
 	public String getMsgRespuesta() {
 		return msgRespuesta;
 	}
-
 
 	public void setMsgRespuesta(String msgRespuesta) {
 		this.msgRespuesta = msgRespuesta;

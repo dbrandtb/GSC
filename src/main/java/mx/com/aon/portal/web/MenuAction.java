@@ -23,8 +23,6 @@ public class MenuAction extends PrincipalCoreAction {
 	 */
 	private static final long serialVersionUID = -7185390642113025561L;
 	private static final String VENTANA_EXTERNA = "E";
-	private boolean success;
-	//private MenuPrincipalManager menuPrincipalManager;
 	private MenuPrincipalManager menuPrincipalManagerJdbcTemplate;
 	private List<MenuPrincipalVO> listaMenu;
 	private List<MenuPrincipalVO> listaMenuVertical;
@@ -302,22 +300,6 @@ public class MenuAction extends PrincipalCoreAction {
 	public void setMenuPrincipalManagerJdbcTemplate(
 			MenuPrincipalManager menuPrincipalManagerJdbcTemplate) {
 		this.menuPrincipalManagerJdbcTemplate = menuPrincipalManagerJdbcTemplate;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isSuccess() {
-		return success;
-	}
-
-	/**
-	 * 
-	 * @param success
-	 */
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	/**

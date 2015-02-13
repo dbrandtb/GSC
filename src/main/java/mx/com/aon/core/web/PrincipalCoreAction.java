@@ -8,22 +8,29 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.json.JSONUtil;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
 
 
-public abstract class PrincipalCoreAction extends ActionSupport implements SessionAware, Preparable {
+public abstract class PrincipalCoreAction extends ActionSupport implements SessionAware {
 
 	private static final long serialVersionUID = -7975229967003917194L;
 
 	protected final transient Logger logger = Logger.getLogger(PrincipalCoreAction.class);
 	
+	/**
+	 * Sesion de usuario 
+	 */
 	protected Map<String,Object> session;
-
 	
-	@Override
-	public void prepare() throws Exception {
-			
-	}
+	/**
+	 * Propiedad general success
+	 */
+	protected boolean success;
+	
+	/**
+	 * Propiedad general mensaje de respuesta
+	 */
+	protected String respuesta;
+	
 
 	public Map<String,Object> getSession() {
 		return session;
@@ -35,6 +42,22 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 		
 	}
 	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
 	
 	/**
 	 * Convierte el valor de una propiedad a formato JSON 

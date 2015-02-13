@@ -15,7 +15,7 @@ import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-public class WebServicesAction extends PrincipalCoreAction{
+public class WebServicesAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = -7264510862184393230L;
 	
@@ -24,8 +24,6 @@ public class WebServicesAction extends PrincipalCoreAction{
 	private WebServicesManager webServicesManager;
 	private Ice2sigsService ice2sigsService;
 	private RecibosSigsService recibosSigsService;
-	
-	private boolean success;
 	
 	private String mensajeRespuesta;
 	
@@ -146,14 +144,7 @@ public class WebServicesAction extends PrincipalCoreAction{
     }
 
     // getters and setters
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
+    
 	public Map<String,String> getParams() {
 		return params;
 	}

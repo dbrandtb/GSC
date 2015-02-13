@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.consultas.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,26 +9,24 @@ import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoVO;
-import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.EndosoVO;
 import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
-import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -51,11 +48,6 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasAseguradoAction.class);
 	
-	/**
-     * Success property
-     */
-    private boolean success;
-    
     private String mensajeRes;
 	
 	@Autowired
@@ -628,14 +620,6 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.resultados = resultados;
 	}
 	
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
 	public String getMensajeRes() {
 		return mensajeRes;
 	}

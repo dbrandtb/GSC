@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.utils.HttpUtil;
 
@@ -15,15 +16,13 @@ import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-public class MailAction extends ActionSupport {
+public class MailAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 3608545898806750390L;
 	
 	private final static Log logger = LogFactory.getLog(MailAction.class);
 	
 	private MailService mailService;
-	
-	private boolean success;
 	
 	private List<String> to;
 	
@@ -126,14 +125,6 @@ public class MailAction extends ActionSupport {
 
 	//Getters and setters
 	
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
 	public List<String> getTo() {
 		return to;
 	}

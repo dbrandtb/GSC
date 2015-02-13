@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasSiniestroManager;
-import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 /**
@@ -20,11 +19,6 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
     private static final long serialVersionUID = -6321288906841302337L;
 
 	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasSiniestroAction.class);
-	
-    /**
-     * Success property
-     */
-    private boolean success;
     
     private SiniestrosManager siniestrosManager;
     private ConsultasSiniestroManager consultaSiniestrosManager;
@@ -99,14 +93,6 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
     public String execute() throws Exception {
     	return SUCCESS;
     }
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;

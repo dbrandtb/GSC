@@ -7,11 +7,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.utils.Utilerias;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-public class EnvironmentAction extends ActionSupport {
+public class EnvironmentAction extends PrincipalCoreAction {
 
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EnvironmentAction.class);
 	

@@ -24,7 +24,6 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
     private Dinosaurio dino;
     private String llave;
     private CotizacionSaludVO cotizacion;
-    public boolean success=false;
     private Logger log=Logger.getLogger(DinosaurioAction.class);
     
     public String jsoo()
@@ -85,12 +84,4 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
         this.cotizacion = cotizacion;
     }
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-    
 }

@@ -31,7 +31,6 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	private static final String CODIGO_TIPO_ALERTA_PANTALLA = "9";
 	
 	private PaginaPrincipalManager paginaPrincipalManager;
-	private boolean success;
 	private List<PortalVO> componentes;
 
 	private String rolCliente;
@@ -583,22 +582,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 		}
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isSuccess() {
-		return success;
-	}
-
-	/**
-	 * 
-	 * @param success
-	 */
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
+	
 	/**
 	 * 
 	 * @param paginaPrincipalManager

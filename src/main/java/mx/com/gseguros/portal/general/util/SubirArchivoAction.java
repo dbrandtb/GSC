@@ -51,11 +51,9 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     private KernelManagerSustituto kernelManager;
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
     private List<Map<String,String>>slist1;
-    private boolean success;
     private String mensajeRespuesta;
     private MesaControlManager mesaControlManager;
     private boolean exito;
-    private String respuesta;
     private String respuestaOculta;
     
     public String mostrarPanel()
@@ -644,14 +642,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		this.slist1 = slist1;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
 	public String getMensajeRespuesta() {
 		return mensajeRespuesta;
 	}
@@ -670,14 +660,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

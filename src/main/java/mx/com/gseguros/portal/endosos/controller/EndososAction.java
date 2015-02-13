@@ -50,7 +50,6 @@ public class EndososAction extends PrincipalCoreAction
 {
 	private static final long        serialVersionUID = 84257834070419933L;
 	private final static Logger      logger             = Logger.getLogger(EndososAction.class);
-	private boolean                  success          = false;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 
 	public static final String       ENDOSO_SIMPLE_NO_PERMITIDO = "Este endoso solo lo puede capturar si no hay endosos anteriores";
@@ -78,7 +77,6 @@ public class EndososAction extends PrincipalCoreAction
 	private StoredProceduresManager  storedProceduresManager;
 	
 	private boolean exito           = false;
-	private String  respuesta       = null;
 	private String  respuestaOculta = null;
 
 	public EndososAction()
@@ -7671,14 +7669,6 @@ public class EndososAction extends PrincipalCoreAction
 		this.smap1 = smap1;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
 		this.endososManager.setSession(session);
@@ -7811,14 +7801,6 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

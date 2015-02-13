@@ -44,8 +44,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 
-	private boolean success;
-
 	private Map<String, String> loadForm;
 	
 	private List<Map<String, String>> loadList;
@@ -635,14 +633,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public String getLoadForm() {

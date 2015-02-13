@@ -35,7 +35,6 @@ public class PersonasAction extends PrincipalCoreAction
 	private final Logger             logger           = Logger.getLogger(PersonasAction.class); 
 	private PersonasManager          personasManager;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
-	private String                   respuesta        = null;
 	private String                   respuestaOculta  = null;
 	private static final long        serialVersionUID = -5438595581905207477L;
 	private List<Map<String,String>> slist1;
@@ -1114,14 +1113,6 @@ public class PersonasAction extends PrincipalCoreAction
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

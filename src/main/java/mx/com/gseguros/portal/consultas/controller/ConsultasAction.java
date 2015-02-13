@@ -38,7 +38,6 @@ public class ConsultasAction extends PrincipalCoreAction
 	private List<Map<String,String>>     stringList;
 	private Map<String,String>           stringMap;
 	
-	private boolean       success = false;
 	private static Logger logger  = Logger.getLogger(ConsultasAction.class);
 	
 	@Override
@@ -253,14 +252,6 @@ public class ConsultasAction extends PrincipalCoreAction
 	public void setListaMapasStringSalida(
 			List<Map<String, String>> listaMapasStringSalida) {
 		this.listaMapasStringSalida = listaMapasStringSalida;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public void setConsultasManager(ConsultasManager consultasManager) {

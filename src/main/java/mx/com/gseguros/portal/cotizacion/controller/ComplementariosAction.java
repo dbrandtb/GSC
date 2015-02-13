@@ -124,7 +124,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private EmisionAutosService emisionAutosService;
 	private boolean clienteWS;
 	private String mensajeEmail;
-	private String respuesta;
 	private String respuestaOculta;
 	private CotizacionManager cotizacionManager;
 	private EmisionManager    emisionManager;
@@ -3914,14 +3913,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setMensajeEmail(String mensajeEmail) {
 		this.mensajeEmail = mensajeEmail;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {
