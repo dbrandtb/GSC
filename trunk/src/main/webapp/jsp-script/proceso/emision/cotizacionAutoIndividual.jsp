@@ -1982,27 +1982,37 @@ function _p28_cargar(boton)
                                         }).show());
                                     }
                                 });
-                                
-                                if(_p28_smap1.cdsisrol=='SUSCRIAUTO')
-                                {
-                                    var agente = _fieldByName('parametros.pv_otvalor01');
-                                    agente.getStore().load(
-                                    {
-                                        params :
-                                        {
-                                            'params.agente' : primerInciso.get('parametros.pv_otvalor01')
-                                        }
-                                        ,callback : function()
-                                        {
-                                            agente.setValue(agente.findRecord('key',primerInciso.get('parametros.pv_otvalor01')));
-                                        }
-                                    });
-                                }
                             }
                         }
                     };
                     panelpri.setLoading(true);
-                    renderiza();
+                    if(_p28_smap1.cdramo+'x'=='5x'
+                        &&
+                        (
+                            _p28_smap1.cdsisrol=='SUSCRIAUTO'
+                            ||_p28_smap1.cdsisrol=='PROMOTORAUTO'
+                        ))
+                    {
+                        var agente  = _fieldByName('parametros.pv_otvalor01');
+                        var negocio = _fieldByLabel('NEGOCIO');
+                        agente.getStore().load(
+                        {
+                            params :
+                            {
+                                'params.agente' : primerInciso.get('parametros.pv_otvalor01')
+                            }
+                            ,callback : function()
+                            {
+                                agente.setValue(agente.findRecord('key',primerInciso.get('parametros.pv_otvalor01')));
+                                _p28_ramo5AgenteSelect(agente,agente.getValue());
+                                renderiza();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        renderiza();
+                    }
                 }
                 else
                 {
