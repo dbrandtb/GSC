@@ -78,7 +78,10 @@ public interface CatalogosDAO {
 	public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit)throws Exception;
 	public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio,String tipocot)throws Exception;
 	public List<GenericVO>cargarMarcasPorNegocioRamo5(String cdnegocio,String cdtipsit)throws Exception;
-	public List<GenericVO>cargarNegociosPorAgenteRamo5(String cdagente)throws Exception;
+	public List<GenericVO>cargarNegociosPorAgenteRamo5(
+			String cdagente
+			,String cdsisrol
+			)throws Exception;
 	public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception;
 	public List<GenericVO>cargarPlanesPorNegocioModeloClavegsRamo5(
 			String cdtipsit
@@ -91,6 +94,7 @@ public interface CatalogosDAO {
 			String cdtipsit
 			,String cdagente
 			,String producto
+			,String cdsisrol
 			)throws Exception;
 	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio,String producto)throws Exception;
 	public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception;
