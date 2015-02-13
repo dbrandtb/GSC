@@ -37,8 +37,6 @@ public class ReportesAction extends PrincipalCoreAction {
 	
 	protected String contentType;
 
-	protected boolean success;
-	
 	private String cdreporte;
 	private String cdPantalla;
 	private String cdSeccion;
@@ -132,14 +130,6 @@ public class ReportesAction extends PrincipalCoreAction {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public String getContentType() {

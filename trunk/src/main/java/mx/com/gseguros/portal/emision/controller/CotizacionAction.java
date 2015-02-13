@@ -91,8 +91,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	private TipoCambioDolarGSService         tipoCambioService;
 	private transient Ice2sigsService        ice2sigsService;
 	private AgentePorFolioService            agentePorFolioService;
-	private boolean                          success;
-	private String                           respuesta       = null;
 	private String                           respuestaOculta = null;
 	private boolean                          exito           = false;
 	private File                             censo;
@@ -8040,14 +8038,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		this.catalogosManager = catalogosManager;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
 	public Map<String, String> getSmap1() {
 		return smap1;
 	}
@@ -8114,14 +8104,6 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setTipoCambioService(TipoCambioDolarGSService tipoCambioService) {
 		this.tipoCambioService = tipoCambioService;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

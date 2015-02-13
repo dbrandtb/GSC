@@ -47,8 +47,6 @@ public class CargaMasivaAction extends PrincipalCoreAction {
     private String fileFileName;
     private String fileContentType;
     
-    private boolean success;
-	
 	@Autowired
 	private ValidadorFormatoContext validadorFormatoContext;
 	
@@ -190,14 +188,6 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 
 	public void setFileContentType(String fileContentType) {
 		this.fileContentType = fileContentType;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public GenericVO getResultado() {

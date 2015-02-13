@@ -19,6 +19,7 @@ import mx.com.aon.configurador.pantallas.model.components.ColumnGridVO;
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.configurador.pantallas.model.components.ItemVO;
 import mx.com.aon.configurador.pantallas.model.components.RecordVO;
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import net.sf.json.JSONArray;
 
@@ -27,14 +28,12 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.DynaProperty;
 
-public class ResultadoCotizacionAction extends PrincipalCotizacionAction {
+public class ResultadoCotizacionAction extends PrincipalCoreAction {
 	
 	private static final long serialVersionUID = -5578184550261043277L;
 	
 	public static final String DATOS_GRID = "DATOS_GRID";
 
-    private boolean success;
-    
     private JSONArray dataResult = new JSONArray();
 
     /**
@@ -212,14 +211,6 @@ public class ResultadoCotizacionAction extends PrincipalCotizacionAction {
         success = true;
         return SUCCESS;
     }
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
 
 	public JSONArray getDataResult() {
 		return dataResult;

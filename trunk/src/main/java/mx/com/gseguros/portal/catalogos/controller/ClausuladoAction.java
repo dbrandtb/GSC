@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.catalogos.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.catalogos.service.ClausuladoManager;
 import mx.com.gseguros.portal.general.model.BaseVO;
 
@@ -10,13 +11,11 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-public class ClausuladoAction extends ActionSupport {
+public class ClausuladoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = -7264510862184393230L;
 	
 	private Logger logger = Logger.getLogger(ClausuladoAction.class);
-	
-	private boolean success;
 	
 	private HashMap<String,String> params;
 	
@@ -95,14 +94,6 @@ public class ClausuladoAction extends ActionSupport {
     
     
     //Getters and setters
-    
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
 
 	public HashMap<String, String> getParams() {
 		return params;

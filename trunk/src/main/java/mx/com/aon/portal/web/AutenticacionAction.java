@@ -1,10 +1,10 @@
 package mx.com.aon.portal.web;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
@@ -15,13 +15,11 @@ import mx.com.gseguros.utils.Constantes;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.SessionMap;
-import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
 
-public class AutenticacionAction extends ActionSupport implements SessionAware {
+public class AutenticacionAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 0L;
 
@@ -37,11 +35,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	@Autowired
 	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
 	private List<RamaVO> listaRolCliente;
-	private boolean success;
 	private String errorMessage;
-
-	@SuppressWarnings("unchecked")
-	protected Map session;
 
 	public String execute() throws Exception {
 		logger.debug("Entrando a execute");
@@ -222,14 +216,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		this.navigationManager = navigationManager;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
 	public String getUser() {
 		return user;
 	}
@@ -253,12 +239,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 	public void setPasswordNuevo(String passwordNuevo) {
 		this.passwordNuevo = passwordNuevo;
-	}
-
-
-	@SuppressWarnings("unchecked")
-	public void setSession(Map session) {
-		this.session = session;
 	}
 	
 	public String getErrorMessage() {

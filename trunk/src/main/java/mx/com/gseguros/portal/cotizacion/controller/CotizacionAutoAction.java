@@ -33,7 +33,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	private Map<String,String>       smap1            = null;
 	private Map<String,String>       smap2            = null;
-	private String                   respuesta        = null;
 	private String                   respuestaOculta  = null;
 	private boolean                  exito            = false;
 	private Map<String,Item>         imap             = null;
@@ -1522,14 +1521,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

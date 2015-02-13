@@ -26,7 +26,6 @@ public class AgentesAction extends PrincipalCoreAction
     private ConsultaDatosAgenteVO datosAgente;
     private HashMap<String,String> params;
     private List<AgentePolizaVO> datosPolizaAgente;
-    private boolean success;
     private KernelManagerSustituto kernelManager;
     
     public String execute() throws Exception {
@@ -183,16 +182,4 @@ public class AgentesAction extends PrincipalCoreAction
 		this.datosPolizaAgente = datosPolizaAgente;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
-
-
-	
-	
 }

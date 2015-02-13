@@ -18,13 +18,11 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 
-public class UsuarioAction extends PrincipalCoreAction{
+public class UsuarioAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = -7264510862184393230L;
 	
 	private Logger logger = Logger.getLogger(UsuarioAction.class);
-	
-	private boolean success;
 	
 	private String errorMessage;
 	
@@ -265,13 +263,6 @@ public class UsuarioAction extends PrincipalCoreAction{
 
 
     // getters and setters
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
 	
 	public String getErrorMessage() {
 		return errorMessage;

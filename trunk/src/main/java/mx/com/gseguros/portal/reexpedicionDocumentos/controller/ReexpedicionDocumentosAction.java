@@ -37,7 +37,6 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 	private String                        mensaje;
 	private List<Map<String,String>>      stringList;
 	private Map<String,String>            stringMap;
-	private boolean                       success;
 
 	public String principal()
 	{
@@ -292,14 +291,6 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 
 	public void setStringList(List<Map<String, String>> stringList) {
 		this.stringList = stringList;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public Map<String, String> getStringMap() {

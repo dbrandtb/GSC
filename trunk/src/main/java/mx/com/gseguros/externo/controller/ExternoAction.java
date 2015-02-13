@@ -31,7 +31,6 @@ public class ExternoAction extends PrincipalCoreAction
 	private List<Map<String,String>> slist2;
 	private Map<String,String>       smap1;
 	private StoredProceduresManager  storedProceduresManager;
-	private boolean                  success;
 	private String                   estadoSesion;
 	
 	public String cotizar()
@@ -266,14 +265,6 @@ public class ExternoAction extends PrincipalCoreAction
 
 	public void setError(String error) {
 		this.error = error;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public List<Map<String, String>> getSlist2() {
