@@ -28,6 +28,7 @@ import org.apache.struts2.ServletActionContext;
 public class LoadClientesRolesAction extends PrincipalCoreAction {
 
     private static final long serialVersionUID = -7704147817021446988L;
+    private boolean success;
     private String user;
     private NavigationManager navigationManager;
     private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
@@ -360,6 +361,22 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
      */
     public void setUser(String user) {
         this.user = user;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isSuccess() {
+        return success;
+    }
+
+    /**
+     *
+     * @param success
+     */
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     /**

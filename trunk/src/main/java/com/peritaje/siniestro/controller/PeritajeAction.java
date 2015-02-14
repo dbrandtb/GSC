@@ -34,6 +34,7 @@ public class PeritajeAction extends PrincipalCoreAction
 	private List<Map<String,String>> strListMapOut;
 	private PeritajeManager          peritajeManager;
 	private String                   mensaje;
+	private boolean                  success;
 	private InputStream              fileInputStream;
 	private String                   contentType;
 	private String                   filename;
@@ -828,6 +829,14 @@ public class PeritajeAction extends PrincipalCoreAction
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getConsNumeroPoliza() {

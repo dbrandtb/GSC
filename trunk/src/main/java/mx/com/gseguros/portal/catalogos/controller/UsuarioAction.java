@@ -24,6 +24,8 @@ public class UsuarioAction extends PrincipalCoreAction {
 	
 	private Logger logger = Logger.getLogger(UsuarioAction.class);
 	
+	private boolean success;
+	
 	private String errorMessage;
 	
 	private UsuarioManager usuarioManager;
@@ -263,6 +265,13 @@ public class UsuarioAction extends PrincipalCoreAction {
 
 
     // getters and setters
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 	
 	public String getErrorMessage() {
 		return errorMessage;

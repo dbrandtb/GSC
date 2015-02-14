@@ -14,8 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 public class MailAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 3608545898806750390L;
@@ -23,6 +21,8 @@ public class MailAction extends PrincipalCoreAction {
 	private final static Log logger = LogFactory.getLog(MailAction.class);
 	
 	private MailService mailService;
+	
+	private boolean success;
 	
 	private List<String> to;
 	
@@ -125,6 +125,14 @@ public class MailAction extends PrincipalCoreAction {
 
 	//Getters and setters
 	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public List<String> getTo() {
 		return to;
 	}

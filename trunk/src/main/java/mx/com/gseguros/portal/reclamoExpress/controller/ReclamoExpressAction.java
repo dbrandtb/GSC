@@ -34,6 +34,11 @@ public class ReclamoExpressAction extends PrincipalCoreAction {
 	private static final long serialVersionUID = 7279218302506728952L;
 	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ReclamoExpressAction.class);
 	
+	/**
+     * Success property
+     */
+    private boolean success;
+    
     private String mensajeRes;
     
     private Map<String, String> params = new HashMap<String, String>();
@@ -660,6 +665,14 @@ public class ReclamoExpressAction extends PrincipalCoreAction {
 
 	public void setDatosTablas(List<HashMap<String, String>> datosTablas) {
 		this.datosTablas = datosTablas;
+	}
+	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	
 	public List<BaseVO> getDatosSecuenciales() {

@@ -23,6 +23,9 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 	private TablasApoyoManager tablasApoyoManager;
 	
 	
+	private boolean success;
+	
+	
 	/**
      * Parametros enviados a los catalogos
      */
@@ -136,6 +139,16 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     	success = true;
     	return SUCCESS;
     }
+
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
 
 	public Map<String, String> getParams() {

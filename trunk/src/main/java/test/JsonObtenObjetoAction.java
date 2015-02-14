@@ -14,6 +14,7 @@ import test.model.Cotizacion;
  */
 public class JsonObtenObjetoAction extends PrincipalCoreAction {
     
+    private boolean success;
     private test.model.Cotizacion data=null;
     
     public String obtenCotizacion()
@@ -33,6 +34,14 @@ public class JsonObtenObjetoAction extends PrincipalCoreAction {
                 new GenericVO("1","J"));
         System.out.println("##### SUCCESS");
         return SUCCESS;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public Cotizacion getData() {

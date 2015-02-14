@@ -29,6 +29,7 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 	private Map<String,String>               params;
 	private List<Map<String,String>>         loadList;
 	private String                           mensaje;
+	private boolean                          success;	
 	
 	public String execute() throws Exception {
     	success = true;
@@ -296,6 +297,14 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 		this.pantallasManager = pantallasManager;
 	}
 	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public Map<String, String> getParams() {
 		return params;
 	}

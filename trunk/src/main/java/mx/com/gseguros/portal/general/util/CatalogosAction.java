@@ -38,6 +38,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 	private SiniestrosManager 	    siniestrosManager;
     private StoredProceduresManager storedProceduresManager; 
 	
+    private boolean success;
+    
     /**
      * true si queremos la propiedad "listaGenerica", 
      * false si queremos la propiedad "lista"
@@ -717,7 +719,14 @@ public class CatalogosAction extends PrincipalCoreAction {
     }
     
     // Getters and setters
-    
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public boolean isCatalogoGenerico() {
 		return catalogoGenerico;
 	}

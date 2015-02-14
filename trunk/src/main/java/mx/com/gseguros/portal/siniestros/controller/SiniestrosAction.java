@@ -71,6 +71,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     private static final long serialVersionUID = -6321288906841302337L;
 	private Logger logger = Logger.getLogger(SiniestrosAction.class);
 	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private boolean success;
     private SiniestrosManager siniestrosManager;
     private KernelManagerSustituto kernelManagerSustituto;
     private transient CatalogosManager catalogosManager;
@@ -7780,6 +7781,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		this.listaPoliza = listaPoliza;
 	}
 	
+	public boolean isSuccess() {
+		return success;
+	}
+
 	public HashMap<String, String> getParams() {
 		return params;
 	}
@@ -7805,6 +7810,11 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         }
         return null;
     }
+    
+    /*	SETTER 	*/    
+    public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;

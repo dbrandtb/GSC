@@ -48,6 +48,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasAseguradoAction.class);
 	
+	/**
+     * Success property
+     */
+    private boolean success;
+    
     private String mensajeRes;
 	
 	@Autowired
@@ -620,6 +625,14 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		this.resultados = resultados;
 	}
 	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public String getMensajeRes() {
 		return mensajeRes;
 	}

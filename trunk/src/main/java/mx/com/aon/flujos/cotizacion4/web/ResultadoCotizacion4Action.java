@@ -107,6 +107,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String fechaFinVigencia;
     
     private List<IncisoSaludVO> incisos;
+    private boolean success;
     private boolean exito;
     private GridVO gridResultados;
     private JSONArray dataResult = new JSONArray();
@@ -118,6 +119,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String jsonCober_cdramo;
     private String jsonCober_cdcia;
     private String jsonCober_situa;
+    private String respuesta;
     private String respuestaOculta;
     
     //utilitarios
@@ -1692,6 +1694,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	return cdatribuMunicipio;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
     public String getCdatribuRol() {
         return cdatribuRol;
     }
@@ -1956,6 +1966,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

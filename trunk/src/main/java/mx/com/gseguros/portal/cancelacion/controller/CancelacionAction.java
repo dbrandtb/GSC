@@ -25,6 +25,7 @@ public class CancelacionAction extends PrincipalCoreAction
 {
 	private static final long              serialVersionUID   = 3337342608259982346L;
 	private static org.apache.log4j.Logger log                = org.apache.log4j.Logger.getLogger(CancelacionAction.class);
+	private boolean                        success;
 	private SimpleDateFormat               renderFechas       = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CancelacionManager       cancelacionManager;
@@ -494,6 +495,14 @@ public class CancelacionAction extends PrincipalCoreAction
 
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public void setCancelacionManager(CancelacionManager cancelacionManager) {

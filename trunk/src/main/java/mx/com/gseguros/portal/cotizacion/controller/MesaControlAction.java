@@ -44,6 +44,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private List<Map<String,Object>>       olist1;
 	private List<GenericVO>                lista;
 	private String                         msgResult;
+	private boolean                        success;
 	private Map<String,Item>               imap1;
 	private String                         username;
 	private String                         rol;
@@ -935,6 +936,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMsgResult() {

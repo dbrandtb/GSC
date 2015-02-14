@@ -42,6 +42,11 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public static final String ACCESO_CATALOGO_PERSONAS = "catalogoPersonas";
     
     
+    /**
+     * Success property
+     */
+    private boolean success;
+    
     private LoginManager loginManager;
 	private NavigationManager navigationManager;
 	@Autowired
@@ -375,6 +380,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 
 	public void setParams(HashMap<String, String> params) {
 		this.params = params;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getCodigoCliente() {

@@ -34,6 +34,8 @@ public class ResultadoCotizacionAction extends PrincipalCoreAction {
 	
 	public static final String DATOS_GRID = "DATOS_GRID";
 
+    private boolean success;
+    
     private JSONArray dataResult = new JSONArray();
 
     /**
@@ -211,6 +213,14 @@ public class ResultadoCotizacionAction extends PrincipalCoreAction {
         success = true;
         return SUCCESS;
     }
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
 	public JSONArray getDataResult() {
 		return dataResult;
