@@ -35,6 +35,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	@Autowired
 	private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
 	private List<RamaVO> listaRolCliente;
+	private boolean success;
 	private String errorMessage;
 
 	public String execute() throws Exception {
@@ -216,6 +217,14 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		this.navigationManager = navigationManager;
 	}
 
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+	
 	public String getUser() {
 		return user;
 	}

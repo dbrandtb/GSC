@@ -4,12 +4,10 @@
  */
 package mx.com.aon.portal.web;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.web.model.CotizacionSaludVO;
-import mx.com.aon.portal2.web.GenericVO;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.CookiesAware;
@@ -24,6 +22,7 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
     private Dinosaurio dino;
     private String llave;
     private CotizacionSaludVO cotizacion;
+    public boolean success;
     private Logger log=Logger.getLogger(DinosaurioAction.class);
     
     public String jsoo()
@@ -84,4 +83,12 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
         this.cotizacion = cotizacion;
     }
 
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+    
 }

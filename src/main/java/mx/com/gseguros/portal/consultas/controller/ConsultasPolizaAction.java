@@ -57,6 +57,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ConsultasPolizaAction.class);
 
+	/**
+	 * Success property
+	 */
+	private boolean success;
+
 	private String mensajeRes;
 
 	@Autowired
@@ -897,6 +902,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public void setDatosCoberturas(
 			List<CoberturaVO> datosCoberturas) {
 		this.datosCoberturas = datosCoberturas;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public List<PolizaAseguradoVO> getPolizasAsegurado() {

@@ -28,6 +28,8 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	private final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private boolean exito           = false;
+	private boolean success;
+	private String  respuesta;
 	private String  respuestaOculta = null;
 	
 	private Map<String,String>       smap1;
@@ -398,6 +400,14 @@ public class RehabilitacionAction extends PrincipalCoreAction
 		this.slist1 = slist1;
 	}
 
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public void setRehabilitacionManager(RehabilitacionManager rehabilitacionManager) {
 		this.rehabilitacionManager = rehabilitacionManager;
 	}
@@ -428,6 +438,14 @@ public class RehabilitacionAction extends PrincipalCoreAction
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

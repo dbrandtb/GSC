@@ -15,6 +15,8 @@ public class MenuAction extends PrincipalCoreAction {
 	
 	private Logger logger = Logger.getLogger(MenuAction.class);
 	
+	private boolean success;
+	
 	private String errorMessage;
 	
 	private MenuManager menuManager;
@@ -180,6 +182,13 @@ public class MenuAction extends PrincipalCoreAction {
     }
 
     // getters and setters
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 	
 	public String getErrorMessage() {
 		return errorMessage;

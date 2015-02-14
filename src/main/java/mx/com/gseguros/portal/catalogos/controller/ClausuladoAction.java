@@ -9,13 +9,13 @@ import mx.com.gseguros.portal.general.model.BaseVO;
 
 import org.apache.log4j.Logger;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 public class ClausuladoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = -7264510862184393230L;
 	
 	private Logger logger = Logger.getLogger(ClausuladoAction.class);
+	
+	private boolean success;
 	
 	private HashMap<String,String> params;
 	
@@ -94,6 +94,14 @@ public class ClausuladoAction extends PrincipalCoreAction {
     
     
     //Getters and setters
+    
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
 	public HashMap<String, String> getParams() {
 		return params;

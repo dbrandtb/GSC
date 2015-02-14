@@ -19,6 +19,11 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
     private static final long serialVersionUID = -6321288906841302337L;
 
 	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasSiniestroAction.class);
+	
+    /**
+     * Success property
+     */
+    private boolean success;
     
     private SiniestrosManager siniestrosManager;
     private ConsultasSiniestroManager consultaSiniestrosManager;
@@ -93,6 +98,14 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
     public String execute() throws Exception {
     	return SUCCESS;
     }
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;

@@ -21,6 +21,7 @@ public class EndososGrupoAction extends PrincipalCoreAction
 	
 	private boolean                  success         = true;
 	private boolean                  exito           = false;
+	private String                   respuesta;
 	private String                   respuestaOculta = null;
 	private Map<String,String>       smap1           = null;
 	private Map<String,Item>         imap            = null;
@@ -317,6 +318,14 @@ public class EndososGrupoAction extends PrincipalCoreAction
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

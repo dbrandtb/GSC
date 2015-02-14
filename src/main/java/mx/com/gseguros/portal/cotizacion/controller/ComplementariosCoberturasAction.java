@@ -51,10 +51,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	private Map<String,Object> opanel2;
 	private Map<String,Object> opanel3;
 	private final static Logger logger=Logger.getLogger(ComplementariosCoberturasAction.class);
+	private boolean success;
 	private boolean exito  =false;
 	private Map<String,String>parametros;
 	private String str1;
 	private String str2;
+	private String respuesta;
 	private String respuestaOculta;
 	
 	public String pantallaCoberturas()
@@ -1620,6 +1622,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		this.opanel3 = opanel3;
 	}
 
+	public boolean isSuccess() {
+		return success;
+	}
+
 	public Map<String, String> getParametros() {
 		return parametros;
 	}
@@ -1658,6 +1664,14 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

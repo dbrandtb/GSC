@@ -25,6 +25,8 @@ public class WebServicesAction extends PrincipalCoreAction {
 	private Ice2sigsService ice2sigsService;
 	private RecibosSigsService recibosSigsService;
 	
+	private boolean success;
+	
 	private String mensajeRespuesta;
 	
 	private Map<String,String> params;
@@ -144,7 +146,14 @@ public class WebServicesAction extends PrincipalCoreAction {
     }
 
     // getters and setters
-    
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public Map<String,String> getParams() {
 		return params;
 	}

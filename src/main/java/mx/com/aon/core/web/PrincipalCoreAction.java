@@ -16,20 +16,7 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 
 	protected final transient Logger logger = Logger.getLogger(PrincipalCoreAction.class);
 	
-	/**
-	 * Sesion de usuario 
-	 */
 	protected Map<String,Object> session;
-	
-	/**
-	 * Propiedad general success
-	 */
-	protected boolean success;
-	
-	/**
-	 * Propiedad general mensaje de respuesta
-	 */
-	protected String respuesta;
 	
 
 	public Map<String,Object> getSession() {
@@ -42,22 +29,6 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 		
 	}
 	
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
 	
 	/**
 	 * Convierte el valor de una propiedad a formato JSON 

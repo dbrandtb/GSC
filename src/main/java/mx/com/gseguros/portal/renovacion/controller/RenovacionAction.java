@@ -24,6 +24,7 @@ public class RenovacionAction extends PrincipalCoreAction
 	private boolean                  success          = true;
 	private boolean                  exito            = false;
 	private Map<String,String>       smap1            = null;
+	private String                   respuesta;
 	private String                   respuestaOculta  = null;
 	private Map<String,Item>         imap             = null;
 	private List<Map<String,String>> slist1           = null;
@@ -313,6 +314,14 @@ public class RenovacionAction extends PrincipalCoreAction
 
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {

@@ -30,10 +30,12 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private Map<String,String>smap1;
 	private List<Map<String,String>>slist1;
 
+	protected boolean success;
 	protected String contentType;
 	
 	private String url;
 	
+	private String  respuesta;
 	private String  respuestaOculta = null;
 	private boolean exito           = false;
 	
@@ -285,6 +287,14 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		this.filename = filename;
 	}
 
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public String getContentType() {
 		return contentType;
 	}
@@ -315,6 +325,14 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
 	public String getRespuestaOculta() {
