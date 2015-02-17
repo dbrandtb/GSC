@@ -9,21 +9,22 @@
 ////// overrides //////
 
 ////// urls //////
-var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"       />';
-var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"       />';
-var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
-var _p30_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
-var _p30_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"        />';
-var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                />';
-var _p30_urlCotizar                        = '<s:url namespace="/emision"         action="cotizarAutosFlotilla"           />';
-var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"    />';
-var _p30_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacionAutoFlotilla"   />';
-var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
-var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"        />';
-var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
-var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"            />';
-var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"             />';
-var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                 />';
+var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"           />';
+var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"           />';
+var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"     />';
+var _p30_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
+var _p30_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
+var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                    />';
+var _p30_urlCotizar                        = '<s:url namespace="/emision"         action="cotizarAutosFlotilla"               />';
+var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"        />';
+var _p30_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacionAutoFlotilla"       />';
+var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                 />';
+var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"            />';
+var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                 />';
+var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"                />';
+var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                 />';
+var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                     />';
+var _p30_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5" />';
 ////// urls //////
 
 ////// variables //////
@@ -353,7 +354,7 @@ Ext.onReady(function()
             ,'parametros.pv_otvalor86','parametros.pv_otvalor87','parametros.pv_otvalor88','parametros.pv_otvalor89','parametros.pv_otvalor90'
             ,'parametros.pv_otvalor91','parametros.pv_otvalor92','parametros.pv_otvalor93','parametros.pv_otvalor94','parametros.pv_otvalor95'
             ,'parametros.pv_otvalor96','parametros.pv_otvalor97','parametros.pv_otvalor98','parametros.pv_otvalor99'
-            ,'cdplan','cdtipsit','personalizado',{name:'nmsituac',type:'int'}
+            ,'cdplan'                 ,'cdtipsit'               ,'personalizado'          ,{name:'nmsituac',type:'int'}
         ]
     });
     
@@ -2407,6 +2408,38 @@ Ext.onReady(function()
         //herencia situaciones
     }
     //ramo 5
+    
+    Ext.Ajax.request(
+    {
+        url : _p30_urlCargarParametros
+        ,params  :
+        {
+            'smap1.parametro' : 'REMOLQUES_POR_TRACTOCAMION'
+            ,'smap1.cdramo'   : _p30_smap1.cdramo
+            ,'smap1.cdtipsit' : '*'
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('### remolques por tracto:',json);
+            if(json.exito)
+            {
+                //5100
+                //6001
+                _p30_smap1.remolquesPorTracto=json.smap1.P1VALOR;
+            }
+            else
+            {
+                _p30_smap1.remolquesPorTracto=0;
+                mensajeError(json.respuesta);
+            }
+            debug('_p30_smap1:',_p30_smap1);
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// custom //////
     
     ////// loaders //////
@@ -2853,6 +2886,36 @@ function _p30_cotizar(sinTarificar)
         if(!valido)
         {
             mensajeWarning(error);
+        }
+    }
+    
+    if(valido)
+    {
+        var nTipo4  = 0;
+        var nTipo13 = 0;
+        _p30_store.each(function(record)
+        {
+            if(record.get('cdtipsit')+'x'=='CRx')
+            {
+                var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+                if(record.get(tipoVehiName)-0==4)
+                {
+                    nTipo4=nTipo4+1;
+                }
+                else if(record.get(tipoVehiName)-0==13)
+                {
+                    nTipo13=nTipo13+1;
+                }
+            }
+        });
+        if(nTipo13>nTipo4*_p30_smap1.remolquesPorTracto)
+        {
+            valido=false;
+        }
+        if(!valido)
+        {
+            mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
+                           +'Y en la cotizaci&oacute;n hay '+nTipo13+' remolques y '+nTipo4+' tractocamiones');
         }
     }
     
@@ -4499,6 +4562,37 @@ function _p30_tatrisitWindowAutoAceptarClic(bot)
             throw 'Favor de verificar los datos';
         }
         
+        if(_p30_selectedRecord.get('cdtipsit')+'x'=='CRx')
+        {
+            Ext.Ajax.request(
+            {
+                url     : _p30_urlCargarObligatorioCamionRamo5
+                ,params :
+                {
+                    'smap1.clave' : form.down('[fieldLabel*=VERSI]').getValue()
+                }
+                ,success : function(response)
+                {
+                    var json=Ext.decode(response.responseText);
+                    debug('### tipo vehi:',json);
+                    if(json.exito)
+                    {
+                        var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+                        _p30_selectedRecord.set(tipoVehiName,json.smap1.tipo);
+                        debug('_p30_selectedRecord:',_p30_selectedRecord.data);
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    errorComunicacion();
+                }
+            });
+        }
+         
         form.micallback(form);
     }
     catch(e)
