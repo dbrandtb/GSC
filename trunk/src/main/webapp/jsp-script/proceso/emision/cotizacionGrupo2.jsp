@@ -1688,7 +1688,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     hijo.on('change',function(comp,value)
                                                     {
                                                         debug('change:',value,comp.maxValue,comp);
-                                                        if(value!=comp.maxValue)
+                                                        if(value!=comp.valorInicial)
                                                         {
                                                             comp.addCls('valorNoOriginal');
                                                         }
