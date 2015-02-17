@@ -193,8 +193,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdusuari = usu.getUser();
 			smap1.put("pv_cdrol_i",cdsisrol);
 			smap1.put("pv_cdusuari_i",cdusuari);
-			if(cdsisrol.equalsIgnoreCase("operadorsini")||cdsisrol.equalsIgnoreCase("medajustador")|| cdsisrol.equalsIgnoreCase("mcsiniestros")||
-			   cdsisrol.equalsIgnoreCase("coordinamed"))//|| cdsisrol.equalsIgnoreCase("coordmedmulti")|| cdsisrol.equalsIgnoreCase("germedmulti"))
+			if(cdsisrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.MESA_DE_CONTROL_SINIESTROS.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol()))
 			{
 				slist1=kernelManager.loadMesaControlUsuario(smap1);
 			}
