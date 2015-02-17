@@ -869,4 +869,41 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public String recuperarPorcentajeRecargoPorProducto(String cdramo,String cdperpag)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo"   , cdramo);
+    	params.put("cdperpag" , cdperpag);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_PORC_RECARGO", params);
+    	Map<String,Object>procResult=ejecutaSP(new RecuperarPorcentajeRecargoPorProducto(getDataSource()), params);
+    	double recargo;
+    	try
+    	{
+    		recargo=Double.parseDouble((String)procResult.get("pv_porcrcgo_o"));
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error(ex);
+    		throw new ApplicationException("Error al obtener recargo por forma de pago");
+    	}
+    	String sRecargo=String.format("%.2f", recargo);
+    	logger.debug(Utilerias.join("PKG_CONSULTA.P_GET_PORC_RECARGO result=",sRecargo));
+    	return sRecargo;
+    }
+    
+    protected class RecuperarPorcentajeRecargoPorProducto extends StoredProcedure
+    {
+    	protected RecuperarPorcentajeRecargoPorProducto(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_PORC_RECARGO");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_porcrcgo_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

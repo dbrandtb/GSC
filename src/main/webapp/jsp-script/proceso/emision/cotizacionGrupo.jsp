@@ -69,6 +69,7 @@ var _p21_urlCargarConceptosGlobales      = '<s:url namespace="/emision"         
 var _p21_urlGuardarContratanteColectivo  = '<s:url namespace="/emision"         action="guardarContratanteColectivo"      />';
 var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         action="cargarTramite"                    />';
 var _p21_urlPantallaClausulasPoliza      = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
+var _p21_urlRecuperacionSimple           = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -874,6 +875,75 @@ Ext.onReady(function()
     }
     ////// contenido //////
     
+    ////// custom //////
+    
+    //recargo fraccionado
+    var recargoCmp=_fieldByName('recargoPago');
+    debug('@CUSTOM recargo:',recargoCmp);
+    recargoCmp.bloqueo = false;
+    recargoCmp.heredar = function()
+    {
+        var me             = _fieldByName('recargoPago');
+        var cdperpagCmp    = _fieldByName('cdperpag');
+        var recargoPersCmp = _fieldByName('recargoPers');
+        if(recargoPersCmp.getValue()+'x'=='Nx')
+        {
+            me.hide();
+            me.setValue(0);
+        }
+        else
+        {
+            me.show();
+            if(!Ext.isEmpty(cdperpagCmp.getValue())&&me.bloqueo==false)
+            {
+                me.setLoading(true);
+                Ext.Ajax.request(
+                {
+                    url     : _p21_urlRecuperacionSimple
+                    ,params :
+                    {
+                        'smap1.procedimiento' : 'RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO'
+                        ,'smap1.cdramo'       : _p21_smap1.cdramo
+                        ,'smap1.cdperpag'     : cdperpagCmp.getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        me.setLoading(false);
+                        var json=Ext.decode(response.responseText);
+                        debug('### pago frac:',json);
+                        if(json.exito)
+                        {
+                            me.setValue(json.smap1.recargo);
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        me.setLoading(false);
+                        errorComunicacion();
+                    }
+                });
+            }
+        }
+    };
+    
+    //triggers
+    _fieldByName('cdperpag').on(
+    {
+        change : function(){ _fieldByName('recargoPago').heredar(); }
+    });
+    _fieldByName('recargoPers').on(
+    {
+        change : function(){ _fieldByName('recargoPago').heredar(); }
+    });
+    //triggers
+    //recargo fraccionado
+    
+    ////// custom //////
+    
     ////// loaders //////
     _p21_fieldRfc().on(
     {
@@ -986,6 +1056,7 @@ Ext.onReady(function()
     else if(_p21_ntramite)
     {
         _p21_tabpanel().setLoading(true);
+        _fieldByName('recargoPago').bloqueo=true;
         Ext.Ajax.request(
         {
             url     : _p21_urlCargarDatosCotizacion
@@ -1107,6 +1178,10 @@ Ext.onReady(function()
                                 ,'smap1.cdramo'   : _p21_smap1.cdramo
                                 ,'smap1.estado'   : _p21_smap1.estado
                                 ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                            }
+                            ,callback : function()
+                            {
+                                _fieldByName('recargoPago').bloqueo=false;
                             }
                             ,success : function(response)
                             {
@@ -1882,6 +1957,15 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     ,minHeight : 100
                                                     ,hidden    : _p21_ntramite ? false : true
                                                     ,maxHeight : 250
+                                                    ,tbar      :
+                                                    [
+                                                        {
+                                                            text     : 'Ver conceptos globales'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/money_dollar.png'
+                                                            ,hidden  : _p21_smap1.cdsisrol!='COTIZADOR'
+                                                            ,handler : function(){ _p21_generarVentanaVistaPrevia(true); }
+                                                        }
+                                                    ]
                                                     ,store     : Ext.create('Ext.data.Store',
                                                     {
                                                         model     : '_p21_modeloTarifaEdad'
@@ -3399,7 +3483,7 @@ function _p21_emitir()
     _p21_generarTramiteClic(_p21_generarVentanaVistaPrevia);
 }
 
-function _p21_generarVentanaVistaPrevia()
+function _p21_generarVentanaVistaPrevia(sinBotones)
 {
     var itemsVistaPrevia=[];
     
@@ -3410,7 +3494,7 @@ function _p21_generarVentanaVistaPrevia()
             title     : 'Vista previa'
             ,width    : 800
             ,height   : 400
-            ,closable : false
+            ,closable : !Ext.isEmpty(sinBotones)&&sinBotones==true
             ,modal    : true
             ,items    :
             [
@@ -3426,11 +3510,13 @@ function _p21_generarVentanaVistaPrevia()
                 {
                     text     : 'Emitir'
                     ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
                     ,handler : function(){_p21_emitir2(ventana,this);}
                 }
                 ,{
                     text     : 'Cancelar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
                     ,handler : function(){ventana.destroy();}
                 }
             ]
@@ -3496,6 +3582,7 @@ function _p21_generarVentanaVistaPrevia()
                         debug('### obtener conceptos globales:',json);
                         if(json.exito)
                         {
+                            me.getStore().removeAll();
                             me.getStore().add(new _p21_vpModelo(
                             {
                                 concepto : 'PRIMA NETA'

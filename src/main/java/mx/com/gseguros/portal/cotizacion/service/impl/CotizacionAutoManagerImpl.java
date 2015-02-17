@@ -62,6 +62,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
 	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
+	    ,RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO               = "RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO"
 	    ,RECUPERAR_TEXTO_CLAUSULA_POLIZA                         = "RECUPERAR_TEXTO_CLAUSULA_POLIZA"
 	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
 	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
@@ -1019,6 +1020,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      , null);
 		procedimientos.put(RECUPERAR_TEXTO_CLAUSULA_POLIZA                         , null);
 		procedimientos.put(RECUPERAR_CLAUSULAS_POLIZA                              , null);
+		procedimientos.put(RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO               , null);
 		return procedimientos;
 	}
 	
@@ -1088,6 +1090,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String cdclausu = parametros.get("cdclausu");
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("dsclausu" , Utilerias.join("Texto de la clausula ",cdclausu));
+			}
+			else if(procedimiento.equals(RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO))
+			{
+				String cdramo   = parametros.get("cdramo");
+				String cdperpag = parametros.get("cdperpag");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("recargo" , consultasDAO.recuperarPorcentajeRecargoPorProducto(cdramo,cdperpag));
 			}
 			
 			setCheckpoint("0");
