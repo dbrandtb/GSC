@@ -11,6 +11,8 @@ debug('#################################################');
 
 // Catalogo Estatus de tramite a utilizar:
 var _STATUS_PENDIENTE                 = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
+var _STATUS_EN_CAPTURA                = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
+var _STATUS_EN_CAPTURA_CMM			  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA_CMM.codigo" />';
 var _STATUS_EN_ESPERA_DE_AUTORIZACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_AUTORIZACION.codigo" />';
 var _STATUS_TRAMITE_RECHAZADO         = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
 var _STATUS_TRAMITE_CONFIRMADO        = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />'; 
@@ -711,6 +713,95 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 
 
 //TURNAR AL GERENTE MULTIREGIONAL
+function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
+    var record = grid.getStore().getAt(rowIndex);
+	debug("VALOR DEL RECORD -->>>",record);
+    debug("VALOR DEL record.get('status')");
+	debug(record.get('status'));
+    if(record.get('status') == _STATUS_EN_CAPTURA || record.get('status') == _STATUS_EN_CAPTURA_CMM || record.get('status') ==_STATUS_PENDIENTE){
+		mensajeWarning('El tr&aacute;mite se encuentra activo');
+		return;
+	}else{
+		msgWindow = Ext.Msg.show({
+		    title: 'Aviso',
+		    msg: '&iquest; Deseas reactivar el tr&aacute;mite '+record.get('ntramite')+'?',
+		    buttons: Ext.Msg.YESNO,
+		    icon: Ext.Msg.QUESTION,
+		    fn: function(buttonId, text, opt){
+		        if(buttonId == 'yes'){
+		            var comentarioReactivacion = Ext.create('Ext.form.field.TextArea', {
+		                fieldLabel: 'Observaciones de reactivaci&oacute;n'
+		                ,labelWidth: 150
+		                ,width: 600
+		                ,name:'smap1.comments'
+		                ,height: 250
+		            });
+		            windowLoader = Ext.create('Ext.window.Window',{
+		                modal       : true,
+		                buttonAlign : 'center',
+		                width       : 663,
+		                height      : 400,
+		                autoScroll  : true,
+		                items       : [
+		                                Ext.create('Ext.form.Panel', {
+		                                title: 'Reactivar Tr&aacute;mite',
+		                                width: 650,
+		                                url: _URL_ActualizaStatusTramite,
+		                                bodyPadding: 5,
+		                                items: [comentarioReactivacion],
+		                                buttonAlign:'center',
+		                                buttons: [{
+		                                    text: 'Reactivar',
+		                                    icon    : '${ctx}/resources/fam3icons/icons/accept.png',
+		                                    buttonAlign : 'center',
+		                                    handler: function() {
+		                                        if (this.up().up().form.isValid()) {
+		                                            this.up().up().form.submit({
+		                                                waitMsg:'Procesando...',
+		                                                params: {
+		                                                    'smap1.ntramite' : record.get('ntramite'), 
+		                                                    'smap1.status'   : _STATUS_PENDIENTE
+		                                                },
+		                                                failure: function(form, action) {
+		                                                    mensajeError('No se pudo reactivar dicho tr&aacute;mite.');
+		                                                },
+		                                                success: function(form, action) {
+		                                                    //mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+		                                                    loadMcdinStore();
+		                                                    windowLoader.close();
+		                                                    
+		                                                }
+		                                            });
+		                                        } else {
+		                                            Ext.Msg.show({
+		                                                   title: 'Aviso',
+		                                                   msg: 'Complete la informaci&oacute;n requerida',
+		                                                   buttons: Ext.Msg.OK,
+		                                                   icon: Ext.Msg.WARNING
+		                                               });
+		                                        }
+		                                    }
+		                                },{
+		                                    text: 'Cancelar',
+		                                    icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+		                                    buttonAlign : 'center',
+		                                    handler: function() {
+		                                        windowLoader.close();
+		                                    }
+		                                }
+		                                ]
+		                            })  
+		                        ]
+		            }).show();
+		            centrarVentana(windowLoader);
+		        }
+		    }
+		});
+		centrarVentana(msgWindow);
+	}
+}
+
+
 function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
     var record = grid.getStore().getAt(rowIndex);
 	

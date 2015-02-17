@@ -404,6 +404,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
 							paramsMCAut.put("pv_otvalor06",params.get("copagoTotal"));					// Total Penalizacinn
 							paramsMCAut.put("pv_otvalor07",params.get("idHospitalPlus"));				// Tipo Hospital Plus
+							paramsMCAut.put("pv_otvalor16",usuario.getUser());
+							paramsMCAut.put("pv_otvalor17",usuario.getUser());
+							paramsMCAut.put("pv_otvalor18",usuario.getUser());
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
 							
 							if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -434,6 +437,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				    		otvalor.put("pv_otvalor04_i"  , params.get("fevencim"));
 				    		otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
 				    		otvalor.put("pv_otvalor07_i",params.get("idHospitalPlus"));
+				    		otvalor.put("pv_otvalor16_i",usuario.getUser());
+				    		otvalor.put("pv_otvalor17_i",usuario.getUser());
 				    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
 				    		
 				    		// Tenemos que actualizar el status para el guardado
