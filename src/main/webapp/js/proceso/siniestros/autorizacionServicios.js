@@ -3415,12 +3415,6 @@ Ext.onReady(function() {
 				Ext.getCmp('idReqPenalizacion').setValue(json.REQPENALIZACION);
 				Ext.getCmp('idValMaternidad').setValue(json.VALMATERNIDAD);
 				Ext.getCmp('idValSesiones').setValue(json.VALSESIONES);
-				if(json.MENSAJEMATERNIDAD == "null"|| json.MENSAJEMATERNIDAD ==null){
-					Ext.getCmp('observaciones').setValue('');
-				}else{
-					var mensajeCompleto = json.MENSAJEMATERNIDAD + " CONTRATANTE.";
-					Ext.getCmp('observaciones').setValue(mensajeCompleto);
-				}
 				
 				if(Ext.getCmp('idValMaternidad').getValue() =="1"){
 					Ext.Ajax.request(
