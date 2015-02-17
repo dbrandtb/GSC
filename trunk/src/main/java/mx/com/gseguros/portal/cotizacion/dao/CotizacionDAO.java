@@ -560,6 +560,9 @@ public interface CotizacionDAO
 			,String cdusuari
 			)throws Exception;
 	public void validarCodpostalTarifa(String codpostal,String cdtipsit)throws Exception;
+	
+	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception;
+	
 	public boolean validarCuadroComisionNatural(
 			String cdunieco
 			,String cdramo

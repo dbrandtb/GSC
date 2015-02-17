@@ -4850,6 +4850,36 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception{
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR",params);
+		
+		Map<String,Object>procResult=ejecutaSP(new ValidaDomicilCotTitular(getDataSource()),params);
+		String resVal = (String)procResult.get("pv_swdomici_o");
+		
+		boolean resValidacion =(StringUtils.isNotBlank(resVal)&&resVal.equalsIgnoreCase("S"));
+		
+		logger.debug(Utilerias.join("PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR result=",resValidacion));
+		return resValidacion;
+	}
+	
+	protected class ValidaDomicilCotTitular extends StoredProcedure
+	{
+		protected ValidaDomicilCotTitular(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swdomici_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public boolean validarCuadroComisionNatural(
 			String cdunieco
 			,String cdramo

@@ -1127,6 +1127,55 @@ public class ComplementariosAction extends PrincipalCoreAction
 		logger.debug(list1);
 		try
 		{
+			/**
+			 * Para validar Zona de CP Estado y municipio del titular Respecto a la cotizacion
+			 */
+			String cdpersonContrat = null;
+			HashMap<String, String> cdpersonsAsegs = new HashMap<String, String>();
+			
+			for(Map<String,Object>personaIt:list1){
+				String cdrolIt = (String) personaIt.get("cdrol");
+				String cdpersonIt = (String) personaIt.get("cdperson");
+				
+				if(StringUtils.isNotBlank(cdrolIt) && "1".equals(cdrolIt)){
+					cdpersonContrat = cdpersonIt;
+				}else{
+					cdpersonsAsegs.put(cdpersonIt, cdrolIt);
+				}
+			}
+			
+			/**
+			 * Validar el domicilio de algun asegurado que tambien es contrantante, 
+			 * pues debe heredar el domicilio del titular y debe de ser el mismo de la cotizacion
+			 */
+			if(cdpersonsAsegs.containsKey(cdpersonContrat)){
+				try
+				{
+					Map<String,String> param=new LinkedHashMap<String,String>(0);
+					param.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
+					param.put("pv_cdramo_i",	map1.get("pv_cdramo"));
+					param.put("pv_estado_i",	map1.get("pv_estado"));
+					param.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
+					param.put("pv_cdperson_i",	cdpersonContrat);
+					boolean validacionDomTitu = cotizacionManager.validaDomicilioCotizacionTitular(param);
+					
+					if(!validacionDomTitu){
+						mensajeRespuesta = "El C&oacute;digo Postal (Estado y Municipio) de la cotizaci&oacute;n debe coincidir con el domicilio del asegurado contratante.";
+						success = false;
+						return SUCCESS;
+					}
+					 
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error de validaci&oacute;n de C&oacute;digo Postal (Estado y Municipio) de la cotizaci&oacute;n debe coincidir con el domicilio del asegurado contratante.",ex);
+					mensajeRespuesta = "Error al validar el C&oacutge;digo Postal. Consulte a Soporte.";
+					success = false;
+					return SUCCESS;
+				}
+			}
+			
+			
 			///////////////////////////////////////////////
 			////// para borrar los mpoliper anterior //////
 			/*///////////////////////////////////////////*/
