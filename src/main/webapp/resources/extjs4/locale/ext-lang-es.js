@@ -128,14 +128,14 @@ Ext.define("Ext.locale.es.toolbar.Paging", {
 
 Ext.define("Ext.locale.es.form.field.Base", {
     override: "Ext.form.field.Base",
-    invalidText: "El valor en este campo es inv&aacute;lido"
+    invalidText: "Valor inv&aacute;lido"
 });
 
 Ext.define("Ext.locale.es.form.field.Text", {
     override: "Ext.form.field.Text",
-    minLengthText: "El tama&ntilde;o m&iacute;nimo para este campo es de {0}",
-    maxLengthText: "El tama&ntilde;o m&aacute;ximo para este campo es de {0}",
-    blankText: "Este campo es obligatorio",
+    minLengthText: "Tama&ntilde;o m&iacute;nimo {0}",
+    maxLengthText: "Tama&ntilde;o m&aacute;ximo {0}",
+    blankText: "Dato obligatorio",
     regexText: "",
     emptyText: null
 });
@@ -144,9 +144,9 @@ Ext.define("Ext.locale.es.form.field.Number", {
     override: "Ext.form.field.Number",
     decimalSeparator: ",",
     decimalPrecision: 2,
-    minText: "El valor m&iacute;nimo para este campo es de {0}",
-    maxText: "El valor m&aacute;ximo para este campo es de {0}",
-    nanText: "{0} no es un n&uacute;mero v&aacute;lido"
+    minText: "Valor m&iacute;nimo {0}",
+    maxText: "Valor m&aacute;ximo {0}",
+    nanText: "{0} n&uacute;mero inv&aacute;lido"
 });
 
 Ext.define("Ext.locale.es.form.field.File", { 
@@ -158,9 +158,9 @@ Ext.define("Ext.locale.es.form.field.Date", {
     override: "Ext.form.field.Date",
     disabledDaysText: "Deshabilitado",
     disabledDatesText: "Deshabilitado",
-    minText: "La fecha para este campo debe ser posterior a {0}",
-    maxText: "La fecha para este campo debe ser anterior a {0}",
-    invalidText: "{0} no es una fecha v&aacute;lida - debe tener el formato {1}",
+    minText: "Fecha m&iacute;nima {0}",
+    maxText: "Fecha m&aacute;xima {0}",
+    invalidText: "{0} sin formato {1}",
     format: "d/m/Y",
     altFormats: "d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
 });
@@ -176,10 +176,10 @@ Ext.define("Ext.locale.es.form.field.ComboBox", {
 
 Ext.define("Ext.locale.es.form.field.VTypes", {
     override: "Ext.form.field.VTypes",
-    emailText: 'Este campo debe ser una direcci&oacute;n de correo electr&oacute;nico con el formato "usuario@dominio.com"',
-    urlText: 'Este campo debe ser una URL con el formato "http:/' + '/www.dominio.com"',
-    alphaText: 'Este campo s&oacute;lo debe contener letras y _',
-    alphanumText: 'Este campo s&oacute;lo debe contener letras, n&uacute;meros y _'
+    emailText: 'No tiene formato "usuario@dominio.com"',
+    urlText: 'No tiene formato "http:/' + '/www.dominio.com"',
+    alphaText: 'S&oacute;lo letras y _',
+    alphanumText: 'S&oacute;lo letras, n&uacute;meros y _'
 });
 
 Ext.define("Ext.locale.es.form.field.HtmlEditor", {
