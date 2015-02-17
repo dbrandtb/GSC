@@ -348,7 +348,8 @@ public class GeneradorCampos
         item.add("swobligaemiflot" , comp.isObligatorioEmiFlot());
         if(StringUtils.isNotBlank(value))
         {
-        	item.add(Item.crear("value" , value).setQuotes(""));
+        	item.add(Item.crear("valorInicial" , value).setQuotes(""));
+        	item.add(Item.crear("value"        , value).setQuotes(""));
         }
         item.add("hidden"     , comp.isOculto());
         if(!esMovil)
@@ -379,9 +380,13 @@ public class GeneradorCampos
         ////// numericos no menores a cero //////
         if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
         {
-        	if(!comp.isMenorCero())
+        	if(StringUtils.isBlank(comp.getMinValue())&&!comp.isMenorCero())
         	{
         		item.add("minValue",0);
+        	}
+        	else if(StringUtils.isNotBlank(comp.getMinValue()))
+        	{
+        		item.add("minValue",Double.parseDouble(comp.getMinValue()));
         	}
         	if(comp.getMaxValue()!=null)
         	{

@@ -57,6 +57,7 @@ public class ComponenteVO
 	private boolean comboVacio    = false;
 	private String  defaultValue  = null;
 	private String  maxValue      = null;
+	private String  minValue      = null;
 	
 	private String swsuscri = null;
 	private String swtarifi = null;
@@ -645,5 +646,13 @@ public class ComponenteVO
 
 	public void setSwpresemiflot(String swpresemiflot) {
 		this.swpresemiflot = swpresemiflot;
+	}
+
+	public String getMinValue() {
+		return minValue;
+	}
+
+	public void setMinValue(String minValue) {
+		this.minValue = minValue;
 	}
 }

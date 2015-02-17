@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -77,16 +78,28 @@ public class ObtieneTatrigarMapper implements RowMapper
 		}
 		result.setDependiente(isDepend);
 
-		String maximo = rs.getString("MAXIMO");
-		if (StringUtils.isNotBlank(maximo)) {
-			if (StringUtils.isNotBlank(result.getCatalogo()))
+		String valor = rs.getString("VALOR");
+		if(StringUtils.isNotBlank(valor))
+		{
+			if(StringUtils.isNotBlank(result.getCatalogo()))
 			{
-				result.setValue("'" + maximo + "'");
+				result.setValue(Utilerias.join("'"+valor+"'"));
 			}
 			else
 			{
-				result.setValue(maximo);
+				result.setValue(valor);
 			}
+		}
+
+		String minimo = rs.getString("MINIMO");
+		if(StringUtils.isNotBlank(minimo))
+		{
+			result.setMinValue(minimo);
+		}
+		
+		String maximo = rs.getString("MAXIMO");
+		if (StringUtils.isNotBlank(maximo))
+		{
 			result.setMaxValue(maximo);
 		}
 
