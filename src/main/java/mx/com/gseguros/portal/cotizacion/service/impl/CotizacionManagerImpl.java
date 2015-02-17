@@ -5701,6 +5701,11 @@ public class CotizacionManagerImpl implements CotizacionManager
     	return resp;
     }
 	
+    @Override
+    public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception{
+    	return cotizacionDAO.validaDomicilioCotizacionTitular(params);
+    }
+    
     @Deprecated
     @Override
     public boolean validarCuadroComisionNatural(

@@ -268,10 +268,11 @@
                	{
                 	Ext.Msg.show({
                         title:'Error',
-                        msg: 'No se pudo guardar',
+                        msg: Ext.isEmpty(jsonResp.mensajeRespuesta)? 'No se pudo guardar' : jsonResp.mensajeRespuesta,
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
                     });
+                    
                 	timeoutflagp2=2;
                	}
             },

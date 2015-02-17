@@ -432,6 +432,10 @@ public interface CotizacionManager
 			,Map<String,String>tvalopol
 			);
 	
+	
+	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception;
+	
+	
 	@Deprecated
 	public boolean validarCuadroComisionNatural(
 			String cdunieco

@@ -219,7 +219,18 @@ Ext.onReady(function()
 					            		_RFCsel = '';
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		form.down('[name=smap1.rfc]').getStore().removeAll();
+					            		
+					            		if(e.isSpecialKey() || e.isNavKeyPress() || e.getKey() == e.CONTEXT_MENU || e.getKey() == e.HOME || e.getKey() == e.NUM_CENTER 
+						            		|| e.getKey() == e.F1 || e.getKey() == e.F2 || e.getKey() == e.F3 || e.getKey() == e.F4 || e.getKey() == e.F5 || e.getKey() == e.F6 
+						            		|| e.getKey() == e.F7 || e.getKey() == e.F8 || e.getKey() == e.F9 || e.getKey() == e.F10 || e.getKey() == e.F11 || e.getKey() == e.F12){
+						            			if(e.getKey() == e.BACKSPACE){
+						            				form.down('[name=smap1.rfc]').getStore().removeAll();
+						            			}
+					            		}else{
+					            			form.down('[name=smap1.rfc]').getStore().removeAll();
+					            		}
+					            			
+					            		
 					            		
 					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
