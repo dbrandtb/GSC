@@ -370,6 +370,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"pcpgocte"
 			,"tipoDerPol"
 			,"montoDerPol"
+			,"recargoPers"
+			,"recargoPago"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)

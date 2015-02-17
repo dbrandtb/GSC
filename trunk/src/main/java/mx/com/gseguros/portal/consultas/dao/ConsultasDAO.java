@@ -104,4 +104,6 @@ public interface ConsultasDAO
 			,String nmpoliza
 			,String cdusuari
 			)throws Exception;
+	
+	public String recuperarPorcentajeRecargoPorProducto(String cdramo,String cdperpag)throws Exception;
 }

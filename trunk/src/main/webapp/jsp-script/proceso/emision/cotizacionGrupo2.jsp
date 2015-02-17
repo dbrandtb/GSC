@@ -1943,6 +1943,15 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     ,minHeight : 100
                                                     ,hidden    : _p25_ntramite ? false : true
                                                     ,maxHeight : 250
+                                                    ,tbar      :
+                                                    [
+                                                        {
+                                                            text     : 'Ver conceptos globales'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/money_dollar.png'
+                                                            ,hidden  : _p25_smap1.cdsisrol!='COTIZADOR'
+                                                            ,handler : function(){ _p25_generarVentanaVistaPrevia(true); }
+                                                        }
+                                                    ]
                                                     ,store     : Ext.create('Ext.data.Store',
                                                     {
                                                         model     : '_p25_modeloTarifaEdad'
@@ -3576,7 +3585,7 @@ function _p25_guardarAsegurados(grid,callback)
     debug('<_p25_guardarAsegurados');
 }
 
-function _p25_generarVentanaVistaPrevia()
+function _p25_generarVentanaVistaPrevia(sinBotones)
 {
     var itemsVistaPrevia=[];
     
@@ -3587,7 +3596,7 @@ function _p25_generarVentanaVistaPrevia()
             title     : 'Vista previa'
             ,width    : 800
             ,height   : 400
-            ,closable : false
+            ,closable : !Ext.isEmpty(sinBotones)&&sinBotones==true
             ,modal    : true
             ,items    :
             [
@@ -3603,11 +3612,13 @@ function _p25_generarVentanaVistaPrevia()
                 {
                     text     : 'Emitir'
                     ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
                     ,handler : function(){_p25_emitir2(ventana,this);}
                 }
                 ,{
                     text     : 'Cancelar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
                     ,handler : function(){ventana.destroy();}
                 }
             ]
@@ -3673,6 +3684,7 @@ function _p25_generarVentanaVistaPrevia()
                         debug('### obtener conceptos globales:',json);
                         if(json.exito)
                         {
+                            me.getStore().removeAll();
                             me.getStore().add(new _p25_vpModelo(
                             {
                                 concepto : 'PRIMA NETA'

@@ -4682,6 +4682,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor04" , smap1.get("cdperpag"));
 				params.put("pv_otvalor10" , smap1.get("tipoDerPol"));
 				params.put("pv_otvalor11" , smap1.get("montoDerPol"));
+				params.put("pv_otvalor12" , smap1.get("recargoPers"));
+				params.put("pv_otvalor13" , smap1.get("recargoPago"));
 				kernelManager.pMovTvalopol(params);
 			}
 			
