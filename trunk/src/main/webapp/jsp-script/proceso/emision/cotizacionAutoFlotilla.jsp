@@ -2469,33 +2469,90 @@ function _p30_calculaVigencia()
 function _p30_configuracionPanelDinClic(cdtipsit,titulo)
 {
     debug('>_p30_configuracionPanelDinClic:',cdtipsit,titulo);
-    var panel = _p30_paneles[cdtipsit];
-    panel.setTitle(titulo);
-    if(panel.valores!=false)
+    if(Ext.isEmpty(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()))
     {
-        panel.down('form').loadRecord(new _p30_modelo(panel.valores));
+        mensajeWarning('Seleccione el negocio');
     }
     else
     {
-        panel.down('form').getForm().reset();
-    }
-    panel.callback=function()
-    {
-        var form = panel.down('form');
-        var valido = form.isValid();
-        if(!valido)
+        var panel    = _p30_paneles[cdtipsit];
+        var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
+        if(_p30_smap1.cdsisrol=='SUSCRIAUTO'&&!Ext.isEmpty(itemDesc))
         {
-            datosIncompletos();
+            Ext.Ajax.request(
+            {
+                url     : _p30_urlRecuperacionSimple
+                ,params :
+                {
+                    'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+                    ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
+                    ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                    ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                    ,'smap1.tipocot'      : _p30_smap1.tipoflot
+                    ,'smap1.cdsisrol'     : _p30_smap1.cdsisrol
+                    ,'smap1.cdusuari'     : _p30_smap1.cdusuari
+                }
+                ,success : function(response)
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### cargar rango descuento ramo 5:',json);
+                    if(json.exito)
+                    {
+                        itemDesc.minValue=100*(json.smap1.min-0);
+                        itemDesc.maxValue=100*(json.smap1.max-0);
+                        itemDesc.isValid();
+                        debug('min:',itemDesc.minValue);
+                        debug('max:',itemDesc.maxValue);
+                        itemDesc.setReadOnly(false);
+                    }
+                    else
+                    {
+                        itemDesc.minValue=0;
+                        itemDesc.maxValue=0;
+                        itemDesc.setValue(0);
+                        itemDesc.isValid();
+                        itemDesc.setReadOnly(true);
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    itemDesc.minValue=0;
+                    itemDesc.maxValue=0;
+                    itemDesc.setValue(0);
+                    itemDesc.isValid();
+                    itemDesc.setReadOnly(true);
+                    errorComunicacion();
+                }
+            });
         }
+        panel.setTitle(titulo);
+        if(panel.valores!=false)
+        {
+            panel.down('form').loadRecord(new _p30_modelo(panel.valores));
+        }
+        else
+        {
+            panel.down('form').getForm().reset();
+        }
+        panel.callback=function()
+        {
+            var form = panel.down('form');
+            var valido = form.isValid();
+            if(!valido)
+            {
+                datosIncompletos();
+            }
         
-        if(valido)
-        {
-            panel.valores=form.getValues();
-            panel.hide();
-            debug('panel:',panel);
+            if(valido)
+            {
+                panel.valores=form.getValues();
+                panel.hide();
+                debug('panel:',panel);
+            }
         }
+        centrarVentanaInterna(panel.show());
     }
-    centrarVentanaInterna(panel.show());
     debug('<_p30_configuracionPanelDinClic');
 }
 
@@ -3004,7 +3061,12 @@ function _p30_cotizar(sinTarificar)
                 }
                 for(var att in valuesFormOculto)
                 {
-                    recordTvalosit.set(att,valuesFormOculto[att]);
+                    var valorOculto  = valuesFormOculto[att];
+                    var valorValosit = recordTvalosit.get(att);
+                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                    {
+                        recordTvalosit.set(att,valorOculto);
+                    }
                 }
             }
             else
@@ -3029,7 +3091,12 @@ function _p30_cotizar(sinTarificar)
                             }
                             for(var att in valuesFormOculto)
                             {
-                                recordTvalosit.set(att,valuesFormOculto[att]);
+                                var valorOculto  = valuesFormOculto[att];
+                                var valorValosit = recordTvalosit.get(att);
+                                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                {
+                                    recordTvalosit.set(att,valorOculto);
+                                }
                             }
                         }
                         else
@@ -3056,7 +3123,12 @@ function _p30_cotizar(sinTarificar)
                                 }
                                 else if(origen=='O')
                                 {
-                                    recordTvalosit.set(modelo,valuesFormOculto[pantalla]);
+                                    var valorOculto  = valuesFormOculto[pantalla];
+                                    var valorValosit = recordTvalosit.get(modelo);
+                                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                    {
+                                        recordTvalosit.set(modelo,valorOculto);
+                                    }
                                 }
                             }
                         }

@@ -1688,6 +1688,23 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitPanel=tatrisitPanelAux;
 				
+				setCheckpoint("Recuperando componentes adicionales para configuracion");
+				List<ComponenteVO>listaAdicionales=pantallasDAO.obtenerComponentes(
+						null                   //cdtiptra
+						,null                  //cdunieco
+						,cdramo
+						,situacionPanel        //cdtipsit
+						,null                  //estado
+						,cdsisrol
+						,"COTIZACION_FLOTILLA" //pantalla
+						,"CONFIG_ADICIONALES"  //seccion
+						,null                  //orden
+						);
+				for(ComponenteVO tatri:listaAdicionales)
+				{
+					tatrisitPanel.add(tatri);
+				}
+				
 				setCheckpoint(new StringBuilder("Construyendo panel dinamico ").append(situacionPanel).toString());
 				GeneradorCampos gcPanel = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gcPanel.setCdramo(cdramo);
