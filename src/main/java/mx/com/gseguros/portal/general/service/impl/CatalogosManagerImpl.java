@@ -857,4 +857,28 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>cargarSumaAseguradaRamo4(String cdsisrol,String cdplan)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarSumaAseguradaRamo4 @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdplan="   , cdplan
+				));
+		
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(cdplan))
+		{
+			lista=catalogosDAO.recuperarSumaAseguradaRamo4(cdsisrol,cdplan);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ cargarSumaAseguradaRamo4 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }
