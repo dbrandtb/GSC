@@ -590,6 +590,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista.add(new GenericVO("2" , "dos"));
 					lista.add(new GenericVO("3" , "tres"));
 					break;
+				case RAMO_4_SUMA_ASEG:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista=catalogosManager.cargarSumaAseguradaRamo4(params.get("cdsisrol"),params.get("cdplan"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

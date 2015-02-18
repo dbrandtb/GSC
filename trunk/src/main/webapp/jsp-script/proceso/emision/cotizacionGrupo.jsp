@@ -137,6 +137,41 @@ debug('_p21_editorPlan:',_p21_editorPlan);
 
 var _p21_editorSumaAseg = <s:property value="imap.editorSumaAsegColumn" />.editor;
 debug('_p21_editorSumaAseg:',_p21_editorSumaAseg);
+_p21_editorSumaAseg.forceSelection = false;
+_p21_editorSumaAseg.heredar        = function(cdplanIn)
+{
+    if(
+        (
+            !Ext.isEmpty(_p21_editorPlan.getValue())
+            &&_p21_editorPlan.findRecordByValue(_p21_editorPlan.getValue())!=false
+        )
+        ||!Ext.isEmpty(cdplanIn)
+    )
+    {
+        _p21_editorSumaAseg.getStore().load(
+        {
+            params :
+            {
+                'params.cdplan' : Ext.isEmpty(cdplanIn)?_p21_editorPlan.getValue():cdplanIn
+            }
+            ,callback : function()
+            {
+                _p21_editorSumaAseg.forceSelection=true;
+                if(_p21_editorSumaAseg.findRecordByValue(_p21_editorSumaAseg.getValue())!=false)
+                {
+                    _p21_editorSumaAseg.reset();
+                }
+            }
+        });
+    }
+}
+_p21_editorPlan.on(
+{
+    change : function()
+    {
+        _p21_editorSumaAseg.heredar();
+    }
+});
 
 var _p21_editorAyudaMater = <s:property value="imap.editorAyudaMaterColumn" />.editor;
 debug('_p21_editorAyudaMater:',_p21_editorAyudaMater);
@@ -430,6 +465,8 @@ Ext.onReady(function()
                     beforeedit : function(editor,context)
                     {
                         debug('beforeedit:',context.record.get('cdplan'));
+                        _p21_editorSumaAseg.forceSelection=false;
+                        _p21_editorSumaAseg.heredar(context.record.get('cdplan'));
                         if(context.record.get('cdplan')+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));

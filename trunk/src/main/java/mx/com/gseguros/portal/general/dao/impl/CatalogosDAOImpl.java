@@ -1378,4 +1378,43 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>recuperarSumaAseguradaRamo4(String cdsisrol,String cdplan)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdplan"   , cdplan);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarSumaAseguradaRamo4(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
+			}
+		}
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class RecuperarSumaAseguradaRamo4 extends StoredProcedure
+	{
+		protected RecuperarSumaAseguradaRamo4(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC");
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"OTCLAVE"
+					,"OTVALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
