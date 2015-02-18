@@ -1355,6 +1355,30 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				+ "\n##########################"
 				);
 	}
+	
+	@Override
+	public void turnarAutServicio(
+			String ntramite
+			,String nuevoStatus
+			,String comments
+			,String cdusuariSesion
+			,String cdsisrolSesion
+			,String cdusuariDestino
+			,String cdsisrolDestino
+			,String cdmotivo
+			,String cdclausu
+			) throws Exception
+	{
+		log.info(""
+				+ "\n##########################"
+				+ "\n###### moverTramite ######"
+				);
+		siniestrosDAO.turnarAutServicio(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
+		log.info(""
+				+ "\n###### moverTramite ######"
+				+ "\n##########################"
+				);
+	}
 
 	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo

@@ -34,6 +34,7 @@ var _URL_MONTO_MAXIMO			= '<s:url namespace="/siniestros"  action="consultaMonto
 var _UrlValidaAutoProceso    = '<s:url namespace="/siniestros" action="validaAutorizacionProceso" />';
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+var _URL_TURNAR_AUTSERVICIO      =      '<s:url namespace="/mesacontrol" action="turnarAutorizacionServicio" />';
 var _URL_ActualizaStatusMAUTSERV =      '<s:url namespace="/siniestros" action="cambiarEstatusMAUTSERV" />';
 var _URL_Existe_Documentos =     '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
 
@@ -632,9 +633,9 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 			        			                    autoScroll  : true,
 			        			                    items       : [
 			        			                                    Ext.create('Ext.form.Panel', {
-			        			                                    title: 'Turnar al coordinador m&eacute;dico multiregional',
+			        			                                    title: 'Turnar a Coordinador M&eacute;dico Multiregional',
 			        			                                    width: 650,
-			        			                                    url: _URL_ActualizaStatusTramite,
+			        			                                    url: _URL_TURNAR_AUTSERVICIO,
 			        			                                    bodyPadding: 5,
 			        			                                    items: [comentariosText],
 			        			                                    buttonAlign:'center',
@@ -649,6 +650,8 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 			        			                	            		        	params: {
 			        			                	            		        		'smap1.ntramite' : record.get('ntramite'), 
 			        			                	            		        		'smap1.status'   : _STATUS_PENDIENTE,
+                                                                                        'smap1.rol_destino'     : 'COORDMEDMULTI',
+                                                                                        'smap1.usuario_destino' : colIndex.length>3 ? colIndex : ''
 			        			                	            		        	},
 			        			                	            		        	failure: function(form, action) {
 			        			                	            		        		mensajeError('No se pudo turnar.');
@@ -710,7 +713,6 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 				});
 	}
 }
-
 
 //TURNAR AL GERENTE MULTIREGIONAL
 function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
@@ -867,7 +869,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			        				                                    Ext.create('Ext.form.Panel', {
 			        				                                    title: 'Turnar al gerente m&eacute;dico multiregional',
 			        				                                    width: 650,
-			        				                                    url: _URL_ActualizaStatusTramite,
+			        				                                    url: _URL_TURNAR_AUTSERVICIO,
 			        				                                    bodyPadding: 5,
 			        				                                    items: [comentariosText],
 			        				                                    buttonAlign:'center',
@@ -882,6 +884,8 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			        				                	            		        	params: {
 			        				                	            		        		'smap1.ntramite' : record.get('ntramite'), 
 			        				                	            		        		'smap1.status'   : _STATUS_EN_ESPERA_DE_AUTORIZACION,
+                                                                                            'smap1.rol_destino'     : 'GERMEDMULTI',
+                                                                                            'smap1.usuario_destino' : colIndex.length>3 ? colIndex : ''
 			        				                	            		        	},
 			        				                	            		        	failure: function(form, action) {
 			        				                	            		        		mensajeError('No se pudo turnar.');

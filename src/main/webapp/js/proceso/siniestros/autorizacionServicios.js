@@ -2422,6 +2422,8 @@ Ext.onReady(function() {
 			 		{
 			 			if (panelInicialPrincipal.form.isValid()) {
 			 				//validamos que exista valor del registro
+			 				
+			 				debug("####VALOR DE valorAction ####--->",valorAction);
 			 				if(valorAction == null )
 			 				{
 			 					//Solo se guarda y no realiza la validacion del monto
@@ -2449,6 +2451,7 @@ Ext.onReady(function() {
 												,success : function (response)
 											    {
 											    	
+											    	debug("VALORA DE LA SUMA DISPONIBLE -->> ",Ext.getCmp('sumDisponible').getValue(), " Monto Maximo --->> ",Ext.decode(response.responseText).montoMaximo);
 											    	if(cdrol=="COORDMEDMULTI")
 													{
 											    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
