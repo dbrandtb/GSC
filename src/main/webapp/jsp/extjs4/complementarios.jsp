@@ -264,6 +264,8 @@ function _datComTurnarSuscripcion()
 }
             
             Ext.onReady(function(){
+            	
+            	Ext.Ajax.timeout = 5*60*1000;
                 
                 Ext.define('MiModeloDinamico',{
                     extend:'Ext.data.Model',
