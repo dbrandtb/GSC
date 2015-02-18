@@ -196,7 +196,9 @@ public class MesaControlAction extends PrincipalCoreAction
 			if(cdsisrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.MESA_DE_CONTROL_SINIESTROS.getCdsisrol())
-				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol()))
+				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol()))
 			{
 				slist1=kernelManager.loadMesaControlUsuario(smap1);
 			}
@@ -408,6 +410,50 @@ public class MesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	////////////////////////////////////////////////
+	////// actualizar status de tramite de mc //////
+	/*////////////////////////////////////////////*/
+	public String turnarAutorizacionServicio()
+	{
+		log.debug(""
+				+ "\n########################################"
+				+ "\n########################################"
+				+ "\n###### turnarAutorizacionServicio ######"
+				+ "\n######                            ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			UserVO usu=(UserVO)session.get("USUARIO");
+			
+			String ntramite=smap1.get("ntramite");
+			String statusNuevo=smap1.get("status");
+			String comments=smap1.get("comments");
+			String cdmotivo=smap1.get("cdmotivo");
+			
+			String rolDestino     = smap1.get("rol_destino");
+			String usuarioDestino = smap1.get("usuario_destino");
+			
+			String cdusuariSesion = usu.getUser();
+			String cdsisrolSesion = usu.getRolActivo().getClave();
+			String cdclausu       = null;
+			
+			siniestrosManager.turnarAutServicio(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+			success=true;
+			
+		} catch(Exception ex) {
+			success=false;
+			log.error("error al actualizar status de tramite de mesa de control",ex);
+			mensaje=ex.getMessage();
+		}
+		log.debug(""
+				+ "\n######                            ######"
+				+ "\n###### turnarAutorizacionServicio ######"
+				+ "\n########################################"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
 	////////////////////////////////////////////////
 	////// actualizar status de tramite de mc //////
 	/*////////////////////////////////////////////*/

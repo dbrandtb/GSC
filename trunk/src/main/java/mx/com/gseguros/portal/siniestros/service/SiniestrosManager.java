@@ -484,7 +484,19 @@ public interface SiniestrosManager {
 			,String cdmotivo
 			,String cdclausu
 			) throws Exception;
-
+	
+	public void turnarAutServicio(
+			String ntramite
+			,String nuevoStatus
+			,String comments
+			,String cdusuariSesion
+			,String cdsisrolSesion
+			,String cdusuariDestino
+			,String cdsisrolDestino
+			,String cdmotivo
+			,String cdclausu
+			) throws Exception;
+	
 	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo)throws Exception;
 
 	public void eliminaDocumentosxTramite(String ntramite) throws Exception;
