@@ -88,6 +88,7 @@ var _p25_tabGrupos;
 var _p25_tabGruposLineal;
 var _p25_tabGruposModifi;
 var _p25_gridTarifas;
+var _p25_valoresFactores = null;
 
 var _p25_filtroCobTimeout;
 
@@ -2050,6 +2051,63 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         model : '_p25_modeloGrupo'
                                                         ,data : record
                                                     })
+                                                    ,listeners :
+                                                    {
+                                                        afterrender : function()
+                                                        {
+                                                            if(_p25_smap1.FACTORES=='S'&&Ext.isEmpty(record.get('extrreno')))
+                                                            {
+                                                                var ponerValoresFactores=function()
+                                                                {
+                                                                    debug('_p25_valoresFactores:',_p25_valoresFactores);
+                                                                    var letraGrupo = record.get('letra');
+                                                                    var pestania   = Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    for(var i in _p25_valoresFactores)
+                                                                    {
+                                                                        var elem  = _p25_valoresFactores[i];
+                                                                        var name  = elem.NAME;
+                                                                        var valor = elem.VALOR;
+                                                                        record.set(name,valor);
+                                                                    }
+                                                                };
+                                                                if(Ext.isEmpty(_p25_valoresFactores))
+                                                                {
+                                                                    Ext.Ajax.request(
+                                                                    {
+                                                                        url     : _p25_urlRecuperacionSimpleLista
+                                                                        ,params :
+                                                                        {
+                                                                            'smap1.procedimiento' : 'RECUPERAR_VALORES_ATRIBUTOS_FACTORES'
+                                                                            ,'smap1.cdramo'       : _p25_smap1.cdramo
+                                                                            ,'smap1.cdtipsit'     : _p25_smap1.cdtipsit
+                                                                        }
+                                                                        ,success : function(response)
+                                                                        {
+                                                                            var jsonValfac=Ext.decode(response.responseText);
+                                                                            debug('### valores factores:',jsonValfac);
+                                                                            if(jsonValfac.exito)
+                                                                            {
+                                                                                _p25_valoresFactores=jsonValfac.slist1;
+                                                                                ponerValoresFactores();
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mensajeError(jsonValfac.respuesta);
+                                                                            }
+                                                                        }
+                                                                        ,failure : function()
+                                                                        {
+                                                                            errorComunicacion();
+                                                                        }
+                                                                    });
+                                                                }
+                                                                else
+                                                                {
+                                                                    ponerValoresFactores();
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 })
                                                 ,Ext.create('Ext.grid.Panel',
                                                 {
