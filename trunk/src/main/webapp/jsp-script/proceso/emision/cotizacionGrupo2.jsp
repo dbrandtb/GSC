@@ -2109,6 +2109,10 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                     ponerValoresFactores();
                                                                 }
                                                             }
+                                                            else
+                                                            {
+                                                                debug('sin factores');
+                                                            }
                                                         }
                                                     }
                                                 })
