@@ -2,27 +2,26 @@ package test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceFeature;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
-import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.ResponseFolio;
 
 import org.apache.log4j.Logger;
+//import org.exolab.castor.types.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 
-@Controller("testAction")
-@Scope("prototype")
+
 /*
 @Namespace("/test")
 @ResultPath(value="/")
@@ -33,14 +32,17 @@ public class TestAction extends PrincipalCoreAction {
 	
 	private static Logger logger = Logger.getLogger(TestAction.class);
 
-	@Autowired
-	private transient EmisionAutosService emisionAutosService;
+//	@Autowired
+//	private transient EmisionAutosService emisionAutosService;
 	
 	private Map<String, String> params;
 	
 	private EmisionAutosVO emisionAutos;
 	
 	private ResponseFolio responseFolio;
+	
+	@Autowired
+	private AutosDAOSIGS autosDAOSIGS;
 	
 	/*
 	@Action(value="invocaServicioCotizacionAutos",
@@ -49,16 +51,34 @@ public class TestAction extends PrincipalCoreAction {
 	*/
 	public String invocaServicioCotizacionAutos() throws Exception {
 		
-		logger.debug("params=" + params);
+		logger.debug("prueba para SP AUTOS" + params);
 		
-		//System.out.println("params==" + params);
-		
-		emisionAutos = emisionAutosService.cotizaEmiteAutomovilWS(
-				params.get("cdunieco"), params.get("cdramo"), 
-				params.get("estado"), params.get("nmpoliza"), "I",
-				params.get("nmsuplem"), params.get("nmtramite"),
-				params.get("cdtipsit"),
-				(UserVO) session.get("USUARIO"));
+		try{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("Sucursal"        , "4");
+			params.put("Ramo"            , "711");
+			params.put("Poliza"          , "121");
+			params.put("TipoEndoso"      , " ");
+			params.put("NumeroEndoso"    , "0");
+			params.put("Recibo"          , "2");
+			params.put("TotalRecibos"    , "2");
+			params.put("PrimaNeta"       , "7384.748");
+			params.put("Iva"             , "1286.077");
+			params.put("Recargo"         , "273.235");
+			params.put("Derechos"        , "380");
+			params.put("CesionComision"  , "0");
+			params.put("ComisionPrima"   , "738.4748");
+			params.put("ComisionRecargo" , "27.3235");
+			params.put("FechaInicio"     , sdf.format(new Date()));
+			params.put("FechaTermino"    , sdf.format(new Date()));
+			
+			Integer res = autosDAOSIGS.insertaReciboAuto(params);
+			
+		} catch (Exception e){
+			logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+		}
 		
 		return SUCCESS;
 	}

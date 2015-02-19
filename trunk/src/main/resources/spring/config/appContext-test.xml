@@ -9,4 +9,7 @@
     
     <bean id="polizaDaoImpl" class="mx.com.gseguros.portal.consultas.dao.PolizaDAOImpl" parent="abstractManagerDAO"/> -->
     
+    <bean id="testAction" class="test.TestAction" scope="prototype">
+    </bean>
+    
 </beans>
