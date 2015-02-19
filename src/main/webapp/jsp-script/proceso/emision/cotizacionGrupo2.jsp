@@ -66,6 +66,7 @@ var _p25_urlVentanaDocumentosClon       = '<s:url namespace="/documentos"      a
 var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         action="guardarContratanteColectivo"      />';
 var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                    />';
 var _p25_urlPantallaClausulasPoliza     = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
+var _p25_urlRecuperacionSimpleLista     = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -891,7 +892,7 @@ Ext.onReady(function()
     
     _fieldByName('cdreppag').on(
     {
-        select : function(comp,arr)
+        select : function()
         {
             var val=_fieldByName('cdreppag').getValue();
             debug('reparto pago select valor:',val);
@@ -918,6 +919,61 @@ Ext.onReady(function()
             }
         }
     });
+    
+    var formAsegCmp=_fieldByLabel('FORMA DE ASEGURAMIENTO',false,true);
+    if(!Ext.isEmpty(formAsegCmp))
+    {
+        formAsegCmp.on(
+        {
+            select : function()
+            {
+                var me  =_fieldByLabel('FORMA DE ASEGURAMIENTO');
+                debug('formAsegCmp select me:',me);
+                var val = me.getValue();
+                var record = me.findRecordByValue(val);
+                debug('formAsegCmp select record:',record);
+                var label  = record.get('value');
+                
+                var repartoCmp = _fieldByName('cdreppag');
+                if(repartoCmp.store.getCount()==0)
+                {
+                    repartoCmp.store.padre = repartoCmp;
+                    repartoCmp.igualar     = record.get('value')+'';
+                    repartoCmp.store.on(
+                    {
+                        load : function(me)
+                        {
+                            var repartoCmp=me.padre;
+                            repartoCmp.store.each(function(record)
+                            {
+                                var display = record.get('value');
+                                if(display.lastIndexOf(repartoCmp.igualar)!=-1)
+                                {
+                                    debug('repartoCmp vacio select:',repartoCmp);
+                                    repartoCmp.select(record);
+                                    repartoCmp.fireEvent('select',repartoCmp,[record]);
+                                }
+                            });
+                        }
+                    });
+                }
+                else
+                {
+                    repartoCmp.store.each(function(record)
+                    {
+                        var display = record.get('value');
+                        if(display.lastIndexOf(label)!=-1)
+                        {
+                            debug('repartoCmp select:',repartoCmp);
+                            repartoCmp.select(record);
+                            repartoCmp.fireEvent('select',repartoCmp,[record]);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    
     ////// custom //////
     
     ////// loaders //////
@@ -1206,6 +1262,69 @@ Ext.onReady(function()
     _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    if(!_p25_ntramite)
+    {
+        Ext.Ajax.request(
+        {
+            url     : _p25_urlRecuperacionSimpleLista
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_VALORES_PANTALLA'
+                ,'smap1.pantalla'     : 'COTIZACION_COLECTIVO'
+                ,'smap1.cdramo'       : _p25_smap1.cdramo
+                ,'smap1.cdtipsit'     : _p25_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### valores pantalla:',json);
+                if(json.exito)
+                {
+                    for(var i in json.slist1)
+                    {
+                        var comp=_fieldByName(json.slist1[i].NAME,_fieldById('_p25_tabConcepto'));
+                        if(comp)
+                        {
+                            if(Ext.isEmpty(comp.store))
+                            {
+                                comp.setValue(json.slist1[i].VALOR);
+                            }
+                            else
+                            {
+                                if(comp.store.getCount()==0)
+                                {
+                                    comp.valorInicial = json.slist1[i].VALOR;
+                                    comp.store.padre  = comp;
+                                    comp.store.on(
+                                    {
+                                        load : function(me)
+                                        {
+                                            me.padre.select(me.padre.findRecordByValue(me.padre.valorInicial));
+                                            me.padre.fireEvent('select');
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    comp.select(comp.findRecordByValue(json.slist1[i].VALOR));
+                                    comp.fireEvent('select');
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
+    }
     
     try
     {

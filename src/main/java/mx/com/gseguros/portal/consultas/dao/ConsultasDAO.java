@@ -106,4 +106,10 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public String recuperarPorcentajeRecargoPorProducto(String cdramo,String cdperpag)throws Exception;
+	
+	public List<Map<String,String>>recuperarValoresPantalla(
+			String pantalla
+			,String cdramo
+			,String cdtipsit
+			)throws Exception;
 }
