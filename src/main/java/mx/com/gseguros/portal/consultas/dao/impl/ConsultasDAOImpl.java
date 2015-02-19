@@ -946,4 +946,38 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public List<Map<String,String>>recuperarValoresAtributosFactores(String cdramo,String cdtipsit)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo"   , cdramo);
+    	params.put("cdtipsit" , cdtipsit);
+    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES",params);
+    	Map<String,Object>procResult  = ejecutaSP(new RecuperarValoresAtributosFactores(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES",params,lista);
+    	return lista;
+	}
+    
+    protected class RecuperarValoresAtributosFactores extends StoredProcedure
+    {
+    	protected RecuperarValoresAtributosFactores(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		"NAME","VALOR"
+    	            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

@@ -67,6 +67,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    ,RECUPERAR_TEXTO_CLAUSULA_POLIZA                         = "RECUPERAR_TEXTO_CLAUSULA_POLIZA"
 	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
 	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
+	    ,RECUPERAR_VALORES_ATRIBUTOS_FACTORES                    = "RECUPERAR_VALORES_ATRIBUTOS_FACTORES"
 	    ,RECUPERAR_VALORES_PANTALLA                              = "RECUPERAR_VALORES_PANTALLA"
 	    ,VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      = "VERIFICAR_CODIGO_POSTAL_FRONTERIZO"
 	    ;
@@ -1023,6 +1024,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_CLAUSULAS_POLIZA                              , null);
 		procedimientos.put(RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO               , null);
 		procedimientos.put(RECUPERAR_VALORES_PANTALLA                              , null);
+		procedimientos.put(RECUPERAR_VALORES_ATRIBUTOS_FACTORES                    , null);
 		return procedimientos;
 	}
 	
@@ -2729,6 +2731,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String cdramo   = parametros.get("cdramo");
 				String cdtipsit = parametros.get("cdtipsit");
 				resp.setSlist(consultasDAO.recuperarValoresPantalla(pantalla,cdramo,cdtipsit));
+			}
+			else if(procedimiento.equals(RECUPERAR_VALORES_ATRIBUTOS_FACTORES))
+			{
+				String cdramo   = parametros.get("cdramo");
+				String cdtipsit = parametros.get("cdtipsit");
+				resp.setSlist(consultasDAO.recuperarValoresAtributosFactores(cdramo,cdtipsit));
 			}
 			
 			setCheckpoint("0");

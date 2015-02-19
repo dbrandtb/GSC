@@ -90,6 +90,7 @@ var _p21_selectedNmsituac   = null;
 var _p21_semaforo           = true;
 var _p21_incrinflAux        = null;
 var _p21_extrrenoAux        = null;
+var _p21_valoresFactores    = null;
 
 var _p21_filtroCobTimeout;
 
@@ -2069,6 +2070,89 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         model : '_p21_modeloGrupo'
                                                         ,data : record
                                                     })
+                                                    ,listeners :
+                                                    {
+                                                        afterrender : function()
+                                                        {
+                                                            if(_p21_smap1.FACTORES=='S'&&Ext.isEmpty(record.get('extrreno')))
+                                                            {
+                                                                var ponerValoresFactores=function()
+                                                                {
+                                                                    debug('_p21_valoresFactores:',_p21_valoresFactores);
+                                                                    var letraGrupo = record.get('letra');
+                                                                    var pestania   = Ext.ComponentQuery.query('[letraGrupo='+letraGrupo+']')[0];
+                                                                    for(var i in _p21_valoresFactores)
+                                                                    {
+                                                                        var elem  = _p21_valoresFactores[i];
+                                                                        var name  = elem.NAME;
+                                                                        var valor = elem.VALOR;
+                                                                        record.set(name,valor);
+                                                                        if(name=='extrreno')
+                                                                        {
+                                                                            $.each(_p21_arrayNombresExtrreno,function(i,nombre)
+                                                                            {
+                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
+                                                                                debug('componentes para poner factor extrreno:',componentes);
+                                                                                $.each(componentes,function(i,comp)
+                                                                                {
+                                                                                    debug('poniendo valor en:',comp);
+                                                                                    comp.setValue(valor);
+                                                                                });
+                                                                            });
+                                                                        }
+                                                                        else if(name=='incrinfl')
+                                                                        {
+                                                                            $.each(_p21_arrayNombresIncrinfl,function(i,nombre)
+                                                                            {
+                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
+                                                                                debug('componentes para poner factor incrinfl:',componentes);
+                                                                                $.each(componentes,function(i,comp)
+                                                                                {
+                                                                                    debug('poniendo valor en:',comp);
+                                                                                    comp.setValue(valor);
+                                                                                });
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                };
+                                                                if(Ext.isEmpty(_p21_valoresFactores))
+                                                                {
+                                                                    Ext.Ajax.request(
+                                                                    {
+                                                                        url     : _p21_urlRecuperacionSimpleLista
+                                                                        ,params :
+                                                                        {
+                                                                            'smap1.procedimiento' : 'RECUPERAR_VALORES_ATRIBUTOS_FACTORES'
+                                                                            ,'smap1.cdramo'       : _p21_smap1.cdramo
+                                                                            ,'smap1.cdtipsit'     : _p21_smap1.cdtipsit
+                                                                        }
+                                                                        ,success : function(response)
+                                                                        {
+                                                                            var jsonValfac=Ext.decode(response.responseText);
+                                                                            debug('### valores factores:',jsonValfac);
+                                                                            if(jsonValfac.exito)
+                                                                            {
+                                                                                _p21_valoresFactores=jsonValfac.slist1;
+                                                                                ponerValoresFactores();
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mensajeError(jsonValfac.respuesta);
+                                                                            }
+                                                                        }
+                                                                        ,failure : function()
+                                                                        {
+                                                                            errorComunicacion();
+                                                                        }
+                                                                    });
+                                                                }
+                                                                else
+                                                                {
+                                                                    ponerValoresFactores();
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 })
                                                 ,Ext.create('Ext.grid.Panel',
                                                 {

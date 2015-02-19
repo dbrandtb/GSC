@@ -112,4 +112,6 @@ public interface ConsultasDAO
 			,String cdramo
 			,String cdtipsit
 			)throws Exception;
+	
+	public List<Map<String,String>>recuperarValoresAtributosFactores(String cdramo,String cdtipsit)throws Exception;
 }
