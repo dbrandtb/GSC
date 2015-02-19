@@ -70,6 +70,7 @@ var _p21_urlGuardarContratanteColectivo  = '<s:url namespace="/emision"         
 var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         action="cargarTramite"                    />';
 var _p21_urlPantallaClausulasPoliza      = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 var _p21_urlRecuperacionSimple           = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
+var _p21_urlRecuperacionSimpleLista      = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -1024,11 +1025,34 @@ Ext.onReady(function()
         _fieldByName('pcpgocte').setReadOnly(_p21_smap1.status-0>18);
     }
     
+    _fieldByName('cdformaseg').on(
+    {
+        select : function()
+        {
+            var val=Number(_fieldByName('cdformaseg').getValue());
+            if(val==1)
+            {
+                _fieldByName('cdreppag').select('3');
+                _fieldByName('cdreppag').fireEvent('select');
+            }
+            else if(val==2)
+            {
+                _fieldByName('cdreppag').select('1');
+                _fieldByName('cdreppag').fireEvent('select');
+            }
+            else if(val==3)
+            {
+                _fieldByName('cdreppag').select('2');
+                _fieldByName('cdreppag').fireEvent('select');
+            }
+        }
+    });
+    
     _fieldByName('cdreppag').on(
     {
-        select : function(comp,arr)
+        select : function()
         {
-            var val=_fieldByName('cdreppag').getValue();
+            var val=_fieldByName('cdreppag').getValue()-0;
             debug('reparto pago select valor:',val);
             if(val==1)
             {
@@ -1394,6 +1418,69 @@ Ext.onReady(function()
     _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    if(!_p21_ntramite)
+    {
+        Ext.Ajax.request(
+        {
+            url     : _p21_urlRecuperacionSimpleLista
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_VALORES_PANTALLA'
+                ,'smap1.pantalla'     : 'COTIZACION_COLECTIVO'
+                ,'smap1.cdramo'       : _p21_smap1.cdramo
+                ,'smap1.cdtipsit'     : _p21_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### valores pantalla:',json);
+                if(json.exito)
+                {
+                    for(var i in json.slist1)
+                    {
+                        var comp=_fieldByName(json.slist1[i].NAME,_fieldById('_p21_tabConcepto'));
+                        if(comp)
+                        {
+                            if(Ext.isEmpty(comp.store))
+                            {
+                                comp.setValue(json.slist1[i].VALOR);
+                            }
+                            else
+                            {
+                                if(comp.store.getCount()==0)
+                                {
+                                    comp.valorInicial = json.slist1[i].VALOR;
+                                    comp.store.padre  = comp;
+                                    comp.store.on(
+                                    {
+                                        load : function(me)
+                                        {
+                                            me.padre.select(me.padre.findRecordByValue(me.padre.valorInicial));
+                                            me.padre.fireEvent('select');
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    comp.select(comp.findRecordByValue(json.slist1[i].VALOR));
+                                    comp.fireEvent('select');
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
+    }
     
     try
     {

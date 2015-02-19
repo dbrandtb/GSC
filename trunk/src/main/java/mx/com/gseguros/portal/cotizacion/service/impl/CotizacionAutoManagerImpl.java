@@ -62,11 +62,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    ,RECUPERAR_DATOS_VEHICULO_RAMO_5                         = "RECUPERAR_DATOS_VEHICULO_RAMO_5"
 	    ,RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA            = "RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA"
 	    ,RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA = "RECUPERAR_DETALLES_COBERTURAS_COTIZACION_AUTOS_FLOTILLA"
+	    ,RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             = "RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC" 
 	    ,RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO               = "RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO"
 	    ,RECUPERAR_TEXTO_CLAUSULA_POLIZA                         = "RECUPERAR_TEXTO_CLAUSULA_POLIZA"
 	    ,RECUPERAR_TVALOSIT                                      = "RECUPERAR_TVALOSIT"
 	    ,RECUPERAR_ULTIMO_NMSUPLEM                               = "RECUPERAR_ULTIMO_NMSUPLEM"
-	    ,RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC             = "RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC" 
+	    ,RECUPERAR_VALORES_PANTALLA                              = "RECUPERAR_VALORES_PANTALLA"
 	    ,VERIFICAR_CODIGO_POSTAL_FRONTERIZO                      = "VERIFICAR_CODIGO_POSTAL_FRONTERIZO"
 	    ;
 	
@@ -1021,6 +1022,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		procedimientos.put(RECUPERAR_TEXTO_CLAUSULA_POLIZA                         , null);
 		procedimientos.put(RECUPERAR_CLAUSULAS_POLIZA                              , null);
 		procedimientos.put(RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO               , null);
+		procedimientos.put(RECUPERAR_VALORES_PANTALLA                              , null);
 		return procedimientos;
 	}
 	
@@ -2720,6 +2722,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				cla2.put("cdclausu" , "2");
 				cla2.put("dsclausu" , "dos");
 				cla2.put("dslinea"  , "Texto de la segunda clausula");
+			}
+			else if(procedimiento.equals(RECUPERAR_VALORES_PANTALLA))
+			{
+				String pantalla = parametros.get("pantalla");
+				String cdramo   = parametros.get("cdramo");
+				String cdtipsit = parametros.get("cdtipsit");
+				resp.setSlist(consultasDAO.recuperarValoresPantalla(pantalla,cdramo,cdtipsit));
 			}
 			
 			setCheckpoint("0");
