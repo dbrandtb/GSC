@@ -2055,7 +2055,10 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     {
                                                         afterrender : function()
                                                         {
-                                                            if(_p25_smap1.FACTORES=='S'&&Ext.isEmpty(record.get('extrreno')))
+                                                            if(_p25_factoresColumns.length>0
+                                                                &&_p25_smap1.FACTORES=='S'
+                                                                &&Ext.isEmpty(record.get(_p25_factoresColumns[0].editor.name))
+                                                            )
                                                             {
                                                                 var ponerValoresFactores=function()
                                                                 {
