@@ -1,5 +1,6 @@
 package mx.com.gseguros.ws.autosgs.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
+import mx.com.gseguros.portal.reclamoExpress.dao.ReclamoExpressDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub;
@@ -36,6 +38,7 @@ import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWS
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacion;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionE;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionResponseE;
+import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
@@ -73,6 +76,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	@Autowired
 	private StoredProceduresManager storedProceduresManager;
 	
+	@Autowired
+	private AutosDAOSIGS autosDAOSIGS;
+	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String tipopol, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
@@ -81,6 +87,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		EmisionAutosVO emisionAutoRes = null;
 		SDTPoliza polizaEmiRes = null;
 		Cotizacion datosCotizacionAuto = null;
+		
+		boolean exitoRecibosSigs = false;
 		
 		//Se invoca servicio para obtener los datos del auto
 		try
@@ -521,6 +529,14 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
 						emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
 						emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
+						
+						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
+							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem);
+							
+							if(!exitoRecibosSigs){
+								logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
+							}
+						}
 					}
 					
 				}else{
@@ -632,6 +648,105 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		}
 		
 		return resultWS;
+	}
+	
+	
+	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
+		
+		//boolean envioRecibos = false;
+		List<Map<String,String>> recibos = null;
+		
+		//Se invoca servicio para obtener los datos del recibos
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+//			params.put("param6" , tipopol);
+			
+			recibos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_RECIBOS_AUTOS.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
+			return false;
+		}	
+		
+		if(recibos != null && !recibos.isEmpty()){
+			
+			for(Map<String,String> reciboIt : recibos){
+				try{
+					String fechaInicio = reciboIt.get("FECINI");
+					String fechaTermino = reciboIt.get("FECTER");
+					
+					HashMap<String, Object> params = new HashMap<String, Object>();
+					params.put("Sucursal"        , reciboIt.get("NUMSUC"));
+					params.put("Ramo"            , reciboIt.get("NUMRAM"));
+					params.put("Poliza"          , reciboIt.get("NUMPOL"));
+					params.put("TipoEndoso"      , StringUtils.isBlank(reciboIt.get("TIPEND"))?" " : reciboIt.get("TIPEND"));
+					params.put("NumeroEndoso"    , reciboIt.get("NUMEND"));
+					params.put("Recibo"          , reciboIt.get("NUMREC"));
+					params.put("TotalRecibos"    , reciboIt.get("TOTALREC"));
+					params.put("PrimaNeta"       , reciboIt.get("PRIMA"));
+					params.put("Iva"             , reciboIt.get("IVA"));
+					params.put("Recargo"         , reciboIt.get("RECARGOS"));
+					params.put("Derechos"        , reciboIt.get("DERECHOS"));
+					params.put("CesionComision"  , reciboIt.get("CESIONCOM"));
+					params.put("ComisionPrima"   , reciboIt.get("COMISIONPRIMA"));
+					params.put("ComisionRecargo" , reciboIt.get("COMISIONRECARGO"));
+					params.put("FechaInicio"     , fechaInicio);
+					params.put("FechaTermino"    , fechaTermino);
+					
+					Integer res = autosDAOSIGS.insertaReciboAuto(params);
+					
+					logger.debug("Respuesta al insertar recibo: " + reciboIt.get("NUMREC")+ " - "+res);
+					
+					if(res == null || res != 0){
+						logger.debug("Recibo no exitoso, retornando false");
+						return false;
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+					return false;
+				}
+			}
+			
+			try{
+				
+				HashMap<String, Object> params = new HashMap<String, Object>();
+				params.put("Sucursal"    , recibos.get(0).get("NUMSUC"));
+				params.put("Ramo"        , recibos.get(0).get("NUMRAM"));
+				params.put("Poliza"      , recibos.get(0).get("NUMPOL"));
+				params.put("TipoEndoso"  , StringUtils.isBlank(recibos.get(0).get("TIPEND"))?" " : recibos.get(0).get("TIPEND"));
+				params.put("NumeroEndoso", recibos.get(0).get("NUMEND"));
+				
+				Integer valida = autosDAOSIGS.confirmaRecibosAuto(params);
+				logger.debug("Respuesta al validar recibos: " + valida);
+				
+				if(valida == null || valida != 0){
+					logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente los recibos.");
+					return false;
+				}else{
+					logger.info("Envio de Recibos de Auto a SIGS realizado correctamente");
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Confirmacion de Recibos Exitosos! " + e.getMessage(),e);
+				return false;
+			}
+		}else{
+			logger.warn("Aviso, No se tienen datos de Recibos Autos");
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

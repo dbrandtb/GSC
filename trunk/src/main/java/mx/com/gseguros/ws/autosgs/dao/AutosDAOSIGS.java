@@ -7,6 +7,6 @@ public interface AutosDAOSIGS {
 		
 	public Integer insertaReciboAuto(Map<String, Object> params) throws Exception;
 
-	public boolean confirmaRecibosAuto(Map<String, Object> params) throws Exception;
+	public Integer confirmaRecibosAuto(Map<String, Object> params) throws Exception;
 	
 }

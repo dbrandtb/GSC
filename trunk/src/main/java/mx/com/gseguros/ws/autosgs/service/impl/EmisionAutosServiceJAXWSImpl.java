@@ -572,5 +572,12 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 		
 		return resultWS;
 	}
+
+	@Override
+	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
