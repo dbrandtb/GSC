@@ -31,6 +31,18 @@ Ext.override(Ext.form.TextField,
         return this.callParent();
     }
 });
+
+Ext.override(Ext.form.NumberField,
+{
+    initComponent:function()
+    {
+        Ext.apply(this,
+        {
+            decimalPrecision : 20
+        });
+        return this.callParent();
+    }
+});
 ////// overrides //////
 
 ////// variables //////
