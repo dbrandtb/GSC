@@ -52,7 +52,7 @@ public class TractoCamionServiceImpl implements TractoCamionService {
 					
 				}else{
 					logger.error("WS validarPolizaTractoCamion, Poliza NO Valida");
-					polizaValida = new String("La poliza no es valida");
+					polizaValida = new String("La póliza no es válida");
 				}
 				
 			} catch(WSException wse){
