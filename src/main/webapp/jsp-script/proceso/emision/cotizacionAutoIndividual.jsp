@@ -953,6 +953,16 @@ function _p28_cotizar(sinTarificar)
         _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
         _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
         _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';
+        
+        var agenteCmp=_fieldByLabel('AGENTE',_fieldById('_p28_form'),true);
+        if(Ext.isEmpty(agenteCmp))
+        {
+            smap.cdagenteAux='';
+        }
+        else
+        {
+            smap.cdagenteAux=agenteCmp.getValue();
+        }
     
         var json=
         {

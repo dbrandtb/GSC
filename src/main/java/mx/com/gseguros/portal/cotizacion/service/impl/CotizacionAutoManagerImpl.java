@@ -1877,7 +1877,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,null     //nmpolant
 			            ,null     //nmpolnva
 			            ,renderFechas.format(fechaHoy) //fesolici
-			            ,cdusuari //cdramant
+			            ,cdagente //cdramant
 			            ,null     //cdmejred
 			            ,null     //nmpoldoc
 			            ,null     //nmpoliza2
@@ -2386,7 +2386,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(String cdramo,String nmpoliza,String cdusuari)
+	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(
+			String cdramo
+			,String nmpoliza
+			,String cdusuari
+			,String cdsisrol
+			)
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2394,6 +2399,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				,"\n@@@@@@ cdramo="   , cdramo
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
 				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
 		ManagerRespuestaSlist2SmapVO resp = new ManagerRespuestaSlist2SmapVO(true);
@@ -2433,7 +2439,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,nmpoliza
 					,null     //nmsuplem
 					,null     //nmsolici
-					,cdusuari //cdramant
+					,RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol)?"*":cdusuari //cdramant
 					);
 			listaEmisiones=consultasDAO.cargarMpolizasPorParametrosVariables(
 					null      //cdunieco
@@ -2442,7 +2448,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,null     //nmpoliza
 					,null     //nmsuplem
 					,nmpoliza //nmsolici
-					,cdusuari //cdramant
+					,RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol)?"*":cdusuari //cdramant
 					);
 			if(listaCotizaciones.size()+listaEmisiones.size()==0)
 			{
@@ -2885,7 +2891,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.toString()
 				);
 		return resp;
-	}@Override
+	}
+	
+	@Override
 	public ManagerRespuestaVoidVO guardarComplementariosAutoFlotilla(
 			String cdunieco
 			,String cdramo

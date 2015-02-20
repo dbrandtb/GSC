@@ -3629,6 +3629,8 @@ function _p30_cargarClic()
                     debug('### cargar:',json);
                     checkBool(json.exito,json.respuesta);
                     
+                    _p30_smap1.cdunieco=json.smap1.CDUNIECO;
+                    
                     var maestra=json.smap1.ESTADO=='M';
                     
                     var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');

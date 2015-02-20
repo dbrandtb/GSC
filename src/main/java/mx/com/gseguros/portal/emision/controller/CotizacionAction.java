@@ -1368,6 +1368,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String cdtipsit = smap1.get("cdtipsit");
 			
+			String cdagente = smap1.get("cdagenteAux");
+			
 			checkNull(session                , "No hay sesion");
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			UserVO usuario  = (UserVO)session.get("USUARIO");
@@ -1414,6 +1416,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,slist1
 					,smap1.containsKey("movil")
 					,tvalopol
+					,cdagente
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -2151,6 +2154,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
+		String cdsisrol = usuario.getRolActivo().getClave();
 		
 		//validar nmpoliza contra producto y situacion
 		if(success)
@@ -2180,10 +2184,22 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					if(datosParaComplementar.containsKey("ESTADO")
 							&&datosParaComplementar.containsKey("NMPOLIZA")
-							)
+							)//para clonar emitidas
 					{
+						cdunieco = datosParaComplementar.get("CDUNIECO");
 						estado   = datosParaComplementar.get("ESTADO");
 						nmpoliza = datosParaComplementar.get("NMPOLIZA");
+					}
+					else if(datosParaComplementar.containsKey("CDUNIECO_RECUPERADO"))//para normales
+					{
+						cdunieco = datosParaComplementar.get("CDUNIECO_RECUPERADO");
+						smap1.put("CDUNIECO" , cdunieco);
+					}
+					else if(datosParaComplementar.containsKey("NTRAMITE")
+							&&datosParaComplementar.containsKey("CDUNIECO")
+							)//para complementar/clonar tramite
+					{
+						cdunieco = datosParaComplementar.get("CDUNIECO");
 					}
 					smap1.putAll(datosParaComplementar);
 				}
@@ -2208,7 +2224,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsObtenerTvalosit.put("param3" , estado);
 				paramsObtenerTvalosit.put("param4" , cdtipsit);
 				paramsObtenerTvalosit.put("param5" , nmpoliza);
-				paramsObtenerTvalosit.put("param6" , cdusuari);
+				if(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol))
+				{
+					paramsObtenerTvalosit.put("param6" , "*");
+				}
+				else
+				{
+					paramsObtenerTvalosit.put("param6" , cdusuari);
+				}
 				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 				if(slist1==null||slist1.size()==0)
 				{
@@ -2259,58 +2282,67 @@ public class CotizacionAction extends PrincipalCoreAction
 		//recupera tvalosit
 		
 		//recupera mpolizas
-		try
+		if(success)
 		{
-			List<Map<String,String>>polizas=consultasManager.cargarMpolizasPorParametrosVariables(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,null
-					,null
-					,null);
-			smap1.put("FESOLICI" , polizas.get(0).get("FESOLICI"));
-		}
-		catch(Exception ex)
-		{
-			logger.error("error al obtener datos de poliza",ex);
-			error   = ex.getMessage();
-			success = false;
+			try
+			{
+				List<Map<String,String>>polizas=consultasManager.cargarMpolizasPorParametrosVariables(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,null
+						,null
+						,null);
+				smap1.put("FESOLICI" , polizas.get(0).get("FESOLICI"));
+			}
+			catch(Exception ex)
+			{
+				logger.error("error al obtener datos de poliza",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
 		}
 		//recupera mpolizas
 		
 		//recuperar dias validos cotizacion
-		ManagerRespuestaSmapVO dias=cotizacionManager.obtenerParametrosCotizacion(ParametroCotizacion.DIAS_VALIDOS_COTIZACION,cdramo,cdtipsit,null,null);
-		if(dias.isExito())
+		if(exito)
 		{
-			smap1.put("diasValidos" , dias.getSmap().get("P1VALOR"));
-		}
-		else
-		{
-			logger.error("error al obtener dias validos de cotizacion, se cargan 15 por defecto, no impacta el flujo: "+dias.getRespuestaOculta());
-			smap1.put("diasValidos" , "15");
+			ManagerRespuestaSmapVO dias=cotizacionManager.obtenerParametrosCotizacion(ParametroCotizacion.DIAS_VALIDOS_COTIZACION,cdramo,cdtipsit,null,null);
+			if(dias.isExito())
+			{
+				smap1.put("diasValidos" , dias.getSmap().get("P1VALOR"));
+			}
+			else
+			{
+				logger.error("error al obtener dias validos de cotizacion, se cargan 15 por defecto, no impacta el flujo: "+dias.getRespuestaOculta());
+				smap1.put("diasValidos" , "15");
+			}
 		}
 		//recuperar dias validos cotizacion
 		
 		//recuperar tvalopol
-		try
+		if(exito)
 		{
-			Map<String,String>tvalopol=cotizacionManager.cargarTvalopol(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					);
-			for(Entry<String,String>en:tvalopol.entrySet())
+			try
 			{
-				smap1.put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+				Map<String,String>tvalopol=cotizacionManager.cargarTvalopol(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						);
+				for(Entry<String,String>en:tvalopol.entrySet())
+				{
+					smap1.put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+				}
 			}
-		}
-		catch(Exception ex)
-		{
-			logger.error("Error al recuperar tvlopol",ex);
-			error   = ex.getMessage();
-			success = false;
+			catch(Exception ex)
+			{
+				logger.error("Error al recuperar tvlopol",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
 		}
 		//recuperar tvalopol
 		

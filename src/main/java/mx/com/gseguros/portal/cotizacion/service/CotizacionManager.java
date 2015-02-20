@@ -430,6 +430,7 @@ public interface CotizacionManager
 			,List<Map<String,String>>incisos
 			,boolean flagMovil
 			,Map<String,String>tvalopol
+			,String cdagente
 			);
 	
 	
