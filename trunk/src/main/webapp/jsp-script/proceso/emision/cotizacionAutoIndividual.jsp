@@ -1976,6 +1976,7 @@ function _p28_cargar(boton)
                                                     {
                                                         bot.up('window').destroy();
                                                         _fieldByName('nmpoliza').setValue('');
+                                                        _fieldById('_p28_form').formOculto.getForm().reset();
                                                     }
                                                 }
                                             ]
