@@ -1080,8 +1080,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session                , "No hay sesion");
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
-			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari);
+			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari,cdsisrol);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

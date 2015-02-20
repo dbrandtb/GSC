@@ -5072,6 +5072,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,List<Map<String,String>>incisos
 			,boolean flagMovil
 			,Map<String,String>tvalopol
+			,String cdagente
 			)
     {
     	logger.info(Utilerias.join(
@@ -5092,6 +5093,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ incisos="     , incisos
     			,"\n@@@@@@ flagMovil="   , flagMovil
     			,"\n@@@@@@ tvalopol="    , tvalopol
+    			,"\n@@@@@@ cdagente="    , cdagente
     			));
     	
     	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
@@ -5160,7 +5162,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,null     //nmpolant
 						,null     //nmpolnva
 						,renderFechas.format(fechaHoy) //fesolici
-						,cdusuari //cdramant
+						,StringUtils.isNotBlank(cdagente)?cdagente:cdusuari//cdramant
 						,null     //cdmejred
 						,null     //nmpoldoc
 						,null     //nmpoliza2
