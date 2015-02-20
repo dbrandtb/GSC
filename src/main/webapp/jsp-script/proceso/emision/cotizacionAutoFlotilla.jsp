@@ -3920,6 +3920,7 @@ function _p30_cargarClic()
                                     {
                                         bot.up('window').destroy();
                                         _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                                        _fieldById('_p30_form').formOculto.getForm().reset();
                                     }
                                 }
                             ]
