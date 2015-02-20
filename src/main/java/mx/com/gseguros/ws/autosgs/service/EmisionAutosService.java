@@ -18,4 +18,7 @@ public interface EmisionAutosService {
 	 */
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String tipopol, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO);
+	
+	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
 }
