@@ -2326,6 +2326,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
+			int nGrupos       = grupos.size();
+			boolean[] bGrupos = new boolean[nGrupos];
+			
 			//instanciar
 			try
 			{
@@ -2770,6 +2773,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                		.toString());
 				                output.print(
 				                		new StringBuilder(String.format("%.0f",row.getCell(12).getNumericCellValue())).append("|").toString());
+				                
+				                double cdgrupo=row.getCell(12).getNumericCellValue();
+				                if(cdgrupo>nGrupos||cdgrupo<1d)
+				                {
+				                	long timestamp = System.currentTimeMillis();
+				                	resp.setExito(false);
+				                	resp.setRespuesta(Utilerias.join("No existe el grupo (","M",") de la fila ",fila," #",timestamp));
+				                	logger.error(resp.getRespuesta());
+				                }
+				                else
+				                {
+				                	bGrupos[new Double(cdgrupo).intValue()-1]=true;
+				                }
 			                }
 			                catch(Exception ex)
 			                {
@@ -2926,6 +2942,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                		.toString());
 				                output.print(
 				                		new StringBuilder(String.format("%.0f",row.getCell(3).getNumericCellValue())).append("|").toString());
+				                
+				                double cdgrupo=row.getCell(3).getNumericCellValue();
+				                if(cdgrupo>nGrupos||cdgrupo<1d)
+				                {
+				                	long timestamp = System.currentTimeMillis();
+				                	resp.setExito(false);
+				                	resp.setRespuesta(Utilerias.join("No existe el grupo (","D",") de la fila ",fila," #",timestamp));
+				                	logger.error(resp.getRespuesta());
+				                }
+				                else
+				                {
+				                	bGrupos[new Double(cdgrupo).intValue()-1]=true;
+				                }
 			                }
 			                catch(Exception ex)
 			                {
@@ -2985,6 +3014,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 						long timestamp  = System.currentTimeMillis();
 						resp.setExito(false);
 						resp.setRespuesta(Utilerias.join("No se permiten menos de 50 asegurados #",timestamp));
+						resp.setRespuestaOculta(resp.getRespuesta());
+						logger.error(resp.getRespuesta());
+					}
+				}
+				
+				if(resp.isExito())
+				{
+					int cdgrupoVacio=0;
+					for(int i=0;i<nGrupos;i++)
+					{
+						if(!bGrupos[i])
+						{
+							cdgrupoVacio=i+1;
+							break;
+						}
+					}
+					if(cdgrupoVacio>0)
+					{	                	
+	                	long timestamp = System.currentTimeMillis();
+						resp.setExito(false);
+						resp.setRespuesta(Utilerias.join("No hay asegurados para el grupo ",cdgrupoVacio," #"+timestamp));
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
