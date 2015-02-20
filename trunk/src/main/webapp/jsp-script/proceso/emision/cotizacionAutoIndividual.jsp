@@ -114,7 +114,6 @@ var _p28_selectedCdperpag        = null;
 var _p28_selectedCdplan          = null;
 var _p28_selectedDsplan          = null;
 var _p28_selectedNmsituac        = null;
-var _p28_ramo5_CR_tracto_timeout = null;
 var _p28_precioDolarDia          = null;
 ////// variables //////
 
@@ -682,47 +681,38 @@ Ext.onReady(function()
 	        _fieldLikeLabel('LIZA TRACTOCAMI').allowBlank=false;
 	        _fieldLikeLabel('LIZA TRACTOCAMI').on(
 	        {
-	            change : function(me,val)
+	            blur : function(me)
 	            {
-	                if(!Ext.isEmpty(_p28_ramo5_CR_tracto_timeout))
-                    {
-                        clearTimeout(_p28_ramo5_CR_tracto_timeout);
-                        me.removeCls('conTimeout');
-                    }
+	                var val=me.getValue();
 	                if(!Ext.isEmpty(val)&&val+'x'!='x')
 	                {
-	                    me.addCls('conTimeout');
-	                    _p28_ramo5_CR_tracto_timeout = setTimeout(function()
+	                    me.setLoading(true);
+	                    Ext.Ajax.request(
 	                    {
-	                        me.removeCls('conTimeout');
-	                        me.setLoading(true);
-	                        Ext.Ajax.request(
+	                        url     : _p28_urlValidarTractocamionRamo5
+	                        ,params :
 	                        {
-	                            url     : _p28_urlValidarTractocamionRamo5
-	                            ,params :
+	                            'smap1.poliza' : val
+	                            ,'smap1.rfc'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.RFCCLI
+	                        }
+	                        ,success : function(response)
+	                        {
+	                            me.setLoading(false);
+	                            var json = Ext.decode(response.responseText);
+	                            debug('### tractocamion:',json);
+	                            if(!json.exito)
 	                            {
-	                                'smap1.poliza' : val
-	                                ,'smap1.rfc'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.RFCCLI
-	                            }
-	                            ,success : function(response)
-	                            {
-	                                me.setLoading(false);
-	                                var json = Ext.decode(response.responseText);
-	                                debug('### tractocamion:',json);
-	                                if(!json.exito)
-	                                {
-	                                    mensajeWarning(json.respuesta);
-	                                    me.setValue('');
-	                                }
-	                            }
-	                            ,failure : function()
-	                            {
-	                                me.setLoading(false);
+	                                mensajeWarning(json.respuesta);
 	                                me.setValue('');
-	                                errorComunicacion();
 	                            }
-	                        });
-	                    },5000);
+	                        }
+	                        ,failure : function()
+	                        {
+	                            me.setLoading(false);
+	                            me.setValue('');
+	                            errorComunicacion();
+	                        }
+	                    });
 	                }
 	            }
 	        });
