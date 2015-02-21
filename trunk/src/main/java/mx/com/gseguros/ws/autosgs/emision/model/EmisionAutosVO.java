@@ -23,6 +23,8 @@ public class EmisionAutosVO implements Serializable {
     private String sucursal;
     
     private int numeroIncisos;
+    
+    private boolean exitoRecibos;
 	
 	@Override
 	public String toString()
@@ -60,5 +62,13 @@ public class EmisionAutosVO implements Serializable {
 
 	public void setNumeroIncisos(int numeroIncisos) {
 		this.numeroIncisos = numeroIncisos;
+	}
+
+	public boolean isExitoRecibos() {
+		return exitoRecibos;
+	}
+
+	public void setExitoRecibos(boolean exitoRecibos) {
+		this.exitoRecibos = exitoRecibos;
 	}
 }

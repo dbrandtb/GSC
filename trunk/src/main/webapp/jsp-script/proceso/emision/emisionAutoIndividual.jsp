@@ -969,6 +969,41 @@ function _p29_emitirFinal(me)
             debug('### emitir:',json);
             if(json.success==true)
             {
+            	
+            	if(json.retryRec){
+                    _fieldById('_p29_botonEmitirPolizaFinal').hide();
+                    _fieldById('_p29_botonCancelarEmision').setDisabled(true);
+                    _fieldById('_p29_botonNueva').setDisabled(false);
+                    
+                    Ext.Msg.show(
+	                {
+	                    title    :'Aviso'
+	                    ,msg     : 'Error en la emisi&oacute;n. No se pudo emitir la p&oacute;liza.'
+	                    ,buttons : Ext.Msg.OK
+	                    ,icon    : Ext.Msg.WARNING
+	                    ,fn      : function()
+	                    {
+	                            var paramsWS = {
+	                                 'panel1.pv_nmpoliza' : _p29_smap1.nmpoliza
+	                                ,'panel1.pv_ntramite' : _p29_smap1.ntramite
+	                                ,'panel2.pv_cdramo'   : _p29_smap1.cdramo
+	                                ,'panel2.pv_cdunieco' : _p29_smap1.cdunieco
+	                                ,'panel2.pv_estado'   : _p29_smap1.estado
+	                                ,'panel2.pv_nmpoliza' : _p29_smap1.nmpoliza
+	                                ,'panel2.pv_cdtipsit' : _p29_smap1.cdtipsit
+	                                ,'nmpoliza'           : json.nmpoliza
+	                                ,'nmsuplem'           : json.nmsuplem                                                                       
+	                                ,'cdIdeper'           : json.cdIdeper
+	                                ,'nmpolAlt'           : json.nmpolAlt
+	                                ,'sucursalGS'         : json.sucursalGS
+	                                ,'retryRec'           : json.retryRec
+	                            };
+	                            reintentarWSAuto(me.up().up(), paramsWS);
+	                    }
+	                });
+	                return;
+                }
+            	
                 _p29_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
                 debug("_p29_smap1.nmpolizaEmitida:",_p29_smap1.nmpolizaEmitida);
                 
@@ -981,26 +1016,7 @@ function _p29_emitirFinal(me)
                 _mensajeEmail = json.mensajeEmail;
                 _fieldById('botonEnvioEmail').enable();
                 
-                /*
-                _fieldById('_p29_botonEmitirPolizaFinalPreview').hide();
                 
-                if(_p29_smap1.SITUACION == 'AUTO')
-                {
-                    
-                }
-                else
-                {
-                    _fieldById('botonEnvioEmail').hide();
-                }
-                if(_p29_smap1.SITUACION=='AUTO')
-                {
-                    _fieldById('venDocVenEmiBotIrCotiza').show();
-                }
-                else
-                {
-                    _fieldById('venDocVenEmiBotNueCotiza').show();
-                }
-                */
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
@@ -1034,15 +1050,6 @@ function _p29_emitirFinal(me)
             {
                 if(json.retryWS){
                     _fieldById('_p29_botonEmitirPolizaFinal').hide();
-//                    _fieldById('_p29_botonEmitirPolizaFinalPreview').hide();
-//                    if(_p29_smap1.SITUACION=='AUTO')
-//                    {
-//                        _fieldById('venDocVenEmiBotIrCotiza').show();
-//                    }
-//                    else
-//                    {
-//                        _fieldById('venDocVenEmiBotNueCotiza').show();
-//                    }
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p29_botonNueva').setDisabled(false);
                 }
