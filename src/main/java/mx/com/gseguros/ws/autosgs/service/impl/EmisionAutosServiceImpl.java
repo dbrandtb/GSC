@@ -534,7 +534,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem);
 							
 							if(!exitoRecibosSigs){
+								emisionAutoRes.setExitoRecibos(false);
 								logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
+							}else{
+								emisionAutoRes.setExitoRecibos(true);
 							}
 						}
 					}
@@ -716,6 +719,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
 					return false;
 				}
+				//break;
 			}
 			
 			try{

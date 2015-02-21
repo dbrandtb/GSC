@@ -93,6 +93,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String cdtipsit;
 	private boolean success = true;
 	private boolean retryWS;
+	private boolean retryRec;
 	private ScreenInterceptor scrInt = new ScreenInterceptor();
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	private Calendar calendarHoy = Calendar.getInstance();
@@ -1700,6 +1701,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		////// variables 
 		success                = true;
 		retryWS                = false;
+		retryRec               = false;
 		String ntramite        = null;
 		UserVO us              = null;
 		String cdunieco        = null;
@@ -2069,7 +2071,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
 									edoPoliza, nmpolizaEmitida, tipoGrupoInciso, nmsuplemEmitida, ntramite,cdtipsit , us);
 						
-						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex()) ;
+						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex());
 						retryWS = !success;
 						
 						if(success)
@@ -2095,6 +2097,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 								logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
 								mensajeRespuesta = "Error al insertar Poliza Externa: " + this.nmpolAlt;
 								success = false;
+							}
+							
+							if(!aux.isExitoRecibos()){
+								this.retryRec = true;
+								return SUCCESS;
 							}
 							
 						}else {
@@ -2715,6 +2722,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		success = true;
 		retryWS = false;
+		boolean soloRecibos = this.retryRec;
 		
 		String _cdunieco = panel2.get("pv_cdunieco");
 		String _cdramo   = panel2.get("pv_cdramo");
@@ -2744,6 +2752,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		
 		
+		/**
+		 * si solo fue error de recibos se reintenta reenviarlos
+		 */
+		
+		if(soloRecibos){
+			this.retryRec = false;
+			this.retryRec = !emisionAutosService.enviaRecibosAutosSigs(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
+			retryRec= false;
+			logger.debug("Respuesta al reintento de envio de Recibos Autos: " + this.retryRec);
+			
+			if(this.retryRec){
+				mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
+				success = false;
+				return SUCCESS;
+			}
+		}
+		
 		logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente, Recibos y Autos: <<<<<<<<<<<<<<<<<<<<<<< ");
 		logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
 		logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
@@ -2755,7 +2780,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		//ws cliente
 		
-		if(StringUtils.isBlank(cdIdeperRes)){
+		if(!soloRecibos && StringUtils.isBlank(cdIdeperRes)){
 			
 			ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, null, Ice2sigsService.Operacion.INSERTA, null, us, false);
 			if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
@@ -2790,7 +2815,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 		////// ws de cotizacion y emision para autos
 		if(success
-				&& (
+				&& !soloRecibos && (
 						cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())
 						|| cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
@@ -3995,6 +4020,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setEmisionManager(EmisionManager emisionManager) {
 		this.emisionManager = emisionManager;
+	}
+
+	public boolean isRetryRec() {
+		return retryRec;
+	}
+
+	public void setRetryRec(boolean retryRec) {
+		this.retryRec = retryRec;
 	}
 
 }
