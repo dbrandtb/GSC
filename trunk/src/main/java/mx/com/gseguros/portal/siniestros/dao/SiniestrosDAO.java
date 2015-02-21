@@ -135,6 +135,8 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>> listaSiniestrosTramite2(Map<String, String> params) throws Exception;
 	
+	public List<Map<String,String>> listaAseguradosTramite(Map<String, String> params) throws Exception;
+	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */

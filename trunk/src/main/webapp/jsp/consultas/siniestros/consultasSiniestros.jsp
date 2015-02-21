@@ -54,6 +54,6 @@
         
     </head>
     <body>
-        <div id="dvConsultasPolizas" style="height:710px"></div>
+        <div id="dvConsultasPolizas" style="height:1010px"></div>
     </body>
 </html>

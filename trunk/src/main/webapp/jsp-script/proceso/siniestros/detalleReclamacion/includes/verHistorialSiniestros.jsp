@@ -19,10 +19,10 @@
 		
 				Ext.define('ModelHistorial', {
 				    extend:'Ext.data.Model',
-				    fields:['CDTIPATE','DSTIPATE','FEOCURRE','CDPROVEE','CDROL',
-				            'DSPROVEED','CDICD','DESCICD','CDICD2','DESCICD2',
-				            'NMSINIES','MONTO_PAGADO','MONTO_GAST_TOT','MONTO_GAST_ANTIC',
-				            'MONTO_AUTORIZADO','CDUNIECO','CDRAMO','ESTADO','NMPOLIZA']
+				    fields:['TRAMITE',		'CONTRARECIBO',		'TIPOPAGO',				'CDTIPATE',
+							'TIPOATENCION',	'STATUS',			'FACTURA',				'POLIZA',
+							'NOSINIES',		'DSPROVEED',		'DESCICD',				'DESCICD2',
+							'IMPFACTURA',	'IMPORTEPAGADO']
 				});
 				
 				var storeHistorial = new Ext.data.Store({
@@ -69,37 +69,62 @@
 				    titleCollapse: true,
 				    buttonAlign : 'center',
 				    columns     : [{
-							        header    : 'Tipo de Ateni&oacute;n',
-							        dataIndex : 'DSTIPATE'
+							        header    : 'Tr&aacute;mite',
+							        dataIndex : 'TRAMITE'
 							        
 				    			},{
-							        header    : 'Fecha de Reclamo',
-							        dataIndex : 'FEOCURRE'
-				    			},{
+							        header    : 'Contra Recibo',
+							        dataIndex : 'CONTRARECIBO'
+				    			}
+				    			,{
+							        header    : 'Estatus',
+							        dataIndex : 'STATUS'
+				    			}
+				    			,
+				    			{
+							        header    : 'Tipo Pago',
+							        dataIndex : 'TIPOPAGO'
+				    			},
+				    			{
+							        header    : 'Tipo atenci&oacute;n',
+							        dataIndex : 'TIPOATENCION'
+				    			},
+				    			{
+							        header    : 'Factura',
+							        dataIndex : 'FACTURA'
+				    			},
+				    			{
+							        header    : 'P&oacute;liza',
+							        dataIndex : 'POLIZA'
+				    			},
+				    			{
+							        header    : 'No. Siniestro',
+							        dataIndex : 'NOSINIES'
+				    			},
+				    			{
 							        header    : 'Proveedor',
 							        dataIndex : 'DSPROVEED'
-				    			},{
+				    			},
+				    			{
 							        header    : 'Diagn&oacute;stico',
 							        dataIndex : 'DESCICD'
-				    			},{
-							        header    : 'N&uacute;mero de Siniestro',
-							        dataIndex : 'NMSINIES'
-				    			},{
-							        header    : 'Monto Pagado',
-							        dataIndex : 'MONTO_PAGADO'
-				    			},{
-							        header    : 'Monto Gastado Total',
-							        dataIndex : 'MONTO_GAST_TOT'
-				    			},{
-							        header    : 'Monto gastado por anticipado',
-							        dataIndex : 'MONTO_GAST_ANTIC'
-				    			},{
-							        header    : 'Monto Autorizado',
-							        dataIndex : 'MONTO_AUTORIZADO'
-				    			},{
-							        header    : 'P&oacute;liza afectada',
-							        dataIndex : 'NMPOLIEX'
-				    			}]
+				    			},
+				    			{
+							        header    : 'Diagn&oacute;stico',
+							        dataIndex : 'DESCICD2'
+				    			},
+				    			{
+							        header    : 'Importe Factura',
+							        dataIndex : 'IMPFACTURA',
+							        renderer  : Ext.util.Format.usMoney
+				    			},
+				    			{
+							        header    : 'Importe Pagado',
+							        dataIndex : 'IMPORTEPAGADO',
+							        renderer  : Ext.util.Format.usMoney
+				    			}
+				    			
+				    			]
 				});
 		            	
 		    });
