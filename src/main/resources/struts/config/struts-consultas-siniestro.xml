@@ -31,11 +31,16 @@
         </action>
         
         
-        <action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
-		    <result type="json"></result>
+        <action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectadosConsulta">
+		    <result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					slist1.*,
+					success
+				</param>
+			</result>
 		</action>
-
-
+		
         <action name="consultaAseguradosPagoReembolso" class="consultasSiniestroAction"
 			method="consultaAseguradosPagoReembolso">
 			<result type="json">

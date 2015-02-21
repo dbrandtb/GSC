@@ -61,10 +61,7 @@ Ext.onReady(function() {
     Ext.define('modelListadoProvMedico',{
 	    extend: 'Ext.data.Model',
 	    fields: [
-            {type:'string', name:'cdpresta'},
-            {type:'string', name:'nombre'},
-            {type:'string', name:'cdespeci'},
-            {type:'string',name:'descesp'}
+            {type:'string', name:'cdpresta'},		{type:'string', name:'nombre'},        {type:'string', name:'cdespeci'},     {type:'string',name:'descesp'}
 	    ]
 	});
     
@@ -110,6 +107,7 @@ Ext.onReady(function() {
     Ext.define('modelListAsegAfiliados',{
 	    extend: 'Ext.data.Model',
 	    fields: [
+	                {type:'string',    name:'NTRAMITE'},		{type:'string',    name:'NFACTURA'},
 	                {type:'string',    name:'NMSINIES'},        {type:'string',    name:'NMAUTSER'},        {type:'string',    name:'CDPERSON'},        {type:'string',    name:'NOMBRE'},
                     {type:'string',    name:'FEOCURRE'},        {type:'string',    name:'CDUNIECO'},        {type:'string',    name:'DSUNIECO'},        {type:'string',    name:'AAAPERTU'},
                     {type:'string',    name:'ESTADO'},        {type:'string',    name:'NMSITUAC'},        {type:'string',    name:'NMSUPLEM'},        {type:'string',    name:'CDRAMO'},
@@ -126,8 +124,6 @@ Ext.onReady(function() {
 	{
 	    autoDestroy: true,						model: 'modelListAsegAfiliados'
 	});
-    
-    
     
     Ext.define('EditorAsegPagDirecto', {
     	extend: 'Ext.grid.Panel',
@@ -147,33 +143,19 @@ Ext.onReady(function() {
                 columns: 
                 [
                     {	text :'Usuario<br/>asignado',  width : 100,		   	align  :'center',		dataIndex       :'USERASIGNADO'},
+                    {	text :'Tr&aacute;mite',        width : 100,			align  :'center', 	 	dataIndex       :'NTRAMITE'	},
+                    {	text :'Factura',               width : 100,			align  :'center', 	 	dataIndex       :'NFACTURA'	},
                     {	text :'Id<br/>Sini.',          width : 100,			align  :'center', 	 	dataIndex       :'NMSINIES'	},
                     {   text :'# Auto.',          	   width : 100,         align  :'center',       dataIndex       :'NMAUTSER' },
                     {   text :'Clave<br/>asegu.',      width : 100,         align  :'center',       dataIndex       :'CDPERSON' },
                     {   text :'Nombre<br/>Asegurado',  width : 150,         align  :'center',       dataIndex       :'NOMBRE'   },
                     {	text :'Fecha<br/>Ocurrencia',  width : 100,         align  :'center',       dataIndex       :'FEOCURRE' },
                     {	text :'P&oacute;liza',         width : 100,			align  :'center',		dataIndex       :'NMPOLIZA'	},
-                    {
-                        text :'Vo.Bo.<br/>Auto.',      width : 100,			align  :'center',       dataIndex       :'VOBOAUTO',
-                        renderer        : function(v)
-                        {
-                            var r=v;
-                            if(v=='S'||v=='s')
-                            {
-                                r='SI';
-                            }
-                            else if(v=='N'||v=='n')
-                            {
-                                r='NO';
-                            }
-                            return r;
-                        }
-                    },
                     {	text :'ICD', 				 width : 100,			align  :'center', 		dataIndex       :'CDICD'	},
                     {	text :'ICD2',                width : 100,           align  :'center',       dataIndex       :'CDICD2'	},
                     {	text :'Copago',              width : 100,           align  :'center',		dataIndex       :'COPAGO'	},
                     {	text :'$<br/>Facturado', 	 width : 100,           align  :'center',		dataIndex       :'PTIMPORT',	renderer       :Ext.util.Format.usMoney  },
-                    {	text :'#<br/>Reclamo',       width : 60,		   	align  :'center',		dataIndex       :'NMRECLAMO'}
+                    {	text :'#<br/>Reclamo',       width : 150,		   	align  :'center',		dataIndex       :'NMRECLAMO'}
                     
                     
                 ]
@@ -391,7 +373,7 @@ Ext.onReady(function() {
 						var rowSelected = Ext.getCmp('gridProveedoresPDirecto').getSelectionModel().getSelection()[0];
 						var ntramite= rowSelected.get('ntramite');
 						_TIPOPAGO = TipoPago.Directo;
-						validaTipoPagoDirecto(ntramite);
+						validaTipoPagoDirecto(ntramite, null,"1");
 					}else {
 						Ext.Msg.show({
 							title: 'Aviso',
@@ -505,11 +487,11 @@ Ext.onReady(function() {
 	            title: 'Informaci&oacute;n General'
     	    }, {
     	        title: 'Revisi&oacute;n Administrativa'
-    	    }, {
+    	    }/*, {
     	        title: 'C&aacute;lculos'
     	    }, {
     	        title: 'Documentaci&oacute;n'
-    	    }]
+    	    }*/]
 	});
 
     // SECCION DE INFORMACION GENERAL:
@@ -549,7 +531,8 @@ Ext.onReady(function() {
                             vertical: true,
                             items: [
                                 {boxLabel: 'Pago Directo', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 200},
-                                {boxLabel: 'Pago Reembolso', name: 'tipoBusqueda', inputValue: 2,width: 200}
+                                {boxLabel: 'Pago Reembolso', name: 'tipoBusqueda', inputValue: 2,width: 200},
+                                {boxLabel: 'Pago Indemnizatorio', name: 'tipoBusqueda', inputValue: 3,width: 200}
                                 
                             ],
                             listeners : {
@@ -559,11 +542,14 @@ Ext.onReady(function() {
                                 	this.up('form').getForm().findField('params.pagoDirecto').setValue('');
                                 	
                                     switch (newValue.tipoBusqueda) {
-                                        case 1:
+                                        case 1: //Pago Directo
                                             Ext.getCmp('subpanelBusquedaGral').show();
                                             break;
-                                        case 2:
+                                        case 2: //Pago Reembolso
                                             Ext.getCmp('subpanelBusquedaRFC').show();
+                                            break;
+                                        case 3: //Pago Indemnizatorio
+                                        	Ext.getCmp('subpanelBusquedaRFC').show();
                                             break;
                                     }
                                 }
@@ -608,9 +594,11 @@ Ext.onReady(function() {
 											listeners : {
 									        	change:function(field,value){
 									        		limpiarRegistros();
+									        		debug("this.getValue() -->",this.getValue());
+									        		// 1.- Trámite 	2.- Factura		3.- Proveedor
 									        	    this.up('form').getForm().findField('params.pagoReembolso').setValue('');
 									            	this.up('form').getForm().findField('params.pagoDirecto').setValue('');
-									        		//Tipo de busqueda --> Por asegurado (2)
+									        		
 									        		if(this.getValue() =="3")
 									        		{
 									        			this.up('form').getForm().findField('params.pagoDirecto').hide();
@@ -626,13 +614,13 @@ Ext.onReady(function() {
                                             name : 'params.pagoDirecto',
                                             bodyStyle:'padding:5px;',
                                             fieldLabel : 'Busqueda',
-                                            //labelWidth : 120,
-                                            //width: 300,
-                                            //maxLength : 30,
                                             allowBlank: false
                                         }
                                     ]
                                 },
+                                
+                                
+                                
                                 {
                                     id: 'subpanelBusquedaRFC',
                                     layout : 'hbox',
@@ -711,47 +699,11 @@ Ext.onReady(function() {
 	                                                showMessage('', _MSG_BUSQUEDA_FACTURA, Ext.Msg.OK, Ext.Msg.INFO);
 	                                                return;
 	                                            }
-	                                        	
-	                                        	//se realiza la validación para 
-	                                            Ext.Ajax.request(
-                                        		{
-                                        		    url     : _URL_FACTURA_PDIRECTO
-                                        		    ,params:{
-                                        				'params.cdfactura': formBusqueda.findField('params.pagoDirecto').rawValue
-                                                    }
-                                        		    ,success : function (response)
-                                        		    {
-                                        		    	var json = Ext.decode(response.responseText).datosFacturaPagoDirecto;
-                                        		    	
-                                        		    	if(json != null)
-                                        	    		{
-                                        		    		validaTipoPagoDirecto(json[0].ntramite);
-                                        	    		}else{
-                                        	    			Ext.Msg.show({
-                                            		            title:'Error',
-                                            		            msg: 'La factura no se encuentra regristrada',
-                                            		            buttons: Ext.Msg.OK,
-                                            		            icon: Ext.Msg.ERROR
-                                            		        });
-                                        	    		}
-                                    		    	},
-                                        		    failure : function ()
-                                        		    {
-                                        		        //me.up().up().setLoading(false);
-                                        		        Ext.Msg.show({
-                                        		            title:'Error',
-                                        		            msg: 'Error de comunicaci&oacute;n',
-                                        		            buttons: Ext.Msg.OK,
-                                        		            icon: Ext.Msg.ERROR
-                                        		        });
-                                        		    }
-                                        		});
-	                                        	//validaTipoPagoDirecto(formBusqueda.findField('params.pagoDirecto').rawValue);
+	                                        	validaTipoPagoDirecto(null,formBusqueda.findField('params.pagoDirecto').rawValue,"2");
                                         	}
                                         	// ---> Proveedor
                                         	if(formBusqueda.findField('tipoPagoDirecto').getValue() =="3")
                                         	{
-	                                        	//validaTipoPagoDirecto(formBusqueda.findField('params.pagoDirecto').rawValue);
 	                                        	busquedaProveedorPDirecto.show();
                                         	}
                                         }
@@ -789,7 +741,7 @@ Ext.onReady(function() {
         {
             title:'ASEGURADOS AFECTADOS',
             width:990,
-            //height:150,
+            height:200,
             colspan:2,
             autoScroll:true,
             items : [
@@ -799,7 +751,7 @@ Ext.onReady(function() {
         {
             //title:
             width:990,
-            height:400,
+            height:600,
             colspan:2,
             autoScroll:true,
             items : [
@@ -832,7 +784,7 @@ Ext.onReady(function() {
 		    		}else{
 		    			//--> Pago Directo
 		    			if(tipoPago =="1"){
-                        	validaTipoPagoDirecto(numeroTramite);
+                        	validaTipoPagoDirecto(numeroTramite, null, "1");
 		    			}else{
 		    				// --> Pago por reembolso
 		    				// Si es pago por reembolso insertar en la tabla el valor de otvalor05
@@ -867,7 +819,7 @@ Ext.onReady(function() {
     }
     
     
-    function validaTipoPagoDirecto(numeroTramite)
+    function validaTipoPagoDirecto(numeroTramite, numeroFactura, tipoProceso)
     {
     	storeListAsegPagDirecto.removeAll();
         Ext.Ajax.request(
@@ -875,49 +827,29 @@ Ext.onReady(function() {
 		    url     : _URL_AFILIADOS_AFECTADOS
 		    ,params:{
 				'params.ntramite': numeroTramite
+				,'params.tipoProceso': tipoProceso
+				,'params.nfactura': numeroFactura
             }
 		    ,success : function (response)
 		    {
-		    	
 		    	var json = Ext.decode(response.responseText).slist1;
+		    	debug("VALOR DEL JSON DE RESPUESTA DE AFILIADOS ",json);
 		    	if(json != null)
 	    		{
 		    		var dato = Ext.decode(response.responseText).params;
-		    		
 		    		for(var i = 0; i < json.length; i++){
 			    		var rec = new modelListAsegAfiliados({
-		    				NMSINIES: 	json[i].NMSINIES,			//	9
-		    				NMAUTSER: 	json[i].NMAUTSER,
-		    				CDPERSON: 	json[i].CDPERSON,
-		    				NOMBRE:   	json[i].NOMBRE,
-		    				FEOCURRE:   json[i].FEOCURRE,
-		    				CDUNIECO:   json[i].CDUNIECO,		// 	1
-		    				DSUNIECO:   json[i].DSUNIECO,
-		    				AAAPERTU:   json[i].AAAPERTU,		//	8
-		    				ESTADO:   	json[i].ESTADO,			// 	3
-		    				NMSITUAC:   json[i].NMSITUAC,		//	5
-		    				NMSUPLEM:   json[i].NMSUPLEM,		// 	6
-		    				CDRAMO:  	json[i].CDRAMO,			//	2
-		    				CDTIPSIT:   json[i].CDTIPSIT,
-		    				DSTIPSIT:   json[i].DSTIPSIT,
-		    				STATUS:   	json[i].STATUS,			//	7
-		    				NMPOLIZA:   json[i].NMPOLIZA,		// 	4
-		    				VOBOAUTO:   json[i].VOBOAUTO,
-		    				CDICD:   	json[i].CDICD,
-		    				DSICD:   	json[i].DSICD,
-		    				CDICD2:   	json[i].CDICD2,
-		    				DSICD2:   	json[i].DSICD2,
-		    				DESCPORC:   json[i].DESCPORC,
-		    				DESCNUME:   json[i].DESCNUME,
-		    				COPAGO:   	json[i].COPAGO,
-		    				PTIMPORT:   json[i].PTIMPORT,
-		    				AUTRECLA:   json[i].AUTRECLA,
-		    				NMRECLAMO:  json[i].NMRECLAMO,
-		    				COMMENAR:   json[i].COMMENAR,
-		    				COMMENME:   json[i].COMMENME,
-		    				AUTMEDIC:   json[i].AUTMEDIC,
-		    				NTRAMITE:	numeroTramite,
-		    				USERASIGNADO: dato.OTVALOR17
+		    				NTRAMITE: 	json[i].NTRAMITE,		NFACTURA: 	json[i].NFACTURA, 		NMSINIES: 	json[i].NMSINIES,
+		    				NMAUTSER: 	json[i].NMAUTSER,		CDPERSON: 	json[i].CDPERSON,  		NOMBRE:   	json[i].NOMBRE,
+		    				FEOCURRE:   json[i].FEOCURRE,		CDUNIECO:   json[i].CDUNIECO,  		DSUNIECO:   json[i].DSUNIECO,
+		    				AAAPERTU:   json[i].AAAPERTU,		ESTADO:   	json[i].ESTADO,    		NMSITUAC:   json[i].NMSITUAC,
+		    				NMSUPLEM:   json[i].NMSUPLEM,		CDRAMO:  	json[i].CDRAMO,    		CDTIPSIT:   json[i].CDTIPSIT,
+		    				DSTIPSIT:   json[i].DSTIPSIT,		STATUS:   	json[i].STATUS,    		NMPOLIZA:   json[i].NMPOLIZA,
+		    				VOBOAUTO:   json[i].VOBOAUTO,		CDICD:   	json[i].CDICD,			DSICD:   	json[i].DSICD,
+		    				CDICD2:   	json[i].CDICD2,			DSICD2:   	json[i].DSICD2,			DESCPORC:   json[i].DESCPORC,
+		    				DESCNUME:   json[i].DESCNUME,		COPAGO:   	json[i].COPAGO,			PTIMPORT:   json[i].IMPORTETOTALPAGO,
+		    				AUTRECLA:   json[i].AUTRECLA,		NMRECLAMO:  json[i].NMRECLAMO,		COMMENAR:   json[i].COMMENAR,
+		    				COMMENME:   json[i].COMMENME,		AUTMEDIC:   json[i].AUTMEDIC,		USERASIGNADO: json[i].USUARIO
 	                    });
 		    			storeListAsegPagDirecto.add(rec);
 		    		}
@@ -998,7 +930,7 @@ Ext.onReady(function() {
         	title: 'Revisi&oacute;n Administrativa'
 		});
         
-        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
+        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
 	    tabDatosGeneralesPoliza.insert(2,{
         	title: 'C&aacute;lculos'
         });
@@ -1006,7 +938,7 @@ Ext.onReady(function() {
         tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
 	    tabDatosGeneralesPoliza.insert(3,{
         	title: 'Documentaci&oacute;n'
-        });
+        });*/
 	    
 	    storeListAsegPagDirecto.removeAll();
 	    return true;
@@ -1057,7 +989,7 @@ Ext.onReady(function() {
 		    }
 		});
         
-        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
+        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
 	    tabDatosGeneralesPoliza.insert(2,{
         	title: 'C&aacute;lculos',
             loader: {
@@ -1110,7 +1042,7 @@ Ext.onReady(function() {
                     tab.loader.load();
                 }
             }
-        });
+        });*/
         
 	    tabDatosGeneralesPoliza.setActiveTab(0);
     	return true;
