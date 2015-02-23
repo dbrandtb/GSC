@@ -2099,6 +2099,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         var name  = elem.NAME;
                                                                         var valor = elem.VALOR;
                                                                         record.set(name,valor);
+                                                                        /*
                                                                         if(name=='extrreno')
                                                                         {
                                                                             $.each(_p21_arrayNombresExtrreno,function(i,nombre)
@@ -2125,6 +2126,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                                 });
                                                                             });
                                                                         }
+                                                                        */
                                                                     }
                                                                 };
                                                                 if(Ext.isEmpty(_p21_valoresFactores))
