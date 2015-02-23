@@ -599,49 +599,38 @@ Ext.onReady(function() {
 												                    },
 												                    failure: function(form, action) {
 												                    	
-												                    	Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
-												                    	Ext.getCmp('_p22_BotCanDoc').setDisabled(false);
-												                    	
-												                		switch (action.failureType) {
-												                            case Ext.form.action.Action.CONNECT_FAILURE:
-												                        	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-												                                break;
-												                            case Ext.form.action.Action.SERVER_INVALID:
-												                            case Ext.form.action.Action.LOAD_FAILURE:
-												                                 
-												                                var msgServer = 'Error al realizar la carga masiva, consulte a soporte';
-												                                try {
-                                                                                    if(action.result.resultado.key == 1) {
-                                                                                    	// Error en validacion de formato:
-                                                                                    	msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
-                                                                                        Ext.Msg.show({
-                                                                                            title: 'Error', 
-                                                                                            msg: msgServer, 
-                                                                                            buttons: Ext.Msg.YESNO, 
-                                                                                            icon: Ext.Msg.ERROR,
-                                                                                            fn: function(btn){
-                                                                                                if (btn == 'yes'){
-                                                                                                    Ext.create('Ext.form.Panel').submit({
-                                                                                                        url            : _URL_DESCARGA_DOCUMENTOS,
-                                                                                                        standardSubmit : true,
-                                                                                                        target         : '_blank',
-                                                                                                        params         : {
-                                                                                                            path     : _RUTA_DOCUMENTOS_TEMPORAL,
-                                                                                                            filename : action.result.fileFileName 
-                                                                                                        }
-                                                                                                    });
+												                    	manejaErrorSubmit(form, action, function() {
+												                    		
+												                    		Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+                                                                            Ext.getCmp('_p22_BotCanDoc').setDisabled(false);
+                                                                            
+                                                                            if(action.result.resultado.key == 1) {
+                                                                                // Error en validacion de formato:
+                                                                                msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
+                                                                                Ext.Msg.show({
+                                                                                    title: 'Error', 
+                                                                                    msg: msgServer, 
+                                                                                    buttons: Ext.Msg.YESNO, 
+                                                                                    icon: Ext.Msg.ERROR,
+                                                                                    fn: function(btn){
+                                                                                        if (btn == 'yes'){
+                                                                                            Ext.create('Ext.form.Panel').submit({
+                                                                                                url            : _URL_DESCARGA_DOCUMENTOS,
+                                                                                                standardSubmit : true,
+                                                                                                target         : '_blank',
+                                                                                                params         : {
+                                                                                                    path     : _RUTA_DOCUMENTOS_TEMPORAL,
+                                                                                                    filename : action.result.fileFileName 
                                                                                                 }
-                                                                                            }
-                                                                                         });
-                                                                                    } else if (action.result.resultado.key == 2) {
-                                                                                    	// Error en carga masiva:
-                                                                                    	Ext.Msg.show({title: 'Error', msg: action.result.resultado.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                                                                                            });
+                                                                                        }
                                                                                     }
-                                                                                } catch(err) {
-                                                                                    Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-                                                                                }
-												                                break;
-												                        }
+                                                                                 });
+                                                                            } else if (action.result.resultado.key == 2) {
+                                                                                // Error en carga masiva:
+                                                                                Ext.Msg.show({title: 'Error', msg: action.result.resultado.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                                                                            }
+												                    	});
 												        			}
 							                                    });
 							                                }
@@ -765,7 +754,7 @@ Ext.onReady(function() {
 										    	                'saveList'   : saveList,
 										    	                'updateList' : updateList
 										    	            },
-										    	            success  : function(response){
+										    	            success  : function(response, options){
 										    	                panelValoresTablaApoyo.setLoading(false);
 										    	                var json = Ext.decode(response.responseText);
 										    	                if(json.success){
@@ -775,8 +764,7 @@ Ext.onReady(function() {
 										    	                    mensajeError(json.msgRespuesta);
 										    	                }
 										    	            }
-										    	            ,failure  : function()
-										    	            {
+										    	            ,failure  : function(response, options){
 										    	                panelValoresTablaApoyo.setLoading(false);
 										    	                errorComunicacion();
 										    	            }
@@ -807,7 +795,6 @@ Ext.onReady(function() {
 		
 	recargagridTabla5Claves = function(){
 		loadMaskTabla.show();
-		
 		
 		if(!_TIPO_1CLAVE){
 			storeTablaCincoClaves.load({
@@ -860,32 +847,6 @@ Ext.onReady(function() {
 				}
 			});
 		}
-		
-//		cargaStorePaginadoLocal(_TIPO_1CLAVE?storeTablaUnaClave:storeTablaCincoClaves, _TIPO_1CLAVE?_URL_CONSULTA_VALORES_TABLA_UNA_CLAVE :_URL_CONSULTA_VALORES_TABLA_CINCO_CLAVES, 'loadList', panelValoresTablaApoyo.getValues(), function (options, success, response){
-//    		loadMaskTabla.hide();
-//    		if(success){
-//                var jsonResponse = Ext.decode(response.responseText);
-//                
-//                if(!jsonResponse.success) {
-//                    mensajeError(jsonResponse.msgRespuesta);
-//                }else{
-//                	if(!Ext.isEmpty(jsonResponse.msgRespuesta)) {
-//                		mensajeWarning(jsonResponse.msgRespuesta);
-//                	}
-//                	
-//                	//Agregamos 10 rows vacios por defecto:
-//		        	for(var count=0 ;count<10; count++){
-//		        		if(_TIPO_1CLAVE){
-//	                		storeTablaUnaClave.insert(storeTablaUnaClave.getCount(),new UnaClaveModel());
-//	                	}else{
-//	                		storeTablaCincoClaves.insert(storeTablaCincoClaves.getCount(),new CincoClavesModel());
-//	                	}
-//		        	}
-//                }
-//            }else{
-//                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
-//            }
-//    	}, panelValoresTabCincoClaves);
 	};
 	
     
