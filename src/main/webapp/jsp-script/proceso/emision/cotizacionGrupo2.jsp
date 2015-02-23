@@ -2543,6 +2543,11 @@ function _p25_generarTramiteClic(callback,sincenso)
                         {
                             if(callback)
                             {
+                                if(!_p25_ntramite)
+                                {
+                                    _p25_smap1.ntramite = _p25_ntramiteVacio;
+                                    _p25_smap1.nmpoliza = json.smap1.nmpoliza;
+                                }
                                 callback(json);
                             }
                             else
