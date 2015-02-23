@@ -107,15 +107,20 @@ Ext.onReady(function(){
         			url: _URL_VALIDA_EXISTE_USUARIO,
     	        	waitMsg:'Procesando...',
     	        	failure: function(form, action) {
-    	        		dsPassword.reset();
-						loginForm.down('[name=passwordConfirm]').enable();
-						loginForm.down('[name=passwordConfirm]').show();
-						Ext.Msg.show({
-							title    : 'Aviso'
-							,icon    : Ext.Msg.INFO
-							,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contraseña.'
-							,buttons : Ext.Msg.OK
-						});
+    	        		// Si hay un mensaje de error lo mostramos, sino solicitamos renovar la contraseña:
+    	        		if(!Ext.isEmpty(action.result.errorMessage)) {
+    	        			Ext.Msg.show({title: 'Error', msg: action.result.errorMessage, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+    	        		} else {
+    	        			dsPassword.reset();
+                            loginForm.down('[name=passwordConfirm]').enable();
+                            loginForm.down('[name=passwordConfirm]').show();
+                            Ext.Msg.show({
+                                title    : 'Aviso'
+                                ,icon    : Ext.Msg.INFO
+                                ,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contraseña.'
+                                ,buttons : Ext.Msg.OK
+                            });
+    	        		}
 					},
     				success: function(form, action) {
 						validarPasswordYrol();

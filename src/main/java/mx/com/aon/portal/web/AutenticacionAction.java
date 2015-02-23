@@ -46,16 +46,12 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	
 	public String existeUsuarioLDAP() throws Exception {
 		try {
-			
 			success = loginManager.validaUsuarioLDAP(true, user, password);
-			//logger.debug(new StringBuilder("Existe usuario '").append(user).append("' en LDAP? ").append(success));
-			return SUCCESS;
-
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			errorMessage = ex.getMessage();
-			return SUCCESS;
+			errorMessage = "Error al validar credenciales de usuario en el servidor: " + ex.getMessage();
 		}
+		return SUCCESS;
 	}
 	
 	
