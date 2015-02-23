@@ -90,3 +90,35 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid)
         }
     });
 }
+
+
+/**
+ * Maneja los errores en un submit de un formulario e invoca la función callback enviada como parametro
+ *
+ * @param {Ext.form.Basic} form Formulario que solicitó la acción
+ * @param {Ext.form.action.Action} action El objeto Action que ejecutó la operación
+ * @param {Function} clbkFn Funcion callback a ejecutar
+ */
+function manejaErrorSubmit(form, action, clbkFn) {
+    var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+    try {
+    	debug('action=',action);
+    	debug('action.failureType=', action.failureType);
+        switch (action.failureType) {
+        case Ext.form.action.Action.CONNECT_FAILURE:
+            Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+            break;
+        case Ext.form.action.Action.SERVER_INVALID:
+        case Ext.form.action.Action.LOAD_FAILURE:
+            if(clbkFn) {
+                clbkFn(form,action);
+            } else {
+                Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+            }
+            break;
+        }
+    } catch(err) {
+        debug(err);
+        Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+    }
+}
