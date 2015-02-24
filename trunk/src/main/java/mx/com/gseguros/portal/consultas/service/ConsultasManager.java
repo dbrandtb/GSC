@@ -53,4 +53,14 @@ public interface ConsultasManager
 			,String nmsolici
 			,String cdramant
 			)throws Exception;
+
+	public List<Map<String,String>> obtieneContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			)throws Exception;
 }
