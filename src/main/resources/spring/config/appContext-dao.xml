@@ -1,107 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-	   xsi:schemaLocation="
-	       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
-           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-	
-    
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS"/>
-        <property name="username" value="ice"/>
-        <property name="password" value="ice"/>
-        <!--
-        <property name="maxActive" value="30"/>
-        <property name="maxIdle" value="10"/>
-        <property name="maxWait" value="1000"/>
-        <property name="defaultAutoCommit" value="true"/>
-        -->
-    </bean>
-    
-    <bean id="dataSourceSISA" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-        <property name="url" value="jdbc:sqlserver://192.168.1.26\\RESPALDO:1434;databaseName=SISA"/>
-        <property name="username" value="sa"/>
-        <property name="password" value="sa4925"/>
-    </bean>
-    
-    <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/> -->
-    
-    <bean id="dataSourceSIGS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.informix.jdbc.IfxDriver"/>
-        <property name="url" value="jdbc:informix-sqli://10.1.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
-        <property name="username" value="sadgdl"/>
-        <property name="password" value="1salud"/>
-    </bean>
-    
-    <!-- Manejo de transacciones para Spring JDBC: -->
-    <!-- Enable Annotation based Declarative Transaction Management -->
-    <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
-    
-    <!-- Creating TransactionManager Bean, since JDBC we are creating of type DataSourceTransactionManager -->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <!-- Fin de Manejo de transacciones para Spring JDBC -->
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="autosDAOSIGSImpl" class="mx.com.gseguros.ws.autosgs.dao.impl.AutosDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
 
-    <!-- ******************** Beans de Viejo Patron de Spring JDBC: ******************** -->
-    <bean id="processResultDAO" class="mx.com.aon.portal.dao.ProcessResultDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
-        <property name="abstractDAO">
-            <ref bean="processResultDAO"/>
-        </property>
-    </bean>
+    <bean id="cancelacionDAOImpl" class="mx.com.gseguros.portal.cancelacion.dao.impl.CancelacionDAOImpl" parent="abstractManagerDAO"></bean>
 
-    <bean id="abstractManagerJdbcTemplateInvoke" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke">
-        <property name="processResultManager">
-            <ref bean="processResultManagerJdbcTemplate"/>
-        </property>
-    </bean>
-    <!-- ******************** Fin de Beans de Viejo Patron de Spring JDBC: ******************** -->
+    <bean id="catalogosDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.CatalogosDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="clausuladoDAOImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.ClausuladoDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="consultasSiniestroDAOImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasSiniestroDAOImpl" parent="abstractManagerDAO"/>
     
-    <!-- ******************** Beans de Nuevo patron de Spring JDBC: ******************** -->
-    <bean id="abstractJdbcDAO" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <bean id="consultasDAOImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl" parent="abstractManagerDAO"/>
     
-    <bean id="procesoResultadoDAO" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/>
+    <bean id="consultasDAOICEImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPolizaDAOImpl" parent="abstractManagerDAO"/>
     
-    <bean id="abstractManagerDAO" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAO">
-        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
-    </bean>
+    <bean id="consultasDAOSISAImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultaPolizasDAOSISAImpl" parent="abstractManagerDAOSISA"/>
     
-    <!-- Para SISA: -->
-    <bean id="abstractJdbcDAOSISA" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
-        <property name="dataSource" ref="dataSourceSISA"/>
-    </bean>
+    <bean id="consultasAseguradoDAOSISAImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasAseguradoDAOSISAImpl" parent="abstractManagerDAOSISA"/>
     
-    <!-- <bean id="procesoResultadoDAOSISA" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/> -->
+    <bean id="consultasAseguradoDAOICEImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasAseguradoDAOICEImpl" parent="abstractManagerDAO"/>
+
+    <bean id="cotizacionDAOImpl" class="mx.com.gseguros.portal.cotizacion.dao.impl.CotizacionDAOImpl" parent="abstractManagerDAO"></bean>
+
+    <bean id="dinamicDao" class="mx.com.gseguros.confpantallas.base.dao.DinamicDao" parent="abstractManagerDAO"/>
     
-    <bean id="abstractManagerDAOSISA" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSISA">
-        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
-    </bean>
+    <bean id="dinamicDAOImpl" class="mx.com.gseguros.confpantallas.base.dao.DinamicDao" parent="abstractManagerDAO"/>
     
-    <!-- Para SIGS: -->
-    <bean id="abstractJdbcDAOSIGS" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
-        <property name="dataSource" ref="dataSourceSIGS"/>
-    </bean>
+    <bean id="endososDAOImpl" class="mx.com.gseguros.portal.endosos.dao.impl.EndososDAOImpl" parent="abstractManagerDAO"></bean>
     
-    <bean id="abstractManagerDAOSIGS" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAOSIGS">
-        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
-    </bean>
+    <bean id="endososGrupoDAOImpl" class="mx.com.gseguros.portal.endosos.dao.impl.EndososGrupoDAOImpl" parent="abstractManagerDAO" />
+
+    <bean id="generadorPantallasDAOImpl" class="mx.com.gseguros.confpantallas.dao.impl.GeneradorPantallasDAOImpl" parent="abstractManagerDAO"></bean>
+
+    <bean id="menuDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.MenuDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="mesaControlDAOImpl" class="mx.com.gseguros.portal.mesacontrol.dao.impl.MesaControlDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="pantallasDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.PantallasDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="peritajeDaoImpl" class="com.peritaje.siniestro.dao.impl.PeritajeDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="personasDAOImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.PersonasDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="recibosDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.RecibosDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="reclamoExpressDAOSIGSImpl" class="mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
     
-    <!-- ******************** Fin de Beans de Nuevo patron de Spring JDBC: ******************** -->
+    <bean id="reexpedicionDocumentosDAOImpl" class="mx.com.gseguros.portal.reexpedicionDocumentos.dao.impl.ReexpedicionDocumentosDAOImpl" parent="abstractManagerDAO"></bean>
+
+    <bean id="rehabilitacionDAOImpl" class="mx.com.gseguros.portal.rehabilitacion.dao.impl.RehabilitacionDAOImpl" parent="abstractManagerDAO"></bean>
+
+    <bean id="renovacionDAOImpl" class="mx.com.gseguros.portal.renovacion.dao.impl.RenovacionDAOImpl" parent="abstractManagerDAO" />
     
+    <bean id="reportesDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.ReportesDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="siniestrosDaoImpl" class="mx.com.gseguros.portal.siniestros.dao.impl.SiniestrosDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="storedProceduresDAOImpl" class="mx.com.gseguros.externo.dao.impl.StoredProceduresDAOImpl" parent="abstractManagerDAO" />
+
+    <bean id="tablasApoyoDAOImpl" class="mx.com.gseguros.wizard.dao.impl.TablasApoyoDAOImpl" parent="abstractManagerDAO"/>    
+    
+    <bean id="usuarioDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="webServicesDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.WebServicesDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="WizardDAOImpl" class="mx.com.gseguros.wizard.dao.impl.WizardDAOImpl" parent="abstractManagerDAO"/>
     
 </beans>
