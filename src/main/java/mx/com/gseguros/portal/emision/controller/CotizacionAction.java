@@ -2306,7 +2306,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//recupera mpolizas
 		
 		//recuperar dias validos cotizacion
-		if(exito)
+		if(success)
 		{
 			ManagerRespuestaSmapVO dias=cotizacionManager.obtenerParametrosCotizacion(ParametroCotizacion.DIAS_VALIDOS_COTIZACION,cdramo,cdtipsit,null,null);
 			if(dias.isExito())
@@ -2322,7 +2322,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//recuperar dias validos cotizacion
 		
 		//recuperar tvalopol
-		if(exito)
+		if(success)
 		{
 			try
 			{
