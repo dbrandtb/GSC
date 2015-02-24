@@ -1075,7 +1075,18 @@ function _p28_cotizar(sinTarificar)
                                             itemId   : '_p28_botonAplicarCesion'
                                             ,text    : 'Aplicar'
                                             ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                            ,handler : function(me) { me.up('window').hide(); _p28_cotizar(); }
+                                            ,handler : function(me)
+                                            {
+                                                if(me.up('form').getForm().isValid())
+                                                {
+                                                    me.up('window').hide();
+                                                    _p28_cotizar();
+                                                }
+                                                else
+                                                {
+                                                    mensajeWarning('Favor de verificar los datos');
+                                                }
+                                            }
                                         }
                                     ]
                                 })
@@ -1096,7 +1107,17 @@ function _p28_cotizar(sinTarificar)
                                 itemId   : '_p28_botonAplicarDescuento'
                                 ,text    : 'Aplicar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                ,handler : function(){_p28_cotizar();}
+                                ,handler : function(me)
+                                {
+                                    if(me.up('form').getForm().isValid())
+                                    {
+                                        _p28_cotizar();
+                                    }
+                                    else
+                                    {
+                                        mensajeWarning('Favor de verificar los datos');
+                                    }
+                                }
                             }
                         ]
                     });
