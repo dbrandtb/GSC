@@ -209,11 +209,11 @@ Ext.onReady(function()
 					            		
 					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
 					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
-					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue(); 
+					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Continuar y Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText('Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
 					            		_RFCsel = '';
@@ -232,7 +232,7 @@ Ext.onReady(function()
 					            			
 					            		
 					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val, oldVal, eopts){
 						    				try{
@@ -291,9 +291,9 @@ Ext.onReady(function()
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		};
-				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue(); //SALUD o DAÑOS
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].disable();
+				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
 				                        		var form=_p22_formBusqueda();
@@ -303,8 +303,8 @@ Ext.onReady(function()
 				                        		
 				                        		form.down('[name=smap1.rfc]').setRawValue(form.down('[name=smap1.rfc]').getValue())
 				                        		
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].enable();
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].enable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].enable();
 				                        		
 				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
 				                        			store.removeAll();
@@ -351,11 +351,11 @@ Ext.onReady(function()
 					            		
 					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
 					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
-					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue(); 
+					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText('Continuar y Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText('Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function(){
 					            		_RFCnomSel = '';
@@ -363,7 +363,7 @@ Ext.onReady(function()
 					            		form.down('[name=smap1.rfc]').reset();
 					            		form.down('[name=smap1.nombre]').getStore().removeAll();
 					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[0].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
 					            	},
 					            	change: function(me, val){
 						    				try{
@@ -400,13 +400,13 @@ Ext.onReady(function()
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		}
-				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue(); //SALUD o DAÑOS
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].disable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].disable();
+				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[0].enable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[0].enable();
+				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].enable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].enable();
 				                        		
 				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
 				                        			store.removeAll();
@@ -525,7 +525,7 @@ Ext.onReady(function()
 															form.down('[name=smap1.rfc]').getStore().removeAll();
 												    		form.down('[name=smap1.nombre]').getStore().removeAll();
 															
-															_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
+															_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue();
 															
 															irModoAgregar();
 							    		            	}else{
@@ -553,7 +553,7 @@ Ext.onReady(function()
 												form.down('[name=smap1.rfc]').getStore().removeAll();
 									    		form.down('[name=smap1.nombre]').getStore().removeAll();
 												
-												_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[0].getGroupValue();
+												_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue();
 												
 												if(_esCargaClienteNvo){
 													form.down('[name=smap1.rfc]').doQuery(valorRFC,true,false);
@@ -684,8 +684,8 @@ Ext.onReady(function()
 									
 									if(_esCargaClienteNvo && !Ext.isEmpty(_cargaTipoPersona)){
 										_p22_fieldTipoPersona().setValue(_cargaTipoPersona);
-										Ext.ComponentQuery.query('#tipoPerAgregarId')[0].setValue(_cargaTipoPersona);
-										Ext.ComponentQuery.query('#tipoPerAgregarId')[0].setReadOnly(true);
+										Ext.ComponentQuery.query('#tipoPerAgregarId')[Ext.ComponentQuery.query('#tipoPerAgregarId').length-1].setValue(_cargaTipoPersona);
+										Ext.ComponentQuery.query('#tipoPerAgregarId')[Ext.ComponentQuery.query('#tipoPerAgregarId').length-1].setReadOnly(true);
 									}
 								}
 							}
@@ -966,8 +966,11 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	 *	Para Cliente No existente pero con un Codigo postal y tipo de persona predefinido 
 	 */
     	setTimeout(function(){
+    		
+    		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].hide();
+    		
 			if(!Ext.isEmpty(_cargaCompania)){
-				Ext.ComponentQuery.query('#companiaId')[0].setValue(_cargaCompania);
+				Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].setValue(_cargaCompania);
 				
 				if('D' == _cargaCompania){
 					_fieldByName('DSL_CDIDEEXT').hide();
@@ -977,7 +980,10 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 				}
 			}
 			
-			Ext.ComponentQuery.query('#companiaGroupId')[0].hide();
+			_p22_formDatosGenerales().hide();
+    		_p22_formDomicilio().hide();
+    		_p22_principalDatosAdicionales().hide();
+    		
 			var form=_p22_formBusqueda();
 			form.down('[name=smap1.rfc]').setFieldLabel('Ingrese el RFC');
 			form.down('[name=smap1.nombre]').hide();
@@ -991,7 +997,9 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	    
     }else if(!Ext.isEmpty(_cargaCompania)){
     	setTimeout(function(){
-			Ext.ComponentQuery.query('#companiaId')[0].setValue(_cargaCompania);
+    		
+    		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].hide();
+			Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].setValue(_cargaCompania);
 			
 			if('D' == _cargaCompania){
 				_fieldByName('DSL_CDIDEEXT').hide();
@@ -1000,7 +1008,9 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 				_fieldByName('DSL_CDIDEPER').hide();
 			}
 			
-			Ext.ComponentQuery.query('#companiaGroupId')[0].hide();
+			_p22_formDatosGenerales().hide();
+    		_p22_formDomicilio().hide();
+    		_p22_principalDatosAdicionales().hide();
 			
 		},1000);
     }
@@ -1013,7 +1023,8 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 function _p22_formBusqueda()
 {
     debug('>_p22_formBusqueda<');
-	return Ext.ComponentQuery.query('#_p22_formBusqueda')[0];
+    debug(Ext.ComponentQuery.query('#_p22_formBusqueda'));
+	return Ext.ComponentQuery.query('#_p22_formBusqueda')[Ext.ComponentQuery.query('#_p22_formBusqueda').length-1];
 }
 
 function _p22_heredarColonia(callbackload)
@@ -1132,60 +1143,60 @@ function _p22_tipoPersonaChange(combo,value)
 function _p22_comboColonias()
 {
     debug('>_p22_comboColonias<');
-    return Ext.ComponentQuery.query('[name=CDCOLONI]')[0];
+    return Ext.ComponentQuery.query('[name=CDCOLONI]')[Ext.ComponentQuery.query('[name=CDCOLONI]').length-1];
 }
 
 function _p22_comboCodPostal()
 {
     debug('>_p22_comboCodPostal<');
-    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[0];
+    return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];
 }
 
 function _p22_fieldSegundoNombre()
 {
     debug('>_p22_fieldSegundoNombre<');
-    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[0];
+    return Ext.ComponentQuery.query('[name=DSNOMBRE1]')[Ext.ComponentQuery.query('[name=DSNOMBRE1]').length-1];
 }
 
 function _p22_fieldApat()
 {
     debug('>_p22_fieldApat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[0];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO]')[Ext.ComponentQuery.query('[name=DSAPELLIDO]').length-1];
 }
 
 function _p22_fieldAmat()
 {
     debug('>_p22_fieldAmat<');
-    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[0];
+    return Ext.ComponentQuery.query('[name=DSAPELLIDO1]')[Ext.ComponentQuery.query('[name=DSAPELLIDO1]').length-1];
 }
 
 function _p22_fieldSexo()
 {
     debug('>_p22_fieldSexo<');
-    return Ext.ComponentQuery.query('[name=OTSEXO]')[0];
+    return Ext.ComponentQuery.query('[name=OTSEXO]')[Ext.ComponentQuery.query('[name=OTSEXO]').length-1];
 }
 
 function _p22_fieldTipoPersona()
 {
     debug('>_p22_fieldTipoPersona<');
-    return Ext.ComponentQuery.query('[name=OTFISJUR]')[0];
+    return Ext.ComponentQuery.query('[name=OTFISJUR]')[Ext.ComponentQuery.query('[name=OTFISJUR]').length-1];
 }
 
 function _p22_fieldCumuloPrima(){
-    return Ext.ComponentQuery.query('[name=PTCUMUPR]')[0];
+    return Ext.ComponentQuery.query('[name=PTCUMUPR]')[Ext.ComponentQuery.query('[name=PTCUMUPR]').length-1];
 }
 
 function _p22_fielCdNacion(){
-    return Ext.ComponentQuery.query('[name=CDNACION]')[0];
+    return Ext.ComponentQuery.query('[name=CDNACION]')[Ext.ComponentQuery.query('[name=CDNACION]').length-1];
 }
 
 function _p22_fieldResidente(){
-    return Ext.ComponentQuery.query('[name=RESIDENTE]')[0];
+    return Ext.ComponentQuery.query('[name=RESIDENTE]')[Ext.ComponentQuery.query('[name=RESIDENTE]').length-1];
 }
 
 function _p22_formDatosGenerales()
 {
-    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[0];
+    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[Ext.ComponentQuery.query('#_p22_formDatosGenerales').length-1];
 }
 
 /* PARA EL LOADER */
@@ -1314,7 +1325,7 @@ function _p22_loadRecordCdperson(callbackload)
 function _p22_PanelPrincipal()
 {
     debug('>_p22_PanelPrincipal<');
-    return Ext.ComponentQuery.query('#_p22_PanelPrincipal')[0];
+    return Ext.ComponentQuery.query('#_p22_PanelPrincipal')[Ext.ComponentQuery.query('#_p22_PanelPrincipal').length-1];
 }
 
 function _p22_guardarClic(callback, autosave)
@@ -1441,31 +1452,31 @@ function _p22_guardarClic(callback, autosave)
 function _p22_formDomicilio()
 {
     debug('>_p22_formDomicilio<');
-    return Ext.ComponentQuery.query('#_p22_formDomicilio')[0];
+    return Ext.ComponentQuery.query('#_p22_formDomicilio')[Ext.ComponentQuery.query('#_p22_formDomicilio').length-1];
 }
 
 function _p22_principalDatosAdicionales()
 {
     debug('>_p22_principalDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_principalDatosAdicionales')[0];
+    return Ext.ComponentQuery.query('#_p22_principalDatosAdicionales')[Ext.ComponentQuery.query('#_p22_principalDatosAdicionales').length-1];
 }
 
 function _p22_fieldRFC()
 {
     debug('>_p22_fieldRFC<');
-    return Ext.ComponentQuery.query('[name=CDRFC]')[0];
+    return Ext.ComponentQuery.query('[name=CDRFC]')[Ext.ComponentQuery.query('[name=CDRFC]').length-1];
 }
 
 function _p22_fieldCdperson()
 {
     debug('>_p22_fieldCdperson<');
-    return Ext.ComponentQuery.query('[name=CDPERSON]')[0];
+    return Ext.ComponentQuery.query('[name=CDPERSON]')[Ext.ComponentQuery.query('[name=CDPERSON]').length-1];
 }
 
 function _p22_fieldConsecutivo()
 {
     debug('>_p22_fieldConsecutivo<');
-    return Ext.ComponentQuery.query('[name=NMORDDOM]')[0];
+    return Ext.ComponentQuery.query('[name=NMORDDOM]')[Ext.ComponentQuery.query('[name=NMORDDOM]').length-1];
 }
 
 function recargaTelefonoEmail(){
@@ -2105,7 +2116,7 @@ function _p22_guardarDatosAdicionalesClic()
 function _p22_formDatosAdicionales()
 {
     debug('>_p22_formDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[0];
+    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[Ext.ComponentQuery.query('#_p22_formDatosAdicionales').length-1];
 }
 
 function _p22_documentosClic()
@@ -2334,7 +2345,7 @@ function callbackDocumentoSubidoPersona()
     	elemento.setValue('S');
     }
     
-    (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]')[0]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
+    (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]')[Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]').length-1]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
     
 }
 

@@ -1,4 +1,4 @@
-a<%@ include file="/taglibs.jsp"%>
+<%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 ///////////////////////
@@ -35,12 +35,55 @@ var _35_gridContratantes;
 var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoContratante"       />';
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
+var _p35_urlPantallaCliente = '<s:url namespace="/catalogos"  action="includes/personasLoader" />';
+//para funcion de pantalla de personas
+var obtieneDatosClienteContratante;
+//var destruirContLoaderPersona;
+var _p22_parentCallback         = false;
+var _contratanteSaved = false;
+
 debug('_35_smap1:',_35_smap1);
 ////// variables //////
 ///////////////////////
 
 Ext.onReady(function()
 {
+	
+	function contratanteGuardado (){
+		_contratanteSaved = true;
+	}
+	
+	var query = Ext.ComponentQuery.query('#_p22_PanelPrincipal');
+	if(query.length>0){
+		
+		
+		for(var pos = query.length-1 ; pos>=0; pos--){
+		
+			var pantallaPersonas = query[pos];
+			
+			pantallaPersonas.query().forEach(function(element){
+				try{
+					element.destroy();
+				}catch(e){
+					debug('Error al destruir en Pantalla de Clientes',e);
+				}
+			});
+		
+			try{
+				pantallaPersonas.destroy();	
+			}catch(e){
+				debug('Error al destruir Panel Principal en Pantalla de Clientes',e);
+			}
+		
+			try{
+				windowAccionistas.destroy();	
+			}catch(e){
+				debug('Error al destruir Window accionistas en Pantalla de Clientes',e);
+			}
+		}
+	}
+	
+	
 	///////////////////////
 	////// overrides //////
 	Ext.override(Ext.form.field.ComboBox,
@@ -50,7 +93,7 @@ Ext.onReady(function()
 			debug('Ext.form.field.ComboBox initComponent');
 			Ext.apply(this,
 			{
-				forceSelection : 'true'
+				forceSelection : false
 			});
 			return this.callParent();
 		}
@@ -132,27 +175,31 @@ Ext.onReady(function()
             debug('_35_FormContratante initComponent');
             Ext.apply(this,
             {
-                title      : 'Nuevo Contratante'
-                ,defaults  :
+                title       : 'Nuevo Contratante'
+                ,height     : 400
+                ,autoScroll : true
+				,loader     :
                 {
-                    style : 'margin : 5px;'
-                }
-                ,layout    :
-                {
-                    type     : 'table'
-                    ,columns : 2
-                }
-//                ,items     :
-//                [
-//                     
-//                ]
-                ,listeners :
-                {
-                    afterrender : function(me)
-                    {
-                    }
+                    url       : _p35_urlPantallaCliente
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,ajaxOptions: {
+                            method: 'POST'
+                     },
+                     params: {
+					                'smap1.cdperson' : '',
+					                'smap1.cdideper' : '',
+					                'smap1.cdideext' : '',
+					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esCargaClienteNvo' : 'N' ,
+					                'smap1.ocultaBusqueda' : 'S' ,
+					                'smap1.cargaCP' : '',
+					                'smap1.cargaTipoPersona' : '',
+					                'smap1.cargaSucursalEmi' : ''
+					            }
                 }
             });
+            _p22_parentCallback = contratanteGuardado;
             this.callParent();
         }
     });
@@ -263,6 +310,9 @@ Ext.onReady(function()
                 ////// usa codigo del padre //////
                 /*//////////////////////////////*/
                 marendNavegacion(4);
+//                if(!Ext.isEmpty(destruirContLoaderPersona)){
+//					destruirContLoaderPersona();	                                
+//	            }
                 /*//////////////////////////////*/
                 ////// usa codigo del padre //////
                 //////////////////////////////////
@@ -288,7 +338,16 @@ function _35_confirmar()
     
     if(valido)
     {
-        valido=_35_formContratante.isValid()&&_35_panelEndoso.isValid();
+    	 var datosContr = obtieneDatosClienteContratante();
+		if(Ext.isEmpty(datosContr.nombre)){
+			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			return false;
+		}else if(!Ext.isEmpty(datosContr.cdperson) && !_contratanteSaved){
+			mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
+			return false;
+		}
+    	
+        valido=_35_panelEndoso.isValid();
         if(!valido)
         {
             datosIncompletos();
@@ -310,10 +369,8 @@ function _35_confirmar()
             smap1   : _35_smap1
             ,smap2  :
             {
-                fecha_endoso : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y')
-                ,contratante      : _35_formContratante.items.items[0].getValue()
-                ,nmcuadro    : _35_storeContratantes.getAt(0).get('NMCUADRO')
-                ,cdsucurs    : _35_storeContratantes.getAt(0).get('CDSUCURS')
+                fecha_endoso : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y'),
+                cdpersonNvoContr : datosContr.cdperson
             }
             ,slist1 : slist1
         }
@@ -336,6 +393,10 @@ function _35_confirmar()
                     ////// usa codigo del padre //////
                     /*//////////////////////////////*/
                     marendNavegacion(2);
+                    
+//                    if(!Ext.isEmpty(destruirContLoaderPersona)){
+//							destruirContLoaderPersona();	                                
+//	                }
                     /*//////////////////////////////*/
                     ////// usa codigo del padre //////
                     //////////////////////////////////
