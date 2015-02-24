@@ -3897,6 +3897,11 @@ function _p30_cargarClic()
                     {
                         _p30_store.add(new _p30_modelo(json.slist2[i]));
                     }
+                    
+                    if(maestra||vencida)
+                    {
+                        _fieldById('_p30_form').formOculto.getForm().reset();
+                    }
            
                     if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida)
                     {
