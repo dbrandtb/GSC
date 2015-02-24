@@ -3516,7 +3516,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	String tipoEndoso = rs.getString("tipEnd");
         	//logger.debug(">>>>>  Valor de tipEnd: " +rs.getString("tipEnd"));
         	
-        	if(tipoEndoso == null)tipoEndoso = "";
+        	if(tipoEndoso == null)tipoEndoso = " ";
         	recibo.setTipEnd(tipoEndoso);
         	
         	recibo.setTipRec(rs.getString("tipRec"));
@@ -3573,7 +3573,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		comision.setNumSucc(rs.getInt("numSucc"));
     		comision.setRmdbRn(rs.getInt("rmdbRn"));
     		
-    		comision.setTipEndc(StringUtils.isBlank(rs.getString("tipEndc"))?"":rs.getString("tipEndc"));
+    		comision.setTipEndc(StringUtils.isBlank(rs.getString("tipEndc"))?" ":rs.getString("tipEndc"));
     		
     		return comision;
     	}
