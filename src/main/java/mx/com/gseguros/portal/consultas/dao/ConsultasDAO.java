@@ -114,4 +114,15 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarValoresAtributosFactores(String cdramo,String cdtipsit)throws Exception;
+
+	
+	public List<Map<String,String>>obtieneContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			)throws Exception;
 }

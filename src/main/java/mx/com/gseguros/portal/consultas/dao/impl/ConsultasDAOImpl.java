@@ -980,4 +980,56 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+
+    @Override
+    public List<Map<String,String>>obtieneContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			)throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsituac" , nmsituac);
+    	params.put("cdrol"    , cdrol);
+    	params.put("cdperson" , cdperson);
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES.P_OBTIENE_MPOLIPER",params);
+    	Map<String,Object>procResult  = ejecutaSP(new ObtieneContratantePoliza(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES.P_OBTIENE_MPOLIPER",params,lista);
+    	return lista;
+    }
+    
+    protected class ObtieneContratantePoliza extends StoredProcedure
+    {
+    	protected ObtieneContratantePoliza(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_SATELITES.P_OBTIENE_MPOLIPER");
+    		declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+    		String[] cols=new String[]{
+    				"NOMBRE","CDRFC","CDPERSON","CDIDEPER","CDIDEEXT", "NMSITUAC", "CDROL"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

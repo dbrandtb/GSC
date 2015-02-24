@@ -139,6 +139,47 @@ public class ConsultasManagerImpl implements ConsultasManager
 				));
 		return lista;
 	}
+
+	@Override
+	public List<Map<String,String>> obtieneContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrol
+			,String cdperson
+			)throws Exception
+			{
+		logger.info(Utilerias.join(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				,"\n@@@@@@ cdrol="    , cdrol
+				,"\n@@@@@@ cdperson=" , cdperson
+				));
+		
+		List<Map<String,String>>lista=consultasDAO.obtieneContratantePoliza(
+				  cdunieco
+				, cdramo
+				, estado
+				, nmpoliza
+				, nmsituac
+				, cdrol
+				, cdperson
+				);
+		
+		logger.info(Utilerias.join(
+				"\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+			}
 	
 	///////////////////////////////
 	////// getters y setters //////
