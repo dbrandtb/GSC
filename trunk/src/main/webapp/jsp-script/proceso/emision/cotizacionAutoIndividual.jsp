@@ -1951,6 +1951,11 @@ function _p28_cargar(boton)
                                         }
                                     }
                                     
+                                    if(maestra||vencida)
+                                    {
+                                        _fieldById('_p28_form').formOculto.getForm().reset();
+                                    }
+                                    
                                     if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida)
                                     {
                                         _p28_cotizar(!maestra&&!vencida);
