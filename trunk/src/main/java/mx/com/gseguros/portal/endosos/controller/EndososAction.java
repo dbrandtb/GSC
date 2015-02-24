@@ -7276,18 +7276,18 @@ String cdramo              = smap1.get("CDRAMO");
 String estado              = smap1.get("ESTADO");
 String nmpoliza            = smap1.get("NMPOLIZA");
 String sFecha              = smap2.get("fecha_endoso");
-Date   dFecha            = renderFechas.parse(sFecha);
+Date   dFecha              = renderFechas.parse(sFecha);
 UserVO usuario             = (UserVO)session.get("USUARIO");
 String cdelemento          = usuario.getEmpresa().getElementoId();
 String cdusuari            = usuario.getUser();
 String proceso             = "END";
-String cdtipsup            = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
-String cdcontratante            = smap2.get("contratante");
+String cdtipsup            = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
+//String cdcontratante            = smap2.get("contratante");
 String tipoContratantePrincipal = "1";
 String sesionComision      = "0";
 String porcenParticip      = "100";
-String nmcuadro            = smap2.get("nmcuadro");
-String cdsucurs            = smap2.get("cdsucurs");
+//String nmcuadro            = smap2.get("nmcuadro");
+//String cdsucurs            = smap2.get("cdsucurs");
 String comentariosEndoso   = "";
 String cdtipsit            = smap1.get("CDTIPSIT");
 String ntramite            = smap1.get("NTRAMITE");
@@ -7298,33 +7298,34 @@ Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estad
 String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 
-//matar anteriores
-for(Map<String,String>contratanteIte:slist1) {
-String cdcontratanteIte = contratanteIte.get("CDAGENTE");
-String cdtipoagIte = contratanteIte.get("CDTIPOAG");
-String porredauIte = contratanteIte.get("PORREDAU");
-String nmcuadroIte = contratanteIte.get("NMCUADRO");
-String cdsucursIte = contratanteIte.get("CDSUCURS");
-String porpartiIte = contratanteIte.get("PORPARTI");
 
-/**
-* insertar muerto
-* PKG_SATELITES.P_MOV_MPOLIAGE
-*/
-endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
-	cdcontratanteIte, nmsuplem, Constantes.STATUS_VIVO, cdtipoagIte, porredauIte,
-	nmcuadroIte, cdsucursIte, Constantes.DELETE_MODE, ntramite, porpartiIte);
-}
+Map<String,String>contratanteIte =  slist1.get(0);
 
-/**
-* insertar vivo
-* PKG_SATELITES.P_MOV_MPOLIAGE
-*/
-endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
-cdcontratante, nmsuplem, Constantes.STATUS_VIVO, tipoContratantePrincipal, sesionComision,
-nmcuadro, cdsucurs, Constantes.INSERT_MODE, ntramite, porcenParticip);
+//* insertar muerto
+HashMap<String,Object> paramsMpopliper = new HashMap<String, Object>();
+paramsMpopliper.put("pv_cdunieco_i", cdunieco);
+paramsMpopliper.put("pv_cdramo_i"  , cdramo);
+paramsMpopliper.put("pv_estado_i"  , estado);
+paramsMpopliper.put("pv_nmpoliza_i", nmpoliza);
+paramsMpopliper.put("pv_nmsituac_i", contratanteIte.get("NMSITUAC"));
+paramsMpopliper.put("pv_cdrol_i"   , contratanteIte.get("CDROL"));
+paramsMpopliper.put("pv_cdperson_i", contratanteIte.get("CDPERSON"));
+paramsMpopliper.put("pv_nmsuplem_i", nmsuplem);
+paramsMpopliper.put("pv_status_i"  , contratanteIte.get("STATUS"));
+paramsMpopliper.put("pv_nmorddom_i", contratanteIte.get("NMORDDOM"));
+paramsMpopliper.put("pv_swreclam_i", contratanteIte.get("SWRECLAM"));
+paramsMpopliper.put("pv_accion_i", 	 Constantes.DELETE_MODE);
+paramsMpopliper.put("pv_swexiper_i", "S");
 
-//endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdcontratante);
+kernelManager.movMpoliper(paramsMpopliper);
+
+//* insertar vivo
+paramsMpopliper.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
+paramsMpopliper.put("pv_accion_i", 	 Constantes.INSERT_MODE);
+
+kernelManager.movMpoliper(paramsMpopliper);
+
+endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 
 //// Se confirma el endoso si cumple la validacion de fechas: 
 RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);

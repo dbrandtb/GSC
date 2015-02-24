@@ -784,6 +784,25 @@ public class EndososManagerImpl implements EndososManager
 				+ "\n#########################################"
 				);
 	}
+
+	@Override
+	public void calcularRecibosCambioContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+			{
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### calcularRecibosCambioContratante ######"
+				);
+		endososDAO.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		logger.info(""
+				+ "\n###### calcularRecibosCambioAgente ######"
+				+ "\n#########################################"
+				);
+			}
 	
 	@Override
 	public List<Map<String,String>> habilitaRecibosSubsecuentes(

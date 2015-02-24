@@ -146,6 +146,13 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem
 			,String cdagente) throws Exception;
+
+	public void calcularRecibosCambioContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception;
 	
 	public List<Map<String,String>> habilitaRecibosSubsecuentes(
 			Date fechaDeInicio

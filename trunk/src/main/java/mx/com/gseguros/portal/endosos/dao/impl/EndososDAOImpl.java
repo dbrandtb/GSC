@@ -1657,6 +1657,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	
+	@Override
+	public void calcularRecibosCambioContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+			{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		logger.info("params :"+params);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************")
+				.append("\n****** P_CALC_RECIBOS_CAM_CONTRATANTE ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************")
+				.toString()
+				);
+		ejecutaSP(new CalcularRecibosCambioContratante(getDataSource()),params);
+			}
+	
+	protected class CalcularRecibosCambioContratante extends StoredProcedure
+	{
+		
+		protected CalcularRecibosCambioContratante(DataSource dataSource)
+		{
+			super(dataSource, "P_CALC_RECIBOS_CAM_CONTRATANTE");
+			
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public List<Map<String,String>> habilitaRecibosSubsecuentes(
