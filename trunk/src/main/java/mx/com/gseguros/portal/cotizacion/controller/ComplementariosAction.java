@@ -2758,8 +2758,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		if(soloRecibos){
 			this.retryRec = false;
-			this.retryRec = !emisionAutosService.enviaRecibosAutosSigs(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
-			retryRec= false;
+			this.retryRec = !emisionAutosService.enviaRecibosAutosSigs(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, this.nmpolAlt);
+			
 			logger.debug("Respuesta al reintento de envio de Recibos Autos: " + this.retryRec);
 			
 			if(this.retryRec){

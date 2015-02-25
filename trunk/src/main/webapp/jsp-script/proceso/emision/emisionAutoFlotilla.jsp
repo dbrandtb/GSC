@@ -1126,7 +1126,9 @@ function _p31_emitirFinal(me)
             debug('### emitir:',json);
             if(json.success==true)
             {
-            	
+            	_p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
+                debug("_p31_smap1.nmpolizaEmitida:",_p31_smap1.nmpolizaEmitida);
+                
             	if(json.retryRec){
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
@@ -1162,9 +1164,6 @@ function _p31_emitirFinal(me)
 	                });
 	                return;
                 }
-                
-                _p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
-                debug("_p31_smap1.nmpolizaEmitida:",_p31_smap1.nmpolizaEmitida);
                 
                 _fieldById('_p31_numerofinalpoliza').setValue(json.panel2.nmpoliex);
                 _fieldById('_p31_botonEmitirPolizaFinal').setDisabled(true);

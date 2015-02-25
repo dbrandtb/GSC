@@ -575,7 +575,7 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 
 	@Override
 	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem) {
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex) {
 		// TODO Auto-generated method stub
 		return false;
 	}
