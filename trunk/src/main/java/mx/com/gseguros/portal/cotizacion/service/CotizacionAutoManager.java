@@ -92,10 +92,6 @@ public interface CotizacionAutoManager
 			,String cdtipsit
 			,String cdusuari
 			,Map<String,String>valores);
-	public Map<String,String>obtenerMapaProcedimientosSimples();
-	public ManagerRespuestaSmapVO recuperacionSimple(
-			String procedimiento
-			,Map<String,String>params);
 	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturas(
 			String cdtipsit
 			,String cdsisrol
@@ -142,10 +138,6 @@ public interface CotizacionAutoManager
 			,String nmpoliza
 			,String cdusuari
 			,String cdsisrol
-			);
-	public ManagerRespuestaSlistVO recuperacionSimpleLista(
-			String procedimiento
-			,Map<String,String>parametros
 			);
 	public ManagerRespuestaImapSmapVO emisionAutoFlotilla(
 			String cdunieco

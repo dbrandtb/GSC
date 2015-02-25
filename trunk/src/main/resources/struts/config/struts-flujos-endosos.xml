@@ -414,6 +414,14 @@
             <result type="json" />
         </action>
         
+        <action name="marcoEndosos" class="endososAutoAction" method="marcoEndosos">
+            <result name="success">/jsp-script/proceso/endosos/marcoEndososAuto.jsp</result>
+        </action>
+        
+        <action name="recuperarColumnasIncisoRamo" class="endososAutoAction" method="recuperarColumnasIncisoRamo">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

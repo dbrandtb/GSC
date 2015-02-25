@@ -30,6 +30,47 @@ public class GenericMapper implements RowMapper
 
     public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 	{
+    	if(rowNum==0)
+    	{
+    		if(columnas!=null)
+    		{
+    			for(String col:columnas)
+    			{
+    				boolean found=false;
+    				for(int i=1;i<=rs.getMetaData().getColumnCount();i++)
+    				{
+    					if(col.equalsIgnoreCase(rs.getMetaData().getColumnName(i)))
+    					{
+    						found=true;
+    						break;
+    					}
+    				}
+    				if(!found)
+    				{
+    					throw new SQLException(Utilerias.join("No se encuentra la columna ",col));
+    				}
+    			}
+    		}
+    		else if(columnas2!=null)
+    		{
+    			for(String col:columnas2)
+    			{
+    				boolean found=false;
+    				for(int i=1;i<=rs.getMetaData().getColumnCount();i++)
+    				{
+    					if(col.equalsIgnoreCase(rs.getMetaData().getColumnName(i)))
+    					{
+    						found=true;
+    						break;
+    					}
+    				}
+    				if(!found)
+    				{
+    					throw new SQLException(Utilerias.join("No se encuentra la columna ",col));
+    				}
+    			}
+    		}
+    	}
 		Map<String,String> map=new HashMap<String,String>(0);
 		if(columnas!=null)
 		{

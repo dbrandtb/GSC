@@ -17,4 +17,8 @@
         <property name="endososGrupoManager" ref="endososGrupoManagerImpl" />
     </bean>
     
+    <bean id="endososAutoAction" class="mx.com.gseguros.portal.endosos.controller.EndososAutoAction" scope="prototype">
+        <property name="endososAutoManager" ref="endososAutoManagerImpl" />
+    </bean>
+    
 </beans>

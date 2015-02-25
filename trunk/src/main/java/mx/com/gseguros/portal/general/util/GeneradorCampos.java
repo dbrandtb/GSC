@@ -950,29 +950,9 @@ public class GeneradorCampos
 	    			boolean esCombo = StringUtils.isNotBlank(comp.getCatalogo());
 	    			if(esCombo)
 	    			{
-	    				column.add(Item.crear("renderer","function(value){"
-	    						+ "/*debug('store:',"
-	    						+ "'"+(this.idPrefix+"editor_"+idx)+"',"
-	    						+ "Ext.getCmp('"+(this.idPrefix+"editor_"+idx)+"').getStore(),"
-	    						+ "value"
-	    						+ ");*/"
-	    						+ "var comp  = Ext.getCmp('"+(this.idPrefix+"editor_"+idx)+"');"
-	    						+ "/*debug('anidado:',comp.anidado);*/"
-	    						+ "var store = comp.getStore();"
-	    						+ "store.each(function(record)"
-	    						+ "{"
-	    						+ "    /*debug('buscando en record:',record);*/"
-	    						+ "    if(record.get('key')==value)"
-	    						+ "    {"
-	    						+ "        value=record.get('value');"
-	    						+ "        /*debug('encontrado:',value);*/"
-	    						+ "    }"
-	    						+ "    else"
-	    						+ "    {"
-	    						+ "        /*debug('no es');*/"
-	    						+ "    }"
-	    						+ "});"
-	    						+ "return value;}").setQuotes(""));
+	    				column.add(Item.crear("renderer","function(value,metadata,record,row,col,store,view){"
+	    						+ "return rendererDinamico(value,Ext.getCmp('"+(this.idPrefix+"editor_"+idx)+"'),view);"
+	    						+ "}").setQuotes(""));
 	    			}
 	    		}
 	    		columns.add(column);

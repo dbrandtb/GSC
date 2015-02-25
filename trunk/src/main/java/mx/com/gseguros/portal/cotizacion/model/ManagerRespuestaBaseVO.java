@@ -18,9 +18,11 @@ public class ManagerRespuestaBaseVO
 	public void setRespuesta(String respuesta) {
 		this.respuesta = respuesta;
 	}
+	@Deprecated
 	public String getRespuestaOculta() {
 		return respuestaOculta;
 	}
+	@Deprecated
 	public void setRespuestaOculta(String respuestaOculta) {
 		this.respuestaOculta = respuestaOculta;
 	}
