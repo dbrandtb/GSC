@@ -114,7 +114,6 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarValoresAtributosFactores(String cdramo,String cdtipsit)throws Exception;
-
 	
 	public List<Map<String,String>>obtieneContratantePoliza(
 			String cdunieco
@@ -124,5 +123,36 @@ public interface ConsultasDAO
 			,String nmsituac
 			,String cdrol
 			,String cdperson
+			)throws Exception;
+	
+	public List<Map<String,String>>recuperarPolizasEndosables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmpoliex
+			)throws Exception;
+	
+	public List<Map<String,String>>recuperarHistoricoPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	public List<Map<String,String>>recuperarIncisosPolizaGrupoFamilia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdgrupo
+			,String nmfamili
+			,String nivel
+			)throws Exception;
+	
+	public String recuperarValorAtributoUnico(
+			String cdtipsit
+			,String cdatribu
+			,String otclave
 			)throws Exception;
 }

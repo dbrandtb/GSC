@@ -12,6 +12,8 @@
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
     </bean>
     
-    
+    <bean id="recuperacionSimpleAction" class="mx.com.gseguros.portal.consultas.controller.RecuperacionSimpleAction" scope="prototype">
+        <property name="recuperacionSimpleManager" ref="recuperacionSimpleManagerImpl"/>
+    </bean>
     
 </beans>

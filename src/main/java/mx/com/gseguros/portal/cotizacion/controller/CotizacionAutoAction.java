@@ -709,47 +709,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String recuperacionSimple()
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n################################")
-				.append("\n###### recuperacionSimple ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
-		
-		try
-		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
-			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento, "No se recibio el procedimiento");
-			checkBool(cotizacionAutoManager.obtenerMapaProcedimientosSimples().containsKey(procedimiento),"El procedimiento no existe");
-			
-			ManagerRespuestaSmapVO resp = cotizacionAutoManager.recuperacionSimple(procedimiento,smap1);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
-			{
-				smap1.putAll(resp.getSmap());
-			}
-		}
-		catch(Exception ex)
-		{
-			manejaException(ex);
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### recuperacionSimple ######")
-				.append("\n################################")
-				.toString()
-				);
-		return SUCCESS;
-	}
-	
 	public String cargarParamerizacionConfiguracionCoberturas()
 	{
 		logger.info(
@@ -1102,47 +1061,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				 "\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n##########################################"
 				));
-		return SUCCESS;
-	}
-	
-	public String recuperacionSimpleLista()
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n#####################################")
-				.append("\n###### recuperacionSimpleLista ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
-		
-		try
-		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
-			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento, "No se recibio el procedimiento");
-			checkBool(cotizacionAutoManager.obtenerMapaProcedimientosSimples().containsKey(procedimiento),"El procedimiento no existe");
-			
-			ManagerRespuestaSlistVO resp = cotizacionAutoManager.recuperacionSimpleLista(procedimiento,smap1);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
-			{
-				slist1=resp.getSlist();
-			}
-		}
-		catch(Exception ex)
-		{
-			manejaException(ex);
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### recuperacionSimpleLista ######")
-				.append("\n#####################################")
-				.toString()
-				);
 		return SUCCESS;
 	}
 	

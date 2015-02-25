@@ -16,4 +16,8 @@
         <property name="pantallasDAO"    ref="pantallasDAOImpl"    />
     </bean>
     
+    <bean id="endososAutoManagerImpl" class="mx.com.gseguros.portal.endosos.service.impl.EndososAutoManagerImpl">
+        <property name="pantallasDAO" ref="pantallasDAOImpl" />
+    </bean>
+    
 </beans>

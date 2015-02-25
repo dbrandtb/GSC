@@ -288,7 +288,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="recuperacionSimple" class="cotizacionAutoAction" method="recuperacionSimple">
+        <action name="recuperacionSimple" class="recuperacionSimpleAction" method="recuperacionSimple">
             <result name="success" type="json" />
         </action>
         
@@ -321,7 +321,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="recuperacionSimpleLista" class="cotizacionAutoAction" method="recuperacionSimpleLista">
+        <action name="recuperacionSimpleLista" class="recuperacionSimpleAction" method="recuperacionSimpleLista">
             <result name="success" type="json" />
         </action>
         
