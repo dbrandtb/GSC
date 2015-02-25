@@ -531,7 +531,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
 						
 						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
-							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem);
+							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex());
 							
 							if(!exitoRecibosSigs){
 								emisionAutoRes.setExitoRecibos(false);
@@ -655,7 +655,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex){
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
@@ -691,7 +691,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					HashMap<String, Object> params = new HashMap<String, Object>();
 					params.put("Sucursal"        , reciboIt.get("NUMSUC"));
 					params.put("Ramo"            , reciboIt.get("NUMRAM"));
-					params.put("Poliza"          , reciboIt.get("NUMPOL"));
+					params.put("Poliza"          , nmpoliex);
 					params.put("TipoEndoso"      , StringUtils.isBlank(reciboIt.get("TIPEND"))?" " : reciboIt.get("TIPEND"));
 					params.put("NumeroEndoso"    , reciboIt.get("NUMEND"));
 					params.put("Recibo"          , reciboIt.get("NUMREC"));
