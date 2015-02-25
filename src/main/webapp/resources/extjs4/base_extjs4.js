@@ -37,6 +37,34 @@ function debugError(a,b,c,d)
     }
 }
 
+//se llama automatico cuando un grid tiene columnas con editor y el editor es combo
+function rendererDinamico(value,combo,view)
+{
+    debug('>rendererDinamico value,combo,view:',value,combo.id,view.id);
+    var store=combo.store;
+    if(store.getCount()>0)
+    {
+        var record=combo.findRecordByValue(value);
+        if(record)
+        {
+            value=record.get('value');
+        }
+    }
+    else
+    {
+        value='Cargando...';
+        store.padreView=view;
+        store.on(
+        {
+            load : function(me)
+            {
+                me.padreView.refresh();
+            }
+        });
+    }
+    return value;
+}
+
 function rendererColumnasDinamico(value,comboName)
 {
     debug('>rendererColumnasDinamico',value,comboName);
