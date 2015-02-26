@@ -105,6 +105,10 @@
 		        <param name="actionName">personas</param>
                 <param name="namespace">/catalogos</param>
 		    </result>
+		    <result name="menuPrincipal" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/seguridad</param>
+            </result>
         </action>
         
 	</package>
