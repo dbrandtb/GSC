@@ -1185,6 +1185,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmfamili" , OracleTypes.VARCHAR));
             String[] cols=new String[]{
             		//MPOLISIT
             		"CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
@@ -1193,6 +1195,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"FECHAREF"   , "CDGRUPO"  , "NMSITUAEXT" , "NMSITAUX"
             		,"NMSBSITEXT" , "CDPLAN"   , "CDASEGUR"   , "DSGRUPO"
             		//TVALOSIT
+            		,"NMSUPLEM_TVAL"
             		,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05" , "OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
             		,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15" , "OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
             		,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25" , "OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
@@ -1240,6 +1243,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String otclave
 			)throws Exception
 	{
+		
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdtipsit" , cdtipsit);
     	params.put("cdatribu" , cdatribu);
@@ -1266,6 +1270,92 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		declareParameter(new SqlOutParameter("pv_otvalor_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public List<Map<String,String>>recuperarGruposPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_GRUPOS_POLIZA", params);
+    	Map<String,Object>procResult  = ejecutaSP(new RecuperarGruposPoliza(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugProcedure(logger,"PKG_CONSULTA.P_GET_GRUPOS_POLIZA",params,lista);
+    	return lista;
+	}
+    
+    protected class RecuperarGruposPoliza extends StoredProcedure
+    {
+    	protected RecuperarGruposPoliza(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_GRUPOS_POLIZA");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		"CDGRUPO" , "DSGRUPO"
+    	            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    @Override
+    public List<Map<String,String>>recuperarFamiliasPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_FAMILIAS_POLIZA", params);
+    	Map<String,Object>procResult  = ejecutaSP(new RecuperarFamiliasPoliza(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista=new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugProcedure(logger,"PKG_CONSULTA.P_GET_FAMILIAS_POLIZA",params,lista);
+    	return lista;
+	}
+    
+    protected class RecuperarFamiliasPoliza extends StoredProcedure
+    {
+    	protected RecuperarFamiliasPoliza(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_FAMILIAS_POLIZA");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		"NMSITAUX" , "TITULAR"
+    	            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
     	}
     }

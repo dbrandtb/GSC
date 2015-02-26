@@ -155,4 +155,18 @@ public interface ConsultasDAO
 			,String cdatribu
 			,String otclave
 			)throws Exception;
+	
+	public List<Map<String,String>>recuperarGruposPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	public List<Map<String,String>>recuperarFamiliasPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

@@ -2193,7 +2193,95 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public void insertarIncisoEvaluacion(
+			double stamp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String cdtipsit
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("stamp"    , String.format("%.0f",stamp));
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsit" , cdtipsit);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INS_INCISO_EVAL_ENDOSO", params);
+		ejecutaSP(new InsertarIncisoEvaluacion(this.getDataSource()), params);
+	}
 	
+	protected class InsertarIncisoEvaluacion extends StoredProcedure {
+
+		protected InsertarIncisoEvaluacion(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_INS_INCISO_EVAL_ENDOSO");
+			declareParameter(new SqlParameter("stamp"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
+	@Override
+	public List<Map<String,String>>recuperarEndososClasificados(
+			double stamp
+			,String cdramo
+			,String nivel
+			,String multiple
+			,String tipoflot
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("stamp"    , String.format("%.0f",stamp));
+		params.put("cdramo"   , cdramo);
+		params.put("nivel"    , nivel);
+		params.put("multiple" , multiple);
+		params.put("tipoflot" , tipoflot);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS", params, lista);
+		return lista;
+	}
 	
+	protected class RecuperarEndososClasificados extends StoredProcedure
+	{
+		protected RecuperarEndososClasificados(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS");
+			declareParameter(new SqlParameter("stamp"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("multiple" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoflot"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDTIPSUP"
+					,"DSTIPSUP"
+					,"LIGA"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

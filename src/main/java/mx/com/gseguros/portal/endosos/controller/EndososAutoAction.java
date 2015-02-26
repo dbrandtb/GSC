@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.utils.Utilerias;
@@ -138,6 +140,62 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				 "\n###### recuperarColumnasIncisoRamo ######"
 				,"\n#########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String recuperarEndososClasificados()
+	{
+		logger.info(Utilerias.join(
+				 "\n##########################################"
+				,"\n###### recuperarEndososClasificados ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos de entrada");
+			String cdramo   = smap1.get("cdramo");
+			String nivel    = smap1.get("nivel");
+			String multiple = smap1.get("multiple");
+			String tipoflot = smap1.get("tipoflot");
+			
+			checkBlank(cdramo   , "No se recibio el producto");
+			checkBlank(nivel    , "No se recibio el nivel de endoso");
+			checkBlank(multiple , "No se recibio el tipo de seleccion");
+			checkBlank(tipoflot , "No se recibio el tipo de poliza");
+			
+			if(slist1==null)
+			{
+				slist1=new ArrayList<Map<String,String>>();
+			}
+			
+			ManagerRespuestaSlistSmapVO resp=endososAutoManager.recuperarEndososClasificados(
+					cdramo
+					,nivel
+					,multiple
+					,tipoflot
+					,slist1
+					);
+			
+			exito = resp.isExito();
+			respuesta = resp.getRespuesta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				slist1=resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### recuperarEndososClasificados ######"
+				,"\n##########################################"
 				));
 		return SUCCESS;
 	}

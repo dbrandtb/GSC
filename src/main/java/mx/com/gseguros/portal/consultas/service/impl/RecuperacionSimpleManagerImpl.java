@@ -312,6 +312,22 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,nivel
 						));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_GRUPOS_POLIZA))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSlist(consultasDAO.recuperarGruposPoliza(cdunieco,cdramo,estado,nmpoliza));
+			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_FAMILIAS_POLIZA))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSlist(consultasDAO.recuperarFamiliasPoliza(cdunieco,cdramo,estado,nmpoliza));
+			}
 			
 			setCheckpoint("0");
 		}
