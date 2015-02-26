@@ -83,22 +83,25 @@
 	                    url       : recordOperacion.get('liga')
 	                    ,scripts  : true
 	                    ,autoLoad : true
-	                    ,params   :
+	                    ,jsonData :
 	                    {
-	                    	'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
-	                    	,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
-	                    	,'smap1.pv_estado'       : recordActivo.get('ESTADO')
-	                    	,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
-	                    	,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
-	                    	,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
-	                    	,'smap1.cdrfc'           : recordActivo.get('cdrfc')
-	                    	,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
-	                    	,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
-	                    	,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
-	                    	,'smap1.botonCopiar'     : '0'
-	                    	,'smap1.altabaja'        : 'alta'
-	                    	,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
-	                    	,'smap1.fenacimi'        : Ext.Date.format(recordActivo.get('fenacimi'), 'd/m/Y')
+	                    	smap1 :
+	                    	{
+	                    	    pv_cdunieco      : recordActivo.get('CDUNIECO')
+	                    	    ,pv_cdramo       : recordActivo.get('CDRAMO')
+	                    	    ,pv_estado       : recordActivo.get('ESTADO')
+	                    	    ,pv_nmpoliza     : recordActivo.get('NMPOLIZA')
+	                    	    ,pv_nmsituac     : recordActivo.get('nmsituac')
+	                    	    ,pv_cdperson     : recordActivo.get('cdperson')
+	                    	    ,cdrfc           : recordActivo.get('cdrfc')
+	                    	    ,pv_cdrol        : recordActivo.get('cdrol')
+	                    	    ,nombreAsegurado : recordActivo.get('nombrecompleto')
+	                    	    ,ntramite        : recordActivo.get('NTRAMITE')
+	                    	    ,botonCopiar     : '0'
+	                    	    ,altabaja        : 'alta'
+	                    	    ,cdtipsit        : recordActivo.get('CDTIPSIT')
+	                    	    ,fenacimi        : Ext.Date.format(recordActivo.get('fenacimi'), 'd/m/Y')
+	                    	}
 	                    }
 	                });
     			}
@@ -148,21 +151,24 @@
                         url       : recordOperacion.get('liga')
                         ,scripts  : true
                         ,autoLoad : true
-                        ,params   :
+                        ,jsonData :
                         {
-                            'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
-                            ,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
-                            ,'smap1.pv_estado'       : recordActivo.get('ESTADO')
-                            ,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
-                            ,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
-                            ,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
-                            ,'smap1.cdrfc'           : recordActivo.get('cdrfc')
-                            ,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
-                            ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
-                            ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
-                            ,'smap1.botonCopiar'     : '0'
-                            ,'smap1.altabaja'        : 'baja'
-                            ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
+                            smap1 :
+                            {
+                                pv_cdunieco      : recordActivo.get('CDUNIECO')
+                                ,pv_cdramo       : recordActivo.get('CDRAMO')
+                                ,pv_estado       : recordActivo.get('ESTADO')
+                                ,pv_nmpoliza     : recordActivo.get('NMPOLIZA')
+                                ,pv_nmsituac     : recordActivo.get('nmsituac')
+                                ,pv_cdperson     : recordActivo.get('cdperson')
+                                ,cdrfc           : recordActivo.get('cdrfc')
+                                ,pv_cdrol        : recordActivo.get('cdrol')
+                                ,nombreAsegurado : recordActivo.get('nombrecompleto')
+                                ,ntramite        : recordActivo.get('NTRAMITE')
+                                ,botonCopiar     : '0'
+                                ,altabaja        : 'baja'
+                                ,cdtipsit        : recordActivo.get('CDTIPSIT')
+                            }
                         }
                     });
                 }
@@ -220,24 +226,27 @@
                     url       : recordOperacion.get('liga')
                     ,scripts  : true
                     ,autoLoad : true
-                    ,params   :
+                    ,jsonData :
                     {
-                        'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
-                        ,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
-                        ,'smap1.pv_estado'       : recordActivo.get('ESTADO')
-                        ,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
-                        ,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
-                        ,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
-                        ,'smap1.cdrfc'           : recordActivo.get('cdrfc')
-                        ,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
-                        ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
-                        ,'smap1.botonCopiar'     : '0'//recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
-                        ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
-                        ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
-                        ,'smap1.habilitaEdicion' : recordActivo.get('nmsituac')==0
-                                                      && marendStoreAsegurados.getCount()>1
-                                                      && marendStoreAsegurados.getAt(1).get('cdperson')!=recordActivo.get('cdperson')
-                                                      ? '1' : '0'
+                        smap1 :
+                        {
+                            pv_cdunieco      : recordActivo.get('CDUNIECO')
+                            ,pv_cdramo       : recordActivo.get('CDRAMO')
+                            ,pv_estado       : recordActivo.get('ESTADO')
+                            ,pv_nmpoliza     : recordActivo.get('NMPOLIZA')
+                            ,pv_nmsituac     : recordActivo.get('nmsituac')
+                            ,pv_cdperson     : recordActivo.get('cdperson')
+                            ,cdrfc           : recordActivo.get('cdrfc')
+                            ,pv_cdrol        : recordActivo.get('cdrol')
+                            ,nombreAsegurado : recordActivo.get('nombrecompleto')
+                            ,botonCopiar     : '0'//recordActivo.get('cdrol')==1?'0':'1'//es asegurado?
+                            ,cdtipsit        : recordActivo.get('CDTIPSIT')
+                            ,ntramite        : recordActivo.get('NTRAMITE')
+                            ,habilitaEdicion : recordActivo.get('nmsituac')==0
+                                                   && marendStoreAsegurados.getCount()>1
+                                                   && marendStoreAsegurados.getAt(1).get('cdperson')!=recordActivo.get('cdperson')
+                                                   ? '1' : '0'
+                        }
                     }
                 });
             }
@@ -276,16 +285,19 @@
 	                    url       : recordOperacion.get('liga')
 	                    ,scripts  : true
 	                    ,autoLoad : true
-	                    ,params   :
+	                    ,jsonData :
 	                    {
-	                        'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
-	                        ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
-	                        ,'smap1.estado'   : recordActivo.get('ESTADO')
-	                        ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
-	                        ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
-	                        ,'smap1.nmsituac' : recordActivo.get('nmsituac') 
-	                        ,'smap1.ntramite' : recordActivo.get('NTRAMITE')
-	                        ,'smap1.nmsuplem' : recordActivo.get('NMSUPLEM')
+	                        smap1 :
+	                        {
+	                            cdunieco  : recordActivo.get('CDUNIECO')
+	                            ,cdramo   : recordActivo.get('CDRAMO')
+	                            ,estado   : recordActivo.get('ESTADO')
+	                            ,nmpoliza : recordActivo.get('NMPOLIZA')
+	                            ,cdtipsit : recordActivo.get('CDTIPSIT')
+	                            ,nmsituac : recordActivo.get('nmsituac') 
+	                            ,ntramite : recordActivo.get('NTRAMITE')
+	                            ,nmsuplem : recordActivo.get('NMSUPLEM')
+	                        }
 	                    }
 	                });
             	}
@@ -387,16 +399,19 @@
                         url       : recordOperacion.get('liga')
                         ,scripts  : true
                         ,autoLoad : true
-                        ,params   :
+                        ,jsonData :
                         {
-                             'smap1.cdunieco' : recordActivo.get('CDUNIECO')
-                            ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
-                            ,'smap1.estado'   : recordActivo.get('ESTADO')
-                            ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
-                            ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
-                            ,'smap1.nmsituac' : recordActivo.get('nmsituac') 
-                            ,'smap1.ntramite' : recordActivo.get('NTRAMITE')
-                            ,'smap1.nmsuplem' : recordActivo.get('NMSUPLEM')
+                            smap1 :
+                            {
+                                cdunieco  : recordActivo.get('CDUNIECO')
+                                ,cdramo   : recordActivo.get('CDRAMO')
+                                ,estado   : recordActivo.get('ESTADO')
+                                ,nmpoliza : recordActivo.get('NMPOLIZA')
+                                ,cdtipsit : recordActivo.get('CDTIPSIT')
+                                ,nmsituac : recordActivo.get('nmsituac') 
+                                ,ntramite : recordActivo.get('NTRAMITE')
+                                ,nmsuplem : recordActivo.get('NMSUPLEM')
+                            }
                         }
                     });
                 }

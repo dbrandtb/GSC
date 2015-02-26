@@ -229,5 +229,22 @@ public interface EndososDAO
 	 */
 	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
 	
+	public void insertarIncisoEvaluacion(
+			double stamp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String cdtipsit
+			)throws Exception;
 	
+	public List<Map<String,String>>recuperarEndososClasificados(
+			double stamp
+			,String cdramo
+			,String nivel
+			,String multiple
+			,String tipoflot
+			)throws Exception;
 }
