@@ -40,6 +40,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
     public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
     public static final String ACCESO_CATALOGO_PERSONAS = "catalogoPersonas";
+    public static final String MENU_PRINCIPAL = "menuPrincipal";
     
     
     /**
@@ -90,11 +91,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			obtenCodigoTree();
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
-	        logger.debug(">>>> usuario name: "+usuario.getName());
+			
+			logger.debug(">>>> usuario name: "+usuario.getName());
 	        logger.debug(">>>> usuario user: "+usuario.getUser());
-	        logger.debug(">>>> usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
 	        logger.debug(">>>> usuario codigopersona: "+usuario.getCodigoPersona());
 	        logger.debug(">>>> usuario claveUsuarioCaptura: "+usuario.getClaveUsuarioCaptura());
+			if(usuario != null && usuario.getEmpresa() != null) {
+				logger.debug(">>>> usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+			}
         }catch( Exception e){
             logger.error(">>>> Error en el proceso Interno", e);
             return false;
@@ -116,7 +120,8 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		if (ACCESO_COTIZADOR.equals(acceso)
 				|| ACCESO_CONSULTA_POLIZAS.equals(acceso)
 				|| ACCESO_CONSULTA_ASEGURADOS.equals(acceso)
-				|| ACCESO_CATALOGO_PERSONAS.equals(acceso)) {
+				|| ACCESO_CATALOGO_PERSONAS.equals(acceso)
+				|| MENU_PRINCIPAL.equals(acceso)) {
     		instanciaUsuarioLigaDirecta();
     		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
