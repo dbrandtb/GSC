@@ -15,6 +15,7 @@ var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"    acti
 
 ////// variables //////
 var _p34_contexto = '${ctx}';
+var _p34_smap1    = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
 var _p34_storePolizas;
 var _p34_storeGrupos;
@@ -337,32 +338,84 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    Ext.create('Ext.form.Panel',
+    Ext.create('Ext.panel.Panel',
     {
-        itemId    : '_p34_formBusq'
+        defaults  : { style : 'margin:5px;' }
         ,renderTo : '_p34_divpri'
-        ,title    : 'B&uacute;squeda de p&oacute;lizas'
-        ,items    : _p34_formBusqItems
-        ,layout   :
-        {
-            type     : 'table'
-            ,columns : 2
-        }
-        ,buttonAlign : 'center'
-        ,buttons     :
+        ,items    :
         [
+            Ext.create('Ext.form.Panel',
             {
-                text     : 'Buscar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                ,handler : function(){ _p34_buscarClic(); }
-            }
-            ,{
-                text     : 'Limpiar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                ,handler : function(me){ me.up('form').getForm().reset(); }
-            }
+                itemId    : '_p34_formBusq'
+                ,title    : 'B&uacute;squeda de p&oacute;lizas'
+                ,items    : _p34_formBusqItems
+                ,layout   :
+                {
+                    type     : 'table'
+                    ,columns : 3
+                }
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Buscar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                        ,handler : function(){ _p34_buscarClic(); }
+                    }
+                    ,{
+                        text     : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                        ,handler : function(me){ me.up('form').getForm().reset(); }
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                itemId     : '_p34_gridPolizas'
+                ,columns   : _p34_gridPolizasColumns
+                ,maxHeight : 400
+                ,selModel  :
+                {
+                    selType        : 'checkboxmodel'
+                    ,allowDeselect : true
+                    ,mode          : 'SINGLE'
+                    ,listeners     :
+                    {
+                        selectionchange : function(me,selected)
+                        {
+                            _fieldById('_p34_botonEndososPoliza').setDisabled(selected.length==0);
+                        }
+                    }
+                }
+                ,store   : _p34_storePolizas
+                ,tbar    :
+                [
+                    {
+                        text      : 'Endosos...'
+                        ,itemId   : '_p34_botonEndososPoliza'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+                        ,disabled : true
+                        ,handler  : function(){ _p34_botonEndososPolizaClic(); }
+                    }
+                    ,'->'
+                    ,{
+                        xtype      : 'textfield'
+                        ,listeners :
+                        {
+                            afterrender : function()
+                            {
+                                _p34_filtrarStore('',_p34_storePolizas);
+                            }
+                            ,change : function(me,val)
+                            {
+                                _p34_filtrarStore(val,_p34_storePolizas);
+                            }
+                        }
+                    }
+                ]
+            })
         ]
-    });
+    })
     ////// contenido //////
     
     ////// custom //////
@@ -376,9 +429,10 @@ Ext.onReady(function()
 function _p34_buscarClic()
 {
     debug('>_p34_buscarClic');
-    var form           = _fieldById('_p34_formBusq');
-    var nItemsNoVacios = 0;
-    var formItems      = Ext.ComponentQuery.query('[fieldLabel][hidden=false]',form);
+    var form            = _fieldById('_p34_formBusq');
+    var nItemsNoVacios  = 0;
+    var nItemsNoValidos = 0;
+    var formItems       = Ext.ComponentQuery.query('[fieldLabel][hidden=false]',form);
     for(var i in formItems)
     {
         var item = formItems[i];
@@ -386,10 +440,18 @@ function _p34_buscarClic()
         {
             nItemsNoVacios=nItemsNoVacios+1;
         }
+        if(!item.isValid())
+        {
+            nItemsNoValidos=nItemsNoValidos+1;
+        }
     }
     if(nItemsNoVacios==0)
     {
         mensajeWarning('Favor de introducir alg&uacute;n criterio de b&uacute;squeda');
+    }
+    else if(nItemsNoValidos>0)
+    {
+        datosIncompletos();
     }
     else
     {
@@ -431,49 +493,6 @@ function _p34_polizas()
                         (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
                     );
                 }
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
-                {
-                    itemId       : '_p34_windowPolizas'
-                    ,title       : 'Resultados'
-                    ,closeAction : 'destroy'
-                    ,autoScroll  : true
-                    ,modal       : true
-                    ,width       : 950
-                    ,maxHeight   : 400
-                    ,items       :
-                    [
-                        Ext.create('Ext.grid.Panel',
-                        {
-                            itemId    : '_p34_gridPolizas'
-                            ,columns  : _p34_gridPolizasColumns
-                            ,width    : 910
-                            ,selModel :
-                            {
-                                selType        : 'checkboxmodel'
-                                ,allowDeselect : true
-                                ,mode          : 'SINGLE'
-                                ,listeners     :
-                                {
-                                    selectionchange : function(me,selected)
-                                    {
-                                        _fieldById('_p34_botonEndososPoliza').setDisabled(selected.length==0);
-                                    }
-                                }
-                            }
-                            ,store   : _p34_storePolizas
-                            ,tbar    :
-                            [
-                                {
-                                    text      : 'Endosos...'
-                                    ,itemId   : '_p34_botonEndososPoliza'
-                                    ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
-                                    ,disabled : true
-                                    ,handler  : function(){ _p34_botonEndososPolizaClic(); }
-                                }
-                            ]
-                        })
-                    ]
-                }).show());
             }
             else
             {
@@ -495,7 +514,7 @@ function _p34_polizas()
 function _p34_botonEndososPolizaClic()
 {
     debug('>_p34_botonEndososPolizaClic');
-    var windowPoliza = _fieldById('_p34_windowPolizas');
+    var windowPoliza = _fieldById('_p34_gridPolizas');
     var poliza       = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
     debug('poliza:',poliza.data);
     
@@ -582,7 +601,10 @@ function _p34_mostrarVentanaDocumentos(params)
     debug('>_p34_mostrarVentanaDocumentos params:',params);
     centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
-        title        : 'Documentos de p&oacute;liza'
+        title        : 'Documentos de p&oacute;liza - Sucursal '
+                                   +params['smap1.cdunieco']+' - producto '
+                                   +params['smap1.cdramo']  +' - p&oacuteliza '
+                                   +params['smap1.nmpoliza']
         ,modal       : true
         ,buttonAlign : 'center'
         ,width       : 600
@@ -605,7 +627,10 @@ function _p34_gridPolizasHistorialClic(record)
     debug('>_p34_gridPolizasHistorialClic record:',record.data);
     centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
-        title        : 'Historial de p&oacute;liza'
+        title        : 'Historial de p&oacute;liza - Sucursal '
+                                   +record.get('CDUNIECO')+' - producto '
+                                   +record.get('CDRAMO')  +' - p&oacuteliza '
+                                   +record.get('NMPOLIZA')
         ,width       : 700
         ,maxHeight   : 400
         ,autoScroll  : true
@@ -791,6 +816,21 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososIncisosClic(); }
+                                }
+                                ,'->'
+                                ,{
+                                    xtype      : 'textfield'
+                                    ,listeners :
+                                    {
+                                        afterrender : function()
+                                        {
+                                            _p34_filtrarStore('',_p34_storeIncisos);
+                                        }
+                                        ,change : function(me,val)
+                                        {
+                                            _p34_filtrarStore(val,_p34_storeIncisos);
+                                        }
+                                    }
                                 }
                             ]
                         })
@@ -1077,7 +1117,7 @@ function _p34_gridPolizasGruposClic(row)
     var record=_p34_storePolizas.getAt(row);
     debug('>_p34_gridPolizasGruposClic record:',record.data);
     _fieldById('_p34_gridPolizas').getSelectionModel().deselectAll();
-    var windowPolizas=_fieldById('_p34_windowPolizas');
+    var windowPolizas=_fieldById('_p34_gridPolizas');
     windowPolizas.setLoading(true);
     _p34_storeGrupos.load(
     {
@@ -1135,6 +1175,21 @@ function _p34_gridPolizasGruposClic(row)
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososGruposClic(); }
                                 }
+                                ,'->'
+                                ,{
+                                    xtype      : 'textfield'
+                                    ,listeners :
+                                    {
+                                        afterrender : function()
+                                        {
+                                            _p34_filtrarStore('',_p34_storeGrupos);
+                                        }
+                                        ,change : function(me,val)
+                                        {
+                                            _p34_filtrarStore(val,_p34_storeGrupos);
+                                        }
+                                    }
+                                }
                             ]
                         })
                     ]
@@ -1154,7 +1209,7 @@ function _p34_gridPolizasFamiliasClic(row)
     var record=_p34_storePolizas.getAt(row);
     debug('>_p34_gridPolizasFamiliasClic record:',record.data);
     _fieldById('_p34_gridPolizas').getSelectionModel().deselectAll();
-    var windowPolizas=_fieldById('_p34_windowPolizas');
+    var windowPolizas=_fieldById('_p34_gridPolizas');
     windowPolizas.setLoading(true);
     _p34_storeFamilias.load(
     {
@@ -1211,6 +1266,21 @@ function _p34_gridPolizasFamiliasClic(row)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososFamiliasClic(); }
+                                }
+                                ,'->'
+                                ,{
+                                    xtype      : 'textfield'
+                                    ,listeners :
+                                    {
+                                        afterrender : function()
+                                        {
+                                            _p34_filtrarStore('',_p34_storeFamilias);
+                                        }
+                                        ,change : function(me,val)
+                                        {
+                                            _p34_filtrarStore(val,_p34_storeFamilias);
+                                        }
+                                    }
                                 }
                             ]
                         })
@@ -1441,8 +1511,36 @@ function _p34_gridFamiliasIncisosClic(record,padre)
     });
     debug('<_p34_gridFamiliasIncisosClic');
 }
+
+function _p34_filtrarStore(fil,store)
+{
+    debug('>_p34_filtrarStore fil:',fil);
+    if(Ext.isEmpty(fil))
+    {
+        store.clearFilter();
+    }
+    else
+    {
+        fil = fil.toUpperCase().replace(/ /g,'');
+        debug('filtro:',fil);
+        store.filterBy(function(record)
+        {
+            var incluido = false;
+            for(var clave in record.raw)
+            {
+                var valor=(String(record.raw[clave])).toUpperCase().replace(/ /g,'');
+                if(valor.lastIndexOf(fil)!=-1)
+                {
+                    incluido=true;
+                    break;
+                }
+            }
+            return incluido;
+        });
+    }
+}
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p34_divpri" style="height:600px;border:1px solid #999999;"></div></body>
+<body><div id="_p34_divpri" style="height:700px;border:1px solid #999999;"></div></body>
 </html>

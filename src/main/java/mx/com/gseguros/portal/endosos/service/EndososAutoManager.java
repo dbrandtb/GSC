@@ -11,7 +11,7 @@ public interface EndososAutoManager
 {
 	public void setSession(Map<String,Object>session);
 	
-	public ManagerRespuestaImapVO construirMarcoEndosos();
+	public ManagerRespuestaImapVO construirMarcoEndosos(String cdsisrol);
 	
 	public ManagerRespuestaSmapVO recuperarColumnasIncisoRamo(String cdramo);
 	
