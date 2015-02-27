@@ -65,11 +65,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	 */
 	
 	@Override
-	public ManagerRespuestaImapVO construirMarcoEndosos()
+	public ManagerRespuestaImapVO construirMarcoEndosos(String cdsisrol)
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
+				,"\n@@@@@@ cdsisrol=",cdsisrol
 				));
 		
 		ManagerRespuestaImapVO resp=new ManagerRespuestaImapVO(true);
@@ -84,7 +85,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //cdramo
 					,null //cdtipsit
 					,null //estado
-					,null //cdsisrol
+					,cdsisrol
 					,"MARCO_ENDOSOS_AUTO" //pantalla
 					,"FORM_BUSQUEDA"      //seccion
 					,null //orden
@@ -97,7 +98,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //cdramo
 					,null //cdtipsit
 					,null //estado
-					,null //cdsisrol
+					,cdsisrol
 					,"MARCO_ENDOSOS_AUTO" //pantalla
 					,"GRID_POLIZAS"       //seccion
 					,null //orden
@@ -110,7 +111,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //cdramo
 					,null //cdtipsit
 					,null //estado
-					,null //cdsisrol
+					,cdsisrol
 					,"MARCO_ENDOSOS_AUTO"    //pantalla
 					,"GRID_HISTORICO_POLIZA" //seccion
 					,null //orden
@@ -123,7 +124,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //cdramo
 					,null //cdtipsit
 					,null //estado
-					,null //cdsisrol
+					,cdsisrol
 					,"MARCO_ENDOSOS_AUTO" //pantalla
 					,"GRID_GRUPOS"        //seccion
 					,null //orden
@@ -136,7 +137,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //cdramo
 					,null //cdtipsit
 					,null //estado
-					,null //cdsisrol
+					,cdsisrol
 					,"MARCO_ENDOSOS_AUTO" //pantalla
 					,"GRID_FAMILIAS"        //seccion
 					,null //orden

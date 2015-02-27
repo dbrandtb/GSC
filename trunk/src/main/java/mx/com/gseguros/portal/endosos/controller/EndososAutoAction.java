@@ -1,10 +1,12 @@
 package mx.com.gseguros.portal.endosos.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
@@ -94,12 +96,29 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### marcoEndosos ######"
 				));
 		
-		ManagerRespuestaImapVO resp = endososAutoManager.construirMarcoEndosos();
-		exito                       = resp.isExito();
-		respuesta                   = resp.getRespuesta();
-		if(exito)
+		try
 		{
-			imap=resp.getImap();
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			if(smap1==null)
+			{
+				smap1=new HashMap<String,String>();
+			}
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			smap1.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
+			smap1.put("cdsisrol" , cdsisrol);
+			
+			ManagerRespuestaImapVO resp = endososAutoManager.construirMarcoEndosos(cdsisrol);
+			exito                       = resp.isExito();
+			respuesta                   = resp.getRespuesta();
+			if(exito)
+			{
+				imap=resp.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
 		}
 		
 		logger.info(Utilerias.join(
