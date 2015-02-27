@@ -18,17 +18,6 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 	
 	protected Map<String,Object> session;
 	
-
-	public Map<String,Object> getSession() {
-		return session;
-	}
-	
-	@Override
-	public void setSession(Map<String, Object> session) {
-		this.session = session;
-		
-	}
-	
 	
 	/**
 	 * Convierte el valor de una propiedad a formato JSON 
@@ -53,5 +42,11 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 		return strJSON;
 	}
 	
+	
+	@Override
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+		
+	}
 	
 }
