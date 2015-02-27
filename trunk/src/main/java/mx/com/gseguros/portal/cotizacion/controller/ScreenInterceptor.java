@@ -1,9 +1,10 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import org.apache.commons.lang3.StringUtils;
+import mx.com.aon.core.web.PrincipalCoreAction;
+
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
+import com.opensymphony.xwork2.ActionContext;
 
 public class ScreenInterceptor
 {
@@ -30,8 +31,8 @@ public class ScreenInterceptor
 		if(screen==PANTALLA_COMPLEMENTARIOS_ASEGURADOS)
 		{
 			ComplementariosAction a=(ComplementariosAction)action;
-			if(a.getSession()==null
-                            ||a.getSession().get("USUARIO")==null
+			if(ActionContext.getContext().getSession()==null
+                            ||ActionContext.getContext().getSession().get("USUARIO")==null
                             ||a.getMap1()==null
                     		||a.getMap1().isEmpty()
                     		||!a.getMap1().containsKey("cdunieco")
@@ -57,8 +58,8 @@ public class ScreenInterceptor
                 else if(screen==PANTALLA_COMPLEMENTARIOS_COBERTURAS_ASEGURADO)
 		{
 			ComplementariosCoberturasAction a=(ComplementariosCoberturasAction)action;
-			if(a.getSession()==null
-                            ||a.getSession().get("USUARIO")==null
+			if(ActionContext.getContext().getSession()==null
+                            ||ActionContext.getContext().getSession().get("USUARIO")==null
                             ||a.getSmap1()==null
                     		||a.getSmap1().isEmpty()
                     		||!a.getSmap1().containsKey("pv_cdunieco")
@@ -92,8 +93,8 @@ public class ScreenInterceptor
         else if(screen==PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO)
 		{
 			ComplementariosCoberturasAction a=(ComplementariosCoberturasAction)action;
-			if(a.getSession()==null
-                            ||a.getSession().get("USUARIO")==null
+			if(ActionContext.getContext().getSession()==null
+                            ||ActionContext.getContext().getSession().get("USUARIO")==null
                             ||a.getSmap1()==null
                     		||a.getSmap1().isEmpty()
                     		||!a.getSmap1().containsKey("pv_cdunieco")
@@ -115,8 +116,8 @@ public class ScreenInterceptor
         else if(screen==PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO)
 		{
 			ComplementariosCoberturasAction a=(ComplementariosCoberturasAction)action;
-			if(a.getSession()==null
-                            ||a.getSession().get("USUARIO")==null
+			if(ActionContext.getContext().getSession()==null
+                            ||ActionContext.getContext().getSession().get("USUARIO")==null
                             ||a.getSmap1()==null
                     		||a.getSmap1().isEmpty()
                     		||!a.getSmap1().containsKey("pv_cdunieco")
