@@ -84,6 +84,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private Map<String, String> parametros;
 	private String cdunieco;
 	private String sucursalGS;
+	private String cdRamoGS;
 	private String cdramo;
 	private String estado;
 	private String nmpoliza;
@@ -1720,7 +1721,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String esDxN           = null;
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
-		String cdRamoGS        = null;
 		boolean esFlotilla     = false;
 		tipoGrupoInciso = "I";
 		
@@ -2086,11 +2086,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 							try{
 								HashMap<String, String> paramsInsertaPolAlt = new HashMap<String, String>();
 								paramsInsertaPolAlt.put("pv_cdunieco_i", cdunieco);
-								paramsInsertaPolAlt.put("pv_cdramo_i",   cdramo);
-								paramsInsertaPolAlt.put("pv_estado_i",   edoPoliza);
+								paramsInsertaPolAlt.put("pv_cdramo_i"  ,   cdramo);
+								paramsInsertaPolAlt.put("pv_estado_i"  ,   edoPoliza);
 								paramsInsertaPolAlt.put("pv_nmpoliza_i", nmpolizaEmitida);
 								paramsInsertaPolAlt.put("pv_nmsuplem_i", nmsuplemEmitida);
 								paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
+								paramsInsertaPolAlt.put("pv_cduniext_i", this.sucursalGS);
+								paramsInsertaPolAlt.put("pv_ramo_i"    , cdRamoGS);
 								kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
 								
 							}catch(Exception e){
@@ -2436,7 +2438,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes      = null;
 		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String rutaCarpeta      = null;
-		String cdRamoGS         = null;
 		
 		////// obtener parametros
 		if(success)
@@ -2738,7 +2739,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		if("1".equals(sucursal)){
 			sucursal = "1000";
 		}
-		String cdRamoGS  = null;
 		
 		String cdIdeperRes = this.cdIdeper;
 		UserVO us          = (UserVO)session.get("USUARIO");
@@ -2758,7 +2758,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		if(soloRecibos){
 			this.retryRec = false;
-			this.retryRec = !emisionAutosService.enviaRecibosAutosSigs(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, this.nmpolAlt);
+			this.retryRec = !emisionAutosService.enviaRecibosAutosSigs(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, this.nmpolAlt, this.cdRamoGS, this.sucursalGS);
 			
 			logger.debug("Respuesta al reintento de envio de Recibos Autos: " + this.retryRec);
 			
@@ -2850,6 +2850,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsInsertaPolAlt.put("pv_nmpoliza_i", _nmpoliza);
 					paramsInsertaPolAlt.put("pv_nmsuplem_i", _nmsuplem);
 					paramsInsertaPolAlt.put("pv_nmpoliex_i", this.nmpolAlt);
+					paramsInsertaPolAlt.put("pv_cduniext_i", this.sucursalGS);
+					paramsInsertaPolAlt.put("pv_ramo_i"    , cdRamoGS);
 					kernelManager.actualizaPolizaExterna(paramsInsertaPolAlt);
 					
 				}catch(Exception e){
@@ -4028,6 +4030,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setRetryRec(boolean retryRec) {
 		this.retryRec = retryRec;
+	}
+
+	public String getCdRamoGS() {
+		return cdRamoGS;
+	}
+
+	public void setCdRamoGS(String cdRamoGS) {
+		this.cdRamoGS = cdRamoGS;
 	}
 
 }
