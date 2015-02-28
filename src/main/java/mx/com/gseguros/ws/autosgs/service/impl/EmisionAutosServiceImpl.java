@@ -531,7 +531,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
 						
 						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
-							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex());
+							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
 							
 							if(!exitoRecibosSigs){
 								emisionAutoRes.setExitoRecibos(false);
@@ -655,7 +655,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmpoliex){
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal){
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
@@ -689,8 +689,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					String fechaTermino = reciboIt.get("FECTER");
 					
 					HashMap<String, Object> params = new HashMap<String, Object>();
-					params.put("Sucursal"        , reciboIt.get("NUMSUC"));
-					params.put("Ramo"            , reciboIt.get("NUMRAM"));
+					params.put("Sucursal"        , sucursal);
+					params.put("Ramo"            , subramo);
 					params.put("Poliza"          , nmpoliex);
 					params.put("TipoEndoso"      , StringUtils.isBlank(reciboIt.get("TIPEND"))?" " : reciboIt.get("TIPEND"));
 					params.put("NumeroEndoso"    , reciboIt.get("NUMEND"));
@@ -725,9 +725,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			try{
 				
 				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("Sucursal"    , recibos.get(0).get("NUMSUC"));
-				params.put("Ramo"        , recibos.get(0).get("NUMRAM"));
-				params.put("Poliza"      , recibos.get(0).get("NUMPOL"));
+				params.put("Sucursal"    , sucursal);
+				params.put("Ramo"        , subramo);
+				params.put("Poliza"      , nmpoliex);
 				params.put("TipoEndoso"  , StringUtils.isBlank(recibos.get(0).get("TIPEND"))?" " : recibos.get(0).get("TIPEND"));
 				params.put("NumeroEndoso", recibos.get(0).get("NUMEND"));
 				

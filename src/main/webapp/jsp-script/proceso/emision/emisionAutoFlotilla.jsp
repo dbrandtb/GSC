@@ -1157,6 +1157,7 @@ function _p31_emitirFinal(me)
 	                                ,'panel1.tipoGrupoInciso' : 'C'
 	                                ,'nmpolAlt'           : json.nmpolAlt
 	                                ,'sucursalGS'         : json.sucursalGS
+	                                ,'cdRamoGS'           : json.cdRamoGS
 	                                ,'retryRec'           : json.retryRec
 	                            };
 	                            reintentarWSAuto(me.up().up(), paramsWS);

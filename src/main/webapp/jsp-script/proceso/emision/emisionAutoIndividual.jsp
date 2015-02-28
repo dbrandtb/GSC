@@ -999,6 +999,7 @@ function _p29_emitirFinal(me)
 	                                ,'cdIdeper'           : json.cdIdeper
 	                                ,'nmpolAlt'           : json.nmpolAlt
 	                                ,'sucursalGS'         : json.sucursalGS
+	                                ,'cdRamoGS'           : json.cdRamoGS
 	                                ,'retryRec'           : json.retryRec
 	                            };
 	                            reintentarWSAuto(me.up().up(), paramsWS);
