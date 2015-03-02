@@ -97,7 +97,7 @@ public class Utils {
 	 * @param e
 	 * @return
 	 */
-	public static String manejaException(Exception e) {
+	public static String manejaExcepcion(Exception e) {
 		
 		String respuesta;
 		if(e instanceof ApplicationException) {
@@ -107,6 +107,21 @@ public class Utils {
 		}
 		logger.error(respuesta, e);
 		return respuesta;
+	}
+	
+	/**
+	 * Genera una ApplicationException o la lanza si existe
+	 * @param e
+	 * @return
+	 * @throws Exception
+	 */
+	public static ApplicationException generaExcepcion(Exception e) throws Exception {
+		
+		if(e.getClass().equals(ApplicationException.class)) {
+			throw e;
+		} else {
+			throw new ApplicationException("Error del sistema", e);
+		}
 	}
 	
 	
