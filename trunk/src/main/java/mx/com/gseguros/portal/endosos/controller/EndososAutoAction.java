@@ -7,15 +7,12 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -25,7 +22,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private static Logger logger = Logger.getLogger(EndososAutoAction.class);
 	
 	private boolean                  success;
-	private boolean                  exito;
 	private String                   respuesta;
 	private Map<String,String>       smap1;
 	private Map<String,Item>         imap;
@@ -38,57 +34,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 		this.session=ActionContext.getContext().getSession();
 	}
 	
-	/*
-	 * Utilerias
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(Utilerias.join("checkpoint-->",checkpoint));
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(StringUtils.isBlank(cadena))
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		
-		if(ex.getClass().equals(ApplicationException.class))
-		{
-			respuesta = Utilerias.join(ex.getMessage()," #",timestamp);
-		}
-		else
-		{
-			respuesta = Utilerias.join("Error ",getCheckpoint().toLowerCase()," #",timestamp);
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
-	/*
-	 * Utilerias
-	 */
-	
 	public String marcoEndosos()
 	{
 		logger.info(Utilerias.join(
@@ -96,10 +41,12 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### marcoEndosos ######"
 				));
 		
+		String result = ERROR;
+		
 		try
 		{
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			if(smap1==null)
 			{
 				smap1=new HashMap<String,String>();
@@ -108,24 +55,21 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
 			smap1.put("cdsisrol" , cdsisrol);
 			
-			ManagerRespuestaImapVO resp = endososAutoManager.construirMarcoEndosos(cdsisrol);
-			exito                       = resp.isExito();
-			respuesta                   = resp.getRespuesta();
-			if(exito)
-			{
-				imap=resp.getImap();
-			}
+			imap = endososAutoManager.construirMarcoEndosos(cdsisrol);
+			
+			result = SUCCESS;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.info(Utilerias.join(
-				"\n###### marcoEndosos ######"
+				 "\n###### result=",result
+				,"\n###### marcoEndosos ######"
 				,"\n##########################"
 				));
-		return SUCCESS;
+		return result;
 	}
 	
 	public String recuperarColumnasIncisoRamo()
@@ -138,22 +82,17 @@ public class EndososAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			Utils.validate(smap1  , "No se recibieron datos");
 			String cdramo=smap1.get("cdramo");
-			checkBlank(cdramo, "No se recibio el producto");
+			Utils.validate(cdramo , "No se recibio el producto");
 			
-			ManagerRespuestaSmapVO resp=endososAutoManager.recuperarColumnasIncisoRamo(cdramo);
-			exito     = resp.isExito();
-			respuesta = resp.getRespuesta();
-			if(exito)
-			{
-				smap1.putAll(resp.getSmap());
-			}
+			smap1.put("columnas" , endososAutoManager.recuperarColumnasIncisoRamo(cdramo));
+			
+			success = true;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
 		logger.info(Utilerias.join(
@@ -174,42 +113,43 @@ public class EndososAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos de entrada");
 			String cdramo   = smap1.get("cdramo");
 			String nivel    = smap1.get("nivel");
 			String multiple = smap1.get("multiple");
 			String tipoflot = smap1.get("tipoflot");
 			
-			checkBlank(cdramo   , "No se recibio el producto");
-			checkBlank(nivel    , "No se recibio el nivel de endoso");
-			checkBlank(multiple , "No se recibio el tipo de seleccion");
-			checkBlank(tipoflot , "No se recibio el tipo de poliza");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(nivel    , "No se recibio el nivel de endoso");
+			Utils.validate(multiple , "No se recibio el tipo de seleccion");
+			Utils.validate(tipoflot , "No se recibio el tipo de poliza");
+			
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			if(slist1==null)
 			{
 				slist1=new ArrayList<Map<String,String>>();
 			}
 			
-			ManagerRespuestaSlistSmapVO resp=endososAutoManager.recuperarEndososClasificados(
+			SlistSmapVO resp=endososAutoManager.recuperarEndososClasificados(
 					cdramo
 					,nivel
 					,multiple
 					,tipoflot
 					,slist1
+					,cdsisrol
 					);
 			
-			exito = resp.isExito();
-			respuesta = resp.getRespuesta();
-			if(exito)
-			{
-				smap1.putAll(resp.getSmap());
-				slist1=resp.getSlist();
-			}
+			smap1.putAll(resp.getSmap());
+			slist1=resp.getSlist();
+			
+			success = true;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
 		logger.info(Utilerias.join(
@@ -223,19 +163,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 	 * Getters y setters
 	 */
 	public boolean isSuccess() {
-		return true;
+		return success;
 	}
 
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	public boolean isExito() {
-		return exito;
-	}
-
-	public void setExito(boolean exito) {
-		this.exito = exito;
 	}
 
 	public String getRespuesta() {
@@ -263,7 +195,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 	}
 
 	public void setEndososAutoManager(EndososAutoManager endososAutoManager) {
-		endososAutoManager.setSession(this.session);
 		this.endososAutoManager = endososAutoManager;
 	}
 

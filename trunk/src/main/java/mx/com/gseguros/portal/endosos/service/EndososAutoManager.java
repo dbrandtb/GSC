@@ -3,23 +3,21 @@ package mx.com.gseguros.portal.endosos.service;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 
 public interface EndososAutoManager
 {
-	public void setSession(Map<String,Object>session);
+	public Map<String,Item> construirMarcoEndosos(String cdsisrol)throws Exception;
 	
-	public ManagerRespuestaImapVO construirMarcoEndosos(String cdsisrol);
+	public String recuperarColumnasIncisoRamo(String cdramo) throws Exception;
 	
-	public ManagerRespuestaSmapVO recuperarColumnasIncisoRamo(String cdramo);
-	
-	public ManagerRespuestaSlistSmapVO recuperarEndososClasificados(
+	public SlistSmapVO recuperarEndososClasificados(
 			String cdramo
 			,String nivel
 			,String multiple
 			,String tipoflot
 			,List<Map<String,String>>incisos
-			);
+			,String cdsisrol
+			)throws Exception;
 }

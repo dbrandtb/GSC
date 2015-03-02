@@ -23,13 +23,13 @@ public class Utils {
 	
 	
 	/**
-	 * Lanza una excepcion cuando la cadena es null o vacía
+	 * Lanza una excepcion cuando la cadena es null o vacï¿½a
 	 * 
 	 * @param cadena Elemento a validar
 	 * @param mensaje Mensaje agregado a la excepcion
 	 * @throws ValidationDataException
 	 */
-	public static void isEmpty(String cadena, String mensaje) throws ValidationDataException {
+	public static void validate(String cadena, String mensaje) throws ValidationDataException {
 		if(StringUtils.isBlank(cadena)) {
 			throw new ValidationDataException(mensaje);
 		}
@@ -43,7 +43,7 @@ public class Utils {
 	 * @param mensaje Mensaje agregado a la excepcion
 	 * @throws ValidationDataException
 	 */
-	public static void isEmpty(Object objeto, String mensaje) throws ValidationDataException {
+	public static void validate(Object objeto, String mensaje) throws ValidationDataException {
 		if(objeto==null) {
 			throw new ValidationDataException(mensaje);
 		}
@@ -57,7 +57,7 @@ public class Utils {
 	 * @param mensaje Mensaje agregado a la excepcion
 	 * @throws ValidationDataException
 	 */
-	public static void isEmpty(Collection<?> coll, String mensaje) throws ValidationDataException {
+	public static void validate(Collection<?> coll, String mensaje) throws ValidationDataException {
 		if(CollectionUtils.isEmpty(coll)) {
 			throw new ValidationDataException(mensaje);
 		}
@@ -71,7 +71,7 @@ public class Utils {
 	 * @param mensaje Mensaje agregado a la excepcion
 	 * @throws ValidationDataException
 	 */
-	public static void isEmpty(Map<?,?> map, String mensaje) throws ValidationDataException {
+	public static void validate(Map<?,?> map, String mensaje) throws ValidationDataException {
 		if(MapUtils.isEmpty(map)) {
 			throw new ValidationDataException(mensaje);
 		}
@@ -85,7 +85,7 @@ public class Utils {
 	 * @param mensaje Mensaje agregado a la excepcion
 	 * @throws ValidationDataException
 	 */
-	public static void isFalse(Boolean condicion, String mensaje) throws ValidationDataException {
+	public static void validate(Boolean condicion, String mensaje) throws ValidationDataException {
 		if(BooleanUtils.isNotTrue(condicion)) {
 			throw new ValidationDataException(mensaje);
 		}
@@ -115,12 +115,12 @@ public class Utils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ApplicationException generaExcepcion(Exception e) throws Exception {
+	public static ApplicationException generaExcepcion(Exception e,String paso) throws Exception {
 		
 		if(e.getClass().equals(ApplicationException.class)) {
 			throw e;
 		} else {
-			throw new ApplicationException("Error del sistema", e);
+			throw new ApplicationException(Utilerias.join("Error en el proceso: ",paso), e);
 		}
 	}
 	
