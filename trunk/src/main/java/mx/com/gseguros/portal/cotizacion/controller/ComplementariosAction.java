@@ -4040,4 +4040,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.cdRamoGS = cdRamoGS;
 	}
 
+	public String getSucursalGS() {
+		return sucursalGS;
+	}
+
+	public void setSucursalGS(String sucursalGS) {
+		this.sucursalGS = sucursalGS;
+	}
+
 }
