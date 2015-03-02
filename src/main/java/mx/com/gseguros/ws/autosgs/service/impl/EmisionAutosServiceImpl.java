@@ -712,12 +712,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					if(res == null || res != 0){
 						logger.debug("Recibo no exitoso, retornando false");
-						return false;
+						//return false;
 					}
 					
 				} catch (Exception e){
 					logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
-					return false;
+					//return false;
 				}
 				//break;
 			}
