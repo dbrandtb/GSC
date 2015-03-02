@@ -4,18 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -24,48 +21,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 {
 	private static Logger logger = Logger.getLogger(EndososAutoManagerImpl.class);
 	
-	private Map<String,Object>session;
-	
 	private PantallasDAO pantallasDAO;
 	private EndososDAO   endososDAO;
-
-	/*
-	 * Utilidades
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(Utilerias.join("checkpoint-->",checkpoint));
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		
-		if(ex.getClass().equals(ApplicationException.class))
-		{
-			resp.setRespuesta(Utilerias.join(ex.getMessage()," #",timestamp));
-		}
-		else
-		{
-			resp.setRespuesta(Utilerias.join("Error ",getCheckpoint().toLowerCase()," #",timestamp));
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	/*
-	 * Utilidades
-	 */
 	
 	@Override
-	public ManagerRespuestaImapVO construirMarcoEndosos(String cdsisrol)
+	public Map<String,Item> construirMarcoEndosos(String cdsisrol) throws Exception
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -73,12 +33,14 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdsisrol=",cdsisrol
 				));
 		
-		ManagerRespuestaImapVO resp=new ManagerRespuestaImapVO(true);
-		resp.setImap(new HashMap<String,Item>());
+		Map<String,Item>items=new HashMap<String,Item>();
+		
+		String paso="";
 		
 		try
 		{
-			setCheckpoint("Recuperando componentes del formulario de busqueda");
+			paso="Recuperando componentes del formulario de busqueda";
+			logger.info(paso);
 			List<ComponenteVO>componentesFiltro=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -91,7 +53,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Recuperando componentes del grid de polizas");
+			paso="Recuperando componentes del grid de polizas";
+			logger.info(paso);
 			List<ComponenteVO>componentesGridPolizas=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -104,7 +67,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Recuperando componentes del grid de historico de poliza");
+			paso="Recuperando componentes del grid de historico de poliza";
+			logger.info(paso);
 			List<ComponenteVO>componentesGridHistoricoPoliza=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -117,7 +81,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Recuperando componentes del grid de grupos");
+			paso="Recuperando componentes del grid de grupos";
+			logger.info(paso);
 			List<ComponenteVO>componentesGridGrupos=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -130,7 +95,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Recuperando componentes del grid de familias");
+			paso="Recuperando componentes del grid de familias";
+			logger.info(paso);
 			List<ComponenteVO>componentesGridFamilias=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -143,44 +109,47 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Construyendo componentes del formulario de busqueda");
+			paso="Construyendo componentes del formulario de busqueda";
+			logger.info(paso);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaComponentes(componentesFiltro, true, false, true, false, false, false);
-			resp.getImap().put("formBusqItems" , gc.getItems());
+			items.put("formBusqItems" , gc.getItems());
 			
-			setCheckpoint("Construyendo componentes del grid de polizas");
+			paso="Construyendo componentes del grid de polizas";
+			logger.info(paso);
 			gc.generaComponentes(componentesGridPolizas, true, false, false, true, true, false);
-			resp.getImap().put("gridPolizasColumns" , gc.getColumns());
+			items.put("gridPolizasColumns" , gc.getColumns());
 			
-			setCheckpoint("Construyendo componentes del grid de historico de poliza");
+			paso="Construyendo componentes del grid de historico de poliza";
+			logger.info(paso);
 			gc.generaComponentes(componentesGridHistoricoPoliza, true, false, false, true, false, false);
-			resp.getImap().put("gridHistoricoColumns" , gc.getColumns());
+			items.put("gridHistoricoColumns" , gc.getColumns());
 			
-			setCheckpoint("Construyendo componentes del grid de grupos");
+			paso="Construyendo componentes del grid de grupos";
+			logger.info(paso);
 			gc.generaComponentes(componentesGridGrupos, true, false, false, true, false, false);
-			resp.getImap().put("gridGruposColumns" , gc.getColumns());
+			items.put("gridGruposColumns" , gc.getColumns());
 			
-			setCheckpoint("Construyendo componentes del grid de familias");
+			paso="Construyendo componentes del grid de familias";
+			logger.info(paso);
 			gc.generaComponentes(componentesGridFamilias, true, false, false, true, false, false);
-			resp.getImap().put("gridFamiliasColumns" , gc.getColumns());
-			
-			setCheckpoint("0");
+			items.put("gridFamiliasColumns" , gc.getColumns());
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(Utilerias.join(
-				 "\n@@@@@@ ",resp
+				 "\n@@@@@@ items=",items
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-		return resp;
+		return items;
 	}
 	
 	@Override
-	public ManagerRespuestaSmapVO recuperarColumnasIncisoRamo(String cdramo)
+	public String recuperarColumnasIncisoRamo(String cdramo)throws Exception
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -188,12 +157,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdramo=",cdramo
 				));
 		
-		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
-		resp.setSmap(new HashMap<String,String>());
+		String cols = null;
+		String paso = "";
 		
 		try
 		{
-			setCheckpoint("Recuperando columnas de incisos para el producto");
+			paso="Recuperando columnas de incisos para el producto";
+			logger.info(paso);
 			List<ComponenteVO>columnas=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -206,34 +176,34 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //orden
 					);
 			
-			setCheckpoint("Construyendo columnas de incisos para el producto");
+			paso="Construyendo columnas de incisos para el producto";
+			logger.info(paso);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaComponentes(columnas, true, false, false, true, true, false);
-			resp.getSmap().put("columnas",gc.getColumns().toString());
-			
-			setCheckpoint("0");
+			cols=gc.getColumns().toString();
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex,paso);
 		}
 		
 		logger.info(Utilerias.join(
-				 "\n@@@@@@ ",resp
+				 "\n@@@@@@ columnas=",cols
 				,"\n@@@@@@ recuperarColumnasIncisoRamo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-		return resp;
+		return cols;
 	}
 	
 	@Override
-	public ManagerRespuestaSlistSmapVO recuperarEndososClasificados(
+	public SlistSmapVO recuperarEndososClasificados(
 			String cdramo
 			,String nivel
 			,String multiple
 			,String tipoflot
 			,List<Map<String,String>>incisos
-			)
+			,String cdsisrol
+			)throws Exception
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -243,10 +213,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ multiple=" , multiple
 				,"\n@@@@@@ tipoflot=" , tipoflot
 				,"\n@@@@@@ incisos="  , incisos
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 
-		ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
-		resp.setSmap(new HashMap<String,String>());
+		SlistSmapVO resp = new SlistSmapVO();
+		String      paso = null;
 		
 		try
 		{
@@ -258,7 +229,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			if(incisos.size()>0)
 			{
-				setCheckpoint("Insertando situaciones para evaluacion");
+				paso="Insertando situaciones para evaluacion";
+				logger.info(paso);
 				
 				for(Map<String,String>inciso:incisos)
 				{
@@ -275,14 +247,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 			}
 			
-			setCheckpoint("Recuperando lista de endosos");
-			resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot));
-			
-			setCheckpoint("0");
+			paso="Recuperando lista de endosos";
+			logger.info(paso);
+			resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol));
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(Utilerias.join(
@@ -296,11 +267,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	/*
 	 * Getters y setters
 	 */
-	@Override
-	public void setSession(Map<String,Object>session)
-	{
-		this.session=session;
-	}
 	
 	public void setPantallasDAO(PantallasDAO pantallasDAO) {
 		this.pantallasDAO = pantallasDAO;

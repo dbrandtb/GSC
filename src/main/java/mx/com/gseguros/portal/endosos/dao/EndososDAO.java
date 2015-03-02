@@ -246,5 +246,6 @@ public interface EndososDAO
 			,String nivel
 			,String multiple
 			,String tipoflot
+			,String cdsisrol
 			)throws Exception;
 }

@@ -6889,7 +6889,7 @@ public class EndososAction extends PrincipalCoreAction
 			PKG_CONSULTA.P_GET_AGENTE_POLIZA
 			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
 			*/
-			slist1=endososManager.obtenerAgentesEndosoAgente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			slist1=endososManager.obtenerAgentesEndosoAgente(cdunieco, cdramo, estado, nmpoliza, ""/*nmsuplem*/);
 			
 			for(Map<String,String>agente:slist1)
 			{
