@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.general.controller;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.BaseObjectVO;
@@ -79,6 +81,18 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public boolean instanciaUsuarioLigaDirecta(){
     	logger.debug(">>>> Entrando a instanciar usuario para Liga Directa ****");
         try {
+        	
+        	//TODO: ELIMINAR CUANDO SE RESUELVA LA PARTE DEL ROL EMPLEADO DE AGENTE:
+        	if(RolSistema.AGENTE.getCdsisrol().equals(codigoRol)) {
+        		Pattern pattern = Pattern.compile("A[0-9]+");
+        		Matcher matcher = pattern.matcher(user);
+        		if (matcher.find()) {
+        		    user = matcher.group(0);
+        		    logger.info(new StringBuilder().append("Accede el Empleado del Agente ").append(user).toString());
+        		}
+        	}
+        	
+        	
         	creaSesionDeUsuario(user);
         
         	obtenRolesClientes();
@@ -92,12 +106,12 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
-			logger.debug(">>>> usuario name: "+usuario.getName());
-	        logger.debug(">>>> usuario user: "+usuario.getUser());
-	        logger.debug(">>>> usuario codigopersona: "+usuario.getCodigoPersona());
-	        logger.debug(">>>> usuario claveUsuarioCaptura: "+usuario.getClaveUsuarioCaptura());
+			logger.debug(new StringBuilder().append(">>>> usuario name: ").append(usuario.getName()).toString());
+	        logger.debug(new StringBuilder().append(">>>> usuario user: ").append(usuario.getUser()).toString());
+	        logger.debug(new StringBuilder().append(">>>> usuario codigopersona: ").append(usuario.getCodigoPersona()).toString());
+	        logger.debug(new StringBuilder().append(">>>> usuario claveUsuarioCaptura: ").append(usuario.getClaveUsuarioCaptura()).toString());
 			if(usuario != null && usuario.getEmpresa() != null) {
-				logger.debug(">>>> usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+				logger.debug(new StringBuilder().append(">>>> usuario empresa cdelemento id: ").append(usuario.getEmpresa().getElementoId()).toString());
 			}
         }catch( Exception e){
             logger.error(">>>> Error en el proceso Interno", e);
@@ -115,7 +129,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public String accesoDirecto() throws Exception {
     	
     	String acceso = (String)params.get("acceso");
-    	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user));
+    	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user).toString());
     	
 		if (ACCESO_COTIZADOR.equals(acceso)
 				|| ACCESO_CONSULTA_POLIZAS.equals(acceso)
