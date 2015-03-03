@@ -67,7 +67,7 @@ public interface SiniestrosManager {
 	
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob) throws Exception;
+	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob, String cdramo,String cdtipsit) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
 	
@@ -512,7 +512,7 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaRamoSalud() throws Exception;
 
-	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception;
+	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura, String cdramo, String cdtipsit) throws Exception;
 	
 	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, String feautori) throws Exception;
 

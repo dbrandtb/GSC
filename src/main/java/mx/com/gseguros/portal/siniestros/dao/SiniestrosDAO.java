@@ -39,7 +39,7 @@ public interface SiniestrosDAO {
 	
 	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws Exception;
+	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob,String cdramo, String cdtipsit) throws Exception;
 	
 	public List<GenericVO> obtieneListadoSubcoberturaTotales() throws Exception;
 	

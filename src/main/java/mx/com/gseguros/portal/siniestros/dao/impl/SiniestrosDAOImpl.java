@@ -110,6 +110,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setCduser(rs.getString("CDUSER"));
         	consulta.setEspecialidadMedico(rs.getString("ESPECMED"));
         	consulta.setCveTipoAutorizaG(rs.getString("TPAUTORI"));
+        	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
             return consulta;
         }
     }
@@ -315,6 +316,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_subcober_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaDatSubGeneralMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -341,10 +343,12 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
     @Override
 	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant,
-			String cdsubcob) throws Exception {
+			String cdsubcob, String cdramo, String cdtipsit) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdgarant_i", cdgarant);
 		params.put("pv_cdsubcob_i", cdsubcob);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_cdtipsit_i", cdtipsit);
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaSP(getDataSource()), params);
 		return (List<GenericVO>) mapResult.get("pv_registro_o");
@@ -357,6 +361,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_SUB_COBERT");
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsubcob_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -3829,6 +3835,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_SINIESTRO.P_GET_REQAUTSERV");
 			declareParameter(new SqlParameter("pv_cobertura_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_subcobertura_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
     		String[] cols = new String[]{
     				"REQAUTSERV"
     				,"SUMADISP"
