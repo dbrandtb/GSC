@@ -50,6 +50,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String cduser;
 	private String especialidadMedico;
 	private String cveTipoAutorizaG;
+	private String cdtipsit;
 	
 	
 	public String getCopagofi() {
@@ -359,6 +360,14 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setCveTipoAutorizaG(String cveTipoAutorizaG) {
 		this.cveTipoAutorizaG = cveTipoAutorizaG;
+	}
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
 	}	
 	
 }

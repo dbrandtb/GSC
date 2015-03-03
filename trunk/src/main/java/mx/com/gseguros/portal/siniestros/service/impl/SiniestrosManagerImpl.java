@@ -108,10 +108,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	@Override
 	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant,
-			String cdsubcob) throws Exception {
+			String cdsubcob, String cdramo, String cdtipsit) throws Exception {
 		try {
 			log.debug("getConsultaListaSubcobertura cdgarant: "+cdgarant+", cdsubcob: "+cdsubcob);
-			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob);
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob,cdramo,cdtipsit);
 			if(lista==null)
 			{
 				lista= new ArrayList<GenericVO>();
@@ -1466,10 +1466,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	
 	@Override
-	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura) throws Exception {
+	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura, String cdramo, String cdtipsit) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_cobertura_i", cobertura);
 		params.put("pv_subcobertura_i",   subcobertura);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_cdtipsit_i",   cdtipsit);
 		log.debug("requiereInformacionAdicional params: "+params);
 		return siniestrosDAO.obtieneDatosAdicionales(params);
 	}

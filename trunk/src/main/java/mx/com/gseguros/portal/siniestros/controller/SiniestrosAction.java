@@ -688,6 +688,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramDatSubGral.put("pv_subcober_i",params.get("subcober"));
 			paramDatSubGral.put("pv_cdpresta_i",params.get("cdpresta"));
 			paramDatSubGral.put("pv_cdtipo_i",Rol.CLINICA.getCdrol());
+			paramDatSubGral.put("pv_cdtipsit_i",params.get("cdtipsit"));
 			
 			List<DatosSiniestroVO> lista = siniestrosManager.getConsultaListaDatSubGeneral(paramDatSubGral);
 			if(lista!=null && !lista.isEmpty())	listaDatosSiniestro = lista;
@@ -706,9 +707,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
     * @return Lista GenericVO con la informaciï¿½n de los asegurados
     */    
    public String consultaListaSubcobertura(){
-   	logger.debug(" **** Entrando al mï¿½todo de Lista de Subcobertura ****");
+   	logger.debug(" **** Entrando al metodo de Lista de Subcobertura ****");
+   	logger.debug(params);
    	  	try {
-	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"));
+	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"), params.get("cdramo"),params.get("cdtipsit"));
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
 	   		return SUCCESS;
@@ -1612,7 +1614,7 @@ public String consultaListaPlazas(){
    public String obtieneRequiereAutServ(){
 	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
 	   	try {
-	   		datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"));
+	   		datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"),params.get("cdramo"),params.get("cdtipsit"));
 	   	}catch( Exception e){
 	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
 	   		return SUCCESS;

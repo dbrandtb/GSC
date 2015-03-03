@@ -664,6 +664,8 @@ Ext.onReady(function() {
 										'params.nmsituac':Ext.getCmp('nmsituac1').getValue(),
 										'params.cdgarant':Ext.getCmp('cveGarantia1').getValue(),
 										'params.subcober':Ext.getCmp('cveSubgarantia1').getValue()
+										
+										
 									}
 									,success : function (response)
 									{

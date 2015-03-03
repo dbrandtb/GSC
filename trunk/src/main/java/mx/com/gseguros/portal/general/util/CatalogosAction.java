@@ -331,9 +331,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case SUBCOBERTURAS:
 					String cdgarant = null;
 					String cdsubcob = null;
+					String cdramo = null;
+					String cdtipsit = null;
 					if(params!=null)
 					{
 						cdsubcob = params.get("cdsubcob");
+						cdramo = params.get("cdramo");
+						cdtipsit = params.get("cdtipsit");
 						if(params.get("cdgarant")!=null)
 						{
 							cdgarant = params.get("cdgarant");
@@ -343,7 +347,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							cdgarant = params.get("idPadre");
 						}
 					}
-					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
+					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob,cdramo,cdtipsit);
 					break;
 					
 				case SUBCOBERTURASTOTALES:
