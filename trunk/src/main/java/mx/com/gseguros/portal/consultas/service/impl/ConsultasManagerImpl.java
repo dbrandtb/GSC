@@ -181,6 +181,12 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return lista;
 			}
 	
+	
+	@Override
+	public boolean esProductoSalud(String cdramo) throws Exception {
+		return consultasDAO.esProductoSalud(cdramo);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

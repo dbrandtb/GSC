@@ -6723,13 +6723,16 @@ public class EndososAction extends PrincipalCoreAction
 				
 				String sucursal = cdunieco;
 				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-						estado, nmpoliza, 
-						nmsuplem, null, 
-						sucursal, nmsolici, ntramite, 
-						true, cdtipsup, 
-						(UserVO) session.get("USUARIO"));
+				boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+				if(esProductoSalud) {
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+							estado, nmpoliza, 
+							nmsuplem, null, 
+							sucursal, nmsolici, ntramite, 
+							true, cdtipsup, 
+							(UserVO) session.get("USUARIO"));
+				}
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 				
@@ -7038,13 +7041,16 @@ public class EndososAction extends PrincipalCoreAction
 	   			
 				String sucursal = cdunieco;
 				
-				// Ejecutamos el Web Service de Recibos:
-	   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-						estado, nmpoliza, 
-						nmsuplem, null, 
-						sucursal, nmsolici, ntramite, 
-						true, cdtipsup, 
-						(UserVO) session.get("USUARIO"));
+				boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+				if(esProductoSalud) {
+					// Ejecutamos el Web Service de Recibos:
+		   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+							estado, nmpoliza, 
+							nmsuplem, null, 
+							sucursal, nmsolici, ntramite, 
+							true, cdtipsup, 
+							(UserVO) session.get("USUARIO"));
+				}
 	   			
 	   			mensaje="Se ha guardado el endoso "+nsuplogi;
 	   			
