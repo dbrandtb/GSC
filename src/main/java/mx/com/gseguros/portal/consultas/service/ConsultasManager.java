@@ -63,4 +63,14 @@ public interface ConsultasManager
 			,String cdrol
 			,String cdperson
 			)throws Exception;
+
+	
+	/**
+	 * Indica si un producto es o no de Salud
+	 * @param cdramo Ramo del producto a validar
+	 * @return true si el producto es de salud, false si no
+	 * @throws Exception
+	 */
+	boolean esProductoSalud(String cdramo) throws Exception;
+	
 }

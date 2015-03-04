@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -1379,6 +1381,31 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    
+    @Override
+    public boolean esProductoSalud(String cdramo) throws Exception {
+    	boolean esSalud = false;
+    	Map<String,Object> params = new HashMap<String, Object>();
+    	params.put("pv_cdramo_i" , cdramo);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_VALIDA_PRODUCTO_SALUD", params);
+    	Map<String,Object> result = ejecutaSP(new ValidaProductoSaludSP(getDataSource()),params);
+    	if(Constantes.SI.equals(result.get("pv_swprosalud_o"))) {
+    		esSalud = true;
+    	}
+    	return esSalud;
+    }
+    
+    protected class ValidaProductoSaludSP extends StoredProcedure {
+    	protected ValidaProductoSaludSP(DataSource dataSource) {
+    		super(dataSource , "PKG_CONSULTA.P_VALIDA_PRODUCTO_SALUD");
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_swprosalud_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    ,  OracleTypes.VARCHAR));
             compile();
     	}
     }

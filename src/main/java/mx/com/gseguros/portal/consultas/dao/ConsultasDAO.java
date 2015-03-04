@@ -169,4 +169,13 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	/**
+	 * Indica si un producto es o no de Salud
+	 * @param cdramo Ramo del producto a validar
+	 * @return true si el producto es de salud, false si no
+	 * @throws Exception
+	 */
+	public boolean esProductoSalud(String cdramo) throws Exception;
+	
 }
