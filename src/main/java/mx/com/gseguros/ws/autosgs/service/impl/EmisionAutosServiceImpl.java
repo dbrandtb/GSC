@@ -30,6 +30,7 @@ import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWS
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.GuardarCotizacionResponse;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Inciso;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Paquete;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.PolizaCotizacion;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.SDTClientesSDTClientesItem;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.TipoProducto;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.TipoVehiculo;
@@ -154,6 +155,22 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
 				
 				datosCotizacionAuto.setCotizacionNegocio(cotNeg);
+				
+				/**
+				 * PARA ENDOSOS
+				 */
+				PolizaCotizacion polizaCotizacion = new PolizaCotizacion();
+				polizaCotizacion.setIdMotivoEndoso(Integer.valueOf(m.get("IDMOTIVOENDOSO")));
+				polizaCotizacion.setNumEndoso(Integer.valueOf(m.get("NUMENDOSO")));
+				polizaCotizacion.setNumPoliza(Integer.valueOf(m.get("NUMPOLIZA")));
+				polizaCotizacion.setRamo(Integer.valueOf(m.get("RAMO")));
+				polizaCotizacion.setSucursalEmisora(Integer.valueOf(m.get("SUCURSALEMISORA")));
+				
+				String tipoEndAuto = StringUtils.isBlank(m.get("TIPOENDOSO"))?" " : m.get("TIPOENDOSO");
+				int valTipoEnd = tipoEndAuto.charAt(0);
+				logger.debug("Valor Numerico de endoso a enviar: "+ valTipoEnd);
+				polizaCotizacion.setTipoEndoso(new org.apache.axis2.databinding.types.UnsignedShort((long)valTipoEnd));
+				datosCotizacionAuto.setPolizaCotizacion(polizaCotizacion);
 				
 				//idagente y sucursal
 				Agente agente=new Agente();
@@ -422,6 +439,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					
 					incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
+					
+					
+					incisoIterado.setCilindraje(m.get("CILINDRAJE"));
+					incisoIterado.setDescuentoInciso(Double.valueOf(m.get("DESCUENTOINCISO")));
 					
 					//versionTarifa
 					confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
