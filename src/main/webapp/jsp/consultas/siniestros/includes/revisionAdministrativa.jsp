@@ -180,7 +180,8 @@ Ext.onReady(function() {
     		'params.nmsuplem'  : _NMSUPLEM,
     		'params.status'    : _STATUS,
     		'params.aaapertu'  : _AAAPERTU,
-    		'params.nmsinies'  : _NMSINIES
+    		'params.nmsinies'  : _NMSINIES,
+    		'params.cdtipsit'  : _CDTIPSIT
     	}
     });
 

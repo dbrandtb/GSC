@@ -2182,7 +2182,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
-			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception
+			String nmsituac,String aaapertu,String status,String nmsinies,String cdtipsit) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -2194,6 +2194,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_aaapertu_i" , aaapertu);
 		p.put("pv_status_i"   , status);
 		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_cdtipsit_i" , cdtipsit);
 		logger.debug("P_GET_FACTURAS_SINIESTRO params: "+p);
 		Map<String, Object> mapResult = ejecutaSP(new PGETFACTURASSINIESTRO(this.getDataSource()), p);
 		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
@@ -2213,6 +2214,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"NFACTURA"
 					,"FFACTURA"
@@ -2550,7 +2552,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception
+			String nfactura,
+			String cdtipsit) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -2563,6 +2566,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_status_i"   , status);
 		p.put("pv_nmsinies_i" , nmsinies);
 		p.put("pv_nfactura_i" , nfactura);
+		p.put("pv_cdtipsit_i" , cdtipsit);
 		logger.debug("P_GET_CONCEPTOS_FACTURA params: "+p);
 		Map<String, Object> mapResult = ejecutaSP(new PGETCONCEPTOSFACTURA(this.getDataSource()), p);
 		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
@@ -2572,7 +2576,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PGETCONCEPTOSFACTURA(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOS_FACTURA");
+			super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOS_FACTURA2");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -2583,6 +2587,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDUNIECO"
 					,"CDRAMO"
@@ -2637,7 +2642,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String status,
 			String nmsinies,
 			String nfactura,
-			String tipopago) throws Exception
+			String tipopago,
+			String cdtipsit) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("cdunieco" , cdunieco);
@@ -2651,6 +2657,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("nmsinies" , nmsinies);
 		p.put("nfactura" , nfactura);
 		p.put("tipopago" , tipopago);
+		p.put("cdtipsit" , cdtipsit);
 		logger.debug("obtenerCopagoDeducible params: "+p);
 		Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
@@ -2683,6 +2690,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("nmsinies" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipopago" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDGARANT"
 					,"OTCLAVE2"

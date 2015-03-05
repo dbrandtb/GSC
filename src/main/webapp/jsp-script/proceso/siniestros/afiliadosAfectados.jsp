@@ -3292,7 +3292,9 @@
 			url	: _11_URL_REQUIEREAUTSERV
 			,params:{
 				'params.cobertura': panelInicialPral.down('[name=params.cdgarant]').getValue(),
-				'params.subcobertura': panelInicialPral.down('[name=params.cdconval]').getValue()
+				'params.subcobertura': panelInicialPral.down('[name=params.cdconval]').getValue(),
+				'params.cdramo': record.raw.CDRAMO,
+				'params.cdtipsit': record.raw.CDTIPSIT
 			}
 			,success : function (response)
 			{

@@ -932,11 +932,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
-			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception
+			String nmsituac,String aaapertu,String status,String nmsinies,String cdtipsit) throws Exception
 	{
 		List<Map<String,String>>lista=siniestrosDAO.P_GET_FACTURAS_SINIESTRO(
 				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,
-				aaapertu,status,nmsinies);
+				aaapertu,status,nmsinies,cdtipsit);
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
@@ -1073,10 +1073,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception
+			String nfactura,
+			String cdtipsit) throws Exception
 	{
 		List<Map<String,String>>lista=siniestrosDAO.P_GET_CONCEPTOS_FACTURA(
-				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura);
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,cdtipsit);
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
@@ -1128,9 +1129,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String status,
 			String nmsinies,
 			String nfactura,
-			String tipopago) throws Exception
+			String tipopago,
+			String cdtipsit) throws Exception
 	{
-		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago);
+		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago,cdtipsit);
 	}
 	
 	@Override

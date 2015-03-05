@@ -267,7 +267,7 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
-			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
+			String nmsituac,String aaapertu,String status,String nmsinies,String cdtipsit) throws Exception;
 
 	public List<Map<String,String>>cargaHistorialSiniestros(Map<String,String> params) throws Exception;
 	
@@ -296,7 +296,8 @@ public interface SiniestrosDAO {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception;
+			String nfactura,
+			String cdtipsit) throws Exception;
 	
 	public Map<String,String>obtenerCopagoDeducible(
 			String cdunieco,
@@ -309,7 +310,8 @@ public interface SiniestrosDAO {
 			String status,
 			String nmsinies,
 			String nfactura,
-			String tipopago) throws Exception;
+			String tipopago,
+			String cdtipsit) throws Exception;
 	
 	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
 			String cdunieco,
@@ -444,4 +446,5 @@ public interface SiniestrosDAO {
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
 
 	List<Map<String, String>> obtieneListaDatosSumaAsegurada(HashMap<String, Object> params) throws Exception;
+
 }

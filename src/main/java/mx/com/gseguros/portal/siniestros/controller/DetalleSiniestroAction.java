@@ -254,7 +254,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	public String loadListaFacturasTramite(){
 	   	try {
-	   			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
+	   			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies"), params.get("cdtipsit")); 
 		   		
 	   	}catch( Exception e){
 	   		logger.error("Error en loadListaFacturasTramite",e);
