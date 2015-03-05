@@ -354,7 +354,7 @@ public interface SiniestrosManager {
 	
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
-			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
+			String nmsituac,String aaapertu,String status,String nmsinies,String cdtipsit) throws Exception;
 
 	public List<Map<String,String>> cargaHistorialSiniestros(Map<String,String> params) throws Exception;
 
@@ -387,7 +387,8 @@ public interface SiniestrosManager {
 			String aaapertu,
 			String status,
 			String nmsinies,
-			String nfactura) throws Exception;
+			String nfactura,
+			String cdtipsit) throws Exception;
 	
 	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
 	
@@ -407,7 +408,8 @@ public interface SiniestrosManager {
 			String status,
 			String nmsinies,
 			String nfactura,
-			String tipoPago) throws Exception;
+			String tipoPago,
+			String cdtipsit) throws Exception;
 	
 	public Map<String,String>obtenerRentaDiariaxHospitalizacion(
 			String cdunieco,
