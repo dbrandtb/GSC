@@ -6690,21 +6690,21 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
 			
-			String urlReporteCotizacion=""
-					+ getText("ruta.servidor.reports")
-					+ "?p_unieco="      + cdunieco
-					+ "&p_ramo="        + cdramo
-					+ "&p_estado="      + estado
-					+ "&p_poliza="      + nmpoliza
-					+ "&p_suplem=0"
-					+ "&p_cdplan="
-                    + "&destype=cache"
-                    + "&desformat=PDF"
-                    + "&userid="        + getText("pass.servidor.reports")
-                    + "&ACCESSIBLE=YES"
-                    + "&report="        + getText("rdf.cotizacion.nombre."+cdtipsit)
-                    + "&paramform=no"
-                    ;
+			String urlReporteCotizacion=Utilerias.join(
+					  getText("ruta.servidor.reports")
+					, "?p_unieco="      , cdunieco
+					, "&p_ramo="        , cdramo
+					, "&p_estado="      , estado
+					, "&p_poliza="      , nmpoliza
+					, "&p_suplem=0"
+					, "&p_cdplan="
+                    , "&destype=cache"
+                    , "&desformat=PDF"
+                    , "&userid="        , getText("pass.servidor.reports")
+                    , "&ACCESSIBLE=YES"
+                    , "&report="        , getText("rdf.cotizacion.nombre."+cdtipsit)
+                    , "&paramform=no"
+                    );
 			String nombreArchivoCotizacion="cotizacion.pdf";
 			String pathArchivoCotizacion=""
 					+ getText("ruta.documentos.poliza")
@@ -6721,12 +6721,50 @@ public class CotizacionAction extends PrincipalCoreAction
 			mapArchivo.put("pv_nmsuplem_i"  , "0");
 			mapArchivo.put("pv_feinici_i"   , new Date());
 			mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-			mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+			mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N EN RESUMEN");
 			mapArchivo.put("pv_ntramite_i"  , ntramite);
 			mapArchivo.put("pv_nmsolici_i"  , nmpoliza);
 			mapArchivo.put("pv_tipmov_i"    , "1");
 			mapArchivo.put("pv_swvisible_i" , null);
 			kernelManager.guardarArchivo(mapArchivo);
+			
+			String urlReporteCotizacion2=Utilerias.join(
+					  getText("ruta.servidor.reports")
+					, "?p_unieco="      , cdunieco
+					, "&p_ramo="        , cdramo
+					, "&p_estado="      , estado
+					, "&p_poliza="      , nmpoliza
+					, "&p_suplem=0"
+					, "&p_cdplan="
+                  , "&destype=cache"
+                  , "&desformat=PDF"
+                  , "&userid="        , getText("pass.servidor.reports")
+                  , "&ACCESSIBLE=YES"
+                  , "&report="        , getText("rdf.cotizacion2.nombre."+cdtipsit)
+                  , "&paramform=no"
+                  );
+			String nombreArchivoCotizacion2="cotizacion2.pdf";
+			String pathArchivoCotizacion2=""
+					+ getText("ruta.documentos.poliza")
+					+ "/"+ntramite
+					+ "/"+nombreArchivoCotizacion2
+					;
+			HttpUtil.generaArchivo(urlReporteCotizacion2, pathArchivoCotizacion2);
+
+			Map<String,Object>mapArchivo2=new LinkedHashMap<String,Object>(0);
+			mapArchivo2.put("pv_cdunieco_i"  , cdunieco);
+			mapArchivo2.put("pv_cdramo_i"    , cdramo);
+			mapArchivo2.put("pv_estado_i"    , estado);
+			mapArchivo2.put("pv_nmpoliza_i"  , "0");
+			mapArchivo2.put("pv_nmsuplem_i"  , "0");
+			mapArchivo2.put("pv_feinici_i"   , new Date());
+			mapArchivo2.put("pv_cddocume_i"  , nombreArchivoCotizacion2);
+			mapArchivo2.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N A DETALLE");
+			mapArchivo2.put("pv_ntramite_i"  , ntramite);
+			mapArchivo2.put("pv_nmsolici_i"  , nmpoliza);
+			mapArchivo2.put("pv_tipmov_i"    , "1");
+			mapArchivo2.put("pv_swvisible_i" , null);
+			kernelManager.guardarArchivo(mapArchivo2);
 		}
 		catch(Exception ex)
 		{
