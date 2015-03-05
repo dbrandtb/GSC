@@ -1297,7 +1297,7 @@ Ext.onReady(function()
             var cdtipsit = _p30_situaciones[i];
             
             //uso
-            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            if('|AR|CR|PC|PP|MO|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
                 var tipoUsoCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]');
                 debug('@CUSTOM tipouso:',tipoUsoCmp,'.');
@@ -1355,7 +1355,7 @@ Ext.onReady(function()
             //uso
             
             //plan
-            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            if('|AR|CR|PC|PP|MO|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
                 var planCmp=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
                 debug('@CUSTOM plan:',planCmp,'.');
