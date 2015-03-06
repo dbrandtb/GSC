@@ -365,6 +365,7 @@ Ext.onReady(function()
     {
         defaults  : { style : 'margin:5px;' }
         ,renderTo : '_p34_divpri'
+        ,border   : 0
         ,items    :
         [
             Ext.create('Ext.form.Panel',
@@ -1092,7 +1093,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                         {
                             var poliza        = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
                             var smap1         = poliza.raw;
-                            smap1['stamp']    = stamp;
+                            smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
                             smap1['marco2']   = '';
                             debug('smap1:',smap1);
@@ -1127,7 +1128,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                         {
                             var poliza        = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
                             var smap1         = poliza.raw;
-                            smap1['stamp']    = stamp;
+                            smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
                             smap1['marco2']   = '';
                             debug('smap1:',smap1);
