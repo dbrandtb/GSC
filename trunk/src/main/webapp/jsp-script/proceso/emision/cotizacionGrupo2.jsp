@@ -1564,10 +1564,10 @@ function _p25_agregarGrupoClic()
     debug('<_p25_agregarGrupoClic');
 }
 
-function _p25_renombrarGrupos(sinBorrarPestañas)
+function _p25_renombrarGrupos(sinBorrarPestanias)
 {
     debug('>_p25_renombrarGrupos');
-    if(!sinBorrarPestañas)
+    if(!sinBorrarPestanias)
     {
         _p25_quitarTabsDetalleGrupo();
     }

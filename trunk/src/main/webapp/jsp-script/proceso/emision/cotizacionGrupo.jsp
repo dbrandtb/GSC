@@ -1610,10 +1610,10 @@ function _p21_tabpanel()
     return Ext.ComponentQuery.query('#_p21_tabpanel')[0];
 }
 
-function _p21_renombrarGrupos(sinBorrarPestañas)
+function _p21_renombrarGrupos(sinBorrarPestanias)
 {
     debug('>_p21_renombrarGrupos');
-    if(!sinBorrarPestañas)
+    if(!sinBorrarPestanias)
     {
         _p21_quitarTabsDetalleGrupo();
     }
