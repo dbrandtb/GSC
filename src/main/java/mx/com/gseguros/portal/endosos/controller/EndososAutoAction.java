@@ -159,6 +159,146 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String pantallaEndosoValosit()
+	{
+		logger.info(Utilerias.join(
+				 "\n###################################"
+				,"\n###### pantallaEndosoValosit ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		String result=ERROR;
+		
+		try
+		{
+			Utils.validate(smap1,"No se recibieron datos de poliza");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String cdramo   = smap1.get("CDRAMO");
+			Utils.validate(cdramo , "No se recibio el tipo de endoso");
+			Utils.validate(cdramo , "No se recibio el producto");
+			
+			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### result="    , result
+				,"\n###### respuesta=" , respuesta
+				,"\n###### pantallaEndosoValosit ######"
+				,"\n###################################"
+				));
+		return result;
+	}
+	
+	public String guardarTvalositEndoso()
+	{
+		logger.info(Utilerias.join(
+				 "\n###################################"
+				,"\n###### guardarTvalositEndoso ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1,"No se recibieron datos");
+			
+			endososAutoManager.guardarTvalositEndoso(
+					smap1.get("CDUNIECO")
+					,smap1.get("CDRAMO")
+					,smap1.get("ESTADO")
+					,smap1.get("NMPOLIZA")
+					,smap1.get("NMSITUAC")
+					,smap1.get("NMSUPLEM")
+					,smap1.get("STATUS")
+					,smap1.get("CDTIPSIT")
+					,smap1.get("OTVALOR01"),smap1.get("OTVALOR02"),smap1.get("OTVALOR03"),smap1.get("OTVALOR04"),smap1.get("OTVALOR05")
+					,smap1.get("OTVALOR06"),smap1.get("OTVALOR07"),smap1.get("OTVALOR08"),smap1.get("OTVALOR09"),smap1.get("OTVALOR10")
+					,smap1.get("OTVALOR11"),smap1.get("OTVALOR12"),smap1.get("OTVALOR13"),smap1.get("OTVALOR14"),smap1.get("OTVALOR15")
+					,smap1.get("OTVALOR16"),smap1.get("OTVALOR17"),smap1.get("OTVALOR18"),smap1.get("OTVALOR19"),smap1.get("OTVALOR20")
+					,smap1.get("OTVALOR21"),smap1.get("OTVALOR22"),smap1.get("OTVALOR23"),smap1.get("OTVALOR24"),smap1.get("OTVALOR25")
+					,smap1.get("OTVALOR26"),smap1.get("OTVALOR27"),smap1.get("OTVALOR28"),smap1.get("OTVALOR29"),smap1.get("OTVALOR30")
+					,smap1.get("OTVALOR31"),smap1.get("OTVALOR32"),smap1.get("OTVALOR33"),smap1.get("OTVALOR34"),smap1.get("OTVALOR35")
+					,smap1.get("OTVALOR36"),smap1.get("OTVALOR37"),smap1.get("OTVALOR38"),smap1.get("OTVALOR39"),smap1.get("OTVALOR40")
+					,smap1.get("OTVALOR41"),smap1.get("OTVALOR42"),smap1.get("OTVALOR43"),smap1.get("OTVALOR44"),smap1.get("OTVALOR45")
+					,smap1.get("OTVALOR46"),smap1.get("OTVALOR47"),smap1.get("OTVALOR48"),smap1.get("OTVALOR49"),smap1.get("OTVALOR50")
+					,smap1.get("OTVALOR51"),smap1.get("OTVALOR52"),smap1.get("OTVALOR53"),smap1.get("OTVALOR54"),smap1.get("OTVALOR55")
+					,smap1.get("OTVALOR56"),smap1.get("OTVALOR57"),smap1.get("OTVALOR58"),smap1.get("OTVALOR59"),smap1.get("OTVALOR60")
+					,smap1.get("OTVALOR61"),smap1.get("OTVALOR62"),smap1.get("OTVALOR63"),smap1.get("OTVALOR64"),smap1.get("OTVALOR65")
+					,smap1.get("OTVALOR66"),smap1.get("OTVALOR67"),smap1.get("OTVALOR68"),smap1.get("OTVALOR69"),smap1.get("OTVALOR70")
+					,smap1.get("OTVALOR71"),smap1.get("OTVALOR72"),smap1.get("OTVALOR73"),smap1.get("OTVALOR74"),smap1.get("OTVALOR75")
+					,smap1.get("OTVALOR76"),smap1.get("OTVALOR77"),smap1.get("OTVALOR78"),smap1.get("OTVALOR79"),smap1.get("OTVALOR80")
+					,smap1.get("OTVALOR81"),smap1.get("OTVALOR82"),smap1.get("OTVALOR83"),smap1.get("OTVALOR84"),smap1.get("OTVALOR85")
+					,smap1.get("OTVALOR86"),smap1.get("OTVALOR87"),smap1.get("OTVALOR88"),smap1.get("OTVALOR89"),smap1.get("OTVALOR90")
+					,smap1.get("OTVALOR91"),smap1.get("OTVALOR92"),smap1.get("OTVALOR93"),smap1.get("OTVALOR94"),smap1.get("OTVALOR95")
+					,smap1.get("OTVALOR96"),smap1.get("OTVALOR97"),smap1.get("OTVALOR98"),smap1.get("OTVALOR99")
+					,smap1.get("tstamp")
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta=Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarTvalositEndoso ######"
+				,"\n###################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String confirmarEndosoTvalositAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n#########################################"
+				,"\n###### confirmarEndosoTvalositAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1,"No se recibieron datos");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String tstamp   = smap1.get("tstamp");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
+			Utils.validate(tstamp    , "No se recibio el id de proceso");
+			Utils.validate(cdunieco  , "No se recibio la sucursal");
+			Utils.validate(cdramo    , "No se recibio el producto");
+			Utils.validate(estado    , "No se recibio el estado");
+			Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
+			
+			endososAutoManager.confirmarEndosoTvalositAuto(cdtipsup,tstamp,cdunieco,cdramo,estado,nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### success="   , success
+				,"\n###### respuesta=" , respuesta
+				,"\n###### confirmarEndosoTvalositAuto ######"
+				,"\n#########################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

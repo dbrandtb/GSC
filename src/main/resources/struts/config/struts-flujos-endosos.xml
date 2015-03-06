@@ -454,6 +454,27 @@
             <result type="json" />
         </action>
         
+        <action name="includes/pantallaEndosoValosit" class="endososAutoAction" method="pantallaEndosoValosit">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoValositAuto.jsp</result>
+        </action>
+        
+        <action name="guardarTvalositEndoso" class="endososAutoAction" method="guardarTvalositEndoso">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
+        <action name="confirmarEndosoTvalositAuto" class="endososAutoAction" method="confirmarEndosoTvalositAuto">
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>

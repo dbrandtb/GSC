@@ -2196,7 +2196,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 	@Override
 	public void insertarIncisoEvaluacion(
-			double stamp
+			String stamp
 			,String cdunieco
 			,String cdramo
 			,String estado
@@ -2207,7 +2207,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("stamp"    , String.format("%.0f",stamp));
+		params.put("stamp"    , stamp);
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
@@ -2223,7 +2223,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected InsertarIncisoEvaluacion(DataSource dataSource) {
 			super(dataSource, "PKG_DESARROLLO.P_INS_INCISO_EVAL_ENDOSO");
-			declareParameter(new SqlParameter("stamp"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("stamp"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -2239,7 +2239,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	@Override
 	public List<Map<String,String>>recuperarEndososClasificados(
-			double stamp
+			String stamp
 			,String cdramo
 			,String nivel
 			,String multiple
@@ -2248,7 +2248,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("stamp"    , String.format("%.0f",stamp));
+		params.put("stamp"    , stamp);
 		params.put("cdramo"   , cdramo);
 		params.put("nivel"    , nivel);
 		params.put("multiple" , multiple);
@@ -2270,7 +2270,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected RecuperarEndososClasificados(DataSource dataSource)
 		{
 			super(dataSource,"PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS");
-			declareParameter(new SqlParameter("stamp"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("stamp"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("multiple" , OracleTypes.VARCHAR));
@@ -2282,6 +2282,308 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"LIGA"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarTvalositEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,String otvalor01,String otvalor02,String otvalor03,String otvalor04,String otvalor05
+			,String otvalor06,String otvalor07,String otvalor08,String otvalor09,String otvalor10
+			,String otvalor11,String otvalor12,String otvalor13,String otvalor14,String otvalor15
+			,String otvalor16,String otvalor17,String otvalor18,String otvalor19,String otvalor20
+			,String otvalor21,String otvalor22,String otvalor23,String otvalor24,String otvalor25
+			,String otvalor26,String otvalor27,String otvalor28,String otvalor29,String otvalor30
+			,String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35
+			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
+			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
+			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor51,String otvalor52,String otvalor53,String otvalor54,String otvalor55
+			,String otvalor56,String otvalor57,String otvalor58,String otvalor59,String otvalor60
+			,String otvalor61,String otvalor62,String otvalor63,String otvalor64,String otvalor65
+			,String otvalor66,String otvalor67,String otvalor68,String otvalor69,String otvalor70
+			,String otvalor71,String otvalor72,String otvalor73,String otvalor74,String otvalor75
+			,String otvalor76,String otvalor77,String otvalor78,String otvalor79,String otvalor80
+			,String otvalor81,String otvalor82,String otvalor83,String otvalor84,String otvalor85
+			,String otvalor86,String otvalor87,String otvalor88,String otvalor89,String otvalor90
+			,String otvalor91,String otvalor92,String otvalor93,String otvalor94,String otvalor95
+			,String otvalor96,String otvalor97,String otvalor98,String otvalor99
+			,String tstamp)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("nmsituac"  , nmsituac);
+		params.put("nmsuplem"  , nmsuplem);
+		params.put("status"    , status);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("otvalor01" , otvalor01);
+		params.put("otvalor02" , otvalor02);
+		params.put("otvalor03" , otvalor03);
+		params.put("otvalor04" , otvalor04);
+		params.put("otvalor05" , otvalor05);
+		params.put("otvalor06" , otvalor06);
+		params.put("otvalor07" , otvalor07);
+		params.put("otvalor08" , otvalor08);
+		params.put("otvalor09" , otvalor09);
+		params.put("otvalor10" , otvalor10);
+		params.put("otvalor11" , otvalor11);
+		params.put("otvalor12" , otvalor12);
+		params.put("otvalor13" , otvalor13);
+		params.put("otvalor14" , otvalor14);
+		params.put("otvalor15" , otvalor15);
+		params.put("otvalor16" , otvalor16);
+		params.put("otvalor17" , otvalor17);
+		params.put("otvalor18" , otvalor18);
+		params.put("otvalor19" , otvalor19);
+		params.put("otvalor20" , otvalor20);
+		params.put("otvalor21" , otvalor21);
+		params.put("otvalor22" , otvalor22);
+		params.put("otvalor23" , otvalor23);
+		params.put("otvalor24" , otvalor24);
+		params.put("otvalor25" , otvalor25);
+		params.put("otvalor26" , otvalor26);
+		params.put("otvalor27" , otvalor27);
+		params.put("otvalor28" , otvalor28);
+		params.put("otvalor29" , otvalor29);
+		params.put("otvalor30" , otvalor30);
+		params.put("otvalor31" , otvalor31);
+		params.put("otvalor32" , otvalor32);
+		params.put("otvalor33" , otvalor33);
+		params.put("otvalor34" , otvalor34);
+		params.put("otvalor35" , otvalor35);
+		params.put("otvalor36" , otvalor36);
+		params.put("otvalor37" , otvalor37);
+		params.put("otvalor38" , otvalor38);
+		params.put("otvalor39" , otvalor39);
+		params.put("otvalor40" , otvalor40);
+		params.put("otvalor41" , otvalor41);
+		params.put("otvalor42" , otvalor42);
+		params.put("otvalor43" , otvalor43);
+		params.put("otvalor44" , otvalor44);
+		params.put("otvalor45" , otvalor45);
+		params.put("otvalor46" , otvalor46);
+		params.put("otvalor47" , otvalor47);
+		params.put("otvalor48" , otvalor48);
+		params.put("otvalor49" , otvalor49);
+		params.put("otvalor50" , otvalor50);
+		params.put("otvalor51" , otvalor51);
+		params.put("otvalor52" , otvalor52);
+		params.put("otvalor53" , otvalor53);
+		params.put("otvalor54" , otvalor54);
+		params.put("otvalor55" , otvalor55);
+		params.put("otvalor56" , otvalor56);
+		params.put("otvalor57" , otvalor57);
+		params.put("otvalor58" , otvalor58);
+		params.put("otvalor59" , otvalor59);
+		params.put("otvalor60" , otvalor60);
+		params.put("otvalor61" , otvalor61);
+		params.put("otvalor62" , otvalor62);
+		params.put("otvalor63" , otvalor63);
+		params.put("otvalor64" , otvalor64);
+		params.put("otvalor65" , otvalor65);
+		params.put("otvalor66" , otvalor66);
+		params.put("otvalor67" , otvalor67);
+		params.put("otvalor68" , otvalor68);
+		params.put("otvalor69" , otvalor69);
+		params.put("otvalor70" , otvalor70);
+		params.put("otvalor71" , otvalor71);
+		params.put("otvalor72" , otvalor72);
+		params.put("otvalor73" , otvalor73);
+		params.put("otvalor74" , otvalor74);
+		params.put("otvalor75" , otvalor75);
+		params.put("otvalor76" , otvalor76);
+		params.put("otvalor77" , otvalor77);
+		params.put("otvalor78" , otvalor78);
+		params.put("otvalor79" , otvalor79);
+		params.put("otvalor80" , otvalor80);
+		params.put("otvalor81" , otvalor81);
+		params.put("otvalor82" , otvalor82);
+		params.put("otvalor83" , otvalor83);
+		params.put("otvalor84" , otvalor84);
+		params.put("otvalor85" , otvalor85);
+		params.put("otvalor86" , otvalor86);
+		params.put("otvalor87" , otvalor87);
+		params.put("otvalor88" , otvalor88);
+		params.put("otvalor89" , otvalor89);
+		params.put("otvalor90" , otvalor90);
+		params.put("otvalor91" , otvalor91);
+		params.put("otvalor92" , otvalor92);
+		params.put("otvalor93" , otvalor93);
+		params.put("otvalor94" , otvalor94);
+		params.put("otvalor95" , otvalor95);
+		params.put("otvalor96" , otvalor96);
+		params.put("otvalor97" , otvalor97);
+		params.put("otvalor98" , otvalor98);
+		params.put("otvalor99" , otvalor99);
+		params.put("tstamp"    , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INS_TVALOSIT_ENDOSO", params);
+		ejecutaSP(new GuardarTvalositEndoso(getDataSource()),params);
+	}
+	
+	protected class GuardarTvalositEndoso extends StoredProcedure
+	{
+		protected GuardarTvalositEndoso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_INS_TVALOSIT_ENDOSO");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor01" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor02" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor03" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor04" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor05" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor06" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor07" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor08" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor09" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor10" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor11" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor12" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor13" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor14" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor15" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor16" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor17" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor18" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor19" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor20" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor21" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor22" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor23" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor24" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor25" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor26" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor27" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor28" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor29" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor30" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor31" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor32" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor33" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor34" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor35" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor36" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor37" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor38" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor39" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor40" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor41" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor42" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor43" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor44" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor45" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor46" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor47" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor48" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor49" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor50" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor51" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor52" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor53" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor54" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor55" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor56" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor57" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor58" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor59" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor60" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor61" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor62" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor63" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor64" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor65" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor66" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor67" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor68" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor69" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor70" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor71" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor72" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor73" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor74" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor75" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor76" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor77" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor78" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor79" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor80" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor81" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor82" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor83" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor84" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor85" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor86" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor87" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor88" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor89" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor90" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor91" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor92" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor93" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor94" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor95" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor96" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor97" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor98" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor99" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void confirmarEndosoTvalositAuto(
+			String cdtipsup
+			,String tstamp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsup" , cdtipsup);
+		params.put("tstamp"   , tstamp);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO", params);
+		ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
+	}
+	
+	protected class ConfirmarEndosoTvalositAuto extends StoredProcedure
+	{
+		protected ConfirmarEndosoTvalositAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO");
+			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
