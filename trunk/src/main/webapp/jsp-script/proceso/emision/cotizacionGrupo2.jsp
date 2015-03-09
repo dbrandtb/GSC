@@ -596,7 +596,7 @@ Ext.onReady(function()
                             }
                             ,{
                                 xtype     : 'fieldset'
-                                ,title    : '<span style="font:bold 14px Calibri;">INFORMACIÓN DEL RIESGO</span>'
+                                ,title    : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DEL RIESGO</span>'
                                 ,layout   :
                                 {
                                     type     : 'table'
