@@ -1371,20 +1371,24 @@ Ext.onReady(function()
                     }
                     var modeloName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=MODELO]').getName();
                     var claveName  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=CLAVE]').getName();
+                    var marcaName  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=MARCA]').getName();
                     debug('heredar:'    , me);
                     debug('modeloName:' , modeloName);
                     debug('claveName:'  , claveName);
+                    debug('marcaName:'  , marcaName);
                     
                     var modeloVal   = record.get(modeloName);
                     var claveVal    = record.get(claveName);
+                    var marcaVal    = record.get(marcaName);
                     var negocioVal  = _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue();
                     var servicioVal = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').getValue();
                     debug('modeloVal:'   , modeloVal);
                     debug('claveVal:'    , claveVal);
+                    debug('marcaVal:'    , marcaVal);
                     debug('negocioVal:'  , negocioVal);
                     debug('servicioVal:' , servicioVal);
                     
-                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(claveVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal))
+                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(marcaVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal))
                     {
                         me.allowBlank=true;
                         me.setFieldLabel('PAQUETE (Seleccionar veh&iacute;culo primero)');

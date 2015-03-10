@@ -131,6 +131,7 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String nmpoliex
+			,String ramo
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarHistoricoPoliza(
