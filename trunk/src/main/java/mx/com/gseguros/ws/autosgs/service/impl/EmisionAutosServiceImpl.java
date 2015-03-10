@@ -91,491 +91,513 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		
 		boolean exitoRecibosSigs = false;
 		
-		//Se invoca servicio para obtener los datos del auto
-		try
-		{
-			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
-			params.put("param1" , cdunieco);
-			params.put("param2" , cdramo);
-			params.put("param3" , estado);
-			params.put("param4" , nmpoliza);
-			params.put("param5" , nmsuplem);
-			params.put("param6" , tipopol);
-			
-			List<Map<String,String>>lista = null;
-			
-			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-				lista = storedProceduresManager.procedureListCall(
-						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
-			}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-				lista = storedProceduresManager.procedureListCall(
-						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
-			}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
-					){
-				lista = storedProceduresManager.procedureListCall(
-						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
-			}
-			
-			if(lista!=null && lista.size()>0)
-			{
-				Map<String,String>m=lista.get(0);
-				datosCotizacionAuto=new Cotizacion();
-				
-				datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("NUMFOLIO")));
-				datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("VIGENCIA")));
-				datosCotizacionAuto.setIdNegocio(Integer.valueOf(m.get("IDNEGOCIO")));
-				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
-				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
-				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
-				datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
-				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
-
-				datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
-				
-				datosCotizacionAuto.setContarPAI(Boolean.valueOf(m.get("CONTARPAI")));
-				datosCotizacionAuto.setNombreAlterno(m.get("NOMBREALTERNO"));
-				
-				CotizacionNegocio cotNeg =  new CotizacionNegocio();
-				
-				cotNeg.setIdTarifa(Integer.valueOf(m.get("IDTARIFA")));
-				cotNeg.setUdi(Double.valueOf(m.get("UDI")));
-				cotNeg.setMultianual(Integer.valueOf(m.get("MULTIANUAL")));
-				cotNeg.setPeriodoGracia(Integer.valueOf(m.get("PERIODOGRACIA")));
-				cotNeg.setFondoEspecial(Double.valueOf(m.get("FONDOESPECIAL")));
-				cotNeg.setF1(Double.valueOf(m.get("F1")));
-				cotNeg.setF2(Double.valueOf(m.get("F2")));
-				cotNeg.setF3(Double.valueOf(m.get("F3")));
-				cotNeg.setPorcentajeBono(Double.valueOf(m.get("PORCENTAJEBONO")));
-				cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
-				cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
-				
-				datosCotizacionAuto.setCotizacionNegocio(cotNeg);
-				
-				/**
-				 * PARA ENDOSOS
-				 */
-				PolizaCotizacion polizaCotizacion = new PolizaCotizacion();
-				polizaCotizacion.setIdMotivoEndoso(Integer.valueOf(m.get("IDMOTIVOENDOSO")));
-				polizaCotizacion.setNumEndoso(Integer.valueOf(m.get("NUMENDOSO")));
-				polizaCotizacion.setNumPoliza(Integer.valueOf(m.get("NUMPOLIZA")));
-				polizaCotizacion.setRamo(Integer.valueOf(m.get("RAMO")));
-				polizaCotizacion.setSucursalEmisora(Integer.valueOf(m.get("SUCURSALEMISORA")));
-				
-				String tipoEndAuto = StringUtils.isBlank(m.get("TIPOENDOSO"))?" " : m.get("TIPOENDOSO");
-				int valTipoEnd = tipoEndAuto.charAt(0);
-				logger.debug("Valor Numerico de endoso a enviar: "+ valTipoEnd);
-				polizaCotizacion.setTipoEndoso(new org.apache.axis2.databinding.types.UnsignedShort((long)valTipoEnd));
-				datosCotizacionAuto.setPolizaCotizacion(polizaCotizacion);
-				
-				//idagente y sucursal
-				Agente agente=new Agente();
-				datosCotizacionAuto.setAgente(agente);
-				agente.setIdAgente(m.get("IDAGENTE"));
-				agente.setSucursal(Integer.valueOf(m.get("SUCURSAL")));
-				
-				//cve_cli
-				SDTClientesSDTClientesItem cliente = new SDTClientesSDTClientesItem();
-				datosCotizacionAuto.setCliente(cliente);
-				cliente.setCve_cli(Integer.valueOf(m.get("CVE_CLI").substring(m.get("CVE_CLI").length()-10)));
-				cliente.setFis_mor("");//null
-				cliente.setNom_cli("");//null
-				cliente.setApe_pat("");//null
-				cliente.setApe_mat("");//null
-				cliente.setRaz_soc("");//null
-				cliente.setAne_cli("");//null
-				cliente.setRfc_cli("");//null
-				cliente.setCve_ele("");//null
-				cliente.setCurpcli("");//null
-				cliente.setCal_cli("");//null
-				cliente.setNum_cli("");//null
-				cliente.setColonia("");//null
-				cliente.setPoblaci("");//null
-				cliente.setNac_ext("");//null
-				cliente.setTelefo1("");//null
-				cliente.setTelefo2("");//null
-				cliente.setTelefo3("");//null
-				cliente.setCor_ele("");//null
-				cliente.setPag_web("");//null
-				cliente.setFue_ing("");//null
-				cliente.setAdm_con("");//null
-				cliente.setCar_pub("");//null
-				cliente.setNom_car("");//null
-				cliente.setPer_car("");//null
-				cliente.setApo_cli("");//null
-				cliente.setDom_ori("");//null
-				cliente.setNum_pas("");//null
-				cliente.setSta_cli("");//null
-				
-				datosCotizacionAuto.setFormasDePago(new FormasDePago_type0());//null
-				
-				//codigo
-				CodigoPostal cp=new CodigoPostal();
-				datosCotizacionAuto.setCodigoPostal(cp);
-				cp.setCodigo(Integer.valueOf(m.get("CODIGO")));
-				
-				//cveusuariocaptura
-				if(userVO != null) logger.info("Clave del Usuario Captura Externo en Sesion: " + userVO.getClaveUsuarioCaptura());
-				if(userVO != null && StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
-					datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(userVO.getClaveUsuarioCaptura()));
-				}else{
-					datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(m.get("CVEUSUARIOCAPTURA")));
-				}
-				logger.info("Clave del Usuario Captura a enviar: "+ datosCotizacionAuto.getCveUsuarioCaptura());
-				
-				//descuentoagente
-				datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
-				datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("DESCUENTOCLIENTE")));
-				datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("DESCUENTOFACULTAMIENTO")));
-				datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("PORCENTAJECESIONCOMISION")));
-				
-				//idagentecompartido
-				int aux=0;
-				if(m.get("IDAGENTECOMPARTIDO")!=null)
-				{
-					aux=Integer.valueOf(m.get("IDAGENTECOMPARTIDO")).intValue();
-				}
-				datosCotizacionAuto.setIdAgenteCompartido(aux);
-				
-				//porcencomisionagente2
-				aux=0;
-				if(m.get("PORCENCOMISIONAGENTE2")!=null)
-				{
-					aux=Integer.valueOf(m.get("PORCENCOMISIONAGENTE2")).intValue();
-				}
-				datosCotizacionAuto.setPorcenComisionAgente2(aux);
-				
-				//idestatuscotizacion
-				datosCotizacionAuto.setIdEstatusCotizacion(Integer.valueOf(m.get("IDESTATUSCOTIZACION")));
-				
-				//tipoproducto
-				TipoProducto tipoProducto=TipoProducto.ROJO;
-				if(StringUtils.isNotBlank(m.get("TIPOPRODUCTO"))
-						&&m.get("TIPOPRODUCTO").equalsIgnoreCase("VERDE"))
-				{
-					tipoProducto=TipoProducto.VERDE;
-				}
-				datosCotizacionAuto.setTipoProducto(tipoProducto);
-				
-				//tipoServicio
-				datosCotizacionAuto.setTipoServicio(Integer.valueOf(m.get("TIPOSERVICIO")));
-				
-				//versiontarifa
-				datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
-				
-				//inicioVigencia
-				datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
-				
-				//moneda
-				datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));
-				
-				//formapago
-				datosCotizacionAuto.setFormaPago(Integer.valueOf(m.get("FORMAPAGO")));
-				
-				TotalFormaPago totalFormaPago=new TotalFormaPago();
-				datosCotizacionAuto.setTotalFormaPago(totalFormaPago);
-				
-				//derechopoliza
-				totalFormaPago.setDerechoPoliza(Double.valueOf(m.get("DERECHOPOLIZA")));
-				
-				//iva
-				totalFormaPago.setIva(Double.valueOf(m.get("IVA")));
-				
-				//pagosubsecuente
-				totalFormaPago.setPagoSubSecuente(Double.valueOf(m.get("PAGOSUBSECUENTE")));
-				
-				//primaneta
-				totalFormaPago.setPrimaNeta(Double.valueOf(m.get("PRIMANETA")));
-				
-				//primerpago
-				totalFormaPago.setPrimerPago(Double.valueOf(m.get("PRIMERPAGO")));
-				
-				//recargopagofraccionado
-				totalFormaPago.setRecargoPagoFraccionado(Double.valueOf(m.get("RECARGOPAGOFRACCIONADO")));
-				
-				totalFormaPago.setDerechoAgente(Double.valueOf(m.get("DERECHOAGENTE")));
-				totalFormaPago.setDerechoPromotor(Double.valueOf(m.get("DERECHOPROMOTOR")));
-				
-				Map<String,Integer[]>mapaIndicesIncisos=new HashMap<String,Integer[]>();
-				List<Inciso> incisos=new ArrayList<Inciso>();
-				
-				//encontrar todos los incisos
-				{
-					int indiceRow    = 0;
-					int indiceInciso = 0;
-					Inciso nuevoInciso;
-					Version nuevoVersion;
-					
-					for(Map<String,String>row:lista)
-					{
-						nuevoVersion = new Version();
-						nuevoVersion.setAmis(Integer.valueOf(m.get("AMIS")));
-						nuevoInciso = new Inciso();
-						nuevoInciso.setVersion(nuevoVersion);
-						
-						String nmsituac=row.get("NMSITUAC");
-						if(!mapaIndicesIncisos.containsKey(nmsituac))
-						{
-							mapaIndicesIncisos.put(nmsituac,new Integer[]{Integer.valueOf(indiceInciso),Integer.valueOf(indiceRow)});
-							incisos.add(nuevoInciso);
-							indiceInciso=indiceInciso+1;
-						}
-						indiceRow = indiceRow+1;
-					}
-				}
-				
-				Map<String,List<Map<String,String>>>listaRowCoberturaPorInciso=new HashMap<String,List<Map<String,String>>>();
-				
-				//encontrar todas las coberturas por inciso
-				for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
-				{
-					String nmsituac=indiceInciso.getKey();
-					List<Map<String,String>>coberturasDelInciso=new ArrayList<Map<String,String>>();
-					for(Map<String,String>row:lista)
-					{
-						if(row.get("NMSITUAC").equalsIgnoreCase(nmsituac))
-						{
-							coberturasDelInciso.add(row);
-						}
-					}
-					listaRowCoberturaPorInciso.put(nmsituac,coberturasDelInciso);
-				}
-				
-				//llenar todos los incisos
-				for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
-				{
-					String nmsituac=indiceInciso.getKey();
-					int indiceArray;
-					int indiceRow;
-					{
-						Integer[] indices = indiceInciso.getValue();
-						indiceArray       = indices[0].intValue();
-						indiceRow         = indices[1].intValue();
-					}
-					Inciso incisoIterado   = incisos.get(indiceArray);
-					Map<String,String> row = lista.get(indiceRow);
-					
-					//idtipovalor
-					incisoIterado.setIdTipoValor(Integer.valueOf(row.get("IDTIPOVALOR")));
-					
-					//modelo
-					incisoIterado.setModelo(Integer.valueOf(row.get("MODELO")));
-					
-					//nummotor
-					incisoIterado.setNumMotor(row.get("NUMMOTOR"));
-					
-					//numserie
-					incisoIterado.setNumSerie(row.get("NUMSERIE"));
-					
-					//numplacas
-					incisoIterado.setNumPlacas(row.get("NUMPLACAS"));
-					
-					//numeconomico
-					incisoIterado.setNumEconomico(row.get("NUMECONOMICO"));
-					
-					//numocupantes
-					incisoIterado.setNumOcupantes(Integer.valueOf(row.get("NUMOCUPANTES")));
-					
-					//beneficiariopreferente
-					incisoIterado.setBeneficiarioPref(row.get("BENEFICIARIOPREFERENTE"));
-					
-					//tipvehica
-					incisoIterado.setTipVehiCA(Integer.valueOf(row.get("TIPVEHICA")));
-					
-					//tipovehiculo
-					TipoVehiculo tipoVehiculo=null;
-					
-					if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("FRONTERIZO")){
-						tipoVehiculo=TipoVehiculo.FRONTERIZO;
-					}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("PICKUP")){
-						tipoVehiculo=TipoVehiculo.AUTO_PICKUP;
-					}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("SERVICIO_PUBLICO_AUTOS")){
-						tipoVehiculo=TipoVehiculo.SERVICIO_PUBLICO_AUTOS;
-					}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("SERVICIO_PUBLICO_MICROS")){
-						tipoVehiculo=TipoVehiculo.SERVICIO_PUBLICO_MICROS;
-					}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("AUTO_PICKUP")){
-						tipoVehiculo=TipoVehiculo.AUTO_PICKUP;
-					}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("CAMION")){
-						tipoVehiculo=TipoVehiculo.CAMION;
-					}
-					
-					incisoIterado.setTipoVehiculo(tipoVehiculo);
-					
-					//valor
-					incisoIterado.setValor(Double.valueOf(row.get("VALOR")));
-					
-					//conductor
-					incisoIterado.setConductor(row.get("CONDUCTOR"));
-
-					//TipoUso
-					incisoIterado.setConductor(row.get("CONDUCTOR"));
-					
-					//primanetainc
-					incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
-					
-					incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("IDTIPOCARGA")));
-					incisoIterado.setAdaptaciones(row.get("ADAPTACIONES"));
-					incisoIterado.setEquipoEspecial(row.get("EQUIPOESPECIAL"));
-					incisoIterado.setSituacionRiesgo(row.get("SITUACIONRIESGO"));
-					
-					/**
-					 * TODO: Poner validacion de WS para setNumSerieValido
-					 */
-					incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("NUMSERIEVALIDO")));
-					
-					
-					//version
-					Version version=new Version();
-					version.setDescripcion(row.get("DESCRIPCION"));
-					version.setAmis(Integer.valueOf(m.get("AMIS")));
-					incisoIterado.setVersion(version);
-					
-					ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
-					incisoIterado.setConfiguracionPaquete(confPaq);
-					
-					
-					incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
-					
-					
-					incisoIterado.setCilindraje(m.get("CILINDRAJE"));
-					incisoIterado.setDescuentoInciso(Double.valueOf(m.get("DESCUENTOINCISO")));
-					
-					//versionTarifa
-					confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
-					
-					List<Paquete> paquetesIncisoIterado = new ArrayList<Paquete>();
-					Paquete paqueteIncisoIterado        = new Paquete();
-					paquetesIncisoIterado.add(paqueteIncisoIterado);
-					
-					//idconfiguracionpaquete
-					paqueteIncisoIterado.setIdConfiguracionPaquete(Integer.valueOf(row.get("IDCONFIGURACIONPAQUETE")));
-					
-					//seleccionado
-					boolean seleccionado = false;
-					if(StringUtils.isNotBlank(row.get("SELECCIONADO"))
-							&&row.get("SELECCIONADO").equalsIgnoreCase("TRUE"))
-					{
-						seleccionado = true;
-					}
-					paqueteIncisoIterado.setSeleccionado(seleccionado);
-					
-					List<Map<String,String>>listaCoberturasIncisoIterado=listaRowCoberturaPorInciso.get(nmsituac);
-					
-					List<Cobertura>coberturasIncisoIterado=new ArrayList<Cobertura>();
-					
-					////// iterar cada cobertura //////
-					for(Map<String,String>rowCoberturaIncisoIterado:listaCoberturasIncisoIterado)
-					{
-						Cobertura coberturaIteradaPaqueteIncisoIterado=new Cobertura();
-						
-						//idcobertura
-						coberturaIteradaPaqueteIncisoIterado.setIdCobertura(Integer.parseInt(rowCoberturaIncisoIterado.get("IDCOBERTURA")));
-						
-						//seleccionadocob
-						boolean seleccionadoCob = false;
-						if(StringUtils.isNotBlank(rowCoberturaIncisoIterado.get("SELECCIONADOCOB"))
-								&&rowCoberturaIncisoIterado.get("SELECCIONADOCOB").equalsIgnoreCase("TRUE"))
-						{
-							seleccionadoCob = true;
-						}
-						coberturaIteradaPaqueteIncisoIterado.setSeleccionado(seleccionadoCob);
-						
-						//deducible
-						coberturaIteradaPaqueteIncisoIterado.setDeducible(Double.valueOf(rowCoberturaIncisoIterado.get("DEDUCIBLE")));
-						
-						//suma_asegurada
-						coberturaIteradaPaqueteIncisoIterado.setSuma_asegurada(Double.valueOf(rowCoberturaIncisoIterado.get("SUMA_ASEGURADA")));
-						
-						//prima_bruta
-						coberturaIteradaPaqueteIncisoIterado.setPrima_bruta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_BRUTA")));
-						
-						//prima_netacob
-						coberturaIteradaPaqueteIncisoIterado.setPrima_neta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_NETACOB")));
-						
-						//comision
-						coberturaIteradaPaqueteIncisoIterado.setComision(Double.valueOf(rowCoberturaIncisoIterado.get("COMISION")));
-
-						coberturasIncisoIterado.add(coberturaIteradaPaqueteIncisoIterado);
-					}
-					
-					Cobertura[] listaCoberturasPaqueteAux=new Cobertura[coberturasIncisoIterado.size()];
-					for(int i=0;i<listaCoberturasPaqueteAux.length;i++)
-					{
-						listaCoberturasPaqueteAux[i]=coberturasIncisoIterado.get(i);
-					}
-					paqueteIncisoIterado.setCoberturas(listaCoberturasPaqueteAux);
-					
-					Paquete[]listaPaquetesIncisoIteradoAux=new Paquete[paquetesIncisoIterado.size()];
-					for(int i=0;i<listaPaquetesIncisoIteradoAux.length;i++)
-					{
-						listaPaquetesIncisoIteradoAux[i]=paquetesIncisoIterado.get(i);
-					}
-					confPaq.setPaquetes(listaPaquetesIncisoIteradoAux);
-				}
-				
-				Inciso[]incisosCotizacionAux=new Inciso[incisos.size()];
-				for(int i=0;i<incisosCotizacionAux.length;i++)
-				{
-					incisosCotizacionAux[i]=incisos.get(i);
-				}
-				datosCotizacionAuto.setIncisos(incisosCotizacionAux);
-				
-			}
-		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
-		}	
 		
-		if(datosCotizacionAuto != null){
-			try{
-				WrapperResultadosWS resultWSCot = this.ejecutaCotizacionAutosWS(datosCotizacionAuto);
-						
-				GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
-				
-				if(cotRes != null && cotRes.getExito()){
-					logger.debug("Respuesta de WS Cotizacion Codigo(): " +cotRes.getCodigo());
-					logger.debug("Respuesta de WS Cotizacion Mensaje(): " +cotRes.getMensaje());
-					
-					long numSolicitud = cotRes.getCotizacion().getIdCotizacion();
-					logger.debug("Numero de Cotizacion Generada: " + numSolicitud);
-					
-					WrapperResultadosWS resultWSEmi = this.ejecutaEmisionAutosWS(numSolicitud);
-					
-					if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
-						polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
-						emisionAutoRes = new EmisionAutosVO();
-						emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
-						emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
-						emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
-						
-						if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
-							exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
-							
-							if(!exitoRecibosSigs){
-								emisionAutoRes.setExitoRecibos(false);
-								logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
-							}else{
-								emisionAutoRes.setExitoRecibos(true);
-							}
-						}
-					}
-					
-				}else{
-					logger.error("Error en la cotizacion de Autos WS, respuesta no exitosa");
-				}
-				
-			} catch(WSException wse){
-				logger.error("Error en WS de Autos, xml enviado: " + wse.getPayload(), wse);
-			} catch (Exception e){
-				logger.error("Error en WS de Autos: " + e.getMessage(),e);
-			}
-		}else{
-			logger.error("Error, No se tienen datos del Auto");
+		LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("param1" , cdunieco);
+		params.put("param2" , cdramo);
+		params.put("param3" , estado);
+		params.put("param4" , nmpoliza);
+		params.put("param5" , nmsuplem);
+		
+		List<Map<String,String>> listaEndosos = null;
+		
+		try {
+			listaEndosos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_WS_ENDOSO_AUTO.getNombre(), params, null);
+		} catch (Exception e2) {
+			logger.error("Error al obtener lista de endosos o emision para WS de autos.",e2);
 		}
 		
+		params.put("param6" , tipopol);
+		
+		if(listaEndosos!=null && !listaEndosos.isEmpty()){
+		
+			for(Map<String,String> endosoIt : listaEndosos){
+				
+				params.put("param7" , endosoIt.get("TIPOEND"));//tipoend
+				params.put("param8" , endosoIt.get("NUMEND"));//numend
+		
+				//Se invoca servicio para obtener los datos del auto
+				try
+				{
+					
+					List<Map<String,String>>lista = null;
+					
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+						lista = storedProceduresManager.procedureListCall(
+								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+						lista = storedProceduresManager.procedureListCall(
+								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
+							){
+						lista = storedProceduresManager.procedureListCall(
+								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
+					}
+					
+					if(lista!=null && lista.size()>0)
+					{
+						Map<String,String>m=lista.get(0);
+						datosCotizacionAuto=new Cotizacion();
+						
+						datosCotizacionAuto.setNumFolio(Integer.valueOf(m.get("NUMFOLIO")));
+						datosCotizacionAuto.setVigencia(Integer.valueOf(m.get("VIGENCIA")));
+						datosCotizacionAuto.setIdNegocio(Integer.valueOf(m.get("IDNEGOCIO")));
+						datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
+						datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
+						datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
+						datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
+						datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
+		
+						datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
+						
+						datosCotizacionAuto.setContarPAI(Boolean.valueOf(m.get("CONTARPAI")));
+						datosCotizacionAuto.setNombreAlterno(m.get("NOMBREALTERNO"));
+						
+						CotizacionNegocio cotNeg =  new CotizacionNegocio();
+						
+						cotNeg.setIdTarifa(Integer.valueOf(m.get("IDTARIFA")));
+						cotNeg.setUdi(Double.valueOf(m.get("UDI")));
+						cotNeg.setMultianual(Integer.valueOf(m.get("MULTIANUAL")));
+						cotNeg.setPeriodoGracia(Integer.valueOf(m.get("PERIODOGRACIA")));
+						cotNeg.setFondoEspecial(Double.valueOf(m.get("FONDOESPECIAL")));
+						cotNeg.setF1(Double.valueOf(m.get("F1")));
+						cotNeg.setF2(Double.valueOf(m.get("F2")));
+						cotNeg.setF3(Double.valueOf(m.get("F3")));
+						cotNeg.setPorcentajeBono(Double.valueOf(m.get("PORCENTAJEBONO")));
+						cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
+						cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
+						
+						datosCotizacionAuto.setCotizacionNegocio(cotNeg);
+						
+						/**
+						 * PARA ENDOSOS
+						 */
+						PolizaCotizacion polizaCotizacion = new PolizaCotizacion();
+						polizaCotizacion.setIdMotivoEndoso(Integer.valueOf(m.get("IDMOTIVOENDOSO")));
+						polizaCotizacion.setNumEndoso(Integer.valueOf(m.get("NUMENDOSO")));
+						polizaCotizacion.setNumPoliza(Integer.valueOf(m.get("NUMPOLIZA")));
+						polizaCotizacion.setRamo(Integer.valueOf(m.get("RAMO")));
+						polizaCotizacion.setSucursalEmisora(Integer.valueOf(m.get("SUCURSALEMISORA")));
+						
+						String tipoEndAuto = StringUtils.isBlank(m.get("TIPOENDOSO"))?" " : m.get("TIPOENDOSO");
+						int valTipoEnd = tipoEndAuto.charAt(0);
+						logger.debug("Valor Numerico de endoso a enviar: "+ valTipoEnd);
+						polizaCotizacion.setTipoEndoso(new org.apache.axis2.databinding.types.UnsignedShort((long)valTipoEnd));
+						datosCotizacionAuto.setPolizaCotizacion(polizaCotizacion);
+						
+						//idagente y sucursal
+						Agente agente=new Agente();
+						datosCotizacionAuto.setAgente(agente);
+						agente.setIdAgente(m.get("IDAGENTE"));
+						agente.setSucursal(Integer.valueOf(m.get("SUCURSAL")));
+						
+						//cve_cli
+						SDTClientesSDTClientesItem cliente = new SDTClientesSDTClientesItem();
+						datosCotizacionAuto.setCliente(cliente);
+						cliente.setCve_cli(Integer.valueOf(m.get("CVE_CLI").substring(m.get("CVE_CLI").length()-10)));
+						cliente.setFis_mor("");//null
+						cliente.setNom_cli("");//null
+						cliente.setApe_pat("");//null
+						cliente.setApe_mat("");//null
+						cliente.setRaz_soc("");//null
+						cliente.setAne_cli("");//null
+						cliente.setRfc_cli("");//null
+						cliente.setCve_ele("");//null
+						cliente.setCurpcli("");//null
+						cliente.setCal_cli("");//null
+						cliente.setNum_cli("");//null
+						cliente.setColonia("");//null
+						cliente.setPoblaci("");//null
+						cliente.setNac_ext("");//null
+						cliente.setTelefo1("");//null
+						cliente.setTelefo2("");//null
+						cliente.setTelefo3("");//null
+						cliente.setCor_ele("");//null
+						cliente.setPag_web("");//null
+						cliente.setFue_ing("");//null
+						cliente.setAdm_con("");//null
+						cliente.setCar_pub("");//null
+						cliente.setNom_car("");//null
+						cliente.setPer_car("");//null
+						cliente.setApo_cli("");//null
+						cliente.setDom_ori("");//null
+						cliente.setNum_pas("");//null
+						cliente.setSta_cli("");//null
+						
+						datosCotizacionAuto.setFormasDePago(new FormasDePago_type0());//null
+						
+						//codigo
+						CodigoPostal cp=new CodigoPostal();
+						datosCotizacionAuto.setCodigoPostal(cp);
+						cp.setCodigo(Integer.valueOf(m.get("CODIGO")));
+						
+						//cveusuariocaptura
+						if(userVO != null) logger.info("Clave del Usuario Captura Externo en Sesion: " + userVO.getClaveUsuarioCaptura());
+						if(userVO != null && StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
+							datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(userVO.getClaveUsuarioCaptura()));
+						}else{
+							datosCotizacionAuto.setCveUsuarioCaptura(Integer.valueOf(m.get("CVEUSUARIOCAPTURA")));
+						}
+						logger.info("Clave del Usuario Captura a enviar: "+ datosCotizacionAuto.getCveUsuarioCaptura());
+						
+						//descuentoagente
+						datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
+						datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("DESCUENTOCLIENTE")));
+						datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("DESCUENTOFACULTAMIENTO")));
+						datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("PORCENTAJECESIONCOMISION")));
+						
+						//idagentecompartido
+						int aux=0;
+						if(m.get("IDAGENTECOMPARTIDO")!=null)
+						{
+							aux=Integer.valueOf(m.get("IDAGENTECOMPARTIDO")).intValue();
+						}
+						datosCotizacionAuto.setIdAgenteCompartido(aux);
+						
+						//porcencomisionagente2
+						aux=0;
+						if(m.get("PORCENCOMISIONAGENTE2")!=null)
+						{
+							aux=Integer.valueOf(m.get("PORCENCOMISIONAGENTE2")).intValue();
+						}
+						datosCotizacionAuto.setPorcenComisionAgente2(aux);
+						
+						//idestatuscotizacion
+						datosCotizacionAuto.setIdEstatusCotizacion(Integer.valueOf(m.get("IDESTATUSCOTIZACION")));
+						
+						//tipoproducto
+						TipoProducto tipoProducto=TipoProducto.ROJO;
+						if(StringUtils.isNotBlank(m.get("TIPOPRODUCTO"))
+								&&m.get("TIPOPRODUCTO").equalsIgnoreCase("VERDE"))
+						{
+							tipoProducto=TipoProducto.VERDE;
+						}
+						datosCotizacionAuto.setTipoProducto(tipoProducto);
+						
+						//tipoServicio
+						datosCotizacionAuto.setTipoServicio(Integer.valueOf(m.get("TIPOSERVICIO")));
+						
+						//versiontarifa
+						datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
+						
+						//inicioVigencia
+						datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
+						
+						//moneda
+						datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));
+						
+						//formapago
+						datosCotizacionAuto.setFormaPago(Integer.valueOf(m.get("FORMAPAGO")));
+						
+						TotalFormaPago totalFormaPago=new TotalFormaPago();
+						datosCotizacionAuto.setTotalFormaPago(totalFormaPago);
+						
+						//derechopoliza
+						totalFormaPago.setDerechoPoliza(Double.valueOf(m.get("DERECHOPOLIZA")));
+						
+						//iva
+						totalFormaPago.setIva(Double.valueOf(m.get("IVA")));
+						
+						//pagosubsecuente
+						totalFormaPago.setPagoSubSecuente(Double.valueOf(m.get("PAGOSUBSECUENTE")));
+						
+						//primaneta
+						totalFormaPago.setPrimaNeta(Double.valueOf(m.get("PRIMANETA")));
+						
+						//primerpago
+						totalFormaPago.setPrimerPago(Double.valueOf(m.get("PRIMERPAGO")));
+						
+						//recargopagofraccionado
+						totalFormaPago.setRecargoPagoFraccionado(Double.valueOf(m.get("RECARGOPAGOFRACCIONADO")));
+						
+						totalFormaPago.setDerechoAgente(Double.valueOf(m.get("DERECHOAGENTE")));
+						totalFormaPago.setDerechoPromotor(Double.valueOf(m.get("DERECHOPROMOTOR")));
+						
+						Map<String,Integer[]>mapaIndicesIncisos=new HashMap<String,Integer[]>();
+						List<Inciso> incisos=new ArrayList<Inciso>();
+						
+						//encontrar todos los incisos
+						{
+							int indiceRow    = 0;
+							int indiceInciso = 0;
+							Inciso nuevoInciso;
+							Version nuevoVersion;
+							
+							for(Map<String,String>row:lista)
+							{
+								nuevoVersion = new Version();
+								nuevoVersion.setAmis(Integer.valueOf(m.get("AMIS")));
+								nuevoInciso = new Inciso();
+								nuevoInciso.setVersion(nuevoVersion);
+								
+								String nmsituac=row.get("NMSITUAC");
+								if(!mapaIndicesIncisos.containsKey(nmsituac))
+								{
+									mapaIndicesIncisos.put(nmsituac,new Integer[]{Integer.valueOf(indiceInciso),Integer.valueOf(indiceRow)});
+									incisos.add(nuevoInciso);
+									indiceInciso=indiceInciso+1;
+								}
+								indiceRow = indiceRow+1;
+							}
+						}
+						
+						Map<String,List<Map<String,String>>>listaRowCoberturaPorInciso=new HashMap<String,List<Map<String,String>>>();
+						
+						//encontrar todas las coberturas por inciso
+						for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
+						{
+							String nmsituac=indiceInciso.getKey();
+							List<Map<String,String>>coberturasDelInciso=new ArrayList<Map<String,String>>();
+							for(Map<String,String>row:lista)
+							{
+								if(row.get("NMSITUAC").equalsIgnoreCase(nmsituac))
+								{
+									coberturasDelInciso.add(row);
+								}
+							}
+							listaRowCoberturaPorInciso.put(nmsituac,coberturasDelInciso);
+						}
+						
+						//llenar todos los incisos
+						for(Entry<String,Integer[]>indiceInciso:mapaIndicesIncisos.entrySet())
+						{
+							String nmsituac=indiceInciso.getKey();
+							int indiceArray;
+							int indiceRow;
+							{
+								Integer[] indices = indiceInciso.getValue();
+								indiceArray       = indices[0].intValue();
+								indiceRow         = indices[1].intValue();
+							}
+							Inciso incisoIterado   = incisos.get(indiceArray);
+							Map<String,String> row = lista.get(indiceRow);
+							
+							//idtipovalor
+							incisoIterado.setIdTipoValor(Integer.valueOf(row.get("IDTIPOVALOR")));
+							
+							//modelo
+							incisoIterado.setModelo(Integer.valueOf(row.get("MODELO")));
+							
+							//nummotor
+							incisoIterado.setNumMotor(row.get("NUMMOTOR"));
+							
+							//numserie
+							incisoIterado.setNumSerie(row.get("NUMSERIE"));
+							
+							//numplacas
+							incisoIterado.setNumPlacas(row.get("NUMPLACAS"));
+							
+							//numeconomico
+							incisoIterado.setNumEconomico(row.get("NUMECONOMICO"));
+							
+							//numocupantes
+							incisoIterado.setNumOcupantes(Integer.valueOf(row.get("NUMOCUPANTES")));
+							
+							//beneficiariopreferente
+							incisoIterado.setBeneficiarioPref(row.get("BENEFICIARIOPREFERENTE"));
+							
+							//tipvehica
+							incisoIterado.setTipVehiCA(Integer.valueOf(row.get("TIPVEHICA")));
+							
+							//tipovehiculo
+							TipoVehiculo tipoVehiculo=null;
+							
+							if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("FRONTERIZO")){
+								tipoVehiculo=TipoVehiculo.FRONTERIZO;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("PICKUP")){
+								tipoVehiculo=TipoVehiculo.AUTO_PICKUP;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("SERVICIO_PUBLICO_AUTOS")){
+								tipoVehiculo=TipoVehiculo.SERVICIO_PUBLICO_AUTOS;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("SERVICIO_PUBLICO_MICROS")){
+								tipoVehiculo=TipoVehiculo.SERVICIO_PUBLICO_MICROS;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("AUTO_PICKUP")){
+								tipoVehiculo=TipoVehiculo.AUTO_PICKUP;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("CAMION")){
+								tipoVehiculo=TipoVehiculo.CAMION;
+							}
+							
+							incisoIterado.setTipoVehiculo(tipoVehiculo);
+							
+							//valor
+							incisoIterado.setValor(Double.valueOf(row.get("VALOR")));
+							
+							//conductor
+							incisoIterado.setConductor(row.get("CONDUCTOR"));
+		
+							//TipoUso
+							incisoIterado.setConductor(row.get("CONDUCTOR"));
+							
+							//primanetainc
+							incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
+							
+							incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("IDTIPOCARGA")));
+							incisoIterado.setAdaptaciones(row.get("ADAPTACIONES"));
+							incisoIterado.setEquipoEspecial(row.get("EQUIPOESPECIAL"));
+							incisoIterado.setSituacionRiesgo(row.get("SITUACIONRIESGO"));
+							
+							/**
+							 * TODO: Poner validacion de WS para setNumSerieValido
+							 */
+							incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("NUMSERIEVALIDO")));
+							
+							
+							//version
+							Version version=new Version();
+							version.setDescripcion(row.get("DESCRIPCION"));
+							version.setAmis(Integer.valueOf(m.get("AMIS")));
+							incisoIterado.setVersion(version);
+							
+							ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
+							incisoIterado.setConfiguracionPaquete(confPaq);
+							
+							
+							incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
+							
+							
+							incisoIterado.setCilindraje(m.get("CILINDRAJE"));
+							incisoIterado.setDescuentoInciso(Double.valueOf(m.get("DESCUENTOINCISO")));
+							
+							//versionTarifa
+							confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
+							
+							List<Paquete> paquetesIncisoIterado = new ArrayList<Paquete>();
+							Paquete paqueteIncisoIterado        = new Paquete();
+							paquetesIncisoIterado.add(paqueteIncisoIterado);
+							
+							//idconfiguracionpaquete
+							paqueteIncisoIterado.setIdConfiguracionPaquete(Integer.valueOf(row.get("IDCONFIGURACIONPAQUETE")));
+							
+							//seleccionado
+							boolean seleccionado = false;
+							if(StringUtils.isNotBlank(row.get("SELECCIONADO"))
+									&&row.get("SELECCIONADO").equalsIgnoreCase("TRUE"))
+							{
+								seleccionado = true;
+							}
+							paqueteIncisoIterado.setSeleccionado(seleccionado);
+							
+							List<Map<String,String>>listaCoberturasIncisoIterado=listaRowCoberturaPorInciso.get(nmsituac);
+							
+							List<Cobertura>coberturasIncisoIterado=new ArrayList<Cobertura>();
+							
+							////// iterar cada cobertura //////
+							for(Map<String,String>rowCoberturaIncisoIterado:listaCoberturasIncisoIterado)
+							{
+								Cobertura coberturaIteradaPaqueteIncisoIterado=new Cobertura();
+								
+								//idcobertura
+								coberturaIteradaPaqueteIncisoIterado.setIdCobertura(Integer.parseInt(rowCoberturaIncisoIterado.get("IDCOBERTURA")));
+								
+								//seleccionadocob
+								boolean seleccionadoCob = false;
+								if(StringUtils.isNotBlank(rowCoberturaIncisoIterado.get("SELECCIONADOCOB"))
+										&&rowCoberturaIncisoIterado.get("SELECCIONADOCOB").equalsIgnoreCase("TRUE"))
+								{
+									seleccionadoCob = true;
+								}
+								coberturaIteradaPaqueteIncisoIterado.setSeleccionado(seleccionadoCob);
+								
+								//deducible
+								coberturaIteradaPaqueteIncisoIterado.setDeducible(Double.valueOf(rowCoberturaIncisoIterado.get("DEDUCIBLE")));
+								
+								//suma_asegurada
+								coberturaIteradaPaqueteIncisoIterado.setSuma_asegurada(Double.valueOf(rowCoberturaIncisoIterado.get("SUMA_ASEGURADA")));
+								
+								//prima_bruta
+								coberturaIteradaPaqueteIncisoIterado.setPrima_bruta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_BRUTA")));
+								
+								//prima_netacob
+								coberturaIteradaPaqueteIncisoIterado.setPrima_neta(Double.valueOf(rowCoberturaIncisoIterado.get("PRIMA_NETACOB")));
+								
+								//comision
+								coberturaIteradaPaqueteIncisoIterado.setComision(Double.valueOf(rowCoberturaIncisoIterado.get("COMISION")));
+		
+								coberturasIncisoIterado.add(coberturaIteradaPaqueteIncisoIterado);
+							}
+							
+							Cobertura[] listaCoberturasPaqueteAux=new Cobertura[coberturasIncisoIterado.size()];
+							for(int i=0;i<listaCoberturasPaqueteAux.length;i++)
+							{
+								listaCoberturasPaqueteAux[i]=coberturasIncisoIterado.get(i);
+							}
+							paqueteIncisoIterado.setCoberturas(listaCoberturasPaqueteAux);
+							
+							Paquete[]listaPaquetesIncisoIteradoAux=new Paquete[paquetesIncisoIterado.size()];
+							for(int i=0;i<listaPaquetesIncisoIteradoAux.length;i++)
+							{
+								listaPaquetesIncisoIteradoAux[i]=paquetesIncisoIterado.get(i);
+							}
+							confPaq.setPaquetes(listaPaquetesIncisoIteradoAux);
+						}
+						
+						Inciso[]incisosCotizacionAux=new Inciso[incisos.size()];
+						for(int i=0;i<incisosCotizacionAux.length;i++)
+						{
+							incisosCotizacionAux[i]=incisos.get(i);
+						}
+						datosCotizacionAuto.setIncisos(incisosCotizacionAux);
+						
+					}
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
+				}	
+				
+				if(datosCotizacionAuto != null){
+					try{
+						WrapperResultadosWS resultWSCot = this.ejecutaCotizacionAutosWS(datosCotizacionAuto);
+								
+						GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
+						
+						if(cotRes != null && cotRes.getExito()){
+							logger.debug("Respuesta de WS Cotizacion Codigo(): " +cotRes.getCodigo());
+							logger.debug("Respuesta de WS Cotizacion Mensaje(): " +cotRes.getMensaje());
+							
+							long numSolicitud = cotRes.getCotizacion().getIdCotizacion();
+							logger.debug("Numero de Cotizacion Generada: " + numSolicitud);
+							
+							WrapperResultadosWS resultWSEmi = this.ejecutaEmisionAutosWS(numSolicitud);
+							
+							if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
+								polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
+								emisionAutoRes = new EmisionAutosVO();
+								emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
+								emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
+								emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
+								
+								if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
+									exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
+									
+									if(!exitoRecibosSigs){
+										emisionAutoRes.setExitoRecibos(false);
+										logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
+									}else{
+										emisionAutoRes.setExitoRecibos(true);
+									}
+								}
+							}
+							
+						}else{
+							logger.error("Error en la cotizacion de Autos WS, respuesta no exitosa");
+						}
+						
+					} catch(WSException wse){
+						logger.error("Error en WS de Autos, xml enviado: " + wse.getPayload(), wse);
+					} catch (Exception e){
+						logger.error("Error en WS de Autos: " + e.getMessage(),e);
+					}
+				}else{
+					logger.error("Error, No se tienen datos del Auto");
+				}
+		
+		
+			}
+		}
 		return emisionAutoRes;
 	}
 	
