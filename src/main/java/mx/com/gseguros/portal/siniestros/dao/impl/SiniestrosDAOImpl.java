@@ -2576,7 +2576,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PGETCONCEPTOSFACTURA(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOS_FACTURA2");
+			super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOS_FACTURA");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
