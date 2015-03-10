@@ -759,8 +759,8 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			)throws Exception
     {
 		logger.info(Utilerias.join(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarPlanesPorNegocioModeloClavegsRamo5 @@@@@@"
 				,"\n@@@@@@ cdtipsit=" , cdtipsit
 				,"\n@@@@@@ modelo="   , modelo
 				,"\n@@@@@@ negocio="  , negocio
@@ -768,7 +768,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				,"\n@@@@@@ servicio=" , servicio
 				));
 		List<GenericVO>lista=new ArrayList<GenericVO>();
-		if(StringUtils.isNotBlank(clavegs))
+		if(StringUtils.isNotBlank(modelo))
 		{
 			lista=catalogosDAO.cargarPlanesPorNegocioModeloClavegsRamo5(cdtipsit,modelo,negocio,clavegs,servicio);
 		}

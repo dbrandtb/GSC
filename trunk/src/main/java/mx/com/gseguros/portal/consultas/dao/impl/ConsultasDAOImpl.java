@@ -1042,6 +1042,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String nmpoliex
+			,String ramo
 			)throws Exception
 	{
     	Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1050,6 +1051,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
     	params.put("nmpoliex" , nmpoliex);
+    	params.put("ramo"     , ramo);
     	Utilerias.debugProcedure(logger,"PKG_CONSULTA.P_GET_POLIZAS_PARA_ENDOSOS",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarPolizasEndosables(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1071,6 +1073,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliex" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("ramo"     , OracleTypes.VARCHAR));
             String[] cols=new String[]{
             		//MPOLIZAS
             		"CDUNIECO"  , "CDRAMO"   , "ESTADO"   , "NMPOLIZA"
