@@ -350,6 +350,15 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager obtenerNombreEndosos lista size: "+lista.size());
 		return lista;
 	}
+	@Override
+	public List<Map<String, String>> obtenerNombreEndoso(String cdtipsup) throws Exception
+	{
+		logger.debug("EndososManager obtenerNombreEndoso");
+		List<Map<String,String>> lista=endososDAO.obtenerNombreEndoso(cdtipsup);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		logger.debug("EndososManager obtenerNombreEndoso lista size: "+lista.size());
+		return lista;
+	}
 	
 	@Override
 	public void actualizarFenacimi(Map<String, String> params) throws Exception

@@ -30,6 +30,8 @@
         <pattern>/endosos/endosoEdad.action</pattern>
         <pattern>/endosos/endosoSexo.action</pattern>
         <pattern>/endosos/endosoDomicilioFull.action</pattern>
+        <pattern>/endosos/endosoDomicilioAuto.action</pattern>
+        <pattern>/endosos/endosoDomicilioAutoFull.action</pattern>
         <pattern>/endosos/errorEndosoAnterior.action</pattern>
         <pattern>/endosos/endosoDeducible.action</pattern>
         <pattern>/endosos/endosoCopago.action</pattern>

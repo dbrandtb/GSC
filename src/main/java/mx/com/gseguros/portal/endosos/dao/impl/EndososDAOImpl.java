@@ -799,6 +799,37 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> obtenerNombreEndoso(String cdtipsup) throws Exception
+	{
+		Map<String, Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdtipsup_i", cdtipsup);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_DSTIPSUP ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNombreEndoso(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerNombreEndoso extends StoredProcedure
+	{
+		protected ObtenerNombreEndoso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_DSTIPSUP");
+			declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{"DSTIPSUP"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public void actualizarFenacimi(Map<String, String> params) throws Exception
@@ -1162,7 +1193,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-				"CDUNIECO"   , "CDRAMO"    , "ESTADO"    , "NMPOLIZA"  , "NMSITUAC"  ,"NMSUPLEM" , "STATUS" , "CDTIPSIT"
+				"CDUNIECO"   , "CDRAMO"    , "ESTADO"    , "NMPOLIZA"  , "NMSITUAC"  ,"NMSUPLEM" , "STATUS" , "CDTIPSIT", "CDATRIBU"
 				,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05"
 				,"OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
 				,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15"
