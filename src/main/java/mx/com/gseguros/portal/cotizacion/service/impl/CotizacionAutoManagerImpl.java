@@ -1179,6 +1179,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdramo
 			,String cdtipsit
 			,String ntramite
+			,String tipoflot
 			)
 	{
 		logger.info(
@@ -1515,7 +1516,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			setCheckpoint("Recuperando agrupacion de situaciones");
 			Map<String,String>agrupAux = cotizacionDAO.obtenerParametrosCotizacion(
-					ParametroCotizacion.FLOTILLA_AGRUPACION_SITUACION, cdramo, cdtipsit, null, null);
+					ParametroCotizacion.FLOTILLA_AGRUPACION_SITUACION, cdramo, cdtipsit, cdsisrol, tipoflot);
 			
 			Map<String,String>botones    = new LinkedHashMap<String,String>();
 			Map<String,String>agrupacion = new LinkedHashMap<String,String>();

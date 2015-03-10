@@ -790,14 +790,24 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
+			String tipoflot = smap1.get("tipoflot");
 			
 			smap1.put("cdsisrol" , cdsisrol);
 			smap1.put("cdusuari" , cdusuari);
 			
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
+			checkBlank(tipoflot , "No se recibio el tipo de cotizacion");
 			
-			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionAutoFlotilla(cdusuari,cdsisrol,cdunieco,cdramo,cdtipsit,ntramite);
+			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionAutoFlotilla(
+					cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,ntramite
+					,tipoflot
+					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
