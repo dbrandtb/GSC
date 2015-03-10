@@ -1594,7 +1594,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			{
 				Map<String,String>mapeo= cotizacionDAO.obtenerParametrosCotizacion(
 						ParametroCotizacion.MAPEO_TVALOSIT_FORMS_FLOTILLAS, cdramo, cdtipsit, null, null);
-				resp.getSmap().put("mapeo" , mapeo.get("P1VALOR"));
+				resp.getSmap().put("mapeo" , mapeo.get("P1VALOR")+mapeo.get("P2VALOR"));
 			}
 			catch(Exception ex)
 			{
