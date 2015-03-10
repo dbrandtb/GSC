@@ -109,6 +109,7 @@ public interface CotizacionAutoManager
 			,String cdramo
 			,String cdtipsit
 			,String ntramite
+			,String tipoflot
 			);
 	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari
