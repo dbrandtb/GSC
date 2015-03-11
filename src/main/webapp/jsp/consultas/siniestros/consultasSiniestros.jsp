@@ -24,6 +24,7 @@
             var _AAAPERTU;
             var _NMSINIES;
             var _NTRAMITE;
+            var _CDTIPSIT;
             
             var _URL_AFILIADOS_AFECTADOS   		    = '<s:url namespace="/consultasSiniestro" action="afiliadosAfectados" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';

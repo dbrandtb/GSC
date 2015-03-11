@@ -175,6 +175,7 @@ Ext.onReady(function() {
     		                _NMSINIES = record.get('NMSINIES');
     		                _TIPOPAGO = TipoPago.Directo;
     		                _NTRAMITE = record.get('NTRAMITE');
+    		                _CDTIPSIT = record.get('CDTIPSIT');
     		                cargaInformacionTab();
                 		}
                     	
