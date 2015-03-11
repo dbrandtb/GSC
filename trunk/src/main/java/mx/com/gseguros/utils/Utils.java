@@ -103,7 +103,7 @@ public class Utils {
 		if(e instanceof ApplicationException) {
 			respuesta = new StringBuilder(e.getMessage()).append(" #").append(System.currentTimeMillis()).toString();
 		} else {
-			respuesta = "Error del sistema.";
+			respuesta = new StringBuilder("Error del sistema #").append(System.currentTimeMillis()).toString();
 		}
 		logger.error(respuesta, e);
 		return respuesta;

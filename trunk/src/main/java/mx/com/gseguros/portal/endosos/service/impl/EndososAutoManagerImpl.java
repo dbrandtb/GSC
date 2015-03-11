@@ -541,6 +541,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -552,13 +555,26 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdramo="   , cdramo
 				,"\n@@@@@@ estado="   , estado
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdelemen=" , cdelemen
 				));
 		
 		String paso="Confirmando endoso";
 		
 		try
 		{
-			endososDAO.confirmarEndosoTvalositAuto(cdtipsup,tstamp,cdunieco,cdramo,estado,nmpoliza);
+			endososDAO.confirmarEndosoTvalositAuto(
+					cdtipsup
+					,tstamp
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdusuari
+					,cdsisrol
+					,cdelemen
+					);
 		}
 		catch(Exception ex)
 		{
