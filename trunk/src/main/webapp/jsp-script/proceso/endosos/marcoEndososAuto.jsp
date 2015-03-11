@@ -40,7 +40,7 @@ _p34_gridPolizasColumns.push
         xtype         : 'actioncolumn'
         ,sortable     : false
         ,menuDisabled : true
-        ,width        : 70
+        ,width        : 80
         ,items        :
         [
             {
