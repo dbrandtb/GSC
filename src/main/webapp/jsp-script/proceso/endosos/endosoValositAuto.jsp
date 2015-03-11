@@ -28,6 +28,21 @@ var _p36_gridColumns =
      <s:property value="imap.gridColumnsLectura"   escapeHtml="false" />
     ,<s:property value="imap.gridColumnsEditables" escapeHtml="false" />
 ];
+
+var _p36_itemsEdicion=[];
+for(var i in _p36_gridColumns)
+{
+    var col=_p36_gridColumns[i];
+    if(!Ext.isEmpty(col.editor)
+        &&col.hidden==true
+    )
+    {
+        col.editor.fieldLabel = col.text;
+        col.editor.width      = 300;
+        col.editor.allowBlank = false;
+        _p36_itemsEdicion.push(col.editor);
+    }
+}
 ////// dinamicos //////
 
 Ext.onReady(function()
@@ -106,15 +121,30 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-            Ext.create('Ext.grid.Panel',
+    Ext.create('Ext.panel.Panel',
+    {
+        itemId    : '_p36_panelpri'
+        ,renderTo : '_p36_divpri'
+        ,border   : 0
+        ,defaults : { style : 'margin:5px;' }
+        ,items    :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                itemId  : '_p36_form'
+                ,title  : 'Edici&oacute;n'
+                ,hidden : _p36_itemsEdicion.length==0
+                ,items  : _p36_itemsEdicion
+            })
+            ,Ext.create('Ext.grid.Panel',
             {
                 itemId      : '_p36_grid'
-                ,renderTo   : '_p36_divpri'
                 ,title      : 'Incisos'
                 ,minHeight  : 200
                 ,maxHeight  : 400
                 ,autoScroll : true
                 ,plugins    :
+                _p36_itemsEdicion.length==0 ?
                 [
                     Ext.create('Ext.grid.plugin.RowEditing',
                     {
@@ -129,7 +159,7 @@ Ext.onReady(function()
                             }
                         }
                     })
-                ]
+                ] : []
                 ,columns     : _p36_gridColumns
                 ,store       : _p36_store
                 ,buttonAlign : 'center'
@@ -139,46 +169,78 @@ Ext.onReady(function()
                         text     : 'Confirmar'
                         ,itemId  : '_p36_botonConfirmar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                        ,handler : function(me)
+                        ,handler : function()
                         {
-                            me.setLoading(true);
-                            Ext.Ajax.request(
+                            var panel    = _fieldById('_p36_botonConfirmar');
+                            var callback = function()
                             {
-                                url     : _p36_urlConfirmarEndoso
-                                ,params :
+                                panel.setDisabled(true);
+                                Ext.Ajax.request(
                                 {
-                                    'smap1.cdtipsup'  : _p36_smap1.cdtipsup
-                                    ,'smap1.tstamp'   : _p36_smap1.tstamp
-                                    ,'smap1.cdunieco' : _p36_store.getAt(0).get('CDUNIECO')
-                                    ,'smap1.cdramo'   : _p36_store.getAt(0).get('CDRAMO')
-                                    ,'smap1.estado'   : _p36_store.getAt(0).get('ESTADO')
-                                    ,'smap1.nmpoliza' : _p36_store.getAt(0).get('NMPOLIZA')
-                                }
-                                ,success : function(response)
-                                {
-                                    me.setLoading(false);
-                                    var json=Ext.decode(response.responseText);
-                                    debug('### confirmar endoso:',json);
-                                    if(json.success)
+                                    url     : _p36_urlConfirmarEndoso
+                                    ,params :
                                     {
-                                        marendNavegacion(2);
-                                        mensajeCorrecto('Endoso generado','Endoso generado');
+                                        'smap1.cdtipsup'  : _p36_smap1.cdtipsup
+                                        ,'smap1.tstamp'   : _p36_smap1.tstamp
+                                        ,'smap1.cdunieco' : _p36_store.getAt(0).get('CDUNIECO')
+                                        ,'smap1.cdramo'   : _p36_store.getAt(0).get('CDRAMO')
+                                        ,'smap1.estado'   : _p36_store.getAt(0).get('ESTADO')
+                                        ,'smap1.nmpoliza' : _p36_store.getAt(0).get('NMPOLIZA')
                                     }
-                                    else
+                                    ,success : function(response)
                                     {
-                                        mensajeError(json.respuesta);
+                                        panel.setDisabled(false);
+                                        var json=Ext.decode(response.responseText);
+                                        debug('### confirmar endoso:',json);
+                                        if(json.success)
+                                        {
+                                            marendNavegacion(2);
+                                            mensajeCorrecto('Endoso generado','Endoso generado');
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.respuesta);
+                                        }
                                     }
-                                }
-                                ,failure : function(response)
+                                    ,failure : function(response)
+                                    {
+                                        panel.setDisabled(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            };
+                            
+                            var valido = _fieldById('_p36_form').getForm().isValid();
+                            if(!valido)
+                            {
+                                datosIncompletos();
+                            }
+                            
+                            if(valido)
+                            {
+                                if(_p36_itemsEdicion.length==0)
                                 {
-                                    me.setLoading(false);
-                                    errorComunicacion();
+                                    callback();
                                 }
-                            });
-                        } 
+                                else
+                                {
+                                    _p36_store.each(function(record)
+                                    {
+                                        var values=_fieldById('_p36_form').getForm().getValues();
+                                        for(var att in values)
+                                        {
+                                            record.set(att,values[att]);
+                                        }
+                                    });
+                                    _p36_guardarCambio(_p36_store.getAt(_p36_store.getCount()-1),callback,_p36_store.getCount()-1);
+                                }
+                            }
+                        }
                     }
                 ]
-            });
+            })
+        ]
+    });
     ////// contenido //////
     
     ////// custom //////
@@ -189,9 +251,9 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-function _p36_guardarCambio(record)
+function _p36_guardarCambio(record,callback,i)
 {
-    debug('>_p36_guardarCambio record.data:',record.data);
+    debug('>_p36_guardarCambio record.data,!callback?,i',record.data,Ext.isEmpty(callback),i);
     var valores={
         tstamp : _p36_smap1.tstamp
     };
@@ -219,7 +281,8 @@ function _p36_guardarCambio(record)
     }
     debug('valores a enviar:',valores);
     var grid  = _fieldById('_p36_grid');
-    var boton = _fieldById('_p36_botonConfirmar');
+    var panel = _fieldById('_p36_botonConfirmar');
+    panel.setDisabled(true);
     Ext.Ajax.request(
     {
         url       : _p36_urlGuardarTvalositEndoso
@@ -229,11 +292,26 @@ function _p36_guardarCambio(record)
         }
         ,success  : function(response)
         {
+            panel.setDisabled(false);
             var json=Ext.decode(response.responseText);
             debug('### guardar tvalosit endoso:',json);
             if(json.success)
             {
-                grid.getStore().commitChanges();
+                if(Ext.isEmpty(callback))
+                {
+                    grid.getStore().commitChanges();
+                }
+                else
+                {
+                    if(i==0)
+                    {
+                        callback();
+                    }
+                    else
+                    {
+                        _p36_guardarCambio(_p36_store.getAt(i-1),callback,i-1);
+                    }
+                }
             }
             else
             {
@@ -243,6 +321,7 @@ function _p36_guardarCambio(record)
         }
         ,failure : function()
         {
+            panel.setDisabled(false);
             grid.getStore().rejectChanges();
             errorComunicacion();
         }

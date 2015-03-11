@@ -288,5 +288,8 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
 			)throws Exception;
 }

@@ -179,6 +179,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo , "No se recibio el tipo de endoso");
 			Utils.validate(cdramo , "No se recibio el producto");
 			
+			//override del tstamp
+			smap1.put("tstamp" , String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random()));
+			
 			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo);
 			
 			result = SUCCESS;
@@ -281,7 +284,24 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(estado    , "No se recibio el estado");
 			Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
 			
-			endososAutoManager.confirmarEndosoTvalositAuto(cdtipsup,tstamp,cdunieco,cdramo,estado,nmpoliza);
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			endososAutoManager.confirmarEndosoTvalositAuto(
+					cdtipsup
+					,tstamp
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdusuari
+					,cdsisrol
+					,cdelemen
+					);
 			
 			success = true;
 		}

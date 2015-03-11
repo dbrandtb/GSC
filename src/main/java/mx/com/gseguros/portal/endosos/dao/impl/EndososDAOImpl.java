@@ -2591,6 +2591,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -2600,6 +2603,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdelemen" , cdelemen);
 		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
 	}
@@ -2615,6 +2621,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
