@@ -896,7 +896,9 @@ function _p34_botonEndososIncisosClic()
     var incisosRaw=[];
     for(var i in incisos)
     {
-        incisosRaw.push(incisos[i].raw);
+        var incisoIte=incisos[i].raw;
+        incisoIte['ATRIBUTOS']=incisos[i].get('ATRIBUTOS');
+        incisosRaw.push(incisoIte);
     }    
     
     windowIncisos.setLoading(true);
@@ -983,65 +985,6 @@ function _p34_renderer(valor,mapeo,view)
                 valor=valores[cdatribu].split('~')[1];
                 debug('tipo DISPLAY cdatribu,valor:',cdatribu,valor,'.');
                 break;
-                /*
-                var otclave=valores[cdatribu];
-                debug('B _p34_buffer inicio:' , _p34_buffer);
-                if(Ext.isEmpty(_p34_buffer)
-                    ||Ext.isEmpty(_p34_buffer[cdtipsit])
-                    ||Ext.isEmpty(_p34_buffer[cdtipsit]['a'+cdatribu])
-                    ||Ext.isEmpty(_p34_buffer[cdtipsit]['a'+cdatribu]['c'+otclave])
-                )
-                {
-                    Ext.Ajax.request(
-                    {
-                        url     : _p34_urlRecuperacionSimple
-                        ,params :
-                        {
-                            'smap1.procedimiento' : 'RECUPERAR_VALOR_ATRIBUTO_UNICO'
-                            ,'smap1.cdtipsit'     : cdtipsit
-                            ,'smap1.cdatribu'     : cdatribu
-                            ,'smap1.otclave'      : otclave
-                            ,'smap1.viewId'       : view.id
-                        }
-                        ,success : function(response)
-                        {
-                            var json=Ext.decode(response.responseText);
-                            debug('### atributo unico:',json);
-                            if(json.success)
-                            {
-                                if(Ext.isEmpty(_p34_buffer))
-                                {
-                                    _p34_buffer=[];
-                                }
-                                if(Ext.isEmpty(_p34_buffer[json.smap1.cdtipsit]))
-                                {
-                                    _p34_buffer[json.smap1.cdtipsit]=[];
-                                }
-                                if(Ext.isEmpty(_p34_buffer[json.smap1.cdtipsit]['a'+json.smap1.cdatribu]))
-                                {
-                                    _p34_buffer[json.smap1.cdtipsit]['a'+json.smap1.cdatribu]=[];
-                                }
-                                _p34_buffer[json.smap1.cdtipsit]['a'+json.smap1.cdatribu]['c'+json.smap1.otclave]=json.smap1.otvalor;
-                                debug('B _p34_buffer:',_p34_buffer);
-                                _fieldById(json.smap1.viewId).refresh();
-                            }
-                            else
-                            {
-                                mensajeError(json.respuesta);
-                            }
-                        }
-                        ,failure : function()
-                        {
-                            errorComunicacion();
-                        }
-                    });
-                    valor='Cargando...';
-                }
-                else
-                {
-                    alert();
-                }
-                */
             }
         } 
     }
@@ -1139,7 +1082,9 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             var incisosRaw=[];
                             for(var i in incisos)
                             {
-                                incisosRaw.push(incisos[i].raw);
+                                var incisoIte=incisos[i].raw;
+                                incisoIte['ATRIBUTOS']=incisos[i].get('ATRIBUTOS');
+                                incisosRaw.push(incisoIte);
                             }
                             debug('incisosRaw:',incisosRaw);
                             
