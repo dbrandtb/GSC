@@ -38,11 +38,15 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
+import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -76,6 +80,10 @@ public class EndososAction extends PrincipalCoreAction
 	private boolean                  endosoSimple = false;
 	private ConsultasManager         consultasManager;
 	private StoredProceduresManager  storedProceduresManager;
+	
+	@Autowired
+	@Qualifier("emisionAutosServiceImpl")
+	private EmisionAutosService emisionAutosService;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -307,7 +315,7 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug(new StringBuilder()
 		.append("\n#####################################")
 		.append("\n#####################################")
-		.append("\n###### pantallaEndosoDomicilio ######")
+		.append("\n###### pantallaEndosoDomicilioAuto ######")
 		.append("\n######                         ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		logger.debug(new StringBuilder("session: ").append(session).toString());
@@ -1491,17 +1499,20 @@ public class EndososAction extends PrincipalCoreAction
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
 				///////////////////////////////////////
+
 				
-				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(
-						smap1.get("pv_cdunieco"), 
-						smap1.get("pv_cdramo"), 
-						smap1.get("pv_estado"), 
-						smap1.get("pv_nmpoliza"), 
-						resEndDomi.get("pv_nmsuplem_o"), 
-						respConfirmacionEndoso.getNumeroTramite(),
-						Ice2sigsService.Operacion.ACTUALIZA, 
-						(UserVO) session.get("USUARIO"));
+				/**
+				 * PARA WS ENDOSO DE AUTOS
+				 */
+//				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(smap1.get("pv_cdunieco"),
+//						smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"),
+//						respConfirmacionEndoso.getNumeroTramite(), null, (UserVO) session.get("USUARIO"));
+//				
+//				if(aux == null || !aux.isExitoRecibos()){
+//					success = false;
+//					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+//					logger.error("Error al ejecutar los WS de endoso");
+//				}
 				
 				mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 				
@@ -5900,23 +5911,15 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 				///////////////////////////////////////
 				
-				// Ejecutamos el Web Service de Cliente Salud:
-//				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
-				
-//				String sucursal = cdunieco;
-//				String nmsolici = listaDocu.get(0).get("nmsolici");
-//				String nmtramite = ntramite;
-//				
-//				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
-				
-				// Ejecutamos el Web Service de Recibos:
-//				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-//						estado, nmpoliza, 
-//						nmsuplem, rutaCarpeta, 
-//						sucursal, nmsolici, nmtramite, 
-//						true, tipomov, 
-//						(UserVO) session.get("USUARIO"));
+				/**
+				 * PARA WS ENDOSO DE AUTOS
+				 */
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+				if(aux == null || !aux.isExitoRecibos()){
+					success = false;
+					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+					logger.error("Error al ejecutar los WS de endoso");
+				}
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 				
@@ -7449,6 +7452,13 @@ public class EndososAction extends PrincipalCoreAction
 							sucursal, nmsolici, ntramite, 
 							true, cdtipsup, 
 							(UserVO) session.get("USUARIO"));
+				}else{
+					EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+					if(aux == null || !aux.isExitoRecibos()){
+						success = false;
+						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						logger.error("Error al ejecutar los WS de endoso");
+					}
 				}
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -7767,6 +7777,13 @@ public class EndososAction extends PrincipalCoreAction
 							sucursal, nmsolici, ntramite, 
 							true, cdtipsup, 
 							(UserVO) session.get("USUARIO"));
+				}else{
+					EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+					if(aux == null || !aux.isExitoRecibos()){
+						success = false;
+						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						logger.error("Error al ejecutar los WS de endoso");
+					}
 				}
 	   			
 	   			mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -8851,5 +8868,5 @@ return SUCCESS;
 	public void setRespuestaOculta(String respuestaOculta) {
 		this.respuestaOculta = respuestaOculta;
 	}
-	
+
 }

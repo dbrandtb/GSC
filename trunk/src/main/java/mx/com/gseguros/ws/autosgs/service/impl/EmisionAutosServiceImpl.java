@@ -14,6 +14,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.reclamoExpress.dao.ReclamoExpressDAO;
 import mx.com.gseguros.utils.Constantes;
@@ -81,7 +82,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private AutosDAOSIGS autosDAOSIGS;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String tipopol, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -108,14 +109,14 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			logger.error("Error al obtener lista de endosos o emision para WS de autos.",e2);
 		}
 		
-		params.put("param6" , tipopol);
+//		params.put("param6" , tipopol);
 		
 		if(listaEndosos!=null && !listaEndosos.isEmpty()){
 		
 			for(Map<String,String> endosoIt : listaEndosos){
 				
-				params.put("param7" , endosoIt.get("TIPOEND"));//tipoend
-				params.put("param8" , endosoIt.get("NUMEND"));//numend
+				params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
+				params.put("param7" , endosoIt.get("NUMEND"));//numend
 		
 				//Se invoca servicio para obtener los datos del auto
 				try
@@ -123,19 +124,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					
 					List<Map<String,String>>lista = null;
 					
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-						lista = storedProceduresManager.procedureListCall(
-								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
-					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-						lista = storedProceduresManager.procedureListCall(
-								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
-					}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_CARGA.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())
-							){
+					if(cdramo.equalsIgnoreCase(Ramo.AUTOS_FRONTERIZOS.getCdramo())){
+						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+					}else if(cdramo.equalsIgnoreCase(Ramo.SERVICIO_PUBLICO.getCdramo())){
+						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+					}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
 						lista = storedProceduresManager.procedureListCall(
 								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 					}
@@ -570,7 +563,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
 								emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
 								
-								if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
+								if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
 									exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
 									
 									if(!exitoRecibosSigs){
@@ -794,6 +787,74 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		}
 		
 		return true;
+	}
+	
+	public int endosoCambioDomicil(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Domicilio contratante Auto Sin Modificacion de Codigo Postal");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+			datos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_CAMBIO_DOMICIL.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			
+				try{
+					
+					HashMap<String, Object> params = new HashMap<String, Object>();
+//					params.put("vSucursal"  , datosEnd.get(key));
+//					params.put("vRamo"      , datosEnd.get(key));
+//					params.put("vPoliza"    , datosEnd.get(key));
+//					params.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get(key))?" " : datosEnd.get(key));
+//					params.put("vEndoso"    , datosEnd.get(key));
+//					params.put("vIdMotivo"  , datosEnd.get(key));
+//					params.put("vCalle"     , datosEnd.get(key));
+//					params.put("vNumero"    , datosEnd.get(key));
+//					params.put("vColonia"   , datosEnd.get(key));
+//					params.put("vTelefono1" , datosEnd.get(key));
+//					params.put("vTelefono2" , datosEnd.get(key));
+//					params.put("vTelefono3" , datosEnd.get(key));
+					
+					Integer res = autosDAOSIGS.insertaReciboAuto(params);
+					
+					logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
+					
+					if(res == null || res == 0){
+						logger.debug("Endoso domicilio no exitoso");
+					}else{
+						numeroEndosoRes = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				}
+			
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Domicil");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
 	}
 	
 }

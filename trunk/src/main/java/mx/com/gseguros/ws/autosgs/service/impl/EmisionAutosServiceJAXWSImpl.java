@@ -15,6 +15,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
@@ -77,7 +78,7 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 	private StoredProceduresManager storedProceduresManager;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String tipopol,
+			String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
@@ -98,14 +99,13 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 			
 			List<Map<String,String>>lista = null;
 			
-			if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+			if(cdramo.equalsIgnoreCase(Ramo.AUTOS_FRONTERIZOS.getCdramo())){
+				lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+			}else if(cdramo.equalsIgnoreCase(Ramo.SERVICIO_PUBLICO.getCdramo())){
+				lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+			}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
 				lista = storedProceduresManager.procedureListCall(
-						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
-			}else if(cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-				lista = storedProceduresManager.procedureListCall(
-						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
+						ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 			}
 			
 			if(lista!=null && lista.size()>0)
