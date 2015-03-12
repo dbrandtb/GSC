@@ -1275,13 +1275,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 		    	 */
 				try
         		{
-			    	if(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.AUTOS_RESIDENTES.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.CAMIONES_CARGA.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.PICK_UP_CARGA.getCdtipsit().equalsIgnoreCase(cdtipsit)
-				    		|| TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit().equalsIgnoreCase(cdtipsit)
-			    			){
+			    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(comprarCdramo) 
+				    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(comprarCdramo)
+				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(comprarCdramo)
+				    	){
 			    		
 			    		
 			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();

@@ -175,7 +175,7 @@ Ext.onReady(function()
 	
 	_5_panelPri=Ext.create('Ext.panel.Panel',
 	{
-		renderTo  : '_5_divPri'
+		renderTo  : 'divEndDomCP'
 		,border   : 0
 		,defaults :
 		{
@@ -385,4 +385,4 @@ function _comboColoniasEnd(){
 //////funciones //////
 //////////////////////
 </script>
-<div id="_5_divPri" style="height:1000px;"></div>
+<div id="divEndDomCP" style="height:1000px;"></div>

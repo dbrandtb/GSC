@@ -353,8 +353,13 @@ Ext.onReady(function(){
             }*/
         ]
     });
-    _comboColoniasEnd().setEditable(true);//colonia
+    
     _codPosEnd().setReadOnly(true);
+    
+    _comboEstadoEnd().setReadOnly(true);
+    _comboMunicipioEnd().setReadOnly(true);
+    _comboColoniasEnd().setEditable(true);
+    
     
 //    if(!_p4_habilitaEdicion)//si es asegurado solo puede leer cp, estado y municipio
 //    {
@@ -432,7 +437,7 @@ Ext.onReady(function(){
             debug(resp);
             formPanelp4.loadRecord(resp);
             
-            Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
+            _comboColoniasEnd().getStore().load(
             {
                 params :
                 {
@@ -451,71 +456,6 @@ Ext.onReady(function(){
         }
     });
     
-    //////usa valores del padre (marcoEndosos.jsp) //////
-    if(false&&!esElContratanteP4)
-    {
-        var record = storePersonasp2.getAt(0);
-        if(true||record.get('estomador')==true)
-        {
-            Ext.define('LoaderFormp4',
-            {
-                extend:'Modelo1p4',
-                proxy:
-                {
-                    extraParams:
-                    {
-                        'smap1.pv_cdunieco_i'   : inputCduniecop4,
-                        'smap1.pv_cdramo_i'     : inputCdramop4,
-                        'smap1.pv_estado_i'     : inputEstadop4,
-                        'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-                        'smap1.pv_nmsituac_i'   : record.get('nmsituac'),
-                        'smap1.pv_cdperson_i'   : record.get('cdperson'),
-                        'smap1.pv_cdrol_i'      : '2',
-                        'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-                        'smap1.cdrfc'           : record.get('cdrfc'),
-                        'smap1.pv_cdtipsit_i'   : inputCdtipsit
-                    },
-                    type:'ajax',
-                    url : urlCargarp4,
-                    reader:
-                    {
-                        type:'json'
-                    }
-                }
-            });
-
-            var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
-            loaderFormp4.load(123, {
-                success: function(resp) {
-                    formPanelp4.getForm().setValues(
-                    {
-                        'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
-                        'smap1.CODPOSTAL':resp.data['smap1.CODPOSTAL'],
-                        'smap1.estado':resp.data['smap1.estado'],
-                        'smap1.Municipio':resp.data['smap1.Municipio'],
-                        'smap1.NMTELEFO':resp.data['smap1.NMTELEFO'],
-                        'smap1.CDCOLONI':resp.data['smap1.CDCOLONI'],
-                        'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
-                        'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
-                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
-                    });
-                    Ext.getCmp('coloniaId').getStore().load({
-                        params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
-                    });
-                },
-                failure:function()
-                {
-                    Ext.Msg.show({
-                        title:'Error',
-                        icon: Ext.Msg.ERROR,
-                        msg: 'Error al cargar',
-                        buttons: Ext.Msg.OK
-                    });
-                }
-            });
-        }
-    }
-    ////// usa valores del padre //////
     
     _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
