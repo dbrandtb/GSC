@@ -115,9 +115,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		
 			for(Map<String,String> endosoIt : listaEndosos){
 				
-				params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
-				params.put("param7" , endosoIt.get("NUMEND"));//numend
-		
 				//Se invoca servicio para obtener los datos del auto
 				try
 				{
@@ -125,10 +122,15 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					List<Map<String,String>>lista = null;
 					
 					if(cdramo.equalsIgnoreCase(Ramo.AUTOS_FRONTERIZOS.getCdramo())){
+						
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
 					}else if(cdramo.equalsIgnoreCase(Ramo.SERVICIO_PUBLICO.getCdramo())){
+						
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
 					}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
+						
+						params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
+						params.put("param7" , endosoIt.get("NUMEND"));//numend
 						lista = storedProceduresManager.procedureListCall(
 								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 					}
@@ -564,6 +566,27 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
 								
 								if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
+									
+									if(!endosoIt.get("TIPOEND").equalsIgnoreCase("E")){
+										LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
+									
+										paramsEnd.put("param1" , cdunieco);
+										paramsEnd.put("param2" , cdramo);
+										paramsEnd.put("param3" , estado);
+										paramsEnd.put("param4" , nmpoliza);
+										paramsEnd.put("param5" , nmsuplem);
+										paramsEnd.put("param6" , endosoIt.get("TIPOEND"));
+										paramsEnd.put("param7" , endosoIt.get("NUMEND"));
+										paramsEnd.put("param8" , polizaEmiRes.getEndoso());
+										
+										try {
+											listaEndosos = storedProceduresManager.procedureListCall(
+													ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
+										} catch (Exception e2) {
+											logger.error("Error al actualizar el numero de endoso.",e2);
+										}
+									}
+									
 									exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
 									
 									if(!exitoRecibosSigs){
@@ -807,47 +830,45 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			params.put("param5" , nmsuplem);
 			
 			datos = storedProceduresManager.procedureListCall(
-					ObjetoBD.OBTIENE_DATOS_CAMBIO_DOMICIL.getNombre(), params, null);
+					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
 			
 			
 		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil",e1);
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil para SIGS",e1);
 			return 0;
 		}	
 		
 		if(datos != null && !datos.isEmpty()){
 			Map<String,String> datosEnd = datos.get(0);
-			
-				try{
-					
-					HashMap<String, Object> params = new HashMap<String, Object>();
-//					params.put("vSucursal"  , datosEnd.get(key));
-//					params.put("vRamo"      , datosEnd.get(key));
-//					params.put("vPoliza"    , datosEnd.get(key));
-//					params.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get(key))?" " : datosEnd.get(key));
-//					params.put("vEndoso"    , datosEnd.get(key));
-//					params.put("vIdMotivo"  , datosEnd.get(key));
-//					params.put("vCalle"     , datosEnd.get(key));
-//					params.put("vNumero"    , datosEnd.get(key));
-//					params.put("vColonia"   , datosEnd.get(key));
-//					params.put("vTelefono1" , datosEnd.get(key));
-//					params.put("vTelefono2" , datosEnd.get(key));
-//					params.put("vTelefono3" , datosEnd.get(key));
-					
-					Integer res = autosDAOSIGS.insertaReciboAuto(params);
-					
-					logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
-					
-					if(res == null || res == 0){
-						logger.debug("Endoso domicilio no exitoso");
-					}else{
-						numeroEndosoRes = res.intValue();
-					}
-					
-				} catch (Exception e){
-					logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+//				paramsEnd.put("vSucursal"  , datosEnd.get(key));
+//				paramsEnd.put("vRamo"      , datosEnd.get(key));
+//				paramsEnd.put("vPoliza"    , datosEnd.get(key));
+//				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get(key))?" " : datosEnd.get(key));
+//				paramsEnd.put("vEndoso"    , datosEnd.get(key));
+//				paramsEnd.put("vIdMotivo"  , datosEnd.get(key));
+//				paramsEnd.put("vCalle"     , datosEnd.get(key));
+//				paramsEnd.put("vNumero"    , datosEnd.get(key));
+//				paramsEnd.put("vColonia"   , datosEnd.get(key));
+//				paramsEnd.put("vTelefono1" , datosEnd.get(key));
+//				paramsEnd.put("vTelefono2" , datosEnd.get(key));
+//				paramsEnd.put("vTelefono3" , datosEnd.get(key));
+				
+				Integer res = autosDAOSIGS.insertaReciboAuto(paramsEnd);
+				
+				logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso domicilio no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
 				}
-			
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+			}
 			
 		}else{
 			logger.warn("Aviso, No se tienen datos de Cambio Domicil");
