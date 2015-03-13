@@ -1771,89 +1771,92 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"0" //nmsuplem
 						,"V" //status
 						,tvalopol);
+			}
 				
-				setCheckpoint("Insertando situaciones y maestro de situaciones");
-				for(Map<String,String>tvalositIte:tvalosit)
+			setCheckpoint("Insertando situaciones y maestro de situaciones");
+			for(Map<String,String>tvalositIte:tvalosit)
+			{
+				cotizacionDAO.movimientoMpolisit(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,tvalositIte.get("nmsituac")
+						,"0"                       //nmsuplem
+						,"V"                       //status
+						,tvalositIte.get("cdtipsit")
+						,null                      //swreduci
+						,"1"                       //cdagrupa
+						,"0"                       //cdestado
+						,renderFechas.parse(feini) //fefecsit
+						,renderFechas.parse(feini) //fecharef
+						,null                      //cdgrupo
+						,null                      //nmsituaext
+						,null                      //nmsitaux
+						,null                      //nmsbsitext
+						,tvalositIte.get("cdplan") //cdplan
+						,"30"                      //cdasegur
+						,"I"                       //accion
+						);
+				
+				Map<String,String>valores=new HashMap<String,String>();
+				for(Entry<String,String>valosit:tvalositIte.entrySet())
 				{
-					cotizacionDAO.movimientoMpolisit(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,tvalositIte.get("nmsituac")
-							,"0"                       //nmsuplem
-							,"V"                       //status
-							,tvalositIte.get("cdtipsit")
-							,null                      //swreduci
-							,"1"                       //cdagrupa
-							,"0"                       //cdestado
-							,renderFechas.parse(feini) //fefecsit
-							,renderFechas.parse(feini) //fecharef
-							,null                      //cdgrupo
-							,null                      //nmsituaext
-							,null                      //nmsitaux
-							,null                      //nmsbsitext
-							,tvalositIte.get("cdplan") //cdplan
-							,"30"                      //cdasegur
-							,"I"                       //accion
-							);
-					
-					Map<String,String>valores=new HashMap<String,String>();
-					for(Entry<String,String>valosit:tvalositIte.entrySet())
+					String key = valosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
-						String key = valosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							valores.put(key.substring("parametros.pv_".length()),valosit.getValue());
-						}
+						valores.put(key.substring("parametros.pv_".length()),valosit.getValue());
 					}
-					
-					cotizacionDAO.movimientoTvalosit(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,tvalositIte.get("nmsituac")
-							,"0"               //nmsuplem
-							,"V"               //status
-							,tvalositIte.get("cdtipsit")
-							,valores
-							,"I"               //accion
-							);
 				}
 				
-				setCheckpoint("Borrando situaciones base anteriores");
-				cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
+				cotizacionDAO.movimientoTvalosit(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,tvalositIte.get("nmsituac")
+						,"0"               //nmsuplem
+						,"V"               //status
+						,tvalositIte.get("cdtipsit")
+						,valores
+						,"I"               //accion
+						);
+			}
 				
-				setCheckpoint("Inserando situaciones base");
-				for(Map<String,String>baseTvalositIte:baseTvalosit)
+			setCheckpoint("Borrando situaciones base anteriores");
+			cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
+		
+			setCheckpoint("Inserando situaciones base");
+			for(Map<String,String>baseTvalositIte:baseTvalosit)
+			{
+				Map<String,String>valores=new HashMap<String,String>();
+				for(Entry<String,String>basvalosit:baseTvalositIte.entrySet())
 				{
-					Map<String,String>valores=new HashMap<String,String>();
-					for(Entry<String,String>basvalosit:baseTvalositIte.entrySet())
+					String key = basvalosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
-						String key = basvalosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							valores.put(key.substring("parametros.pv_".length()),basvalosit.getValue());
-						}
+						valores.put(key.substring("parametros.pv_".length()),basvalosit.getValue());
 					}
-					
-					cotizacionDAO.guardarTbasvalsit(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,String.valueOf(baseTvalositIte.get("nmsituac")) //nmsituac
-							,"0"               //nmsuplem
-							,"V"               //status
-							,baseTvalositIte.get("cdtipsit")
-							,valores);
 				}
 				
+				cotizacionDAO.guardarTbasvalsit(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,String.valueOf(baseTvalositIte.get("nmsituac")) //nmsituac
+						,"0"               //nmsuplem
+						,"V"               //status
+						,baseTvalositIte.get("cdtipsit")
+						,valores);
+			}
+			
+			if(noTarificar==false)
+			{
 				setCheckpoint("Borrando configuracion de situaciones anteriores");
 				cotizacionDAO.borrarTconvalsit(cdunieco, cdramo, estado, nmpoliza);
 				
@@ -2382,19 +2385,37 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.setSlist1(Utilerias.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
 			
 			setCheckpoint("Recuperando incisos base");
-			List<Map<String,String>>incisosBase=consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			List<Map<String,String>>incisosBase    = consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			Map<String,String>incisoPoliza         = new HashMap<String,String>();
+			List<Map<String,String>>incisosBaseAux = new ArrayList<Map<String,String>>();
 			for(Map<String,String>incisoBase:incisosBase)
 			{
-				String nmsituac = incisoBase.get("NMSITUAC");
+				String nmsituac    = incisoBase.get("NMSITUAC");
+				String cdtipsitAnt = incisoBase.get("CDTIPSIT");
 				incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
-				incisoBase.put("cdtipsit" , incisoBase.get("CDTIPSIT"));
+				incisoBase.put("CDTIPSIT" , cdtipsitAnt);
+				incisoBase.put("cdtipsit" , cdtipsitAnt);
 				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
 				incisoBase.put("nmsituac" , incisoBase.get("NMSITUAC"));
+				if(incisoBase.get("CDTIPSIT").equals("XPOLX"))
+				{
+					logger.debug(Utilerias.join("Es XPOLX",incisoBase));
+					for(Entry<String,String>en:incisoBase.entrySet())
+					{
+						incisoPoliza.put("parametros.pv_"+en.getKey().toLowerCase(),en.getValue());
+					}
+				}
+				else
+				{
+					logger.debug(Utilerias.join("No es XPOLX",incisoBase));
+					incisosBaseAux.add(incisoBase);
+				}
 			}
+			incisosBase=incisosBaseAux;
 			resp.setSlist2(Utilerias.concatenarParametros(incisosBase,false));
 			
 			setCheckpoint("Recuperando datos generales");
-			resp.getSmap().putAll(cotizacionDAO.cargarTvalosit(cdunieco,cdramo,estado,nmpoliza,"1"));
+			resp.getSmap().putAll(incisoPoliza);
 			
 			String cdperson = "";
 			String cdideper = "";
