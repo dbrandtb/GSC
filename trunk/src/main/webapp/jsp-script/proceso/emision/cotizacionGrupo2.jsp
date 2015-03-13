@@ -79,6 +79,7 @@ var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         a
 var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                    />';
 var _p25_urlPantallaClausulasPoliza     = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 var _p25_urlRecuperacionSimpleLista     = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
+var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -86,6 +87,13 @@ var _p25_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+sma
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
+
+//Para la pantalla de agentes
+var inputCdunieco = _p25_smap1.cdunieco;
+var inputCdramo   = _p25_smap1.cdramo;
+var inputEstado   = _p25_smap1.estado;
+var inputNmpoliza = _p25_smap1.nmpoliza;
+//Para la pantalla de agentes
 
 var _p25_TARIFA_LINEA       = 1;
 var _p25_TARIFA_MODIFICADA  = 2;
@@ -4121,6 +4129,28 @@ function _p25_crearVentanaClausulas()
             }
         }
     }).show());
+}
+
+function _p25_agentes()
+{
+    debug('>_p25_agentes');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'AGENTES'
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 800
+        ,height      : 400
+        ,autoScroll  : true
+        ,closeAction : 'destroy'
+        ,loader      :
+        {
+            url       : _p25_urlPantallaAgentes
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show());
+    debug('<_p25_agentes');
 }
 ////// funciones //////
 </script>
