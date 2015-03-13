@@ -25,6 +25,11 @@ var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"       
 var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                 />';
 var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                     />';
 var _p30_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5" />';
+var _p30_urlViewDoc                        = '<s:url namespace="/documentos"      action="descargaDocInline"                  />';
+var _p30_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                        />';
+
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
 
 ////// variables //////
@@ -51,6 +56,8 @@ var _p30_storeVersionesRamo5 = null;
 var _p30_storeUsosRamo5      = null;
 var _p30_storePlanesRamo5    = null;
 var _p30_storeCargasRamo5    = null;
+
+var _p30_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.flot.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 ////// variables //////
 
 ////// dinamicos //////
@@ -3472,7 +3479,7 @@ function _p30_cotizar(sinTarificar)
                                         ,text     : 'Enviar'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
                                         ,disabled : true
-                                        /*,handler  : _p28_enviar*/
+                                        ,handler  : _p30_enviar
                                     }
                                     ,{
                                         itemId    : '_p30_botonImprimir'
@@ -3480,7 +3487,7 @@ function _p30_cotizar(sinTarificar)
                                         ,text     : 'Imprimir'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                         ,disabled : true
-                                        /*,handler  : _p28_imprimir*/
+                                        ,handler  : _p30_imprimir
                                     }
                                     ,{
                                         itemId   : '_p30_botonCesion'
@@ -3702,6 +3709,7 @@ function _p30_cargarClic()
                         _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
                     }
                     var datosGenerales = new _p30_modelo(json.smap1);
+                    debug('datosGenerales:',datosGenerales);
                     var cdtipsitDatos  = datosGenerales.raw['parametros.pv_cdtipsit'];
                     debug('cdtipsitDatos:',cdtipsitDatos);
                     
@@ -4010,8 +4018,8 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
     debug('columnName',columnName);
     if(columnName=='DSPERPAG')
     {
-        /*_fieldById('_p30_botonImprimir').setDisabled(true);*/
-        /*_fieldById('_p30_botonEnviar').setDisabled(true);*/
+        _fieldById('_p30_botonImprimir').setDisabled(true);
+        _fieldById('_p30_botonEnviar').setDisabled(true);
         _fieldById('_p30_botonDetalles').setDisabled(true);
         _fieldById('_p30_botonCoberturas').setDisabled(true);
         _fieldById('_p30_botonComprar').setDisabled(true);
@@ -4023,8 +4031,8 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _p30_selectedTarifa = record;
         debug('_p30_selectedTarifa:',_p30_selectedTarifa);
         
-        /*_fieldById('_p30_botonImprimir').setDisabled(false);*/
-        /*_fieldById('_p30_botonEnviar').setDisabled(false);*/
+        _fieldById('_p30_botonImprimir').setDisabled(false);
+        _fieldById('_p30_botonEnviar').setDisabled(false);
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
         _fieldById('_p30_botonComprar').setDisabled(false);
@@ -4771,6 +4779,169 @@ function _p30_inicializarTatripol(itemsTatripol)
             tatriItem.select('1');
         }
     }
+}
+
+function _p30_imprimir()
+{
+    debug('>_p30_imprimir');
+    var urlRequestImpCotiza = _p30_urlImprimirCotiza
+            + '?p_unieco='      + _p30_smap1.cdunieco
+            + '&p_ramo='        + _p30_smap1.cdramo
+            + '&p_subramo='     + _p30_smap1.cdtipsit
+            + '&p_estado=W'
+            + '&p_poliza='      + _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+            + '&p_suplem=0'
+            + '&p_perpag='      + _p30_selectedTarifa.get('CDPERPAG')
+            + '&p_ntramite='    + _p30_smap1.ntramite
+            + '&p_cdusuari='    + _p30_smap1.cdusuari
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p30_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p30_reporteCotizacion
+            + "&paramform=no";
+    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p30_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p30_imprimir');
+}
+
+function _p30_enviar()
+{
+    debug('>_p30_enviar');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Enviar cotizaci&oacute;n'
+        ,width       : 550
+        ,modal       : true
+        ,height      : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items       :
+        [
+            {
+                xtype       : 'textfield'
+                ,itemId     : '_p30_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text     : 'Enviar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (_fieldById('_p30_idInputCorreos').getValue().length > 0
+                            &&_fieldById('_p30_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        me.up().up().setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : _p30_urlEnviarCorreo
+                            ,params :
+                            {
+                                to          : _fieldById('_p30_idInputCorreos').getValue()
+                                ,urlArchivo : _p30_urlImprimirCotiza
+                                             + '?p_unieco='      + _p30_smap1.cdunieco
+                                             + '&p_ramo='        + _p30_smap1.cdramo
+                                             + '&p_subramo='     + _p30_smap1.cdtipsit
+                                             + '&p_estado=W'
+                                             + '&p_poliza='      + _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                                             + '&p_suplem=0'
+                                             + '&p_perpag='      + _p30_selectedTarifa.get('CDPERPAG')
+                                             + '&p_ntramite='    + _p30_smap1.ntramite
+                                             + '&p_cdusuari='    + _p30_smap1.cdusuari
+                                             + '&destype=cache'
+                                             + "&desformat=PDF"
+                                             + "&userid="        + _p30_reportsServerUser
+                                             + "&ACCESSIBLE=YES"
+                                             + "&report="        + _p30_reporteCotizacion
+                                             + "&paramform=no",
+                                nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
+                            },
+                            callback : function(options,success,response)
+                            {
+                                me.up().up().setLoading(false);
+                                if (success)
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    if (json.success == true)
+                                    {
+                                        me.up().up().destroy();
+                                        centrarVentanaInterna(Ext.Msg.show(
+                                        {
+                                            title : 'Correo enviado'
+                                            ,msg : 'El correo ha sido enviado'
+                                            ,buttons : Ext.Msg.OK
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        mensajeError('Error al enviar');
+                                    }
+                                }
+                                else
+                                {
+                                    errorComunicacion();
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                    }
+                }
+            }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show());
+    _fieldById('_p30_idInputCorreos').focus();
+    debug('<_p30_enviar');
 }
 ////// funciones //////
 </script>
