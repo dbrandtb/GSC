@@ -18,6 +18,7 @@ var inputCdpersonp4        = '<s:property value="smap1.CDPERSON" />';
 var inputCdrfcp4           = '<s:property value="smap1.CDRFC" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.CDTIPSIT" />';
 var inputNtramite          = '<s:property value="smap1.NTRAMITE" />';
+var tipoFlotilla           = '<s:property value="smap1.TIPOFLOT" />';
 var inputFechaInicio       = new Date();
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
@@ -280,6 +281,7 @@ Ext.onReady(function(){
                                 'smap1.pv_nmsituac' : '1',
                                 'smap1.pv_cdperson' : inputCdpersonp4,
                                 'smap1.pv_cdrol'    : '1',
+                                'smap1.TIPOFLOT'    : tipoFlotilla,
                                 'smap2.cdtipsit'    : inputCdtipsit
                             },
                             success:function(response,opts)
@@ -358,7 +360,7 @@ Ext.onReady(function(){
     
     _comboEstadoEnd().setReadOnly(true);
     _comboMunicipioEnd().setReadOnly(true);
-    _comboColoniasEnd().setEditable(true);
+    _comboColoniasEnd().setReadOnly(true);
     
     
 //    if(!_p4_habilitaEdicion)//si es asegurado solo puede leer cp, estado y municipio
@@ -417,7 +419,8 @@ Ext.onReady(function(){
                 'smap1.pv_cdrol_i'      : '1',
                 'smap1.nombreAsegurado' : '',
                 'smap1.cdrfc'           : inputCdrfcp4,
-                'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
+                'smap1.domGeneral'      : 'S'
             },
             type:'ajax',
             url : urlCargarp4,
@@ -461,6 +464,8 @@ Ext.onReady(function(){
     _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    Ext.ComponentQuery.query('[name=smap1.NMTELEFO]')[Ext.ComponentQuery.query('[name=smap1.NMTELEFO]').length-1].hide();
     
     /*//////////////////*/
     ////// cargador //////

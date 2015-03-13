@@ -20,6 +20,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -805,9 +806,13 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			map.put("NMNUMERO" , rs.getString("NMNUMERO"));
 			map.put("NMNUMINT" , rs.getString("NMNUMINT"));
 			*/
-			smap1=kernelManager.obtenerDomicilio(smap1);
 			
-			
+			if(StringUtils.isNotBlank(smap1.get("domGeneral")) && Constantes.SI.equalsIgnoreCase(smap1.get("domGeneral"))){
+				smap1=kernelManager.obtenerDomicilioGeneral(smap1);
+			}else{
+				smap1=kernelManager.obtenerDomicilio(smap1);
+			}
+				
 			success=true;
 		}
 		catch(Exception ex)

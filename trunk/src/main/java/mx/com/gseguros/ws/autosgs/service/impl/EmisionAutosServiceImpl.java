@@ -1,6 +1,5 @@
 package mx.com.gseguros.ws.autosgs.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,8 +14,6 @@ import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.TipoSituacion;
-import mx.com.gseguros.portal.reclamoExpress.dao.ReclamoExpressDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub;
@@ -580,21 +577,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 										paramsEnd.put("param8" , polizaEmiRes.getEndoso());
 										
 										try {
-											listaEndosos = storedProceduresManager.procedureListCall(
+											storedProceduresManager.procedureVoidCall(
 													ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
 										} catch (Exception e2) {
 											logger.error("Error al actualizar el numero de endoso.",e2);
 										}
 									}
 									
-									exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
-									
-									if(!exitoRecibosSigs){
-										emisionAutoRes.setExitoRecibos(false);
-										logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
-									}else{
-										emisionAutoRes.setExitoRecibos(true);
-									}
 								}
 							}
 							
@@ -612,6 +601,15 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				}
 		
 		
+			}
+			
+			exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
+			
+			if(!exitoRecibosSigs){
+				emisionAutoRes.setExitoRecibos(false);
+				logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
+			}else{
+				emisionAutoRes.setExitoRecibos(true);
 			}
 		}
 		return emisionAutoRes;
@@ -843,18 +841,18 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			try{
 				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
-//				paramsEnd.put("vSucursal"  , datosEnd.get(key));
-//				paramsEnd.put("vRamo"      , datosEnd.get(key));
-//				paramsEnd.put("vPoliza"    , datosEnd.get(key));
-//				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get(key))?" " : datosEnd.get(key));
-//				paramsEnd.put("vEndoso"    , datosEnd.get(key));
-//				paramsEnd.put("vIdMotivo"  , datosEnd.get(key));
-//				paramsEnd.put("vCalle"     , datosEnd.get(key));
-//				paramsEnd.put("vNumero"    , datosEnd.get(key));
-//				paramsEnd.put("vColonia"   , datosEnd.get(key));
-//				paramsEnd.put("vTelefono1" , datosEnd.get(key));
-//				paramsEnd.put("vTelefono2" , datosEnd.get(key));
-//				paramsEnd.put("vTelefono3" , datosEnd.get(key));
+				paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
+				paramsEnd.put("vRamo"      , datosEnd.get("Ramo"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("Poliza"));
+				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
+				paramsEnd.put("vEndoso"    , datosEnd.get("Endoso"));
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("IdMotivo"));
+				paramsEnd.put("vCalle"     , datosEnd.get("Calle"));
+				paramsEnd.put("vNumero"    , datosEnd.get("Numero"));
+				paramsEnd.put("vColonia"   , datosEnd.get("Colonia"));
+				paramsEnd.put("vTelefono1" , datosEnd.get("Telefono1"));
+				paramsEnd.put("vTelefono2" , datosEnd.get("Telefono2"));
+				paramsEnd.put("vTelefono3" , datosEnd.get("Telefono3"));
 				
 				Integer res = autosDAOSIGS.insertaReciboAuto(paramsEnd);
 				
@@ -864,6 +862,24 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					logger.debug("Endoso domicilio no exitoso");
 				}else{
 					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.ACTUALIZA_ENDB_DE_SIGS.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil para SIGS",e1);
+						return 0;
+					}	
 				}
 				
 			} catch (Exception e){

@@ -219,6 +219,7 @@ Ext.onReady(function()
             ,'smap1.nombreAsegurado'  : ''
             ,'smap1.cdrfc'            : _5_smap1.cdrfc
             ,'smap1.pv_cdtipsit_i'    : _5_smap1.CDTIPSIT
+            ,'smap1.domGeneral'      : 'S'
 		}
 	    ,success : function(response)
 	    {
@@ -374,6 +375,9 @@ function _5_confirmar(boton)
 		});
 	}
 }
+
+
+Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].hide();
 
 function _codPosEnd(){
     return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];
