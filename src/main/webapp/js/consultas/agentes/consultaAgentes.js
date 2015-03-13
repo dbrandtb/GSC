@@ -79,20 +79,21 @@ Ext.onReady(function() {
              totalClaveAgentes= Ext.create('Ext.form.field.ComboBox',
             {
                 fieldLabel : 'Agente'
-                ,allowBlank: false
-                ,displayField : 'value'                
-                ,id:'pv_cdagente_i'
+                ,displayField : 'value'
                 ,name      : 'pv_cdagente_i'
-                ,labelWidth: 170
-                ,width:         500
+				,width:         500
                 ,valueField   : 'key'
-                ,forceSelection : false
+                ,forceSelection : true
                 ,matchFieldWidth: false
-                ,minChars  : 3
                 ,queryMode :'remote'
                 ,queryParam: 'params.agente'
+                ,minChars  : 3
                 ,store : storeDatosAgente
                 ,triggerAction: 'all'
+                ,hideTrigger:true
+                ,allowBlank: false
+                ,id:'pv_cdagente_i'
+                ,labelWidth: 170
             }),
             
             //INFORMACION PARA EL TIPO DE AGENTE
