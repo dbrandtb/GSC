@@ -24,4 +24,7 @@ public interface EmisionAutosService {
 	
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem);
+
+	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
 }
