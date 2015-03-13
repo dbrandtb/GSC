@@ -3298,7 +3298,7 @@ function _p30_cotizar(sinTarificar)
                                                 if(me.up('form').getForm().isValid())
                                                 {
                                                     me.up('window').hide();
-                                                    _p30_cotizar();
+                                                    _p30_cotizar(true);
                                                 }
                                                 else
                                                 {
