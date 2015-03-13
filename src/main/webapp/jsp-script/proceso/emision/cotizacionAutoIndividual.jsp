@@ -2382,7 +2382,7 @@ function _p28_imprimir()
 function _p28_enviar()
 {
     debug('>_p28_enviar');
-    Ext.create('Ext.window.Window',
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
         title        : 'Enviar cotizaci&oacute;n'
         ,width       : 550
@@ -2485,7 +2485,7 @@ function _p28_enviar()
                 }
             }
         ]
-    }).show();
+    }).show());
     _fieldById('_p28_idInputCorreos').focus();
     debug('<_p28_enviar');
 }
