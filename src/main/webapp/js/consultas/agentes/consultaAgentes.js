@@ -149,8 +149,9 @@ Ext.onReady(function() {
             
     /*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
     ventanaGrid= Ext.create('Ext.window.Window', {
-         renderTo: document.body,
+         //renderTo: document.body,
            title: 'P&Oacute;LIZA - AGENTE',
+           modal:true,
            height: 230,
            closeAction: 'hide',
            items:[panelModificacionInsercion],
@@ -315,7 +316,8 @@ Ext.onReady(function() {
                 ,collapsible   : true
                 ,titleCollapse : true
                 ,style         : 'margin:5px'
-                ,height        : 400
+                ,minHeight     : 200
+                ,maxHeight     : 400
                 ,columns       :
                 [                         
                     {    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
@@ -524,7 +526,7 @@ Ext.onReady(function() {
         if(bandera == 0)
         {
             panelModificacionInsercion.getForm().reset();
-            ventanaGrid.show();
+            centrarVentanaInterna(ventanaGrid.show());
         }
         else
         {
@@ -540,7 +542,7 @@ Ext.onReady(function() {
                 {
                     var json=Ext.decode(response.responseText);
                     claveAgente = json.lista[0].value;
-                    ventanaGrid.show(); 
+                    centrarVentanaInterna(ventanaGrid.show()); 
                     
                 },
                 failure : function ()
