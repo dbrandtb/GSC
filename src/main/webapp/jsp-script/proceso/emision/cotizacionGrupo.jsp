@@ -83,6 +83,7 @@ var _p21_urlRecuperarProspecto           = '<s:url namespace="/emision"         
 var _p21_urlPantallaClausulasPoliza      = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 var _p21_urlRecuperacionSimple           = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
 var _p21_urlRecuperacionSimpleLista      = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
+var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -131,6 +132,13 @@ var _p21_arrayNombresExtrreno =
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
+
+//Para la pantalla de agentes
+var inputCdunieco = _p21_smap1.cdunieco;
+var inputCdramo   = _p21_smap1.cdramo;
+var inputEstado   = _p21_smap1.estado;
+var inputNmpoliza = _p21_smap1.nmpoliza;
+//Para la pantalla de agentes
 
 var _p21_ntramite = Ext.isEmpty(_p21_smap1.ntramite) ? false : _p21_smap1.ntramite;
 debug('_p21_ntramite:',_p21_ntramite);
@@ -4070,6 +4078,28 @@ function _p21_imprimir()
         }
     }).show());
     debug('<_p21_imprimir');
+}
+
+function _p21_agentes()
+{
+    debug('>_p21_agentes');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'AGENTES'
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 800
+        ,height      : 400
+        ,autoScroll  : true
+        ,closeAction : 'destroy'
+        ,loader      :
+        {
+            url       : _p21_urlPantallaAgentes
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show());
+    debug('<_p21_agentes');
 }
 
 function _p21_revisarAseguradosClic(grid,rowIndex)
