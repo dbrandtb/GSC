@@ -3191,6 +3191,23 @@ function _p30_cotizar(sinTarificar)
             json.slist1.push(record.data);
         });
         
+        //crear record con los valores del formulario y el formulario oculto
+        debug('storeTvalosit.getAt(0).data:',storeTvalosit.getAt(0).data);
+        var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
+        debug('recordTvalositPoliza:',recordTvalositPoliza.data);
+        recordTvalositPoliza.set('cdtipsit','XPOLX');
+        for(var prop in formValues)
+        {
+            recordTvalositPoliza.set(prop,formValues[prop]);
+        }
+        for(var att in valuesFormOculto)
+        {
+            recordTvalositPoliza.set(att,valuesFormOculto[att]);
+        }
+        debug('recordTvalositPoliza final:',recordTvalositPoliza.data);
+        json.slist2.push(recordTvalositPoliza.data);
+        //crear record con los valores del formulario y el formulario oculto
+        
         debug('>>> json a enviar:',json);
         
         var panelpri = _fieldById('_p30_panelpri');
@@ -3690,7 +3707,7 @@ function _p30_cargarClic()
                     
                     if(_p30_smap1.cdramo+'x'=='5x')
                     {
-                        var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                        var clienteNuevoName = _p30_tatrisitFullForms[_p30_smap1.cdtipsit].down('[fieldLabel*=CLIENTE NUEVO]').name;
                         debug('clienteNuevoName:',clienteNuevoName);
                         datosGenerales.set(clienteNuevoName,'S');
                     }
@@ -3787,7 +3804,7 @@ function _p30_cargarClic()
                                     var recordMapeado = new _p30_modelo();
                                     if(_p30_smap1.cdramo=='5')
                                     {
-                                        var clienteNuevoName = _p30_tatrisitFullForms[cdtipsitDatos].down('[fieldLabel*=CLIENTE NUEVO]').name;
+                                        var clienteNuevoName = _p30_tatrisitFullForms[_p30_smap1.cdtipsit].down('[fieldLabel*=CLIENTE NUEVO]').name;
                                         debug('clienteNuevoName:',clienteNuevoName);
                                         datosGenerales.set(clienteNuevoName,'S');
                                     }
