@@ -27,6 +27,49 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 	private static Logger logger = Logger.getLogger(AutosDAOSIGSImpl.class);
 	
 	@Override
+	public Integer cambioDomicilioCP(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new CambioDomicilioCP(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class CambioDomicilioCP extends StoredProcedure{
+		protected CambioDomicilioCP(DataSource dataSource){
+			super(dataSource, "sp_ActualizaDirCliente");
+			
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
+			declareParameter(new SqlParameter("vCPostal", Types.INTEGER));
+			declareParameter(new SqlParameter("vCveEdo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vDesMun", Types.VARCHAR));
+			declareParameter(new SqlParameter("vMunCepomex", Types.SMALLINT));
+			declareParameter(new SqlParameter("vColonia", Types.VARCHAR));
+			declareParameter(new SqlParameter("vTelefono", Types.VARCHAR));
+			declareParameter(new SqlParameter("vCalle", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumero", Types.VARCHAR));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+	
+	
+	@Override
 	public Integer endosoDomicilio(Map<String, Object> params) throws Exception {
 		Integer resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new EndosoDomicilio(getDataSource()), params);

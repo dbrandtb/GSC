@@ -5926,109 +5926,109 @@ public class EndososAction extends PrincipalCoreAction
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
 				 */
 				
-					
-//				String parametros = null;
-//				
-//				String urlCaratula = null;
-//				if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
-//			    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
-//			    	){
-//					urlCaratula = this.getText("caratula.impresion.autos.url");
-//				}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-//					urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
-//				}
-//				
-//				if("C".equalsIgnoreCase(tipoGrupoInciso)){
-//					urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
-//				}
-//				
-//				String urlRecibo = this.getText("recibo.impresion.autos.url");
-//				String urlCaic = this.getText("caic.impresion.autos.url");
-//				String urlAp = this.getText("ap.impresion.autos.url");
-//				
-//				String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
-//				String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+				String tipoGrupoInciso = smap1.get("TIPOFLOT");
+				String parametros = null;
+				
+				String urlCaratula = null;
+				if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+			    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
+			    	){
+					urlCaratula = this.getText("caratula.impresion.autos.url");
+				}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
+					urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+				}
+				
+				if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+					urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+				}
+				
+				String urlRecibo = this.getText("recibo.impresion.autos.url");
+				String urlCaic = this.getText("caic.impresion.autos.url");
+				String urlAp = this.getText("ap.impresion.autos.url");
+				
+				String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+				String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
 				
 				
 				/**
 				 * Para Caratula
 				 */
-//				parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
-//				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-//				
-//				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-//				paramsR.put("pv_cdunieco_i", cdunieco);
-//				paramsR.put("pv_cdramo_i",   cdramo);
-//				paramsR.put("pv_estado_i",   "M");
-//				paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
-//				paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
-//				paramsR.put("pv_feinici_i",  new Date());
-//				paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-//				paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-//				paramsR.put("pv_nmsolici_i", nmpoliza);
-//				paramsR.put("pv_ntramite_i", ntramite);
-//				paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
-//				paramsR.put("pv_swvisible_i", Constantes.SI);
-//				
-//				kernelManager.guardarArchivo(paramsR);
-//				
-//				/**
-//				 * Para Recibo 1
-//				 */
-//				parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",0,0,,1";
-//				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-//				
-//				paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-//				paramsR.put("pv_dsdocume_i", "Recibo 1");
-//				
-//				kernelManager.guardarArchivo(paramsR);
-//				
-//				/**
-//				 * Para AP inciso 1
-//				 */
-//				parametros = "?14,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
-//				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-//				
-//				paramsR.put("pv_cddocume_i", urlAp + parametros);
-//				paramsR.put("pv_dsdocume_i", "AP");
-//				
-//				kernelManager.guardarArchivo(paramsR);
-//				
-//				/**
-//				 * Para CAIC inciso 1
-//				 */
-//				parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-//				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-//				
-//				paramsR.put("pv_cddocume_i", urlCaic + parametros);
-//				paramsR.put("pv_dsdocume_i", "CAIC");
-//				
-//				kernelManager.guardarArchivo(paramsR);
-//				
-//				if("C".equalsIgnoreCase(tipoGrupoInciso)){
-//					/**
-//					 * Para Incisos Flotillas
-//					 */
-//					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
-//					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-//					
-//					paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-//					paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
-//					
-//					kernelManager.guardarArchivo(paramsR);
-//					
-//					/**
-//					 * Para Tarjeta Identificacion
-//					 */
-//					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-//					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-//					
-//					paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-//					paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
-//					
-//					kernelManager.guardarArchivo(paramsR);
-//					
-//				}
+				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+				
+				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+				paramsR.put("pv_cdunieco_i", cdunieco);
+				paramsR.put("pv_cdramo_i",   cdramo);
+				paramsR.put("pv_estado_i",   "M");
+				paramsR.put("pv_nmpoliza_i", nmpoliza);
+				paramsR.put("pv_nmsuplem_i", nmsuplem);
+				paramsR.put("pv_feinici_i",  new Date());
+				paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+				paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+				paramsR.put("pv_nmsolici_i", nmpoliza);
+				paramsR.put("pv_ntramite_i", ntramite);
+				paramsR.put("pv_tipmov_i",   TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup());
+				paramsR.put("pv_swvisible_i", Constantes.SI);
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para Recibo 1
+				 */
+				parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
+				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+				paramsR.put("pv_dsdocume_i", "Recibo 1");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para AP inciso 1
+				 */
+				parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
+				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlAp + parametros);
+				paramsR.put("pv_dsdocume_i", "AP");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para CAIC inciso 1
+				 */
+				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
+				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlCaic + parametros);
+				paramsR.put("pv_dsdocume_i", "CAIC");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+					/**
+					 * Para Incisos Flotillas
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+					paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Tarjeta Identificacion
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
+					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+					paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+				}
 				
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -7569,6 +7569,114 @@ public class EndososAction extends PrincipalCoreAction
 						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 					}
+					
+					/**
+					 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+					 */
+					
+					String tipoGrupoInciso = smap1.get("TIPOFLOT");
+					String parametros = null;
+					
+					String urlCaratula = null;
+					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
+				    	){
+						urlCaratula = this.getText("caratula.impresion.autos.url");
+					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+					}
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+					}
+					
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					
+					
+					/**
+					 * Para Caratula
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i",   cdramo);
+					paramsR.put("pv_estado_i",   "M");
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i",  new Date());
+					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					paramsR.put("pv_nmsolici_i", nmpoliza);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i",   TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup());
+					paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Recibo 1
+					 */
+					parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
+					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo 1");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para AP inciso 1
+					 */
+					parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
+					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlAp + parametros);
+					paramsR.put("pv_dsdocume_i", "AP");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						/**
+						 * Para Incisos Flotillas
+						 */
+						parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para Tarjeta Identificacion
+						 */
+						parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
+						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+					}
 				}
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -7893,6 +8001,114 @@ public class EndososAction extends PrincipalCoreAction
 						success = false;
 						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
+					}
+					
+					/**
+					 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+					 */
+					
+					String tipoGrupoInciso = smap1.get("TIPOFLOT");
+					String parametros = null;
+					
+					String urlCaratula = null;
+					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
+				    	){
+						urlCaratula = this.getText("caratula.impresion.autos.url");
+					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+					}
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+					}
+					
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					
+					
+					/**
+					 * Para Caratula
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i",   cdramo);
+					paramsR.put("pv_estado_i",   "M");
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i",  new Date());
+					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					paramsR.put("pv_nmsolici_i", nmpoliza);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i",   TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup());
+					paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Recibo 1
+					 */
+					parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
+					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo 1");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para AP inciso 1
+					 */
+					parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
+					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlAp + parametros);
+					paramsR.put("pv_dsdocume_i", "AP");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					paramsR.put("pv_dsdocume_i", "CAIC");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						/**
+						 * Para Incisos Flotillas
+						 */
+						parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para Tarjeta Identificacion
+						 */
+						parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
+						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
 					}
 				}
 	   			
