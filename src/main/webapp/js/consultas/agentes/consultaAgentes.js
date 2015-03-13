@@ -107,8 +107,9 @@ Ext.onReady(function() {
                 ,labelWidth: 170
                 ,width:500
                 ,valueField   : 'key'
+                ,editable   : false
                 ,forceSelection : false
-                ,matchFieldWidth: false
+                //,matchFieldWidth: false
                 ,queryMode :'local'
                 ,store : storeTiposAgente
                 ,triggerAction: 'all'
