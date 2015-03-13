@@ -1080,7 +1080,7 @@ function _p28_cotizar(sinTarificar)
                                                 if(me.up('form').getForm().isValid())
                                                 {
                                                     me.up('window').hide();
-                                                    _p28_cotizar();
+                                                    _p28_cotizar(true);
                                                 }
                                                 else
                                                 {
