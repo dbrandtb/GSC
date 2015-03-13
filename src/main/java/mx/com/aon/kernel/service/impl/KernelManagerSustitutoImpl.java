@@ -769,6 +769,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto obtenerDomicilio response map: "+map);
         return map;
 	}
+
+	public Map<String, String> obtenerDomicilioGeneral(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtenerDomicilio map: "+params);
+		Map<String,String>map=(Map<String,String>) this.getBackBoneInvoke(params, ProcesoDAO.P_GET_DOMICIL_GENERAL);
+		log.debug("### kernel sustituto obtenerDomicilio response map: "+map);
+		return map;
+	}
 	
 	public WrapperResultados pMovMdomicil(Map<String, String> param) throws ApplicationException
 	{

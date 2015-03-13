@@ -22,6 +22,10 @@ public class EmisionAutosVO implements Serializable {
     
     private String sucursal;
     
+    private String numeroEndoso;
+
+    private String tipoEndoso;
+    
     private int numeroIncisos;
     
     private boolean exitoRecibos;
@@ -70,5 +74,21 @@ public class EmisionAutosVO implements Serializable {
 
 	public void setExitoRecibos(boolean exitoRecibos) {
 		this.exitoRecibos = exitoRecibos;
+	}
+
+	public String getNumeroEndoso() {
+		return numeroEndoso;
+	}
+
+	public void setNumeroEndoso(String numeroEndoso) {
+		this.numeroEndoso = numeroEndoso;
+	}
+
+	public String getTipoEndoso() {
+		return tipoEndoso;
+	}
+
+	public void setTipoEndoso(String tipoEndoso) {
+		this.tipoEndoso = tipoEndoso;
 	}
 }

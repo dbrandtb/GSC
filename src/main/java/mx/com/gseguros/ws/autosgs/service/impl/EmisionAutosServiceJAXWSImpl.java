@@ -579,5 +579,12 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public int endosoCambioDomicil(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
