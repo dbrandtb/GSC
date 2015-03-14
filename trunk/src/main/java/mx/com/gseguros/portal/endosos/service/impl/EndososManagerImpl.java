@@ -179,7 +179,7 @@ public class EndososManagerImpl implements EndososManager
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
-			,String cdtipsit
+			//,String cdtipsit
 			,String cdtipsup
 			) throws Exception
 	{
@@ -192,7 +192,7 @@ public class EndososManagerImpl implements EndososManager
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsituac_i" , nmsituac);
 		params.put("pv_nmsuplem_i" , nmsuplem);
-		params.put("pv_cdtipsit_i" , cdtipsit);
+		//params.put("pv_cdtipsit_i" , cdtipsit);
 		params.put("pv_cdtipsup_i" , cdtipsup);
 		return this.sigsvalipolEnd(params);
 	}
@@ -1514,7 +1514,7 @@ public class EndososManagerImpl implements EndososManager
 				mapaSigsvalipolEnd.put("pv_nmpoliza_i", nmpoliza);
 				mapaSigsvalipolEnd.put("pv_nmsituac_i", "0");
 				mapaSigsvalipolEnd.put("pv_nmsuplem_i", nmsuplemEndoso);
-				mapaSigsvalipolEnd.put("pv_cdtipsit_i", cdtipsit);
+				//mapaSigsvalipolEnd.put("pv_cdtipsit_i", cdtipsit);
 				mapaSigsvalipolEnd.put("pv_cdtipsup_i", cdtipsup);
 				endososDAO.sigsvalipolEnd(mapaSigsvalipolEnd);
 				////// tarificacion //////

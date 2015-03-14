@@ -311,7 +311,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		String columnas[]=new String[]{"GARANTIA","NOMBRE_GARANTIA","SWOBLIGA","SUMA_ASEGURADA","CDCAPITA",
 				"status","cdtipbca","ptvalbas","swmanual","swreas","cdagrupa",
-				"ptreduci","fereduci","swrevalo"};
+				"ptreduci","fereduci","swrevalo","nmsituac"};
 		
 		protected ObtieneCoberturasDisponibles(DataSource dataSource)
 		{
@@ -435,7 +435,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));

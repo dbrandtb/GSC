@@ -47,7 +47,7 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
-			,String cdtipsit
+			//,String cdtipsit
 			,String cdtipsup
 			) throws Exception;
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params)         throws Exception;

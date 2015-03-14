@@ -2390,7 +2390,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			Map<String,String> map=new HashMap<String,String>(0);
 			String columnas[]=new String[]{"GARANTIA","NOMBRE_GARANTIA","SWOBLIGA","SUMA_ASEGURADA","CDCAPITA",
 					"status","cdtipbca","ptvalbas","swmanual","swreas","cdagrupa",
-					"ptreduci","fereduci","swrevalo","orden"};
+					"ptreduci","fereduci","swrevalo","orden","nmsituac"};
 			for(String columna:columnas)
 			{
 				String string=rs.getString(columna);
