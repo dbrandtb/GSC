@@ -186,4 +186,80 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 			compile();
 		}
 	}
+	
+	@Override
+	public Integer endosoPlacasMotor(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoPlacasMotor(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoPlacasMotor extends StoredProcedure{
+		protected EndosoPlacasMotor(DataSource dataSource){
+			super(dataSource, "sp_EndosoBPlacasMotor");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
+			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPlacas", Types.SMALLINT));
+			declareParameter(new SqlParameter("vMotor", Types.VARCHAR));
+			declareParameter(new SqlParameter("vUltimo", Types.SMALLINT));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+	
+	@Override
+	public Integer endosoBeneficiario(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoBeneficiario(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoBeneficiario extends StoredProcedure{
+		protected EndosoBeneficiario(DataSource dataSource){
+			super(dataSource, "sp_EndosoBBeneficiario");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
+			declareParameter(new SqlParameter("vBeneficiario", Types.VARCHAR));
+			declareParameter(new SqlParameter("vListaIncisos", Types.VARCHAR));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
 }

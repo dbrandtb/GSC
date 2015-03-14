@@ -13,4 +13,8 @@ public interface AutosDAOSIGS {
 
 	public Integer confirmaRecibosAuto(Map<String, Object> params) throws Exception;
 	
+	public Integer endosoPlacasMotor(Map<String, Object> params) throws Exception;
+	
+	public Integer endosoBeneficiario(Map<String, Object> params) throws Exception;
+	
 }

@@ -963,4 +963,166 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		return numeroEndosoRes;
 	}
 	
+	public int endosoPlacasMotor(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Placas Motor");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+//			datos = storedProceduresManager.procedureListCall(
+//					ObjetoBD.OBTIENE_DATOS_END_PLACASMOTOR_SIGS.getNombre(), params, null);
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Placas Motor para SIGS",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			for(Map<String,String> datosEnd : datos){
+				try{
+					
+					HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+					paramsEnd.put("vIdMotivo"  , datosEnd.get("ASD"));
+					paramsEnd.put("vSucursal"      , datosEnd.get("ASD"));
+					paramsEnd.put("vRamo"    , datosEnd.get("ASD"));
+					paramsEnd.put("vPoliza"   , datosEnd.get("ASD"));
+					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("ASD"))?" " : datosEnd.get("ASD"));
+					paramsEnd.put("vEndoso"  , datosEnd.get("ASD"));
+					paramsEnd.put("vInciso"     , datosEnd.get("ASD"));
+					paramsEnd.put("vPlacas"    , datosEnd.get("ASD"));
+					paramsEnd.put("vMotor"   , datosEnd.get("ASD"));
+					paramsEnd.put("vUltimo" , datosEnd.get("ASD"));
+					
+					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
+					
+					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
+					
+					if(res == null || res == 0){
+						logger.debug("Endoso Cambio Placas Motor no exitoso");
+					}else{
+						numeroEndosoRes = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Cambio Placas Motor Auto: " + e.getMessage(),e);
+				}
+			
+			}
+			
+			if(numeroEndosoRes!=0){
+				try{
+					LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+					params.put("param1" , cdunieco);
+					params.put("param2" , cdramo);
+					params.put("param3" , estado);
+					params.put("param4" , nmpoliza);
+					params.put("param5" , nmsuplem);
+					params.put("param6" , numeroEndosoRes);
+					
+//					storedProceduresManager.procedureVoidCall(
+//							ObjetoBD.ACTUALIZA_ENDB_DE_SIG.getNombre(), params, null);
+					
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL de obtencion de datos para Cambio Motor Placas para SIGS",e1);
+					return 0;
+				}
+			}
+				
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Placas Motor");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+	
+	
+	public int endosoBeneficiario(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Beneficiario Auto");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+//			datos = storedProceduresManager.procedureListCall(
+//					ObjetoBD.OBTIENE_DATOS_END_BENEFICIARIO.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto SIGS",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("ASD"));
+				paramsEnd.put("vSucursal"  , datosEnd.get("ASD"));
+				paramsEnd.put("vRamo"      , datosEnd.get("ASD"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("ASD"));
+				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("ASD"))?" " : datosEnd.get("ASD"));
+				paramsEnd.put("vEndoso"    , datosEnd.get("ASD"));
+				paramsEnd.put("vBeneficiario"  , datosEnd.get("ASD"));
+				paramsEnd.put("vListaIncisos"     , datosEnd.get("ASD"));
+				
+				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio Beneficiario Auto, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso Cambio Beneficiario Auto no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+//						storedProceduresManager.procedureVoidCall(
+//								ObjetoBD.ACTUALIZA_ENDB_DE_SIG.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Cambio Beneficiario  Auto: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Beneficiario Auto");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
 }
