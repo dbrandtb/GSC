@@ -150,6 +150,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_DATOS_POLIZA_AGENTE =    "OBTIENE_DATOS_POLIZA_AGENTE";
 	public static final String OBTIENE_DATOS_GENERAL_AGENTE =	"OBTIENE_DATOS_GENERAL_AGENTE";
 	public static final String GUARDA_PORCENTAJE_POLIZA =	"GUARDA_PORCENTAJE_POLIZA";
+	public static final String GUARDA_ELIMINA_PORCENTAJE_POLIZA =	"GUARDA_ELIMINA_PORCENTAJE_POLIZA";
 	public static final String OBTIENE_DATOS_RECIBOS_DxN =	"OBTIENE_DATOS_RECIBOS_DxN";
 	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
@@ -261,7 +262,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE,      new ObtieneDatosPolizaAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_GENERAL_AGENTE,      new ObtieneDatosGeneralAgente(getDataSource()));
 		addStoredProcedure(GUARDA_PORCENTAJE_POLIZA, new GuardarPorcentajePoliza(getDataSource()));
-
+		addStoredProcedure(GUARDA_ELIMINA_PORCENTAJE_POLIZA, new GuardarEliminarPorcentajePoliza(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_RECIBOS_DxN, new ObtenDatosRecibosDxN(getDataSource()));
 		addStoredProcedure(GUARDA_PERIODOS_DXN, new GuardaPeriodosDxN(getDataSource()));
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
@@ -4485,6 +4486,40 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		}   	
 
     }
+    
+    
+    protected class GuardarEliminarPorcentajePoliza extends CustomStoredProcedure {
+    	
+    	protected GuardarEliminarPorcentajePoliza(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES2");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE_NVO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMSUPLEM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDTIPOAG", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORREDAU", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ACCION", OracleTypes.VARCHAR));
+    		
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}   	
+
+    }
+    
     
     protected class ValidarExtraprima extends CustomStoredProcedure {
     	

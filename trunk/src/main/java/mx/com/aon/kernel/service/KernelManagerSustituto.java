@@ -218,6 +218,8 @@ public interface KernelManagerSustituto {
 	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
 	 */
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
+	
+	public WrapperResultados guardarEliminarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
 	/**
 	 * pkg_satelites.valida_extraprima_situac
 	 */

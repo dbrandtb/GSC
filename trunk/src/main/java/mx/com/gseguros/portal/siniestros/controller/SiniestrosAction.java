@@ -51,12 +51,14 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
+import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONException;
 import org.apache.struts2.json.JSONUtil;
+import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -7567,6 +7569,84 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	success = true;
 	return SUCCESS;
     }
+    
+    /*public String complementarTramite(){
+    	logger.debug(" **** Entrando a Complementar tramite **");
+		logger.debug(params); //---> El parametro a pasar es  ntramite
+		
+		//List<MesaControlVO> lista;
+		try {
+			//1.- Obtenemos los valores de la MC a clonar
+			String tramiteAnterior = params.get("ntramite").toString();
+			String tramiteNuevo = null;
+			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(tramiteAnterior);
+			
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			parMesCon.put("pv_cdunieco_i",lista.get(0).getCduniecomc());
+			parMesCon.put("pv_cdramo_i",lista.get(0).getCdramomc());
+			parMesCon.put("pv_estado_i",lista.get(0).getEstadomc());
+			parMesCon.put("pv_nmpoliza_i",lista.get(0).getNmpolizamc());
+			parMesCon.put("pv_nmsuplem_i",lista.get(0).getNmsuplemmc());
+			parMesCon.put("pv_nmsolici_i",lista.get(0).getNmsolicimc());
+			parMesCon.put("pv_cdtipsit_i",lista.get(0).getCdtipsitmc());
+			parMesCon.put("pv_cdsucadm_i",lista.get(0).getCdsucadmmc());
+			parMesCon.put("pv_cdsucdoc_i",lista.get(0).getCdsucdocmc());
+			parMesCon.put("pv_cdtiptra_i",lista.get(0).getCdtiptramc());
+			parMesCon.put("pv_ferecepc_i",lista.get(0).getFerecepcmc());
+			parMesCon.put("pv_cdagente_i",lista.get(0).getCdagentemc());
+			parMesCon.put("pv_referencia_i",lista.get(0).getReferenciamc());
+			parMesCon.put("pv_nombre_i",lista.get(0).getNombremc());
+			parMesCon.put("pv_festatus_i",lista.get(0).getFecstatumc());
+			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
+			parMesCon.put("pv_comments_i",lista.get(0).getCommentsmc());
+			parMesCon.put("pv_otvalor02",lista.get(0).getOtvalor02mc());
+			parMesCon.put("pv_otvalor03",lista.get(0).getOtvalor03mc());
+			parMesCon.put("pv_otvalor04",lista.get(0).getOtvalor04mc());
+			parMesCon.put("pv_otvalor05",lista.get(0).getOtvalor05mc());
+			parMesCon.put("pv_otvalor06",lista.get(0).getOtvalor06mc());
+			parMesCon.put("pv_otvalor07",lista.get(0).getOtvalor07mc());
+			parMesCon.put("pv_otvalor08",lista.get(0).getOtvalor08mc());
+			parMesCon.put("pv_otvalor09",lista.get(0).getOtvalor09mc());
+			parMesCon.put("pv_otvalor10",lista.get(0).getOtvalor10mc());
+			parMesCon.put("pv_otvalor11",lista.get(0).getOtvalor11mc());
+			parMesCon.put("pv_otvalor12",lista.get(0).getOtvalor12mc());
+			parMesCon.put("pv_otvalor13",lista.get(0).getOtvalor13mc());
+			parMesCon.put("pv_otvalor14",lista.get(0).getOtvalor14mc());
+			parMesCon.put("pv_otvalor15",lista.get(0).getOtvalor15mc());
+			parMesCon.put("pv_otvalor16",lista.get(0).getOtvalor16mc());
+			parMesCon.put("pv_otvalor17",lista.get(0).getOtvalor17mc());
+			parMesCon.put("pv_otvalor18",lista.get(0).getOtvalor18mc());
+			parMesCon.put("pv_otvalor19",lista.get(0).getOtvalor19mc());
+			parMesCon.put("pv_otvalor20",lista.get(0).getOtvalor20mc());
+			
+			
+			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+		    if(res.getItemMap() == null)
+		    {
+		        logger.error("Sin mensaje respuesta de nmtramite!!");
+		    }
+		    else{
+		    	tramiteNuevo = (String) res.getItemMap().get("ntramite");
+		        List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(tramiteAnterior);
+		        Map<String, String> factura;
+		        for(int i = 0; i < facturasAux.size(); i++)
+    			{
+    				factura = facturasAux.get(i);
+    				//factura.get("DESCPORC");
+    			}
+				
+	        }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+    	success = true;
+    	return SUCCESS;
+    }*/
+    
 	/*public String subirCenso()
 	{
 		logger.info(""

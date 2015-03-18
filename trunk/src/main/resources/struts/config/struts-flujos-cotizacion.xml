@@ -85,6 +85,10 @@
 	        <result name="success" type="json"/>
 		</action>
 		
+		<action name="guardaEliminaPorcentajeAgentes" class="agentesAction" method="guardaEliminaPorcentajeAgentes">
+	         <result name="success" type="json" />
+        </action>
+		
     </package>
 
 </struts>
