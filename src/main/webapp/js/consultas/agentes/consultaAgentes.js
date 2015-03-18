@@ -183,25 +183,14 @@ Ext.onReady(function() {
                                         nmcuadro=storGridClau.data.items[0].data.nmcuadro;
                                         nmsuplem=storGridClau.data.items[0].data.nmsuplem;
                                     }
-                                    var rec = new modeloGridClau({
-                                            cdagente: datos.pv_cdagente_i,
-                                            cdagenteA: datos.pv_cdagente_i,
-                                            cdsucurs: cdsucurs,
-                                            cdtipoAg: datos.tipoAgente,
-                                            descripl: tiposAgente.rawValue,
-                                            nmcuadro: nmcuadro,
-                                            nmsuplem: nmsuplem,
-                                            porparti: datos.participacion,
-                                            porredau: datos.sesionComision
-                                        });
                                     
-                                    	storGridClau.add(rec);
-                                        Ext.getCmp('btnGuardaRegistro').enable();
-                                        ventanaGrid.close();
-                                    
+                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,datos.pv_cdagente_i, nmsuplem, datos.tipoAgente, datos.sesionComision, nmcuadro, cdsucurs,datos.participacion, "I");
+                                    Ext.getCmp('btnGuardaRegistro').enable();
+                                    ventanaGrid.close();
                                 }
                                 else
                                 {    //valores del windows
+                                    debug("Entra al else - Modificar");
                                     var obtener = [];
                                     storGridClau.each(function(record) {
                                         obtener.push(record.data);
@@ -224,12 +213,7 @@ Ext.onReady(function() {
                                         respuesta=datos.pv_cdagente_i;
                                     }
                                     
-                                    storGridClau.data.items[valorIndex].set('cdagente',datos.pv_cdagente_i);
-                                    storGridClau.data.items[valorIndex].set('cdagenteA',respuesta);
-                                    storGridClau.data.items[valorIndex].set('cdtipoAg',datos.tipoAgente);
-                                    storGridClau.data.items[valorIndex].set('descripl',tiposAgente.rawValue);
-                                    storGridClau.data.items[valorIndex].set('porparti',datos.participacion);
-                                    storGridClau.data.items[valorIndex].set('porredau',datos.sesionComision);
+                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,respuesta, storGridClau.data.items[valorIndex].get('nmsuplem'), datos.tipoAgente,datos.sesionComision, storGridClau.data.items[valorIndex].get('nmcuadro'), storGridClau.data.items[valorIndex].get('cdsucurs'),datos.participacion, "U");
                                     Ext.getCmp('btnGuardaRegistro').enable();
                                     ventanaGrid.close();
                                 }
@@ -306,55 +290,85 @@ Ext.onReady(function() {
                     }
 
                 ]
-            })
-            
-            
-            /*PANEL DONDE MUESTRA LA INFORMACION DEL AGENTE*/
-            ,datosGridC=Ext.create('Ext.grid.Panel',
-            {
-                id             : 'clausulasGridId'
-                ,title         : 'DATOS GENERALES'
-                ,store         :  storGridClau
-                ,collapsible   : true
-                ,titleCollapse : true
-                ,style         : 'margin:5px'
-                ,minHeight     : 200
-                ,maxHeight     : 400
-                ,columns       :
-                [                         
-                    {    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
-                    {    header     : 'Agente',                              dataIndex : 'cdtipoAg',        flex      : 1    },
-                    {    header     : 'Tipo de Agente',                      dataIndex : 'descripl',        flex      : 1    },
-                    {    header     : 'Participaci&oacute;n',                dataIndex : 'porparti',        flex      : 1    },
-                    {   header      : 'Cesi&oacute;n de comisi&oacute;n',    dataIndex : 'porredau',        flex      : 1    }
-                ],
-                tbar: [{
-                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
-                    text: 'Agregar agente',
-                    id:'btnAgregarAgente',
-                    disabled:true,
-                    //hidden : true,
-                    scope: this,
-                    handler: function() {
-                        bandera= 0;
-                        valorIndex=0;
-                        actualizacionInsercion(null,null,null,null);
-                    }
-                }],
-                listeners: {
-                    itemclick: function(dv, record, item, index, e) {
-                        claveAgente= Ext.getCmp('pv_cdagente_i').setValue(record.get('cdagente'));
-                        tipoAgente= Ext.getCmp('tipoAgente').setValue(record.get('cdtipoAg'));
-                        valorparticipacion= Ext.getCmp('participacion').setValue(record.get('porparti'));
-                        valorsesionComision= Ext.getCmp('sesionComision').setValue(record.get('porredau'));
+            }),
+            Ext.define('datosGridC', {
+				extend: 'Ext.grid.Panel',
+				collapsible   : true,
+				titleCollapse : true,
+				requires: [
+				           'Ext.selection.CellModel',
+				           'Ext.grid.*',
+				           'Ext.data.*',
+				           'Ext.util.*',
+				           'Ext.form.*'
+			           ],
+		       xtype: 'cell-editing',
+		       title: 'DATOS GENERALES',
+		       frame: false,
+		       initComponent: function(){
+		    	   this.cellEditing = new Ext.grid.plugin.CellEditing({
+	    		   		clicksToEdit: 1
+	    	   		});
+				    Ext.apply(this, {
+					   height: 200,
+					   plugins: [this.cellEditing],
+					   store: storGridClau,
+					   columns: 
+					   [
+							{    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
+		                	{    header     : 'Agente',                              dataIndex : 'cdtipoAg',        flex      : 1    },
+		                	{    header     : 'Tipo de Agente',                      dataIndex : 'descripl',        flex      : 1    },
+		                	{    header     : 'Participaci&oacute;n',                dataIndex : 'porparti',        flex      : 1    },
+		                	{    header     : 'Cesi&oacute;n de comisi&oacute;n',    dataIndex : 'porredau',        flex      : 1    },						
+							{
+					    		 xtype		: 'actioncolumn',		width: 60,		 sortable: false,				menuDisabled: true,
+					    		 items: [{
+							    			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							    			tooltip: 'Quitar Agente',
+							    			scope: this,
+							    			handler: this.onRemoveClick
+							    		},
+							    		{
+					    			    	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+					    			    	tooltip: 'Modificar Agente',
+					    			    	scope: this,
+					    			    	handler: this.onAddClick
+					    			    }
+			    			    ]
+					    	}
+				    	],
+				    	tbar: [{
+			                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+			                    text: 'Agregar agente',
+			                    id:'btnAgregarAgente',
+			                    disabled:true,
+			                    scope: this,
+			                    handler: function() {
+			                        bandera= 0;
+			                        valorIndex=0;
+			                        actualizacionInsercion(null,null,null,null);
+			                    }
+			                }]
+					   });
+				   		this.callParent();
+			       },
+			       onRemoveClick: function(grid, rowIndex){
+			    	   var record=this.getStore().getAt(rowIndex);
+			    	   guardaEliminaPorcentajeAgentes(record.data.cdagente, record.data.cdagente, record.data.nmsuplem, record.data.cdtipoAg, record.data.porredau, record.data.nmcuadro, record.data.cdsucurs,record.data.porparti, 'D' );
+			    	   this.getStore().removeAt(rowIndex);
+			       }
+			       ,
+			       onAddClick: function(grid, rowIndex){
+			       	 var record=this.getStore().getAt(rowIndex);
+			    	   claveAgente= Ext.getCmp('pv_cdagente_i').setValue(record.data.cdagente);
+			    	   tipoAgente= Ext.getCmp('tipoAgente').setValue(record.data.cdtipoAg);
+				   	    valorparticipacion= Ext.getCmp('participacion').setValue(record.data.porparti);
+                        valorsesionComision= Ext.getCmp('sesionComision').setValue(record.data.porredau);
                         bandera= 1;
-                        valorIndex= index;
-                        actualizacionInsercion(record.get('cdagente'),record.get('cdtipoAg'),record.get('porparti'),record.get('porredau'));
-                    }
-                }
-            })
-            
-
+                        valorIndex= rowIndex;
+                        actualizacionInsercion(record.data.cdagente ,record.data.cdtipoAg ,record.data.porparti ,record.data.porredau);
+				   }
+				})
         ],
         buttonAlign: 'center'
             ,buttons : [{
@@ -525,6 +539,7 @@ Ext.onReady(function() {
 
     function actualizacionInsercion(claveAgente,tipoAgente,valorparticipacion,valorsesionComision)
     {
+    	debug("VALORES ---> ",claveAgente,tipoAgente,valorparticipacion,valorsesionComision);
         if(bandera == 0)
         {
             panelModificacionInsercion.getForm().reset();
@@ -543,7 +558,16 @@ Ext.onReady(function() {
                 ,success : function (response)
                 {
                     var json=Ext.decode(response.responseText);
-                    claveAgente = json.lista[0].value;
+                    debug("VALOR DEL JSON --> ",json);
+                    claveAgente = json.lista[0].key;
+                    
+                    storeDatosAgente.load({
+						params: {
+							'params.agente'   : claveAgente
+						}
+					});
+					
+					panelModificacionInsercion.query('combo[name=pv_cdagente_i]')[0].setValue(claveAgente);
                     centrarVentanaInterna(ventanaGrid.show()); 
                     
                 },
@@ -559,6 +583,84 @@ Ext.onReady(function() {
                 }
             });
         }
+    }
+    
+    function guardaEliminaPorcentajeAgentes(cdagente,cdagenteA, nmsuplem, cdtipoAg, porredau, nmcuadro, cdsucurs,porparti, accion){
+    	debug("Entra a la función");
+            Ext.Ajax.request(
+            {
+                url     : _URL_GUARDA_ELIMINA_PORC
+                ,params : 
+                {
+                	'params.cdunieco'   : Ext.getCmp('unieco').getValue()
+                    ,'params.ramo'      : Ext.getCmp('ramo').getValue()
+                    ,'params.estado'    : Ext.getCmp('estado').getValue()
+                    ,'params.nmpoliza'  : Ext.getCmp('poliza').getValue()
+                    ,'params.cdagente'  : cdagente
+                    ,'params.cdagenteA' : cdagenteA
+                    ,'params.nmsuplem'  : nmsuplem
+                    ,'params.cdtipoAg'  : cdtipoAg
+                    ,'params.porredau'  : porredau
+                    ,'params.nmcuadro'  : nmcuadro
+                    ,'params.cdsucurs'  : cdsucurs
+                    ,'params.porparti'  : porparti
+                    ,'params.accion'    : accion
+                }
+                ,success : function (response)
+                {
+                    var json=Ext.decode(response.responseText);
+                    debug("VALOR DEL JSON --> ",json, "Valor de la respuesta",json.success);
+                    if(json.success){
+	                	storGridClau.removeAll();
+					    var params = {
+					        'params.cdunieco' : Ext.getCmp('unieco').getValue(),
+					        'params.cdramo' : Ext.getCmp('ramo').getValue(),
+					        'params.estado' : Ext.getCmp('estado').getValue(),
+					        'params.nmpoliza' : Ext.getCmp('poliza').getValue()
+					    };
+					    
+					    storGridClau.load({
+					        params: params,
+					        callback: function(records, operation, success){
+					            if(success){
+					                if(records.length <= 0){
+					                    Ext.getCmp('btnAgregarAgente').disable();
+					                    Ext.getCmp('btnRecargar').disable();
+					                    Ext.Msg.show({
+					                         title: 'Aviso',
+					                         msg: 'No se encontraron datos',
+					                         buttons: Ext.Msg.OK,
+					                         icon: Ext.Msg.ERROR
+					                     });
+					                }else{
+					                    Ext.getCmp('btnAgregarAgente').enable();
+					                    Ext.getCmp('btnRecargar').enable();
+					                }
+					            }else{
+					                Ext.getCmp('btnAgregarAgente').disable();
+					                Ext.getCmp('btnRecargar').disable();
+					                Ext.Msg.show({
+					                     title: 'Error',
+					                     msg: 'Error al obtener los datos',
+					                     buttons: Ext.Msg.OK,
+					                     icon: Ext.Msg.ERROR
+					                 });
+					            }
+					        }
+					    });
+                    }
+                },
+                failure : function ()
+                {
+                    me.up().up().setLoading(false);
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
     }
     
     storGridClau.removeAll();

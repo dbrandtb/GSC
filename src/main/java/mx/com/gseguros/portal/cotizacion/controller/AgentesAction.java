@@ -122,7 +122,7 @@ public class AgentesAction extends PrincipalCoreAction
 		   	   		mapArchivo.put("pi_ESTADO"   , params.get("estado"));
 		   	   		mapArchivo.put("pi_NMPOLIZA" , params.get("nmpoliza"));
 			   	   	mapArchivo.put("pi_CDAGENTE_NVO" , datosPorcentajeAgente.get(i).get("cdagente"));// nuevo
-			   	    mapArchivo.put("pi_CDAGENTE" , datosPorcentajeAgente.get(i).get("cdagenteA"));	//	anterior																	//cdagente anteriro
+			   	    mapArchivo.put("pi_CDAGENTE" , datosPorcentajeAgente.get(i).get("cdagenteA"));	//	anterior
 			   		mapArchivo.put("pi_NMSUPLEM" , datosPorcentajeAgente.get(i).get("nmsuplem"));
 			   		mapArchivo.put("pi_CDTIPOAG" , datosPorcentajeAgente.get(i).get("cdtipoAg"));
 			   		mapArchivo.put("pi_PORREDAU" , datosPorcentajeAgente.get(i).get("porredau"));
@@ -141,7 +141,38 @@ public class AgentesAction extends PrincipalCoreAction
 	   	
 	   }
 
-	public List<HashMap<String, String>> getDatosPorcentajeAgente() {
+	   public String guardaEliminaPorcentajeAgentes(){
+		   	logger.debug(" **** Entrando a guardaEliminaPorcentajeAgentes ****");
+		   	logger.debug(params);
+		   	try {
+			   		Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+		   	   		mapArchivo.put("pi_CDUNIECO" , params.get("cdunieco"));	
+		   	   		mapArchivo.put("pi_CDRAMO"   , params.get("ramo"));
+		   	   		mapArchivo.put("pi_ESTADO"   , params.get("estado"));
+		   	   		mapArchivo.put("pi_NMPOLIZA" , params.get("nmpoliza"));
+			   	   	mapArchivo.put("pi_CDAGENTE_NVO" , params.get("cdagente"));// nuevo
+			   	    mapArchivo.put("pi_CDAGENTE" , params.get("cdagenteA"));//	anterior
+			   		mapArchivo.put("pi_NMSUPLEM" , params.get("nmsuplem"));
+			   		mapArchivo.put("pi_CDTIPOAG" , params.get("cdtipoAg"));
+			   		mapArchivo.put("pi_PORREDAU" , params.get("porredau"));
+			   		mapArchivo.put("pi_NMCUADRO" , params.get("nmcuadro"));
+			   		mapArchivo.put("pi_CDSUCURS" , params.get("cdsucurs"));
+			   		mapArchivo.put("pi_PORPARTI" , params.get("porparti"));
+			   		mapArchivo.put("pi_ACCION"   , params.get("accion"));
+			   		WrapperResultados result=kernelManager.guardarEliminarPorcentajeAgentes(mapArchivo) ;
+			   		
+		   	}catch( Exception e){
+		   		logger.error("Error al obtener los consultaDatosPolizaAgente ",e);
+		   		return SUCCESS;
+		   	}
+		   	
+		   	success = true;
+		   	return SUCCESS;
+		   	
+		   }
+
+		
+	   public List<HashMap<String, String>> getDatosPorcentajeAgente() {
 		return datosPorcentajeAgente;
 	}
 

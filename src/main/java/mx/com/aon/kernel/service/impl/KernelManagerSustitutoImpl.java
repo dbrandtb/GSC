@@ -1355,7 +1355,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.GUARDA_PORCENTAJE_POLIZA);
 		return result;
 	}
+	
+	public WrapperResultados guardarEliminarPorcentajeAgentes(Map<String, Object> params)
+			throws ApplicationException {
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.GUARDA_ELIMINA_PORCENTAJE_POLIZA);
+		return result;
+	}
 
+	
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params)
 			throws ApplicationException {
 		WrapperResultados result = this.returnBackBoneInvoke(params,
