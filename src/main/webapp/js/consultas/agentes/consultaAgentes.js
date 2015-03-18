@@ -315,11 +315,6 @@ Ext.onReady(function() {
 					   store: storGridClau,
 					   columns: 
 					   [
-							{    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
-		                	{    header     : 'Agente',                              dataIndex : 'cdtipoAg',        flex      : 1    },
-		                	{    header     : 'Tipo de Agente',                      dataIndex : 'descripl',        flex      : 1    },
-		                	{    header     : 'Participaci&oacute;n',                dataIndex : 'porparti',        flex      : 1    },
-		                	{    header     : 'Cesi&oacute;n de comisi&oacute;n',    dataIndex : 'porredau',        flex      : 1    },						
 							{
 					    		 xtype		: 'actioncolumn',		width: 60,		 sortable: false,				menuDisabled: true,
 					    		 items: [{
@@ -329,13 +324,19 @@ Ext.onReady(function() {
 							    			handler: this.onRemoveClick
 							    		},
 							    		{
-					    			    	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+					    			    	icon:_CONTEXT+ '/resources/fam3icons/icons/pencil.png',
 					    			    	tooltip: 'Modificar Agente',
 					    			    	scope: this,
 					    			    	handler: this.onAddClick
 					    			    }
 			    			    ]
-					    	}
+					    	},
+					    	{    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
+		                	{    header     : 'Agente',                              dataIndex : 'cdtipoAg',        flex      : 1    },
+		                	{    header     : 'Tipo de Agente',                      dataIndex : 'descripl',        flex      : 1    },
+		                	{    header     : 'Participaci&oacute;n',                dataIndex : 'porparti',        flex      : 1    },
+		                	{    header     : 'Cesi&oacute;n de comisi&oacute;n',    dataIndex : 'porredau',        flex      : 1    }
+							
 				    	],
 				    	tbar: [{
 			                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
