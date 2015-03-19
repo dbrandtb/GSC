@@ -786,11 +786,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			setCheckpoint("Validando datos de entrada");
 			checkNull(smap1, "No se recibieron datos");
+			
+			String endoso = smap1.containsKey("marco2")?"S":"N";
+			smap1.put("endoso",endoso);
+			if(endoso.equals("S"))
+			{
+				smap1.put("cdramo"   , smap1.get("CDRAMO"));
+				smap1.put("tipoflot" , smap1.get("TIPOFLOT"));
+				smap1.put("cdtipsit" , "AR");
+			}
+			
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
-			String tipoflot = smap1.get("tipoflot");
+			String tipoflot = smap1.get("tipoflot"); 
 			
 			smap1.put("cdsisrol" , cdsisrol);
 			smap1.put("cdusuari" , cdusuari);
