@@ -401,6 +401,19 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="includes/cotizacionAutoFlotilla" class="cotizacionAutoAction" method="cotizacionAutoFlotilla">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
+        </action>
+        
+        <action name="recuperarDatosEndosoAltaIncisoAuto" class="endososAutoAction" method="recuperarDatosEndosoAltaIncisoAuto">
+            <result type="json" />
+        </action>
        
     </package>
     

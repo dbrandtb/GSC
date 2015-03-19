@@ -2629,4 +2629,48 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void confirmarEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tstamp
+			,String cdusuri
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("tstamp"   , tstamp);
+		params.put("cdusuri"  , cdusuri);
+		params.put("cdelemen" , cdelemen);
+		params.put("cdtipsup" , cdtipsup);
+		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ALTA_AUTO", params);
+		ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
+	}
+	
+	protected class ConfirmarEndosoAltaIncisoAuto extends StoredProcedure
+	{
+		protected ConfirmarEndosoAltaIncisoAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_ENDOSO_ALTA_AUTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

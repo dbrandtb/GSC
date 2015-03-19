@@ -68,4 +68,30 @@ public interface EndososAutoManager
 			,String cdsisrol
 			,String cdelemen
 			)throws Exception;
+	
+	/**
+	 * @return incisoPoliza => Map String String,
+	 *         tvalopol     => Map String String,
+	 *         tconvalsit   => List Map String String,
+	 *         cdperson     => String,
+	 *         cdideper     => cdideper
+	 */
+	public Map<String,Object> recuperarDatosEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
+	
+	public void confirmarEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>>incisos
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception;
 }

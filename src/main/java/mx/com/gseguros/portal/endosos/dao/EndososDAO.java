@@ -292,4 +292,15 @@ public interface EndososDAO
 			,String cdsisrol
 			,String cdelemen
 			)throws Exception;
+	
+	public void confirmarEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tstamp
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception;
 }
