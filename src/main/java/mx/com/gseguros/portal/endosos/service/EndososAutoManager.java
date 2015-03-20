@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.endosos.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 
@@ -67,6 +68,7 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	/**

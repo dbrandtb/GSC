@@ -80,6 +80,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
         	consulta.setNmsolici(rs.getString("nmsolici"));
         	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
         	consulta.setNmpoliex(rs.getString("nmpoliex"));
+        	consulta.setCduniext(rs.getString("cduniext"));
+        	consulta.setCdramoext(rs.getString("ramo"));
         	consulta.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
         	consulta.setCdmoneda(rs.getString("cdmoneda"));
         	consulta.setDsmoneda(rs.getString("dsmoneda"));

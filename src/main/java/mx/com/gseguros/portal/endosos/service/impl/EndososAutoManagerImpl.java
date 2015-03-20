@@ -1,10 +1,15 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -15,11 +20,21 @@ import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
+import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
+import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
@@ -30,6 +45,41 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
 	private PersonasDAO   personasDAO;
+	
+	@Autowired
+	private AutosDAOSIGS autosDAOSIGS;
+	
+	@Autowired
+	@Qualifier("emisionAutosServiceImpl")
+	private EmisionAutosService emisionAutosService;
+	
+	@Autowired
+	private KernelManagerSustituto   kernelManager;
+	
+	@Value("${caratula.impresion.autos.url}")
+	private String urlImpresionCaratula;
+	
+	@Value("${caratula.impresion.autos.serviciopublico.url}")
+	private String urlImpresionCaratulaServicioPublico;
+	
+	@Value("${caratula.impresion.autos.flotillas.url}")
+	private String urlImpresionCaratulaServicioFotillas;
+	
+	@Value("${recibo.impresion.autos.url}")
+	private String urlImpresionRecibos;
+	
+	@Value("${caic.impresion.autos.url}")
+	private String urlImpresionCaic;
+	
+	@Value("${ap.impresion.autos.url}")
+	private String urlImpresionAp;
+	
+	@Value("${incisos.flotillas.impresion.autos.url}")
+	private String urlImpresionIncisosFlotillas;
+	
+	@Value("${tarjeta.iden.impresion.autos.url}")
+	private String urlImpresionTarjetaIdentificacion;
+	
 	
 	@Override
 	public Map<String,Item> construirMarcoEndosos(String cdsisrol) throws Exception
@@ -552,6 +602,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen
+			,UserVO usuarioSesion
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -572,7 +623,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
-			endososDAO.confirmarEndosoTvalositAuto(
+			Map<String,Object> resParams = endososDAO.confirmarEndosoTvalositAuto(
 					cdtipsup
 					,tstamp
 					,cdunieco
@@ -583,6 +634,144 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdsisrol
 					,cdelemen
 					);
+			
+			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			
+			/**
+			 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+			 */
+			
+			String urlCaratula = null;
+			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
+		    	){
+				urlCaratula = this.urlImpresionCaratula;
+			}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
+				urlCaratula = this.urlImpresionCaratulaServicioPublico;
+			}
+			
+			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+				urlCaratula = this.urlImpresionCaratulaServicioFotillas;
+			}
+			
+			String urlRecibo = this.urlImpresionRecibos;
+			String urlCaic = this.urlImpresionCaic;
+			String urlAp = this.urlImpresionAp;
+			
+			String urlIncisosFlot = this.urlImpresionIncisosFlotillas;
+			String urlTarjIdent = this.urlImpresionTarjetaIdentificacion;
+			
+			String parametros = null;
+			
+			/**
+			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
+			 */
+			if(TipoEndoso.BENEFICIARIO_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+				
+			}else if(TipoEndoso.PLACAS_Y_MOTOR.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+				if(this.endosoPlacasMotor(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+					logger.info("Endoso de Placas y motor exitoso...");
+				}else{
+					logger.error("Error al ejecutar los WS de endoso de Placas y Motor");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				}
+			}else if(TipoEndoso.SERIE_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+				if(this.endosoSerie(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+					logger.info("Endoso de Serie exitoso...");
+				}else{
+					logger.error("Error al ejecutar los WS de endoso de Serie");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				}
+			}else{
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
+				if(aux == null || !aux.isExitoRecibos()){
+					logger.error("Error al ejecutar los WS de endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				}
+				
+				/**
+				 * Para Caratula
+				 */
+				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+				
+				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+				paramsR.put("pv_cdunieco_i", cdunieco);
+				paramsR.put("pv_cdramo_i",   cdramo);
+				paramsR.put("pv_estado_i",   estado);
+				paramsR.put("pv_nmpoliza_i", nmpoliza);
+				paramsR.put("pv_nmsuplem_i", nmsuplem);
+				paramsR.put("pv_feinici_i",  new Date());
+				paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+				paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+				paramsR.put("pv_nmsolici_i", nmpoliza);
+				paramsR.put("pv_ntramite_i", ntramite);
+				paramsR.put("pv_tipmov_i",   cdtipsup);
+				paramsR.put("pv_swvisible_i", Constantes.SI);
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para Recibo 1
+				 */
+				parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
+				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+				paramsR.put("pv_dsdocume_i", "Recibo 1");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para AP inciso 1
+				 */
+				parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
+				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlAp + parametros);
+				paramsR.put("pv_dsdocume_i", "AP");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				/**
+				 * Para CAIC inciso 1
+				 */
+				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
+				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+				
+				paramsR.put("pv_cddocume_i", urlCaic + parametros);
+				paramsR.put("pv_dsdocume_i", "CAIC");
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+					/**
+					 * Para Incisos Flotillas
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
+					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+					paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Tarjeta Identificacion
+					 */
+					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
+					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+					paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+					
+					kernelManager.guardarArchivo(paramsR);
+				}
+			
+			}
+			
 		}
 		catch(Exception ex)
 		{
@@ -1089,6 +1278,254 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	private int endosoBeneficiario(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Beneficiario Auto");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del BENEFICIARIO
+		try{
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+//			datos = storedProceduresManager.procedureListCall(
+//					ObjetoBD.OBTIENE_DATOS_END_BENEFICIARIO.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto SIGS",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("ASD"));
+				paramsEnd.put("vSucursal"  , datosEnd.get("ASD"));
+				paramsEnd.put("vRamo"      , datosEnd.get("ASD"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("ASD"));
+				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("ASD"))?" " : datosEnd.get("ASD"));
+				paramsEnd.put("vEndoso"    , datosEnd.get("ASD"));
+				paramsEnd.put("vBeneficiario"  , datosEnd.get("ASD"));
+				paramsEnd.put("vListaIncisos"     , datosEnd.get("ASD"));
+				
+				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio Beneficiario Auto, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso Cambio Beneficiario Auto no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+//						storedProceduresManager.procedureVoidCall(
+//								ObjetoBD.ACTUALIZA_ENDB_DE_SIG.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Cambio Beneficiario  Auto: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Beneficiario Auto");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+	
+	private boolean endosoPlacasMotor(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Placas Motor");
+		
+		List<Map<String,String>> datos = null;
+		
+		try{
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			
+			datos = endososDAO.obtieneDatosEndPlacasMotor(params);
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Placas Motor para SIGS",e1);
+			return false;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			int endosoRecuperado = -1;
+			for(Map<String,String> datosEnd : datos){
+				try{
+					
+					HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+					paramsEnd.put("vIdMotivo"  , datosEnd.get("IdMotivo"));
+					paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
+					paramsEnd.put("vRamo"    , datosEnd.get("Ramo"));
+					paramsEnd.put("vPoliza"   , datosEnd.get("Poliza"));
+					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
+					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
+					paramsEnd.put("vInciso"     , datosEnd.get("Inciso"));
+					paramsEnd.put("vPlacas"    , datosEnd.get("Placas"));
+					paramsEnd.put("vMotor"   , datosEnd.get("Motor"));
+					paramsEnd.put("vEndoB" , endosoRecuperado);
+					
+					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
+					
+					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
+					
+					if(res == null || res == 0 || res == -1){
+						logger.debug("Endoso Cambio Placas Motor no exitoso");
+						return false;
+					}else{
+						endosoRecuperado = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Cambio Placas Motor Auto: " + e.getMessage(),e);
+				}
+			
+			}
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso Placas Motor de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso Cambio Placas Motor no exitoso, valor de endoso en -1");
+				return false;
+			}
+				
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Placas Motor");
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean endosoSerie(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Serie");
+		
+		List<Map<String,String>> datos = null;
+		
+		try{
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			
+			datos = endososDAO.obtieneDatosEndSerie(params);
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Serie para SIGS",e1);
+			return false;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			int endosoRecuperado = -1;
+			for(Map<String,String> datosEnd : datos){
+				try{
+					
+					HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+					paramsEnd.put("vIdMotivo"  , datosEnd.get("IdMotivo"));
+					paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
+					paramsEnd.put("vRamo"    , datosEnd.get("Ramo"));
+					paramsEnd.put("vPoliza"   , datosEnd.get("Poliza"));
+					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
+					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
+					paramsEnd.put("vInciso"     , datosEnd.get("Inciso"));
+					paramsEnd.put("vSerie"    , datosEnd.get("Serie"));
+					paramsEnd.put("vEndoB" , endosoRecuperado);
+					
+					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
+					
+					logger.debug("Respuesta de Cambio Serie numero de endoso: " + res);
+					
+					if(res == null || res == 0 || res == -1){
+						logger.debug("Endoso Cambio Serie no exitoso");
+						return false;
+					}else{
+						endosoRecuperado = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Cambio Serie Auto: " + e.getMessage(),e);
+				}
+				
+			}
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso Serie de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso Cambio Serie no exitoso, valor de endoso en -1");
+				return false;
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Serie");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	
 	/*
 	 * Getters y setters

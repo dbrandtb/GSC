@@ -288,6 +288,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
@@ -302,6 +303,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdusuari
 					,cdsisrol
 					,cdelemen
+					,usuarioSesion
 					);
 			
 			success = true;
