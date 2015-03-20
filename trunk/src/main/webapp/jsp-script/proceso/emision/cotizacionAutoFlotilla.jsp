@@ -5098,6 +5098,7 @@ function _p30_confirmarEndoso()
                 debug('### confirmar endoso:',json2);
                 if(json2.success)
                 {
+                    marendNavegacion(2);
                     mensajeCorrecto('Endoso generado',json2.respuesta);
                 }
                 else
