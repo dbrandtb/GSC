@@ -881,6 +881,215 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 	}
 	
+	@Override
+	public Map<String,Item> endosoBajaIncisos(
+			String cdramo
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoBajaIncisos @@@@@@"
+				,"\n@@@@@@ cdramo=" , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Recuperando columnas de inciso";
+			List<ComponenteVO> colsComps = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"ENDOSO_BAJA_INCISOS"
+					,"COLUMNAS_INCISO"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes de pantalla";
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(colsComps, true, false, false, true, true, false);
+			items.put("gridColumns" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ items=" , items
+				,"\n@@@@@@ endosoBajaIncisos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
+	
+	@Override
+	public void confirmarEndosoBajaIncisos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>>incisos
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoBajaIncisos @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ incisos="  , incisos
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			String tstamp = String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
+			
+			paso = "Guardando situaciones temporales";
+			logger.info(paso);
+			for(Map<String,String>inciso : incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,inciso.get("NMSITUAC")
+						,inciso.get("NMSUPLEM")
+						,inciso.get("STATUS")
+						,inciso.get("CDTIPSIT")
+						,inciso.get("OTVALOR01")
+						,inciso.get("OTVALOR02")
+						,inciso.get("OTVALOR03")
+						,inciso.get("OTVALOR04")
+						,inciso.get("OTVALOR05")
+						,inciso.get("OTVALOR06")
+						,inciso.get("OTVALOR07")
+						,inciso.get("OTVALOR08")
+						,inciso.get("OTVALOR09")
+						,inciso.get("OTVALOR10")
+						,inciso.get("OTVALOR11")
+						,inciso.get("OTVALOR12")
+						,inciso.get("OTVALOR13")
+						,inciso.get("OTVALOR14")
+						,inciso.get("OTVALOR15")
+						,inciso.get("OTVALOR16")
+						,inciso.get("OTVALOR17")
+						,inciso.get("OTVALOR18")
+						,inciso.get("OTVALOR19")
+						,inciso.get("OTVALOR20")
+						,inciso.get("OTVALOR21")
+						,inciso.get("OTVALOR22")
+						,inciso.get("OTVALOR23")
+						,inciso.get("OTVALOR24")
+						,inciso.get("OTVALOR25")
+						,inciso.get("OTVALOR26")
+						,inciso.get("OTVALOR27")
+						,inciso.get("OTVALOR28")
+						,inciso.get("OTVALOR29")
+						,inciso.get("OTVALOR30")
+						,inciso.get("OTVALOR31")
+						,inciso.get("OTVALOR32")
+						,inciso.get("OTVALOR33")
+						,inciso.get("OTVALOR34")
+						,inciso.get("OTVALOR35")
+						,inciso.get("OTVALOR36")
+						,inciso.get("OTVALOR37")
+						,inciso.get("OTVALOR38")
+						,inciso.get("OTVALOR39")
+						,inciso.get("OTVALOR40")
+						,inciso.get("OTVALOR41")
+						,inciso.get("OTVALOR42")
+						,inciso.get("OTVALOR43")
+						,inciso.get("OTVALOR44")
+						,inciso.get("OTVALOR45")
+						,inciso.get("OTVALOR46")
+						,inciso.get("OTVALOR47")
+						,inciso.get("OTVALOR48")
+						,inciso.get("OTVALOR49")
+						,inciso.get("OTVALOR50")
+						,inciso.get("OTVALOR51")
+						,inciso.get("OTVALOR52")
+						,inciso.get("OTVALOR53")
+						,inciso.get("OTVALOR54")
+						,inciso.get("OTVALOR55")
+						,inciso.get("OTVALOR56")
+						,inciso.get("OTVALOR57")
+						,inciso.get("OTVALOR58")
+						,inciso.get("OTVALOR59")
+						,inciso.get("OTVALOR60")
+						,inciso.get("OTVALOR61")
+						,inciso.get("OTVALOR62")
+						,inciso.get("OTVALOR63")
+						,inciso.get("OTVALOR64")
+						,inciso.get("OTVALOR65")
+						,inciso.get("OTVALOR66")
+						,inciso.get("OTVALOR67")
+						,inciso.get("OTVALOR68")
+						,inciso.get("OTVALOR69")
+						,inciso.get("OTVALOR70")
+						,inciso.get("OTVALOR71")
+						,inciso.get("OTVALOR72")
+						,inciso.get("OTVALOR73")
+						,inciso.get("OTVALOR74")
+						,inciso.get("OTVALOR75")
+						,inciso.get("OTVALOR76")
+						,inciso.get("OTVALOR77")
+						,inciso.get("OTVALOR78")
+						,inciso.get("OTVALOR79")
+						,inciso.get("OTVALOR80")
+						,inciso.get("OTVALOR81")
+						,inciso.get("OTVALOR82")
+						,inciso.get("OTVALOR83")
+						,inciso.get("OTVALOR84")
+						,inciso.get("OTVALOR85")
+						,inciso.get("OTVALOR86")
+						,inciso.get("OTVALOR87")
+						,inciso.get("OTVALOR88")
+						,inciso.get("OTVALOR89")
+						,inciso.get("OTVALOR90")
+						,inciso.get("OTVALOR91")
+						,inciso.get("OTVALOR92")
+						,inciso.get("OTVALOR93")
+						,inciso.get("OTVALOR94")
+						,inciso.get("OTVALOR95")
+						,inciso.get("OTVALOR96")
+						,inciso.get("OTVALOR97")
+						,inciso.get("OTVALOR98")
+						,inciso.get("CDPLAN")
+						,tstamp
+						);
+			}
+			
+			paso="Confirmando endoso";
+			logger.info(paso);
+			endososDAO.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,tstamp,cdusuari,cdelemen,cdtipsup);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoBajaIncisos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
 	/*
 	 * Getters y setters
 	 */
