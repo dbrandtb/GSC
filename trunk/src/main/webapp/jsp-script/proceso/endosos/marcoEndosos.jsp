@@ -73,10 +73,12 @@
 	            	recordActivo=record;
 	            }
 	        });
+	        /*
     		if(nAsegActivos==1)
     		{
     			if(recordActivo.get('cdrol')==2)
     			{
+    			*/
     				Ext.getCmp('marendMenuOperaciones').collapse();
                     Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
 	    			Ext.getCmp('marendLoaderFrame').getLoader().load(
@@ -88,16 +90,16 @@
 	                    {
 	                    	smap1 :
 	                    	{
-	                    	    pv_cdunieco      : recordActivo.get('CDUNIECO')
-	                    	    ,pv_cdramo       : recordActivo.get('CDRAMO')
-	                    	    ,pv_estado       : recordActivo.get('ESTADO')
-	                    	    ,pv_nmpoliza     : recordActivo.get('NMPOLIZA')
-	                    	    ,pv_nmsituac     : recordActivo.get('nmsituac')
-	                    	    ,pv_cdperson     : recordActivo.get('cdperson')
+	                    	    CDUNIECO      : recordActivo.get('CDUNIECO')
+	                    	    ,CDRAMO       : recordActivo.get('CDRAMO')
+	                    	    ,ESTADO       : recordActivo.get('ESTADO')
+	                    	    ,NMPOLIZA     : recordActivo.get('NMPOLIZA')
+	                    	    //,pv_nmsituac     : recordActivo.get('nmsituac')
+	                    	    ,CDPERSON     : recordActivo.get('cdperson')
 	                    	    ,cdrfc           : recordActivo.get('cdrfc')
 	                    	    ,pv_cdrol        : recordActivo.get('cdrol')
 	                    	    ,nombreAsegurado : recordActivo.get('nombrecompleto')
-	                    	    ,ntramite        : recordActivo.get('NTRAMITE')
+	                    	    ,NTRAMITE        : recordActivo.get('NTRAMITE')
 	                    	    ,botonCopiar     : '0'
 	                    	    ,altabaja        : 'alta'
 	                    	    ,cdtipsit        : recordActivo.get('CDTIPSIT')
@@ -105,6 +107,7 @@
 	                    	}
 	                    }
 	                });
+    			/*
     			}
     			else
    				{
@@ -127,6 +130,7 @@
                     ,buttons : Ext.Msg.OK
                 });
     		}
+    		*/
     	}
     	else if(recordOperacion.get('funcion')=='endosocoberturasbaja')
         {
@@ -141,10 +145,13 @@
                     recordActivo=record;
                 }
             });
+            /*
             if(nAsegActivos==1)
             {
                 if(recordActivo.get('cdrol')==2)
                 {
+                */
+                    console.log('recordActivo=', recordActivo);
                     Ext.getCmp('marendMenuOperaciones').collapse();
                     Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                     Ext.getCmp('marendLoaderFrame').getLoader().load(
@@ -156,22 +163,24 @@
                         {
                             smap1 :
                             {
-                                pv_cdunieco      : recordActivo.get('CDUNIECO')
-                                ,pv_cdramo       : recordActivo.get('CDRAMO')
-                                ,pv_estado       : recordActivo.get('ESTADO')
-                                ,pv_nmpoliza     : recordActivo.get('NMPOLIZA')
-                                ,pv_nmsituac     : recordActivo.get('nmsituac')
-                                ,pv_cdperson     : recordActivo.get('cdperson')
+                                CDUNIECO      : recordActivo.get('CDUNIECO')
+                                ,CDRAMO       : recordActivo.get('CDRAMO')
+                                ,ESTADO       : recordActivo.get('ESTADO')
+                                ,NMPOLIZA     : recordActivo.get('NMPOLIZA')
+                                //,pv_nmsituac     : recordActivo.get('nmsituac')
+                                ,CDPERSON     : recordActivo.get('cdperson')
                                 ,cdrfc           : recordActivo.get('cdrfc')
                                 ,pv_cdrol        : recordActivo.get('cdrol')
                                 ,nombreAsegurado : recordActivo.get('nombrecompleto')
-                                ,ntramite        : recordActivo.get('NTRAMITE')
+                                ,NTRAMITE        : recordActivo.get('NTRAMITE')
                                 ,botonCopiar     : '0'
                                 ,altabaja        : 'baja'
                                 ,cdtipsit        : recordActivo.get('CDTIPSIT')
+                                ,fenacimi        : Ext.Date.format(recordActivo.get('fenacimi'), 'd/m/Y')
                             }
                         }
                     });
+                /*
                 }
                 else
                 {
@@ -194,6 +203,7 @@
                     ,buttons : Ext.Msg.OK
                 });
             }
+            */
         }
     	else if(recordOperacion.get('funcion')=='endosodomicilio'||recordOperacion.get('funcion')=='endosodomiciliosimple')
     	{

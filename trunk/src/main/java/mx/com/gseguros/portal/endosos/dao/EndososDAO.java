@@ -36,7 +36,8 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdtipsup)throws Exception;
     public List<Map<String,String>> obtieneCoberturasDisponibles (Map<String,String>params)    throws Exception;
-    public Map<String, String>      guardarEndosoCoberturas(Map<String, Object> params)        throws Exception;
+    @Deprecated
+    public Map<String, String>      iniciaEndoso(Map<String, Object> params)        throws Exception;
 	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params)     throws Exception;
 	public Map<String,Object>       sigsvalipolEnd(Map<String, String> params)                 throws Exception;
 	public Map<String, String>      guardarEndosoClausulas(Map<String, Object> params)         throws Exception;
@@ -57,7 +58,7 @@ public interface EndososDAO
 	public void                     insertarTworksupSitTodas(Map<String, String> params)       throws Exception;
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
 	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
-	public List<Map<String,String>> obtenerNombreEndoso(String cdtipsup) throws Exception;
+	public String                   obtieneDescripcionEndoso(String cdtipsup)                  throws Exception;
 	public void                     actualizarFenacimi(Map<String, String> params)             throws Exception;
 	public void                     actualizarSexo(Map<String, String> params)                 throws Exception;
 	public List<Map<String,String>> obtenerCdpersonMpoliper(Map<String, String> params)        throws Exception;
@@ -171,7 +172,6 @@ public interface EndososDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdtipsit
 			,String cdtipsup) throws Exception;
 	
 	public ComponenteVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception;

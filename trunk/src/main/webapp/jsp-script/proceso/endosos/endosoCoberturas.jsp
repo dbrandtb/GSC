@@ -5,23 +5,21 @@
     //////variables //////
     /*///////////////////*/
     var storeCoberturasActuales_p3;
-    var storeCoberturasPorEliminar_p3;
-    var storeCoberturasPorAgregar_p3;
+    var storeCoberturasEditadas_p3;
     var storeCoberturasDisponibles_p3;
     var storeIncisos_p3;
     var panelCoberturasp3;
     var urlCargarCoberturasp3 = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
     var urlCargarCoberturasDispp3 = '<s:url namespace="/endosos" action="obtenerCoberturasDisponibles" />';
     var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos" action="obtenerComponenteSituacionCobertura" />';
-    var inputCduniecop3 = '<s:property value="smap1.pv_cdunieco" />';
-    var inputCdramop3 = '<s:property value="smap1.pv_cdramo" />';
-    var inputEstadop3 = '<s:property value="smap1.pv_estado" />';
-    var inputNmpolizap3 = '<s:property value="smap1.pv_nmpoliza" />';
-    var inputCdpersonap3 = '<s:property value="smap1.pv_cdperson" />';
-    var inputNtramitep3  = '<s:property value="smap1.ntramite" />';
+    var inputCduniecop3 = '<s:property value="smap1.CDUNIECO" />';
+    var inputCdramop3 = '<s:property value="smap1.CDRAMO" />';
+    var inputEstadop3 = '<s:property value="smap1.ESTADO" />';
+    var inputNmpolizap3 = '<s:property value="smap1.NMPOLIZA" />';
+    var inputCdpersonap3 = '<s:property value="smap1.CDPERSON" />';
+    var inputNtramitep3  = '<s:property value="smap1.NTRAMITE" />';
     var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
-    var inputCdtipsitp3  = '<s:property value="smap1.cdtipsit" />';
-    var inputFenacimip3  = '<s:property value="smap1.fenacimi" />';
+    var inputFenacimip3  = '<s:property value="smap1.FENACIMI" />';
     var columnasTatrisit = [<s:property value="columnas" escapeHtml="false" />];
     var urlGuardarCoberturasp3 = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
     var urlTatrip3 = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
@@ -37,7 +35,6 @@
     debug('inputCdpersonap3',inputCdpersonap3);
     debug('inputNtramitep3',inputNtramitep3);
     debug('inputAltabajap3',inputAltabajap3);
-    debug('inputCdtipsitp3',inputCdtipsitp3);
     /*///////////////////*/
     //////variables //////
     ///////////////////////
@@ -52,8 +49,7 @@
         if(form.isValid())
         {
             // Eliminamos los filtros para que enviemos todas las coberturas editadas:
-            storeCoberturasPorAgregar_p3.clearFilter();
-            storeCoberturasPorEliminar_p3.clearFilter();
+            storeCoberturasEditadas_p3.clearFilter();
         	
             form.setLoading(true);
             var json={};
@@ -63,30 +59,10 @@
             json['omap1']['pv_estado_i']   = inputEstadop3;
             json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
             var slist1=[];
-            storeCoberturasPorEliminar_p3.each(function(record)
+            json['slist1']=slist1;
+            storeCoberturasEditadas_p3.each(function(record)
             {
                 slist1.push(
-                {
-                    garantia  : record.get('GARANTIA')
-                    ,cdcapita : record.get('CDCAPITA')
-                    ,status   : record.get('status')
-                    ,ptcapita : record.get('SUMA_ASEGURADA')
-                    ,ptreduci : record.get('ptreduci')
-                    ,fereduci : record.get('fereduci')
-                    ,swrevalo : record.get('swrevalo')
-                    ,cdagrupa : record.get('cdagrupa')
-                    ,cdtipbca : record.get('cdtipbca')
-                    ,ptvalbas : record.get('ptvalbas')
-                    ,swmanual : record.get('swmanual')
-                    ,swreas   : record.get('swreas')
-                    ,nmsituac : record.get('nmsituac')
-                });
-            });
-            json['slist1']=slist1;
-            var slist2=[];
-            storeCoberturasPorAgregar_p3.each(function(record)
-            {
-                slist2.push(
                 {
                     garantia  : record.get('GARANTIA')
                     ,cdcapita : record.get('CDCAPITA')
@@ -103,13 +79,12 @@
                     ,cdatribu : record.get('cdatribu')
                     ,otvalor  : record.get('otvalor')
                     ,nmsituac : record.get('nmsituac')
+                    ,cdtipsit : record.get('cdtipsit')
                 });
             });
-            json['slist2']=slist2;
             json['smap1']={};
             json['smap1']['cdperson']  = inputCdpersonap3;
             json['smap1']['altabaja']  = inputAltabajap3;
-            json['smap1']['cdtipsit']  = inputCdtipsitp3;
             json['smap1']['confirmar'] = confirmar;
             json['smap1']['fenacimi']  = inputFenacimip3;
             debug(json);
@@ -181,6 +156,50 @@
             });
         }
     }
+    
+    /**
+     * 
+     */
+    function recuperaIncisos() {
+    	/*
+    	// Si es el marco de endosos generico, obtenemos los registros recibidos:
+    	if() {
+    		
+    	} else {
+    		// Sino realizamos la consulta:
+            storeIncisos_p3.load({
+                callback: function(records, operation, success) {
+                    if(success){
+                        debug('records', records);
+                        Ext.Array.each(records, function(record, index, recordsItSelf) {
+                            
+                            
+                            debug('SITUAC=', record.get("NMSITUAC"));
+                            console.log('record=', record);
+                            console.log('index=', index);
+                            console.log('recordsItSelf=', recordsItSelf);
+                            
+                            storeCoberturasActuales_p3.load({
+                                addRecords: true,
+                                params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
+                            });
+                            
+                            storeCoberturasDisponibles_p3.load({
+                                addRecords: true,
+                                params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
+                            });
+                            
+                            debug('storeCoberturasActuales_p3=', storeCoberturasActuales_p3);
+                        });
+                        
+                    } else {
+                        showMessage('Error', 'No hay incisos para la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR)
+                    }
+                }
+            });
+    	}
+    	*/
+    }
     /*///////////////////*/
     ////// funciones //////
     ///////////////////////
@@ -190,7 +209,7 @@
                 /////////////////////
                 ////// Modelos //////
                 /*/////////////////*/
-                Ext.define('Modelo1p3', {
+                Ext.define('CoberturaModel_p3', {
                     extend : 'Ext.data.Model',
                     fields : [ {
                         name : 'GARANTIA'
@@ -226,6 +245,7 @@
                     ,'cdatribu'
                     ,'otvalor'
                     ,'nmsituac'
+                    ,'cdtipsit'
                     ]//,
                     //idProperty: 'nmsituac'
                 });
@@ -233,7 +253,7 @@
                 Ext.define('ModelInciso_p3',{
                     extend  : 'Ext.data.Model',
                     fields :[
-                        //MPOLISIT
+                        // De MPOLISIT:
                         "CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
                         ,"NMSITUAC"   , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
                         ,"SWREDUCI"   , "CDAGRUPA" , "CDESTADO"   , "CDGRUPO"
@@ -241,7 +261,7 @@
                         ,"CDASEGUR"   , "DSGRUPO"
                         ,{ name : 'FEFECSIT' , type : 'date' , dateFormat : 'd/m/Y' }
                         ,{ name : 'FECHAREF' , type : 'date' , dateFormat : 'd/m/Y' }
-                        //TVALOSIT
+                        // De TVALOSIT:
                         ,'NMSUPLEM_TVAL'
                         ,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05" , "OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
                         ,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15" , "OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
@@ -263,7 +283,7 @@
                         ,"DSVALOR71" , "DSVALOR72" , "DSVALOR73" , "DSVALOR74" , "DSVALOR75" , "DSVALOR76" , "DSVALOR77" , "DSVALOR78" , "DSVALOR79" , "DSVALOR80"
                         ,"DSVALOR81" , "DSVALOR82" , "DSVALOR83" , "DSVALOR84" , "DSVALOR85" , "DSVALOR86" , "DSVALOR87" , "DSVALOR88" , "DSVALOR89" , "DSVALOR90"
                         ,"DSVALOR91" , "DSVALOR92" , "DSVALOR93" , "DSVALOR94" , "DSVALOR95" , "DSVALOR96" , "DSVALOR97" , "DSVALOR98" , "DSVALOR99"
-                        //MPERSONA
+                        // De MPERSONA:
                         ,"CDPERSON"    , "CDTIPIDE"  , "CDIDEPER"   , "DSNOMBRE"
                         ,"CDTIPPER"    , "OTFISJUR"  , "OTSEXO"     , "CDRFC"
                         ,"FOTO"        , "DSEMAIL"   , "DSNOMBRE1"  , "DSAPELLIDO"
@@ -275,9 +295,9 @@
                         ,{ name : 'FENACIMI'  , type : 'date' , dateFormat : 'd/m/Y' }
                         ,{ name : 'FEINGRESO' , type : 'date' , dateFormat : 'd/m/Y' }
                         ,{ name : 'FEACTUAL'  , type : 'date' , dateFormat : 'd/m/Y' }
-                        //MPOLIPER
+                        // De MPOLIPER:
                         ,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
-                        //CUSTOM
+                        // CUSTOM
                         ,'ATRIBUTOS','NOMBRECOMPLETO'
                     ]
                 });
@@ -289,7 +309,7 @@
                 /*////////////////*/
                 storeCoberturasActuales_p3 = Ext.create('Ext.data.Store', {
                     storeId : 'storeCoberturasActuales_p3',
-                    model : 'Modelo1p3',
+                    model : 'CoberturaModel_p3',
                     proxy : {
                         type : 'ajax',
                         url : urlCargarCoberturasp3,
@@ -306,20 +326,15 @@
                     },
                     autoLoad : false
                 });
-
-                storeCoberturasPorEliminar_p3 = Ext.create('Ext.data.Store', {
-                    storeId : 'storeCoberturasPorEliminar_p3',
-                    model : 'Modelo1p3'
-                });
                 
-                storeCoberturasPorAgregar_p3 = Ext.create('Ext.data.Store', {
-                    storeId : 'storeCoberturasPorAgregar_p3',
-                    model : 'Modelo1p3'
+                storeCoberturasEditadas_p3 = Ext.create('Ext.data.Store', {
+                    storeId : 'storeCoberturasEditadas_p3',
+                    model : 'CoberturaModel_p3'
                 });
                 
                 storeCoberturasDisponibles_p3 = Ext.create('Ext.data.Store', {
                     storeId : 'storeCoberturasDisponibles_p3',
-                    model : 'Modelo1p3',
+                    model : 'CoberturaModel_p3',
                     proxy : {
                         type : 'ajax',
                         url : urlCargarCoberturasDispp3,
@@ -434,11 +449,8 @@
                                             storeCoberturasActuales_p3.clearFilter();
                                             storeCoberturasActuales_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
                                             
-                                            storeCoberturasPorAgregar_p3.clearFilter();
-                                            storeCoberturasPorAgregar_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
-                                            
-                                            storeCoberturasPorEliminar_p3.clearFilter();
-                                            storeCoberturasPorEliminar_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
+                                            storeCoberturasEditadas_p3.clearFilter();
+                                            storeCoberturasEditadas_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
                                         }
                                     }
                                 },
@@ -504,10 +516,21 @@
                                     cellclick : function(grid, td, cellIndex, record)
                                     {
                                         debug('cellclick');
-                                        if(cellIndex==2&&record.get('SWOBLIGA')=='N'&&inputAltabajap3=='baja')
-                                        {
-                                            storeCoberturasPorEliminar_p3.add(record);
-                                            storeCoberturasActuales_p3.remove(record)
+                                        debug('grid=', Ext.ComponentQuery.query('#grdIncisosp3'));
+                                        debug('grid selModel=', Ext.ComponentQuery.query('#grdIncisosp3')[0].getSelectionModel());
+                                        var hayIncisoSeleccionado = Ext.ComponentQuery.query('#grdIncisosp3')[0].getSelectionModel().hasSelection();
+                                        var incisoSelected =        Ext.ComponentQuery.query('#grdIncisosp3')[0].getSelectionModel().getSelection()[0];
+                                        debug('inciso seleccionado?', hayIncisoSeleccionado);
+                                        debug('incisoSelected=', incisoSelected);
+                                        debug('cellIndex=', cellIndex);
+                                        
+                                        if(cellIndex==2 && hayIncisoSeleccionado) {
+                                        	if(record.get('SWOBLIGA')=='N' && inputAltabajap3=='baja') {
+                                                storeCoberturasEditadas_p3.add(record);
+                                                storeCoberturasActuales_p3.remove(record)
+                                            }
+                                        } else {
+                                            mensajeWarning('Debe seleccionar un inciso para continuar');
                                         }
                                     }
                                 }
@@ -515,7 +538,7 @@
                             Ext.create('Ext.grid.Panel', {
                                 title          : 'Coberturas eliminadas'
                                 ,icon          : '${ctx}/resources/fam3icons/icons/delete.png'
-                                ,store         : storeCoberturasPorEliminar_p3
+                                ,store         : storeCoberturasEditadas_p3
                                 ,buttonAlign   : 'center'
                                 ,hidden        : inputAltabajap3=='alta'
                                 ,titleCollapse : true
@@ -563,7 +586,7 @@
                                         if(cellIndex==2)
                                         {
                                             storeCoberturasActuales_p3.add(record);
-                                            storeCoberturasPorEliminar_p3.remove(record)
+                                            storeCoberturasEditadas_p3.remove(record);
                                         }
                                     }
                                 }
@@ -614,7 +637,8 @@
                                  {
                                      cellclick : function(grid, td, cellIndex, record)
                                      {
-                                         debug('cellclick');
+                                     	 debug('cellclick');
+                                         debug('cdtipsit elegido=', record.get('cdtipsit'));
                                          debug('grid=', Ext.ComponentQuery.query('#grdIncisosp3'));
                                          debug('grid selModel=', Ext.ComponentQuery.query('#grdIncisosp3')[0].getSelectionModel());
                                          var hayIncisoSeleccionado = Ext.ComponentQuery.query('#grdIncisosp3')[0].getSelectionModel().hasSelection();
@@ -630,7 +654,7 @@
                                                  ,params :
                                                  {
                                                      'smap1.cdramo'    : inputCdramop3
-                                                     ,'smap1.cdtipsit' : inputCdtipsitp3
+                                                     ,'smap1.cdtipsit' : record.get('cdtipsit')
                                                      ,'smap1.cdgarant' : record.get('GARANTIA')
                                                      ,'smap1.cdtipsup' : inputAltabajap3=='alta'?'6':'7'
                                                  }
@@ -670,7 +694,7 @@
                                                                                  
                                                                                  if(valido)
                                                                                  {
-                                                                                     storeCoberturasPorAgregar_p3.add(record);
+                                                                                     storeCoberturasEditadas_p3.add(record);
                                                                                      storeCoberturasDisponibles_p3.remove(record);
                                                                                      record.set('cdatribu' , item.cdatribu);
                                                                                      record.set('otvalor'  , item.getValue());
@@ -685,7 +709,7 @@
                                                          }
                                                          else
                                                          {
-                                                             storeCoberturasPorAgregar_p3.add(record);
+                                                             storeCoberturasEditadas_p3.add(record);
                                                              storeCoberturasDisponibles_p3.remove(record);
                                                          }
                                                      }
@@ -709,7 +733,7 @@
                             {
                                 title          : 'Coberturas agregadas'
                                 ,icon          : '${ctx}/resources/fam3icons/icons/add.png'
-                                ,store         : storeCoberturasPorAgregar_p3
+                                ,store         : storeCoberturasEditadas_p3
                                 ,buttonAlign   : 'center'
                                 ,colspan       : inputAltabajap3=='alta'?2:1
                                 ,titleCollapse : true
@@ -758,7 +782,7 @@
                                         if(cellIndex==2)
                                         {
                                             storeCoberturasDisponibles_p3.add(record);
-                                            storeCoberturasPorAgregar_p3.remove(record);
+                                            storeCoberturasEditadas_p3.remove(record);
                                         }
                                     }
                                 }

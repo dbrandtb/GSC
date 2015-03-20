@@ -29,7 +29,10 @@ public interface EndososManager
 			,String tipmov
 			)          throws Exception;
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
-    public Map<String,String>        guardarEndosoCoberturas(Map<String,Object>params)        throws Exception;
+    
+    @Deprecated
+    public Map<String,String>        iniciaEndoso(Map<String,Object>params)        throws Exception;
+    
 	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params)   throws Exception;
 	/**
 	 * PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
@@ -107,7 +110,7 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza)         throws Exception;
 	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
-	public List<Map<String, String>> obtenerNombreEndoso(String cdtipsup) throws Exception;
+	public String                    obtieneDescripcionEndoso(String cdtipsup) throws Exception;
 	public void                      actualizarFenacimi(Map<String, String> params)           throws Exception;
 	public void                      actualizarSexo(Map<String, String> params)               throws Exception;
 	public List<Map<String, String>> obtenerCdpersonMpoliper(Map<String, String> params)      throws Exception;
@@ -299,11 +302,10 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdtipsit
 			,String cdtipsup) throws Exception;
 	
 	public ManagerRespuestaImapSmapVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant);
-	public void actualizaTvalositSitaucionCobertura(
+	public void actualizaTvalositSituacionCobertura(
 			String cdunieco
 			,String cdramo
 			,String estado

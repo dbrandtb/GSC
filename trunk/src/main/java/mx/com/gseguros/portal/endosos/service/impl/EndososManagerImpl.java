@@ -140,12 +140,13 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	@Deprecated
 	@Override
-	public Map<String, String> guardarEndosoCoberturas(Map<String, Object> params) throws Exception
+	public Map<String, String> iniciaEndoso(Map<String, Object> params) throws Exception
 	{
-		logger.debug("EndososManager guardarEndosoCoberturas params: "+params);
-		Map<String,String> mapa=endososDAO.guardarEndosoCoberturas(params);
-		logger.debug("EndososManager guardarEndosoCoberturas response map: "+mapa);
+		logger.debug("EndososManager iniciaEndoso params: "+params);
+		Map<String,String> mapa=endososDAO.iniciaEndoso(params);
+		logger.debug("EndososManager iniciaEndoso response map: "+mapa);
         return mapa;
 	}
 	
@@ -350,14 +351,11 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager obtenerNombreEndosos lista size: "+lista.size());
 		return lista;
 	}
+	
 	@Override
-	public List<Map<String, String>> obtenerNombreEndoso(String cdtipsup) throws Exception
-	{
+	public String obtieneDescripcionEndoso(String cdtipsup) throws Exception {
 		logger.debug("EndososManager obtenerNombreEndoso");
-		List<Map<String,String>> lista=endososDAO.obtenerNombreEndoso(cdtipsup);
-		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		logger.debug("EndososManager obtenerNombreEndoso lista size: "+lista.size());
-		return lista;
+		return endososDAO.obtieneDescripcionEndoso(cdtipsup);
 	}
 	
 	@Override
@@ -837,7 +835,6 @@ public class EndososManagerImpl implements EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdtipsit
 			,String cdtipsup) throws Exception
 	{
 		logger.info(
@@ -849,12 +846,11 @@ public class EndososManagerImpl implements EndososManager
 				.append("\n@@@@@@ estado=")  .append(estado)
 				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
 				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.append("\n@@@@@@ cdtipsup=").append(cdtipsup)
 				.toString()
 				);
 		
-		endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdtipsit,cdtipsup);
+		endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdtipsup);
 		
 		logger.info(
 				new StringBuilder()
@@ -952,7 +948,7 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public void actualizaTvalositSitaucionCobertura(
+	public void actualizaTvalositSituacionCobertura(
 			String cdunieco
 			,String cdramo
 			,String estado
