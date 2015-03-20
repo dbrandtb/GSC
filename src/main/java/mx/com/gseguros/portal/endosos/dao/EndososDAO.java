@@ -295,6 +295,7 @@ public interface EndososDAO
 	
 	public List<Map<String,String>> obtieneDatosEndPlacasMotor(Map<String, String> params)throws Exception;
 	public List<Map<String,String>> obtieneDatosEndSerie(Map<String, String> params)throws Exception;
+	public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception;
 	public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
 	
 	public void confirmarEndosoAltaIncisoAuto(

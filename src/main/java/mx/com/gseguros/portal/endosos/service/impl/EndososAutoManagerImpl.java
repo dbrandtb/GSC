@@ -12,6 +12,9 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
@@ -53,6 +56,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private AutosDAOSIGS autosDAOSIGS;
 	
 	@Autowired
+	private ConsultasPolizaManager   consultasPolizaManager;
+	
+	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
 	private EmisionAutosService emisionAutosService;
 	
@@ -61,6 +67,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
+
+	@Value("${caratula.impresion.autos.endosob.url}")
+	private String urlImpresionCaratulaEndosoB;
 	
 	@Value("${caratula.impresion.autos.serviciopublico.url}")
 	private String urlImpresionCaratulaServicioPublico;
@@ -687,16 +696,21 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 			 */
 			if(TipoEndoso.BENEFICIARIO_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-				
+				if(this.endosoBeneficiario(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
+					logger.info("Endoso de Beneficiario exitoso...");
+				}else{
+					logger.error("Error al ejecutar los WS de endoso de Beneficiario");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				}
 			}else if(TipoEndoso.PLACAS_Y_MOTOR.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-				if(this.endosoPlacasMotor(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+				if(this.endosoPlacasMotor(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 					logger.info("Endoso de Placas y motor exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Placas y Motor");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
 				}
 			}else if(TipoEndoso.SERIE_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-				if(this.endosoSerie(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+				if(this.endosoSerie(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 					logger.info("Endoso de Serie exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Serie");
@@ -1297,88 +1311,101 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 	}
 	
-	private int endosoBeneficiario(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+	private boolean endosoBeneficiario(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
 		
-		logger.debug(">>>>> Entrando a metodo Cambio Beneficiario Auto");
+		logger.debug(">>>>> Entrando a metodo Cambio Beneficiario");
 		
-		int numeroEndosoRes = 0;
 		List<Map<String,String>> datos = null;
+		int endosoRecuperado = -1;
 		
-		//Se invoca servicio para obtener los datos del BENEFICIARIO
 		try{
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			params.put("param1" , cdunieco);
-			params.put("param2" , cdramo);
-			params.put("param3" , estado);
-			params.put("param4" , nmpoliza);
-			params.put("param5" , nmsuplem);
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
 			
-//			datos = storedProceduresManager.procedureListCall(
-//					ObjetoBD.OBTIENE_DATOS_END_BENEFICIARIO.getNombre(), params, null);
-			
+			datos = endososDAO.obtieneDatosEndBeneficiario(params);
 			
 		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto SIGS",e1);
-			return 0;
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario para SIGS",e1);
+			return false;
 		}	
 		
 		if(datos != null && !datos.isEmpty()){
-			Map<String,String> datosEnd = datos.get(0);
-			try{
+			
+			String incisos = "";
+			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+			
+			for(Map<String,String> datosEnIt : datos){
+				paramsEnd.put("vIdMotivo"  , datosEnIt.get("IdMotivo"));
+				paramsEnd.put("vSucursal"  , datosEnIt.get("Sucursal"));
+				paramsEnd.put("vRamo"    , datosEnIt.get("Ramo"));
+				paramsEnd.put("vPoliza"   , datosEnIt.get("Poliza"));
+				paramsEnd.put("vBeneficiario"  , datosEnIt.get("Beneficiario"));
 				
-				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
-				paramsEnd.put("vIdMotivo"  , datosEnd.get("ASD"));
-				paramsEnd.put("vSucursal"  , datosEnd.get("ASD"));
-				paramsEnd.put("vRamo"      , datosEnd.get("ASD"));
-				paramsEnd.put("vPoliza"    , datosEnd.get("ASD"));
-				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("ASD"))?" " : datosEnd.get("ASD"));
-				paramsEnd.put("vEndoso"    , datosEnd.get("ASD"));
-				paramsEnd.put("vBeneficiario"  , datosEnd.get("ASD"));
-				paramsEnd.put("vListaIncisos"     , datosEnd.get("ASD"));
+				if(StringUtils.isNotBlank(incisos)){
+					incisos = incisos +",";
+				}
+				
+				incisos = incisos + datosEnIt.get("Inciso");
+			}
+			
+			paramsEnd.put("vListaIncisos"  , incisos);
+			
+			try{
 				
 				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
 				
-				logger.debug("Respuesta de Cambio Beneficiario Auto, numero de endoso: " + res);
+				logger.debug("Respuesta de Cambio Beneficiario numero de endoso: " + res);
 				
-				if(res == null || res == 0){
-					logger.debug("Endoso Cambio Beneficiario Auto no exitoso");
+				if(res == null || res == 0 || res == -1){
+					logger.debug("Endoso Cambio Beneficiario no exitoso");
+					return false;
 				}else{
-					numeroEndosoRes = res.intValue();
-					
-					try{
-						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
-						params.put("param1" , cdunieco);
-						params.put("param2" , cdramo);
-						params.put("param3" , estado);
-						params.put("param4" , nmpoliza);
-						params.put("param5" , nmsuplem);
-						params.put("param6" , numeroEndosoRes);
-						
-//						storedProceduresManager.procedureVoidCall(
-//								ObjetoBD.ACTUALIZA_ENDB_DE_SIG.getNombre(), params, null);
-						
-						
-					} catch (Exception e1) {
-						logger.error("Error en llamar al PL de obtencion de datos para Cambio Beneficiario Auto para SIGS",e1);
-						return 0;
-					}	
+					endosoRecuperado = res.intValue();
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Cambio Beneficiario  Auto: " + e.getMessage(),e);
+				logger.error("Error en Envio Cambio Beneficiario Auto: " + e.getMessage(),e);
+			}
+			
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso Beneficiario de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso Cambio Beneficiario no exitoso, valor de endoso en -1");
+				return false;
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Beneficiario Auto");
-			return 0;
+			logger.warn("Aviso, No se tienen datos de Cambio Beneficiario");
+			return false;
 		}
 		
-		return numeroEndosoRes;
+		return true;
 	}
 	
 	private boolean endosoPlacasMotor(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Placas Motor");
 		
@@ -1414,7 +1441,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vInciso"     , datosEnd.get("Inciso"));
 					paramsEnd.put("vPlacas"    , datosEnd.get("Placas"));
 					paramsEnd.put("vMotor"   , datosEnd.get("Motor"));
-					paramsEnd.put("vEndoB" , endosoRecuperado);
+					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
 					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
 					
@@ -1444,6 +1471,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
 					
 					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
 				} catch (Exception e1) {
 					logger.error("Error en llamar al PL Para actualizar endoso Placas Motor de SIGS",e1);
 					return false;
@@ -1462,7 +1492,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 
 	private boolean endosoSerie(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Serie");
 		
@@ -1497,7 +1527,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
 					paramsEnd.put("vInciso"     , datosEnd.get("Inciso"));
 					paramsEnd.put("vSerie"    , datosEnd.get("Serie"));
-					paramsEnd.put("vEndoB" , endosoRecuperado);
+					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
 					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
 					
@@ -1527,6 +1557,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
 					
 					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
 				} catch (Exception e1) {
 					logger.error("Error en llamar al PL Para actualizar endoso Serie de SIGS",e1);
 					return false;
@@ -1544,6 +1577,51 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return true;
 	}
 	
+	
+	
+	private boolean generaCaratulasSigs(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String nmtramite, String cdtipsup, String numEndoso){
+		/**
+		 * Para Caratula Endoso B
+		 */
+		try{
+		PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+		
+		datosPol.setCdunieco(cdunieco);
+		datosPol.setCdramo(cdramo);
+		datosPol.setEstado(estado);
+		datosPol.setNmpoliza(nmpoliza);
+		
+		List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
+		PolizaDTO polRes = listaPolizas.get(0);
+		
+		
+		String parametros = null;
+		
+		parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEndoso;
+		logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
+		
+		HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+		paramsR.put("pv_cdunieco_i", cdunieco);
+		paramsR.put("pv_cdramo_i",   cdramo);
+		paramsR.put("pv_estado_i",   estado);
+		paramsR.put("pv_nmpoliza_i", nmpoliza);
+		paramsR.put("pv_nmsuplem_i", nmsuplem);
+		paramsR.put("pv_feinici_i",  new Date());
+		paramsR.put("pv_cddocume_i", urlImpresionCaratulaEndosoB + parametros);
+		paramsR.put("pv_dsdocume_i", "Car&aacute;tula Endoso B");
+		paramsR.put("pv_nmsolici_i", nmpoliza);
+		paramsR.put("pv_ntramite_i", nmtramite);
+		paramsR.put("pv_tipmov_i",   cdtipsup);
+		paramsR.put("pv_swvisible_i", Constantes.SI);
+		
+		kernelManager.guardarArchivo(paramsR);
+		}catch(Exception e){
+			logger.debug("Error al guardar la caratula de endoso B");
+			return false;
+		}
+		return true;
+	}
 	
 	/*
 	 * Getters y setters
