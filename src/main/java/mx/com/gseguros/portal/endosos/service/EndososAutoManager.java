@@ -94,4 +94,19 @@ public interface EndososAutoManager
 			,String cdelemen
 			,String cdtipsup
 			)throws Exception;
+	
+	public Map<String,Item> endosoBajaIncisos(
+			String cdramo
+			)throws Exception;
+	
+	public void confirmarEndosoBajaIncisos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>>incisos
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception;
 }

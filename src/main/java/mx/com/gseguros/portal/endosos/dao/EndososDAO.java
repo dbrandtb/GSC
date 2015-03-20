@@ -303,4 +303,15 @@ public interface EndososDAO
 			,String cdelemen
 			,String cdtipsup
 			)throws Exception;
+	
+	public void confirmarEndosoBajaIncisos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tstamp
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception;
 }

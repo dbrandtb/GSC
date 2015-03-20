@@ -377,7 +377,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public String confirmarEndosoAltaIncisoAuto()
 	{
 		logger.info(Utilerias.join(
-				"\n############################################"
+				 "\n###########################################"
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
 				,"\n###### smap1="  , smap1
 				,"\n###### slist1=" , slist1
@@ -421,6 +421,93 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### respuesta=" , respuesta
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
 				,"\n###########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String endosoBajaIncisos()
+	{
+		logger.info(Utilerias.join(
+				 "\n###############################"
+				,"\n###### endosoBajaIncisos ######"
+				,"\n###### smap1(poliza)="   , smap1
+				,"\n###### slist1(incisos)=" , slist1
+				));
+		
+		String result = ERROR;
+		try
+		{
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdramo = smap1.get("CDRAMO");
+			Utils.validate(cdramo , "No se recibio la sucursal");
+	
+			imap = endososAutoManager.endosoBajaIncisos(cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### success="   , success
+				,"\n###### respuesta=" , respuesta
+				,"\n###### endosoBajaIncisos ######"
+				,"\n###############################"
+				));
+		return result;
+	}
+	
+	public String confirmarEndosoBajaIncisos()
+	{
+		logger.info(Utilerias.join(
+				 "\n########################################"
+				,"\n###### confirmarEndosoBajaIncisos ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		try
+		{
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+					
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsup = smap1.get("cdtipsup");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio la sucursal");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			
+			endososAutoManager.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup);
+			
+			respuesta = "Endoso generado correctamente";
+			success   = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### success="   , success
+				,"\n###### respuesta=" , respuesta
+				,"\n###### confirmarEndosoBajaIncisos ######"
+				,"\n########################################"
 				));
 		return SUCCESS;
 	}
