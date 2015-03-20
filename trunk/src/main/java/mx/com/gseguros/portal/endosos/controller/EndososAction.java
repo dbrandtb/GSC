@@ -5894,7 +5894,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramsR.put("pv_nmsuplem_i", nmsuplem);
 					paramsR.put("pv_feinici_i",  new Date());
 					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					paramsR.put("pv_dsdocume_i", "Endoso Cambio de Domicilio");
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula Endoso B");
 					paramsR.put("pv_nmsolici_i", smap1.get("pv_nmpoliza"));
 					paramsR.put("pv_ntramite_i", smap1.get("NTRAMITE"));
 					paramsR.put("pv_tipmov_i",   TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup());

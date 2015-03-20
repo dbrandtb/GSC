@@ -202,14 +202,14 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 			
 			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
-			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
-			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
-			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
-			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
-			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
-			declareParameter(new SqlParameter("vPlacas", Types.SMALLINT));
-			declareParameter(new SqlParameter("vMotor", Types.VARCHAR));
-			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
+			declareParameter(new SqlParameter("vRamo",     Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza",   Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso",  Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso",   Types.INTEGER));
+			declareParameter(new SqlParameter("vInciso",   Types.SMALLINT));
+			declareParameter(new SqlParameter("vPlacas",   Types.VARCHAR));
+			declareParameter(new SqlParameter("vMotor",    Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -246,7 +246,7 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
 			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
 			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
-			declareParameter(new SqlParameter("vSerie", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSerie", Types.VARCHAR));
 			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
