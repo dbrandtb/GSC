@@ -284,7 +284,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String nmpoliza = params.get("nmpoliza");
 				String nmpoliex = params.get("nmpoliex");
 				String ramo     = params.get("ramo");
-				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo));
+				String cdagente = params.get("cdagente");
+				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo,cdagente));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_HISTORICO_POLIZA))
 			{

@@ -52,11 +52,14 @@ public class EndososAutoAction extends PrincipalCoreAction
 			{
 				smap1=new HashMap<String,String>();
 			}
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			smap1.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
 			smap1.put("cdsisrol" , cdsisrol);
 			
-			imap = endososAutoManager.construirMarcoEndosos(cdsisrol);
+			Map<String,Object> valores = endososAutoManager.construirMarcoEndosos(cdusuari,cdsisrol);
+			imap = (Map<String,Item>)valores.get("items");
+			smap1.put("cdagente" , (String)valores.get("cdagente"));
 			
 			result = SUCCESS;
 		}

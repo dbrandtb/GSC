@@ -9,7 +9,7 @@ import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 
 public interface EndososAutoManager
 {
-	public Map<String,Item> construirMarcoEndosos(String cdsisrol)throws Exception;
+	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol)throws Exception;
 	
 	public String recuperarColumnasIncisoRamo(String cdramo) throws Exception;
 	
