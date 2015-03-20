@@ -16,6 +16,7 @@ var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"    acti
 ////// variables //////
 var _p34_contexto = '${ctx}';
 var _p34_smap1    = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+debug('_p34_smap1:',_p34_smap1);
 
 var _p34_storePolizas;
 var _p34_storeGrupos;

@@ -21,7 +21,9 @@ import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
@@ -40,11 +42,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 {
 	private static Logger logger = Logger.getLogger(EndososAutoManagerImpl.class);
 	
-	private PantallasDAO  pantallasDAO;
-	private EndososDAO    endososDAO;
-	private ConsultasDAO  consultasDAO;
-	private CotizacionDAO cotizacionDAO;
-	private PersonasDAO   personasDAO;
+	private PantallasDAO   pantallasDAO;
+	private EndososDAO     endososDAO;
+	private ConsultasDAO   consultasDAO;
+	private CotizacionDAO  cotizacionDAO;
+	private PersonasDAO    personasDAO;
+	private MesaControlDAO mesaControlDAO;
 	
 	@Autowired
 	private AutosDAOSIGS autosDAOSIGS;
@@ -82,15 +85,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	
 	@Override
-	public Map<String,Item> construirMarcoEndosos(String cdsisrol) throws Exception
+	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
-				,"\n@@@@@@ cdsisrol=",cdsisrol
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
-		Map<String,Item>items=new HashMap<String,Item>();
+		Map<String,Object> valores = new HashMap<String,Object>();
+		Map<String,Item>   items   = new HashMap<String,Item>();
 		
 		String paso="";
 		
@@ -191,6 +196,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.info(paso);
 			gc.generaComponentes(componentesGridFamilias, true, false, false, true, false, false);
 			items.put("gridFamiliasColumns" , gc.getColumns());
+			
+			valores.put("items" , items);
+			
+			String cdagente="";
+			if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+			{
+				paso = "Recuperando clave de agente";
+				logger.info(paso);
+				Map<String,String>params=new LinkedHashMap<String,String>();
+				params.put("cdusuari" , cdusuari);
+				cdagente = mesaControlDAO.cargarCdagentePorCdusuari(params);
+			}
+			valores.put("cdagente" , cdagente);
 		}
 		catch(Exception ex)
 		{
@@ -198,11 +216,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		
 		logger.info(Utilerias.join(
-				 "\n@@@@@@ items=",items
+				 "\n@@@@@@ valores=",valores
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-		return items;
+		return valores;
 	}
 	
 	@Override
@@ -1548,5 +1566,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 
 	public void setPersonasDAO(PersonasDAO personasDAO) {
 		this.personasDAO = personasDAO;
+	}
+
+	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
+		this.mesaControlDAO = mesaControlDAO;
 	}
 }
