@@ -234,6 +234,15 @@ public class EndososAction extends PrincipalCoreAction
 			error = resp.getMensaje();
 			*/
 			
+			// Si el origen es del margo general, asignamos el tipo de endoso:
+			if(smap1.containsKey("marco2")) {
+				if(smap1.get("cdtipsup").equals(TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString())) {
+					smap1.put("altabaja", "alta");
+				} else {
+					smap1.put("altabaja", "baja");
+				}
+			}
+			
 			//Se obtienen las columnas del grid de incisos:
 			List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(null, null, null, smap1.get("pv_cdtipsit_i"), null, null, "ENDOSO_COBERTURA", "GRID_INCISOS", null);
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -1839,7 +1848,6 @@ public class EndososAction extends PrincipalCoreAction
 	//////     nmsituac            //////
 	//////     cdperson            //////
     //////     altabaja            //////
-	//////     cdtipsit            //////
 	//////     confirmar           //////
 	//////     fenacimi            //////
 	////// omap1:                  //////
@@ -1848,8 +1856,7 @@ public class EndososAction extends PrincipalCoreAction
 	//////     pv_estado_i         //////
 	//////     pv_nmpoliza_i       //////
 	//////     pv_fecha_i          //////
-	////// slist1: quitar cober.   //////
-	////// slist2: agregar cober.  //////
+	////// slist1: coberturas Editadas//////
 	////// [garantia,cdcapita,     //////
     ////// status,ptcapita,        //////
 	////// ptreduci,fereduci       //////
@@ -1865,29 +1872,33 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug("smap1: "+smap1);
 		logger.debug("omap1: "+omap1);
 		logger.debug("slist1: "+slist1);
-		logger.debug("slist2: "+slist2);
 		
 		this.session=ActionContext.getContext().getSession();
         UserVO usuario=(UserVO) session.get("USUARIO");
 		try {
+			// Se determina el tipo de endoso solicitado:
+			TipoEndoso tipoEndoso = smap1.get("altabaja").equalsIgnoreCase("alta") ? 
+					TipoEndoso.ALTA_COBERTURAS : TipoEndoso.BAJA_COBERTURAS;
+			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS) {
+				logger.debug("ES UN ALTA DE COBERTURAS.....");
+			} else {
+				logger.debug("ES UNA BAJA DE COBERTURAS.....");
+			}
+			
+			// Se realiza validacion de fecha y nuevas coberturas:
 			String sFenacimi = smap1.get("fenacimi");
 			Date fenacimi = null;
 			if(StringUtils.isNotBlank(sFenacimi)) {
 				fenacimi = renderFechas.parse(sFenacimi);
 			}
-			
-			if(fenacimi!=null) {
-				for(Map<String,String> nuevo:slist2) {
-					String cdgarant = nuevo.get("garantia");
+			if(fenacimi != null && tipoEndoso == TipoEndoso.ALTA_COBERTURAS) {
+				for(Map<String,String> nuevaCob : slist1) {
+					String cdgarant = nuevaCob.get("garantia");
 					endososManager.validaNuevaCobertura(cdgarant, fenacimi);
 				}
 			}
 			
-			// Se determina el tipo de endoso solicitado:
-			String cdtipsup = smap1.get("altabaja").equalsIgnoreCase("alta") ? 
-					TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString() : 
-					TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString();
-					
+			// Se inicia endoso:
 			/*
 			 * pv_cdunieco_i
 			 * pv_cdramo_i
@@ -1903,109 +1914,118 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			omap1.put("pv_cdtipsup_i", cdtipsup);
-			Map<String,String> respEndCob=endososManager.guardarEndosoCoberturas(omap1);
+			omap1.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
+			Map<String,String> respEndCob = endososManager.iniciaEndoso(omap1);
 			
-			// Se dan de alta las coberturas correspondientes:
-			for(Map<String,String> coberPorAgregar : slist2) {
-				Map<String,String> paramsAddCober =new LinkedHashMap<String,String>(0);
-				paramsAddCober.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-				paramsAddCober.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-				paramsAddCober.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-				paramsAddCober.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-				paramsAddCober.put("pv_nmsituac_i" , coberPorAgregar .get("nmsituac"));
-				paramsAddCober.put("pv_cdgarant_i" , coberPorAgregar .get("garantia"));
-				paramsAddCober.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-				paramsAddCober.put("pv_cdcapita_i" , coberPorAgregar .get("cdcapita"));
-				paramsAddCober.put("pv_status_i"   , coberPorAgregar .get("status"));
-				paramsAddCober.put("pv_cdtipbca_i" , coberPorAgregar .get("cdtipbca"));
-				paramsAddCober.put("pv_ptvalbas_i" , coberPorAgregar .get("ptvalbas"));
-				paramsAddCober.put("pv_swmanual_i" , coberPorAgregar .get("swmanual"));
-				paramsAddCober.put("pv_swreas_i"   , coberPorAgregar .get("swreas"));
-				paramsAddCober.put("pv_cdagrupa_i" , coberPorAgregar .get("cdagrupa"));
-				paramsAddCober.put("PV_ACCION"     , "I");
-				paramsAddCober.put("pv_cdtipsup_i" , cdtipsup);
-				kernelManager.movPoligar(paramsAddCober);
+			for(Map<String,String> coberturasEditadas : slist1) {
 				
-				Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
-				paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-				paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-				paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-				paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-				paramSigsvdef.put("pv_nmsituac_i" , coberPorAgregar .get("nmsituac"));
-				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-				paramSigsvdef.put("pv_cdgarant_i" , coberPorAgregar .get("garantia"));
-				paramSigsvdef.put("pv_cdtipsup_i" , cdtipsup);
-				kernelManager.coberturas(paramSigsvdef);
+				// ****** Insertamos las coberturas correspondientes ******
+				Map<String,String> paramsMovPoligar =new LinkedHashMap<String,String>(0);
+				paramsMovPoligar.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramsMovPoligar.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramsMovPoligar.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramsMovPoligar.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramsMovPoligar.put("pv_nmsituac_i" , coberturasEditadas.get("nmsituac"));
+				paramsMovPoligar.put("pv_cdgarant_i" , coberturasEditadas.get("garantia"));
+				paramsMovPoligar.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				paramsMovPoligar.put("pv_cdcapita_i" , coberturasEditadas.get("cdcapita"));
+				paramsMovPoligar.put("pv_status_i"   , coberturasEditadas.get("status"));
+				paramsMovPoligar.put("pv_cdtipbca_i" , coberturasEditadas.get("cdtipbca"));
+				paramsMovPoligar.put("pv_ptvalbas_i" , coberturasEditadas.get("ptvalbas"));
+				paramsMovPoligar.put("pv_swmanual_i" , coberturasEditadas.get("swmanual"));
+				paramsMovPoligar.put("pv_swreas_i"   , coberturasEditadas.get("swreas"));
+				paramsMovPoligar.put("pv_cdagrupa_i" , coberturasEditadas.get("cdagrupa"));
+				paramsMovPoligar.put("PV_ACCION"     , tipoEndoso == TipoEndoso.ALTA_COBERTURAS ? "I" : "B");
+				paramsMovPoligar.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
+				kernelManager.movPoligar(paramsMovPoligar);
+				
+				// ****** Si es una alta ejecutamos valores por defecto ******
+				if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS){
+					Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
+					paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+					paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+					paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+					paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+					paramSigsvdef.put("pv_nmsituac_i" , coberturasEditadas.get("nmsituac"));
+					paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+					paramSigsvdef.put("pv_cdgarant_i" , coberturasEditadas.get("garantia"));
+					paramSigsvdef.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
+					kernelManager.coberturas(paramSigsvdef);
+				}
+				
+				// ****** Insertamos en TVALOSIT ******
+				// Cargar Valosit anterior:
+				Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+				paramsValositAsegurado.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramsValositAsegurado.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramsValositAsegurado.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramsValositAsegurado.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramsValositAsegurado.put("pv_nmsituac_i" , coberturasEditadas.get("nmsituac"));
+				Map<String,Object> valositAsegurado = kernelManager.obtieneValositSituac(paramsValositAsegurado);
+				logger.debug("valosit anterior: "+valositAsegurado);
+				// poner pv_ al anterior
+				Map<String,Object> valositAseguradoIterado = new LinkedHashMap<String,Object>(0);
+				Iterator it = valositAsegurado.entrySet().iterator();
+				while(it.hasNext()) {
+					Entry en = (Entry)it.next();
+					valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+				}
+				valositAsegurado = valositAseguradoIterado;
+				logger.debug("se puso pv_ en el anterior");
+				// convertir a string el total que es object:
+				Map<String,String>paramsNuevos = new LinkedHashMap<String,String>(0);
+				it = valositAsegurado.entrySet().iterator();
+				while(it.hasNext()) {
+					Entry en = (Entry)it.next();
+					paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+				}
+				logger.debug("se pasaron a string");
+				/*
+				pv_cdunieco
+	    		pv_cdramo
+	    		pv_estado
+	    		pv_nmpoliza
+	    		pv_nmsituac
+	    		pv_nmsuplem
+	    		pv_status
+	    		pv_cdtipsit
+	    		...pv_otvalor[01-50]
+	    		pv_accion_i
+				*/
+				paramsNuevos.put("pv_cdunieco" , (String)omap1.get("pv_cdunieco_i"));
+				paramsNuevos.put("pv_cdramo"   , (String)omap1.get("pv_cdramo_i"));
+				paramsNuevos.put("pv_estado"   , (String)omap1.get("pv_estado_i"));
+				paramsNuevos.put("pv_nmpoliza" , (String)omap1.get("pv_nmpoliza_i"));
+				paramsNuevos.put("pv_nmsituac" , coberturasEditadas.get("nmsituac"));
+				paramsNuevos.put("pv_nmsuplem" , respEndCob.get("pv_nmsuplem_o"));
+				paramsNuevos.put("pv_status"   , "V");
+				paramsNuevos.put("pv_cdtipsit" , coberturasEditadas.get("cdtipsit"));
+				paramsNuevos.put("pv_accion_i" , "I");
+				logger.debug("los actualizados seran: "+paramsNuevos);
+				kernelManager.insertaValoresSituaciones(paramsNuevos);
 			}
 			
-			// Se dan de baja las coberturas correspondientes:
-			for(Map<String,String> coberPorBorrar : slist1) {
-				Map<String,String> paramsDelCober = new LinkedHashMap<String,String>(0);
-				paramsDelCober.put("pv_cdunieco_i", (String)omap1.get("pv_cdunieco_i"));
-				paramsDelCober.put("pv_cdramo_i"  , (String)omap1.get("pv_cdramo_i"));
-				paramsDelCober.put("pv_estado_i"  , (String)omap1.get("pv_estado_i"));
-				paramsDelCober.put("pv_nmpoliza_i", (String)omap1.get("pv_nmpoliza_i"));
-				paramsDelCober.put("pv_nmsituac_i", coberPorBorrar.get("nmsituac"));
-				paramsDelCober.put("pv_cdgarant_i", coberPorBorrar.get("garantia"));
-				paramsDelCober.put("pv_nmsuplem_i", respEndCob.get("pv_nmsuplem_o"));
-				paramsDelCober.put("pv_cdcapita_i", coberPorBorrar.get("cdcapita"));
-				paramsDelCober.put("pv_status_i"  , coberPorBorrar.get("status"));
-				paramsDelCober.put("pv_cdtipbca_i", coberPorBorrar.get("cdtipbca"));
-				paramsDelCober.put("pv_ptvalbas_i", coberPorBorrar.get("ptvalbas"));
-				paramsDelCober.put("pv_swmanual_i", coberPorBorrar.get("swmanual"));
-				paramsDelCober.put("pv_swreas_i"  , coberPorBorrar.get("swreas"));
-				paramsDelCober.put("pv_cdagrupa_i", coberPorBorrar.get("cdagrupa"));
-				paramsDelCober.put("PV_ACCION"    , "B");
-				paramsDelCober.put("pv_cdtipsup_i", cdtipsup);
-				kernelManager.movPoligar(paramsDelCober);
-			}
-			
-			
-			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
-			/*
-			pv_cdunieco
-    		pv_cdramo
-    		pv_estado
-    		pv_nmpoliza
-    		pv_nmsituac
-    		pv_nmsuplem
-    		pv_status
-    		pv_cdtipsit
-    		...pv_otvalor[01-50]
-    		pv_accion_i
-			*/
-			paramsNuevos.put("pv_cdunieco" , (String)omap1.get("pv_cdunieco_i"));
-			paramsNuevos.put("pv_cdramo"   , (String)omap1.get("pv_cdramo_i"));
-			paramsNuevos.put("pv_estado"   , (String)omap1.get("pv_estado_i"));
-			paramsNuevos.put("pv_nmpoliza" , (String)omap1.get("pv_nmpoliza_i"));
-			paramsNuevos.put("pv_nmsituac" , smap1.get("nmsituac"));
-			paramsNuevos.put("pv_nmsuplem" , respEndCob.get("pv_nmsuplem_o"));
-			paramsNuevos.put("pv_status"   , "V");
-			paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
-			paramsNuevos.put("pv_accion_i" , "I");
-			logger.debug("los actualizados seran: "+paramsNuevos);
-			kernelManager.insertaValoresSituaciones(paramsNuevos);
-			
-			// 
+			// ****** Actualizamos TVALOSIT ******
+			//
 			endososManager.actualizaTvalositCoberturasAdicionales(
 					(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 					(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-					respEndCob.get("pv_nmsuplem_o"), smap1.get("cdtipsit"), cdtipsup);
-			
+					respEndCob.get("pv_nmsuplem_o"), tipoEndoso.getCdTipSup().toString());
 			// 
-			for(Map<String,String> nuevo:slist2) {
-				String cdatribu = nuevo.get("cdatribu");
-				String otvalor  = nuevo.get("otvalor");
-				if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor)) {
-					endososManager.actualizaTvalositSitaucionCobertura(
-							(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-							respEndCob.get("pv_nmsuplem_o"), cdatribu, otvalor);
+			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS){
+				for(Map<String,String> nuevaCob : slist1) {
+					String cdatribu = nuevaCob.get("cdatribu");
+					String otvalor  = nuevaCob.get("otvalor");
+					if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor)) {
+						endososManager.actualizaTvalositSituacionCobertura(
+								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+								respEndCob.get("pv_nmsuplem_o"), cdatribu, otvalor);
+					}
 				}
 			}
 			
-			//
+			// ****** Ejecutamos SIGSVDEF_END ******
 			Map<String,String> paramSigsvdefEnd = new LinkedHashMap<String,String>(0);
 			paramSigsvdefEnd.put("pv_cdusuari_i", usuario.getEmpresa().getElementoId());
 			paramSigsvdefEnd.put("pv_cdelemen_i", usuario.getUser());
@@ -2015,9 +2035,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramSigsvdefEnd.put("pv_nmpoliza_i", (String)omap1.get("pv_nmpoliza_i"));
 			paramSigsvdefEnd.put("pv_nmsituac_i", "0");
 			paramSigsvdefEnd.put("pv_nmsuplem_i", respEndCob.get("pv_nmsuplem_o"));
-			//paramSigsvdefEnd.put("pv_cdtipsit_i", smap1.get("cdtipsit"));
-			paramSigsvdefEnd.put("pv_cdtipsup_i", cdtipsup);
+			paramSigsvdefEnd.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
 			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
+			
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si")) {
 						
@@ -2029,7 +2049,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramCalcValorEndoso.put("pv_nmsituac_i" , "0");
 				paramCalcValorEndoso.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				paramCalcValorEndoso.put("pv_feinival_i" , (Date)omap1.get("pv_fecha_i"));
-				paramCalcValorEndoso.put("pv_cdtipsup_i", cdtipsup);
+				paramCalcValorEndoso.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
 				endososManager.calcularValorEndoso(paramCalcValorEndoso);
 				
 				// Se confirma el endoso si cumple la validacion de fechas: 
@@ -2037,8 +2057,8 @@ public class EndososAction extends PrincipalCoreAction
 						(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
 						(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
 						respEndCob.get("pv_nmsuplem_o"), respEndCob.get("pv_nsuplogi_o"), 
-						cdtipsup, "", 
-						(Date)omap1.get("pv_fecha_i"), smap1.get("cdtipsit"));
+						tipoEndoso.getCdTipSup().toString(), "", 
+						(Date)omap1.get("pv_fecha_i"), null);
 			    
 				// Si el endoso fue confirmado:
 				if(respConfirmacionEndoso.isConfirmado()) {
@@ -2049,7 +2069,7 @@ public class EndososAction extends PrincipalCoreAction
 				    List<Map<String,String>> docs = endososManager.reimprimeDocumentos(
 				    		(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 				    		(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-				    		respEndCob.get("pv_nmsuplem_o"), cdtipsup);
+				    		respEndCob.get("pv_nmsuplem_o"), tipoEndoso.getCdTipSup().toString());
 				    logger.debug("documentos que se regeneran: "+docs);
 				    
 				    if(!CollectionUtils.isEmpty(docs)) {
@@ -2108,7 +2128,7 @@ public class EndososAction extends PrincipalCoreAction
 						String nmsolici = docs.get(0).get("nmsolici");
 						String nmtramite = docs.get(0).get("ntramite");
 						// En este caso tipomov y cdtipsup son iguales: 
-						String tipomov = cdtipsup;
+						String tipomov = tipoEndoso.getCdTipSup().toString();
 						String rutaCarpeta= new StringBuilder(this.getText("ruta.documentos.poliza"))
 	    				.append("/").append(docs.get(0).get("ntramite")).toString();
 						
@@ -2349,7 +2369,7 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
 			omap1.put("pv_cdtipsup_i", TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
-			Map<String,String> respEnd=endososManager.guardarEndosoCoberturas(omap1);
+			Map<String,String> respEnd=endososManager.iniciaEndoso(omap1);
 			
 			//cargar anterior valosit
 			Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
@@ -4771,21 +4791,7 @@ public class EndososAction extends PrincipalCoreAction
 		// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
 		long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
 		
-		// Asignamos el valor a dssuplem:
-		String dssuplem = "";
-		List<Map<String,String>> endosos = null;
-		
-		if(StringUtils.isBlank(cdtipsit)){
-			endosos = endososManager.obtenerNombreEndoso(cdtipsup);
-			dssuplem = endosos.get(0).get("DSTIPSUP");
-		}else{
-			endosos = endososManager.obtenerNombreEndosos(null, Integer.parseInt(cdramo), cdtipsit);
-			for(Map<String,String>endoso:endosos) {
-				if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup)) {
-					dssuplem = endoso.get("DSTIPSUP");
-				}
-			}
-		}
+		String descEndoso = endososManager.obtieneDescripcionEndoso(cdtipsup); 
 		
 		logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
 		logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
@@ -4835,7 +4841,7 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
 		paramsMesaControl.put("pv_otvalor01"    , ntramiteEmision);
 		paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
-		paramsMesaControl.put("pv_otvalor03"    , dssuplem);
+		paramsMesaControl.put("pv_otvalor03"    , descEndoso);
 		paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
 		paramsMesaControl.put("pv_otvalor05"    , ((UserVO)session.get("USUARIO")).getUser());
 		

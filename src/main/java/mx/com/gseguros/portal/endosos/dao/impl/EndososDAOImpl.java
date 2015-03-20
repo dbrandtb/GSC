@@ -311,7 +311,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		String columnas[]=new String[]{"GARANTIA","NOMBRE_GARANTIA","SWOBLIGA","SUMA_ASEGURADA","CDCAPITA",
 				"status","cdtipbca","ptvalbas","swmanual","swreas","cdagrupa",
-				"ptreduci","fereduci","swrevalo","nmsituac"};
+				"ptreduci","fereduci","swrevalo","nmsituac", "cdtipsit"};
 		
 		protected ObtieneCoberturasDisponibles(DataSource dataSource)
 		{
@@ -341,9 +341,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneCoberturasDisponibles(this.getDataSource()), params);
 		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
 	}
-	
+
+	@Deprecated
 	@Override
-	public Map<String, String> guardarEndosoCoberturas(Map<String, Object> params) throws Exception
+	public Map<String, String> iniciaEndoso(Map<String, Object> params) throws Exception
 	{
 		logger.debug(
 				new StringBuilder()
@@ -801,7 +802,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
-	public List<Map<String,String>> obtenerNombreEndoso(String cdtipsup) throws Exception
+	public String obtieneDescripcionEndoso(String cdtipsup) throws Exception
 	{
 		Map<String, Object> params = new LinkedHashMap<String,Object>();
 		params.put("pv_cdtipsup_i", cdtipsup);
@@ -813,20 +814,17 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n***************************************")
 				.toString()
 				);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNombreEndoso(this.getDataSource()), params);
-		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+		Map<String,Object> result = this.ejecutaSP(new ObtieneDescripcionEndosoSP(this.getDataSource()), params);
+		return (String)result.get("pv_dstipsup_o");
 	}
 	
-	protected class ObtenerNombreEndoso extends StoredProcedure
-	{
-		protected ObtenerNombreEndoso(DataSource dataSource)
-		{
+	protected class ObtieneDescripcionEndosoSP extends StoredProcedure {
+		protected ObtieneDescripcionEndosoSP(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.P_GET_DSTIPSUP");
 			declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
-			String[] cols = new String[]{"DSTIPSUP"};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dstipsup_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -1823,7 +1821,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdtipsit
 			,String cdtipsup) throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1832,7 +1829,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
-		params.put("cdtipsit" , cdtipsit);
+		params.put("cdtipsit" , null);
 		params.put("cdtipsup" , cdtipsup);
 		logger.debug(
 				new StringBuilder()
