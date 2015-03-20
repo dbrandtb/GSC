@@ -281,7 +281,7 @@ public interface EndososDAO
 			,String otvalor96,String otvalor97,String otvalor98,String otvalor99
 			,String tstamp)throws Exception;
 	
-	public void confirmarEndosoTvalositAuto(
+	public Map<String,Object> confirmarEndosoTvalositAuto(
 			String cdtipsup
 			,String tstamp
 			,String cdunieco
@@ -292,6 +292,10 @@ public interface EndososDAO
 			,String cdsisrol
 			,String cdelemen
 			)throws Exception;
+	
+	public List<Map<String,String>> obtieneDatosEndPlacasMotor(Map<String, String> params)throws Exception;
+	public List<Map<String,String>> obtieneDatosEndSerie(Map<String, String> params)throws Exception;
+	public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
 	
 	public void confirmarEndosoAltaIncisoAuto(
 			String cdunieco

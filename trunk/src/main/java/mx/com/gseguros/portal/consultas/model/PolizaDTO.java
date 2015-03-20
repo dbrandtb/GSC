@@ -14,6 +14,8 @@ public class PolizaDTO implements Serializable{
 	private static final long serialVersionUID = -8555353864912795413L;
 	
 	private String nmpoliex;
+	private String cdramoext;
+	private String cduniext;
 	private String nmsolici;
 	private String feemisio;
 	private String feefecto;
@@ -471,6 +473,26 @@ public class PolizaDTO implements Serializable{
 
 	public void setStatuspago(String statuspago) {
 		this.statuspago = statuspago;
+	}
+
+
+	public String getCdramoext() {
+		return cdramoext;
+	}
+
+
+	public void setCdramoext(String cdramoext) {
+		this.cdramoext = cdramoext;
+	}
+
+
+	public String getCduniext() {
+		return cduniext;
+	}
+
+
+	public void setCduniext(String cduniext) {
+		this.cduniext = cduniext;
 	}
 	
 	

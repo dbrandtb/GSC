@@ -282,6 +282,7 @@ Ext.onReady(function(){
                                 'smap1.pv_cdperson' : inputCdpersonp4,
                                 'smap1.pv_cdrol'    : '1',
                                 'smap1.TIPOFLOT'    : tipoFlotilla,
+                                'smap1.NTRAMITE'    : inputNtramite,
                                 'smap2.cdtipsit'    : inputCdtipsit
                             },
                             success:function(response,opts)

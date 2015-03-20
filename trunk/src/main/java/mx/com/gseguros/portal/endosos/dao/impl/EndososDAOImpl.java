@@ -2584,7 +2584,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void confirmarEndosoTvalositAuto(
+	public Map<String,Object> confirmarEndosoTvalositAuto(
 			String cdtipsup
 			,String tstamp
 			,String cdunieco
@@ -2607,7 +2607,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdelemen" , cdelemen);
 		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO", params);
-		ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class ConfirmarEndosoTvalositAuto extends StoredProcedure
@@ -2624,6 +2626,115 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtieneDatosEndPlacasMotor(Map<String, String> params)throws Exception
+	{
+		List<Map<String,String>>lista = null;
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndPlacasMotor(getDataSource()),params);
+		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params, lista);
+		return lista;
+	}
+	
+	protected class ObtieneDatosEndPlacasMotor extends StoredProcedure
+	{
+		protected ObtieneDatosEndPlacasMotor(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"IdMotivo"
+					,"Sucursal"
+					,"Ramo"
+					,"Poliza"
+					,"TEndoso"
+					,"Endoso"
+					,"Inciso"
+					,"Placas"
+					,"Motor"
+					,"EndosoB"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtieneDatosEndSerie(Map<String, String> params)throws Exception
+	{
+		List<Map<String,String>>lista = null;
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndSerie(getDataSource()),params);
+		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params, lista);
+		return lista;
+	}
+	
+	protected class ObtieneDatosEndSerie extends StoredProcedure
+	{
+		protected ObtieneDatosEndSerie(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"IdMotivo"
+					,"Sucursal"
+					,"Ramo"
+					,"Poliza"
+					,"TEndoso"
+					,"Endoso"
+					,"Inciso"
+					,"Serie"
+					,"EndosoB"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception
+	{
+		List<Map<String,String>>lista = null;
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params);
+		ejecutaSP(new ActualizaNumeroEndosSigs(getDataSource()),params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params, lista);
+		return;
+	}
+	
+	protected class ActualizaNumeroEndosSigs extends StoredProcedure
+	{
+		protected ActualizaNumeroEndosSigs(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_numend_sigs_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

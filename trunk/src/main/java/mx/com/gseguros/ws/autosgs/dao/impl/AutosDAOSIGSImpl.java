@@ -209,7 +209,45 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
 			declareParameter(new SqlParameter("vPlacas", Types.SMALLINT));
 			declareParameter(new SqlParameter("vMotor", Types.VARCHAR));
-			declareParameter(new SqlParameter("vUltimo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+
+	@Override
+	public Integer endosoSerie(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoSerie(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoSerie extends StoredProcedure{
+		protected EndosoSerie(DataSource dataSource){
+			super(dataSource, "sp_EndosoBNumSerie");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
+			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSerie", Types.SMALLINT));
+			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -243,8 +281,6 @@ public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
-			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
-			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
 			declareParameter(new SqlParameter("vBeneficiario", Types.VARCHAR));
 			declareParameter(new SqlParameter("vListaIncisos", Types.VARCHAR));
 			

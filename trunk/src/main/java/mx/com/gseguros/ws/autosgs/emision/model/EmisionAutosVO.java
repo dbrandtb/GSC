@@ -29,6 +29,8 @@ public class EmisionAutosVO implements Serializable {
     private int numeroIncisos;
     
     private boolean exitoRecibos;
+    
+    private boolean endosoSinRetarif;//Para usar si se se concluyo un endoso B sin retarificacion
 	
 	@Override
 	public String toString()
@@ -90,5 +92,13 @@ public class EmisionAutosVO implements Serializable {
 
 	public void setTipoEndoso(String tipoEndoso) {
 		this.tipoEndoso = tipoEndoso;
+	}
+
+	public boolean isEndosoSinRetarif() {
+		return endosoSinRetarif;
+	}
+
+	public void setEndosoSinRetarif(boolean endosoSinRetarif) {
+		this.endosoSinRetarif = endosoSinRetarif;
 	}
 }
