@@ -2868,6 +2868,7 @@ function _p21_turnar(status,titulo,closable)
                                 ,'smap1.cdramo'   : _p21_smap1.cdramo
                                 ,'smap1.estado'   : _p21_smap1.estado
                                 ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
                                 ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
                                 ,'smap1.ntramite' : _p21_smap1.ntramite
                             }
@@ -4038,6 +4039,7 @@ function _p21_imprimir()
             + '&p_estado=W'
             + '&p_poliza='      + _p21_smap1.nmpoliza
             + '&p_suplem=0'
+            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
