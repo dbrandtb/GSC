@@ -2694,6 +2694,7 @@ function _p25_turnar(status,titulo,closable)
                                 ,'smap1.cdramo'   : _p25_smap1.cdramo
                                 ,'smap1.estado'   : _p25_smap1.estado
                                 ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
                                 ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
                                 ,'smap1.ntramite' : _p25_smap1.ntramite
                             }
@@ -2825,6 +2826,7 @@ function _p25_imprimir()
             + '&p_poliza='      + _p25_smap1.nmpoliza
             + '&p_suplem=0'
             + '&p_cdplan='
+            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _p25_reportsServerUser
