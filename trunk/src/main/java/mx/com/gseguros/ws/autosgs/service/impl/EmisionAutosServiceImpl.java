@@ -412,6 +412,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								tipoVehiculo=TipoVehiculo.AUTO_PICKUP;
 							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("CAMION")){
 								tipoVehiculo=TipoVehiculo.CAMION;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("MOTO_RESIDENTE")){
+								tipoVehiculo=TipoVehiculo.MOTO_RESIDENTE;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("SEMI_INDISTINTO")){
+								tipoVehiculo=TipoVehiculo.SEMI_INDISTINTO;
+							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("TRACTOCAMION_ARMADO")){
+								tipoVehiculo=TipoVehiculo.TRACTOCAMION_ARMADO;
 							}
 							
 							incisoIterado.setTipoVehiculo(tipoVehiculo);
