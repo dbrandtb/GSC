@@ -76,6 +76,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="guardarEndosoAseguradoAlterno" class="EndososAction" method="guardarEndosoAseguradoAlterno">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
         <action name="guardarEndosoNombresSimple" class="EndososAction" method="guardarEndosoNombresSimple">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -250,6 +258,15 @@
             </interceptor-ref>
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoDomicilioAutoFull.jsp</result>
+        </action>
+        
+        <action name="includes/endosoAseguradoAlterno" class="EndososAction" method="endosoAseguradoAlterno">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoAseguradoAlterno.jsp</result>
         </action>
         
         <action name="guardarEndosoDomicilioAutoFull" class="EndososAction" method="guardarEndosoDomicilioAutoFull">

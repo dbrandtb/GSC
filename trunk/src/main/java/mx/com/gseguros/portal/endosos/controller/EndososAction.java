@@ -46,6 +46,7 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,7 +89,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ConsultasPolizaManager   consultasPolizaManager;
-	
+	private CotizacionDAO  			 cotizacionDAO;
 	private StoredProceduresManager  storedProceduresManager;
 	
 	@Autowired
@@ -389,6 +390,122 @@ public class EndososAction extends PrincipalCoreAction
 	////// pantalla de endoso de domicilio  //////
 	//////////////////////////////////////////////
 	
+	public String endosoAseguradoAlterno()
+	{
+		
+		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+		smap1.put("pv_estado", smap1.get("ESTADO"));
+		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		
+		logger.debug(new StringBuilder()
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endosoAseguradoAlterno ######")
+		.append("\n######                         ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());		
+		logger.debug(new StringBuilder()
+		.append("\n######                         ######")
+		.append("\n###### endosoAseguradoAlterno  ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
+		
+		return SUCCESS;
+	}
+	
+	public String guardarEndosoAseguradoAlterno() {
+        
+		logger.debug(new StringBuilder()
+				.append("\n###########################################")
+				.append("\n###########################################")
+				.append("\n###### guardarEndosoAseguradoAlterno ######")
+				.append("\n######                               ######").toString());
+		
+		this.session = ActionContext.getContext().getSession();
+        UserVO usuario = (UserVO) session.get("USUARIO");
+		
+		try {
+			logger.debug(smap1);
+			logger.debug(smap1.get("CDUNIECO"));
+			logger.debug(smap1.get("RAMO"));
+			logger.debug(smap1.get("ESTADO"));
+			logger.debug(smap1.get("NMPOLIZA"));
+			logger.debug(new Date());
+			
+			String cdelemen     = usuario.getEmpresa().getElementoId();
+			String cdusuari     = usuario.getUser();
+			String cdtipsup     = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
+			String fechaEndoso = sdf.format(new Date());
+			Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
+			
+			logger.debug("dFechaEndoso --->"+fechaEndoso);
+			logger.debug("fechaHoy --->"+dFechaEndoso);
+			
+			// Se inicia endoso:
+			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
+			paramsIniciarEndoso.put("pv_cdunieco_i" , smap1.get("CDUNIECO"));
+			paramsIniciarEndoso.put("pv_cdramo_i"   , smap1.get("CDRAMO"));
+			paramsIniciarEndoso.put("pv_estado_i"   , smap1.get("ESTADO"));
+			paramsIniciarEndoso.put("pv_nmpoliza_i" , smap1.get("NMPOLIZA"));
+			paramsIniciarEndoso.put("pv_fecha_i"    , fechaEndoso);
+			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
+			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
+			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
+			paramsIniciarEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			//1.- Mandamos a iniciar el endoso 
+			Map<String,String>respuestaIniciarEndoso=endososManager.iniciarEndoso(paramsIniciarEndoso);
+			//String nmsuplem= smap1.get("NMSUPLEM");
+			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
+			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
+			
+			logger.debug(smap1.size());
+			//Generar un map, con los valores que vienen por default
+			
+			//slist1  = new ArrayList<Map<String,String>>();
+			Map<String,String> otvalores = new HashMap<String,String>();
+			//Map<String, String> otvalores = new Map<String, String>();
+			for(int i = 1; i<= 50; i++){
+				if(i <10){
+					otvalores.put("otvalor0"+i, smap1.get("OTVALOR0"+i));
+				}else{
+					otvalores.put("otvalor"+i, smap1.get("OTVALOR"+i));
+				}
+			}
+			logger.debug("VALORES A ENVIAR -->"+otvalores);
+			//2.- Mandamos a guardar la información de TVALOPOL
+			cotizacionDAO.movimientoTvalopol(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, smap1.get("STATUS"), otvalores);
+			
+			
+			// Se confirma el endoso si cumple la validacion de fechas: 
+			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			
+			// Si el endoso fue confirmado:
+			if(respConfirmacionEndoso.isConfirmado()) {
+				mensaje = "Endoso generado";
+				
+            } else {
+				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
+						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
+						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+			}
+			success = true;
+
+		} catch(Exception ex) {
+			logger.error("Error al generar endoso de asegurado Alterno",ex);
+			success = false;
+			error   = ex.getMessage();
+		}
+		logger.debug(new StringBuilder()
+				.append("\n######                               ######")
+				.append("\n###### guardarEndosoAseguradoAlterno ######")
+				.append("\n###########################################")
+				.append("\n###########################################").toString());
+		return SUCCESS;
+	}
 	//////////////////////////////////////////////
 	////// pantalla de endoso de domicilio  //////
 	/*
@@ -9193,4 +9310,9 @@ return SUCCESS;
 		this.columnas = columnas;
 	}
 
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
+		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	
 }
