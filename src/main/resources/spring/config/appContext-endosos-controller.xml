@@ -11,6 +11,7 @@
         <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
         <property name="consultasManager"   ref="consultasManagerImpl"></property>
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
+        <property name="cotizacionDAO"  	ref="cotizacionDAOImpl"  />
     </bean>
     
     <bean id="endososGrupoAction" class="mx.com.gseguros.portal.endosos.controller.EndososGrupoAction" scope="prototype">
