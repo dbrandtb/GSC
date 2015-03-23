@@ -6687,6 +6687,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
+			String cdperpag = smap1.get("cdperpag");
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
 			
@@ -6696,6 +6697,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					, "&p_ramo="        , cdramo
 					, "&p_estado="      , estado
 					, "&p_poliza="      , nmpoliza
+					, "&p_cdperpag="    , cdperpag
 					, "&p_suplem=0"
 					, "&p_cdplan="
                     , "&destype=cache"
@@ -6734,6 +6736,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					, "&p_ramo="        , cdramo
 					, "&p_estado="      , estado
 					, "&p_poliza="      , nmpoliza
+					, "&p_cdperpag="    , cdperpag
 					, "&p_suplem=0"
 					, "&p_cdplan="
                   , "&destype=cache"
