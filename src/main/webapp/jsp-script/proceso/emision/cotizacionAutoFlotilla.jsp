@@ -3270,6 +3270,7 @@ function _p30_cotizar(sinTarificar)
         var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
         debug('recordTvalositPoliza:',recordTvalositPoliza.data);
         recordTvalositPoliza.set('cdtipsit','XPOLX');
+        recordTvalositPoliza.set('nmsituac',-1);
         for(var prop in formValues)
         {
             recordTvalositPoliza.set(prop,formValues[prop]);
