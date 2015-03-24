@@ -1026,7 +1026,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
-    				"NOMBRE","CDRFC","CDPERSON","CDIDEPER","CDIDEEXT", "NMSITUAC", "CDROL", "STATUS", "NMORDDOM", "SWRECLAM"
+    				"NOMBRE","CDRFC","CDPERSON","CDIDEPER","CDIDEEXT", "NMSITUAC", "CDROL", "STATUS", "NMORDDOM", "SWRECLAM", "OTFISJUR"
     		};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
