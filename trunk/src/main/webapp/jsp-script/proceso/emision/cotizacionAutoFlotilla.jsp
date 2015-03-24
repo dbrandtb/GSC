@@ -4266,7 +4266,7 @@ function _p30_comprar()
                 centrarVentanaInterna(Ext.Msg.show(
                {
                    title    : 'Tr&aacute;mite generado'
-                   ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()+' se guard&oacute; para el tr&aacute;mite '
                               + json.smap1.ntramite
                               + '<br/>y no podr&aacute; ser modificada posteriormente'
                    ,buttons : Ext.Msg.OK
