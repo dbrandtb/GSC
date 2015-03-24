@@ -2,15 +2,17 @@ package test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
 import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
@@ -37,12 +39,23 @@ public class TestAction extends PrincipalCoreAction {
 	
 	private Map<String, String> params;
 	
+	@Autowired
+	private KernelManagerSustituto kernelManager;
+	
 	private EmisionAutosVO emisionAutos;
 	
 	private ResponseFolio responseFolio;
 	
 	@Autowired
-	private AutosDAOSIGS autosDAOSIGS;
+	private PantallasManager pantallasManager;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private AutosSIGSDAO autosDAOSIGS;
+	
+	private List<ComponenteVO> items;
 	
 	/*
 	@Action(value="invocaServicioCotizacionAutos",
@@ -50,36 +63,23 @@ public class TestAction extends PrincipalCoreAction {
 	)
 	*/
 	public String invocaServicioCotizacionAutos() throws Exception {
-		
-		logger.debug("prueba para SP AUTOS" + params);
-		
-		try{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			params.put("Sucursal"        , "4");
-			params.put("Ramo"            , "711");
-			params.put("Poliza"          , "121");
-			params.put("TipoEndoso"      , " ");
-			params.put("NumeroEndoso"    , "0");
-			params.put("Recibo"          , "2");
-			params.put("TotalRecibos"    , "2");
-			params.put("PrimaNeta"       , "7384.748");
-			params.put("Iva"             , "1286.077");
-			params.put("Recargo"         , "273.235");
-			params.put("Derechos"        , "380");
-			params.put("CesionComision"  , "0");
-			params.put("ComisionPrima"   , "738.4748");
-			params.put("ComisionRecargo" , "27.3235");
-			params.put("FechaInicio"     , sdf.format(new Date()));
-			params.put("FechaTermino"    , sdf.format(new Date()));
-			
-			Integer res = autosDAOSIGS.insertaReciboAuto(params);
-			
-		} catch (Exception e){
-			logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
-		}
-		
+		/*
+		items = pantallasManager.obtenerComponentes(null, null, null, null, null, null, "ENDOSO_COBERTURA", "GRID_INCISOS", null);
+		*/
+		/*
+		//cargar anterior valosit
+		Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+		paramsValositAsegurado.put("pv_cdunieco_i" , params.get("cdunieco"));
+		paramsValositAsegurado.put("pv_cdramo_i"   , params.get("cdramo"));
+		paramsValositAsegurado.put("pv_estado_i"   , params.get("estado"));
+		paramsValositAsegurado.put("pv_nmpoliza_i" , params.get("nmpoliza"));
+		paramsValositAsegurado.put("pv_nmsituac_i" , params.get("nmsituac"));
+		Map<String,Object> valositAsegurado = kernelManager.obtieneValositSituac(paramsValositAsegurado);
+		logger.debug("valosit anterior: " + valositAsegurado);
+		*/
+		/*
+		mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza, nmsuplem, feinici, cddocume, dsdocume, nmsolici, ntramite, tipmov, swvisible, codidocu, cdtiptra);
+		*/
 		return SUCCESS;
 	}
 	
@@ -137,6 +137,14 @@ public class TestAction extends PrincipalCoreAction {
 
 	public void setResponseFolio(ResponseFolio responseFolio) {
 		this.responseFolio = responseFolio;
+	}
+
+	public List<ComponenteVO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ComponenteVO> items) {
+		this.items = items;
 	}
 	
 }
