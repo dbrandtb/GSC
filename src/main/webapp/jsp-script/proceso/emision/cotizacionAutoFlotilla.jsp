@@ -5229,6 +5229,10 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                                     {
                                         negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
                                     }
+                                    else
+                                    {
+                                        _p30_editorCdtipsit.heredar();
+                                    }
                                 });
                             }
                         });
@@ -5243,11 +5247,19 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                             {
                                 negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
                             }
+                            else
+                            {
+                                _p30_editorCdtipsit.heredar();
+                            }
                         });
                     }
                     else if(_p30_endoso)
                     {
                         negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
+                    }
+                    else
+                    {
+                        _p30_editorCdtipsit.heredar();
                     }
                 }
                 else
