@@ -787,7 +787,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			setCheckpoint("Validando datos de entrada");
 			checkNull(smap1, "No se recibieron datos");
 			
-			String endoso = smap1.containsKey("marco2")?"S":"N";
+			String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
 			smap1.put("endoso",endoso);
 			if(endoso.equals("S"))
 			{
