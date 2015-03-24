@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
@@ -741,7 +742,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado,nmpoliza, nmsuplem, 
 						new Date(), urlCaratula + parametros,
 						"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite,
-						cdtipsup, Constantes.SI);
+						cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 				
 				/**
 				 * Para Recibo 1
@@ -751,7 +752,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mesaControlDAO.guardarDocumento(
 						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						new Date(), urlRecibo + parametros, "Recibo 1", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI);
+						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 				
 				/**
 				 * Para AP inciso 1
@@ -761,7 +762,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mesaControlDAO.guardarDocumento(
 						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						new Date(), urlAp + parametros, "AP", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI);
+						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 				
 				/**
 				 * Para CAIC inciso 1
@@ -771,7 +772,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mesaControlDAO.guardarDocumento(
 						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						new Date(), urlCaic + parametros, "CAIC", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI);
+						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 				
 				if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
 					/**
@@ -782,7 +783,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					mesaControlDAO.guardarDocumento(
 							cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 							new Date(), urlIncisosFlot + parametros, "Incisos Flotillas", nmpoliza, 
-							ntramite, cdtipsup, Constantes.SI);
+							ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 					
 					/**
 					 * Para Tarjeta Identificacion
@@ -792,7 +793,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					mesaControlDAO.guardarDocumento(
 							cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 							new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
-							ntramite, cdtipsup, Constantes.SI);
+							ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 				}
 			
 			}
@@ -1602,7 +1603,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String parametros = null;
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEndoso;
 			logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
-			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza, nmsuplem, new Date(), urlImpresionCaratulaEndosoB + parametros, "Car&aacute;tula Endoso B", nmpoliza, nmtramite, cdtipsup, Constantes.SI);
+			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza,
+					nmsuplem, new Date(), urlImpresionCaratulaEndosoB + parametros, 
+					"Car&aacute;tula Endoso B", nmpoliza,
+					nmtramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 		
 		}catch(Exception e){
 			logger.debug("Error al guardar la caratula de endoso B");

@@ -503,7 +503,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible) throws Exception {
+			String swvisible, String codidocu, String cdtiptra) throws Exception {
 		
 		HashMap<String, Object> params =  new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -518,6 +518,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_tipmov_i",   tipmov);
 		params.put("pv_swvisible_i",swvisible);
+		params.put("pv_codidocu_i", codidocu);
+		params.put("pv_cdtiptra_i", cdtiptra);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
