@@ -33,7 +33,7 @@
 					,name		: 'feIngreso'
 					,format		: 'd/m/Y'
 					,editable: true		
-					,value		: asegAlterno.FEEMISIO
+					,value		: asegAlterno.FEEFECTO
 			    	,listeners:{
 			    	    change:function(field,value)
 			    	    {
@@ -68,7 +68,7 @@
                         convDateIngreso = dateIngreso.getDate() + "/" + (dateIngreso.getMonth() + 1) + "/" + dateIngreso.getFullYear();
                         convDateFin 	= dateFin.getDate() 	+ "/" + (dateFin.getMonth() + 1) 	 + "/" + dateFin.getFullYear();
                         
-                        asegAlterno.FEEMISIO = convDateIngreso;
+                        asegAlterno.FEEFECTO = convDateIngreso;
         				asegAlterno.FEPROREN = convDateFin;
         				submitValues['smap1']= asegAlterno;
         				
