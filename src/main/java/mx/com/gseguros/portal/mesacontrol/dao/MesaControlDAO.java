@@ -125,24 +125,26 @@ public interface MesaControlDAO
 	public void borrarDocumento(String ntramite, String cddocume) throws Exception;
 	
 	/**
-	 * Guardar documento de una poliza
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @param nmsuplem
-	 * @param feinici
-	 * @param cddocume
-	 * @param dsdocume
-	 * @param nmsolici
-	 * @param ntramite
-	 * @param tipmov
-	 * @param swvisible
+	 * Guarda un documento asociado a una poliza
+	 * @param cdunieco Unidad economica de la poliza
+	 * @param cdramo   Codigo de Ramo de la poliza
+	 * @param estado   Estado de la poliza
+	 * @param nmpoliza Numero de poliza
+	 * @param nmsuplem Numero de suplemento / imagen de la poliza
+	 * @param feinici  Fecha de inicio
+	 * @param cddocume Codigo del documento
+	 * @param dsdocume Descripcion del documento
+	 * @param nmsolici  Numero de solicitud
+	 * @param ntramite  Numero de tramite
+	 * @param tipmov    Tipo de Movimiento / Tipo de Suplemento
+	 * @param swvisible Indica si sera visible en la lista de documentos
+	 * @param codidocu Codigo de documento
+	 * @param cdtiptra Tipo de tramite
 	 * @throws Exception
 	 */
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible) throws Exception;
+			String swvisible, String codidocu, String cdtiptra) throws Exception;
 	
 }
