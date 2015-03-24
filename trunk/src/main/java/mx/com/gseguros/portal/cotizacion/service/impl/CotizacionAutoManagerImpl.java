@@ -2037,7 +2037,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			Iterator<Row>   rowIterator = sheet.iterator();
 			
 			setCheckpoint("Iterando filas");
-			int fila = 0;
+			int fila = 1;
 			String[] columnas=new String[]{
 					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
@@ -2048,6 +2048,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				fila = fila + 1;
 				setCheckpoint(new StringBuilder("Iterando fila ").append(fila).toString());
 				Row row = rowIterator.next();
+				
+				if(fila==2)
+				{
+					row = rowIterator.next();
+				}
 				
 				Map<String,String>record=new LinkedHashMap<String,String>();
 				resp.getSlist().add(record);
@@ -2076,10 +2081,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						for(int i=0;i<splited.length/2;i++)
 						{
 							String splitedUsado=splited[i*2];
-							logger.debug(new StringBuilder("[splited=").append(splitedUsado).append("]").toString());
+							logger.debug(Utilerias.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
 							if(valor.lastIndexOf(splitedUsado)!=-1)
 							{
 								valor=splited[(i*2)+1];
+								break;
 							}
 						}
 						if(valor.equals(cell.getStringCellValue()))
@@ -2101,8 +2107,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					{
 						logger.debug(Utilerias.join(">>",propiedad));
 						String cdtipsitRecord = record.get("cdtipsit");
-						if(cdtipsitCol.equals("*")||cdtipsitRecord.equals(cdtipsitCol))
+						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
 						{
+							logger.debug(Utilerias.join("Mapeado ",cdtipsitRecord," en ",cdtipsitCol));
 							if(isBlank(decode)&&isBlank(cdtabla1)&&isBlank(cdtabla5))
 							{
 								if(tipo.equals("string"))
@@ -2111,9 +2118,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									try
 									{
 										valor=cell.getStringCellValue();
+										logger.debug(Utilerias.join("getStringCellValue=",valor));
 									}
 									catch(Exception ex)
 									{
+										logger.debug(ex);
 										valor="";
 									}
 									if(requerido&&isBlank(valor))
@@ -2129,9 +2138,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									try
 									{
 										num=cell.getNumericCellValue();
+										logger.debug(Utilerias.join("getNumericCellValue=",num));
 									}
 									catch(Exception ex)
 									{
+										logger.debug(ex);
 										num=null;
 									}
 									if(requerido&&num==null)
@@ -2152,9 +2163,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									try
 									{
 										num=cell.getNumericCellValue();
+										logger.debug(Utilerias.join("getNumericCellValue=",num));
 									}
 									catch(Exception ex)
 									{
+										logger.debug(ex);
 										num=null;
 									}
 									if(requerido&&num==null)
@@ -2177,9 +2190,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									try
 									{
 										num=cell.getNumericCellValue();
+										logger.debug(Utilerias.join("getNumericCellValue=",num));
 									}
 									catch(Exception ex)
 									{
+										logger.debug(ex);
 										num=null;
 									}
 									if(requerido&&num==null)
@@ -2237,6 +2252,57 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								logger.debug(Utilerias.join("valor original=",valor,",clave obtenida=",clave));
 								record.put(propiedad,clave);
 							}
+							else if(!isBlank(decode))
+							{
+								logger.debug(Utilerias.join("decode=",decode));
+								String valor = null;
+								try
+								{
+									valor=cell.getStringCellValue();
+									logger.debug(Utilerias.join("getStringCellValue=",valor));
+								}
+								catch(Exception ex)
+								{
+									logger.error(ex);
+									valor="";
+								}
+								if(requerido&&isBlank(valor))
+								{
+									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+								}
+								if(!isBlank(valor))
+								{
+									for(int i=0;i<splited.length/2;i++)
+									{
+										String splitedUsado=splited[i*2];
+										logger.debug(Utilerias.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
+										if(valor.lastIndexOf(splitedUsado)!=-1)
+										{
+											valor=splited[(i*2)+1];
+											break;
+										}
+									}
+									if(valor.equals(cell.getStringCellValue()))
+									{
+										throw new ApplicationException(Utilerias.join(
+												"La descripcion "
+												,valor
+												," no viene dentro de '"
+												,decode
+												,"' en la fila "
+												,fila
+												," en la columna "
+												,columnas[col]
+												));
+									}
+								}
+								logger.debug(new StringBuilder("valor=").append(valor).toString());
+								record.put(propiedad,valor);
+							}
+						}
+						else
+						{
+							logger.debug(Utilerias.join("No mapea ",cdtipsitRecord," en ",cdtipsitCol));
 						}
 					}
 				}
