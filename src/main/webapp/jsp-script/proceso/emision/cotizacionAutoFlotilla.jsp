@@ -3943,6 +3943,11 @@ function _p30_bloquear(b)
     
     _fieldById('_p30_botonera').setDisabled(b);
     _fieldById('_p30_botonCargar').setDisabled(b);
+    var toolbars = Ext.ComponentQuery.query('toolbar',_fieldById('_p30_grid'));
+    for(var i in toolbars)
+    {
+        toolbars[i].setDisabled(b);
+    }
     
     if(b)
     {
