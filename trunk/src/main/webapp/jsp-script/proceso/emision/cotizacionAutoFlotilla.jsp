@@ -2675,18 +2675,30 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
         var cdtipsitPanel = _p30_smap1['destino_'+cdtipsit];
         debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
         var panel = _p30_paneles[cdtipsitPanel];
-        panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE');
         var form  = panel.down('form');
-        if(record.get('personalizado')=='si')
+        var valoresExtras = false;
+        for(var prop in form.getValues())
         {
+            if(!Ext.isEmpty(record.get(prop)))
+            {
+                debug('el valor ',record.get(prop),' encendio la carga del record en el formulario');
+                valoresExtras = true;
+                break;
+            }
+        }
+        if(record.get('personalizado')=='si'||valoresExtras)
+        {
+            panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE (PERSONALIZADA)');
             form.loadRecord(record);
         }
         else if(panel.valores!=false)
         {
+            panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE (VALORES DE SITUACI&Oacute;N)');
             form.loadRecord(new _p30_modelo(panel.valores));
         }
         else
         {
+            panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE (VAC&Iacute;A)');
             form.getForm().reset();
         }
         panel.callback=function()
