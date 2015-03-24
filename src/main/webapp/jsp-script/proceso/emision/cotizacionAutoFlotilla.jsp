@@ -868,6 +868,7 @@ Ext.onReady(function()
                                                         {
                                                             var record       = mrecords[i];
                                                             var cdtipsit     = record.get('cdtipsit');
+                                                            debug('recuperar:',record.data);
                                                             if(cdtipsit+'x'=='ARx'
                                                                 ||cdtipsit+'x'=='CRx'
                                                                 ||cdtipsit+'x'=='PCx'
@@ -901,14 +902,21 @@ Ext.onReady(function()
                                                                                 return true;
                                                                             }
                                                                         });
-                                                                        var encontrado = claveCmp.getStore().getAt(index);
-                                                                        var splited    = encontrado.get('value').split(' - ');
-                                                                        var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
-                                                                        var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2],0,false,false,true)).get('key');
-                                                                        var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
-                                                                        record.set(marcaName    , marca);
-                                                                        record.set(submarcaName , submarca);
-                                                                        record.set(versionName  , version);
+                                                                        if(index==-1)
+                                                                        {
+                                                                            mensajeError('No se pudo recuperar el auto '+record.get(claveName)+' en modelo '+record.get(modeloName));
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            var encontrado = claveCmp.getStore().getAt(index);
+                                                                            var splited    = encontrado.get('value').split(' - ');
+                                                                            var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
+                                                                            var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2],0,false,false,true)).get('key');
+                                                                            var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
+                                                                            record.set(marcaName    , marca);
+                                                                            record.set(submarcaName , submarca);
+                                                                            record.set(versionName  , version);
+                                                                        }
                                                                         i=i+1;
                                                                         if(i<len)
                                                                         {
