@@ -428,6 +428,23 @@
         <action name="cargarContratantesEndosoContratante" class="EndososAction" method="cargarContratantesEndosoContratante">
             <result name="success" type="json" />
         </action>
+
+		<action name="endosoNombreCliente" class="EndososAction" method="endosoNombreCliente">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoNombreCliente.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoNombreCliente" class="EndososAction" method="guardarEndosoNombreCliente">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
         
         <action name="pantallaRecibosSubsecuentes" class="EndososAction" method="pantallaRecibosSubsecuentes">
             <result name="success">/jsp-script/proceso/endosos/pantallaRecibosSubsecuentes.jsp </result>

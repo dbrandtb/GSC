@@ -40,6 +40,9 @@
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
         <pattern>/endosos/endosoContratante.action</pattern>
+        <pattern>/endosos/endosoNombreCliente.action</pattern>
+        <pattern>/endosos/endosoRfcCliente.action</pattern>
+        <pattern>/endosos/endosoContratanteAuto.action</pattern>
         <pattern>/emision/mcotizacion.action*</pattern>
         
         <pattern>/*/includes/*.action</pattern>
