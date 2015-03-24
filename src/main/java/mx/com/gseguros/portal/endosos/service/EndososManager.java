@@ -137,6 +137,14 @@ public interface EndososManager
 	 */
 	public RespuestaVO validaEndosoAnterior(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsup);
 	
+	public void actualizaVigenciaPoliza(String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String feefecto
+			,String feproren) throws Exception;
+	
 	public void                      actualizaDeducibleValosit(
 			String cdunieco
 			,String cdramo

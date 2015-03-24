@@ -444,9 +444,6 @@ public class EndososAction extends PrincipalCoreAction
 			String fechaEndoso = sdf.format(new Date());
 			Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
 			
-			logger.debug("dFechaEndoso --->"+fechaEndoso);
-			logger.debug("fechaHoy --->"+dFechaEndoso);
-			
 			// Se inicia endoso:
 			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
 			paramsIniciarEndoso.put("pv_cdunieco_i" , smap1.get("CDUNIECO"));
@@ -467,9 +464,7 @@ public class EndososAction extends PrincipalCoreAction
 			logger.debug(smap1.size());
 			//Generar un map, con los valores que vienen por default
 			
-			//slist1  = new ArrayList<Map<String,String>>();
 			Map<String,String> otvalores = new HashMap<String,String>();
-			//Map<String, String> otvalores = new Map<String, String>();
 			for(int i = 1; i<= 50; i++){
 				if(i <10){
 					otvalores.put("otvalor0"+i, smap1.get("OTVALOR0"+i));
@@ -477,10 +472,8 @@ public class EndososAction extends PrincipalCoreAction
 					otvalores.put("otvalor"+i, smap1.get("OTVALOR"+i));
 				}
 			}
-			logger.debug("VALORES A ENVIAR -->"+otvalores);
 			//2.- Mandamos a guardar la información de TVALOPOL
 			cotizacionDAO.movimientoTvalopol(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, smap1.get("STATUS"), otvalores);
-			
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			
@@ -589,10 +582,8 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
 			
-			
-			
-			
-			
+			// Realizamos la modificacion de las fechas de FEEFECTO y FEPROREN
+			endososManager.actualizaVigenciaPoliza(smap1.get("CDUNIECO") ,smap1.get("CDRAMO") , smap1.get("ESTADO"),smap1.get("NMPOLIZA"), nmsuplem, smap1.get("FEEFECTO"), smap1.get("FEPROREN")  );
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			

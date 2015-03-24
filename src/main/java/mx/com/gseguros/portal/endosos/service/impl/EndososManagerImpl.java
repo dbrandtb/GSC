@@ -447,6 +447,28 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager actualizaDeducibleValosit end");
 	}
 	
+	@Override
+	public void actualizaVigenciaPoliza(String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String feefecto
+			,String feproren) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsuplem_i"  , nmsuplem);
+		params.put("pv_feefecto_i"  , feefecto);
+		params.put("pv_feproren_i"  , feproren);
+		logger.debug("EndososManager actualizaDeducibleValosit params: "+params);
+		endososDAO.actualizaVigenciaPoliza(params);
+		logger.debug("EndososManager actualizaDeducibleValosit end");
+	}
+	
 	//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
 	@Override
 	public void actualizaCopagoValosit(
