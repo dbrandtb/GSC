@@ -144,7 +144,12 @@ public class ObtieneTatrisitMapper implements RowMapper
 		}
 		result.setCotflotrol(colflotrol);
 
-		result.setSwpresenflot(rs.getString("SWPRESENFLOT"));
+		String swpresenflot = rs.getString("SWPRESENFLOT");
+		if(StringUtils.isBlank(swpresenflot))
+		{
+			swpresenflot="";
+		}
+		result.setSwpresenflot(swpresenflot);
 		
 		String swCompFlot = rs.getString("SWCOMPFLOT");
 		if(StringUtils.isBlank(swCompFlot))
