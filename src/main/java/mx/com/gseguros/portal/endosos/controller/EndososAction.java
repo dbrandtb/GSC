@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.endosos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -506,6 +507,120 @@ public class EndososAction extends PrincipalCoreAction
 				.append("\n###########################################").toString());
 		return SUCCESS;
 	}
+	
+	public String endosoVigenciaPoliza()
+	{
+		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+		smap1.put("pv_estado", smap1.get("ESTADO"));
+		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		
+		String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
+		String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
+		Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        // Establecer las fechas
+        cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
+        cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
+        long milis1 = cal1.getTimeInMillis();
+        long milis2 = cal2.getTimeInMillis();
+        long diff = milis2 - milis1;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        
+		smap1.put("pv_difDate",diffDays+"");
+		logger.debug(new StringBuilder()
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endosoAseguradoAlterno ######")
+		.append("\n######                         ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());		
+		logger.debug(new StringBuilder()
+		.append("\n######                         ######")
+		.append("\n###### endosoAseguradoAlterno  ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
+		
+		return SUCCESS;
+	}
+	
+	public String guardarEndosoVigenciaPoliza() {
+        
+		logger.debug(new StringBuilder()
+				.append("\n###########################################")
+				.append("\n###########################################")
+				.append("\n######  guardarEndosoCambioVigencia  ######")
+				.append("\n######                               ######").toString());
+		
+		this.session = ActionContext.getContext().getSession();
+        UserVO usuario = (UserVO) session.get("USUARIO");
+		
+		try {
+			logger.debug(smap1);
+			logger.debug(smap1.get("CDUNIECO"));
+			logger.debug(smap1.get("RAMO"));
+			logger.debug(smap1.get("ESTADO"));
+			logger.debug(smap1.get("NMPOLIZA"));
+			logger.debug(new Date());
+			
+			String cdelemen     = usuario.getEmpresa().getElementoId();
+			String cdusuari     = usuario.getUser();
+			String cdtipsup     = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
+			String fechaEndoso = sdf.format(new Date());
+			Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
+			// Se inicia endoso:
+			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
+			paramsIniciarEndoso.put("pv_cdunieco_i" , smap1.get("CDUNIECO"));
+			paramsIniciarEndoso.put("pv_cdramo_i"   , smap1.get("CDRAMO"));
+			paramsIniciarEndoso.put("pv_estado_i"   , smap1.get("ESTADO"));
+			paramsIniciarEndoso.put("pv_nmpoliza_i" , smap1.get("NMPOLIZA"));
+			paramsIniciarEndoso.put("pv_fecha_i"    , fechaEndoso);
+			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
+			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
+			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
+			paramsIniciarEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			//1.- Mandamos a iniciar el endoso 
+			Map<String,String>respuestaIniciarEndoso=endososManager.iniciarEndoso(paramsIniciarEndoso);
+			//String nmsuplem= smap1.get("NMSUPLEM");
+			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
+			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
+			
+			
+			
+			
+			
+			
+			// Se confirma el endoso si cumple la validacion de fechas: 
+			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			
+			// Si el endoso fue confirmado:
+			if(respConfirmacionEndoso.isConfirmado()) {
+				mensaje = "Endoso generado";
+				
+            } else {
+				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
+						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
+						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+			}
+			success = true;
+
+		} catch(Exception ex) {
+			logger.error("Error al generar endoso de asegurado Alterno",ex);
+			success = false;
+			error   = ex.getMessage();
+		}
+		logger.debug(new StringBuilder()
+				.append("\n######                               ######")
+				.append("\n######  guardarEndosoCambioVigencia  ######")
+				.append("\n###########################################")
+				.append("\n###########################################").toString());
+		return SUCCESS;
+	}
+	
+	
 	//////////////////////////////////////////////
 	////// pantalla de endoso de domicilio  //////
 	/*
