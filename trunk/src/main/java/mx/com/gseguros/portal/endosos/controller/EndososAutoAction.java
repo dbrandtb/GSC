@@ -14,11 +14,18 @@ import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 
+@Controller
+@Scope("prototype")
 public class EndososAutoAction extends PrincipalCoreAction
 {
+	private static final long serialVersionUID = -7583914370456999908L;
+
 	private static Logger logger = Logger.getLogger(EndososAutoAction.class);
 	
 	private boolean                  success;
@@ -28,6 +35,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
 	
+	@Autowired
 	private EndososAutoManager endososAutoManager;
 	
 	public EndososAutoAction()
@@ -550,10 +558,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
-	}
-
-	public void setEndososAutoManager(EndososAutoManager endososAutoManager) {
-		this.endososAutoManager = endososAutoManager;
 	}
 
 	public Map<String, Item> getImap() {

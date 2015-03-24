@@ -16,13 +16,4 @@
         <property name="pantallasDAO"    ref="pantallasDAOImpl"    />
     </bean>
     
-    <bean id="endososAutoManagerImpl" class="mx.com.gseguros.portal.endosos.service.impl.EndososAutoManagerImpl">
-        <property name="pantallasDAO"   ref="pantallasDAOImpl"   />
-        <property name="endososDAO"     ref="endososDAOImpl"     />
-        <property name="consultasDAO"   ref="consultasDAOImpl"   />
-        <property name="cotizacionDAO"  ref="cotizacionDAOImpl"  />
-        <property name="personasDAO"    ref="personasDAOImpl"    />
-        <property name="mesaControlDAO" ref="mesaControlDAOImpl" />
-    </bean>
-    
 </beans>

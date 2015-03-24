@@ -4,27 +4,23 @@ package mx.com.gseguros.ws.autosgs.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.siniestros.dao.impl.SiniestrosDAOImpl;
-import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.object.StoredProcedure;
 
-public class AutosDAOSIGSImpl extends AbstractManagerDAO implements AutosDAOSIGS {
+public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO {
 
-	private static Logger logger = Logger.getLogger(AutosDAOSIGSImpl.class);
+	private static Logger logger = Logger.getLogger(AutosSIGSDAOImpl.class);
 	
 	@Override
 	public Integer cambioDomicilioCP(Map<String, Object> params) throws Exception {
