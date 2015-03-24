@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
-import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
@@ -30,7 +29,7 @@ import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
-import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 
@@ -40,30 +39,41 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
 	private static Logger logger = Logger.getLogger(EndososAutoManagerImpl.class);
 	
-	private PantallasDAO   pantallasDAO;
-	private EndososDAO     endososDAO;
-	private ConsultasDAO   consultasDAO;
-	private CotizacionDAO  cotizacionDAO;
-	private PersonasDAO    personasDAO;
-	private MesaControlDAO mesaControlDAO;
+	@Autowired
+	private PantallasDAO        pantallasDAO;
 	
 	@Autowired
-	private AutosDAOSIGS autosDAOSIGS;
+	private EndososDAO          endososDAO;
 	
 	@Autowired
-	private ConsultasPolizaManager   consultasPolizaManager;
+	private ConsultasDAO        consultasDAO;
+	
+	@Autowired
+	@Qualifier("consultasDAOICEImpl")
+	private ConsultasPolizaDAO  consultasPolizaDAO;
+	
+	@Autowired
+	private CotizacionDAO       cotizacionDAO;
+	
+	@Autowired
+	private PersonasDAO         personasDAO;
+	
+	@Autowired
+	private MesaControlDAO      mesaControlDAO;
+	
+	@Autowired
+	private AutosSIGSDAO        autosDAOSIGS;
 	
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
 	private EmisionAutosService emisionAutosService;
-	
-	@Autowired
-	private KernelManagerSustituto   kernelManager;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
@@ -728,55 +738,40 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				 */
 				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
 				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", cdunieco);
-				paramsR.put("pv_cdramo_i",   cdramo);
-				paramsR.put("pv_estado_i",   estado);
-				paramsR.put("pv_nmpoliza_i", nmpoliza);
-				paramsR.put("pv_nmsuplem_i", nmsuplem);
-				paramsR.put("pv_feinici_i",  new Date());
-				paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-				paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-				paramsR.put("pv_nmsolici_i", nmpoliza);
-				paramsR.put("pv_ntramite_i", ntramite);
-				paramsR.put("pv_tipmov_i",   cdtipsup);
-				paramsR.put("pv_swvisible_i", Constantes.SI);
-				
-				kernelManager.guardarArchivo(paramsR);
+				mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado,nmpoliza, nmsuplem, 
+						new Date(), urlCaratula + parametros,
+						"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite,
+						cdtipsup, Constantes.SI);
 				
 				/**
 				 * Para Recibo 1
 				 */
 				parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
 				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-				
-				paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo 1");
-				
-				kernelManager.guardarArchivo(paramsR);
+				mesaControlDAO.guardarDocumento(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						new Date(), urlRecibo + parametros, "Recibo 1", nmpoliza, 
+						ntramite, cdtipsup, Constantes.SI);
 				
 				/**
 				 * Para AP inciso 1
 				 */
 				parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
 				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-				
-				paramsR.put("pv_cddocume_i", urlAp + parametros);
-				paramsR.put("pv_dsdocume_i", "AP");
-				
-				kernelManager.guardarArchivo(paramsR);
+				mesaControlDAO.guardarDocumento(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						new Date(), urlAp + parametros, "AP", nmpoliza, 
+						ntramite, cdtipsup, Constantes.SI);
 				
 				/**
 				 * Para CAIC inciso 1
 				 */
 				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
 				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-				
-				paramsR.put("pv_cddocume_i", urlCaic + parametros);
-				paramsR.put("pv_dsdocume_i", "CAIC");
-				
-				kernelManager.guardarArchivo(paramsR);
+				mesaControlDAO.guardarDocumento(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						new Date(), urlCaic + parametros, "CAIC", nmpoliza, 
+						ntramite, cdtipsup, Constantes.SI);
 				
 				if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
 					/**
@@ -784,22 +779,20 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					 */
 					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
 					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-					
-					paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-					paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
-					
-					kernelManager.guardarArchivo(paramsR);
+					mesaControlDAO.guardarDocumento(
+							cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+							new Date(), urlIncisosFlot + parametros, "Incisos Flotillas", nmpoliza, 
+							ntramite, cdtipsup, Constantes.SI);
 					
 					/**
 					 * Para Tarjeta Identificacion
 					 */
 					parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
 					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-					
-					paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-					paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
-					
-					kernelManager.guardarArchivo(paramsR);
+					mesaControlDAO.guardarDocumento(
+							cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+							new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
+							ntramite, cdtipsup, Constantes.SI);
 				}
 			
 			}
@@ -1578,44 +1571,39 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param nmtramite
+	 * @param cdtipsup
+	 * @param numEndoso
+	 * @return
+	 */
 	private boolean generaCaratulasSigs(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmtramite, String cdtipsup, String numEndoso){
 		/**
 		 * Para Caratula Endoso B
 		 */
 		try{
-		PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			
+			datosPol.setCdunieco(cdunieco);
+			datosPol.setCdramo(cdramo);
+			datosPol.setEstado(estado);
+			datosPol.setNmpoliza(nmpoliza);
+			
+			List<PolizaDTO> listaPolizas = consultasPolizaDAO.obtieneDatosPoliza(datosPol);
+			PolizaDTO polRes = listaPolizas.get(0);
+			
+			String parametros = null;
+			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEndoso;
+			logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
+			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza, nmsuplem, new Date(), urlImpresionCaratulaEndosoB + parametros, "Car&aacute;tula Endoso B", nmpoliza, nmtramite, cdtipsup, Constantes.SI);
 		
-		datosPol.setCdunieco(cdunieco);
-		datosPol.setCdramo(cdramo);
-		datosPol.setEstado(estado);
-		datosPol.setNmpoliza(nmpoliza);
-		
-		List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
-		PolizaDTO polRes = listaPolizas.get(0);
-		
-		
-		String parametros = null;
-		
-		parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEndoso;
-		logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
-		
-		HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-		paramsR.put("pv_cdunieco_i", cdunieco);
-		paramsR.put("pv_cdramo_i",   cdramo);
-		paramsR.put("pv_estado_i",   estado);
-		paramsR.put("pv_nmpoliza_i", nmpoliza);
-		paramsR.put("pv_nmsuplem_i", nmsuplem);
-		paramsR.put("pv_feinici_i",  new Date());
-		paramsR.put("pv_cddocume_i", urlImpresionCaratulaEndosoB + parametros);
-		paramsR.put("pv_dsdocume_i", "Car&aacute;tula Endoso B");
-		paramsR.put("pv_nmsolici_i", nmpoliza);
-		paramsR.put("pv_ntramite_i", nmtramite);
-		paramsR.put("pv_tipmov_i",   cdtipsup);
-		paramsR.put("pv_swvisible_i", Constantes.SI);
-		
-		kernelManager.guardarArchivo(paramsR);
 		}catch(Exception e){
 			logger.debug("Error al guardar la caratula de endoso B");
 			return false;
@@ -1623,30 +1611,4 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return true;
 	}
 	
-	/*
-	 * Getters y setters
-	 */
-	public void setPantallasDAO(PantallasDAO pantallasDAO) {
-		this.pantallasDAO = pantallasDAO;
-	}
-
-	public void setEndososDAO(EndososDAO endososDAO) {
-		this.endososDAO = endososDAO;
-	}
-
-	public void setConsultasDAO(ConsultasDAO consultasDAO) {
-		this.consultasDAO = consultasDAO;
-	}
-
-	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
-		this.cotizacionDAO = cotizacionDAO;
-	}
-
-	public void setPersonasDAO(PersonasDAO personasDAO) {
-		this.personasDAO = personasDAO;
-	}
-
-	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
-		this.mesaControlDAO = mesaControlDAO;
-	}
 }

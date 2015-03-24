@@ -37,7 +37,7 @@ import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWS
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacion;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionE;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionResponseE;
-import mx.com.gseguros.ws.autosgs.dao.AutosDAOSIGS;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
@@ -76,7 +76,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private StoredProceduresManager storedProceduresManager;
 	
 	@Autowired
-	private AutosDAOSIGS autosDAOSIGS;
+	private AutosSIGSDAO autosSIGSDAO;
+	
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
@@ -779,7 +780,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					params.put("FechaInicio"     , fechaInicio);
 					params.put("FechaTermino"    , fechaTermino);
 					
-					Integer res = autosDAOSIGS.insertaReciboAuto(params);
+					Integer res = autosSIGSDAO.insertaReciboAuto(params);
 					
 					logger.debug("Respuesta al insertar recibo: " + reciboIt.get("NUMREC")+ " - "+res);
 					
@@ -804,7 +805,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				params.put("TipoEndoso"  , StringUtils.isBlank(recibos.get(0).get("TIPEND"))?" " : recibos.get(0).get("TIPEND"));
 				params.put("NumeroEndoso", recibos.get(0).get("NUMEND"));
 				
-				Integer valida = autosDAOSIGS.confirmaRecibosAuto(params);
+				Integer valida = autosSIGSDAO.confirmaRecibosAuto(params);
 				logger.debug("Respuesta al validar recibos: " + valida);
 				
 				if(valida == null || valida != 0){
@@ -870,7 +871,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
 				
-				Integer res = autosDAOSIGS.endosoDomicilio(paramsEnd);
+				Integer res = autosSIGSDAO.endosoDomicilio(paramsEnd);
 				
 				logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
 				
@@ -955,7 +956,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
 				
-				Integer res = autosDAOSIGS.cambioDomicilioCP(paramsEnd);
+				Integer res = autosSIGSDAO.cambioDomicilioCP(paramsEnd);
 				
 				logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
 				

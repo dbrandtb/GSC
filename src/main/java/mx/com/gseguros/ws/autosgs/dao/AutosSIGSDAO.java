@@ -3,7 +3,7 @@ package mx.com.gseguros.ws.autosgs.dao;
 import java.util.Map;
 
 
-public interface AutosDAOSIGS {
+public interface AutosSIGSDAO {
 		
 	public Integer endosoDomicilio(Map<String, Object> params) throws Exception;
 

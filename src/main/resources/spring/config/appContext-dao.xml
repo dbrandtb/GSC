@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="autosDAOSIGSImpl" class="mx.com.gseguros.ws.autosgs.dao.impl.AutosDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
+    <bean id="autosDAOSIGSImpl" class="mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl" parent="abstractManagerDAOSIGS"/>
 
     <bean id="cancelacionDAOImpl" class="mx.com.gseguros.portal.cancelacion.dao.impl.CancelacionDAOImpl" parent="abstractManagerDAO"></bean>
 
