@@ -235,8 +235,8 @@ public class EndososAction extends PrincipalCoreAction
 			error = resp.getMensaje();
 			*/
 			
-			// Si el origen es del margo general, asignamos el tipo de endoso:
-			if(smap1.containsKey("marco2")) {
+			// Si el origen es del marco general de endosos, asignamos el tipo de endoso:
+			if("MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"))) {
 				if(smap1.get("cdtipsup").equals(TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString())) {
 					smap1.put("altabaja", "alta");
 				} else {

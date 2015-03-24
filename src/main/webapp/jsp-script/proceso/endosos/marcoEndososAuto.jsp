@@ -1039,7 +1039,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             var smap1         = poliza.raw;
                             smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
-                            smap1['marco2']   = '';
+                            smap1['pantallaOrigen'] = 'MARCO_ENDOSOS_GENERAL';
                             debug('smap1:',smap1);
                             
                             centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -1074,7 +1074,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             var smap1         = poliza.raw;
                             smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
-                            smap1['marco2']   = '';
+                            smap1['pantallaOrigen']   = 'MARCO_ENDOSOS_GENERAL';
                             debug('smap1:',smap1);
                             
                             var incisos = _fieldById('_p34_gridIncisos').getSelectionModel().getSelection();
