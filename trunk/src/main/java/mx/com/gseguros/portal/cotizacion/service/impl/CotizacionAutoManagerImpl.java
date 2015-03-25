@@ -2067,11 +2067,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   decode      = conf.get("DECODE");
 					String[] splited     = null;
 					String   cdtabla1    = conf.get("CDTABLA1");
-					String   cdtabla5    = conf.get("CDTABLA5");
+					String   tipoatri    = conf.get("TIPOATRI");
 					if(!isBlank(decode))
 					{
 						splited = decode.split(",");
 					}
+					
+					logger.debug(Utilerias.join("Iterando propiedad=",propiedad," cdtipsit=",cdtipsitCol," tipo=",tipo," tipoatri=",tipoatri));
 					
 					Cell cell = row.getCell(col);
 					if(propiedad.equals("cdtipsit"))
@@ -2103,14 +2105,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						logger.debug(new StringBuilder("valor=").append(valor).toString());
 						record.put("cdtipsit",valor);
 					}
-					else
+					else if("S".equals(respetar)||tipoatri.equals("SITUACION"))
 					{
 						logger.debug(Utilerias.join(">>",propiedad));
 						String cdtipsitRecord = record.get("cdtipsit");
 						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
 						{
 							logger.debug(Utilerias.join("Mapeado ",cdtipsitRecord," en ",cdtipsitCol));
-							if(isBlank(decode)&&isBlank(cdtabla1)&&isBlank(cdtabla5))
+							if(isBlank(decode)&&isBlank(cdtabla1))
 							{
 								if(tipo.equals("string"))
 								{
@@ -2304,6 +2306,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						{
 							logger.debug(Utilerias.join("No mapea ",cdtipsitRecord," en ",cdtipsitCol));
 						}
+					}
+					else
+					{
+						logger.debug(Utilerias.join("No se procesa porque respetar=",respetar," tipoatri=",tipoatri));
 					}
 				}
             }

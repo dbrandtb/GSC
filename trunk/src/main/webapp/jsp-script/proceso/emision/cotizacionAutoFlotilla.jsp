@@ -795,6 +795,7 @@ Ext.onReady(function()
                             ,name       : 'smap1.tomarMasiva'
                             ,inputValue : 'S'
                             ,style      : 'background:#223772;'
+                            ,checked    : true
                         }
                         ,{
                             xtype         : 'filefield'
