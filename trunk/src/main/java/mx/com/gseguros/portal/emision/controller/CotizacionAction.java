@@ -4039,13 +4039,22 @@ public class CotizacionAction extends PrincipalCoreAction
 			                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
 			                		);
 	                	}
-		                catch(Exception ex)
+		                catch(Exception ex2)
 		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Codigo postal' ("+"I"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
+		                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
+		                	try
+		                	{
+		                		logger.info("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
+				                output.print(row.getCell(8).getStringCellValue()+"|");
+		                	}
+		                	catch(Exception ex)
+		                	{
+		                		long etimestamp = System.currentTimeMillis();
+			                	exito           = false;
+			                	respuesta       = "Error en el campo 'Codigo postal' ("+"I"+") de la fila "+fila+" #"+etimestamp;
+			                	respuestaOculta = ex.getMessage();
+			                	logger.error(respuesta,ex);
+		                	}
 		                }
 	                }
 	                
