@@ -16,6 +16,8 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -28,6 +30,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
@@ -103,7 +106,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String urlImpresionTarjetaIdentificacion;
 	
-	
+	private Map<String,Object> session;
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
 	{
@@ -1614,5 +1617,155 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		return true;
 	}
+
+	@Override
+	public void guardarEndosoAseguradoAlterno(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,Map<String, String> otvalores
+		)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ cdelemen="         , cdelemen
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				,"\n@@@@@@ fechaEndoso="      , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
+				,"\n@@@@@@ otvalores="        , otvalores
+				));
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		try
+		{
+			paso ="Iniciando endoso";
+			logger.info(paso);
+			
+			
+			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,dFechaEndoso
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			paso = "finaliza Inicio Endoso";
+			logger.info(paso);
+			
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso ="Registra los valores en TVALOPOL";
+			logger.info(paso);
+			cotizacionDAO.movimientoTvalopol(cdunieco, cdramo, estado, nmpoliza, nmsuplem, status, otvalores);
+			paso ="Se confirma el endoso";
+			logger.info(paso);
+			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 	
+
+	@Override
+	public void guardarEndosoVigenciaPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+		)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ cdelemen="         , cdelemen
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				,"\n@@@@@@ fechaEndoso="      , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
+				,"\n@@@@@@ feefecto="         , feefecto
+				,"\n@@@@@@ feproren="         , feproren
+				));
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		try
+		{
+			paso = "Iniciando endoso";
+			logger.info(paso);
+			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,dFechaEndoso
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso = "Registra los valores en TVALOPOL";
+			logger.debug(paso);
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i"  , cdunieco);
+			params.put("pv_cdramo_i"    , cdramo);
+			params.put("pv_estado_i"    , estado);
+			params.put("pv_nmpoliza_i"  , nmpoliza);
+			params.put("pv_nmsuplem_i"  , nmsuplem);
+			params.put("pv_feefecto_i"  , feefecto);
+			params.put("pv_feproren_i"  , feproren);
+			logger.debug("EndososManager actualizaDeducibleValosit params: "+params);
+			endososDAO.actualizaVigenciaPoliza(params);
+			paso = "Se confirma el endoso";
+			logger.debug(paso);
+			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

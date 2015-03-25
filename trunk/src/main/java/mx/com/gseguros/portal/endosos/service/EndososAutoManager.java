@@ -1,10 +1,12 @@
 package mx.com.gseguros.portal.endosos.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 
 public interface EndososAutoManager
@@ -110,5 +112,34 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			)throws Exception;
+
+	public void guardarEndosoAseguradoAlterno(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,Map<String, String> otvalores
+			)throws Exception;
+	
+	public void guardarEndosoVigenciaPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
 			)throws Exception;
 }
