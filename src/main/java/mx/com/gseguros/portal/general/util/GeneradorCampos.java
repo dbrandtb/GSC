@@ -435,7 +435,7 @@ public class GeneradorCampos
         	item.add("displayField"    , "value");
             item.add("valueField"      , "key");
             item.add("matchFieldWidth" , false);
-            item.add(new Item("listConfig" , "{maxHeight:150}").setQuotes(""));
+            item.add(new Item("listConfig" , "{maxHeight:150,minWidth:120}").setQuotes(""));
             ////// typeAhead, displayField, valueField, matchFieldWidth //////
         	
         	////// forceSelection, editable //////
