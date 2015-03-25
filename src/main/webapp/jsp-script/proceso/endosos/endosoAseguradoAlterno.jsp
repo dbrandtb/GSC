@@ -43,12 +43,7 @@
    						    success:function(response,opts){
    						    	 panelInicialPral.setLoading(false);
    						         var jsonResp = Ext.decode(response.responseText);
-	   						     centrarVentanaInterna(Ext.Msg.show({
-	 					            title:'Endoso',
-	 					            msg: jsonResp.mensaje,
-	 					            buttons: Ext.Msg.OK//,
-	 					            //icon: Ext.Msg.
-	 					        }));
+   						         mensajeCorrecto("Endoso",jsonResp.respuesta,null);
    						    },
    						    failure:function(response,opts)
    						    {

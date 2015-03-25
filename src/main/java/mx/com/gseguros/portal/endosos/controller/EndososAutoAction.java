@@ -1,18 +1,26 @@
 package mx.com.gseguros.portal.endosos.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
+import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -34,6 +42,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,String>       smap2;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
+	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private boolean exito           = false;
+	private String  respuestaOculta = null;
 	
 	@Autowired
 	private EndososAutoManager endososAutoManager;
@@ -524,7 +535,209 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+
+	public String endosoAseguradoAlterno()
+	{
+		
+		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+		smap1.put("pv_estado", smap1.get("ESTADO"));
+		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		
+		logger.debug(new StringBuilder()
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endosoAseguradoAlterno ######")
+		.append("\n######                         ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());		
+		logger.debug(new StringBuilder()
+		.append("\n######                         ######")
+		.append("\n###### endosoAseguradoAlterno  ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
+		
+		return SUCCESS;
+	}
 	
+	public String endosoVigenciaPoliza()
+	{
+		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+		smap1.put("pv_estado", smap1.get("ESTADO"));
+		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		
+		String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
+		String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
+		Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        // Establecer las fechas
+        cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
+        cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
+        long milis1 = cal1.getTimeInMillis();
+        long milis2 = cal2.getTimeInMillis();
+        long diff = milis2 - milis1;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        
+		smap1.put("pv_difDate",diffDays+"");
+		logger.debug(new StringBuilder()
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endosoAseguradoAlterno ######")
+		.append("\n######                         ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());		
+		logger.debug(new StringBuilder()
+		.append("\n######                         ######")
+		.append("\n###### endosoAseguradoAlterno  ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
+		
+		return SUCCESS;
+	}
+	
+	
+	
+	public String guardarEndosoAseguradoAlterno() {
+        
+		logger.info(Utilerias.join(
+				"\n###########################################"
+				,"\n###########################################"
+				,"\n###### guardarEndosoAseguradoAlterno ######"
+				,"\n###### smap1="  , smap1
+				,"\n######                               ######"));
+		try
+		{
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String status   = smap1.get("STATUS");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			String cdtipsup      = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			String fechaEndoso   = sdf.format(new Date());
+			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+			
+			Map<String,String> otvalores = new HashMap<String,String>();
+			for(int i = 1; i<= 50; i++){
+				otvalores.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i), 2, "0")).toString(),smap1.get(new StringBuilder("OTVALOR").append(StringUtils.leftPad(String.valueOf(i), 2, "0")).toString()));
+			}
+			
+			endososAutoManager.guardarEndosoAseguradoAlterno(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					cdelemen,
+					cdusuari,
+					cdtipsup,
+					status,
+					fechaEndoso,
+					dFechaEndoso,
+					otvalores);
+			
+			respuesta = "Endoso generado correctamente";
+			success   = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarEndosoBeneficiarios ######"
+				,"\n########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String guardarEndosoVigenciaPoliza() {
+        
+		logger.info(Utilerias.join(
+				"\n############################################"
+				,"\n###########################################"
+				,"\n######  guardarEndosoCambioVigencia  ######"
+				,"\n###### smap1="  , smap1
+				,"\n######                               ######"));
+		try
+		{
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String status   = smap1.get("STATUS");
+			String feefecto = smap1.get("FEEFECTO");
+			String feproren = smap1.get("FEPROREN");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(status   , "No se recibio el status");
+			Utils.validate(feefecto , "No se recibio la fecha feproren");
+			Utils.validate(feproren , "No se recibio la fecha feproren");
+			
+			
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			String cdtipsup      = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			String fechaEndoso   = sdf.format(new Date());
+			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+			
+			endososAutoManager.guardarEndosoVigenciaPoliza(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					cdelemen,
+					cdusuari,
+					cdtipsup,
+					status,
+					fechaEndoso,
+					dFechaEndoso,
+					feefecto,
+					feproren);
+			respuesta = "Endoso generado correctamente";
+			success   = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarEndosoBeneficiarios ######"
+				,"\n########################################"
+				));
+		return SUCCESS;
+	}
+
 	/*
 	 * Getters y setters
 	 */
