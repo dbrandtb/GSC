@@ -4281,13 +4281,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                		.toString()
 			                		);
 	                	}
-		                catch(Exception ex)
+		                catch(Exception ex2)
 		                {
-		                	long timestamp = System.currentTimeMillis();
-		                	resp.setExito(false);
-		                	resp.setRespuesta(new StringBuilder("Error en el campo 'Codigo postal' (").append("I").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
-		                	resp.setRespuestaOculta(ex.getMessage());
-		                	logger.error(resp.getRespuesta(),ex);
+		                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
+		                	try
+		                	{
+		                		logger.debug(Utilerias.join("COD POSTAL: "
+		                				,row.getCell(8).getStringCellValue()
+				                		,"|"
+				                		));
+				                output.print(Utilerias.join(
+				                		row.getCell(8).getStringCellValue()
+				                		,"|"
+				                		));
+		                	}
+		                	catch(Exception ex)
+		                	{
+			                	long timestamp = System.currentTimeMillis();
+			                	resp.setExito(false);
+			                	resp.setRespuesta(new StringBuilder("Error en el campo 'Codigo postal' (").append("I").append(") de la fila ").append(fila).append(" #").append(timestamp).toString());
+			                	resp.setRespuestaOculta(ex.getMessage());
+			                	logger.error(resp.getRespuesta(),ex);
+		                	}
 		                }
 	                }
 	                
