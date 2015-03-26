@@ -563,39 +563,56 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoVigenciaPoliza()
 	{
-		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
-		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
-		smap1.put("pv_estado", smap1.get("ESTADO"));
-		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
-		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
-		
-		String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
-		String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
-		Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        // Establecer las fechas
-        cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
-        cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
-        long milis1 = cal1.getTimeInMillis();
-        long milis2 = cal2.getTimeInMillis();
-        long diff = milis2 - milis1;
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-        
-		smap1.put("pv_difDate",diffDays+"");
-		logger.debug(new StringBuilder()
-		.append("\n#####################################")
-		.append("\n#####################################")
-		.append("\n###### endosoAseguradoAlterno ######")
-		.append("\n######                         ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("session: ").append(session).toString());		
-		logger.debug(new StringBuilder()
-		.append("\n######                         ######")
-		.append("\n###### endosoAseguradoAlterno  ######")
-		.append("\n#####################################")
-		.append("\n#####################################").toString());
-		
-		return SUCCESS;
+		logger.info(Utilerias.join(
+				"\n###########################################"
+				,"\n###########################################"
+				,"\n###### 		endosoVigenciaPoliza 	 ######"
+				,"\n###### smap1="  , smap1
+				,"\n######                               ######"));
+		try {
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
+			
+			//obtenemos los numero de días para la retroactividad;
+			String diasMinimo = "5";
+			String diasMaximo = "20";
+			
+			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			success   = true;
+			
+			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+			smap1.put("pv_estado", smap1.get("ESTADO"));
+			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+			smap1.put("pv_diasMinimo", diasMinimo);
+			smap1.put("pv_diasMaximo", diasMaximo);
+			
+			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
+			String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
+			Calendar cal1 = Calendar.getInstance();
+	        Calendar cal2 = Calendar.getInstance();
+	        // Establecer las fechas
+	        cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
+	        cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
+	        long milis1 = cal1.getTimeInMillis();
+	        long milis2 = cal2.getTimeInMillis();
+	        long diff = milis2 - milis1;
+	        long diffDays = diff / (24 * 60 * 60 * 1000);
+	        
+			smap1.put("pv_difDate",diffDays+"");
+			logger.debug(new StringBuilder()
+			.append("\n######                         ######")
+			.append("\n######  endosoVigenciaPoliza   ######")
+			.append("\n#####################################")
+			.append("\n#####################################").toString());
+		} catch (Exception ex) {
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return isSuccess() ? SUCCESS : ERROR;
 	}
 	
 	
@@ -662,8 +679,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.info(Utilerias.join(
-				 "\n###### guardarEndosoBeneficiarios ######"
-				,"\n########################################"
+				 "\n###### guardarEndosoAseguradoAlterno ######"
+				,"\n###########################################"
 				));
 		return SUCCESS;
 	}
@@ -732,8 +749,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.info(Utilerias.join(
-				 "\n###### guardarEndosoBeneficiarios ######"
-				,"\n########################################"
+				 "\n###### guardarEndosoCambioVigencia ######"
+				,"\n#########################################"
 				));
 		return SUCCESS;
 	}
