@@ -576,10 +576,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
 			
-			//obtenemos los numero de días para la retroactividad;
-			String diasMinimo = "5";
-			String diasMaximo = "20";
-			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			String fechaProceso   = sdf.format(new Date());
+			//1.Obtenemos los números de días Maximo y Minimo
+			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdunieco,cdramo,cdtipsup, fechaProceso);
 			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			success   = true;
 			
@@ -588,8 +588,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("pv_estado", smap1.get("ESTADO"));
 			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
-			smap1.put("pv_diasMinimo", diasMinimo);
-			smap1.put("pv_diasMaximo", diasMaximo);
+			smap1.put("pv_diasMinimo", retroactividad.get(0).get("DIASMINIMO"));
+			smap1.put("pv_diasMaximo", retroactividad.get(0).get("DIASMAXIMO"));
 			
 			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
 			String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
@@ -617,7 +617,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	
 	
-	public String guardarEndosoAseguradoAlterno() {
+		public String guardarEndosoAseguradoAlterno() {
         
 		logger.info(Utilerias.join(
 				"\n###########################################"

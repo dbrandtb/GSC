@@ -2894,4 +2894,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String, String>> obtenerRetroactividad(String cdunieco, String cdramo,
+			String cdtipsup, String fechaProceso) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************************")
+				.append("\n****** PKG_CONSULTA.P_OBTIENE_RETROACTIVIDAD ******")
+				.append("\n****** cdunieco =").append(cdunieco)
+				.append("\n****** cdramo =").append(cdramo)
+				.append("\n****** cdtipsup =").append(cdtipsup)
+				.append("\n****** feautori =").append(fechaProceso)
+				.append("\n***************************************************")
+				.toString()
+				);
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		params.put("pv_feautori_i" , fechaProceso);
+		
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerRetroActividad(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ObtenerRetroActividad extends StoredProcedure
+	{
+		String[] columnas=new String[]{
+				"DIASMINIMO" 
+	            ,"DIASMAXIMO"
+		};
+
+		protected ObtenerRetroActividad(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_OBTIENE_RETROACTIVIDAD");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feautori_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
