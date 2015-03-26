@@ -2896,14 +2896,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
-	public List<Map<String, String>> obtenerRetroactividad(String cdunieco, String cdramo,
+	public List<Map<String, String>> obtenerRetroactividad(String cdsisrol, String cdramo,
 			String cdtipsup, String fechaProceso) throws Exception
 	{
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************************")
 				.append("\n****** PKG_CONSULTA.P_OBTIENE_RETROACTIVIDAD ******")
-				.append("\n****** cdunieco =").append(cdunieco)
+				.append("\n****** cdsisrol =").append(cdsisrol)
 				.append("\n****** cdramo =").append(cdramo)
 				.append("\n****** cdtipsup =").append(cdtipsup)
 				.append("\n****** feautori =").append(fechaProceso)
@@ -2911,7 +2911,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.toString()
 				);
 		Map<String,String>params = new LinkedHashMap<String,String>();
-		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdsisrol_i" , cdsisrol);
 		params.put("pv_cdramo_i"   , cdramo);
 		params.put("pv_cdtipsup_i" , cdtipsup);
 		params.put("pv_feautori_i" , fechaProceso);
@@ -2929,7 +2929,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ObtenerRetroActividad(DataSource dataSource)
 		{
 			super(dataSource, "PKG_CONSULTA.P_OBTIENE_RETROACTIVIDAD");
-			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feautori_i"    , OracleTypes.VARCHAR));

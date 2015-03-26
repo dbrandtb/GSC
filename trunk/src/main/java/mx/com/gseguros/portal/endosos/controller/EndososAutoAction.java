@@ -576,10 +576,15 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
 			
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			logger.debug("VALOR DEL DATO -->"+cdsisrol);
+			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			String fechaProceso   = sdf.format(new Date());
 			//1.Obtenemos los números de días Maximo y Minimo
-			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdunieco,cdramo,cdtipsup, fechaProceso);
+			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdsisrol,cdramo,cdtipsup, fechaProceso);
 			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			success   = true;
 			
