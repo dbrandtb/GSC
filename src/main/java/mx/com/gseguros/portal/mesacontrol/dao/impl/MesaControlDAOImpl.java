@@ -378,7 +378,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("nmsolici" , nmsolici);
 		logger.debug(Utilerias.join(
 				 "\n*********************************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_TMESACONTROL_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n****** params=",params
 				,"\n*********************************************************"
 				));
@@ -392,7 +392,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 				 "\n*********************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro
-				,"\n****** PKG_DESARROLLO.P_GET_TMESACONTROL_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n*********************************************************"
 				));
 		return registro;
@@ -402,7 +402,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected CargarTramitesPorParametrosVariables(DataSource dataSource)
 		{
-			super(dataSource, "PKG_DESARROLLO.P_GET_TMESACONTROL_X_PAR_VAR");
+			super(dataSource, "PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR");
 			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -434,7 +434,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cdusuari" , cdusuari);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO", params);
 		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
 	}
 	
@@ -442,7 +442,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected GuardarRegistroContrarecibo(DataSource dataSource)
 		{
-			super(dataSource, "PKG_DESARROLLO.P_INSERTA_CONTRARECIBO");
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -458,7 +458,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
 		params.put("nuevo"    , nuevo);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME", params);
 		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
 	}
 	
@@ -466,7 +466,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected ActualizarNombreDocumento(DataSource dataSource)
 		{
-			super(dataSource, "PKG_DESARROLLO.P_UPD_TDOCUPOL_DSDOCUME");
+			super(dataSource, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nuevo"    , OracleTypes.VARCHAR));
@@ -482,7 +482,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_BORRAR_TDOCUPOL", params);
 		ejecutaSP(new BorrarDocumento(getDataSource()),params);
 	}
 	
@@ -490,7 +490,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected BorrarDocumento(DataSource dataSource)
 		{
-			super(dataSource, "PKG_DESARROLLO.P_BORRAR_TDOCUPOL");
+			super(dataSource, "PKG_SATELITES2.P_BORRAR_TDOCUPOL");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
