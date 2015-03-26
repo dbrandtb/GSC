@@ -324,7 +324,7 @@ public interface EndososDAO
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
-			String cdunieco
+			String cdsisrol
 			,String cdramo
 			,String cdtipsup
 			,String fechaProceso

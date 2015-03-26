@@ -1802,14 +1802,14 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 
 	@Override
-	public List<Map<String,String>> obtenerRetroactividad(String cdunieco, String cdramo,
+	public List<Map<String,String>> obtenerRetroactividad(String cdsisrol, String cdramo,
 			String cdtipsup, String fechaProceso) throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, String>> respRetroActividad = null;
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
-				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdsisrol="         , cdsisrol
 				,"\n@@@@@@ cdramo="           , cdramo
 				,"\n@@@@@@ cdtipsup="           , cdtipsup
 				,"\n@@@@@@ fechaProceso="         , fechaProceso
@@ -1820,7 +1820,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		{
 			paso = "Iniciando valida endoso anterior";
 			logger.info(paso);
-			respRetroActividad = endososDAO.obtenerRetroactividad(cdunieco, cdramo, cdtipsup, fechaProceso);
+			respRetroActividad = endososDAO.obtenerRetroactividad(cdsisrol, cdramo, cdtipsup, fechaProceso);
 		}
 		catch(Exception ex)
 		{
