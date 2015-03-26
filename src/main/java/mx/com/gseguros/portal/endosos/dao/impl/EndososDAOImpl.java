@@ -2276,14 +2276,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsit" , cdtipsit);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INS_INCISO_EVAL_ENDOSO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INS_INCISO_EVAL_ENDOSO", params);
 		ejecutaSP(new InsertarIncisoEvaluacion(this.getDataSource()), params);
 	}
 	
 	protected class InsertarIncisoEvaluacion extends StoredProcedure {
 
 		protected InsertarIncisoEvaluacion(DataSource dataSource) {
-			super(dataSource, "PKG_DESARROLLO.P_INS_INCISO_EVAL_ENDOSO");
+			super(dataSource, "PKG_SATELITES2.P_INS_INCISO_EVAL_ENDOSO");
 			declareParameter(new SqlParameter("stamp"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
@@ -2315,14 +2315,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("multiple" , multiple);
 		params.put("tipoflot" , tipoflot);
 		params.put("cdsisrol" , cdsisrol);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS", params, lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params, lista);
 		return lista;
 	}
 	
@@ -2330,7 +2330,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarEndososClasificados(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_ENDOSOS_CLASIFICADOS");
+			super(dataSource,"PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS");
 			declareParameter(new SqlParameter("stamp"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
@@ -2490,7 +2490,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("otvalor98" , otvalor98);
 		params.put("otvalor99" , otvalor99);
 		params.put("tstamp"    , tstamp);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_INS_TVALOSIT_ENDOSO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INS_TVALOSIT_ENDOSO", params);
 		ejecutaSP(new GuardarTvalositEndoso(getDataSource()),params);
 	}
 	
@@ -2498,7 +2498,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarTvalositEndoso(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_INS_TVALOSIT_ENDOSO");
+			super(dataSource,"PKG_SATELITES2.P_INS_TVALOSIT_ENDOSO");
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -2636,7 +2636,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuari" , cdusuari);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdelemen" , cdelemen);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
 		
 		return resParams;
@@ -2646,7 +2646,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoTvalositAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_ENDOSO_ATRIBUTOS_AUTO");
+			super(dataSource,"PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO");
 			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tstamp"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
@@ -2828,7 +2828,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuri"  , cdusuri);
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_ALTA_AUTO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
 	}
 	
@@ -2836,7 +2836,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoAltaIncisoAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_ENDOSO_ALTA_AUTO");
+			super(dataSource,"PKG_SATELITES2.P_ENDOSO_ALTA_AUTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2872,7 +2872,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuri"  , cdusuri);
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_ENDOSO_BAJA_INCISOS", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
 		ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
 	}
 	
@@ -2880,7 +2880,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoBajaIncisos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_ENDOSO_BAJA_INCISOS");
+			super(dataSource,"PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));

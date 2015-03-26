@@ -1132,10 +1132,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdagente" , cdagente);
 		params.put("cdsisrol" , cdsisrol);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_RAMO5", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_RAMO5", params,lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5", params,lista);
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
 		if(lista!=null&&lista.size()>0)
 		{
@@ -1151,7 +1151,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected CargarNegociosPorAgenteRamo5(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_RAMO5");
+			super(dataSource,"PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5");
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "OTCLAVE" , "OTVALOR" };
@@ -1168,10 +1168,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdsisrol" , cdsisrol);
 		params.put("negocio"  , negocio);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_CAT_CARGA_RAMO5", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CAT_CARGA_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarCargasPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_CAT_CARGA_RAMO5", params, lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CAT_CARGA_RAMO5", params, lista);
 		List<GenericVO>listaGen = new ArrayList<GenericVO>();
 		if(lista!=null)
 		{
@@ -1187,7 +1187,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected CargarCargasPorNegocioRamo5(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_CAT_CARGA_RAMO5");
+			super(dataSource,"PKG_SATELITES2.P_GET_CAT_CARGA_RAMO5");
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
@@ -1221,10 +1221,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("negocio"  , negocio);
 		params.put("clavegs"  , clavegs);
 		params.put("servicio" , servicio);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarPlanesPorNegocioModeloClavegsRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5", params, lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5", params, lista);
 		List<GenericVO>listaGen = new ArrayList<GenericVO>();
 		for(Map<String,String>plan:lista)
 		{
@@ -1237,7 +1237,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected CargarPlanesPorNegocioModeloClavegsRamo5(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_PLANES_CUSTOM_RAMO5");
+			super(dataSource,"PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("modelo"   , OracleTypes.VARCHAR));
@@ -1268,7 +1268,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdagente" , cdagente);
 		params.put("producto" , producto);
 		params.put("cdsisrol" , cdsisrol);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorTipoSituacionAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1279,7 +1279,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(negocio.get("OTCLAVE"),negocio.get("OTVALOR")));
 			}
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params, listaGen);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1287,7 +1287,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected CargarNegociosPorTipoSituacionAgenteRamo5(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_NEGOCIO_X_AGENTE_TIPSIT");
+			super(dataSource,"PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_TIPSIT");
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("producto" , OracleTypes.VARCHAR));
@@ -1309,7 +1309,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("negocio"  , negocio);
 		params.put("producto" , producto);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1320,7 +1320,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("CDTIPSIT"),tiposit.get("DSTIPSIT")));
 			}
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params, listaGen);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1328,7 +1328,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected CargarTiposSituacionPorNegocioRamo5(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5");
+			super(dataSource,"PKG_SATELITES2.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5");
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("producto" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
@@ -1385,7 +1385,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdplan"   , cdplan);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_SUMA_ASEG_MSC", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarSumaAseguradaRamo4(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1396,7 +1396,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
 			}
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC", params, listaGen);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_SUMA_ASEG_MSC", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1404,7 +1404,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		protected RecuperarSumaAseguradaRamo4(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_SUMA_ASEG_MSC");
+			super(dataSource,"PKG_SATELITES2.P_GET_SUMA_ASEG_MSC");
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
