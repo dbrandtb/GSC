@@ -62,6 +62,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle).toString());
         
         // Obtenemos el msgText a partir del msgId:
+        boolean esMensajePersonalizado= false;
         if(StringUtils.isBlank(msgText) && StringUtils.isNotBlank(msgId) ) {
         	// Buscamos el msgText en properties, sino lo buscamos en BD:
         	ActionSupport actionSupport = new ActionSupport();
@@ -69,6 +70,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
             	msgText = actionSupport.getText(msgId);
             } else {
             	msgText = procesoResultadoDAO.obtieneMensaje(msgId, "0", null, null);
+            	esMensajePersonalizado = true;
             }
             
             if (StringUtils.isBlank(msgText)) {
@@ -83,7 +85,11 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         // Si msgTitle es de tipo ERROR o WARNING lanzamos la excepción con el msgText obtenido:
  		if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
  			logger.error(new StringBuilder("Error de SP: ").append(msgText).toString());
- 			throw new DaoException(msgText);
+ 			if(esMensajePersonalizado) {
+ 				throw new ApplicationException(msgText);
+ 			} else {
+ 				throw new DaoException(msgText);
+ 			}
  			
  		} else if(msgTitle.equals(Constantes.MSG_TITLE_WARNING)) {
  			logger.warn(new StringBuilder("Mensaje de Warning para Aplicacion: ").append(msgText).toString());
