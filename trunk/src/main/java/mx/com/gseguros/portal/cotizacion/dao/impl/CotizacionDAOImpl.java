@@ -4277,7 +4277,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 logger.debug(
     			 new StringBuilder()
     			 .append("\n******************************************************")
-    			 .append("\n****** PKG_DESARROLLO.P_GET_CONFIGURACION_EXCEL ******")
+    			 .append("\n****** PKG_SATELITES2.P_GET_CONFIGURACION_EXCEL ******")
     			 .append("\n****** params=").append(params)
     			 .append("\n******************************************************")
     			 .toString()
@@ -4295,7 +4295,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      {
      	protected CargarParametrizacionExcel(DataSource dataSource)
          {
-             super(dataSource,"PKG_DESARROLLO.P_GET_CONFIGURACION_EXCEL");
+             super(dataSource,"PKG_SATELITES2.P_GET_CONFIGURACION_EXCEL");
              declareParameter(new SqlParameter("proceso"  , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
@@ -4318,7 +4318,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("otvalor" , otvalor);
     	 logger.debug(Utilerias.join(
     			 "\n*************************************************",
-    			 "\n****** PKG_DESARROLLO.P_GET_CLAVE_TTAPVAT1 ******",
+    			 "\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******",
     			 "\n****** params=",params,
     			 "\n*************************************************"
     	 ));
@@ -4343,7 +4343,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      {
      	protected CargarClaveTtapvat1(DataSource dataSource)
          {
-             super(dataSource,"PKG_DESARROLLO.P_GET_CLAVE_TTAPVAT1");
+             super(dataSource,"PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1");
              declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("otvalor" , OracleTypes.VARCHAR));
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE"})));
@@ -4365,14 +4365,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("cdramo"   , cdramo);
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GEN_TARIFICA_AUTO_FLOT",params);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarResultadosCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay resultados de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GEN_TARIFICA_AUTO_FLOT",params,lista);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params,lista);
     	 return lista;
  	}
      
@@ -4380,7 +4380,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      {
      	protected CargarResultadosCotizacionAutoFlotilla(DataSource dataSource)
          {
-             super(dataSource,"PKG_DESARROLLO.P_GEN_TARIFICA_AUTO_FLOT");
+             super(dataSource,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT");
              declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4408,14 +4408,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
     	 params.put("cdperpag" , cdperpag);
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT", params);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay detalles de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT", params,lista);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params,lista);
     	 return lista;
  	}
      
@@ -4423,7 +4423,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      {
      	protected CargarDetallesCotizacionAutoFlotilla(DataSource dataSource)
          {
-             super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_COTI_AUTO_FLOT");
+             super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT");
              declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4471,14 +4471,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
     	 params.put("cdperpag" , cdperpag);
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT", params);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCoberturasCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay detalles de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT", params,lista);
+    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params,lista);
     	 return lista;
  	}
      
@@ -4486,7 +4486,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      {
      	protected CargarDetallesCoberturasCotizacionAutoFlotilla(DataSource dataSource)
          {
-             super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_COBER_AUTO_FLOT");
+             super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT");
              declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4645,7 +4645,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("clave" , clave);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_TIPOVEHI_RAMO5", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOVEHI_RAMO5", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarTipoVehiculoRamo5(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4663,7 +4663,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	protected CargarTipoVehiculoRamo5(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_DESARROLLO.P_GET_TIPOVEHI_RAMO5");
+    		super(dataSource,"PKG_SATELITES2.P_GET_TIPOVEHI_RAMO5");
             declareParameter(new SqlParameter("clave" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"TIPOVEHI"})));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4677,7 +4677,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("negocio" , negocio);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_DETALLE_NEGOCIO_RAMO5", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarDetalleNegocioRamo5(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4695,7 +4695,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	protected CargarDetalleNegocioRamo5(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_DESARROLLO.P_GET_DETALLE_NEGOCIO_RAMO5");
+    		super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5");
     		declareParameter(new SqlParameter("negocio" , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
     				"TARIFA"
@@ -4726,10 +4726,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
     	params.put("negocio"  , negocio);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
     	if(lista==null||lista.size()==0)
     	{
     		throw new ApplicationException(Utilerias.join("No hay configuracion para los valores del ramo ",cdramo," y subramo ",cdtipsit));
@@ -4741,7 +4741,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	protected CargarConfiguracionTvalositFlotillas(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_DESARROLLO.P_GET_CONFIG_VALOSIT_FLOTILLAS");
+    		super(dataSource,"PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS");
     		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
@@ -4793,7 +4793,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("negocio"  , negocio);
     	params.put("cdsisrol" , cdsisrol);
     	params.put("cdusuari" , cdusuari);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS",params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarRangoDescuentoRamo5TodasSituaciones(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4804,7 +4804,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			throw new ApplicationException("Descuento/recargo para el agente duplicado");
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS",params,lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params,lista);
 		return lista.get(0);
     }
 	
@@ -4812,7 +4812,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected CargarRangoDescuentoRamo5TodasSituaciones(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_DESCUENTO_RAMO5_TODAS");
+			super(dataSource,"PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS");
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
@@ -4932,7 +4932,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmpoliza" , nmpoliza);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("tipocot"  , tipocot);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_AJUSTES_COTIZACION_PRODUCTO", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_AJUSTES_COTIZACION_PRODUCTO", params);
 		ejecutaSP(new AplicarAjustesCotizacionPorProducto(getDataSource()),params);
 	}
 	
@@ -4940,7 +4940,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected AplicarAjustesCotizacionPorProducto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_AJUSTES_COTIZACION_PRODUCTO");
+			super(dataSource,"PKG_SATELITES2.P_AJUSTES_COTIZACION_PRODUCTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));

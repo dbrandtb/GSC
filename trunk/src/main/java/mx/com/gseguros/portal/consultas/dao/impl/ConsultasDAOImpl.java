@@ -121,7 +121,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("cdramant" , cdramant);
 		logger.debug(Utilerias.join(
 				 "\n*****************************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLIZAS_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR ******"
 				,"\n****** params=",params
 				,"\n*****************************************************"
 				));
@@ -135,7 +135,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLIZAS_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR ******"
 				,"\n*****************************************************"
 				));
 		return lista;
@@ -145,7 +145,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpolizasPorParametrosVariables(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_MPOLIZAS_X_PAR_VAR");
+            super(dataSource,"PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -189,7 +189,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsuplem" , nmsuplem);
 		logger.debug(Utilerias.join(
 				 "\n*********************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_TCONVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TCONVALSIT ******"
 				,"\n****** params=",params
 				,"\n*********************************************"
 				));
@@ -203,7 +203,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** PKG_DESARROLLO.P_GET_TCONVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TCONVALSIT ******"
 				,"\n*********************************************"
 				));
 		return lista;
@@ -213,7 +213,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTconvalsit(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_TCONVALSIT");
+            super(dataSource,"PKG_SATELITES2.P_GET_TCONVALSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -263,7 +263,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsuplem" , nmsuplem);
 		logger.debug(Utilerias.join(
 				 "\n*********************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_TBASVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TBASVALSIT ******"
 				,"\n****** params=",params
 				,"\n*********************************************"
 				));
@@ -277,7 +277,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** PKG_DESARROLLO.P_GET_TBASVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TBASVALSIT ******"
 				,"\n*********************************************"
 				));
 		return lista;
@@ -287,7 +287,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTbasvalsit(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_TBASVALSIT");
+            super(dataSource,"PKG_SATELITES2.P_GET_TBASVALSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -338,7 +338,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsituac" , nmsituac);
 		logger.debug(Utilerias.join(
 				 "\n**************************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIPER_SITUAC ******"
 				,"\n****** params=",params
 				,"\n**************************************************"
 				));
@@ -357,7 +357,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIPER_SITUAC ******"
 				,"\n**************************************************"
 				));
 		return mpoliper;
@@ -367,7 +367,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpoliperSituac(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_MPOLIPER_SITUAC");
+            super(dataSource,"PKG_SATELITES2.P_GET_MPOLIPER_SITUAC");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -404,7 +404,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsituac" , nmsituac);
 		logger.debug(Utilerias.join(
 				 "\n**************************************************"
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLISIT_SITUAC ******"
 				,"\n****** params=",params
 				,"\n**************************************************"
 				));
@@ -423,7 +423,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
-				,"\n****** PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLISIT_SITUAC ******"
 				,"\n**************************************************"
 				));
 		return mpoliper;
@@ -433,7 +433,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpolisitSituac(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_MPOLISIT_SITUAC");
+            super(dataSource,"PKG_SATELITES2.P_GET_MPOLISIT_SITUAC");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -467,14 +467,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_TVALOSIT", params);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TVALOSIT", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTvalosit(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_TVALOSIT", params,lista);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TVALOSIT", params,lista);
 		return lista;
 	}
 	
@@ -482,7 +482,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTvalosit(DataSource dataSource)
         {
-            super(dataSource,"PKG_DESARROLLO.P_GET_TVALOSIT");
+            super(dataSource,"PKG_SATELITES2.P_GET_TVALOSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -672,14 +672,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("nmsuplem" , nmsuplem);
     	params.put("nmsituac" , nmsituac);
     	params.put("roles"    , rolesPipes);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarMpoliperOtrosRolesPorNmsituac(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES", params, lista);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES", params, lista);
     	return lista;
 	}
     
@@ -687,7 +687,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpoliperOtrosRolesPorNmsituac(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_DESARROLLO.P_GET_MPOLIPER_OTROS_ROLES");
+    		super(dataSource , "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -762,7 +762,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdpostal" , cdpostal);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_VERIFICA_CDPOSTAL_FRONTER", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_VERIFICA_CDPOSTAL_FRONTER", params);
     	Map<String,Object>procResult = ejecutaSP(new VerificarCodigoPostalFronterizo(getDataSource()),params);
     	boolean esFront = ((String)procResult.get("pv_fronterizo_o")).equals("S");
     	logger.debug(Utilerias.join("verificarCodigoPostalFronterizo=",esFront));
@@ -773,7 +773,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected VerificarCodigoPostalFronterizo(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_DESARROLLO.P_VERIFICA_CDPOSTAL_FRONTER");
+    		super(dataSource , "PKG_SATELITES2.P_VERIFICA_CDPOSTAL_FRONTER");
             declareParameter(new SqlParameter("cdpostal"   , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fronterizo_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
@@ -920,14 +920,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("pantalla" , pantalla);
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
-    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_PANTALLA",params);
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_PANTALLA",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarValoresPantalla(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_PANTALLA",params,lista);
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_PANTALLA",params,lista);
     	return lista;
 	}
     
@@ -935,7 +935,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValoresPantalla(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_DESARROLLO.P_GET_VALORES_PANTALLA");
+    		super(dataSource , "PKG_SATELITES2.P_GET_VALORES_PANTALLA");
     		declareParameter(new SqlParameter("pantalla" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
@@ -955,14 +955,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
-    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES",params);
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarValoresAtributosFactores(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utilerias.debugProcedure(logger,"PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES",params,lista);
+    	Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES",params,lista);
     	return lista;
 	}
     
@@ -970,7 +970,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValoresAtributosFactores(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_DESARROLLO.P_GET_VALORES_DEFECTO_FACTORES");
+    		super(dataSource , "PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             String[] cols=new String[]{
@@ -1279,14 +1279,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdtipsit" , cdtipsit);
     	params.put("cdatribu" , cdatribu);
     	params.put("otclave"  , otclave);
-    	Utilerias.debugProcedure(logger, "PKG_DESARROLLO.P_GET_OTVALOR_CAT_TATRISIT", params);
+    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT", params);
     	Map<String,Object>procResult = ejecutaSP(new RecuperarValorAtributoUnico(getDataSource()),params);
     	String otvalor               = (String)procResult.get("pv_otvalor_o");
     	if(otvalor==null)
     	{
     		otvalor="";
     	}
-    	logger.debug(Utilerias.join("PKG_DESARROLLO.P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
+    	logger.debug(Utilerias.join("PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
     	return otvalor;
 	}
     
@@ -1294,7 +1294,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValorAtributoUnico(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_DESARROLLO.P_GET_OTVALOR_CAT_TATRISIT");
+    		super(dataSource , "PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT");
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("otclave"  , OracleTypes.VARCHAR));
