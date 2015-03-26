@@ -1768,4 +1768,36 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+
+	@Override
+	public void validarEndosoAnterior(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String cdtipsup) throws Exception {
+			logger.info(Utilerias.join(
+					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
+					,"\n@@@@@@ cdunieco="         , cdunieco
+					,"\n@@@@@@ cdramo="           , cdramo
+					,"\n@@@@@@ estado="           , estado
+					,"\n@@@@@@ nmpoliza="         , nmpoliza
+					,"\n@@@@@@ cdtipsup="         , cdtipsup
+					));
+			ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+			String paso = "";
+			try
+			{
+				paso = "Iniciando valida endoso anterior";
+				logger.info(paso);
+				endososDAO.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			}
+			catch(Exception ex)
+			{
+				Utils.generaExcepcion(ex, paso);
+			}
+			
+			logger.info(Utilerias.join(
+					 "\n@@@@@@ " , resp
+					,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
+					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					));
+		}
 }

@@ -8,6 +8,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface EndososAutoManager
 {
@@ -141,5 +142,13 @@ public interface EndososAutoManager
 			,Date dFechaEndoso
 			,String feefecto
 			,String feproren
+			)throws Exception;
+	
+	public void validarEndosoAnterior(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
 			)throws Exception;
 }

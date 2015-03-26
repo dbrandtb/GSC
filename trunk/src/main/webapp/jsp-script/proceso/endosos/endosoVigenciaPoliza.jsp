@@ -6,7 +6,7 @@
 	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno"       />';
 	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoVigenciaPoliza"       />';
 	
-	debug('asegAlterno :',asegAlterno);
+	debug('asegAlterno  -->:',asegAlterno);
 	
 	Ext.onReady(function() {
 		
@@ -27,30 +27,52 @@
 			,
 		    items: [
 		    	{
-					id: 'feInicio'
-					,xtype		: 'datefield'
+					xtype		: 'datefield'
+					,fieldLabel	: 'FECHAEFECTO'
+					,name		: 'feEfecto'
+					,format		: 'm/d/Y'
+					,editable: true		
+					,value		: asegAlterno.FEEFECTO
+				},{
+					xtype		: 'datefield'
 					,fieldLabel	: 'Fecha Efecto'
 					,name		: 'feIngreso'
 					,format		: 'd/m/Y'
 					,editable: true		
 					,value		: asegAlterno.FEEFECTO
-			    	,listeners:{
+					,listeners:{
 			    	    change:function(field,value)
 			    	    {
+			    	    	fechaFeefecto = new Date(panelInicialPral.down('[name="feEfecto"]').getValue());
+			    	    	debug("VALOR -->",fechaFeefecto, "Minimo --> ",Ext.Date.add(fechaFeefecto, Ext.Date.DAY, -5));
+			    	    	debug("Maximo --> ",Ext.Date.add(fechaFeefecto, Ext.Date.DAY, 10));
 			    	    	panelInicialPral.down('[name="feFin"]').setValue(Ext.Date.add(value, Ext.Date.DAY, asegAlterno.pv_difDate));
 			    	    }
 			    	}
 				},
 		    	{
-					id: 'feFin'
-					,xtype		: 'datefield'
+					xtype		: 'datefield'
 					,fieldLabel	: 'Fecha Fin'
 					,name		: 'feFin'
 					,format		: 'd/m/Y'
 					,editable: true		
 					,value		: asegAlterno.FEPROREN
 		    		, readOnly  : true
-				}
+				}/*,{
+						xtype		: 'datefield'
+						,fieldLabel	: 'Minimo'
+						,name		: 'feMinimo'
+						,format		: 'd/m/Y'
+						,editable: true		
+						,value		: asegAlterno.FEEFECTO
+					},{
+						xtype		: 'datefield'
+						,fieldLabel	: 'Maximo'
+						,name		: 'feMaximo'
+						,format		: 'd/m/Y'
+						,editable   : true
+						,value		: asegAlterno.FEEFECTO
+					}*/
 		    	
 	    	]
 			,buttonAlign:'center'
@@ -63,8 +85,10 @@
 					if (formPanel.form.isValid()) {
                         // Realizamos el proceso de guardado
 						var submitValues={};
+                        
                         dateIngreso = new Date(panelInicialPral.down('[name="feIngreso"]').getValue());
                         dateFin = new Date( panelInicialPral.down('[name="feFin"]').getValue());
+                        
                         convDateIngreso = dateIngreso.getDate() + "/" + (dateIngreso.getMonth() + 1) + "/" + dateIngreso.getFullYear();
                         convDateFin 	= dateFin.getDate() 	+ "/" + (dateFin.getMonth() + 1) 	 + "/" + dateFin.getFullYear();
                         
@@ -72,7 +96,7 @@
         				asegAlterno.FEPROREN = convDateFin;
         				submitValues['smap1']= asegAlterno;
         				
-        				Ext.Ajax.request(
+        				/*Ext.Ajax.request(
    						{
    						    url: guarda_Vigencia_Poliza,
    						    jsonData: Ext.encode(submitValues),
@@ -91,7 +115,7 @@
    						            icon: Ext.Msg.ERROR
    						        });
    						    }
-   						});
+   						});*/
         				
 					}else {
 						Ext.Msg.show({
