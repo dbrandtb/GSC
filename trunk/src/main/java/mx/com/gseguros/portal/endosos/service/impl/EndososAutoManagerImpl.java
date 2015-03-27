@@ -2205,4 +2205,71 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		return respRetroActividad;
 	}
+	
+	@Override
+	public Map<String,Item> endosoDevolucionPrimas(
+			String cdtipsup
+			,String cdramo
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Recuperando columnas de inciso";
+			logger.info(paso);
+			List<ComponenteVO> columnasInciso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"ENDOSO_DEVOLUCION_PRIMAS"
+					,"COLUMNAS_INCISO"
+					,null //orden
+					);
+			
+			paso = "Recuperando columnas de cobertura";
+			logger.info(paso);
+			List<ComponenteVO> columnasCobertura = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"ENDOSO_DEVOLUCION_PRIMAS"
+					,"COLUMNAS_COBERTURA"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes";
+			logger.info(paso);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(columnasInciso, true, false, false, true, false, false);
+			items.put("incisoColumns" , gc.getColumns());
+			
+			gc.generaComponentes(columnasCobertura, true, false, false, true, false, false);
+			items.put("coberturaColumns" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ endosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
 }

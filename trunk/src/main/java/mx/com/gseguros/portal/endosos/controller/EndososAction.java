@@ -472,7 +472,7 @@ public class EndososAction extends PrincipalCoreAction
 					otvalores.put("otvalor"+i, smap1.get("OTVALOR"+i));
 				}
 			}
-			//2.- Mandamos a guardar la información de TVALOPOL
+			//2.- Mandamos a guardar la informaciï¿½n de TVALOPOL
 			cotizacionDAO.movimientoTvalopol(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, smap1.get("STATUS"), otvalores);
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
@@ -9983,6 +9983,5 @@ return SUCCESS;
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
 	}
-
 	
 }

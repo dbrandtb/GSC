@@ -865,6 +865,44 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String endosoDevolucionPrimas()
+	{
+		logger.info(Utilerias.join(
+				 "\n####################################"
+				,"\n###### endosoDevolucionPrimas ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+
+		String result = ERROR;
+		
+		try
+		{
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdramo   = smap1.get("CDRAMO");
+			String cdtipsup = smap1.get("cdtipsup");
+			
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			
+			imap = endososAutoManager.endosoDevolucionPrimas(cdtipsup, cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				"\n###### endosoDevolucionPrimas ######"
+				,"\n####################################"
+				));
+		return result;
+	}
 
 	/*
 	 * Getters y setters
