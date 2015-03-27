@@ -10,11 +10,8 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
-import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Utilerias;
@@ -585,7 +582,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			String fechaProceso   = sdf.format(new Date());
-			//1.Obtenemos los números de días Maximo y Minimo
+			//1.Obtenemos los nï¿½meros de dï¿½as Maximo y Minimo
 			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdsisrol,cdramo,cdtipsup, fechaProceso);
 			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			success   = true;
@@ -758,6 +755,113 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				 "\n###### guardarEndosoCambioVigencia ######"
 				,"\n#########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String endosoClaveAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n#############################"
+				,"\n###### endosoClaveAuto ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+
+		String result = ERROR;
+		
+		try
+		{
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			smap1.put("cdsisrol" , cdsisrol);
+			
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron datos de inciso");
+			
+			String cdramo   = slist1.get(0).get("CDRAMO");
+			String cdtipsit = slist1.get(0).get("CDTIPSIT");
+			
+			imap = endososAutoManager.endosoClaveAuto(cdsisrol,cdramo,cdtipsit);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### result="    , result
+				,"\n###### respuesta=" , respuesta
+				,"\n###### endosoClaveAuto ######"
+				,"\n#############################"
+				));
+		return result;
+	}
+	
+	public String guardarEndosoClaveAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n####################################"
+				,"\n###### guardarEndosoClaveAuto ######"
+				,"\n###### smap1="  , smap1 
+				,"\n###### smap2="  , smap2
+				,"\n###### slist1=" , slist1
+				));
+		
+		try
+		{
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(smap2  , "No se recibieron datos nuevos de inciso");
+			Utils.validate(slist1 , "No se recibio el inciso");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String feefecto = smap2.get("feefecto");
+			
+			Utils.validate(cdtipsup , "No se recibio el tipo de endoso");
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(feefecto , "No se recibio la fecha de efecto");
+			
+			endososAutoManager.guardarEndosoClaveAuto(
+					cdtipsup
+					,cdusuari
+					,cdsisrol
+					,cdelemen
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,feefecto
+					,smap2
+					,slist1.get(0)
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarEndosoClaveAuto ######"
+				,"\n####################################"
 				));
 		return SUCCESS;
 	}

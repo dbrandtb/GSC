@@ -607,6 +607,23 @@
             <result type="json" />
         </action>
         
+        <action name="includes/endosoClaveAuto" class="endososAutoAction" method="endosoClaveAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoClaveAuto.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoClaveAuto" class="endososAutoAction" method="guardarEndosoClaveAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>

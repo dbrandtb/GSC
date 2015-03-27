@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,7 +17,6 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
@@ -30,7 +30,6 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
@@ -48,7 +47,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
-	private static Logger logger = Logger.getLogger(EndososAutoManagerImpl.class);
+	private static Logger           logger       = Logger.getLogger(EndososAutoManagerImpl.class);
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Autowired
 	private PantallasDAO        pantallasDAO;
@@ -2004,7 +2004,173 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 					));
 		}
-
+	
+	@Override
+	public Map<String,Item>endosoClaveAuto(
+			String cdsisrol
+			,String cdramo
+			,String cdtipsit
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoClaveAuto @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Obteniendo componentes de situacion";
+			logger.info(paso);
+			List<ComponenteVO> listaItems = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_CLAVE_AUTO"
+					,"ITEMS"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes de situacion";
+			logger.info(paso);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			gc.generaComponentes(listaItems, true, false, true, false, false, false);
+			
+			items.put("items" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ endosoClaveAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
+	
+	@Override
+	public void guardarEndosoClaveAuto(
+			String cdtipsup
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String feefecto
+			,Map<String,String> valores
+			,Map<String,String> incisoAnterior
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoClaveAuto @@@@@@"
+				,"\n@@@@@@ cdtipsup="       , cdtipsup
+				,"\n@@@@@@ cdusuari="       , cdusuari
+				,"\n@@@@@@ cdsisrol="       , cdsisrol
+				,"\n@@@@@@ cdelemen="       , cdelemen
+				,"\n@@@@@@ cdunieco="       , cdunieco
+				,"\n@@@@@@ cdramo="         , cdramo
+				,"\n@@@@@@ estado="         , estado
+				,"\n@@@@@@ nmpoliza="       , nmpoliza
+				,"\n@@@@@@ feefecto="       , feefecto
+				,"\n@@@@@@ valores="        , valores
+				,"\n@@@@@@ incisoAnterior=" , incisoAnterior
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Generando id operacion";
+			logger.info(paso);
+			
+			double millis = System.currentTimeMillis();
+			double random = 1000d*Math.random();
+			String tstamp = String.format("%.0f.%.0f",millis,random);
+			logger.debug(Utilerias.join("stamp=",tstamp));
+			
+			paso = "Guardando situacion temporal";
+			logger.info(paso);
+			endososDAO.guardarTvalositEndoso(cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,incisoAnterior.get("NMSITUAC")
+					,"0"
+					,"V" //status
+					,incisoAnterior.get("CDTIPSIT")
+					,incisoAnterior.get("OTVALOR01"),incisoAnterior.get("OTVALOR02"),incisoAnterior.get("OTVALOR03")
+					,incisoAnterior.get("OTVALOR04"),incisoAnterior.get("OTVALOR05"),incisoAnterior.get("OTVALOR06")
+					,incisoAnterior.get("OTVALOR07"),incisoAnterior.get("OTVALOR08"),incisoAnterior.get("OTVALOR09")
+					,incisoAnterior.get("OTVALOR10")
+					,incisoAnterior.get("OTVALOR11"),incisoAnterior.get("OTVALOR12"),incisoAnterior.get("OTVALOR13")
+					,incisoAnterior.get("OTVALOR14"),incisoAnterior.get("OTVALOR15"),incisoAnterior.get("OTVALOR16")
+					,incisoAnterior.get("OTVALOR17"),incisoAnterior.get("OTVALOR18"),incisoAnterior.get("OTVALOR19")
+					,incisoAnterior.get("OTVALOR20")
+					,incisoAnterior.get("OTVALOR21"),incisoAnterior.get("OTVALOR22"),incisoAnterior.get("OTVALOR23")
+					,incisoAnterior.get("OTVALOR24"),incisoAnterior.get("OTVALOR25"),incisoAnterior.get("OTVALOR26")
+					,incisoAnterior.get("OTVALOR27"),incisoAnterior.get("OTVALOR28"),incisoAnterior.get("OTVALOR29")
+					,incisoAnterior.get("OTVALOR30")
+					,incisoAnterior.get("OTVALOR31"),incisoAnterior.get("OTVALOR32"),incisoAnterior.get("OTVALOR33")
+					,incisoAnterior.get("OTVALOR34"),incisoAnterior.get("OTVALOR35"),incisoAnterior.get("OTVALOR36")
+					,incisoAnterior.get("OTVALOR37"),incisoAnterior.get("OTVALOR38"),incisoAnterior.get("OTVALOR39")
+					,incisoAnterior.get("OTVALOR40")
+					,incisoAnterior.get("OTVALOR41"),incisoAnterior.get("OTVALOR42"),incisoAnterior.get("OTVALOR43")
+					,incisoAnterior.get("OTVALOR44"),incisoAnterior.get("OTVALOR45"),incisoAnterior.get("OTVALOR46")
+					,incisoAnterior.get("OTVALOR47"),incisoAnterior.get("OTVALOR48"),incisoAnterior.get("OTVALOR49")
+					,incisoAnterior.get("OTVALOR50")
+					,incisoAnterior.get("OTVALOR51"),incisoAnterior.get("OTVALOR52"),incisoAnterior.get("OTVALOR53")
+					,incisoAnterior.get("OTVALOR54"),incisoAnterior.get("OTVALOR55"),incisoAnterior.get("OTVALOR56")
+					,incisoAnterior.get("OTVALOR57"),incisoAnterior.get("OTVALOR58"),incisoAnterior.get("OTVALOR59")
+					,incisoAnterior.get("OTVALOR60")
+					,incisoAnterior.get("OTVALOR61"),incisoAnterior.get("OTVALOR62"),incisoAnterior.get("OTVALOR63")
+					,incisoAnterior.get("OTVALOR64"),incisoAnterior.get("OTVALOR65"),incisoAnterior.get("OTVALOR66")
+					,incisoAnterior.get("OTVALOR67"),incisoAnterior.get("OTVALOR68"),incisoAnterior.get("OTVALOR69")
+					,incisoAnterior.get("OTVALOR70")
+					,incisoAnterior.get("OTVALOR71"),incisoAnterior.get("OTVALOR72"),incisoAnterior.get("OTVALOR73")
+					,incisoAnterior.get("OTVALOR74"),incisoAnterior.get("OTVALOR75"),incisoAnterior.get("OTVALOR76")
+					,incisoAnterior.get("OTVALOR77"),incisoAnterior.get("OTVALOR78"),incisoAnterior.get("OTVALOR79")
+					,incisoAnterior.get("OTVALOR80")
+					,incisoAnterior.get("OTVALOR81"),incisoAnterior.get("OTVALOR82"),incisoAnterior.get("OTVALOR83")
+					,incisoAnterior.get("OTVALOR84"),incisoAnterior.get("OTVALOR85"),incisoAnterior.get("OTVALOR86")
+					,incisoAnterior.get("OTVALOR87"),incisoAnterior.get("OTVALOR88"),incisoAnterior.get("OTVALOR89")
+					,incisoAnterior.get("OTVALOR90")
+					,valores.get("OTVALOR91"),valores.get("OTVALOR92"),valores.get("OTVALOR93")
+					,valores.get("OTVALOR94"),valores.get("OTVALOR95"),valores.get("OTVALOR96")
+					,valores.get("OTVALOR97"),valores.get("OTVALOR98"),valores.get("OTVALOR99")
+					,tstamp);
+			
+			paso = "Procesando fecha de efecto";
+			Date feefectoD = renderFechas.parse(feefecto);
+			
+			paso = "Confirmando endoso";
+			logger.info(paso);
+			endososDAO.guardarEndosoClaveAuto(cdunieco, cdramo, estado, nmpoliza, feefectoD, tstamp, cdusuari, cdelemen, cdtipsup);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ guardarEndosoClaveAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
 	@Override
 	public List<Map<String,String>> obtenerRetroactividad(String cdsisrol, String cdramo,
 			String cdtipsup, String fechaProceso) throws Exception {
