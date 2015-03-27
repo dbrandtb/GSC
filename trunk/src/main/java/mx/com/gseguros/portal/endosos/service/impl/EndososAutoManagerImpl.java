@@ -845,7 +845,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			{
 				String nmsituac    = incisoBase.get("NMSITUAC");
 				String cdtipsitAnt = incisoBase.get("CDTIPSIT");
-				incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
+				if(!"-1".equals(nmsituac))
+				{
+					incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
+				}
 				incisoBase.put("CDTIPSIT" , cdtipsitAnt);
 				incisoBase.put("cdtipsit" , cdtipsitAnt);
 				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
