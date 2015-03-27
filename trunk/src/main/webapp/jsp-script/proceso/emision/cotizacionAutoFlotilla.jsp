@@ -4716,8 +4716,6 @@ function _p30_imprimir()
     }
     else
     {
-        var panelpri = _fieldById('_p30_panelpri');
-        panelpri.setLoading(true);
         Ext.create('Ext.form.Panel').submit(
         {
             url             : _p30_urlObtencionReporteExcel
@@ -4732,29 +4730,22 @@ function _p30_imprimir()
                 ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
                 ,cdreporte              : 'REPCOT001'
             }
-            ,callback : function()
-            {
-                Ext.create('Ext.form.Panel').submit(
-                {
-                    url             : _p30_urlObtencionReporteExcel2
-                    ,standardSubmit : true
-                    ,params         :
-                    {
-                        'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
-                        ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
-                        ,'params.pv_estado_i'   : 'W'
-                        ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-                        ,'params.pv_nmsuplem_i' : '0'
-                        ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
-                        ,cdreporte              : 'REPCOT002'
-                    }
-                    ,callback : function()
-                    {
-                        panelpri.setLoading(false);
-                    }
-                });
-            }
         });
+        /*Ext.create('Ext.form.Panel').submit(
+        {
+            url             : _p30_urlObtencionReporteExcel2
+            ,standardSubmit : true
+            ,params         :
+            {
+                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                ,'params.pv_estado_i'   : 'W'
+                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,'params.pv_nmsuplem_i' : '0'
+                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                ,cdreporte              : 'REPCOT002'
+            }
+        });*/
     }
     debug('<_p30_imprimir');
 }
