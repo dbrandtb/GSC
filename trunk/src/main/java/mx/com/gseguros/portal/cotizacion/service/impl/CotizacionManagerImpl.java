@@ -5285,32 +5285,35 @@ public class CotizacionManagerImpl implements CotizacionManager
             int contador=1;
             for(Map<String,String>inciso:incisos)
             {
-            	//////////////////////////////
-            	////// mpolisit iterado //////
-            	cotizacionDAO.movimientoMpolisit(
-            			cdunieco
-            			,cdramo
-            			,"W"          //estado
-            			,nmpoliza
-            			,contador+"" //nmsituac
-            			,"0"         //mnsuplem
-            			,"V"         //status
-            			,cdtipsit
-            			,null        //swreduci
-            			,"1"         //cdagrupa
-            			,"0"         //cdestado
-            			,renderFechas.parse(feini) //fefecsit
-            			,renderFechas.parse(feini) //fecharef
-            			,null        //cdgrupo
-            			,null        //nmsituaext
-            			,null        //nmsitaux
-            			,null        //nmsbsitext
-            			,"1"         //cdplan
-            			,"30"        //cdasegur
-            			,"I"         //accion
-            			);
-            	////// mpolisit iterado //////
-            	//////////////////////////////
+            	if(noTarificar==false)
+            	{
+		        	//////////////////////////////
+		        	////// mpolisit iterado //////
+		        	cotizacionDAO.movimientoMpolisit(
+		        			cdunieco
+		        			,cdramo
+		        			,"W"          //estado
+		        			,nmpoliza
+		        			,contador+"" //nmsituac
+		        			,"0"         //mnsuplem
+		        			,"V"         //status
+		        			,cdtipsit
+		        			,null        //swreduci
+		        			,"1"         //cdagrupa
+		        			,"0"         //cdestado
+		        			,renderFechas.parse(feini) //fefecsit
+		        			,renderFechas.parse(feini) //fecharef
+		        			,null        //cdgrupo
+		        			,null        //nmsituaext
+		        			,null        //nmsitaux
+		        			,null        //nmsbsitext
+		        			,"1"         //cdplan
+		        			,"30"        //cdasegur
+		        			,"I"         //accion
+		        			);
+		        	////// mpolisit iterado //////
+		        	//////////////////////////////
+            	}
                 
                 //////////////////////////////
                 ////// tvalosit iterado //////
