@@ -14,6 +14,7 @@
     <bean id="recuperacionSimpleManagerImpl" class="mx.com.gseguros.portal.consultas.service.impl.RecuperacionSimpleManagerImpl">
         <property name="consultasDAO"  ref="consultasDAOImpl"  />
         <property name="cotizacionDAO" ref="cotizacionDAOImpl" />
+        <property name="endososDAO"    ref="endososDAOImpl"    />
     </bean>
 	
 </beans>

@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
+	private EndososDAO    endososDAO;
 	
 	/*
 	 * Utilerias
@@ -330,6 +332,16 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String nmpoliza = params.get("nmpoliza");
 				resp.setSlist(consultasDAO.recuperarFamiliasPoliza(cdunieco,cdramo,estado,nmpoliza));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_ENDOSO_DEVOLUCION_PRIMAS))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				String nmsituac = params.get("nmsituac");
+				String tstamp   = params.get("tstamp");
+				resp.setSlist(endososDAO.recuperarCoberturasEndosoDevolucionPrimas(cdunieco, cdramo, estado, nmpoliza, nmsituac, tstamp));
+			}
 			
 			setCheckpoint("0");
 		}
@@ -355,6 +367,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public void setEndososDAO(EndososDAO endososDAO) {
+		this.endososDAO = endososDAO;
 	}
 	
 }

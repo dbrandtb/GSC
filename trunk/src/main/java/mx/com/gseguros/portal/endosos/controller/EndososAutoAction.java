@@ -888,6 +888,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
 			
+			smap1.put("tstamp" , String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random()));
+			
 			imap = endososAutoManager.endosoDevolucionPrimas(cdtipsup, cdramo);
 			
 			result = SUCCESS;
@@ -902,6 +904,34 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n####################################"
 				));
 		return result;
+	}
+	
+	public String guardarEndosoDevolucionPrimas()
+	{
+		logger.info(Utilerias.join(
+				 "\n###########################################"
+				,"\n###### guardarEndosoDevolucionPrimas ######"
+				,"\n###### smap1=" , smap1
+				,"\n###### smap2=" , smap2
+				));
+		
+		try
+		{
+			Utils.validate(smap1 , "No se recibieron datos de poliza");
+			Utils.validate(smap2 , "No se recibieron datos de endoso");
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### guardarEndosoDevolucionPrimas ######"
+				,"\n###########################################"
+				));
+		return SUCCESS;
 	}
 
 	/*
