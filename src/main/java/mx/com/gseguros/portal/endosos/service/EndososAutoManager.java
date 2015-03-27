@@ -178,4 +178,9 @@ public interface EndososAutoManager
 			,String cdtipsup
 			,String fechaProceso
 			)throws Exception;
+	
+	public Map<String,Item> endosoDevolucionPrimas(
+			String cdtipsup
+			,String cdramo
+			)throws Exception;
 }
