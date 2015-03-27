@@ -32,7 +32,7 @@ var _35_fieldFechaEndoso;
 var _35_storeContratantes;
 var _35_gridContratantes;
 
-var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoNombreCliente"       />';
+var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoRfcCliente"       />';
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 debug('_35_smap1:',_35_smap1);
@@ -165,7 +165,7 @@ Ext.onReady(function()
             debug('_35_FormContratante initComponent');
             Ext.apply(this,
             {
-                title       : 'Cambio de Nombre del Contratante'
+                title       : 'Cambio de RFC del Contratante'
 //                ,height     : 80
 //                ,autoScroll : true
                 ,defaults :
@@ -175,27 +175,9 @@ Ext.onReady(function()
 				,items     : [
 				{
 					xtype: 'textfield',
-					name:  'nombre',
+					name:  'cdrfc',
 					width: 550,
-					fieldLabel: 'Nombre'
-				},
-				{
-					xtype: 'textfield',
-					name:  'nombre1',
-					width: 550,
-					fieldLabel: 'Segundo Nombre'
-				},
-				{
-					xtype: 'textfield',
-					name:  'apellido',
-					width: 550,
-					fieldLabel: 'Apellido Paterno'
-				},
-				{
-					xtype: 'textfield',
-					name:  'apellido1',
-					width: 550,
-					fieldLabel: 'Apellido Materno'
+					fieldLabel: 'RFC'
 				}
 				]
             });
@@ -302,11 +284,6 @@ Ext.onReady(function()
     			*/
     			_35_storeContratantes.add(json.slist1);
     			
-    			if("F" != _35_storeContratantes.getAt(0).get('OTFISJUR')){
-            		_35_formContratante.down('[name=nombre1]').hide();
-            		_35_formContratante.down('[name=apellido]').hide();
-            		_35_formContratante.down('[name=apellido1]').hide();
-    			}
     		}
     		else
     		{
@@ -341,6 +318,11 @@ function _35_confirmar()
     
     var valido=true;
     
+    if(!validarRFC(_35_formContratante.down('[name=cdrfc]').getValue(), _35_storeContratantes.getAt(0).get('OTFISJUR'))){
+		mensajeWarning('Favor de introducir un RFC correcto.');
+		return;
+	}
+    
     if(valido)
     {
         valido=_35_panelEndoso.isValid();
@@ -368,11 +350,8 @@ function _35_confirmar()
                 fecha_endoso     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y')
             }
             ,smap3:{
-            	'pv_cdperson_i'    : _35_storeContratantes.getAt(0).get('CDPERSON'),
-            	'pv_dsnombre_i'    : _35_formContratante.down('[name=nombre]').getValue(),
-            	'pv_dsnombre1_i'   : _35_formContratante.down('[name=nombre1]').getValue(),
-            	'pv_dsapellido_i'  : _35_formContratante.down('[name=apellido]').getValue(),
-            	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue()
+            	'pv_cdperson_i' : _35_storeContratantes.getAt(0).get('CDPERSON'),
+            	'pv_cdrfc_i'    : _35_formContratante.down('[name=cdrfc]').getValue()
             }
             ,slist1 : slist1
         }
