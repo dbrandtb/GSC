@@ -6,9 +6,7 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
-import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface EndososAutoManager
 {
@@ -153,7 +151,27 @@ public interface EndososAutoManager
 			,String nmpoliza
 			,String cdtipsup
 			)throws Exception;
-
+	
+	public Map<String,Item>endosoClaveAuto(
+			String cdsisrol
+			,String cdramo
+			,String cdtipsit
+			)throws Exception;
+	
+	public void guardarEndosoClaveAuto(
+			String cdtipsup
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String feefecto
+			,Map<String,String> valores
+			,Map<String,String> incisoAnterior
+			)throws Exception;
+	
 	public List<Map<String,String>> obtenerRetroactividad(
 			String cdsisrol
 			,String cdramo

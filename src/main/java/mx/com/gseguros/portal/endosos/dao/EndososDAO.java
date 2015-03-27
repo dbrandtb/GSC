@@ -331,4 +331,16 @@ public interface EndososDAO
 			,String cdtipsup
 			,String fechaProceso
 			)throws Exception;
+	
+	public void guardarEndosoClaveAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feefecto
+			,String tstamp
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			)throws Exception;
 }
