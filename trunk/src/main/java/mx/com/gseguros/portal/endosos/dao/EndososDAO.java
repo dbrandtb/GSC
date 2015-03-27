@@ -59,6 +59,8 @@ public interface EndososDAO
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
 	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
 	public String                   obtieneDescripcionEndoso(String cdtipsup)                  throws Exception;
+	public void                     actualizaNombreCliente(Map<String, String> params)             throws Exception;
+	public void                     actualizaRfcCliente(Map<String, String> params)             throws Exception;
 	public void                     actualizarFenacimi(Map<String, String> params)             throws Exception;
 	public void                     actualizarSexo(Map<String, String> params)                 throws Exception;
 	public List<Map<String,String>> obtenerCdpersonMpoliper(Map<String, String> params)        throws Exception;
@@ -301,7 +303,7 @@ public interface EndososDAO
 	public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception;
 	public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
 	
-	public void confirmarEndosoAltaIncisoAuto(
+	public Map<String,Object> confirmarEndosoAltaIncisoAuto(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -312,7 +314,7 @@ public interface EndososDAO
 			,String cdtipsup
 			)throws Exception;
 	
-	public void confirmarEndosoBajaIncisos(
+	public Map<String,Object> confirmarEndosoBajaIncisos(
 			String cdunieco
 			,String cdramo
 			,String estado

@@ -359,6 +359,22 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
+	public void actualizaNombreCliente(Map<String, String> params) throws Exception
+	{
+		logger.debug("EndososManager actualizaNombreCliente params: "+params);
+		endososDAO.actualizaNombreCliente(params);
+		logger.debug("EndososManager actualizaNombreCliente end");
+	}
+	
+	@Override
+	public void actualizaRfcCliente(Map<String, String> params) throws Exception
+	{
+		logger.debug("EndososManager actualizaRfcCliente params: "+params);
+		endososDAO.actualizaRfcCliente(params);
+		logger.debug("EndososManager actualizaRfcCliente end");
+	}
+
+	@Override
 	public void actualizarFenacimi(Map<String, String> params) throws Exception
 	{
 		logger.debug("EndososManager actualizarFenacimi params: "+params);

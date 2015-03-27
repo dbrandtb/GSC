@@ -98,6 +98,7 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public Map<String,Item> endosoBajaIncisos(
@@ -113,6 +114,7 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,UserVO usuarioSesion
 			)throws Exception;
 
 	public void guardarEndosoAseguradoAlterno(

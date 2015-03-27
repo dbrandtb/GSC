@@ -830,6 +830,64 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	public void actualizaNombreCliente(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** PKG_SATELITES2.P_ACTUALIZA_NOMBRE_PERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n*******************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ActualizaNombreCliente
+				(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class ActualizaNombreCliente extends StoredProcedure
+	{
+		protected ActualizaNombreCliente(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_NOMBRE_PERSONA");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre1_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido1_i"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	@Override
+	public void actualizaRfcCliente(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_SATELITES2.P_ACTUALIZA_RFC_PERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ActualizaRfcCliente(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class ActualizaRfcCliente extends StoredProcedure
+	{
+		protected ActualizaRfcCliente(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_RFC_PERSONA");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrfc_i"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	@Override
 	public void actualizarFenacimi(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -2808,7 +2866,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void confirmarEndosoAltaIncisoAuto(
+	public Map<String,Object> confirmarEndosoAltaIncisoAuto(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -2829,7 +2887,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
-		ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class ConfirmarEndosoAltaIncisoAuto extends StoredProcedure
@@ -2845,6 +2905,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -2852,7 +2915,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void confirmarEndosoBajaIncisos(
+	public Map<String,Object> confirmarEndosoBajaIncisos(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -2873,7 +2936,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
-		ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class ConfirmarEndosoBajaIncisos extends StoredProcedure
@@ -2889,6 +2954,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

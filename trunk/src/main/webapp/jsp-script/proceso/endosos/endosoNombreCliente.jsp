@@ -175,9 +175,27 @@ Ext.onReady(function()
 				,items     : [
 				{
 					xtype: 'textfield',
-					name:  'nuevoNombre',
+					name:  'nombre',
 					width: 550,
 					fieldLabel: 'Nombre'
+				},
+				{
+					xtype: 'textfield',
+					name:  'nombre1',
+					width: 550,
+					fieldLabel: 'Segundo Nombre'
+				},
+				{
+					xtype: 'textfield',
+					name:  'apellido',
+					width: 550,
+					fieldLabel: 'Apellido Paterno'
+				},
+				{
+					xtype: 'textfield',
+					name:  'nombre',
+					width: 550,
+					fieldLabel: 'Apellido Materno'
 				}
 				]
             });
@@ -283,6 +301,13 @@ Ext.onReady(function()
     			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdcontratante, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
     			*/
     			_35_storeContratantes.add(json.slist1);
+    			
+    			if("F" != _35_storeContratantes.getAt(0).get('OTFISJUR')){
+    				_35_formContratante.down('[name=nombre]').hide();
+            		_35_formContratante.down('[name=nombre1]').hide();
+            		_35_formContratante.down('[name=apellido]').hide();
+            		_35_formContratante.down('[name=apellido1]').hide();
+    			}
     		}
     		else
     		{
@@ -341,8 +366,14 @@ function _35_confirmar()
             smap1   : _35_smap1
             ,smap2  :
             {
-                fecha_endoso     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y'),
-                nuevoContratante : _35_formContratante.down('[name=nuevoNombre]').getValue()
+                fecha_endoso     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y')
+            }
+            ,smap3:{
+            	'pv_cdperson_i'    : _35_storeContratantes.getAt(0).get('CDPERSON'),
+            	'pv_dsnombre_i'    : _35_formContratante.down('[name=nombre]').getValue(),
+            	'pv_dsnombre1_i'   : _35_formContratante.down('[name=nombre1]').getValue(),
+            	'pv_dsapellido_i'  : _35_formContratante.down('[name=apellido]').getValue(),
+            	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue()
             }
             ,slist1 : slist1
         }
