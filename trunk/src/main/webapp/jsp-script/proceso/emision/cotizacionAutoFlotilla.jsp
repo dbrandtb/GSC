@@ -30,6 +30,7 @@ var _p30_urlEnviarCorreo                   = '<s:url namespace="/general"       
 var _p30_urlCargarDatosEndoso              = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto" />';
 var _p30_urlConfirmarEndoso                = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"      />';
 var _p30_urlObtencionReporteExcel          = '<s:url namespace="/reportes"        action="procesoObtencionReporte"            />';
+var _p30_urlObtencionReporteExcel2         = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"           />';
 
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -4735,7 +4736,7 @@ function _p30_imprimir()
             {
                 Ext.create('Ext.form.Panel').submit(
                 {
-                    url             : _p30_urlObtencionReporteExcel
+                    url             : _p30_urlObtencionReporteExcel2
                     ,standardSubmit : true
                     ,params         :
                     {
