@@ -412,6 +412,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 					
@@ -430,7 +431,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
 			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
 			
-			endososAutoManager.confirmarEndosoAltaIncisoAuto(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup);
+			endososAutoManager.confirmarEndosoAltaIncisoAuto(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup, usuarioSesion);
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
@@ -499,6 +500,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 					
@@ -517,7 +519,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
 			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
 			
-			endososAutoManager.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup);
+			endososAutoManager.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup,usuarioSesion);
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;

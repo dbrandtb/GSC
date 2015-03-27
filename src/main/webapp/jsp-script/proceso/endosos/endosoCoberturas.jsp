@@ -60,6 +60,7 @@
             json['omap1']['pv_cdramo_i']   = inputCdramop3;
             json['omap1']['pv_estado_i']   = inputEstadop3;
             json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
+            json['omap1']['pv_ntramite_i'] = inputNtramitep3;
             var slist1=[];
             json['slist1']=slist1;
             storeCoberturasEditadas_p3.each(function(record)
