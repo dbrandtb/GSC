@@ -452,7 +452,7 @@
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
-            <result name="success">/jsp-script/proceso/endosos/endosoNombreCliente.jsp </result>
+            <result name="success">/jsp-script/proceso/endosos/endosoRfcCliente.jsp </result>
         </action>
         
         <action name="guardarEndosoRfcCliente" class="EndososAction" method="guardarEndosoRfcCliente">

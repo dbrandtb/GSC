@@ -2373,6 +2373,7 @@ public class EndososAction extends PrincipalCoreAction
 						if(aux == null || !aux.isExitoRecibos()){
 							success = false;
 							mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+							error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 							logger.error("Error al ejecutar los WS de endoso");
 							return SUCCESS;
 						}
@@ -6192,6 +6193,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
 					success = false;
 					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+					error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 					logger.error("Error al ejecutar los WS de endoso");
 					return SUCCESS;
 				}
@@ -7901,6 +7903,7 @@ public class EndososAction extends PrincipalCoreAction
 					if(aux == null || !aux.isExitoRecibos()){
 						success = false;
 						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						return SUCCESS;
 					}
@@ -8335,6 +8338,7 @@ public class EndososAction extends PrincipalCoreAction
 					if(aux == null || !aux.isExitoRecibos()){
 						success = false;
 						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						return SUCCESS;
 					}
@@ -8956,7 +8960,7 @@ String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 
 //Actualizar Mpersona:
 
-this.endososManager.actualizarFenacimi(smap3);
+this.endososManager.actualizaNombreCliente(smap3);
 
 
 ////Se confirma el endoso si cumple la validacion de fechas: 
@@ -9137,7 +9141,7 @@ public String guardarEndosoRfcCliente() {
 logger.debug("\n"
 + "\n#################################"
 + "\n#################################"
-+ "\n###### guardarEndosoNombreCliente ######"
++ "\n###### guardarEndosoRfcCliente ######"
 + "\n######                            ######"
 );
 logger.debug("smap1: "+smap1);
@@ -9177,7 +9181,7 @@ String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 
 //Actualizar Mpersona:
 
-
+this.endososManager.actualizaRfcCliente(smap3);
 
 
 ////Se confirma el endoso si cumple la validacion de fechas: 
@@ -9205,7 +9209,7 @@ error = ex.getMessage();
 }
 logger.debug("\n"
 + "\n######                            ######"
-+ "\n###### guardarEndosoNombreCliente ######"
++ "\n###### guardarEndosoRfcCliente ######"
 + "\n#################################"
 + "\n#################################"
 );
