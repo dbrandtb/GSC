@@ -343,4 +343,13 @@ public interface EndososDAO
 			,String cdelemen
 			,String cdtipsup
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarCoberturasEndosoDevolucionPrimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String tstamp
+			)throws Exception;
 }

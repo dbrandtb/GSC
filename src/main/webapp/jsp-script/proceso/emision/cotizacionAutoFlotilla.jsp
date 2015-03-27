@@ -29,6 +29,7 @@ var _p30_urlViewDoc                        = '<s:url namespace="/documentos"    
 var _p30_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                        />';
 var _p30_urlCargarDatosEndoso              = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto" />';
 var _p30_urlConfirmarEndoso                = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"      />';
+var _p30_urlObtencionReporteExcel          = '<s:url namespace="/reportes"        action="procesoObtencionReporte"            />';
 
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -4660,54 +4661,100 @@ function _p30_inicializarTatripol(itemsTatripol)
 function _p30_imprimir()
 {
     debug('>_p30_imprimir');
-    var urlRequestImpCotiza = _p30_urlImprimirCotiza
-            + '?p_unieco='      + _p30_smap1.cdunieco
-            + '&p_ramo='        + _p30_smap1.cdramo
-            + '&p_subramo='     + _p30_smap1.cdtipsit
-            + '&p_estado=W'
-            + '&p_poliza='      + _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-            + '&p_suplem=0'
-            + '&p_perpag='      + _p30_selectedTarifa.get('CDPERPAG')
-            + '&p_ntramite='    + _p30_smap1.ntramite
-            + '&p_cdusuari='    + _p30_smap1.cdusuari
-            + '&destype=cache'
-            + "&desformat=PDF"
-            + "&userid="        + _p30_reportsServerUser
-            + "&ACCESSIBLE=YES"
-            + "&report="        + _p30_reporteCotizacion
-            + "&paramform=no";
-    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
-    var numRand = Math.floor((Math.random() * 100000) + 1);
-    debug(numRand);
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    
+    if(_p30_smap1.tipoflot+'x'=='Px')
     {
-        title          : 'Cotizaci&oacute;n'
-        ,width         : 700
-        ,height        : 500
-        ,collapsible   : true
-        ,titleCollapse : true
-        ,html : '<iframe innerframe="'
-                + numRand
-                + '" frameborder="0" width="100" height="100"'
-                + 'src="'
-                + _p30_urlViewDoc
-                + "?contentType=application/pdf&url="
-                + encodeURIComponent(urlRequestImpCotiza)
-                + "\">"
-                + '</iframe>'
-        ,listeners :
+        var urlRequestImpCotiza = _p30_urlImprimirCotiza
+                + '?p_unieco='      + _p30_smap1.cdunieco
+                + '&p_ramo='        + _p30_smap1.cdramo
+                + '&p_subramo='     + _p30_smap1.cdtipsit
+                + '&p_estado=W'
+                + '&p_poliza='      + _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                + '&p_suplem=0'
+                + '&p_perpag='      + _p30_selectedTarifa.get('CDPERPAG')
+                + '&p_ntramite='    + _p30_smap1.ntramite
+                + '&p_cdusuari='    + _p30_smap1.cdusuari
+                + '&destype=cache'
+                + "&desformat=PDF"
+                + "&userid="        + _p30_reportsServerUser
+                + "&ACCESSIBLE=YES"
+                + "&report="        + _p30_reporteCotizacion
+                + "&paramform=no";
+        debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+        var numRand = Math.floor((Math.random() * 100000) + 1);
+        debug(numRand);
+        centrarVentanaInterna(Ext.create('Ext.window.Window',
         {
-            resize : function(win,width,height,opt)
+            title          : 'Cotizaci&oacute;n'
+            ,width         : 700
+            ,height        : 500
+            ,collapsible   : true
+            ,titleCollapse : true
+            ,html : '<iframe innerframe="'
+                    + numRand
+                    + '" frameborder="0" width="100" height="100"'
+                    + 'src="'
+                    + _p30_urlViewDoc
+                    + "?contentType=application/pdf&url="
+                    + encodeURIComponent(urlRequestImpCotiza)
+                    + "\">"
+                    + '</iframe>'
+            ,listeners :
             {
-                debug(width,height);
-                $('[innerframe="'+ numRand+ '"]').attr(
+                resize : function(win,width,height,opt)
                 {
-                    'width'   : width - 20
-                    ,'height' : height - 60
+                    debug(width,height);
+                    $('[innerframe="'+ numRand+ '"]').attr(
+                    {
+                        'width'   : width - 20
+                        ,'height' : height - 60
+                    });
+                }
+            }
+        }).show());
+    }
+    else
+    {
+        var panelpri = _fieldById('_p30_panelpri');
+        panelpri.setLoading(true);
+        Ext.create('Ext.form.Panel').submit(
+        {
+            url             : _p30_urlObtencionReporteExcel
+            ,standardSubmit : true
+            ,params         :
+            {
+                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                ,'params.pv_estado_i'   : 'W'
+                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,'params.pv_nmsuplem_i' : '0'
+                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                ,cdreporte              : 'REPCOT001'
+            }
+            ,callback : function()
+            {
+                Ext.create('Ext.form.Panel').submit(
+                {
+                    url             : _p30_urlObtencionReporteExcel
+                    ,standardSubmit : true
+                    ,params         :
+                    {
+                        'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                        ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                        ,'params.pv_estado_i'   : 'W'
+                        ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                        ,'params.pv_nmsuplem_i' : '0'
+                        ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                        ,cdreporte              : 'REPCOT002'
+                    }
+                    ,callback : function()
+                    {
+                        panelpri.setLoading(false);
+                    }
                 });
             }
-        }
-    }).show());
+        });
+    }
     debug('<_p30_imprimir');
 }
 

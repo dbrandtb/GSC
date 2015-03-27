@@ -3057,4 +3057,60 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarCoberturasEndosoDevolucionPrimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String tstamp
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("tstamp"   , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params);
+		Map<String,Object>procResult   = ejecutaSP(new RecuperarCoberturasEndosoDevolucionPrimas(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No se encontraron coberturas");
+		}
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params, lista);
+		return lista;
+	}
+	
+	protected class RecuperarCoberturasEndosoDevolucionPrimas extends StoredProcedure
+	{
+		protected RecuperarCoberturasEndosoDevolucionPrimas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDUNIECO"
+					,"CDRAMO"
+					,"ESTADO"
+					,"NMPOLIZA"
+					,"NMSITUAC"
+					,"CDGARANT"
+					,"DSGARANT"
+					,"DEVOLVER"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

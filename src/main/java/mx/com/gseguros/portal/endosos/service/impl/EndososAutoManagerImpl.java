@@ -2261,7 +2261,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			gc.generaComponentes(columnasInciso, true, false, false, true, false, false);
 			items.put("incisoColumns" , gc.getColumns());
 			
-			gc.generaComponentes(columnasCobertura, true, false, false, true, false, false);
+			gc.generaComponentes(columnasCobertura, true, false, false, true, true, false);
 			items.put("coberturaColumns" , gc.getColumns());
 		}
 		catch(Exception ex)
