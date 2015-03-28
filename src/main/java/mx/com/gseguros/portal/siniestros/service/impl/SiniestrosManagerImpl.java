@@ -1508,8 +1508,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 
 	@Override
-	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception {
-		return siniestrosDAO.obtieneTramiteFacturaPagada(nfactura, cdpresta);
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception {
+		return siniestrosDAO.obtieneTramiteEnProceso(nfactura, cdpresta, ptimport);
 	}
 	
 	@Override
