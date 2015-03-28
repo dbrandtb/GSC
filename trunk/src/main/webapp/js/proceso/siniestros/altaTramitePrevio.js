@@ -1589,7 +1589,17 @@ Ext.onReady(function() {
 	function _p21_agregarGrupoClic()
 	{
 		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-			storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+			var obtener = [];
+			storeFacturaDirecto.each(function(record) {
+				obtener.push(record.data);
+			});
+			if(obtener.length > 0){
+				//Realizamos la validacion de la ultima factura que vayan agregando
+				validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue() ,obtener[obtener.length -1].noFactura, obtener[obtener.length -1].importe);
+				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+			}else{
+				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+			}
 		}else if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_REEMBOLSO){
 			storeFacturaReembolso.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 		}else{
@@ -1605,13 +1615,14 @@ Ext.onReady(function() {
 	}
 	
 	
-	function validarFacturaPagada(cdpresta,nfactura){
+	function validarFacturaPagada(cdpresta,nfactura, totalImporte){
 		Ext.Ajax.request(
 		{
 			url     : _URL_CONSULTA_FACTURA_PAGADA
 			,params:{
 				'params.nfactura' : nfactura,
-				'params.cdpresta' : cdpresta
+				'params.cdpresta' : cdpresta,
+				'params.ptimport' : totalImporte
 			}
 			,success : function (response)
 		    {
@@ -1619,7 +1630,7 @@ Ext.onReady(function() {
 		    	{
 		    		centrarVentanaInterna(Ext.Msg.show({
  		               title: 'Aviso',
- 		               msg: 'La factura '+ nfactura +' ya se encuentra pagada en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+ 		               msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
  		               buttons: Ext.Msg.OK,
  		               icon: Ext.Msg.WARNING
  		           }));
