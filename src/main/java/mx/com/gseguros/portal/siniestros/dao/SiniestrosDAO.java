@@ -427,7 +427,7 @@ public interface SiniestrosDAO {
 
 	public List<Map<String, String>> obtieneDatosAdicionalesCobertura(Map<String, Object> params) throws Exception;
 
-	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception;
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception;
 	
 	public List<Map<String,String>> obtenerAseguradosTramite(Map<String, String> params) throws Exception;
 

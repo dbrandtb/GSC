@@ -3932,21 +3932,23 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
  	@Override
-	public String obtieneTramiteFacturaPagada(String nfactura, String cdpresta) throws Exception {
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdpresta_i"   , cdpresta);
 		params.put("pv_nfactura_i" , nfactura);
+		params.put("pv_ptimport_i" , ptimport);
 		logger.debug("obtiene ntramite : "+params);
-		Map<String, Object> resultado = ejecutaSP(new ObtieneTramiteFacturaPagada(getDataSource()), params);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneTramiteEnProceso(getDataSource()), params);
 		return (String) resultado.get("pv_ntramite_o");
 	}
 
-    protected class ObtieneTramiteFacturaPagada extends StoredProcedure {
+    protected class ObtieneTramiteEnProceso extends StoredProcedure {
     	
-    	protected ObtieneTramiteFacturaPagada(DataSource dataSource) {
+    	protected ObtieneTramiteEnProceso(DataSource dataSource) {
     		super(dataSource, "PKG_PRESINIESTRO.P_GET_TRAMITE_FACT_PAG");
     		declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

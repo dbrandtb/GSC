@@ -6033,7 +6033,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     public String consultaFacturaPagada(){
 	   	logger.debug(" **** Entrando al metodo el tramite  de la factura ****");
 	   	try {
-	   		factPagada = siniestrosManager.obtieneTramiteFacturaPagada(params.get("nfactura"), params.get("cdpresta"));
+	   		factPagada = siniestrosManager.obtieneTramiteEnProceso(params.get("nfactura"), params.get("cdpresta"), params.get("ptimport"));
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de los asegurados ",e);
 	   		return SUCCESS;
