@@ -22,6 +22,15 @@ public interface EmisionAutosService {
 	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal);
 	
+	public int endosoCambioClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
+	
+	public int endosoCambioRfcClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
+	
+	public int endosoCambioNombreClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
+
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem);
 

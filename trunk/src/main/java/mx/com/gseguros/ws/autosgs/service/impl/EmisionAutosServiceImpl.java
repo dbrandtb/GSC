@@ -827,6 +827,241 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		return true;
 	}
 	
+	public int endosoCambioNombreClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio nombre cliente.");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+			datos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_END_NOM_CLI_SIGS.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio nombre cliente.",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
+				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
+				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
+				paramsEnd.put("vNombre"    , datosEnd.get("NOMBRE"));
+				paramsEnd.put("vAPaterno"   , datosEnd.get("APATERNO"));
+				paramsEnd.put("vAMaterno"    , datosEnd.get("AMATERNO"));
+				paramsEnd.put("vRasonSocial" , datosEnd.get("RASONSOCIAL"));
+				
+				Integer res = autosSIGSDAO.endosoNombreCliente(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio nombre cliente, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso domicilio no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.ACTUALIZA_ENDB_DE_SIGS.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio nombre cliente para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio nombre cliente.");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+
+	public int endosoCambioRfcClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Rfc cliente.");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+//			datos = storedProceduresManager.procedureListCall(
+//					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Rfc cliente.",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
+				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
+				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
+				paramsEnd.put("vRFC"    , datosEnd.get("asd"));
+				
+				Integer res = autosSIGSDAO.endosoRfcCliente(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio Rfc cliente, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso domicilio no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.ACTUALIZA_ENDB_DE_SIGS.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio Rfc cliente para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Rfc cliente.");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+
+	public int endosoCambioClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio cliente.");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+//			datos = storedProceduresManager.procedureListCall(
+//					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio cliente.",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
+				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
+				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
+				paramsEnd.put("vCveCliente"    , datosEnd.get("asd"));
+				
+				Integer res = autosSIGSDAO.endosoCambioCliente(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio cliente, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso domicilio no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.ACTUALIZA_ENDB_DE_SIGS.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio cliente para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio cliente.");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+	
+	
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem){
 		
