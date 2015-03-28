@@ -429,6 +429,23 @@
             <result name="success" type="json" />
         </action>
 
+		<action name="endosoCambioClienteAuto" class="EndososAction" method="endosoCambioClienteAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCambioClienteAuto.jsp </result>
+        </action>
+        
+        <action name="guardarEndosoCambioClienteAuto" class="EndososAction" method="guardarEndosoCambioClienteAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
 		<action name="endosoNombreCliente" class="EndososAction" method="endosoNombreCliente">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
