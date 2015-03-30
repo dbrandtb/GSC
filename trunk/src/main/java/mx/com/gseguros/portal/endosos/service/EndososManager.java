@@ -280,7 +280,14 @@ public interface EndososManager
 			String nmpoliza
 			) throws Exception;
 	
-	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception;
+	public void validaNuevaCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdgarant
+			) throws Exception;
 	
 	public void calcularRecibosCambioAgente(
 			String cdunieco
@@ -321,6 +328,7 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String nmsituac
 			,String cdatribu
 			,String otvalor);
 	public ManagerRespuestaImapSmapVO endosoAtributosSituacionGeneral(

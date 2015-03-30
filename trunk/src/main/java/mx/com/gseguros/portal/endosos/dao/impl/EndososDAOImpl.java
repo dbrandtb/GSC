@@ -1703,20 +1703,23 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception
+	public void validaNuevaCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdgarant
+			) throws Exception
 	{
-		Map<String,Object>params = new LinkedHashMap<String,Object>();
-		params.put("fenacimi",fenacimi);
-		params.put("cdgarant",cdgarant);
-		logger.info("params :"+params);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*********************************************")
-				.append("\n****** PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO ******")
-				.append("\n****** params=").append(params)
-				.append("\n*********************************************")
-				.toString()
-				);
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("cdgarant" , cdgarant);
+		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO", params);
 		ejecutaSP(new ValidaNuevaCobertura(getDataSource()),params);
 	}
 	
@@ -1725,7 +1728,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ValidaNuevaCobertura(DataSource dataSource)
 		{
 			super(dataSource, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO");
-			declareParameter(new SqlParameter("fenacimi" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -2004,6 +2011,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String nmsituac
 			,String cdatribu
 			,String otvalor)throws Exception
 	{
@@ -2013,6 +2021,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
 		params.put("cdatribu" , cdatribu);
 		params.put("otvalor"  , otvalor);
 		logger.debug(
@@ -2036,6 +2045,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));

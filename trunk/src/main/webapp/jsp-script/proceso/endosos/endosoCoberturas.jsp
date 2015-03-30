@@ -18,7 +18,6 @@
     var inputCdpersonap3 = '<s:property value="smap1.CDPERSON" />';
     var inputNtramitep3  = '<s:property value="smap1.NTRAMITE" />';
     var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
-    var inputFenacimip3  = '<s:property value="smap1.FENACIMI" />';
     var columnasTatrisit = [<s:property value="columnas" escapeHtml="false" />];
     var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos" action="obtenerComponenteSituacionCobertura" />';
     var urlCargarCoberturasp3     = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
@@ -89,7 +88,6 @@
             json['smap1']['cdperson']  = inputCdpersonap3;
             json['smap1']['altabaja']  = inputAltabajap3;
             json['smap1']['confirmar'] = confirmar;
-            json['smap1']['fenacimi']  = inputFenacimip3;
             debug(json);
             Ext.Ajax.request(
             {
@@ -492,6 +490,7 @@
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
+                                ,hidden    : true
                             }
                         ]
                         ,listeners :
@@ -559,6 +558,7 @@
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
+                                ,hidden    : true
                             }
                         ]
                         ,listeners :
@@ -614,6 +614,7 @@
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
+                                ,hidden    : true
                             }
                          ]
                          ,listeners :
@@ -755,6 +756,7 @@
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
+                                ,hidden    : true
                             }
                         ]
                         ,listeners :
@@ -802,6 +804,7 @@
                             {
                                 text     : 'Guardar endoso'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                ,hidden  : true
                                 ,handler : function(me)
                                 {
                                     var form=me.up().up();

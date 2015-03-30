@@ -23,12 +23,12 @@ import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
-import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -48,7 +48,6 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -2042,18 +2041,26 @@ public class EndososAction extends PrincipalCoreAction
 	//////     cdperson            //////
     //////     altabaja            //////
 	//////     confirmar           //////
-	//////     fenacimi            //////
 	////// omap1:                  //////
 	//////     pv_cdunieco_i       //////
 	//////     pv_cdramo_i         //////
 	//////     pv_estado_i         //////
 	//////     pv_nmpoliza_i       //////
 	//////     pv_fecha_i          //////
-	////// slist1: coberturas Editadas//////
-	////// [garantia,cdcapita,     //////
-    ////// status,ptcapita,        //////
-	////// ptreduci,fereduci       //////
-	//////,swrevalo,cdagrupa]      //////
+	////// slist1: coberturas      //////
+	//////         Editadas        //////
+	////// [                       //////
+	//////     garantia            //////
+	//////     ,cdcapita           //////
+	//////     ,status             //////
+	//////     ,ptcapita,          //////
+	//////     ,ptreduci           //////
+	//////     ,fereduci           //////
+	//////     ,swrevalo           //////
+	//////     ,cdagrupa           //////
+	//////     ,cdatribu           //////
+	//////     ,otvalor            //////
+	////// ]                       //////
 	/*/////////////////////////////////*/
 	public String guardarEndosoCoberturas() {
 		logger.debug(""
@@ -2078,16 +2085,19 @@ public class EndososAction extends PrincipalCoreAction
 				logger.debug("ES UNA BAJA DE COBERTURAS.....");
 			}
 			
-			// Se realiza validacion de fecha y nuevas coberturas:
-			String sFenacimi = smap1.get("fenacimi");
-			Date fenacimi = null;
-			if(StringUtils.isNotBlank(sFenacimi)) {
-				fenacimi = renderFechas.parse(sFenacimi);
-			}
-			if(fenacimi != null && tipoEndoso == TipoEndoso.ALTA_COBERTURAS) {
-				for(Map<String,String> nuevaCob : slist1) {
-					String cdgarant = nuevaCob.get("garantia");
-					endososManager.validaNuevaCobertura(cdgarant, fenacimi);
+			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
+			{
+				// Se realiza validacion de fecha y nuevas coberturas:
+				for(Map<String,String> nueva : slist1) 
+				{
+					endososManager.validaNuevaCobertura(
+							(String)omap1.get("pv_cdunieco_i")
+							,(String)omap1.get("pv_cdramo_i")
+							,(String)omap1.get("pv_estado_i")
+							,(String)omap1.get("pv_nmpoliza_i")
+							,nueva.get("nmsituac")
+							,nueva.get("garantia")
+							);
 				}
 			}
 			
@@ -2131,20 +2141,6 @@ public class EndososAction extends PrincipalCoreAction
 				paramsMovPoligar.put("PV_ACCION"     , tipoEndoso == TipoEndoso.ALTA_COBERTURAS ? "I" : "B");
 				paramsMovPoligar.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
 				kernelManager.movPoligar(paramsMovPoligar);
-				
-				// ****** Si es una alta ejecutamos valores por defecto ******
-				if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS){
-					Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
-					paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-					paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-					paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-					paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-					paramSigsvdef.put("pv_nmsituac_i" , coberturasEditadas.get("nmsituac"));
-					paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-					paramSigsvdef.put("pv_cdgarant_i" , coberturasEditadas.get("garantia"));
-					paramSigsvdef.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
-					kernelManager.coberturas(paramSigsvdef);
-				}
 				
 				// ****** Insertamos en TVALOSIT ******
 				// Cargar Valosit anterior:
@@ -2196,26 +2192,45 @@ public class EndososAction extends PrincipalCoreAction
 				paramsNuevos.put("pv_accion_i" , "I");
 				logger.debug("los actualizados seran: "+paramsNuevos);
 				kernelManager.insertaValoresSituaciones(paramsNuevos);
-			}
-			
-			// ****** Actualizamos TVALOSIT ******
-			//
-			endososManager.actualizaTvalositCoberturasAdicionales(
-					(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-					(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-					respEndCob.get("pv_nmsuplem_o"), tipoEndoso.getCdTipSup().toString());
-			// 
-			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS){
-				for(Map<String,String> nuevaCob : slist1) {
-					String cdatribu = nuevaCob.get("cdatribu");
-					String otvalor  = nuevaCob.get("otvalor");
-					if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor)) {
-						endososManager.actualizaTvalositSituacionCobertura(
-								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-								respEndCob.get("pv_nmsuplem_o"), cdatribu, otvalor);
+				
+				// ****** Actualizamos TVALOSIT ******
+				//
+				endososManager.actualizaTvalositCoberturasAdicionales(
+						(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+						(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+						respEndCob.get("pv_nmsuplem_o"), tipoEndoso.getCdTipSup().toString());
+				// 
+				if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
+				{
+					for(Map<String,String> nuevaCob : slist1)
+					{
+						String cdatribu = nuevaCob.get("cdatribu");
+						String otvalor  = nuevaCob.get("otvalor");
+						if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor)) {
+							endososManager.actualizaTvalositSituacionCobertura(
+									(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+									(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+									respEndCob.get("pv_nmsuplem_o"),
+									coberturasEditadas.get("nmsituac"),
+									cdatribu, otvalor);
+						}
 					}
 				}
+			}
+			
+			// ****** Si es una alta ejecutamos valores por defecto ******
+			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
+			{
+				Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
+				paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramSigsvdef.put("pv_nmsituac_i" , "0");
+				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				paramSigsvdef.put("pv_cdgarant_i" , "TODO");
+				paramSigsvdef.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
+				kernelManager.coberturas(paramSigsvdef);
 			}
 			
 			// ****** Ejecutamos SIGSVDEF_END ******
