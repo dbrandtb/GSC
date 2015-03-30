@@ -18,6 +18,47 @@ public class ObtieneTatrisitMapper implements RowMapper
 	{
 		ComponenteVO result = new ComponenteVO();
 		
+		String[] cols=new String[]{
+				"CDATRIBU"
+				,"SWFORMAT"
+				,"NMLMIN"
+				,"NMLMAX"
+				,"SWOBLIGA"
+				,"DSATRIBU"
+				,"OTTABVAL"
+				,"CDTABLJ1"
+				,"SWSUSCRI"
+				,"SWTARIFI"
+				,"SWPRESEN"
+				,"VALOR"
+				,"OTVALOR01"
+				,"SWACTUAL"
+				,"SWGRUPO"
+				,"SWGRUPOLINEA"
+				,"SWGRUPOFACT"
+				,"SWGRUPOEXTR"
+				,"NMPANELCOTI"
+				,"NMPANELFLOT"
+				,"SWCOLFLOT"
+				,"COLFLOTROL"
+				,"SWPRESENFLOT"
+				,"SWCOMPFLOT"
+				,"NMORDENFLOT"
+				,"SWOBLIGAFLOT"
+				,"SWOBLIGAEMIFLOT"
+		};
+		for(String col:cols)
+		{
+			try
+			{
+				rs.getString(col);
+			}
+			catch(Exception ex)
+			{
+				throw new SQLException("No se encuentra la columna "+col);
+			}
+		}
+		
 		result.setFlagEsAtribu(true);
 		result.setType(ComponenteVO.TIPO_TATRISIT);
 		result.setNameCdatribu(rs.getString("CDATRIBU"));

@@ -797,17 +797,16 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception
+	public void validaNuevaCobertura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdgarant
+			) throws Exception
 	{
-		logger.info(""
-				+ "\n##################################"
-				+ "\n###### validaNuevaCobertura ######"
-				);
-		endososDAO.validaNuevaCobertura(cdgarant,fenacimi);
-		logger.info(""
-				+ "\n###### validaNuevaCobertura ######"
-				+ "\n##################################"
-				);
+		endososDAO.validaNuevaCobertura(cdunieco,cdramo,estado,nmpoliza,nmsituac,cdgarant);
 	}
 	
 	@Override
@@ -992,12 +991,13 @@ public class EndososManagerImpl implements EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			,String nmsituac
 			,String cdatribu
 			,String otvalor)
 	{
 		try
 		{
-			endososDAO.actualizaTvalositSitaucionCobertura(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdatribu,otvalor);
+			endososDAO.actualizaTvalositSitaucionCobertura(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,cdatribu,otvalor);
 		}
 		catch(Exception ex)
 		{
