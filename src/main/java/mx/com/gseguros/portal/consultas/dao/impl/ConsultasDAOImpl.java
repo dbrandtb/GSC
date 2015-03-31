@@ -1415,4 +1415,38 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public List<String> recuperarDescripcionAtributosSituacionPorRamo(String cdramo) throws Exception
+    {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdramo" , cdramo);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarDescripcionAtributosSituacionPorRamo(getDataSource()),params);
+    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		throw new ApplicationException("No se encontraron nombres de atributos de situacion");
+    	}
+    	List<String>listaNombres = new ArrayList<String>();
+    	for(Map<String,String>elem:lista)
+    	{
+    		listaNombres.add(elem.get("ATRIBUTO"));
+    	}
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params, listaNombres);
+    	return listaNombres;
+    }
+    
+    protected class RecuperarDescripcionAtributosSituacionPorRamo extends StoredProcedure
+    {
+    	protected RecuperarDescripcionAtributosSituacionPorRamo(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT");
+            declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ATRIBUTO"})));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    ,  OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
