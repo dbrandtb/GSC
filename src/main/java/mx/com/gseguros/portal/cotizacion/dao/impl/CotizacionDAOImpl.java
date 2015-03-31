@@ -4311,19 +4311,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      }
      
      @Override
-     public String cargarClaveTtapvat1(String cdtabla,String otvalor)throws Exception
+     public String cargarClaveTtapvat1(
+    		 String cdtabla
+    		 ,String otvalor
+    		 ,Map<String,List<Map<String,String>>>buffer
+    		 )throws Exception
      {
-    	 Map<String,String>params=new LinkedHashMap<String,String>();
-    	 params.put("cdtabla" , cdtabla);
-    	 params.put("otvalor" , otvalor);
-    	 logger.debug(Utilerias.join(
-    			 "\n*************************************************",
-    			 "\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******",
-    			 "\n****** params=",params,
-    			 "\n*************************************************"
-    	 ));
-    	 Map<String,Object>procResult  = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
-    	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	 List<Map<String,String>> lista = null;
+    	 if(buffer!=null&&buffer.containsKey(cdtabla))
+    	 {
+    		 logger.debug(Utilerias.join(
+    				  "\n*****************************************"
+    				 ,"\n****** P_GET_CLAVE_TTAPVAT1 buffer ******"
+    				 ,"\n*****************************************"
+    				 ));
+    		 lista = buffer.get(cdtabla);
+    	 }
+    	 else
+    	 {
+    		 Map<String,String>params=new LinkedHashMap<String,String>();
+        	 params.put("cdtabla" , cdtabla);
+        	 params.put("otvalor" , otvalor);
+        	 logger.debug(Utilerias.join(
+        			 "\n*************************************************",
+        			 "\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******",
+        			 "\n****** params=",params,
+        			 "\n*************************************************"
+        	 ));
+        	 Map<String,Object>procResult  = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
+        	 lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        	 if(buffer!=null&&lista!=null&&lista.size()==1)
+        	 {
+        		 buffer.put(cdtabla,lista);
+        	 }
+    	 }
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException(Utilerias.join(

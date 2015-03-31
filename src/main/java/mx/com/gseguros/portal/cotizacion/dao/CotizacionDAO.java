@@ -506,7 +506,13 @@ public interface CotizacionDAO
 			String proceso
 			,String cdramo
 			,String cdtipsit)throws Exception;
-	public String cargarClaveTtapvat1(String cdtabla,String otvalor)throws Exception;
+	
+	public String cargarClaveTtapvat1(
+			String cdtabla
+			,String otvalor
+			,Map<String,List<Map<String,String>>> buffer
+			)throws Exception;
+	
 	public List<Map<String,String>>cargarResultadosCotizacionAutoFlotilla(
 			String cdunieco
 			,String cdramo

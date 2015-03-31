@@ -2030,6 +2030,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
 			logger.debug(config);
 			
+			setCheckpoint("Instanciando mapa buffer de tablas de apoyo");
+			Map<String,List<Map<String,String>>>buffer=new HashMap<String,List<Map<String,String>>>();
+			
 			setCheckpoint("Iniciando procesador de hoja de calculo");
 			FileInputStream input       = new FileInputStream(excel);;
 			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
@@ -2237,7 +2240,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								{
 									try
 									{
-									    clave=cotizacionDAO.cargarClaveTtapvat1(cdtabla1, valor);
+									    clave=cotizacionDAO.cargarClaveTtapvat1(cdtabla1, valor, buffer);
 									}
 									catch(Exception ex)
 									{
