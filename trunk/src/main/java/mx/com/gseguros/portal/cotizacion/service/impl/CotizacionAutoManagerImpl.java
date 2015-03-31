@@ -1771,34 +1771,38 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"0" //nmsuplem
 						,"V" //status
 						,tvalopol);
+				
+				setCheckpoint("Insertando maestro de situaciones");
+				for(Map<String,String>tvalositIte:tvalosit)
+				{
+					cotizacionDAO.movimientoMpolisit(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,tvalositIte.get("nmsituac")
+							,"0"                       //nmsuplem
+							,"V"                       //status
+							,tvalositIte.get("cdtipsit")
+							,null                      //swreduci
+							,"1"                       //cdagrupa
+							,"0"                       //cdestado
+							,renderFechas.parse(feini) //fefecsit
+							,renderFechas.parse(feini) //fecharef
+							,null                      //cdgrupo
+							,null                      //nmsituaext
+							,null                      //nmsitaux
+							,null                      //nmsbsitext
+							,tvalositIte.get("cdplan") //cdplan
+							,"30"                      //cdasegur
+							,"I"                       //accion
+							);
+				}
 			}
 				
-			setCheckpoint("Insertando situaciones y maestro de situaciones");
+			setCheckpoint("Insertando atributos de situacion");
 			for(Map<String,String>tvalositIte:tvalosit)
 			{
-				cotizacionDAO.movimientoMpolisit(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,tvalositIte.get("nmsituac")
-						,"0"                       //nmsuplem
-						,"V"                       //status
-						,tvalositIte.get("cdtipsit")
-						,null                      //swreduci
-						,"1"                       //cdagrupa
-						,"0"                       //cdestado
-						,renderFechas.parse(feini) //fefecsit
-						,renderFechas.parse(feini) //fecharef
-						,null                      //cdgrupo
-						,null                      //nmsituaext
-						,null                      //nmsitaux
-						,null                      //nmsbsitext
-						,tvalositIte.get("cdplan") //cdplan
-						,"30"                      //cdasegur
-						,"I"                       //accion
-						);
-				
 				Map<String,String>valores=new HashMap<String,String>();
 				for(Entry<String,String>valosit:tvalositIte.entrySet())
 				{
