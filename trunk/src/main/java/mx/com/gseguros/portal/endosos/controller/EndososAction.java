@@ -2366,7 +2366,7 @@ public class EndososAction extends PrincipalCoreAction
 						
 						String tipoGrupoInciso = smap1.get("TIPOFLOT");
 						
-						ejecutaCaratulaEndosoTGarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux);
+						ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux);
 				    }
 					
 					mensaje = new StringBuilder("Se ha confirmado el endoso ").append(respEndCob.get("pv_nsuplogi_o")).toString();
@@ -6105,7 +6105,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String tipoGrupoInciso = smap1.get("TIPOFLOT");
 					
-					ejecutaCaratulaEndosoTGarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
 					
 				}else{
 					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
@@ -7660,7 +7660,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String tipoGrupoInciso = smap1.get("TIPOFLOT");
 					
-					ejecutaCaratulaEndosoTGarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
 				}
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -7991,7 +7991,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String tipoGrupoInciso = smap1.get("TIPOFLOT");
 					
-					ejecutaCaratulaEndosoTGarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
 				}
 	   			
 	   			mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -8100,6 +8100,12 @@ public class EndososAction extends PrincipalCoreAction
 	
 	Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
 	smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
+	
+	
+	boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+	
+	smap1.put("esProductoSalud", esProductoSalud? Constantes.SI : Constantes.NO);
+	
 	////// campos pantalla //////
 	/////////////////////////////
 	} catch(Exception ex) {
@@ -8206,115 +8212,122 @@ public class EndososAction extends PrincipalCoreAction
 	*/
 	/*/////////////////////////////*/
 	public String guardarEndosoContratante() {
-	logger.debug("\n"
-	+ "\n#################################"
-	+ "\n#################################"
-	+ "\n###### guardarEndosoContratante ######"
-	+ "\n######                     ######"
-	);
-	logger.debug("smap1: "+smap1);
-	logger.debug("smap2: "+smap2);
-	logger.debug("slist1: "+slist1);
-	
-	this.session=ActionContext.getContext().getSession();
-	try {
-	////// variables //////
-	String cdunieco            = smap1.get("CDUNIECO");
-	String cdramo              = smap1.get("CDRAMO");
-	String estado              = smap1.get("ESTADO");
-	String nmpoliza            = smap1.get("NMPOLIZA");
-	String sFecha              = smap2.get("fecha_endoso");
-	Date   dFecha              = renderFechas.parse(sFecha);
-	UserVO usuario             = (UserVO)session.get("USUARIO");
-	String cdelemento          = usuario.getEmpresa().getElementoId();
-	String cdusuari            = usuario.getUser();
-	String proceso             = "END";
-	String cdtipsup            = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
-	//String cdcontratante            = smap2.get("contratante");
-	String tipoContratantePrincipal = "1";
-	String sesionComision      = "0";
-	String porcenParticip      = "100";
-	//String nmcuadro            = smap2.get("nmcuadro");
-	//String cdsucurs            = smap2.get("cdsucurs");
-	String comentariosEndoso   = "";
-	String cdtipsit            = smap1.get("CDTIPSIT");
-	String ntramite            = smap1.get("NTRAMITE");
-	
-	//PKG_ENDOSOS.P_ENDOSO_INICIA
-	Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
-	
-	String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
-	String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
-	
-	
-	Map<String,String>contratanteIte =  slist1.get(0);
-	
-	//* insertar muerto
-	HashMap<String,Object> paramsMpopliper = new HashMap<String, Object>();
-	paramsMpopliper.put("pv_cdunieco_i", cdunieco);
-	paramsMpopliper.put("pv_cdramo_i"  , cdramo);
-	paramsMpopliper.put("pv_estado_i"  , estado);
-	paramsMpopliper.put("pv_nmpoliza_i", nmpoliza);
-	paramsMpopliper.put("pv_nmsituac_i", contratanteIte.get("NMSITUAC"));
-	paramsMpopliper.put("pv_cdrol_i"   , contratanteIte.get("CDROL"));
-	paramsMpopliper.put("pv_cdperson_i", contratanteIte.get("CDPERSON"));
-	paramsMpopliper.put("pv_nmsuplem_i", nmsuplem);
-	paramsMpopliper.put("pv_status_i"  , contratanteIte.get("STATUS"));
-	paramsMpopliper.put("pv_nmorddom_i", contratanteIte.get("NMORDDOM"));
-	paramsMpopliper.put("pv_swreclam_i", contratanteIte.get("SWRECLAM"));
-	paramsMpopliper.put("pv_accion_i", 	 Constantes.DELETE_MODE);
-	paramsMpopliper.put("pv_swexiper_i", "S");
-	
-	kernelManager.movMpoliper(paramsMpopliper);
-	
-	//* insertar vivo
-	paramsMpopliper.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
-	paramsMpopliper.put("pv_accion_i", 	 Constantes.INSERT_MODE);
-	
-	kernelManager.movMpoliper(paramsMpopliper);
-	
-	endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
-	
-	//// Se confirma el endoso si cumple la validacion de fechas: 
-	RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
-	
-	// Si el endoso fue confirmado:
-	if(respConfirmacionEndoso.isConfirmado()) {
-	
-	// Regeneramos los documentos:
-	String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
-	
-	String sucursal = cdunieco;
-	
-	// Ejecutamos el Web Service de Recibos:
-	ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-		estado, nmpoliza, 
-		nmsuplem, null, 
-		sucursal, nmsolici, ntramite, 
-		true, cdtipsup, 
-		(UserVO) session.get("USUARIO"));
-	
-	mensaje="Se ha guardado el endoso "+nsuplogi;
-	
-	} else {
-	mensaje="El endoso "+nsuplogi
-		+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-		+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
-	}
-	success=true;
-	
-	} catch(Exception ex) {
-	logger.error("Error al guardar endoso de contratante", ex);
-	success = false;
-	error = ex.getMessage();
-	}
-	logger.debug("\n"
-	+ "\n######                     ######"
-	+ "\n###### guardarEndosoContratante ######"
-	+ "\n#################################"
-	+ "\n#################################"
-	);
-	return SUCCESS;
+		logger.debug("\n"
+		+ "\n#################################"
+		+ "\n#################################"
+		+ "\n###### guardarEndosoContratante ######"
+		+ "\n######                     ######"
+		);
+		logger.debug("smap1: "+smap1);
+		logger.debug("smap2: "+smap2);
+		logger.debug("slist1: "+slist1);
+		
+		this.session=ActionContext.getContext().getSession();
+		try {
+		////// variables //////
+		String cdunieco            = smap1.get("CDUNIECO");
+		String cdramo              = smap1.get("CDRAMO");
+		String estado              = smap1.get("ESTADO");
+		String nmpoliza            = smap1.get("NMPOLIZA");
+		String sFecha              = smap2.get("fecha_endoso");
+		Date   dFecha              = renderFechas.parse(sFecha);
+		UserVO usuario             = (UserVO)session.get("USUARIO");
+		String cdelemento          = usuario.getEmpresa().getElementoId();
+		String cdusuari            = usuario.getUser();
+		String proceso             = "END";
+		String cdtipsup            = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
+		//String cdcontratante            = smap2.get("contratante");
+		String tipoContratantePrincipal = "1";
+		String sesionComision      = "0";
+		String porcenParticip      = "100";
+		//String nmcuadro            = smap2.get("nmcuadro");
+		//String cdsucurs            = smap2.get("cdsucurs");
+		String comentariosEndoso   = "";
+		String cdtipsit            = smap1.get("CDTIPSIT");
+		String ntramite            = smap1.get("NTRAMITE");
+		
+		//PKG_ENDOSOS.P_ENDOSO_INICIA
+		Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+		
+		String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+		String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+		
+		
+		Map<String,String>contratanteIte =  slist1.get(0);
+		
+		//* insertar muerto
+		HashMap<String,Object> paramsMpopliper = new HashMap<String, Object>();
+		paramsMpopliper.put("pv_cdunieco_i", cdunieco);
+		paramsMpopliper.put("pv_cdramo_i"  , cdramo);
+		paramsMpopliper.put("pv_estado_i"  , estado);
+		paramsMpopliper.put("pv_nmpoliza_i", nmpoliza);
+		paramsMpopliper.put("pv_nmsituac_i", contratanteIte.get("NMSITUAC"));
+		paramsMpopliper.put("pv_cdrol_i"   , contratanteIte.get("CDROL"));
+		paramsMpopliper.put("pv_cdperson_i", contratanteIte.get("CDPERSON"));
+		paramsMpopliper.put("pv_nmsuplem_i", nmsuplem);
+		paramsMpopliper.put("pv_status_i"  , contratanteIte.get("STATUS"));
+		paramsMpopliper.put("pv_nmorddom_i", contratanteIte.get("NMORDDOM"));
+		paramsMpopliper.put("pv_swreclam_i", contratanteIte.get("SWRECLAM"));
+		paramsMpopliper.put("pv_accion_i", 	 Constantes.DELETE_MODE);
+		paramsMpopliper.put("pv_swexiper_i", "S");
+		
+		kernelManager.movMpoliper(paramsMpopliper);
+		
+		//* insertar vivo
+		paramsMpopliper.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
+		paramsMpopliper.put("pv_accion_i", 	 Constantes.INSERT_MODE);
+		
+		kernelManager.movMpoliper(paramsMpopliper);
+		
+		
+		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+		
+		if(!esProductoSalud){
+			
+		}
+		
+		endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		
+		//// Se confirma el endoso si cumple la validacion de fechas: 
+		RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+		
+		// Si el endoso fue confirmado:
+		if(respConfirmacionEndoso.isConfirmado()) {
+		
+		// Regeneramos los documentos:
+		String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
+		
+		String sucursal = cdunieco;
+		
+		// Ejecutamos el Web Service de Recibos:
+		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+			estado, nmpoliza, 
+			nmsuplem, null, 
+			sucursal, nmsolici, ntramite, 
+			true, cdtipsup, 
+			(UserVO) session.get("USUARIO"));
+		
+		mensaje="Se ha guardado el endoso "+nsuplogi;
+		
+		} else {
+		mensaje="El endoso "+nsuplogi
+			+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+			+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+		}
+		success=true;
+		
+		} catch(Exception ex) {
+		logger.error("Error al guardar endoso de contratante", ex);
+		success = false;
+		error = ex.getMessage();
+		}
+		logger.debug("\n"
+		+ "\n######                     ######"
+		+ "\n###### guardarEndosoContratante ######"
+		+ "\n#################################"
+		+ "\n#################################"
+		);
+		return SUCCESS;
 	}
 	
 	
@@ -8421,145 +8434,6 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	//////endosoNombreCliente //////
 	//////////////////////////
-	
-	/////////////////////////////////
-	//////guardarEndosoNombreCliente //////
-	/*
-	smap1:
-	CDRAMO: "2"
-	CDTIPSIT: "SL"
-	CDUNIECO: "1002"
-	DSCOMENT: ""
-	DSTIPSIT: "SALUD VITAL"
-	ESTADO: "M"
-	FEEMISIO: "20/01/2014"
-	FEINIVAL: "20/01/2014"
-	NMPOLIEX: "1002213000019000000"
-	NMPOLIZA: "19"
-	NMSUPLEM: "245667814480000000"
-	NSUPLOGI: "0"
-	NTRAMITE: "573"
-	PRIMA_TOTAL: "52694.6"
-	smap2:
-	contratante: "11000"
-	fecha_endoso: "31/01/2014"
-	nmcuadro
-	cdsucurs
-	slist1:
-	{NMSUPLEM=245667814480000000,
-	NOMBRE="JIRO Y ASOCIADOS, AGENTE DE   "  "SEGUROS Y FIANZAS, S" .A. DE C.V.,
-	NMPOLIZA=19,
-	CDAGENTE=1170,
-	STATUS=V,
-	NMCUADRO=SV18,
-	ESTADO=M,
-	PORPARTI=100,
-	CDUNIECO=1002,
-	CDRAMO=2,
-	CDTIPOAG=1,
-	PORREDAU=0,
-	CDSUCURS=null}
-	 */
-	/*/////////////////////////////*/
-	public String guardarEndosoCambioClienteAuto() {
-		logger.debug("\n"
-				+ "\n#################################"
-				+ "\n#################################"
-				+ "\n###### guardarEndosoCambioClienteAuto ######"
-				+ "\n######                            ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
-		logger.debug("slist1: "+slist1);
-		
-		this.session=ActionContext.getContext().getSession();
-		try {
-			//////variables //////
-			String cdunieco            = smap1.get("CDUNIECO");
-			String cdramo              = smap1.get("CDRAMO");
-			String estado              = smap1.get("ESTADO");
-			String nmpoliza            = smap1.get("NMPOLIZA");
-			String sFecha              = smap2.get("fecha_endoso");
-			Date   dFecha              = renderFechas.parse(sFecha);
-			UserVO usuario             = (UserVO)session.get("USUARIO");
-			String cdelemento          = usuario.getEmpresa().getElementoId();
-			String cdusuari            = usuario.getUser();
-			String proceso             = "END";
-			String cdtipsup            = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
-			//String cdcontratante            = smap2.get("contratante");
-			String tipoContratantePrincipal = "1";
-			String sesionComision      = "0";
-			String porcenParticip      = "100";
-			//String nmcuadro            = smap2.get("nmcuadro");
-			//String cdsucurs            = smap2.get("cdsucurs");
-			String comentariosEndoso   = "";
-			String cdtipsit            = smap1.get("CDTIPSIT");
-			String ntramite            = smap1.get("NTRAMITE");
-			
-			//PKG_ENDOSOS.P_ENDOSO_INICIA
-			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
-			
-			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
-			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
-			
-			
-			//Actualizar Mpersona:
-			
-			this.endososManager.actualizaNombreCliente(smap3);
-			
-			////Se confirma el endoso si cumple la validacion de fechas: 
-			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
-			
-			//Si el endoso fue confirmado:
-			if(respConfirmacionEndoso.isConfirmado()) {
-				
-				//Regeneramos los documentos:
-				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
-				
-				/**
-				 * PARA WS ENDOSO DE AUTOS
-				 */
-				int numEndRes = emisionAutosService.endosoCambioClienteAutos(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-				
-				if(numEndRes == 0){
-					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					logger.error("Error al ejecutar sp de endoso sigs");
-					
-					success = false;
-					return SUCCESS;
-				}else{
-					ejecutaCaratulaEndosoBsigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, Integer.toString(numEndRes));
-				}
-				
-				
-				
-				
-				mensaje="Se ha guardado el endoso "+nsuplogi;
-				
-			} else {
-				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
-			}
-			success=true;
-			
-		} catch(Exception ex) {
-			logger.error("Error al guardar endoso de contratante", ex);
-			success = false;
-			error = ex.getMessage();
-		}
-		logger.debug("\n"
-				+ "\n######                            ######"
-				+ "\n###### guardarEndosoCambioClienteAuto ######"
-				+ "\n#################################"
-				+ "\n#################################"
-				);
-		return SUCCESS;
-	}
-	/*/////////////////////////////*/
-	//////guardarEndosoCambioClienteAuto //////
-	/////////////////////////////////
 
 	
 	//////////////////////////
@@ -9619,7 +9493,7 @@ public class EndososAction extends PrincipalCoreAction
 		return true;
 	}
 
-	private boolean ejecutaCaratulaEndosoTGarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS){
+	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS){
 		
 		/**
 		 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
