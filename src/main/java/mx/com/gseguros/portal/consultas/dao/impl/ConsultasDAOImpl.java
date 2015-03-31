@@ -22,6 +22,7 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -1202,6 +1203,16 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
+    	} else {
+    		for (Map<String, String> map : lista) {
+    			for(int i=1;i<=99;i++) {
+    				String dsatribu = map.get("DSATRIBU"+StringUtils.leftPad(String.valueOf(i), 2, "0"));
+    				if(StringUtils.isNotBlank(dsatribu)) {
+    					map.put("CVE_"+dsatribu, map.get("OTVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
+    					map.put("DES_"+dsatribu, map.get("DSVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
+    				}
+    			}
+    		}
     	}
     	Utilerias.debugProcedure(logger,"PKG_CONSULTA.P_GET_DATOS_INCISOS",params,lista);
     	return lista;
@@ -1259,6 +1270,17 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"CDSUCEMI"
             		//MPOLIPER
             		,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
+            		//TATRISIT:
+            		,"DSATRIBU01" , "DSATRIBU02" , "DSATRIBU03" , "DSATRIBU04" , "DSATRIBU05" , "DSATRIBU06" , "DSATRIBU07" , "DSATRIBU08" , "DSATRIBU09" , "DSATRIBU10"
+            		,"DSATRIBU11" , "DSATRIBU12" , "DSATRIBU13" , "DSATRIBU14" , "DSATRIBU15" , "DSATRIBU16" , "DSATRIBU17" , "DSATRIBU18" , "DSATRIBU19" , "DSATRIBU20"
+            		,"DSATRIBU21" , "DSATRIBU22" , "DSATRIBU23" , "DSATRIBU24" , "DSATRIBU25" , "DSATRIBU26" , "DSATRIBU27" , "DSATRIBU28" , "DSATRIBU29" , "DSATRIBU30"
+            		,"DSATRIBU31" , "DSATRIBU32" , "DSATRIBU33" , "DSATRIBU34" , "DSATRIBU35" , "DSATRIBU36" , "DSATRIBU37" , "DSATRIBU38" , "DSATRIBU39" , "DSATRIBU40"
+            		,"DSATRIBU41" , "DSATRIBU42" , "DSATRIBU43" , "DSATRIBU44" , "DSATRIBU45" , "DSATRIBU46" , "DSATRIBU47" , "DSATRIBU48" , "DSATRIBU49" , "DSATRIBU50"
+            		,"DSATRIBU51" , "DSATRIBU52" , "DSATRIBU53" , "DSATRIBU54" , "DSATRIBU55" , "DSATRIBU56" , "DSATRIBU57" , "DSATRIBU58" , "DSATRIBU59" , "DSATRIBU60"
+            		,"DSATRIBU61" , "DSATRIBU62" , "DSATRIBU63" , "DSATRIBU64" , "DSATRIBU65" , "DSATRIBU66" , "DSATRIBU67" , "DSATRIBU68" , "DSATRIBU69" , "DSATRIBU70"
+            		,"DSATRIBU71" , "DSATRIBU72" , "DSATRIBU73" , "DSATRIBU74" , "DSATRIBU75" , "DSATRIBU76" , "DSATRIBU77" , "DSATRIBU78" , "DSATRIBU79" , "DSATRIBU80"
+            		,"DSATRIBU81" , "DSATRIBU82" , "DSATRIBU83" , "DSATRIBU84" , "DSATRIBU85" , "DSATRIBU86" , "DSATRIBU87" , "DSATRIBU88" , "DSATRIBU89" , "DSATRIBU90"
+            		,"DSATRIBU91" , "DSATRIBU92" , "DSATRIBU93" , "DSATRIBU94" , "DSATRIBU95" , "DSATRIBU96" , "DSATRIBU97" , "DSATRIBU98" , "DSATRIBU99"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
