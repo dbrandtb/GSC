@@ -193,7 +193,7 @@ Ext.onReady(function()
     Ext.define('_p34_modeloEndoso',
     {
         extend  : 'Ext.data.Model'
-        ,fields : [ 'CDTIPSUP' , 'DSTIPSUP' , 'LIGA' ]
+        ,fields : [ 'CDTIPSUP' , 'DSTIPSUP' , 'LIGA', 'TIPO_VALIDACION' ]
     });
     
     Ext.define('_p34_modeloGrupo',
@@ -1068,6 +1068,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             var smap1         = poliza.raw;
                             smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
+                            smap1['TIPO_VALIDACION'] = record.get('TIPO_VALIDACION');
                             smap1['pantallaOrigen'] = 'MARCO_ENDOSOS_GENERAL';
                             debug('smap1:',smap1);
                             
@@ -1103,6 +1104,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             var smap1         = poliza.raw;
                             smap1['tstamp']   = stamp;
                             smap1['cdtipsup'] = record.get('CDTIPSUP');
+                            smap1['TIPO_VALIDACION'] = record.get('TIPO_VALIDACION');
                             smap1['pantallaOrigen']   = 'MARCO_ENDOSOS_GENERAL';
                             debug('smap1:',smap1);
                             
