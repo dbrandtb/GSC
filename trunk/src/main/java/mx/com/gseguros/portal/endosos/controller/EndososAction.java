@@ -2120,7 +2120,8 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
 			Map<String,String> respEndCob = endososManager.iniciaEndoso(omap1);
 			
-			for(Map<String,String> coberturasEditadas : slist1) {
+			for(Map<String,String> coberturasEditadas : slist1)
+			{
 				
 				// ****** Insertamos las coberturas correspondientes ******
 				Map<String,String> paramsMovPoligar =new LinkedHashMap<String,String>(0);
@@ -2199,38 +2200,39 @@ public class EndososAction extends PrincipalCoreAction
 						(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 						(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
 						respEndCob.get("pv_nmsuplem_o"), tipoEndoso.getCdTipSup().toString());
-				// 
-				if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
-				{
-					for(Map<String,String> nuevaCob : slist1)
-					{
-						String cdatribu = nuevaCob.get("cdatribu");
-						String otvalor  = nuevaCob.get("otvalor");
-						if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor)) {
-							endososManager.actualizaTvalositSituacionCobertura(
-									(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-									(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-									respEndCob.get("pv_nmsuplem_o"),
-									coberturasEditadas.get("nmsituac"),
-									cdatribu, otvalor);
-						}
-					}
-				}
 			}
 			
 			// ****** Si es una alta ejecutamos valores por defecto ******
 			if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
 			{
-				Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
-				paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-				paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-				paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-				paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-				paramSigsvdef.put("pv_nmsituac_i" , "0");
-				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-				paramSigsvdef.put("pv_cdgarant_i" , "TODO");
-				paramSigsvdef.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
-				kernelManager.coberturas(paramSigsvdef);
+				for(Map<String,String> coberturasEditadas : slist1)
+				{
+					String cdatribu = coberturasEditadas.get("cdatribu");
+					String otvalor  = coberturasEditadas.get("otvalor");
+					if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor))
+					{
+						endososManager.actualizaTvalositSituacionCobertura(
+								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+								respEndCob.get("pv_nmsuplem_o"),
+								coberturasEditadas.get("nmsituac"),
+								cdatribu, otvalor);
+					}
+				}
+			
+				for(Map<String,String> coberturasEditadas : slist1)
+				{
+					Map<String,String> paramSigsvdef = new LinkedHashMap<String,String>(0);
+					paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+					paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+					paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+					paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+					paramSigsvdef.put("pv_nmsituac_i" , coberturasEditadas.get("nmsituac"));
+					paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+					paramSigsvdef.put("pv_cdgarant_i" , coberturasEditadas.get("garantia"));
+					paramSigsvdef.put("pv_cdtipsup_i" , tipoEndoso.getCdTipSup().toString());
+					kernelManager.coberturas(paramSigsvdef);
+				}
 			}
 			
 			// ****** Ejecutamos SIGSVDEF_END ******
@@ -2245,7 +2247,6 @@ public class EndososAction extends PrincipalCoreAction
 			paramSigsvdefEnd.put("pv_nmsuplem_i", respEndCob.get("pv_nmsuplem_o"));
 			paramSigsvdefEnd.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
 			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
-			
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si")) {
 						
