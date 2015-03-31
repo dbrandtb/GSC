@@ -70,6 +70,7 @@ public interface EndososAutoManager
 			,String cdsisrol
 			,String cdelemen
 			,UserVO usuarioSesion
+			,List<Map<String,String>> incisos
 			)throws Exception;
 	
 	/**

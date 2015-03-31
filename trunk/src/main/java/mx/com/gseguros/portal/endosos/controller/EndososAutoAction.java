@@ -283,12 +283,22 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				 "\n#########################################"
 				,"\n###### confirmarEndosoTvalositAuto ######"
-				,"\n###### smap1=",smap1
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
 				));
 		
 		try
 		{
-			Utils.validate(smap1,"No se recibieron datos");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			Utils.validate(smap1  , "No se recibieron datos");
+			Utils.validate(slist1 , "No se recibieron datos de inciso");
 			
 			String cdtipsup = smap1.get("cdtipsup");
 			String tstamp   = smap1.get("tstamp");
@@ -304,14 +314,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(estado    , "No se recibio el estado");
 			Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
 			
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-			
 			endososAutoManager.confirmarEndosoTvalositAuto(
 					cdtipsup
 					,tstamp
@@ -323,6 +325,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdsisrol
 					,cdelemen
 					,usuarioSesion
+					,slist1
 					);
 			
 			success = true;
