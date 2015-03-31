@@ -505,10 +505,10 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmautant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fesolici_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fevencim_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feingres_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fesolici_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fevencim_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feingres_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -529,7 +529,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_dstratam_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsobserv_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsnotas_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fesistem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fesistem_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nombmedi_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_especmed_i", OracleTypes.VARCHAR));
@@ -984,7 +984,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.DATE));
 				declareParameter(new SqlParameter("pv_cdtipser_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
@@ -996,7 +996,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_tasacamb_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ptimporta_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_dctonuex_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.DATE));
 				declareParameter(new SqlParameter("pv_diasdedu_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -1024,7 +1024,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -1097,7 +1097,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdcapita_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_femovimi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_femovimi_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptpagos_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptrecobr_i", OracleTypes.VARCHAR));
@@ -1660,7 +1660,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
 	
 	@Override
-	public void actualizarAutorizacionTworksin(Map<String, String> params) throws Exception
+	public void actualizarAutorizacionTworksin(Map<String, Object> params) throws Exception
 	{
 		ejecutaSP(new ActualizarAutorizacionTworksin(this.getDataSource()), params);
 	}
@@ -1675,7 +1675,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feocurrencia_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurrencia_i", OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -3647,7 +3647,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura)throws Exception {
+			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura)throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_cdunieco_i", cdunieco);
@@ -3678,7 +3678,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fechaOcurrencia_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fechaOcurrencia_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -3872,7 +3872,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_CIRCULO_HOSPITALARIO");
 			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.DATE));
     		String[] cols = new String[]{
     				"HOSPITALPLUS"
     				,"PORCINCREMENTO"
@@ -3902,7 +3902,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
@@ -4016,9 +4016,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdsucadm_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucdoc_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtiptra_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ferecepc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ferecepc_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_festatus_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_festatus_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor01_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor02_i", OracleTypes.VARCHAR));

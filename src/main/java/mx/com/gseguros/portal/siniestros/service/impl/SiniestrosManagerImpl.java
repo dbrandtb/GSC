@@ -1,6 +1,8 @@
 package mx.com.gseguros.portal.siniestros.service.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +37,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
-	
+	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Override
 	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
@@ -351,11 +353,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			}else{
 				accion = Constantes.UPDATE_MODE;
 			}
+			
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
 			paramsFacMesaCtrl.put("pv_accion_i", accion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			paramsFacMesaCtrl.put("pv_ffactura_i",renderFechas.parse(fefactura));
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
@@ -367,7 +370,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
 			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
 			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
-			paramsFacMesaCtrl.put("pv_feegreso_i",feegreso);
+			paramsFacMesaCtrl.put("pv_feegreso_i",renderFechas.parse(feegreso));
 			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
@@ -455,7 +458,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	@Override
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-												  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception {
+												  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
@@ -716,18 +719,19 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,String feocurrencia) throws Exception
 	{
-		Map<String,String> params = new HashMap<String,String>();
+		//Map<String,String> params = new HashMap<String,String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i",ntramite);
 		params.put("pv_nmpoliza_i",nmpoliza);
 		params.put("pv_cdperson_i",cdperson);
 		params.put("pv_nmautser_i",nmautser);
 		params.put("pv_nfactura_i",nfactura);
-		params.put("pv_feocurrencia_i",feocurrencia);
+		params.put("pv_feocurrencia_i",renderFechas.parse(feocurrencia));
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
 	}
-
+	
 	@Override
 	public List<PolizaVigenteVO> getConsultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception {
 		try {
@@ -1479,7 +1483,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, String feautori) throws Exception {
+	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, Date feautori) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_cdpresta_i", cdpresta);
 		params.put("pv_cdramo_i",   cdramo);

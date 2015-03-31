@@ -86,7 +86,7 @@ public interface SiniestrosDAO {
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception;
 	
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception;
+			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
 	
 	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
@@ -164,7 +164,7 @@ public interface SiniestrosDAO {
 	/**
 	 * PKG_PRESINIESTRO.P_UPB_NMAUTSER_TWORKSIN
 	 */
-	public void actualizarAutorizacionTworksin(Map<String,String>params) throws Exception;
+	public void actualizarAutorizacionTworksin(Map<String, Object>params) throws Exception;
 
 		public void actualizaMsinies(
 			String cdunieco,

@@ -302,7 +302,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	 * @return Lista AutorizaServiciosVO con la informaci�n de los asegurados
 	 */
 	public String guardaAutorizacionServicio(){
-			logger.debug(" **** Entrando a guardado de Autorizaci�n de Servicio ****");
+			logger.debug(" **** Entrando al metodo de guardado de Autorizacion de servicio ****");
 			logger.debug("VALORES DE ENTRADA PARAMS"+params);
 			logger.debug("VALORES DE ENTRADA datostabla"+datosTablas);
 			try {
@@ -310,41 +310,42 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			        UserVO usuario=(UserVO) session.get("USUARIO");
 			        
 					HashMap<String, Object> paramsR = new HashMap<String, Object>();
-					paramsR.put("pv_nmautser_i",params.get("nmautser"));
-					paramsR.put("pv_nmautant_i",params.get("nmautant"));
-					paramsR.put("pv_cdperson_i",params.get("cdperson"));
-					paramsR.put("pv_fesolici_i",params.get("fesolici"));
-					paramsR.put("pv_feautori_i",params.get("feautori"));
-					paramsR.put("pv_fevencim_i",params.get("fevencim"));
-					paramsR.put("pv_feingres_i",params.get("feingres"));
-					paramsR.put("pv_cdunieco_i",params.get("cdunieco"));
-					paramsR.put("pv_estado_i",params.get("estado"));
-					paramsR.put("pv_cdramo_i",params.get("cdramo"));
-					paramsR.put("pv_nmpoliza_i",params.get("nmpoliza"));
-					paramsR.put("pv_nmsituac_i",params.get("nmsituac"));
-					paramsR.put("pv_cduniecs_i",params.get("cduniecs"));
-					paramsR.put("pv_cdgarant_i",params.get("cdgarant"));
-					paramsR.put("pv_cdconval_i",params.get("cdconval"));
-					paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
-					paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
-					paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
-					paramsR.put("pv_copagofi_i",params.get("copagoTotal"));   // Copago Final  copagoTotal
-					paramsR.put("pv_porpenal_i",params.get("idPenalCircHospitalario")); // penalizacion por circulo hospitalario
-					paramsR.put("pv_cdicd_i",params.get("cdicd"));
-					paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
-					paramsR.put("pv_aaapertu_i",params.get("aaapertu"));
-					paramsR.put("pv_status_i",params.get("status"));
-					paramsR.put("pv_dstratam_i",params.get("dstratam"));
-					paramsR.put("pv_dsobserv_i",params.get("dsobserv"));
-					paramsR.put("pv_dsnotas_i",params.get("dsnotas"));
-					paramsR.put("pv_fesistem_i",params.get("fesistem")); 
-					paramsR.put("pv_cduser_i",usuario.getUser());
-					paramsR.put("pv_nombmedi_i",params.get("medicoPExt"));
-					paramsR.put("pv_especmed_i",params.get("especialidadPExt"));
-					paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
-					//ELIMINACION DE LOS REGISTROS EN LA TABLA
+						paramsR.put("pv_nmautser_i",params.get("nmautser"));
+						paramsR.put("pv_nmautant_i",params.get("nmautant"));
+						paramsR.put("pv_cdperson_i",params.get("cdperson"));
+						paramsR.put("pv_fesolici_i",renderFechas.parse(params.get("fesolici")));
+						paramsR.put("pv_feautori_i",renderFechas.parse(params.get("feautori")));
+						paramsR.put("pv_fevencim_i",renderFechas.parse(params.get("fevencim")));
+						paramsR.put("pv_feingres_i",renderFechas.parse(params.get("feingres")));
+						paramsR.put("pv_cdunieco_i",params.get("cdunieco"));
+						paramsR.put("pv_estado_i",params.get("estado"));
+						paramsR.put("pv_cdramo_i",params.get("cdramo"));
+						paramsR.put("pv_nmpoliza_i",params.get("nmpoliza"));
+						paramsR.put("pv_nmsituac_i",params.get("nmsituac"));
+						paramsR.put("pv_cduniecs_i",params.get("cduniecs"));
+						paramsR.put("pv_cdgarant_i",params.get("cdgarant"));
+						paramsR.put("pv_cdconval_i",params.get("cdconval"));
+						paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
+						paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
+						paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
+						paramsR.put("pv_copagofi_i",params.get("copagoTotal"));   // Copago Final  copagoTotal
+						paramsR.put("pv_porpenal_i",params.get("idPenalCircHospitalario")); // penalizacion por circulo hospitalario
+						paramsR.put("pv_cdicd_i",params.get("cdicd"));
+						paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
+						paramsR.put("pv_aaapertu_i",params.get("aaapertu"));
+						paramsR.put("pv_status_i",params.get("status"));
+						paramsR.put("pv_dstratam_i",params.get("dstratam"));
+						paramsR.put("pv_dsobserv_i",params.get("dsobserv"));
+						paramsR.put("pv_dsnotas_i",params.get("dsnotas"));
+						paramsR.put("pv_fesistem_i",renderFechas.parse(params.get("fesistem"))); 
+						paramsR.put("pv_cduser_i",usuario.getUser());
+						paramsR.put("pv_nombmedi_i",params.get("medicoPExt"));
+						paramsR.put("pv_especmed_i",params.get("especialidadPExt"));
+						paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
+						
+					//1.- Eliminacion de la tabla TDETAUTS ---> PKG_PRESINIESTRO.P_BORRA_TDETAUTS
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
-					
+					//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2
 					List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
 					if(lista!=null && !lista.isEmpty())
 					{
@@ -361,13 +362,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
 							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
 							paramsTDeTauts.put("pv_nombprov_i",datosTablas.get(i).get("nombreMedico"));
-							//GUARDADO DE LOS DATOS PARA LAS TABLAS
+							//3.- Se guarda la informacion en PKG_PRESINIESTRO.P_GUARDA_TDETAUTS
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				   		}
 						
 						if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3"))
 						{
-							/* VALORES A ENVIAR A MESA DE CONTROL */
+							//Cambios de TMESACONTROL
 							HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
 							paramsMCAut.put("pv_cdunieco_i",params.get("cdunieco"));
 							paramsMCAut.put("pv_cdramo_i",params.get("cdramo"));
@@ -383,10 +384,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramsMCAut.put("pv_nombre_i",null);
 							paramsMCAut.put("pv_festatus_i",null);
 							
-							if(params.get("status").trim().equalsIgnoreCase("2")){
-								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());//  con
-								//generarAutoriServicio();
-								
+							if(params.get("status").trim().equalsIgnoreCase(EstatusTramite.PENDIENTE.getCodigo())){
+								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
 							}else{
 								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol()))
 								{
@@ -409,6 +408,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramsMCAut.put("pv_otvalor16",usuario.getUser());
 							paramsMCAut.put("pv_otvalor17",usuario.getUser());
 							paramsMCAut.put("pv_otvalor18",usuario.getUser());
+							//4.- Se realiza la modificacion  de TMESACOMTROL PKG_SATELITES.P_MOV_MESACONTROL
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
 							
 							if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -418,9 +418,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								paramsO.put("pv_cdramo_i" , params.get("cdramo"));
 								paramsO.put("pv_estado_i" , params.get("estado"));
 								paramsO.put("pv_nmpoliza_i" , params.get("nmpoliza"));
-								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());//params.get("nmautant"));
+								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());
 								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
 								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
+								//--> Genera Autorizacion de Servicio
 								generarAutoriServicio(paramsO);
 							}
 							
@@ -476,7 +477,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						}
 					}
 			}catch( Exception e){
-				logger.error("Error al guardar la autorizaci�n de servicio ",e);
+				logger.error("Error al guardar la autorizaci&oacute;n de servicio ",e);
 	        return SUCCESS;
 	    }
 	    
@@ -573,9 +574,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					modMesaControl.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
 					modMesaControl.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
 					modMesaControl.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-					modMesaControl.put("pv_ferecepc_i",params.get("dtFechaRecepcion"));
+					modMesaControl.put("pv_ferecepc_i",renderFechas.parse(params.get("dtFechaRecepcion")));
 					modMesaControl.put("pv_nombre_i",params.get("idnombreAsegurado"));
-					modMesaControl.put("pv_festatus_i",params.get("dtFechaRecepcion"));
+					modMesaControl.put("pv_festatus_i",renderFechas.parse(params.get("dtFechaRecepcion")));
 					modMesaControl.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
 					modMesaControl.put("pv_otvalor02_i",params.get("cmbTipoPago"));
 					modMesaControl.put("pv_otvalor03_i",params.get("ImporteIndFactura"));
@@ -952,8 +953,11 @@ public String generarSiniestroSinAutorizacion()
 	try
 	{
 		//CREA UN MSINIEST A PARTIR DE TWORKSIN
+		String fechaOcurrencia = params.get("dateOcurrencia");
+		Date   dFeOcurrencia   = renderFechas.parse(fechaOcurrencia);
+		
 		siniestrosManager.getAltaSiniestroSinAutorizacion(params.get("ntramite"),params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
-														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"), params.get("dateOcurrencia"), params.get("nfactura"));
+														  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"),dFeOcurrencia, params.get("nfactura"));
 		mensaje = "Se ha generado el siniestro";
 		success=true;
 	}
@@ -985,7 +989,7 @@ public String generarSiniestroSinAutorizacion()
 		paramMsinival.put("pv_cdconval_i",params.get("cdconval"));
 		paramMsinival.put("pv_cdcapita_i",params.get("cdcapita"));
 		paramMsinival.put("pv_nmordina_i",params.get("nmordina"));
-		paramMsinival.put("pv_femovimi_i",params.get("femovimi"));
+		paramMsinival.put("pv_femovimi_i",renderFechas.parse(params.get("femovimi")));
 		paramMsinival.put("pv_cdmoneda_i",params.get("cdmoneda"));
 		paramMsinival.put("pv_ptpagos_i",params.get("ptpagos"));
 		paramMsinival.put("pv_ptrecobr_i",params.get("ptrecobr"));
@@ -1384,7 +1388,7 @@ public String generarSiniestroSinAutorizacion()
            kernelManagerSustituto.guardarArchivo(paramsO);
 		   
 	   }catch( Exception e){
-		   logger.error("Error al generar la autorizaci�n de Servicio ",e);
+		   logger.error("Error al generar la autorizaci&oacute de s",e);
 		   success =  false;
 		   return SUCCESS;
 	   }
@@ -3786,7 +3790,7 @@ public String consultaListaPlazas(){
             		}    				
     			}else{ // DIFERENTE DE SALUD VITAL
     				try {
-						datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(proveedor,ramo,fechaOcurrencia);
+    					datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(proveedor,ramo,renderFechas.parse(fechaOcurrencia));
 						logger.debug("VALORES -->"+datosInformacionAdicional.size());
 						if(datosInformacionAdicional.size() > 0){
 							logger.debug(datosInformacionAdicional.get(0).get("MULTINCREMENTO"));
@@ -5562,7 +5566,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
             paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
             paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("idCdtipsit"));
             paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
-            paramsTworkSinPagRem.put("pv_feocurre_i",params.get("dtFechaOcurrencia"));
+            paramsTworkSinPagRem.put("pv_feocurre_i",renderFechas.parse(params.get("dtFechaOcurrencia")));
             paramsTworkSinPagRem.put("pv_nfactura_i",null);
             paramsTworkSinPagRem.put("pv_nmautser_i",null);
             siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
@@ -5914,7 +5918,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                 paramsTworkSin.put("pv_nmsituac_i",	datosTablas.get(i).get("modNmsituac"));
                 paramsTworkSin.put("pv_cdtipsit_i",	datosTablas.get(i).get("modCdtipsit"));
                 paramsTworkSin.put("pv_cdperson_i",	datosTablas.get(i).get("modCdperson"));
-                paramsTworkSin.put("pv_feocurre_i",	datosTablas.get(i).get("modFechaOcurrencia"));
+                paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia")));
                 paramsTworkSin.put("pv_nmautser_i",	null);
                 paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
                 siniestrosManager.guardaListaTworkSin(paramsTworkSin);
@@ -6008,7 +6012,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                 paramsTworkSin.put("pv_nmsituac_i",params.get("nmsituac"));
                 paramsTworkSin.put("pv_cdtipsit_i",params.get("cdtipsit"));
                 paramsTworkSin.put("pv_cdperson_i",params.get("cdperson"));
-                paramsTworkSin.put("pv_feocurre_i",feOcurrencia);
+                paramsTworkSin.put("pv_feocurre_i",renderFechas.parse(feOcurrencia));
                 
 				siniestrosManager.eliminarAsegurado(paramsTworkSin);
     		mensaje = "Asegurado eliminado";
@@ -7559,7 +7563,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
 			logger.debug("feAutorizacion -->"+feAutorizacion);
 			
-			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(params.get("cdpresta"),params.get("cdramo"),feAutorizacion);
+			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(params.get("cdpresta"),params.get("cdramo"),renderFechas.parse(feAutorizacion));
 			logger.debug("VALOR DE RESPUESTA -->");
 			logger.debug(datosInformacionAdicional);
 		}catch( Exception e){
