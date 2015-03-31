@@ -155,7 +155,7 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception;
 
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  									  String nmsuplem,String nmsituac, String cdtipsit, String fechaOcurrencia,String nfactura) throws Exception;
+			  									  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
 	
 	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
 
@@ -515,7 +515,7 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura, String cdramo, String cdtipsit) throws Exception;
 	
-	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, String feautori) throws Exception;
+	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, Date feautori) throws Exception;
 
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 
