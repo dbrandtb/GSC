@@ -187,55 +187,7 @@ Ext.onReady(function()
     Ext.define('_p34_modeloInciso',
     {
         extend  : 'Ext.data.Model'
-        ,fields :
-        [
-            //MPOLISIT
-            "CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
-            ,"NMSITUAC"   , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
-            ,"SWREDUCI"   , "CDAGRUPA" , "CDESTADO"   , "CDGRUPO"
-            ,"NMSITUAEXT" , "NMSITAUX" , "NMSBSITEXT" , "CDPLAN"
-            ,"CDASEGUR"   , "DSGRUPO"
-            ,{ name : 'FEFECSIT' , type : 'date' , dateFormat : 'd/m/Y' }
-            ,{ name : 'FECHAREF' , type : 'date' , dateFormat : 'd/m/Y' }
-            //TVALOSIT
-            ,'NMSUPLEM_TVAL'
-            ,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05" , "OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
-            ,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15" , "OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
-            ,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25" , "OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
-            ,"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35" , "OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
-            ,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45" , "OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
-            ,"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55" , "OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60"
-            ,"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65" , "OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR70"
-            ,"OTVALOR71" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75" , "OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR80"
-            ,"OTVALOR81" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85" , "OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR90"
-            ,"OTVALOR91" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95" , "OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
-            ,"DSVALOR01" , "DSVALOR02" , "DSVALOR03" , "DSVALOR04" , "DSVALOR05" , "DSVALOR06" , "DSVALOR07" , "DSVALOR08" , "DSVALOR09" , "DSVALOR10"
-            ,"DSVALOR11" , "DSVALOR12" , "DSVALOR13" , "DSVALOR14" , "DSVALOR15" , "DSVALOR16" , "DSVALOR17" , "DSVALOR18" , "DSVALOR19" , "DSVALOR20"
-            ,"DSVALOR21" , "DSVALOR22" , "DSVALOR23" , "DSVALOR24" , "DSVALOR25" , "DSVALOR26" , "DSVALOR27" , "DSVALOR28" , "DSVALOR29" , "DSVALOR30"
-            ,"DSVALOR31" , "DSVALOR32" , "DSVALOR33" , "DSVALOR34" , "DSVALOR35" , "DSVALOR36" , "DSVALOR37" , "DSVALOR38" , "DSVALOR39" , "DSVALOR40"
-            ,"DSVALOR41" , "DSVALOR42" , "DSVALOR43" , "DSVALOR44" , "DSVALOR45" , "DSVALOR46" , "DSVALOR47" , "DSVALOR48" , "DSVALOR49" , "DSVALOR50"
-            ,"DSVALOR51" , "DSVALOR52" , "DSVALOR53" , "DSVALOR54" , "DSVALOR55" , "DSVALOR56" , "DSVALOR57" , "DSVALOR58" , "DSVALOR59" , "DSVALOR60"
-            ,"DSVALOR61" , "DSVALOR62" , "DSVALOR63" , "DSVALOR64" , "DSVALOR65" , "DSVALOR66" , "DSVALOR67" , "DSVALOR68" , "DSVALOR69" , "DSVALOR70"
-            ,"DSVALOR71" , "DSVALOR72" , "DSVALOR73" , "DSVALOR74" , "DSVALOR75" , "DSVALOR76" , "DSVALOR77" , "DSVALOR78" , "DSVALOR79" , "DSVALOR80"
-            ,"DSVALOR81" , "DSVALOR82" , "DSVALOR83" , "DSVALOR84" , "DSVALOR85" , "DSVALOR86" , "DSVALOR87" , "DSVALOR88" , "DSVALOR89" , "DSVALOR90"
-            ,"DSVALOR91" , "DSVALOR92" , "DSVALOR93" , "DSVALOR94" , "DSVALOR95" , "DSVALOR96" , "DSVALOR97" , "DSVALOR98" , "DSVALOR99"
-            //MPERSONA
-            ,"CDPERSON"    , "CDTIPIDE"  , "CDIDEPER"   , "DSNOMBRE"
-            ,"CDTIPPER"    , "OTFISJUR"  , "OTSEXO"     , "CDRFC"
-            ,"FOTO"        , "DSEMAIL"   , "DSNOMBRE1"  , "DSAPELLIDO"
-            ,"DSAPELLIDO1" , "CDNACION"  , "DSCOMNOM"   , "DSRAZSOC"
-            ,"DSNOMUSU"    , "CDESTCIV"  , "CDGRUECO"   , "CDSTIPPE"
-            ,"NMNUMNOM"    , "CURP"      , "CANALING"   , "CONDUCTO"
-            ,"PTCUMUPR"    , "STATUSPER" , "RESIDENCIA" , "NONGRATA"
-            ,"CDIDEEXT"    , "CDSUCEMI"
-            ,{ name : 'FENACIMI'  , type : 'date' , dateFormat : 'd/m/Y' }
-            ,{ name : 'FEINGRESO' , type : 'date' , dateFormat : 'd/m/Y' }
-            ,{ name : 'FEACTUAL'  , type : 'date' , dateFormat : 'd/m/Y' }
-            //MPOLIPER
-            ,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
-            //CUSTOM
-            ,'ATRIBUTOS','NOMBRECOMPLETO'
-        ]
+        ,fields : []
     });
     
     Ext.define('_p34_modeloEndoso',
@@ -754,121 +706,198 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
     debug('recordPoliza:',recordPoliza.data);
     
     padre.setLoading(true);
-    _p34_storeIncisos.load(
+    Ext.Ajax.request(
     {
-        params :
+        url      : _p34_urlRecuperacionSimple
+        ,params  :
         {
-            'smap1.cdunieco'  : recordPoliza.get('CDUNIECO')
-            ,'smap1.cdramo'   : recordPoliza.get('CDRAMO')
-            ,'smap1.estado'   : recordPoliza.get('ESTADO')
-            ,'smap1.nmpoliza' : recordPoliza.get('NMPOLIZA')
-            ,'smap1.cdgrupo'  : recordNivel.get('CDGRUPO')
-            ,'smap1.nmfamili' : recordNivel.get('NMSITAUX')
-            ,'smap1.nivel'    : nivel
+            'smap1.cdramo'         : recordPoliza.get('CDRAMO')
+            ,'smap1.procedimiento' : 'RECUPERAR_DSATRIBUS_TATRISIT'
         }
-        ,callback : function(records,operation,success)
+        ,success : function(response)
         {
-            padre.setLoading(false);
-            debug('### incisos load',records,operation,success);
-            if(success)
+            var json=Ext.decode(response.responseText);
+            debug('### leer descripcion atributos:',json);
+            if(json.exito)
             {
-                for(var i in records)
+                var arrayAtributos = [
+                    //MPOLISIT
+                    "CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
+                    ,"NMSITUAC"   , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
+                    ,"SWREDUCI"   , "CDAGRUPA" , "CDESTADO"   , "CDGRUPO"
+                    ,"NMSITUAEXT" , "NMSITAUX" , "NMSBSITEXT" , "CDPLAN"
+                    ,"CDASEGUR"   , "DSGRUPO"
+                    ,{ name : 'FEFECSIT' , type : 'date' , dateFormat : 'd/m/Y' }
+                    ,{ name : 'FECHAREF' , type : 'date' , dateFormat : 'd/m/Y' }
+                    //TVALOSIT
+                    ,'NMSUPLEM_TVAL'
+                    ,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05" , "OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
+                    ,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15" , "OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
+                    ,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25" , "OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
+                    ,"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35" , "OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
+                    ,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45" , "OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
+                    ,"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55" , "OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60"
+                    ,"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65" , "OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR70"
+                    ,"OTVALOR71" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75" , "OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR80"
+                    ,"OTVALOR81" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85" , "OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR90"
+                    ,"OTVALOR91" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95" , "OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
+                    ,"DSVALOR01" , "DSVALOR02" , "DSVALOR03" , "DSVALOR04" , "DSVALOR05" , "DSVALOR06" , "DSVALOR07" , "DSVALOR08" , "DSVALOR09" , "DSVALOR10"
+                    ,"DSVALOR11" , "DSVALOR12" , "DSVALOR13" , "DSVALOR14" , "DSVALOR15" , "DSVALOR16" , "DSVALOR17" , "DSVALOR18" , "DSVALOR19" , "DSVALOR20"
+                    ,"DSVALOR21" , "DSVALOR22" , "DSVALOR23" , "DSVALOR24" , "DSVALOR25" , "DSVALOR26" , "DSVALOR27" , "DSVALOR28" , "DSVALOR29" , "DSVALOR30"
+                    ,"DSVALOR31" , "DSVALOR32" , "DSVALOR33" , "DSVALOR34" , "DSVALOR35" , "DSVALOR36" , "DSVALOR37" , "DSVALOR38" , "DSVALOR39" , "DSVALOR40"
+                    ,"DSVALOR41" , "DSVALOR42" , "DSVALOR43" , "DSVALOR44" , "DSVALOR45" , "DSVALOR46" , "DSVALOR47" , "DSVALOR48" , "DSVALOR49" , "DSVALOR50"
+                    ,"DSVALOR51" , "DSVALOR52" , "DSVALOR53" , "DSVALOR54" , "DSVALOR55" , "DSVALOR56" , "DSVALOR57" , "DSVALOR58" , "DSVALOR59" , "DSVALOR60"
+                    ,"DSVALOR61" , "DSVALOR62" , "DSVALOR63" , "DSVALOR64" , "DSVALOR65" , "DSVALOR66" , "DSVALOR67" , "DSVALOR68" , "DSVALOR69" , "DSVALOR70"
+                    ,"DSVALOR71" , "DSVALOR72" , "DSVALOR73" , "DSVALOR74" , "DSVALOR75" , "DSVALOR76" , "DSVALOR77" , "DSVALOR78" , "DSVALOR79" , "DSVALOR80"
+                    ,"DSVALOR81" , "DSVALOR82" , "DSVALOR83" , "DSVALOR84" , "DSVALOR85" , "DSVALOR86" , "DSVALOR87" , "DSVALOR88" , "DSVALOR89" , "DSVALOR90"
+                    ,"DSVALOR91" , "DSVALOR92" , "DSVALOR93" , "DSVALOR94" , "DSVALOR95" , "DSVALOR96" , "DSVALOR97" , "DSVALOR98" , "DSVALOR99"
+                    //MPERSONA
+                    ,"CDPERSON"    , "CDTIPIDE"  , "CDIDEPER"   , "DSNOMBRE"
+                    ,"CDTIPPER"    , "OTFISJUR"  , "OTSEXO"     , "CDRFC"
+                    ,"FOTO"        , "DSEMAIL"   , "DSNOMBRE1"  , "DSAPELLIDO"
+                    ,"DSAPELLIDO1" , "CDNACION"  , "DSCOMNOM"   , "DSRAZSOC"
+                    ,"DSNOMUSU"    , "CDESTCIV"  , "CDGRUECO"   , "CDSTIPPE"
+                    ,"NMNUMNOM"    , "CURP"      , "CANALING"   , "CONDUCTO"
+                    ,"PTCUMUPR"    , "STATUSPER" , "RESIDENCIA" , "NONGRATA"
+                    ,"CDIDEEXT"    , "CDSUCEMI"
+                    ,{ name : 'FENACIMI'  , type : 'date' , dateFormat : 'd/m/Y' }
+                    ,{ name : 'FEINGRESO' , type : 'date' , dateFormat : 'd/m/Y' }
+                    ,{ name : 'FEACTUAL'  , type : 'date' , dateFormat : 'd/m/Y' }
+                    //MPOLIPER
+                    ,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
+                    //CUSTOM
+                    ,'ATRIBUTOS','NOMBRECOMPLETO'
+                ];
+                var splited = json.smap1.listaNombres.split('@#@');
+                for(var i in splited)
                 {
-                    var record    = records[i];
-                    var atributos = record.get('CDTIPSIT');
-                    for(var i=1;i<=99;i++)
-                    {
-                        var valor=record.get('OTVALOR'+(('x00'+i).slice(-2)));
-                        if(valor+'x'=='nullx')
-                        {
-                            valor='';
-                        }
-                        var display=record.get('DSVALOR'+(('x00'+i).slice(-2)));
-                        if(display+'x'=='nullx')
-                        {
-                            display='';
-                        }
-                        atributos=atributos+'|'+valor+'~'+display;
-                    }
-                    record.set('ATRIBUTOS',atributos);
-                    
-                    record.set('NOMBRECOMPLETO',
-                        (Ext.isEmpty(record.get('DSNOMBRE'))   ?'':record.get('DSNOMBRE'))   + ' ' +
-                        (Ext.isEmpty(record.get('DSNOMBRE1'))  ?'':record.get('DSNOMBRE1'))  + ' ' +
-                        (Ext.isEmpty(record.get('DSAPELLIDO')) ?'':record.get('DSAPELLIDO')) + ' ' +
-                        (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
-                    );
-                    
-                    debug('record customizado:',record.data);
+                    arrayAtributos.push(splited[i]);
                 }
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                debug('atributos para el modelo:',arrayAtributos);
+                Ext.ModelManager.getModel('_p34_modeloInciso').setFields(arrayAtributos);
+                debug(new _p34_modeloInciso().data);
+                _p34_storeIncisos.load(
                 {
-                    itemId       : '_p34_windowIncisos'
-                    ,title       : 'Incisos de la p&oacute;liza - Sucursal '
-                                   +recordPoliza.get('CDUNIECO')+' - producto '
-                                   +recordPoliza.get('CDRAMO')  +' - p&oacuteliza '
-                                   +recordPoliza.get('NMPOLIZA')
-                                   +(nivel=='GRUPO'  ?(' - grupo ' +recordNivel.get('CDGRUPO' )):'')
-                                   +(nivel=='FAMILIA'?(' - familia'+recordNivel.get('NMSITAUX')):'')
-                    ,_p34_window : 'si'
-                    ,closeAction : 'destroy'
-                    ,modal       : true
-                    ,width       : 950
-                    ,maxHheight  : 400
-                    ,autoScroll  : true
-                    ,items       :
-                    [
-                        Ext.create('Ext.grid.Panel',
-                        {
-                            itemId    : '_p34_gridIncisos'
-                            ,columns  : cols
-                            ,width    : 910
-                            ,selModel :
-                            {
-                                selType    : 'checkboxmodel'
-                                ,mode      : 'SIMPLE'
-                                ,listeners :
-                                {
-                                    selectionchange : function(me,selected)
-                                    {
-                                        _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
-                                    }
-                                }
-                            }
-                            ,store   : _p34_storeIncisos
-                            ,tbar    :
-                            [
-                                {
-                                    text      : 'Endosos...'
-                                    ,itemId   : '_p34_botonEndososIncisos'
-                                    ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
-                                    ,disabled : true
-                                    ,handler  : function(){ _p34_botonEndososIncisosClic(); }
-                                }
-                                ,'->'
-                                ,{
-                                    xtype      : 'textfield'
-                                    ,listeners :
-                                    {
-                                        afterrender : function()
-                                        {
-                                            _p34_filtrarStore('',_p34_storeIncisos);
-                                        }
-                                        ,change : function(me,val)
-                                        {
-                                            _p34_filtrarStore(val,_p34_storeIncisos);
-                                        }
-                                    }
-                                }
-                            ]
-                        })
-                    ]
-                }).show());
-            }
-            else
-            {
-                mensajeError(operation.getError());
-            }
+			        params :
+			        {
+			            'smap1.cdunieco'  : recordPoliza.get('CDUNIECO')
+			            ,'smap1.cdramo'   : recordPoliza.get('CDRAMO')
+			            ,'smap1.estado'   : recordPoliza.get('ESTADO')
+			            ,'smap1.nmpoliza' : recordPoliza.get('NMPOLIZA')
+			            ,'smap1.cdgrupo'  : recordNivel.get('CDGRUPO')
+			            ,'smap1.nmfamili' : recordNivel.get('NMSITAUX')
+			            ,'smap1.nivel'    : nivel
+			        }
+			        ,callback : function(records,operation,success)
+			        {
+			            padre.setLoading(false);
+			            debug('### incisos load',records,operation,success);
+			            if(success)
+			            {
+			                for(var i in records)
+			                {
+			                    var record    = records[i];
+			                    var atributos = record.get('CDTIPSIT');
+			                    for(var i=1;i<=99;i++)
+			                    {
+			                        var valor=record.get('OTVALOR'+(('x00'+i).slice(-2)));
+			                        if(valor+'x'=='nullx')
+			                        {
+			                            valor='';
+			                        }
+			                        var display=record.get('DSVALOR'+(('x00'+i).slice(-2)));
+			                        if(display+'x'=='nullx')
+			                        {
+			                            display='';
+			                        }
+			                        atributos=atributos+'|'+valor+'~'+display;
+			                    }
+			                    record.set('ATRIBUTOS',atributos);
+			                    
+			                    record.set('NOMBRECOMPLETO',
+			                        (Ext.isEmpty(record.get('DSNOMBRE'))   ?'':record.get('DSNOMBRE'))   + ' ' +
+			                        (Ext.isEmpty(record.get('DSNOMBRE1'))  ?'':record.get('DSNOMBRE1'))  + ' ' +
+			                        (Ext.isEmpty(record.get('DSAPELLIDO')) ?'':record.get('DSAPELLIDO')) + ' ' +
+			                        (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
+			                    );
+			                    
+			                    debug('record customizado:',record.data);
+			                }
+			                centrarVentanaInterna(Ext.create('Ext.window.Window',
+			                {
+			                    itemId       : '_p34_windowIncisos'
+			                    ,title       : 'Incisos de la p&oacute;liza - Sucursal '
+			                                   +recordPoliza.get('CDUNIECO')+' - producto '
+			                                   +recordPoliza.get('CDRAMO')  +' - p&oacuteliza '
+			                                   +recordPoliza.get('NMPOLIZA')
+			                                   +(nivel=='GRUPO'  ?(' - grupo ' +recordNivel.get('CDGRUPO' )):'')
+			                                   +(nivel=='FAMILIA'?(' - familia'+recordNivel.get('NMSITAUX')):'')
+			                    ,_p34_window : 'si'
+			                    ,closeAction : 'destroy'
+			                    ,modal       : true
+			                    ,width       : 950
+			                    ,maxHheight  : 400
+			                    ,autoScroll  : true
+			                    ,items       :
+			                    [
+			                        Ext.create('Ext.grid.Panel',
+			                        {
+			                            itemId    : '_p34_gridIncisos'
+			                            ,columns  : cols
+			                            ,width    : 910
+			                            ,selModel :
+			                            {
+			                                selType    : 'checkboxmodel'
+			                                ,mode      : 'SIMPLE'
+			                                ,listeners :
+			                                {
+			                                    selectionchange : function(me,selected)
+			                                    {
+			                                        _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
+			                                    }
+			                                }
+			                            }
+			                            ,store   : _p34_storeIncisos
+			                            ,tbar    :
+			                            [
+			                                {
+			                                    text      : 'Endosos...'
+			                                    ,itemId   : '_p34_botonEndososIncisos'
+			                                    ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+			                                    ,disabled : true
+			                                    ,handler  : function(){ _p34_botonEndososIncisosClic(); }
+			                                }
+			                                ,'->'
+			                                ,{
+			                                    xtype      : 'textfield'
+			                                    ,listeners :
+			                                    {
+			                                        afterrender : function()
+			                                        {
+			                                            _p34_filtrarStore('',_p34_storeIncisos);
+			                                        }
+			                                        ,change : function(me,val)
+			                                        {
+			                                            _p34_filtrarStore(val,_p34_storeIncisos);
+			                                        }
+			                                    }
+			                                }
+			                            ]
+			                        })
+			                    ]
+			                }).show());
+			            }
+			            else
+			            {
+			                mensajeError(operation.getError());
+			            }
+			        }
+			    });
+		    }
+		    else
+		    {
+		        mensajeError(json.respuesta);
+		    }
         }
     });
     

@@ -180,4 +180,5 @@ public interface ConsultasDAO
 	 */
 	public boolean esProductoSalud(String cdramo) throws Exception;
 	
+	public List<String> recuperarDescripcionAtributosSituacionPorRamo(String cdramo) throws Exception;
 }

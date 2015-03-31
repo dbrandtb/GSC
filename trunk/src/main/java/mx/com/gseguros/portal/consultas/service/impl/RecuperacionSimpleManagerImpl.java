@@ -151,6 +151,29 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("otvalor",consultasDAO.recuperarValorAtributoUnico(cdtipsit,cdatribu,otclave));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_DSATRIBUS_TATRISIT))
+			{
+				String        cdramo       = params.get("cdramo");
+				List<String>  listaNombres = consultasDAO.recuperarDescripcionAtributosSituacionPorRamo(cdramo);
+				StringBuilder sb           = new StringBuilder();
+				boolean       primero      = true;
+				for(String nombre:listaNombres)
+				{
+					if(primero)
+					{
+						sb.append(Utilerias.join("CVE_",nombre));
+						sb.append(Utilerias.join("DES_",nombre));
+						primero = false;
+					}
+					else
+					{
+						sb.append(Utilerias.join("@#@CVE_",nombre));
+						sb.append(Utilerias.join("@#@DES_",nombre));
+					}
+				}
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("listaNombres",sb.toString());
+			}
 			
 			setCheckpoint("0");
 		}
