@@ -1,6 +1,5 @@
 package mx.com.gseguros.ws.autosgs.service.impl;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +15,6 @@ import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Agente;
@@ -41,9 +39,6 @@ import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.SDTPol
 import mx.com.gseguros.ws.autosgs.emision.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
-import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWS;
-import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.FolioWSService;
-import mx.com.gseguros.ws.folioserviciopublico.client.jaxws.RequestFolio;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axiom.om.OMElement;
@@ -589,6 +584,27 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 
 	@Override
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int endosoCambioClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int endosoCambioRfcClienteAutos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int endosoCambioNombreClienteAutos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem) {
 		// TODO Auto-generated method stub
 		return 0;
