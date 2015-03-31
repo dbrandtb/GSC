@@ -3162,7 +3162,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		     */
 		    if((Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i")) 
 		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
-		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 		    	) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
@@ -3175,7 +3174,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))){
 		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 		    	}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
-			    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 			    	){
 		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
 		    	}

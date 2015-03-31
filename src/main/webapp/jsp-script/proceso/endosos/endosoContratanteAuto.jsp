@@ -35,7 +35,13 @@ var _35_gridContratantes;
 var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoNombreCliente"       />';
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
+var _p35_urlRecuperarCliente = '<s:url namespace="/" action="buscarPersonasRepetidas" />';
+
 debug('_35_smap1:',_35_smap1);
+
+
+var _cdpersonActual;
+var _cdpersonNuevo;
 ////// variables //////
 ///////////////////////
 
@@ -97,6 +103,16 @@ Ext.onReady(function()
     {
     	extend  : 'Ext.data.Model'
     	,fields : [ <s:property value="imap1.fieldsModelo" /> ]
+    });
+    
+    Ext.define('_p35_modeloRecuperado',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'NOMBRECLI'
+            ,'DIRECCIONCLI'
+        ]
     });
     ////// modelos //////
     /////////////////////
@@ -175,27 +191,131 @@ Ext.onReady(function()
 				,items     : [
 				{
 					xtype: 'textfield',
-					name:  'nombre',
+					name:  'nuevoContratante',
 					width: 550,
 					fieldLabel: 'Nombre'
 				},
 				{
-					xtype: 'textfield',
-					name:  'nombre1',
-					width: 550,
-					fieldLabel: 'Segundo Nombre'
-				},
-				{
-					xtype: 'textfield',
-					name:  'apellido',
-					width: 550,
-					fieldLabel: 'Apellido Paterno'
-				},
-				{
-					xtype: 'textfield',
-					name:  'apellido1',
-					width: 550,
-					fieldLabel: 'Apellido Materno'
+					xtype: 'button',
+					text: 'Seleccionar Cliente',
+					handler: function(){
+					        var ventana=Ext.create('Ext.window.Window',
+					        {
+					            title      : 'Recuperar cliente'
+					            ,modal     : true
+					            ,width     : 600
+					            ,height    : 400
+					            ,items     :
+					            [
+					                {
+					                    layout    : 'hbox'
+					                    ,defaults : { style : 'margin : 5px;' }
+					                    ,items    :
+					                    [
+					                        {
+					                            xtype       : 'textfield'
+					                            ,name       : '_p35_recuperaRfc'
+					                            ,fieldLabel : 'RFC'
+					                            ,minLength  : 9
+					                            ,maxLength  : 13
+					                        }
+					                        ,{
+					                            xtype    : 'button'
+					                            ,text    : 'Buscar'
+					                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+					                            ,handler : function(button)
+					                            {
+					                                debug('recuperar cliente buscar');
+					                                var rfc=_fieldByName('_p35_recuperaRfc').getValue();
+					                                var valido=true;
+					                                if(valido)
+					                                {
+					                                    valido = !Ext.isEmpty(rfc)
+					                                             &&rfc.length>8
+					                                             &&rfc.length<14;
+					                                    if(!valido)
+					                                    {
+					                                        mensajeWarning('Introduza un RFC v&aacute;lido');
+					                                    }
+					                                }
+					                                
+					                                if(valido)
+					                                {
+					                                    button.up('window').down('grid').getStore().load(
+					                                    {
+					                                        params :
+					                                        {
+					                                            'map1.pv_rfc_i'       : rfc
+					                                            ,'map1.cdtipsit'      : _35_smap1.CDTIPSIT
+					                                            ,'map1.pv_cdtipsit_i' : _35_smap1.CDTIPSIT
+					                                            ,'map1.pv_cdunieco_i' : _35_smap1.CDUNIECO
+					                                            ,'map1.pv_cdramo_i'   : _35_smap1.CDRAMO
+					                                            ,'map1.pv_estado_i'   : 'W'
+					                                            ,'map1.pv_nmpoliza_i' : ''
+					                                        }
+					                                    });
+					                                }
+					                            }
+					                        }
+					                    ]
+					                }
+					                ,Ext.create('Ext.grid.Panel',
+					                {
+					                    title    : 'Resultados'
+					                    ,columns :
+					                    [
+					                        {
+					                            xtype    : 'actioncolumn'
+					                            ,width   : 30
+					                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+					                            ,handler : function(view,row,col,item,e,record)
+					                            {
+					                                debug('recuperar cliente handler record:',record);
+					                                
+					                                if(_cdpersonActual == record.raw.CLAVECLI){
+					                                	mensajeWarning('El cliente seleccionado es el mismo que se encuentra actualmente registrado en la p&oacute;liza');
+					                                	return;
+					                                }
+					                                
+													_cdpersonNuevo = record.raw.CLAVECLI;
+													
+													_35_formContratante.down('[name=nuevoContratante]').setValue( record.raw.NOMBRECLI);
+					                                
+					                                ventana.destroy();
+					                            }
+					                        }
+					                        ,{
+					                            text       : 'Nombre'
+					                            ,dataIndex : 'NOMBRECLI'
+					                            ,width     : 200
+					                        }
+					                        ,{
+					                            text       : 'Direcci&oacute;n'
+					                            ,dataIndex : 'DIRECCIONCLI'
+					                            ,flex      : 1
+					                        }
+					                    ]
+					                    ,store : Ext.create('Ext.data.Store',
+					                    {
+					                        model     : '_p35_modeloRecuperado'
+					                        ,autoLoad : false
+					                        ,proxy    :
+					                        {
+					                            type    : 'ajax'
+					                            ,url    : _p35_urlRecuperarCliente
+					                            ,reader :
+					                            {
+					                                type  : 'json'
+					                                ,root : 'slist1'
+					                            }
+					                        }
+					                    })
+					                })
+					            ]
+					        }).show();
+					        centrarVentanaInterna(ventana);
+					    
+					}
 				}
 				]
             });
@@ -302,11 +422,8 @@ Ext.onReady(function()
     			*/
     			_35_storeContratantes.add(json.slist1);
     			
-    			if("F" != _35_storeContratantes.getAt(0).get('OTFISJUR')){
-            		_35_formContratante.down('[name=nombre1]').hide();
-            		_35_formContratante.down('[name=apellido]').hide();
-            		_35_formContratante.down('[name=apellido1]').hide();
-    			}
+    			_cdpersonActual = _35_storeContratantes.getAt(0).get('CDPERSON');
+    			
     		}
     		else
     		{
@@ -365,14 +482,8 @@ function _35_confirmar()
             smap1   : _35_smap1
             ,smap2  :
             {
-                fecha_endoso     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y')
-            }
-            ,smap3:{
-            	'pv_cdperson_i'    : _35_storeContratantes.getAt(0).get('CDPERSON'),
-            	'pv_dsnombre_i'    : _35_formContratante.down('[name=nombre]').getValue(),
-            	'pv_dsnombre1_i'   : _35_formContratante.down('[name=nombre1]').getValue(),
-            	'pv_dsapellido_i'  : _35_formContratante.down('[name=apellido]').getValue(),
-            	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue()
+                'fecha_endoso'     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y'),
+                'cdpersonNvoContr' : _cdpersonNuevo
             }
             ,slist1 : slist1
         }
