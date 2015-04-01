@@ -470,6 +470,7 @@ function _p34_polizas()
                         (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
                     );
                 }
+                _p34_storePolizas.commitChanges();
             }
             else
             {
@@ -823,6 +824,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                    
 			                    debug('record customizado:',record.data);
 			                }
+			                _p34_storeIncisos.commitChanges();
 			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
 			                    itemId       : '_p34_windowIncisos'
