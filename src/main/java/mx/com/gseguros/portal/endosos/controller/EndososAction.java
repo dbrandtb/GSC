@@ -7014,7 +7014,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
 			//P_CLONAR_POLIZA_REEXPED
-			Map<String,String>resReexped=endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha, cdplan);
+			Map<String,String>resReexped = endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha, cdplan, cdusuari);
 			String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
 			

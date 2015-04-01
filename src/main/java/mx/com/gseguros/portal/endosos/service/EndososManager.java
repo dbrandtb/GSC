@@ -167,7 +167,8 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String fecha
-			,String cdplan) throws Exception;
+			,String cdplan
+			,String cdusuario) throws Exception;
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
