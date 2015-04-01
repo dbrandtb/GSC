@@ -341,6 +341,7 @@ public class GeneradorCampos
         item.add("cdatribu"        , cdatribu);
         item.add("fieldLabel"      , fieldLabel);
         item.add("label"           , fieldLabel);
+        item.add("orden"           , comp.getOrden());
         item.add("allowBlank"      , !comp.isObligatorio());
         item.add("name"            , name);
         item.add("readOnly"        , comp.isSoloLectura());
@@ -855,6 +856,7 @@ public class GeneradorCampos
 		    col.setType(Item.OBJ);
 		    col.add("text"      , header);
 		    col.add("dataIndex" , dataIndex);
+		    col.add("orden"     , comp.getOrden());
 		    if(comp.getWidth()==0)
 		    {
 		    	col.add("flex" , GeneradorCampos.staticFlex);

@@ -90,6 +90,7 @@ public class ComponenteVO
 	private String  cdcondicvis        = null;
 	private String  swpresemi          = null;
 	private String  swpresemiflot      = null;
+	private int     orden              = 0;
 	
 	public ComponenteVO(){}
 	
@@ -654,5 +655,13 @@ public class ComponenteVO
 
 	public void setMinValue(String minValue) {
 		this.minValue = minValue;
+	}
+
+	public int getOrden() {
+		return orden;
+	}
+
+	public void setOrden(int orden) {
+		this.orden = orden;
 	}
 }
