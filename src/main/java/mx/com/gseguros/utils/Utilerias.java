@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -21,7 +22,8 @@ public class Utilerias {
 	
 	private static Logger logger          = Logger.getLogger(Utilerias.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-	private static String stringDateFormat = "dd/MM/yyyy";
+	private static String stringDateFormat    = "dd/MM/yyyy";
+	private static String TIMEZONE_DEFAULT_ID = "GMT0"; //Se manda TimeZone a 0 para los WS de ice2sigs, pues se movia un dia.
 	
 	/**
 	 * Formatea un string con el contenido de una fecha
@@ -66,6 +68,8 @@ public class Utilerias {
 				int anio =  Integer.parseInt(fechaArr[2]);
 				cal = Calendar.getInstance();
 				cal.set(anio, mes, dia);
+				cal.setTimeZone(TimeZone.getTimeZone(TIMEZONE_DEFAULT_ID));
+				logger.debug("TIMEZONE_DEFAULT_ID" + TIMEZONE_DEFAULT_ID);
 			}
 		} catch (Exception e) {
 			logger.error("Error al formatear la fecha", e);
