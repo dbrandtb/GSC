@@ -6,8 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p36_urlGuardarTvalositEndoso = '<s:url namespace="/endosos" action="guardarTvalositEndoso"       />';
-var _p36_urlConfirmarEndoso       = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
+var _p36_urlConfirmarEndoso = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
 ////// urls //////
 
 ////// variables //////
@@ -24,11 +23,18 @@ var _p36_store;
 ////// overrides //////
 
 ////// dinamicos //////
+var _p39_gridColumnsEditables =
+[
+    <s:property value="imap.gridColumnsEditables" escapeHtml="false" />
+];
 var _p36_gridColumns =
 [
      <s:property value="imap.gridColumnsLectura"   escapeHtml="false" />
-    ,<s:property value="imap.gridColumnsEditables" escapeHtml="false" />
 ];
+for(var i in _p39_gridColumnsEditables)
+{
+	_p36_gridColumns.push(_p39_gridColumnsEditables[i]);
+}
 
 var _p36_itemsEdicion=[];
 for(var i in _p36_gridColumns)
@@ -54,9 +60,6 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields : []
     });
-    
-    
-    
     
     var arrAtributos = [
         //MPOLISIT
@@ -159,35 +162,45 @@ Ext.onReady(function()
                 ,plugins    :
                 _p36_itemsEdicion.length==0 ?
                 [
-                    Ext.create('Ext.grid.plugin.RowEditing',
+                    Ext.create('Ext.grid.plugin.CellEditing',
                     {
                         clicksToEdit  : 1
                         ,errorSummary : false
                         ,listeners    :
                         {
-                            edit : function(editor,context)
-                            {
-                                debug(context.record.data);
-                                //_p36_guardarCambio(context.record);
-                            }/*,
                             validateedit: function(editor, ctx, eOpts) {
-                            	debug('raw=', ctx.record.raw);
-                            	debug('ctx=', ctx);
-                            	if(_p36_smap1.TIPO_VALIDACION == 'MENOR') {
-                            		debug('ctx.record.data[ctx.field]=', ctx.record.data[ctx.field]);
-                            		debug('ctx.record.raw[ctx.field])=', ctx.record.raw[ctx.field]);
-                            		debug('*** Validando campo, el nuevo valor debe ser menor');
-                            		if(Number(ctx.record.data[ctx.field]) > Number(ctx.record.raw[ctx.field])) {
-                            			editor.cancelEdit();
-                            			mensajeWarning("El nuevo valor debe ser menor");
-                            		} else {
-                            			ctx.record.data[ctx.field] = ctx.record.raw[ctx.field];
-                            			mensajeInfo("Valor nuevo: " + ctx.record.data[ctx.field]);
-                            		}
-                            	} else if(_p36_smap1.TIPO_VALIDACION=='MAYOR') {
-                            		
+                            	_fieldById('_p36_botonConfirmar').disable();
+                            	try {
+                                    if(_p36_smap1.TIPO_VALIDACION == 'MENOR') {
+                                        // Si el nuevo valor es menor o igual al original, mostramos warning:
+                                    	debug('comparando', Number(ctx.record.raw[ctx.field]), '<=', Number(ctx.value));
+                                        if( Number(ctx.record.raw[ctx.field]) <= Number(ctx.value) ) {
+                                            mensajeWarning("El nuevo valor debe ser menor");
+                                            _fieldById('_p36_botonConfirmar').enable();
+                                            return false;
+                                        }
+                                    } else if(_p36_smap1.TIPO_VALIDACION == 'MAYOR') {
+                                        // Si el nuevo valor es mayor o igual al original, mostramos warning:
+                                        debug('comparando', Number(ctx.record.raw[ctx.field]), '>=', Number(ctx.value));
+                                        if( Number(ctx.record.raw[ctx.field]) >= Number(ctx.value) ) {
+                                            mensajeWarning("El nuevo valor debe ser mayor");
+                                            _fieldById('_p36_botonConfirmar').enable();
+                                            return false;
+                                        }
+                                    }
+                            	} catch(e) {
+                            		debugError("Error al aplicar la validacion de campos", e);
                             	}
-                            }*/
+                            },
+                            beforeedit: function() {
+                                _fieldById('_p36_botonConfirmar').disable();
+                            },
+                            edit: function() {
+                                _fieldById('_p36_botonConfirmar').enable();
+                            },
+                            canceledit: function() {
+                                _fieldById('_p36_botonConfirmar').enable();
+                            }
                         }
                     })
                 ] : []
@@ -240,6 +253,16 @@ Ext.onReady(function()
                                             value=fecha;
                                         }
                                         valores[key]=value;
+                                        for(var i in _p39_gridColumnsEditables)
+                                        {
+                                        	var col      = _p39_gridColumnsEditables[i];
+                                        	var name     = col.editor.name;
+                                        	var cdatribu = 90+col.editor.orden;
+                                        	debug('name:',name,'cdatribu:',cdatribu);
+                                        	debug('metemos:',record.get(name));
+                                        	valores['OTVALOR'+cdatribu]=record.get(name);
+                                        	debug('metimos:',valores['OTVALOR'+cdatribu]);
+                                        }
                                     }
                                     jsonDatosConfirmacion.slist1.push(valores);
                             	});
@@ -251,8 +274,9 @@ Ext.onReady(function()
                                     ,jsonData: jsonDatosConfirmacion 
                                     ,success : function(response)
                                     {
+                                    	_p36_store.commitChanges();
                                         panel.setDisabled(false);
-                                        var json=Ext.decode(response.responseText);
+                                        var json = Ext.decode(response.responseText);
                                         debug('### confirmar endoso:',json);
                                         if(json.success)
                                         {
@@ -295,7 +319,6 @@ Ext.onReady(function()
                                         }
                                     });
                                     callback();
-                                    //_p36_guardarCambio(_p36_store.getAt(_p36_store.getCount()-1),callback,_p36_store.getCount()-1);
                                 }
                             }
                         }
@@ -314,84 +337,6 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-function _p36_guardarCambio(record,callback,i)
-{
-    debug('>_p36_guardarCambio record.data,!callback?,i',record.data,Ext.isEmpty(callback),i);
-    var valores={
-        tstamp : _p36_smap1.tstamp
-    };
-    for(var key in record.data)
-    {
-        var value=record.data[key];
-        debug(typeof value,key,value);
-        if((typeof value=='object')&&value&&value.getDate)
-        {
-            var fecha='';
-            fecha+=value.getDate();
-            if((fecha+'x').length==2)//1x
-            {
-                fecha = ('x'+fecha).replace('x','0');//x1=01
-            }
-            fecha+='/';
-            fecha+=value.getMonth()+1<10?
-                   (('x'+(value.getMonth()+1)).replace('x','0'))
-                   :(value.getMonth()+1);
-            fecha+='/';
-            fecha+=value.getFullYear();
-            value=fecha;
-        }
-        valores[key]=value;
-    }
-    debug('valores a enviar:',valores);
-    var grid  = _fieldById('_p36_grid');
-    var panel = _fieldById('_p36_botonConfirmar');
-    panel.setDisabled(true);
-    Ext.Ajax.request(
-    {
-        url       : _p36_urlGuardarTvalositEndoso
-        ,jsonData :
-        {
-            smap1 : valores
-        }
-        ,success  : function(response)
-        {
-        	alert();
-            panel.setDisabled(false);
-            var json=Ext.decode(response.responseText);
-            debug('### guardar tvalosit endoso:',json);
-            if(json.success)
-            {
-                if(Ext.isEmpty(callback))
-                {
-                    grid.getStore().commitChanges();
-                }
-                else
-                {
-                    if(i==0)
-                    {
-                        callback();
-                    }
-                    else
-                    {
-                        //_p36_guardarCambio(_p36_store.getAt(i-1),callback,i-1);
-                    }
-                }
-            }
-            else
-            {
-                grid.getStore().rejectChanges();
-                mensajeError(json.respuesta);
-            }
-        }
-        ,failure : function()
-        {
-            panel.setDisabled(false);
-            grid.getStore().rejectChanges();
-            errorComunicacion();
-        }
-    });
-    debug('<_p36_guardarCambio');
-}
 ////// funciones //////
 </script>
 </head>
