@@ -121,6 +121,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		String llaveHandler     = "HANDLER";
 		String llaveSwNoLoad    = "SWNOLOAD";
 		String llaveWidth       = "WIDTH";
+		String llaveOrden       = "ORDEN";
 		
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
@@ -256,6 +257,8 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			{
 				comp.setWidth(Integer.parseInt(width));
 			}
+			
+			comp.setOrden(rs.getInt(llaveOrden));
 			
 			return comp;
 		}
