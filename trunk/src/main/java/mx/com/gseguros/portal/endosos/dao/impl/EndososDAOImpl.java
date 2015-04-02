@@ -3124,4 +3124,48 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	
+	@Override
+	public boolean revierteEndosoFallido(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String nmsuplem
+			)
+			{
+				try {
+					Map<String,String>params=new LinkedHashMap<String,String>();
+					params.put("p_CDUNIECO" , cdunieco);
+					params.put("p_CDRAMO"   , cdramo);
+					params.put("p_ESTADO"   , estado);
+					params.put("p_NMPOLIZA" , nmpoliza);
+					params.put("p_NSUPLOGI" , nsuplogi);
+					params.put("p_NMSUPLEM" , nmsuplem);
+					Utilerias.debugProcedure(logger, "P_SACAENDOSO", params);
+					ejecutaSP(new RevierteEndosoFallido(getDataSource()),params);
+					Utilerias.debugProcedure(logger, "P_SACAENDOSO", params);
+				} catch (Exception e) {
+					logger.error("Error al revertir el endoso. " ,e);
+					return false;
+				}
+				return true;
+			}
+	
+	protected class RevierteEndosoFallido extends StoredProcedure
+	{
+		protected RevierteEndosoFallido(DataSource dataSource)
+		{
+			super(dataSource,"P_SACAENDOSO");
+			declareParameter(new SqlParameter("p_CDUNIECO" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_CDRAMO"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_ESTADO"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_NMPOLIZA" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_NSUPLOGI" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_NMSUPLEM"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

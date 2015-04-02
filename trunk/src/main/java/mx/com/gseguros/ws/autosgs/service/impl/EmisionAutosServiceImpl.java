@@ -90,6 +90,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		
 		boolean exitoRecibosSigs = false;
 		
+		//if(true)return emisionAutoRes;
 		
 		LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("param1" , cdunieco);
