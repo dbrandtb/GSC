@@ -3157,11 +3157,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    
 		    logger.debug("slist antes de WS: "+ slist1);
 		    
+		    boolean soloBD = false;
+		    if(map1.containsKey("soloBD") && Constantes.SI.equalsIgnoreCase(map1.get("soloBD"))){
+		    	soloBD = true;
+		    }
+		    
+		    logger.info("Busqueda de cliente solo BD: " + soloBD);
+		    
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
 		     */
-		    if((Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i")) 
+		    if(!soloBD && (Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i")) 
 		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
+		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 		    	) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
@@ -3174,6 +3182,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))){
 		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 		    	}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
+		    			|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 			    	){
 		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
 		    	}
