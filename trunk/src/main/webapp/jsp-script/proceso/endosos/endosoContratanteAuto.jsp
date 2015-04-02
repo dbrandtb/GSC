@@ -252,6 +252,7 @@ Ext.onReady(function()
 					                                            ,'map1.pv_cdramo_i'   : _35_smap1.CDRAMO
 					                                            ,'map1.pv_estado_i'   : 'W'
 					                                            ,'map1.pv_nmpoliza_i' : ''
+					                                            ,'map1.soloBD' : 'S'
 					                                        }
 					                                    });
 					                                }
