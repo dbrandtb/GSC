@@ -806,28 +806,55 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.info("Endoso de Beneficiario exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Beneficiario");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
 				}
 			}else if(TipoEndoso.PLACAS_Y_MOTOR.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
 				if(this.endosoPlacasMotor(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 					logger.info("Endoso de Placas y motor exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Placas y Motor");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
 				}
 			}else if(TipoEndoso.SERIE_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
 				if(this.endosoSerie(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 					logger.info("Endoso de Serie exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Serie");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
 				}
 			}else{
 
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
+					
 					logger.error("Error al ejecutar los WS de endoso");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+					
+					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
+					
 				}
 				
 				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
@@ -1131,100 +1158,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramite = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
-			/**
-			 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
-			 */
-			
-			String urlCaratula = null;
-			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
-		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
-		    	){
-				urlCaratula = this.urlImpresionCaratula;
-			}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-				urlCaratula = this.urlImpresionCaratulaServicioPublico;
-			}
-			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				urlCaratula = this.urlImpresionCaratulaServicioFotillas;
-			}
-			
-			String urlRecibo = this.urlImpresionRecibos;
-			String urlCaic = this.urlImpresionCaic;
-			String urlAp = this.urlImpresionAp;
-			
-			String urlIncisosFlot = this.urlImpresionIncisosFlotillas;
-			String urlTarjIdent = this.urlImpresionTarjetaIdentificacion;
-			
-			String parametros = null;
-			
-
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
-				throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
 			}
 			
-			/**
-			 * Para Caratula
-			 */
-			parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
-			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado,nmpoliza, nmsuplem, 
-					new Date(), urlCaratula + parametros,
-					"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite,
-					cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			/**
-			 * Para Recibo 1
-			 */
-			parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
-			logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlRecibo + parametros, "Recibo 1", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			/**
-			 * Para AP inciso 1
-			 */
-			parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
-			logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlAp + parametros, "AP", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			/**
-			 * Para CAIC inciso 1
-			 */
-			parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
-			logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlCaic + parametros, "CAIC", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				/**
-				 * Para Incisos Flotillas
-				 */
-				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
-				logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-				mesaControlDAO.guardarDocumento(
-						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						new Date(), urlIncisosFlot + parametros, "Incisos Flotillas", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-				
-				/**
-				 * Para Tarjeta Identificacion
-				 */
-				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
-				logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-				mesaControlDAO.guardarDocumento(
-						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			}
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
 		
 		}
 		catch(Exception ex)
@@ -1442,100 +1388,21 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramite = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
-			/**
-			 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
-			 */
-			
-			String urlCaratula = null;
-			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
-		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
-		    	){
-				urlCaratula = this.urlImpresionCaratula;
-			}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-				urlCaratula = this.urlImpresionCaratulaServicioPublico;
-			}
-			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				urlCaratula = this.urlImpresionCaratulaServicioFotillas;
-			}
-			
-			String urlRecibo = this.urlImpresionRecibos;
-			String urlCaic = this.urlImpresionCaic;
-			String urlAp = this.urlImpresionAp;
-			
-			String urlIncisosFlot = this.urlImpresionIncisosFlotillas;
-			String urlTarjIdent = this.urlImpresionTarjetaIdentificacion;
-			
-			String parametros = null;
-			
 
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
-				throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte.");
+				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
 			}
 			
-			/**
-			 * Para Caratula
-			 */
-			parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
-			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado,nmpoliza, nmsuplem, 
-					new Date(), urlCaratula + parametros,
-					"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite,
-					cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
 			
-			/**
-			 * Para Recibo 1
-			 */
-			parametros = "?9999,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",0,"+(StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+","+aux.getTipoEndoso()+",1";
-			logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlRecibo + parametros, "Recibo 1", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			/**
-			 * Para AP inciso 1
-			 */
-			parametros = "?14,0,"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+",1";
-			logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlAp + parametros, "AP", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			/**
-			 * Para CAIC inciso 1
-			 */
-			parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",1";
-			logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-			mesaControlDAO.guardarDocumento(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-					new Date(), urlCaic + parametros, "CAIC", nmpoliza, 
-					ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				/**
-				 * Para Incisos Flotillas
-				 */
-				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso());
-				logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-				mesaControlDAO.guardarDocumento(
-						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						new Date(), urlIncisosFlot + parametros, "Incisos Flotillas", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-				
-				/**
-				 * Para Tarjeta Identificacion
-				 */
-				parametros = "?"+aux.getSucursal()+","+aux.getSubramo()+","+aux.getNmpoliex()+","+aux.getTipoEndoso()+","+ (StringUtils.isBlank(aux.getNumeroEndoso())?"0":aux.getNumeroEndoso())+",0";
-				logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-				mesaControlDAO.guardarDocumento(
-						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
-						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			}
 		}
 		catch(Exception ex)
 		{

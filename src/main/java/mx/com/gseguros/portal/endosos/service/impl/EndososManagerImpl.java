@@ -2027,6 +2027,11 @@ public class EndososManagerImpl implements EndososManager
 		logger.error(resp.getRespuesta(),ex);
 		setCheckpoint("0");
 	}
+	
+	
+	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem){
+		return endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+	}
 	/********************** BASE MANAGER ***********************/
 	
 	/////////////////////////////////

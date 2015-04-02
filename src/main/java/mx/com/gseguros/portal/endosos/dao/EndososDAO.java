@@ -361,4 +361,6 @@ public interface EndososDAO
 			,String nmsituac
 			,String tstamp
 			)throws Exception;
+	
+	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza, String nsuplogi, String nmsuplem);
 }

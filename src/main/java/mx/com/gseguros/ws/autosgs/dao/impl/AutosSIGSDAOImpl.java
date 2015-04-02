@@ -387,7 +387,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
-				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
 					Integer result = null;
 					while(rs.next()){  
 						result = rs.getInt(1);
