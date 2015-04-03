@@ -379,7 +379,7 @@ public interface EndososManager
 	 */
 	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
 	
+	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception;
 	
 	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem);
-	
 }

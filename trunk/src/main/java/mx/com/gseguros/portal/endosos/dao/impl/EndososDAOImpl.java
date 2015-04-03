@@ -3124,7 +3124,33 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
-
+	
+	@Override
+	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsup" , cdtipsup);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA", params);
+		Map<String,Object> procResult = ejecutaSP(new RecuperarDiasDiferenciaEndosoValidos(getDataSource()),params);
+		int dias = (Integer)procResult.get("pv_dias_endoso_o");
+		logger.debug(Utilerias.join("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
+		return dias;
+	}
+	
+	protected class RecuperarDiasDiferenciaEndosoValidos extends StoredProcedure
+	{
+		protected RecuperarDiasDiferenciaEndosoValidos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA");
+			//declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dias_endoso_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"      , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"       , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public boolean revierteEndosoFallido(
