@@ -5026,7 +5026,7 @@ public class EndososAction extends PrincipalCoreAction
 			throws Exception {
 		
 		RespuestaConfirmacionEndosoVO respuesta = new RespuestaConfirmacionEndosoVO();
-		long numMaximoDias = 30;
+		long numMaximoDias = (long)endososManager.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
 		
 		// Se obtiene el numero de tramite de emision de una poliza:
 		String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);

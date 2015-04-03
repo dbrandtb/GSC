@@ -2028,6 +2028,10 @@ public class EndososManagerImpl implements EndososManager
 		setCheckpoint("0");
 	}
 	
+	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception
+	{
+		return endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
+	}
 	
 	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem){
 		return endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
