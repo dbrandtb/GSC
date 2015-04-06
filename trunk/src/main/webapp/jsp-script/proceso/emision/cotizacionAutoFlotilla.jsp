@@ -2478,6 +2478,22 @@ Ext.onReady(function()
                 };
             }
             //carga
+            
+            //cilindraje
+            if('|MO|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
+            {
+                var form     = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+                var marcaCmp = form.down('[fieldLabel=MARCA]');
+                debug('@CUSTOM marcaCmp cilindraje:',marcaCmp,'.');
+                marcaCmp.on(
+                {
+                    change : function(me)
+                    {
+                        me.up('form').down('[fieldLabel=CILINDRAJE]').reset();
+                    }
+                });
+            }
+            //cilindraje
         }
         //herencia situaciones
     }
