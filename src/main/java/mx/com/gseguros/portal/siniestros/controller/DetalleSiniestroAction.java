@@ -274,13 +274,19 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		);
 		logger.debug("parametros de entrada PARAMS : "+ params);
 		logger.debug("parametros de entrada PARAMETROS : "+ parametros);
+		
 	   	try {
-	   		
-	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),params.get("feegreso"),params.get("diasdedu"),null);
+	   		Date feegreso = null;
+	   		if(params.get("feegreso").length() > 0){
+	   			feegreso = renderFechas.parse(params.get("feegreso"));
+	   		}else{
+	   			feegreso = renderFechas.parse(params.get("fefactura"));
+	   		}
+	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),feegreso,params.get("diasdedu"),null);
 	   		
 	   		List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
 	   		logger.debug("#####VALOR DE LOS ASEGURADOS######");
-	   		logger.debug(asegurados);
+	   		logger.debug(asegurados.size());
 	   		
 	   		for(int i =0; i < asegurados.size();i++){
 	   			String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
@@ -575,7 +581,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 						valor);
 					String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
 					
-					siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), formatoFechaFactura, params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),params.get("feegreso"), params.get("diasdedu"),null);
+					siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(formatoFechaFactura), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),renderFechas.parse(params.get("feegreso")), params.get("diasdedu"),null);
 			
 			success = true;
 		}catch(Exception e){

@@ -43,7 +43,7 @@ var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDe
 var compleUrlGuardarCartoRechazo = '<s:url namespace="/siniestros" action="guardarCartaRechazoAutServ" />';
 var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
 var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
-
+var _URL_NOMBRE_TURNADO   		= '<s:url namespace="/siniestros" action="obtieneUsuarioTurnado" />';
 
 //UserVO usuario  = (UserVO)session.get("USUARIO");
 //String cdrol    = usuario.getRolActivo().getObjeto().getValue();
@@ -657,9 +657,37 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 			        			                	            		        		mensajeError('No se pudo turnar.');
 			        			                	            					},
 			        			                	            					success: function(form, action) {
-			        			                	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+			        			                	            						Ext.Ajax.request(
+																		    	        {
+																		    	            url     : _URL_NOMBRE_TURNADO
+																		    	            ,params : 
+																		    	            {           
+																		    	                'params.ntramite': record.get('ntramite'),
+																		    	                'params.rolDestino': 'COORDMEDMULTI'
+																		    	            }
+																		    	            ,success : function (response)
+																		    	            {
+																		    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																		    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+												        	            						loadMcdinStore();
+												        	            						windowLoader.close();
+																		    	            },
+																		    	            failure : function ()
+																		    	            {
+																		    	                me.up().up().setLoading(false);
+																		    	                centrarVentanaInterna(Ext.Msg.show({
+																		    	                    title:'Error',
+																		    	                    msg: 'Error de comunicaci&oacute;n',
+																		    	                    buttons: Ext.Msg.OK,
+																		    	                    icon: Ext.Msg.ERROR
+																		    	                }));
+																		    	            }
+																		    	        });
+			        			                	            						
+			        			                	            						
+			        			                	            						/*mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 			        			                	            						loadMcdinStore();
-			        			                	            						windowLoader.close();
+			        			                	            						windowLoader.close();*/
 			        			                	            						
 			        			                	            					}
 			        			                	            				});
@@ -891,9 +919,35 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			        				                	            		        		mensajeError('No se pudo turnar.');
 			        				                	            					},
 			        				                	            					success: function(form, action) {
-			        				                	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+			        				                	            						Ext.Ajax.request(
+																			    	        {
+																			    	            url     : _URL_NOMBRE_TURNADO
+																			    	            ,params : 
+																			    	            {           
+																			    	                'params.ntramite': record.get('ntramite'),
+																			    	                'params.rolDestino': 'GERMEDMULTI'
+																			    	            }
+																			    	            ,success : function (response)
+																			    	            {
+																			    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																			    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+													        	            						loadMcdinStore();
+													        	            						windowLoader.close();
+																			    	            },
+																			    	            failure : function ()
+																			    	            {
+																			    	                me.up().up().setLoading(false);
+																			    	                centrarVentanaInterna(Ext.Msg.show({
+																			    	                    title:'Error',
+																			    	                    msg: 'Error de comunicaci&oacute;n',
+																			    	                    buttons: Ext.Msg.OK,
+																			    	                    icon: Ext.Msg.ERROR
+																			    	                }));
+																			    	            }
+																			    	        });
+			        				                	            						/*mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 			        				                	            						loadMcdinStore();
-			        				                	            						windowLoader.close();
+			        				                	            						windowLoader.close();*/
 			        				                	            						
 			        				                	            					}
 			        				                	            				});

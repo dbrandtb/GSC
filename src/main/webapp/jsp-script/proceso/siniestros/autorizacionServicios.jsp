@@ -63,8 +63,9 @@
             var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
             var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES         = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
-            var _URL_CIRCULO_HOSPITALARIO           = '<s:url namespace="/siniestros" action="consultaCirculoHospitalario" />';
-
+            var _URL_CIRCULO_HOSP_MULTISALUD        = '<s:url namespace="/siniestros" action="consultaCirculoHospitalarioMultisalud" />';
+            var _URL_CIRCULO_HOSPITALARIO        	= '<s:url namespace="/siniestros" action="consultaCirculoHospitalario" />';
+            var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros" action="consultaPorcentajeQuirurgico" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>

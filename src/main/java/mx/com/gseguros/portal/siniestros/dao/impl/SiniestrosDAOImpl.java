@@ -3851,7 +3851,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     				,"REQPENALIZACION"
     				,"VALMATERNIDAD"
     				,"VALSESIONES"
-    				,"MENSAJEMATERNIDAD"
+    				,"REQVALSUMASEGURADA"
     		};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3861,13 +3861,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneDatosCirculoHospitalario(Map<String, Object> params) throws Exception {
-		Map<String, Object> result = ejecutaSP(new ObtieneDatosCirculoHospitalario(this.getDataSource()), params);
+	public List<Map<String, String>> obtieneDatosCirculoHospitalarioMultisalud(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneDatosCirculoHospitalarioMultisalud(this.getDataSource()), params);
 		return (List<Map<String,String>>)result.get("pv_registro_o");
 	}
 	
-	protected class ObtieneDatosCirculoHospitalario extends StoredProcedure {
-		protected ObtieneDatosCirculoHospitalario(DataSource dataSource) {
+	protected class ObtieneDatosCirculoHospitalarioMultisalud extends StoredProcedure {
+		protected ObtieneDatosCirculoHospitalarioMultisalud(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
 			super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_CIRCULO_HOSPITALARIO");
 			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
@@ -3884,6 +3884,32 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+
+	/*@Override
+	public String obtieneDatosCirculoHospitalario(HashMap<String, Object> paramExclusion) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneDatosCirculoHospitalario(getDataSource()), paramExclusion);
+		logger.debug( resultado.get("pv_existe_o"));
+		return (String) resultado.get("pv_existe_o");
+	}
+	
+    protected class ObtieneDatosCirculoHospitalario extends StoredProcedure {
+    	
+    	protected ObtieneDatosCirculoHospitalario(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_PRESINIESTRO.P_ELIMACION_PENALIZACION");
+    		declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }*/
+	
 	@Override
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new eliminaAseguradoRegistrado(getDataSource()), paramsTworkSin);
@@ -4216,5 +4242,52 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public String obtieneDatosCirculoHospitalario(HashMap<String, Object> paramPenalizacion) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneDatosCirculoHospitalario(getDataSource()), paramPenalizacion);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
 	
+	protected class ObtieneDatosCirculoHospitalario extends StoredProcedure {
+    	
+    	protected ObtieneDatosCirculoHospitalario(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_PENALIZACION_CIRHOSP");
+    		declareParameter(new SqlParameter("pv_circuloHosPoliza_i",   OracleTypes.VARCHAR)); 
+			declareParameter(new SqlParameter("pv_circuloHosProv_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public String obtienePorcentajeQuirurgico(String tipoMedico, String feAutorizacion) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_tipoMedico_i", tipoMedico);
+		params.put("pv_feAutorizacion_i", feAutorizacion);
+		
+		Map<String, Object> resultado = ejecutaSP(new ObtienePorcentajeEquipoQuirurgico(getDataSource()), params);
+		return (String) resultado.get("pv_registro_o");
+	}
+
+	protected class ObtienePorcentajeEquipoQuirurgico extends StoredProcedure {
+		
+		protected ObtienePorcentajeEquipoQuirurgico(DataSource dataSource) {
+			
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_PORCENTAJE_QUIRURGICO");
+			declareParameter(new SqlParameter("pv_tipoMedico_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feAutorizacion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
