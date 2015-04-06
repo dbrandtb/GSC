@@ -32,8 +32,9 @@ var _9_panelPri;
 var _9_panelEndoso;
 var _9_fieldFechaEndoso;
 
-var _9_urlGuardar       = '<s:url namespace="/endosos"         action="guardarEndosoFormaPago" />';
-var _9_urlLoaderLectura = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
+var _9_urlGuardar            = '<s:url namespace="/endosos"         action="guardarEndosoFormaPago" />';
+var _9_urlLoaderLectura      = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza"    />';
+var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
 
 debug('_9_smap1:',_9_smap1);
 ////// variables //////
@@ -141,7 +142,7 @@ Ext.onReady(function()
         ,fieldLabel : 'Fecha de efecto'
         ,allowBlank : false
         ,name       : 'fecha_endoso'
-        ,readOnly   : true
+        //,readOnly   : true
     });
     _9_panelEndoso   = new _9_PanelEndoso();
     _9_formFormaPago = new _9_FormFormaPago();
@@ -219,6 +220,40 @@ Ext.onReady(function()
         {
             _9_panelPri.setLoading(false);
             mensajeError('Error al cargar los datos de la p&oacute;liza');
+        }
+    });
+    
+    Ext.Ajax.request(
+    {
+        url      : _9_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _9_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _9_smap1.CDRAMO
+            ,'smap1.estado'       : _9_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _9_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _9_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldByName('fecha_endoso').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldByName('fecha_endoso').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldByName('fecha_endoso').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
         }
     });
     ////// loader //////

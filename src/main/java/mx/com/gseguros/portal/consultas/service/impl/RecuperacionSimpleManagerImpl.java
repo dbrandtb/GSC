@@ -74,6 +74,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			RecuperacionSimple proc
 			,Map<String,String>params
+			,String cdsisrol
 			)
 	{
 		logger.info(Utilerias.join(
@@ -81,6 +82,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ recuperacionSimple @@@@@@"
 				,"\n@@@@@@ procedimiento=" , proc
 				,"\n@@@@@@ parametros="    , params
+				,"\n@@@@@@ cdsisrol="      , cdsisrol
 				));
 		
 		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
@@ -95,7 +97,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdagente = params.get("cdagente");
 				String negocio  = params.get("negocio");
 				String tipocot  = params.get("tipocot");
-				String cdsisrol = params.get("cdsisrol");
 				String cdusuari = params.get("cdusuari");
 				
 				if(tipocot.equals("I"))
@@ -174,6 +175,24 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("listaNombres",sb.toString());
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_FECHAS_LIMITE_ENDOSO))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				String cdtipsup = params.get("cdtipsup");
+				resp.setSmap(new HashMap<String,String>());
+				
+				resp.getSmap().putAll(consultasDAO.recuperarFechasLimiteEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdsisrol
+						,cdtipsup
+						));
+			}
 			
 			setCheckpoint("0");
 		}
@@ -194,13 +213,15 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	public ManagerRespuestaSlistVO recuperacionSimpleLista(
 			RecuperacionSimple proc
 			,Map<String,String>params
+			,String cdsisrol
 			)
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperacionSimpleLista @@@@@@"
-				,"\n@@@@@@ proc="   , proc
-				,"\n@@@@@@ params=" , params
+				,"\n@@@@@@ proc="     , proc
+				,"\n@@@@@@ params="   , params
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
 		ManagerRespuestaSlistVO resp=new ManagerRespuestaSlistVO(true);

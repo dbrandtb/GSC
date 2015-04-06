@@ -1471,4 +1471,51 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public Map<String,String> recuperarFechasLimiteEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdsisrol
+			,String cdtipsup
+			)throws Exception
+	{
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("cdsisrol" , cdsisrol);
+    	params.put("cdtipsup" , cdtipsup);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_FECHAS_ENDOSO", params);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarFechasLimiteEndoso(getDataSource()),params);
+    	Map<String,String> result     = new HashMap<String,String>();
+    	result.put("FECHA_MINIMA" , (String)procResult.get("pv_fechamin_o"));
+    	result.put("FECHA_MAXIMA" , (String)procResult.get("pv_fechamax_o"));
+    	result.put("EDITABLE"     , (String)procResult.get("pv_editable_o"));
+    	logger.debug(Utilerias.join("PKG_CONSULTA.P_GET_FECHAS_ENDOSO mapa=",result));
+    	return result;
+	}
+    
+    protected class RecuperarFechasLimiteEndoso extends StoredProcedure
+    {
+    	protected RecuperarFechasLimiteEndoso(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_FECHAS_ENDOSO");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fechamin_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fechamax_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_editable_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

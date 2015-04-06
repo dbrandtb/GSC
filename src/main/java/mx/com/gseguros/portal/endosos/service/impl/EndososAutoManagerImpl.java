@@ -640,6 +640,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String feefecto
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -656,6 +657,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdramo="   , cdramo
 				,"\n@@@@@@ estado="   , estado
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ feefecto=" , feefecto
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ cdelemen=" , cdelemen
@@ -666,6 +668,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
+			Date fechaEndoso = renderFechas.parse(feefecto);
+			
 			for(Map<String,String>inciso:incisos)
 			{
 				endososDAO.guardarTvalositEndoso(
@@ -788,6 +792,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdramo
 					,estado
 					,nmpoliza
+					,fechaEndoso
 					,cdusuari
 					,cdsisrol
 					,cdelemen
