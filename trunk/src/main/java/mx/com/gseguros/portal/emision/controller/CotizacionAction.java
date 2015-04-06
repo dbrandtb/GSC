@@ -2295,6 +2295,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null);
 				smap1.put("FESOLICI" , polizas.get(0).get("FESOLICI"));
+				smap1.put("FEEFECTO" , polizas.get(0).get("FEEFECTO"));
+				smap1.put("FEPROREN" , polizas.get(0).get("FEPROREN"));
 			}
 			catch(Exception ex)
 			{

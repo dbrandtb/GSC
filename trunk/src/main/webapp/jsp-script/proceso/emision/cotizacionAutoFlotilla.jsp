@@ -709,7 +709,7 @@ Ext.onReady(function()
         ,fieldLabel : 'INICIO DE VIGENCIA'
         ,value      : new Date()
         ,style      : 'margin:5px;margin-left:15px;'
-        ,readOnly   : _p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol!='SUSCRIAUTO'
+        //,readOnly   : _p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol!='SUSCRIAUTO'
         ,hidden     : _p30_endoso
     }
     ,{
@@ -1119,6 +1119,7 @@ Ext.onReady(function()
         {
             debug('val:',val);
             var fefin = _fieldByName('fefin');
+            fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
             fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
             fefin.isValid();
         }
@@ -3826,6 +3827,27 @@ function _p30_cargarClic()
                     debug('vencida='     , vencida , '.');
                     
                     _p30_limpiar();
+                    
+                    var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y').getTime();
+                    var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y').getTime();
+                    var milDif = finVig-iniVig;
+                    var diaDif = milDif/(1000*60*60*24);
+                    debug('diaDif:',diaDif);
+                    
+                    if(!maestra&&!vencida)
+                    {
+                        _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
+                    }
+                    _fieldByName('fefin').setValue
+                    (
+                        Ext.Date.add
+                        (
+                            _fieldByName('feini').getValue()
+                            ,Ext.Date.DAY
+                            ,diaDif
+                        )
+                    );
+                    
                     if(maestra)
                     {
                         _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
