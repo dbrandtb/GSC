@@ -1161,6 +1161,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
+				/* TODO: Descomentar
 				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
 					logger.error("Endoso revertido exitosamente.");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
@@ -1168,6 +1169,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 				}
+				*/
 			}
 			
 			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
@@ -1392,6 +1394,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
+				/* TODO:Descomentar
 				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
 					logger.error("Endoso revertido exitosamente.");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
@@ -1399,6 +1402,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 				}
+				*/
 			}
 			
 			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
