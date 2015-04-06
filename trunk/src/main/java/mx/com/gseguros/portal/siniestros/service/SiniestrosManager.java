@@ -113,7 +113,7 @@ public interface SiniestrosManager {
 	public String guardaListaFacMesaControl(
 			String ntramite,
 			String nfactura,
-			String fefactura,
+			Date fefactura,
 			String cdtipser,
 			String cdpresta,
 			String ptimport,
@@ -125,7 +125,7 @@ public interface SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex,
-			String feegreso,
+			Date feegreso,
 			String diasdedu,
 			String tipoAccion
 			) throws Exception;
@@ -236,7 +236,7 @@ public interface SiniestrosManager {
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
 	 */
 	
-	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,String feocurrencia) throws Exception;
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,Date feocurrencia) throws Exception;
 	
 	public void actualizaMsinies(
 			String cdunieco,
@@ -502,6 +502,8 @@ public interface SiniestrosManager {
 	
 	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo)throws Exception;
 
+	public String porcentajeQuirurgico(String tipoMedico, String feAutorizacion)throws Exception;
+	
 	public void eliminaDocumentosxTramite(String ntramite) throws Exception;
 
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
@@ -515,7 +517,9 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> requiereInformacionAdicional(String cobertura, String subcobertura, String cdramo, String cdtipsit) throws Exception;
 	
-	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, Date feautori) throws Exception;
+	public List<Map<String, String>> listaConsultaCirculoHospitalarioMultisalud(String cdpresta, String cdramo, Date feautori) throws Exception;
+	
+	public String penalizacionCirculoHospitalario(HashMap<String, Object> paramPenalizacion) throws Exception;
 
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 

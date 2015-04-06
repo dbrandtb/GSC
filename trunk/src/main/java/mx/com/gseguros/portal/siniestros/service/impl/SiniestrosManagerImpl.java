@@ -37,7 +37,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
-	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Override
 	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
@@ -329,7 +328,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public String guardaListaFacMesaControl(
 			String ntramite,
 			String nfactura,
-			String fefactura,
+			Date fefactura,
 			String cdtipser,
 			String cdpresta,
 			String ptimport,
@@ -341,7 +340,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex,
-			String feegreso,
+			Date feegreso,
 			String diasdedu,
 			String tipoAccion) throws Exception {
 		// TODO Auto-generated method stub
@@ -358,7 +357,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_accion_i", accion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			paramsFacMesaCtrl.put("pv_ffactura_i",renderFechas.parse(fefactura));
+			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
@@ -370,7 +369,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
 			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
 			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
-			paramsFacMesaCtrl.put("pv_feegreso_i",renderFechas.parse(feegreso));
+			paramsFacMesaCtrl.put("pv_feegreso_i", feegreso);
 			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
@@ -717,7 +716,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}*/
 	
 	@Override
-	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,String feocurrencia) throws Exception
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,Date feocurrencia) throws Exception
 	{
 		//Map<String,String> params = new HashMap<String,String>();
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -726,7 +725,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_cdperson_i",cdperson);
 		params.put("pv_nmautser_i",nmautser);
 		params.put("pv_nfactura_i",nfactura);
-		params.put("pv_feocurrencia_i",renderFechas.parse(feocurrencia));
+		params.put("pv_feocurrencia_i",feocurrencia);
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
@@ -745,6 +744,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception {
 		try {
 			return siniestrosDAO.validaExclusionPenalizacion(paramExclusion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public String penalizacionCirculoHospitalario(HashMap<String, Object> paramPenalizacion) throws Exception {
+		try {
+			return siniestrosDAO.obtieneDatosCirculoHospitalario(paramPenalizacion);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -1413,6 +1421,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
+	public String porcentajeQuirurgico(String tipoMedico, String feAutorizacion) throws Exception {
+		try {
+			return siniestrosDAO.obtienePorcentajeQuirurgico(tipoMedico, feAutorizacion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	@Override
 	public void eliminaDocumentosxTramite(String ntramite) throws Exception {
 		// TODO Auto-generated method stub
 		try {
@@ -1483,15 +1499,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<Map<String, String>> listaConsultaCirculoHospitalario(String cdpresta, String cdramo, Date feautori) throws Exception {
+	public List<Map<String, String>> listaConsultaCirculoHospitalarioMultisalud(String cdpresta, String cdramo, Date feautori) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_cdpresta_i", cdpresta);
 		params.put("pv_cdramo_i",   cdramo);
 		params.put("pv_feautori_i",   feautori);
 		log.debug("listaConsultaCirculoHospitalario params: "+params);
-		return siniestrosDAO.obtieneDatosCirculoHospitalario(params);
+		return siniestrosDAO.obtieneDatosCirculoHospitalarioMultisalud(params);
 	}
-
+	
 	@Override
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
 		// TODO Auto-generated method stub

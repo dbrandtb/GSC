@@ -1745,7 +1745,7 @@ public String consultaListaPlazas(){
     		for(Map<String,String>factura:facturas)
     		{
 	    		String                   nfactura  = factura.get("NFACTURA");
-	    		String                   fefactura = factura.get("FFACTURA");
+	    		Date                     fefactura = renderFechas.parse(factura.get("FFACTURA"));
 	    		String                   cdtipser  = factura.get("CDTIPSER");
 	    		String                   cdpresta  = factura.get("CDPRESTA");
 	    		String                   ptimport  = factura.get("PTIMPORT");
@@ -1755,7 +1755,7 @@ public String consultaListaPlazas(){
 	    		String                   tasacamb  = factura.get("TASACAMB");
 	    		String                   ptimporta = factura.get("PTIMPORTA");
 	    		String                   dctonuex = factura.get("DCTONUEX");
-	    		String                   feegreso = factura.get("FEEGRESO");
+	    		Date                     feegreso = renderFechas.parse(factura.get("FEEGRESO"));
 	    		String                   diasdedu = factura.get("DIASDEDU");
 	    		
 	    		
@@ -1885,7 +1885,7 @@ public String consultaListaPlazas(){
     		
     		String                   ntramite  = params.get("ntramite");
 			String                   nfactura  = params.get("nfactura");
-			String                   fefactura = params.get("ffactura");
+			Date                     fefactura = renderFechas.parse(params.get("ffactura"));
     		String                   cdtipser  = params.get("cdtipser");
     		String                   cdpresta  = params.get("cdpresta");
     		String                   ptimport  = params.get("ptimport");
@@ -2087,7 +2087,7 @@ public String consultaListaPlazas(){
     		String cdramo   = params.get("CDRAMO");
     		String cdtipsit = params.get("CDTIPSIT");
     		String importe  = params.get("OTVALOR03");
-    		String feFactu  = params.get("OTVALOR06");
+    		Date feFactu  = renderFechas.parse(params.get("OTVALOR06"));
     		String tipoate  = params.get("OTVALOR07");
     		String factura  = params.get("OTVALOR08");
     		String cdprove  = params.get("OTVALOR11");
@@ -2170,7 +2170,7 @@ public String consultaListaPlazas(){
     		String nmpoliza = params.get("nmpoliza");
     		String ntramite = params.get("ntramite");
     		String nfactura = params.get("nfactura");
-    		String feocurrencia = params.get("feocurrencia");
+    		Date feocurrencia = renderFechas.parse(params.get("feocurrencia"));
 
     		//CUANDO SE PIDE EL NUMERO DE AUTORIZACION DE SERVICIO EN PANTALLA
     		//SE EJECUTAN LOS SIGUIENTES PL:
@@ -3790,7 +3790,7 @@ public String consultaListaPlazas(){
             		}    				
     			}else{ // DIFERENTE DE SALUD VITAL
     				try {
-    					datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(proveedor,ramo,renderFechas.parse(fechaOcurrencia));
+    					datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalarioMultisalud(proveedor,ramo,renderFechas.parse(fechaOcurrencia));
 						logger.debug("VALORES -->"+datosInformacionAdicional.size());
 						if(datosInformacionAdicional.size() > 0){
 							logger.debug(datosInformacionAdicional.get(0).get("MULTINCREMENTO"));
@@ -5481,7 +5481,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		siniestrosManager.guardaListaFacMesaControl(
                     msgResult, 
                     datosTablas.get(i).get("nfactura"),
-                    datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4),//getDate(datosTablas.get(i).get("ffactura"))+"",
+                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
                     datosTablas.get(i).get("cdtipser"),
                     datosTablas.get(i).get("cdpresta"),
                     datosTablas.get(i).get("ptimport"),
@@ -5527,7 +5527,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
         		siniestrosManager.guardaListaFacMesaControl(
                     msgResult, 
                     nfactura,
-                    datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4),
+                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
                     datosTablas.get(i).get("cdtipser"),
                     datosTablas.get(i).get("cdpresta"),
                     datosTablas.get(i).get("ptimport"),
@@ -5851,7 +5851,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	        		siniestrosManager.guardaListaFacMesaControl(
 	        			params.get("idNumTramite"), 
 	                    datosTablas.get(i).get("nfactura"),
-	                    datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4),//getDate(datosTablas.get(i).get("ffactura"))+"",
+	                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
 	                    datosTablas.get(i).get("cdtipser"),
 	                    datosTablas.get(i).get("cdpresta"),
 	                    datosTablas.get(i).get("ptimport"),
@@ -7553,8 +7553,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
-    public String consultaCirculoHospitalario(){
-		logger.debug(" **** Entrando a consultaCirculoHospitalario **");
+    public String consultaCirculoHospitalarioMultisalud(){
+		logger.debug(" **** Entrando a consultaCirculoHospitalarioMultisalud **");
 		logger.debug(params);
 		
 		try {
@@ -7563,17 +7563,55 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
 			logger.debug("feAutorizacion -->"+feAutorizacion);
 			
-			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalario(params.get("cdpresta"),params.get("cdramo"),renderFechas.parse(feAutorizacion));
+			
+			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalarioMultisalud(params.get("cdpresta"),params.get("cdramo"),renderFechas.parse(feAutorizacion));
 			logger.debug("VALOR DE RESPUESTA -->");
 			logger.debug(datosInformacionAdicional);
 		}catch( Exception e){
-			logger.error("Error al obtener los datos de consultaCirculoHospitalario",e);
+			logger.error("Error al obtener los datos de consultaCirculoHospitalarioMultisalud",e);
 			return SUCCESS;
 		}
 	success = true;
 	return SUCCESS;
     }
+
+    public String consultaPenalizacionCirculoHospitalario(){
+	   	logger.debug(" **** Entrando al metodo de validacion de consultaPenalizacionCirculoHospitalario ****");
+	   	logger.debug(params);
+	   	try {
+		   		String fechaAutorizacion = params.get("feautori");
+				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+				HashMap<String, Object> paramPenalizacion = new HashMap<String, Object>();
+		   		paramPenalizacion.put("pv_circuloHosPoliza_i",params.get("circuloHosPoliza"));
+		   		paramPenalizacion.put("pv_circuloHosProv_i",params.get("circuloHosProv"));
+		   		paramPenalizacion.put("pv_cdramo_i",params.get("cdramo"));
+		   		paramPenalizacion.put("pv_feautori_i", feAutorizacion);
+		   		porcentajePenalizacion = siniestrosManager.penalizacionCirculoHospitalario(paramPenalizacion);
+		   		logger.debug("VALOR DE PORCENTAJE DE PENALIZACION  ===> "+porcentajePenalizacion);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar consultaPenalizacionCirculoHospitalario ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
     
+    public String consultaPorcentajeQuirurgico(){
+	   	logger.debug(" **** Entrando al metodo de validacion de consultaPorcentajeQuirurgico ****");
+	   	logger.debug(params);
+	   	try {
+		   		String fechaAutorizacion = params.get("feautori");
+				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+				
+				msgResult = siniestrosManager.porcentajeQuirurgico(params.get("tipoMedico"), feAutorizacion);
+				logger.debug("VALOR DE PORCENTAJE -->"+msgResult);
+			}catch( Exception e){
+	   		logger.error("Error al consultar consultaPorcentajeQuirurgico ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
     /*public String complementarTramite(){
     	logger.debug(" **** Entrando a Complementar tramite **");
 		logger.debug(params); //---> El parametro a pasar es  ntramite

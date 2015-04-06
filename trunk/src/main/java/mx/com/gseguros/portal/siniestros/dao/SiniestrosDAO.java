@@ -409,6 +409,8 @@ public interface SiniestrosDAO {
 
 	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception;
 
+	public String obtienePorcentajeQuirurgico(String tipoMedico, String feAutorizacion) throws Exception;
+	
 	public void eliminacionDocumentosxTramite(String ntramite) throws Exception;
 	
 	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
@@ -421,7 +423,9 @@ public interface SiniestrosDAO {
 
 	public List<Map<String, String>> obtieneDatosAdicionales(Map<String, Object> params) throws Exception;
 	
-	public List<Map<String, String>> obtieneDatosCirculoHospitalario(Map<String, Object> params) throws Exception;
+	public List<Map<String, String>> obtieneDatosCirculoHospitalarioMultisalud(Map<String, Object> params) throws Exception;
+	
+	public String obtieneDatosCirculoHospitalario(HashMap<String, Object> paramPenalizacion) throws Exception;
 
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception;
 

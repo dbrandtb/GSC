@@ -102,8 +102,8 @@
 			</result>
 		</action>
 		
-		<action name="consultaCirculoHospitalario" class="siniestrosAction"
-			method="consultaCirculoHospitalario">
+		<action name="consultaCirculoHospitalarioMultisalud" class="siniestrosAction"
+			method="consultaCirculoHospitalarioMultisalud">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -555,6 +555,28 @@
 				<param name="includeProperties">
 					success,
 					factPagada
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaCirculoHospitalario" class="siniestrosAction"
+			method="consultaPenalizacionCirculoHospitalario">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					porcentajePenalizacion
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaPorcentajeQuirurgico" class="siniestrosAction"
+			method="consultaPorcentajeQuirurgico">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
 				</param>
 			</result>
 		</action>
