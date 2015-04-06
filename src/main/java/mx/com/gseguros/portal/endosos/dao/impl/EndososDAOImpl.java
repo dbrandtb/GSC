@@ -3133,7 +3133,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsup" , cdtipsup);
 		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA", params);
 		Map<String,Object> procResult = ejecutaSP(new RecuperarDiasDiferenciaEndosoValidos(getDataSource()),params);
-		int dias = (Integer)procResult.get("pv_dias_endoso_o");
+		int dias = Integer.parseInt((String)procResult.get("pv_dias_endoso_o"));
 		logger.debug(Utilerias.join("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
 		return dias;
 	}
