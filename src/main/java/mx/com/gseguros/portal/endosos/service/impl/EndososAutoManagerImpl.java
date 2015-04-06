@@ -806,7 +806,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.info("Endoso de Beneficiario exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Beneficiario");
-					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 					}else{
@@ -819,7 +821,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.info("Endoso de Placas y motor exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Placas y Motor");
-					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 					}else{
@@ -832,7 +835,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.info("Endoso de Serie exitoso...");
 				}else{
 					logger.error("Error al ejecutar los WS de endoso de Serie");
-					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 					}else{
@@ -846,8 +850,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				if(aux == null || !aux.isExitoRecibos()){
 					
 					logger.error("Error al ejecutar los WS de endoso");
-					
-					if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+							
+					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 					}else{
@@ -1162,7 +1167,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
 				/* TODO: Descomentar
-				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+				
+				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 				}else{
@@ -1395,7 +1403,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
 				/* TODO:Descomentar
-				if(endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem)){
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+				
+				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
 				}else{
