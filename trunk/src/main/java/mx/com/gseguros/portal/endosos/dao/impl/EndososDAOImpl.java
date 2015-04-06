@@ -2690,18 +2690,20 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,Date   fechaEndoso
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen
 			)throws Exception
 	{
-		Map<String,String>params=new LinkedHashMap<String,String>();
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdtipsup" , cdtipsup);
 		params.put("tstamp"   , tstamp);
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
+		params.put("feefecto" , fechaEndoso);
 		params.put("cdusuari" , cdusuari);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdelemen" , cdelemen);
@@ -2722,6 +2724,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto"  , OracleTypes.DATE));
 			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen"  , OracleTypes.VARCHAR));

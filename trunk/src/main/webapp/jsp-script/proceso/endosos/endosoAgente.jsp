@@ -32,8 +32,9 @@ var _10_fieldFechaEndoso;
 var _10_storeAgentes;
 var _10_gridAgentes;
 
-var _10_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
-var _10_urlLoadAgentes = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
+var _10_urlGuardar            = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
+var _10_urlLoadAgentes        = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
+var _10_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"        />';
 
 debug('_10_smap1:',_10_smap1);
 ////// variables //////
@@ -195,7 +196,7 @@ Ext.onReady(function()
         ,fieldLabel : 'Fecha de efecto'
         ,allowBlank : false
         ,value      : '<s:property value="smap1.fechaInicioEndoso" />'
-        ,readOnly   : true
+        //,readOnly   : true
         ,name       : 'fecha_endoso'
     });
     _10_panelEndoso = new _10_PanelEndoso();
@@ -272,6 +273,40 @@ Ext.onReady(function()
         {
         	_10_panelPri.setLoading(false);
         	errorComunicacion();
+        }
+    });
+    
+    Ext.Ajax.request(
+    {
+        url      : _10_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _10_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _10_smap1.CDRAMO
+            ,'smap1.estado'       : _10_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _10_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _10_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldByName('fecha_endoso').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldByName('fecha_endoso').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldByName('fecha_endoso').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
         }
     });
     ////// loader //////

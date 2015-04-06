@@ -6,7 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p36_urlConfirmarEndoso = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
+var _p36_urlConfirmarEndoso    = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
+var _p36_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"          />';
 ////// urls //////
 
 ////// variables //////
@@ -209,120 +210,144 @@ Ext.onReady(function()
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
-                    {
-                        text     : 'Confirmar'
-                        ,itemId  : '_p36_botonConfirmar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                        ,handler : function()
-                        {
-                            var panel    = _fieldById('_p36_botonConfirmar');
-                            var callback = function()
+                    
+                ]
+                ,bbar :
+                [
+                    '->'
+                    ,{
+                        xtype     : 'form'
+                        ,itemId   : '_p36_formEndoso'
+                        ,layout   : 'hbox'
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
                             {
-                            	// Generar objeto para la confirmacion:
-                            	var jsonDatosConfirmacion = {
-                            		smap1: {
-                            			'cdtipsup'  : _p36_smap1.cdtipsup
-                                        ,'tstamp'   : _p36_smap1.tstamp
-                                        ,'cdunieco' : _p36_store.getAt(0).get('CDUNIECO')
-                                        ,'cdramo'   : _p36_store.getAt(0).get('CDRAMO')
-                                        ,'estado'   : _p36_store.getAt(0).get('ESTADO')
-                                        ,'nmpoliza' : _p36_store.getAt(0).get('NMPOLIZA')
-                            		},
-                            		slist1 : []
-                            	};
-                            	_p36_store.each(function(record){
-                                	var valores = {};
-                                	for(var key in record.data)
-                                    {
-                                        var value=record.data[key];
-                                        debug(typeof value,key,value);
-                                        if((typeof value=='object')&&value&&value.getDate)
-                                        {
-                                            var fecha='';
-                                            fecha+=value.getDate();
-                                            if((fecha+'x').length==2)//1x
-                                            {
-                                                fecha = ('x'+fecha).replace('x','0');//x1=01
-                                            }
-                                            fecha+='/';
-                                            fecha+=value.getMonth()+1<10?
-                                                   (('x'+(value.getMonth()+1)).replace('x','0'))
-                                                   :(value.getMonth()+1);
-                                            fecha+='/';
-                                            fecha+=value.getFullYear();
-                                            value=fecha;
-                                        }
-                                        valores[key]=value;
-                                        for(var i in _p39_gridColumnsEditables)
-                                        {
-                                        	var col      = _p39_gridColumnsEditables[i];
-                                        	var name     = col.editor.name;
-                                        	var cdatribu = 90+col.editor.orden;
-                                        	debug('name:',name,'cdatribu:',cdatribu);
-                                        	debug('metemos:',record.get(name));
-                                        	valores['OTVALOR'+cdatribu]=record.get(name);
-                                        	debug('metimos:',valores['OTVALOR'+cdatribu]);
-                                        }
-                                    }
-                                    jsonDatosConfirmacion.slist1.push(valores);
-                            	});
-                            	
-                                panel.setDisabled(true);
-                                Ext.Ajax.request(
-                                {
-                                    url     : _p36_urlConfirmarEndoso
-                                    ,jsonData: jsonDatosConfirmacion 
-                                    ,success : function(response)
-                                    {
-                                    	_p36_store.commitChanges();
-                                        panel.setDisabled(false);
-                                        var json = Ext.decode(response.responseText);
-                                        debug('### confirmar endoso:',json);
-                                        if(json.success)
-                                        {
-                                            marendNavegacion(2);
-                                            mensajeCorrecto('Endoso generado','Endoso generado');
-                                        }
-                                        else
-                                        {
-                                            mensajeError(json.respuesta);
-                                        }
-                                    }
-                                    ,failure : function(response)
-                                    {
-                                        panel.setDisabled(false);
-                                        errorComunicacion();
-                                    }
-                                });
-                            };
-                            
-                            var valido = _fieldById('_p36_form').getForm().isValid();
-                            if(!valido)
-                            {
-                                datosIncompletos();
+                                xtype       : 'datefield'
+                                ,itemId     : '_p36_fechaCmp'
+                                ,fieldLabel : 'Fecha de efecto'
+                                ,value      : new Date()
+                                ,allowBlank : false
                             }
-                            
-                            if(valido)
-                            {
-                                if(_p36_itemsEdicion.length==0)
-                                {
-                                    callback();
-                                }
-                                else
-                                {
-                                    _p36_store.each(function(record)
-                                    {
-                                        var values=_fieldById('_p36_form').getForm().getValues();
-                                        for(var att in values)
-                                        {
-                                            record.set(att,values[att]);
-                                        }
-                                    });
-                                    callback();
-                                }
-                            }
-                        }
+                            ,{
+                                xtype    : 'button'
+		                        ,text    : 'Confirmar'
+		                        ,itemId  : '_p36_botonConfirmar'
+		                        ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+		                        ,handler : function()
+		                        {
+		                            var panel    = _fieldById('_p36_botonConfirmar');
+		                            var callback = function()
+		                            {
+		                                // Generar objeto para la confirmacion:
+		                                var jsonDatosConfirmacion = {
+		                                    smap1: {
+		                                        'cdtipsup'  : _p36_smap1.cdtipsup
+		                                        ,'tstamp'   : _p36_smap1.tstamp
+		                                        ,'cdunieco' : _p36_store.getAt(0).get('CDUNIECO')
+		                                        ,'cdramo'   : _p36_store.getAt(0).get('CDRAMO')
+		                                        ,'estado'   : _p36_store.getAt(0).get('ESTADO')
+		                                        ,'nmpoliza' : _p36_store.getAt(0).get('NMPOLIZA')
+		                                        ,'feefecto' : Ext.Date.format(_fieldById('_p36_fechaCmp').getValue(),'d/m/Y')
+		                                    },
+		                                    slist1 : []
+		                                };
+		                                _p36_store.each(function(record){
+		                                    var valores = {};
+		                                    for(var key in record.data)
+		                                    {
+		                                        var value=record.data[key];
+		                                        debug(typeof value,key,value);
+		                                        if((typeof value=='object')&&value&&value.getDate)
+		                                        {
+		                                            var fecha='';
+		                                            fecha+=value.getDate();
+		                                            if((fecha+'x').length==2)//1x
+		                                            {
+		                                                fecha = ('x'+fecha).replace('x','0');//x1=01
+		                                            }
+		                                            fecha+='/';
+		                                            fecha+=value.getMonth()+1<10?
+		                                                   (('x'+(value.getMonth()+1)).replace('x','0'))
+		                                                   :(value.getMonth()+1);
+		                                            fecha+='/';
+		                                            fecha+=value.getFullYear();
+		                                            value=fecha;
+		                                        }
+		                                        valores[key]=value;
+		                                        for(var i in _p39_gridColumnsEditables)
+		                                        {
+		                                            var col      = _p39_gridColumnsEditables[i];
+		                                            var name     = col.editor.name;
+		                                            var cdatribu = 90+col.editor.orden;
+		                                            debug('name:',name,'cdatribu:',cdatribu);
+		                                            debug('metemos:',record.get(name));
+		                                            valores['OTVALOR'+cdatribu]=record.get(name);
+		                                            debug('metimos:',valores['OTVALOR'+cdatribu]);
+		                                        }
+		                                    }
+		                                    jsonDatosConfirmacion.slist1.push(valores);
+		                                });
+		                                
+		                                panel.setDisabled(true);
+		                                Ext.Ajax.request(
+		                                {
+		                                    url     : _p36_urlConfirmarEndoso
+		                                    ,jsonData: jsonDatosConfirmacion 
+		                                    ,success : function(response)
+		                                    {
+		                                        _p36_store.commitChanges();
+		                                        panel.setDisabled(false);
+		                                        var json = Ext.decode(response.responseText);
+		                                        debug('### confirmar endoso:',json);
+		                                        if(json.success)
+		                                        {
+		                                            marendNavegacion(2);
+		                                            mensajeCorrecto('Endoso generado','Endoso generado');
+		                                        }
+		                                        else
+		                                        {
+		                                            mensajeError(json.respuesta);
+		                                        }
+		                                    }
+		                                    ,failure : function(response)
+		                                    {
+		                                        panel.setDisabled(false);
+		                                        errorComunicacion();
+		                                    }
+		                                });
+		                            };
+		                            
+		                            var valido = _fieldById('_p36_form').getForm().isValid()&&_fieldById('_p36_formEndoso').getForm().isValid();
+		                            if(!valido)
+		                            {
+		                                datosIncompletos();
+		                            }
+		                            
+		                            if(valido)
+		                            {
+		                                if(_p36_itemsEdicion.length==0)
+		                                {
+		                                    callback();
+		                                }
+		                                else
+		                                {
+		                                    _p36_store.each(function(record)
+		                                    {
+		                                        var values=_fieldById('_p36_form').getForm().getValues();
+		                                        for(var att in values)
+		                                        {
+		                                            record.set(att,values[att]);
+		                                        }
+		                                    });
+		                                    callback();
+		                                }
+		                            }
+		                        }
+		                    }
+                        ]
                     }
+                    ,'->'
                 ]
             })
         ]
@@ -333,6 +358,39 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    Ext.Ajax.request(
+    {
+        url      : _p36_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p36_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _p36_smap1.CDRAMO
+            ,'smap1.estado'       : _p36_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _p36_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _p36_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldById('_p36_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldById('_p36_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldById('_p36_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldById('_p36_fechaCmp').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 

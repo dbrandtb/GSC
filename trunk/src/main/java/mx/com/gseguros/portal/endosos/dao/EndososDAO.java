@@ -302,6 +302,7 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,Date   fechaEndoso
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen

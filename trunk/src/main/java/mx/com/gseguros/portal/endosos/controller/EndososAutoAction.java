@@ -306,6 +306,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
+			String feefecto = smap1.get("feefecto");
 			
 			Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
 			Utils.validate(tstamp    , "No se recibio el id de proceso");
@@ -313,6 +314,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo    , "No se recibio el producto");
 			Utils.validate(estado    , "No se recibio el estado");
 			Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
+			Utils.validate(feefecto  , "No se recibio la fecha de efecto");
 			
 			endososAutoManager.confirmarEndosoTvalositAuto(
 					cdtipsup
@@ -321,6 +323,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdramo
 					,estado
 					,nmpoliza
+					,feefecto
 					,cdusuari
 					,cdsisrol
 					,cdelemen

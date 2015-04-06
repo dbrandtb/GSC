@@ -66,6 +66,7 @@ public interface EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String feefecto
 			,String cdusuari
 			,String cdsisrol
 			,String cdelemen

@@ -26,6 +26,7 @@
     var urlTatrip3                = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
     var urlLoadTatrip3            = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
     var urlSaveTatrip3            = '<s:url namespace="/" action="guardarValoresTatrigar" />';
+    var urlRecuperacionSimplep3      = '<s:url namespace="/emision"    action="recuperacionSimple"      />';
     var urlRecuperacionSimpleListap3 = '<s:url namespace="/emision"    action="recuperacionSimpleLista" />';
     var endcobUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
     var endcobUrlGuardar          = '<s:url namespace="/endosos" action="guardarEndosoCoberturas" />';
@@ -861,6 +862,45 @@
         /*///////////////////*/
         ////// Contenido //////
         ///////////////////////
+        
+        ////// custom //////
+        ////// custom //////
+        
+        ////// loader //////
+        Ext.Ajax.request(
+        {
+            url      : urlRecuperacionSimplep3
+            ,params  :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+                ,'smap1.cdunieco'     : inputCduniecop3
+                ,'smap1.cdramo'       : inputCdramop3
+                ,'smap1.estado'       : inputEstadop3
+                ,'smap1.nmpoliza'     : inputNmpolizap3
+                ,'smap1.cdtipsup'     : inputAltabajap3=='alta'?'6':'7'
+            }
+            ,success : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### fechas:',json);
+                if(json.exito)
+                {
+                    _fieldByName('pv_fecha_i').setMinValue(json.smap1.FECHA_MINIMA);
+                    _fieldByName('pv_fecha_i').setMaxValue(json.smap1.FECHA_MAXIMA);
+                    _fieldByName('pv_fecha_i').setReadOnly(json.smap1.EDITABLE=='N');
+                    _fieldByName('pv_fecha_i').isValid();
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
+        ////// loader //////
     });
 </script>
 <div id="pan_usu_cob_divgrid"></div>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
@@ -86,14 +87,17 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		try
 		{
 			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			checkNull(smap1                  , "No se recibieron datos");
 			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento, "No se recibio el procedimiento");
+			checkNull(procedimiento          , "No se recibio el procedimiento");
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			try
 			{
 				RecuperacionSimple rec      = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1);
+				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1,cdsisrol);
 				exito           = resp.isExito();
 				respuesta       = resp.getRespuesta();
 				if(exito)
@@ -130,14 +134,17 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		try
 		{
 			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			checkNull(smap1                  , "No se recibieron datos");
 			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento, "No se recibio el procedimiento");
+			checkNull(procedimiento          , "No se recibio el procedimiento");
+			checkNull(session                , "No hay sesion");
+			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			try
 			{
 				RecuperacionSimple rec       = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSlistVO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1);
+				ManagerRespuestaSlistVO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol);
 				exito     = resp.isExito();
 				respuesta = resp.getRespuesta();
 				if(exito)
