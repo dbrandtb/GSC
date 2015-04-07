@@ -21,20 +21,16 @@
             var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
             debug("TIPO_PAGO");
             debug(_TIPO_PAGO_DIRECTO);
-            var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-            
+            var _URL_CATALOGOS 						= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
-            
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
             var _URL_LISTADO_ALTATRAMITE          	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
-            
             var _URL_GUARDA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';
-            
             var _URL_CONSULTA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
             var _URL_CONSULTA_GRID_ALTA_TRAMITE     = '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
-            var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
-            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
+            var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
+            var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
