@@ -1852,10 +1852,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdperpag" , cdperpag);
 		logger.debug(
 				new StringBuilder()
-				.append("\n********************************************************")
-				.append("\n****** PKG_COTIZA.P_OBTIENE_CPTOS_GLOBALES_COLECT ******")
+				.append("\n****************************************************")
+				.append("\n****** PKG_COTIZA.P_OBT_CPTOS_GLOBALES_COLECT ******")
 				.append("\n****** params=").append(params)
-				.append("\n********************************************************")
+				.append("\n****************************************************")
 				.toString()
 				);
 		Map<String,Object>procResult=ejecutaSP(new CargarConceptosGlobalesGrupo(getDataSource()),params);
@@ -1875,7 +1875,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	protected CargarConceptosGlobalesGrupo(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_OBTIENE_CPTOS_GLOBALES_COLECT");
+            super(dataSource,"PKG_COTIZA.P_OBT_CPTOS_GLOBALES_COLECT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
