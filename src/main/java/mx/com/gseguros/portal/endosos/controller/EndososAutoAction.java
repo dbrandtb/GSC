@@ -645,6 +645,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String status   = smap1.get("STATUS");
+			String ntramite = smap1.get("NTRAMITE");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -672,6 +673,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					cdramo,
 					estado,
 					nmpoliza,
+					ntramite,
 					cdelemen,
 					cdusuari,
 					cdtipsup,
