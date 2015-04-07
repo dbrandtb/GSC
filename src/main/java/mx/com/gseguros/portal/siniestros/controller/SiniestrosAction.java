@@ -146,9 +146,53 @@ public class SiniestrosAction extends PrincipalCoreAction {
     private List<Map<String,String>>  datosInformacionAdicional;
     private List<Map<String,String>>  datosValidacion;
     
-    
+    /*** 	A U T O R I Z A C I O N    	D E	     S E R V I C I O 	 ***/
+    /**
+     * Funcion para la visualizacion de la pantalla inicial de autorizacion de servicio
+     * @param params
+     * @return params - Retornamos los valores de la session y rol del Medico
+     */ 
+    public String autorizacionServicios() {
+    	logger.debug(" **** Entrando a autorizacion Servicio ****");
+    	try {
+    		//Obtenemos el Rol a ocupar
+    		UserVO usuario  	= (UserVO)session.get("USUARIO");
+    		String cdrol    	= usuario.getRolActivo().getClave();
+    		String pantalla     = "AUTORIZACION_SERVICIOS";
+    		String seccion      = "PANELBUTTONS";
+    		
+    		List<ComponenteVO>ltFormulario = pantallasManager.obtenerComponentes(
+				null, null, null,
+				null, null, cdrol,
+				pantalla, seccion, null);
+		
+    		GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+    		gc.generaComponentes(ltFormulario, true, false, false, false, false, true);
+    		
+    		imap = new HashMap<String,Item>(0);
+    		imap.put("panelbuttons",gc.getButtons());
+    		String numero_aut = null;
+    		String ntramite = null;
+    	
+	    	if(params != null){
+	    		numero_aut  = params.get("nmAutSer");
+	        	ntramite  =  params.get("ntramite");
+	    	}
+	    	
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("nmAutSer",numero_aut);
+			params.put("ntramite",ntramite);
+			params.put("cdrol",cdrol);
+			setParamsJson(params);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+    	success = true;
+    	return SUCCESS;
+    }
+	
 	/**
-     * Funciï¿½n para la visualizaciï¿½n de la autorizacion de servicio 
+     * Funcion para la visualizacion de la autorizacion de servicio 
      * @return params con los valores para hacer las consultas
      */
 	public String verAutorizacionServicio(){
@@ -163,97 +207,36 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
     }
 	
-	
-	public String altaTramite(){
-		logger.debug(" **** Entrando al metodo de alta de tramite ****");
+	/**
+	 * Funcion que obtiene el listado de  de Autorizacion de Servicio
+	 * @param String cdperson
+	 * @return Lista AutorizaServiciosVO con la informacion de los asegurados
+	 */
+	public String consultaListaAutorizacion(){
+		logger.debug(" **** Entrando a consulta de lista de Autorizacion por CDPERSON ****");
 		try {
-			//modificamos el valor del params para colocarle el rol que se esta ocupando
-			String ntramite = null;
-	    	String cdunieco = null;
-	    	
-	    	UserVO usuario  = (UserVO)session.get("USUARIO");
-			//String cdunueco="1007";
-	    	String cdUnieco = usuario.getCdUnieco();
-			cdunieco = usuario.getCdUnieco().toString();
-	    	
-	    	if(params != null)
-	    	{
-	    		cdunieco  = params.get("cdunieco");
-	    		ntramite  = params.get("ntramite");
-	    	}
-	    	
-	    	HashMap<String, String> params = new HashMap<String, String>();
-			params.put("cdunieco",cdunieco);
-			params.put("ntramite",ntramite);
-			setParamsJson(params);
-			logger.debug("params=" + params);
+				List<AutorizaServiciosVO> lista = siniestrosManager.getConsultaListaAutorizaciones(params.get("tipoAut"),params.get("cdperson"));
+				if(lista!=null && !lista.isEmpty())	listaAutorizacion = lista;
 		}catch( Exception e){
-			logger.error(e.getMessage(), e);
+			logger.error("Error al obtener la lista de autorizaciones por el CDPERSON ",e);
+			return SUCCESS;
 		}
-		success = true;
-		return SUCCESS;
-    }
-	
-	
-
-    public String autorizacionServicios() {
-	logger.debug(" **** Entrando a autorizacion Servicio ****");
-	try {
-		//Obtenemos el Rol a ocupar
-		UserVO usuario  = (UserVO)session.get("USUARIO");
-    	String cdrol    = usuario.getRolActivo().getClave();
-    	
-    	String pantalla            = "AUTORIZACION_SERVICIOS";
-		String seccion             = "PANELBUTTONS";
-		
-		////// obtener valores del formulario //////
-		List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
-				null, null, null,
-				null, null, cdrol,
-				pantalla, seccion, null);
-		
-		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-		
-		////// generar grid //////
-		gc.generaComponentes(ltFormulario, true, false, false, false, false, true);
-		imap=new HashMap<String,Item>(0);
-		imap.put("panelbuttons",gc.getButtons());
-    	
-    	String numero_aut = null;
-    	String ntramite = null;
-    	
-    	if(params != null)
-    	{
-    		numero_aut  = params.get("nmAutSer");
-        	ntramite  =  params.get("ntramite");
-    	}
-    	
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("nmAutSer",numero_aut);
-		params.put("ntramite",ntramite);
-		params.put("cdrol",cdrol);
-		setParamsJson(params);
-		
-		/*params={nmAutSer=98, cdrol=, ntramite=1673}*/
-	} catch (Exception e) {
-		logger.error(e.getMessage(), e);
-	}
 	success = true;
 	return SUCCESS;
     }
 	
 	/**
-     * Funciï¿½n que realiza la busqueda de la consulta de Autorizaciï¿½n de servicio en especifico
+     * Funcion que realiza la busqueda de la consulta de Autorizacion de servicio en especifico
      * @param String nmautser
-     * @return String autorizaciï¿½n de Servicio
+     * @return AutorizacionServicioVO
      */
-    public String consultaAutorizacionServicio(){
-    		logger.debug(" **** Entrando a Consulta de Autorizaciï¿½n de Servicio en Especifico****");
+	public String consultaAutorizacionServicio(){
+    		logger.debug(" **** Entrando a Consulta de Autorizacion de Servicio en Especifico****");
     		try {
     				List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
     				if(lista!=null && !lista.isEmpty())	datosAutorizacionEsp = lista.get(0);
     		}catch( Exception e){
-    			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
+    			logger.error("Error al obtener los datos de Autorizacion de Servicio en Especifico",e);
             return SUCCESS;
         }
         success = true;
@@ -261,41 +244,148 @@ public class SiniestrosAction extends PrincipalCoreAction {
     }
     
     /**
-     * Funciï¿½n que obtiene la lista del asegurado
-     * @param void sin parametros de entrada
-     * @return Lista GenericVO con la informaciï¿½n de los asegurados
-     */    
-    public String consultaListaAsegurado(){
-    	logger.debug(" **** Entrando al mï¿½todo de Lista de Asegurado ****");
-	   	try {
-	   		listaAsegurado= siniestrosManager.getConsultaListaAsegurado(params.get("cdperson"));
+ 	 * metodo que obtiene el listado de las coberturas de poliza
+ 	 * @param maps [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant]
+ 	 * @return Lista CoberturaPolizaVO con la informacion de los asegurados
+ 	 */
+ 	public String consultaListaCoberturaPoliza(){
+ 		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
+ 		try {
+ 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+ 			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
+ 			paramCobertura.put("pv_estado_i",params.get("estado"));
+ 			paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
+ 			paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
+ 			paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
+ 			paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
+ 			
+ 			List<CoberturaPolizaVO> lista = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
+ 			if(lista!=null && !lista.isEmpty())	listaCoberturaPoliza = lista;
+ 		}catch( Exception e){
+ 			logger.error("Error al obtener la lista de la cobertura de la poliza ",e);
+ 			return SUCCESS;
+ 		}
+ 	success = true;
+ 	return SUCCESS;
+    }
+ 	
+    /**
+    * Funcion que obtiene la lista de Sbcobertura
+    * @param cdgarant
+    * @param cdsubcob
+    * @return Lista GenericVO con la informacion de los asegurados
+    */    
+   public String consultaListaSubcobertura(){
+   	logger.debug(" **** Entrando al metodo de Lista de Subcobertura ****");
+   	logger.debug(params);
+   	  	try {
+	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"), params.get("cdramo"),params.get("cdtipsit"));
 	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
 	   		return SUCCESS;
 	   	}
 	   	success = true;
-	   	return SUCCESS;
+	   	return SUCCESS;   	
+  }
+   
+   /**
+    * Funcion que obtiene el listado de las subcobertura
+    * @param cdtabla
+    * @param otclave
+    * @return Lista GenericVO con la informacion de los asegurados
+    */    
+    public String consultaListaCPTICD(){
+ 	  	logger.debug(" **** Entrando al metodo de Lista de Subcobertura ****");
+ 		   	try {	   		
+ 		   		listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("cdtabla"),params.get("otclave"));
+ 		   	}catch( Exception e){
+ 		   		logger.error("Error al consultar la Lista de subcoberturas ",e);
+ 		   		return SUCCESS;
+ 		   	}
+ 		   	success = true;
+ 		   	return SUCCESS;   	
     }
     
 	/**
-	 * Funciï¿½n que obtiene el listado de  de Autorizaciï¿½n de Servicio
-	 * @param String cdperson
-	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
+	 * metodo que obtiene la informacion de deducible y copago
+	 * @param String params [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant,subcober]
+	 * @return Lista DatosSiniestroVO con la informacion de los asegurados
 	 */
-	public String consultaListaAutorizacion(){
-		logger.debug(" **** Entrando a consulta de lista de Autorizaciï¿½n por CDPERSON ****");
+	public String consultaListaDatSubGeneral(){
+		logger.debug(" **** Entrando al metodo de consulta de Deducible y Copagos **");
 		try {
-				
-				List<AutorizaServiciosVO> lista = siniestrosManager.getConsultaListaAutorizaciones(params.get("tipoAut"),params.get("cdperson"));
-				if(lista!=null && !lista.isEmpty())	listaAutorizacion = lista;
+			HashMap<String, Object> paramDatSubGral = new HashMap<String, Object>();
+			paramDatSubGral.put("pv_cdunieco_i",params.get("cdunieco"));
+			paramDatSubGral.put("pv_estado_i",params.get("estado"));
+			paramDatSubGral.put("pv_cdramo_i",params.get("cdramo"));
+			paramDatSubGral.put("pv_nmpoliza_i",params.get("nmpoliza"));
+			paramDatSubGral.put("pv_nmsituac_i",params.get("nmsituac"));
+			paramDatSubGral.put("pv_cdgarant_i",params.get("cdgarant"));
+			paramDatSubGral.put("pv_subcober_i",params.get("subcober"));
+			paramDatSubGral.put("pv_cdpresta_i",params.get("cdpresta"));
+			paramDatSubGral.put("pv_cdtipo_i",Rol.CLINICA.getCdrol());
+			paramDatSubGral.put("pv_cdtipsit_i",params.get("cdtipsit"));
+			
+			List<DatosSiniestroVO> lista = siniestrosManager.getConsultaListaDatSubGeneral(paramDatSubGral);
+			if(lista!=null && !lista.isEmpty())	listaDatosSiniestro = lista;
 		}catch( Exception e){
-			logger.error("Error al obtener la lista de autorizaciones ",e);
+			logger.error("Error en el metodo de consulta de Deducible y Copagos ",e);
 			return SUCCESS;
 		}
 	success = true;
 	return SUCCESS;
     }
     
+   /**
+    * Funcion que obtiene la lista de Porcentajes
+    * @param cdp, tipoMedico y MontoBase
+    * @return Lista ConsultaPorcentajeVO con la informacion del proveedor
+    */ 
+   public String consultaListaPorcentaje(){
+		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
+		try {
+				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
+				if(lista!=null && !lista.isEmpty())	listaPorcentaje = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de la poliza ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+   }
+   
+   @Deprecated	
+   public String consultaListaManteni(){
+		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
+		try {
+				List<ConsultaManteniVO> lista = siniestrosManager.getConsultaListaManteni(params.get("cdtabla"),params.get("codigo"));
+				if(lista!=null && !lista.isEmpty())	listaConsultaManteni = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de la poliza ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+   }
+   
+  	/**
+	 * Funcion que obtiene el listado de las listas de los grids
+	 * @param String nmautser
+	 * @return Lista ConsultaTDETAUTSVO con la informacion
+	 */
+	public String consultaListaTDeTauts(){
+		logger.debug(" **** Entrando a consulta de lista TDETAUTS ****");
+		try {
+				List<ConsultaTDETAUTSVO> lista = siniestrosManager.getConsultaListaTDeTauts(params.get("nmautser"));
+				if(lista!=null && !lista.isEmpty())	listaConsultaTablas = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los datos para la informacion de las tablas internas",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 	/**
 	 * metodo para el guardado de la autorizaciï¿½n de Servicio
 	 * @param Json con todos los valores del formulario y los grid
@@ -347,11 +437,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 					//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2
 					List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
-					if(lista!=null && !lista.isEmpty())
-					{
+					if(lista!=null && !lista.isEmpty()) {
 						numeroAutorizacion = lista.get(0);
-						for(int i=0;i<datosTablas.size();i++)
-				   		{
+						for(int i=0;i<datosTablas.size();i++) {
 				   			HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
 				   			paramsTDeTauts.put("pv_nmautser_i",lista.get(0).getNmautser());
 							paramsTDeTauts.put("pv_cdtipaut_i",datosTablas.get(i).get("cdtipaut"));
@@ -366,8 +454,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				   		}
 						
-						if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3"))
-						{
+						if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3")){
 							//Cambios de TMESACONTROL
 							HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
 							paramsMCAut.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -387,14 +474,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							if(params.get("status").trim().equalsIgnoreCase(EstatusTramite.PENDIENTE.getCodigo())){
 								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
 							}else{
-								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol()))
-								{
+								if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())) {
 									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA_CMM.getCodigo());// valor 12
 								}else{
 									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA.getCodigo());// valor 7
 								}
 							}
-							//paramsMCAut.put("pv_status_i","7");
 							paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
 							paramsMCAut.put("pv_nmsolici_i",null);
 							paramsMCAut.put("pv_cdtipsit_i",params.get("cdtipsit"));
@@ -446,9 +531,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				    		
 				    		// Tenemos que actualizar el status para el guardado
 				    		if(params.get("status").trim().equalsIgnoreCase("2")){
-								//paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
-				    			
-				    			String statusNuevo = EstatusTramite.CONFIRMADO.getCodigo();
+								String statusNuevo = EstatusTramite.CONFIRMADO.getCodigo();
 				    			String ntramite = params.get("idNumtramiteInicial");
 				    			String comments = null;
 				    			String cdmotivo = null;
@@ -470,8 +553,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());
 								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
 								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
-								generarAutoriServicio(paramsO);
-				    			
+								generarAutoriServicio(paramsO);	
 							}
 							
 						}
@@ -485,166 +567,525 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	    return SUCCESS;
 	}
 
-	
 	/**
-	 * metodo para el guardado de la autorizaciï¿½n de Servicio
-	 * @param Json con todos los valores del formulario y los grid
-	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
+	 * metodo para generar la autorizacion de servicio
+	 * @param Map que contiene la informacion del tramite
+	 * @return Autorizacion de Servicio
 	 */
-	public String guardaAltaTramite(){
-			logger.debug(" **** Entrando al guardado de alta de tramite ****");
-			logger.debug(params);
-			logger.debug(datosTablas);
-			try{
-				// 1.- Guardar en TMESACONTROL 
-				this.session=ActionContext.getContext().getSession();
-				UserVO usuario=(UserVO) session.get("USUARIO");
-				HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-				parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
-				parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
-				parMesCon.put("pv_estado_i",params.get("estado"));
-				parMesCon.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-				parMesCon.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-				parMesCon.put("pv_nmsolici_i",params.get("idNmsolici"));
-				parMesCon.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-				parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
-				parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-				parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-				parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
-				parMesCon.put("pv_cdagente_i",null);
-				parMesCon.put("pv_referencia_i",null);
-				parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado"));
-				parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaRecepcion")));
-				parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-				parMesCon.put("pv_comments_i",null);
-				parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));
-				parMesCon.put("pv_otvalor03",params.get("ImporteIndFactura"));
-				parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
-				parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
-				parMesCon.put("pv_otvalor05",usuario.getUser());
-				parMesCon.put("pv_otvalor06",params.get("fechaIndFactura"));
-				parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));
-				parMesCon.put("pv_otvalor08",params.get("numIndFactura"));
-				parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
-				parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
-				parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
-				parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
-				if(params.get("cmbProveedor").toString().length() > 0){
-					parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
-				}
-				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
-					parMesCon.put("pv_otvalor12","7RDH");
-					parMesCon.put("pv_otvalor14","7RDH001");
-				}
-				
-				//Si el tr&aacute;mite es nuevo
-				if(params.get("idNumTramite").toString().length() <= 0){
-				    WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-				    if(res.getItemMap() == null)
-				    {
-				        logger.error("Sin mensaje respuesta de nmtramite!!");
-				    }
-				    else{
-				        msgResult = (String) res.getItemMap().get("ntramite");
-				        ProcesoAltaTramite(msgResult);
-			        }
-				}else{
-					//Existe el trámite y solo lo vamos a actualizar
-					HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
-					//1.- Verificamos si cambio el tipo de atención
-					List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
-					String valorTipoAtencion = lista.get(0).getOtvalor07mc();
-					if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
-						siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
-						modMesaControl.put("pv_otvalor01_i",null);
-					}else{
-						modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
-					}
-					//Actualizar los valores de ntramite
-					
-					modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
-					modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
-					modMesaControl.put("pv_cdramo_i",params.get("cmbRamos"));
-					modMesaControl.put("pv_estado_i",params.get("estado"));
-					modMesaControl.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-					modMesaControl.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-					modMesaControl.put("pv_nmsolici_i",params.get("idNmsolici"));
-					modMesaControl.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-					modMesaControl.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
-					modMesaControl.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-					modMesaControl.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-					modMesaControl.put("pv_ferecepc_i",renderFechas.parse(params.get("dtFechaRecepcion")));
-					modMesaControl.put("pv_nombre_i",params.get("idnombreAsegurado"));
-					modMesaControl.put("pv_festatus_i",renderFechas.parse(params.get("dtFechaRecepcion")));
-					modMesaControl.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-					modMesaControl.put("pv_otvalor02_i",params.get("cmbTipoPago"));
-					modMesaControl.put("pv_otvalor03_i",params.get("ImporteIndFactura"));
-					modMesaControl.put("pv_otvalor04_i",params.get("cmbBeneficiario"));
-					modMesaControl.put("pv_otvalor05_i",usuario.getUser());
-					modMesaControl.put("pv_otvalor06_i",params.get("fechaIndFactura"));
-					modMesaControl.put("pv_otvalor07_i",params.get("cmbTipoAtencion"));
-					modMesaControl.put("pv_otvalor08_i",params.get("numIndFactura"));
-					modMesaControl.put("pv_otvalor09_i",params.get("cmbAseguradoAfectado"));
-					modMesaControl.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));
-					modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
-					modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
-					modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
-				
-					if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
-						modMesaControl.put("pv_otvalor12","7RDH");
-						modMesaControl.put("pv_otvalor14","7RDH001");
-					}
-					siniestrosManager.actualizaValorMC(modMesaControl);
-					
-					//2.- Verificamos Si el tipo de pago es 
-					//    1.- Reembolso
-					//    2.- Indemnizacion
-					//
-					if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))
-					{
-						 ProcesoAltaTramite(params.get("idNumTramite"));
-					}
-				}
-				
-			}catch( Exception e){
-				logger.error("Error en el guardado de alta de tramite ",e);
-		        return SUCCESS;
-			}
-			
-			
-	    success = true;
-	    return SUCCESS;
-	}
-    
-    
-   /**
-	 * metodo que obtiene el listado de las coberturas de poliza
-	 * @param maps [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant]
-	 * @return Lista CoberturaPolizaVO con la informaciï¿½n de los asegurados
+   public String generarAutoriServicio(Map<String, Object> paramsO){
+	   try {
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+           if(!carpeta.exists()){
+           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+           		carpeta.mkdir();
+           		if(carpeta.exists()){
+           			logger.debug("carpeta creada");
+           		} else {
+           			logger.debug("carpeta NO creada");
+           		}
+           } else {
+           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+           }
+           
+           UserVO usuario=(UserVO)session.get("USUARIO");
+           //urlContrareciboSiniestro
+           String reporteSeleccion = null;
+           if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
+        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
+           }else{
+        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
+           }
+           String urlAutorizacionServicio = ""
+           					   + getText("ruta.servidor.reports")
+                               + "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
+                               + "&p_ramo=" + paramsO.get("pv_cdramo_i")
+                               + "&p_estado=" + paramsO.get("pv_estado_i")
+                               + "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
+                               + "&P_AUTSER=" + paramsO.get("pv_nmAutSer_i")
+                               + "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
+                               + "&destype=cache"
+                               + "&desformat=PDF"
+                               + "&userid="+getText("pass.servidor.reports")
+                               + "&ACCESSIBLE=YES"
+                               + "&report="+reporteSeleccion
+                               + "&paramform=no"
+                               ;
+           logger.debug(urlAutorizacionServicio);
+           String nombreArchivo = getText("siniestro.autorizacionServicio.nombre");
+           String pathArchivo=""
+           					+ getText("ruta.documentos.poliza")
+           					+ "/" + paramsO.get("pv_ntramite_i")
+           					+ "/" + nombreArchivo
+           					;
+           HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
+           
+           paramsO.put("pv_feinici_i"  , new Date());
+           paramsO.put("pv_cddocume_i" , nombreArchivo);
+           paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio");
+           paramsO.put("pv_swvisible_i"   , null);
+           paramsO.put("pv_codidocu_i"   , null);
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
+           paramsO.put("pv_nmsolici_i",null);
+           paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
+           logger.debug(paramsO);
+           kernelManagerSustituto.guardarArchivo(paramsO);
+		   
+	   }catch( Exception e){
+		   logger.error("Error al generar la autorizaci&oacute de servicio",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+	/**
+	 * metodo para obtener el listia de la plazas
+	 * @param no recibe ningun valor
+	 * @return Listado de las plazas
 	 */
-	public String consultaListaCoberturaPoliza(){
-		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
-		try {
-			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
-			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
-			paramCobertura.put("pv_estado_i",params.get("estado"));
-			paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
-			paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
-			paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
-			paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
-			
-			List<CoberturaPolizaVO> lista = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
-			if(lista!=null && !lista.isEmpty())	listaCoberturaPoliza = lista;
+   public String consultaListaPlazas(){
+   		logger.debug(" **** Entrando al mï¿½todo de Lista de Plazas ****");
+	   	try {
+	   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el listado de las plazas ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+   
+	/**
+	 * metodo para consultar el numero de dias maximo
+	 * @param Ramo, cdtipsit
+	 * @return diasMaximos - Numero de dias maximo
+	 */
+   public String consultaNumeroDias(){
+	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
+	   	try {
+	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS, Validacion.DIAS_MAX_AUTORIZACION_SERVICIOS);
+	   	}catch( Exception e){
+	   		logger.error("Error al obtener el numero de dias maximo ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
+   
+	/**
+	 * metodo para consultar la poliza en especifico
+	 * @param unieco, Ramo, Estado, Nmpoliza, cdperson
+	 * @return PolizaVigenteVO - Informacion de Poliza en especifico
+	 */
+	public String consultaPolizaUnica(){
+	   logger.debug(" **** Entrando al metodo de consulta poliza Unica ****");
+	   try {
+		   	HashMap<String, Object> paramPolUnica = new HashMap<String, Object>();
+	   		paramPolUnica.put("pv_cdunieco_i",params.get("cdunieco"));
+	   		paramPolUnica.put("pv_cdramo_i",params.get("cdramo"));
+	   		paramPolUnica.put("pv_estado_i",params.get("estado"));
+	   		paramPolUnica.put("pv_nmpoliza_i",params.get("nmpoliza"));
+	   		paramPolUnica.put("pv_cdperson_i",params.get("cdperson"));
+	   		List<PolizaVigenteVO> polUnica = siniestrosManager.getConsultaPolizaUnica(paramPolUnica);
+			if(polUnica!=null && !polUnica.isEmpty())	polizaUnica = polUnica;
 		}catch( Exception e){
-			logger.error("Error al obtener la lista de la cobertura de la poliza ",e);
+			logger.error("Error al obtener los datos de la poliza unica ",e);
+			return SUCCESS;
+		}
+	   	success = true;
+	   	return SUCCESS;
+   }
+   
+	/**
+	 * metodo para validar si existe exclusion de penalizacion
+	 * @param unieco, Ramo, Estado, Nmpoliza, nmsituac
+	 * @return existePenalizacion - Exlusion de penalizacion
+	 */
+	public String validaExclusionPenalizacion(){
+		logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
+		try {
+			HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
+			paramExclusion.put("pv_cdunieco_i",params.get("cdunieco"));
+			paramExclusion.put("pv_estado_i",params.get("estado"));
+			paramExclusion.put("pv_cdramo_i",params.get("cdramo"));
+			paramExclusion.put("pv_nmpoliza_i",params.get("nmpoliza"));
+			paramExclusion.put("pv_nmsituac_i",params.get("nmsituac"));
+			existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+		}catch( Exception e){
+			logger.error("Error obtener la exclusion de penalizacion ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+
+	/**
+	 * metodo para obtener el porcentaje de penalizacion por la zona contratada
+	 * @param zonaContratada, zonaAtencion, cdRamo
+	 * @return porcentajePenalizacion - Porcentaje de Penalizacion x Zona Contratada
+	 */
+   public String validaPorcentajePenalizacion(){
+	   	logger.debug(" **** Entrando al metodo de porcentaje de penalizacion x zona contratada ****");
+	   	try {
+	   		porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"), params.get("cdRamo"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar al metodo de porcentaje de penalizaciï¿½n ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+   
+	/**
+	 * metodo para obtener el monto Maximo
+	 * @param ccdramo, cdtipsit
+	 * @return montoMaximo - Monto Maximo
+	 */
+	public String consultaMontoMaximo(){
+		logger.debug(" **** Entrando al metodo para obtener  el monto Maximo ****");
+		try {
+			montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS, Validacion.MONTO_MAXIMO_AUTORIZACION_SERVICIOS);
+		}catch( Exception e){
+			logger.error("Error al consultar el monto maximo",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+
+	/**
+	 * metodo para obtener el numero de meses maximo en maternidad
+	 * @param ccdramo, cdtipsit
+	 * @return mesMaximoMaternidad - Numero de meses maximo
+	 */
+	public String consultaMesesMaximoMaternidad(){
+	   	logger.debug(" **** Entrando al metodo para obtener el numero de meses max para validar Maternidad****");
+	   	try {
+	   		mesMaximoMaternidad = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.MESES, Validacion.MESES_MAX_MATERNIDAD);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el numero de meses maximo para maternidad ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+   
+	/**
+	 * metodo para validar si tiene todos los documentos cargados
+	 * @param ntramite
+	 * @return existeDocAutServicio - Existe Documentos cargados
+	 */
+   public String validaDocumentosAutoServ(){
+	   	logger.debug(" **** Entrando al metodo de validacion de documentos de Autorizacion de servicio ****");
+	   	try {
+		   		existeDocAutServicio = siniestrosManager.validaDocumentosAutServicio(params.get("ntramite"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la validacion de documentos de Autorizacion de servicio ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+
+	/**
+	 * metodo el numero de meses maximo de periodo de espera
+	 * @param otvalor, cdtabla
+	 * @return mesesTiempoEspera - Numero maximo de tiempo de espera
+	 */
+   public String obtieneMesesTiempoEspera(){
+	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
+	   	try {
+	   			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor"),params.get("cdtabla"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el periodo de espera en meses",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+   
+   /**
+    * Funcion que valida si requiere autorizacion de servicio
+    * @param Cobertura, Subcobertura, cdramo, cdtipsit
+    * @return datosInformacionAdicional informacion adicional
+    */
+   public String obtieneRequiereAutServ(){
+	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
+	   	try {
+	   		datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"),params.get("cdramo"),params.get("cdtipsit"));
+	   	}catch( Exception e){
+	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+
+   /**
+    * Funcion que valida el circulo hospitalario para Multisalud
+    * @param params (feautori, cdramo, cdpresta)
+    * @return datosInformacionAdicional del Multisalud
+    */
+   public String consultaCirculoHospitalarioMultisalud(){
+		logger.debug(" **** Entrando a consultaCirculoHospitalarioMultisalud **");
+		logger.debug(params);
+		
+		try {
+			String fechaAutorizacion = params.get("feautori");
+			logger.debug("fechaAutorizacion -->"+fechaAutorizacion);
+			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+			logger.debug("feAutorizacion -->"+feAutorizacion);
+			
+			
+			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalarioMultisalud(params.get("cdpresta"),params.get("cdramo"),renderFechas.parse(feAutorizacion));
+			logger.debug("VALOR DE RESPUESTA -->");
+			logger.debug(datosInformacionAdicional);
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de consultaCirculoHospitalarioMultisalud",e);
 			return SUCCESS;
 		}
 	success = true;
 	return SUCCESS;
    }
+
+   /**
+    * Funcion que valida el Circulo Hospitalario
+    * @param params (feautori, circuloHosPoliza, circuloHosProv, cdramo)
+    * @return porcentajePenalizacion - Porcentaje de penalizacion
+    */
+   public String consultaPenalizacionCirculoHospitalario(){
+	   	logger.debug(" **** Entrando al metodo de validacion de consultaPenalizacionCirculoHospitalario ****");
+	   	logger.debug(params);
+	   	try {
+		   		String fechaAutorizacion = params.get("feautori");
+				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+				HashMap<String, Object> paramPenalizacion = new HashMap<String, Object>();
+		   		paramPenalizacion.put("pv_circuloHosPoliza_i",params.get("circuloHosPoliza"));
+		   		paramPenalizacion.put("pv_circuloHosProv_i",params.get("circuloHosProv"));
+		   		paramPenalizacion.put("pv_cdramo_i",params.get("cdramo"));
+		   		paramPenalizacion.put("pv_feautori_i", feAutorizacion);
+		   		porcentajePenalizacion = siniestrosManager.penalizacionCirculoHospitalario(paramPenalizacion);
+		   		logger.debug("VALOR DE PORCENTAJE DE PENALIZACION  ===> "+porcentajePenalizacion);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar consultaPenalizacionCirculoHospitalario ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+   
+   /**
+    * Funcion que obtener el porcentaje Quirurgico
+    * @param params (feautori, tipoMedico)
+    * @return msgResult - Porcentaje
+    */
+   public String consultaPorcentajeQuirurgico(){
+	   	logger.debug(" **** Entrando al metodo de validacion de consultaPorcentajeQuirurgico ****");
+	   	logger.debug(params);
+	   	try {
+		   		String fechaAutorizacion = params.get("feautori");
+				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
+				
+				msgResult = siniestrosManager.porcentajeQuirurgico(params.get("tipoMedico"), feAutorizacion);
+				logger.debug("VALOR DE PORCENTAJE -->"+msgResult);
+			}catch( Exception e){
+	   		logger.error("Error al consultar consultaPorcentajeQuirurgico ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+
+   /**
+    * Funcion para la validacion de la autorizacion en proceso
+    * @param nmAutSer
+    * @return autorizarProceso - Autorizacion en proceso
+    */
+	public String validaAutorizacionProceso(){
+	   	logger.debug(" **** Entrando al metodo para la validacion de autorizacion en proceso ****");
+	   	try {
+		   		autorizarProceso = siniestrosManager.validaAutorizacionProceso(params.get("nmAutSer"));
+	   	}catch( Exception e){
+	   		logger.error("Error en el metodo para la validacion de la autorizacion en proceso ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
 	
+   /**
+    * Funcion para cambiar el status de la autorizacion de servicio
+    * @param nmAutSer, status
+    * @return cambioEstatus
+    */
+	public String cambiarEstatusMAUTSERV(){
+		logger.debug(" **** Entrando a cambiar el estatus al momento de cancelarlos ****");
+		try {
+				siniestrosManager.getCambiarEstatusMAUTSERV(params.get("nmautser"), params.get("status"));
+				
+		}catch( Exception e){
+			logger.error("Error al cambiar el estatus",e);
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+  
+   /**
+    * Funcion para guardar la carta de rechazo en autorizacion de servicio
+    * @param ntramite, comments
+    * @return PDF - Carta de rechazo
+    */
+	public String guardarCartaRechazoAutServ()
+	{
+		logger.info(""
+				+ "\n#################################"
+				+ "\n###### guardarCartaRechazo ######"
+				);
+		logger.info("map1: "+map1);
+		String ntramite    = map1.get("ntramite");
+		String comments    = map1.get("comments");
+		logger.debug(comments);
+		String commentsM   = comments.replaceAll("\n", "%0A").
+				replaceAll("á", "%C3%A1").
+				replaceAll("é", "%C3%A9").
+				replaceAll("í", "%C3%AD").
+				replaceAll("ó", "%C3%B3").
+				replaceAll("ú", "%C3%BA").
+				replaceAll("ñ", "%C3%B1").
+				replaceAll("Á", "%C3%81").
+				replaceAll("É", "%C3%89").
+				replaceAll("Í", "%C3%8D").
+				replaceAll("Ó", "%C3%93").
+				replaceAll("Ú", "%C3%9A").
+				replaceAll("Ñ", "%C3%91");
+		String cdsisrol    = map1.get("cdsisrol");
+		String cdunieco    = map1.get("cdunieco");
+		String cdramo      = map1.get("cdramo");
+		String estado      = map1.get("estado");
+		String nmpoliza    = map1.get("nmpoliza");
+		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		
+		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
+      if(!carpeta.exists()){
+      		logger.debug("no existe la carpeta::: "+ntramite);
+      		carpeta.mkdir();
+      		if(carpeta.exists()){
+      			logger.debug("carpeta creada");
+      		} else {
+      			logger.debug("carpeta NO creada");
+      		}
+      } else {
+      	 logger.debug("existe la carpeta   ::: "+ntramite);
+      }
+      
+		String url         = this.getText("ruta.servidor.reports")
+				+ "?destype=cache"
+				+ "&desformat=PDF"
+				+ "&userid="+this.getText("pass.servidor.reports")
+				+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
+						this.getText("rdf.emision.rechazo.medico.nombre"):
+							this.getText("rdf.emision.rechazo.admin.nombre"))
+				+ "&paramform=no"
+				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+				+ "&p_ntramite="+ntramite
+				+ "&p_comments="+commentsM;
+		logger.debug(""
+				+ "\n#################################"
+				+ "\n###### Se solicita reporte ######"
+				+ "\n###### "+url
+				);
+		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
+		logger.debug(""
+				+ "\n###### Se solicita reporte ######"
+				+ "\n#################################"
+				);
+		try
+		{
+			HashMap<String, Object> paramsR = new HashMap<String, Object>();
+			paramsR.put("pv_cdunieco_i"  , cdunieco);
+			paramsR.put("pv_cdramo_i"    , cdramo);
+			paramsR.put("pv_estado_i"    , estado);
+			paramsR.put("pv_nmpoliza_i"  , nmpoliza);
+			paramsR.put("pv_nmsuplem_i"  , 0);
+			paramsR.put("pv_feinici_i"   , new Date());
+			paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
+			paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
+			paramsR.put("pv_nmsolici_i"  , nmpoliza);
+			paramsR.put("pv_ntramite_i"  , ntramite);
+			paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			paramsR.put("pv_swvisible_i" , Constantes.SI);
+			kernelManagerSustituto.guardarArchivo(paramsR);
+	    }
+		catch(Exception ex)
+		{
+			logger.error("error al crear la carta rechazo",ex);
+		}
 	
+		logger.info(""
+				+ "\n###### guardarCartaRechazo ######"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+  
+
+/*** 	A L T A 	 D E	 T R A M I T E 	 ***/
+	/**
+	 * Funcion para cargar la pantalla principal del alta de tramite
+	 * @param params
+	 * @return params - Params con los valores de unieco, tramite y rol
+	 */
+	public String altaTramite(){
+		logger.debug(" **** Entrando al metodo de alta de tramite ****");
+		try {
+			String ntramite = null;
+	    	String cdunieco = null;
+	    	UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdUnieco = usuario.getCdUnieco();
+			cdunieco = usuario.getCdUnieco().toString();
+	    	
+	    	if(params != null){
+	    		cdunieco  = params.get("cdunieco");
+	    		ntramite  = params.get("ntramite");
+	    	}
+	    	
+	    	HashMap<String, String> params = new HashMap<String, String>();
+			params.put("cdunieco",cdunieco);
+			params.put("ntramite",ntramite);
+			setParamsJson(params);
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+    }
+	
+	/**
+    * Funcion para obtener el tipo de atencion
+    * @param ramo y tipoPago
+    * @return Lista GenericVO - Tipo de Atencion
+    */    
+	public String consultaListaTipoAtencion(){
+		logger.debug(" **** consultaListaTipoAtencion ****");
+	   	try {
+	   		listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
+	   		logger.debug(listaTipoAtencion);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+	
+	/**
+    * Funcion para obtener el listado del alta del tramite
+    * @param ntramite
+    * @return Lista AltaTramiteVO - tramite Alta Tramite
+    */
 	public String consultaListadoAltaTramite(){
 		logger.debug(" **** Entrando a consulta de lista de alta de tramite ****");
 		try {
@@ -658,7 +1099,233 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	success = true;
 	return SUCCESS;
    }
+
+	/**
+	 * metodo para el guardado de la autorizacion de Servicio
+	 * @param Json con todos los valores del formulario y los grid
+	 * @return Lista AutorizaServiciosVO con la informacion de los asegurados
+	 */
+	public String guardaAltaTramite(){
+		logger.debug(" **** Entrando al guardado de alta de tramite ****");
+		logger.debug(params);
+		logger.debug(datosTablas);
+		try{
+			// 1.- Guardar en TMESACONTROL 
+			this.session=ActionContext.getContext().getSession();
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
+			parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
+			parMesCon.put("pv_estado_i",params.get("estado"));
+			parMesCon.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+			parMesCon.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+			parMesCon.put("pv_nmsolici_i",params.get("idNmsolici"));
+			parMesCon.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+			parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
+			parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
+			parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
+			parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
+			parMesCon.put("pv_cdagente_i",null);
+			parMesCon.put("pv_referencia_i",null);
+			parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado"));
+			parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaRecepcion")));
+			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
+			parMesCon.put("pv_comments_i",null);
+			parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));
+			parMesCon.put("pv_otvalor03",params.get("ImporteIndFactura"));
+			parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
+			parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
+			parMesCon.put("pv_otvalor05",usuario.getUser());
+			parMesCon.put("pv_otvalor06",params.get("fechaIndFactura"));
+			parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));
+			parMesCon.put("pv_otvalor08",params.get("numIndFactura"));
+			parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
+			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
+			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
+			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
+			if(params.get("cmbProveedor").toString().length() > 0){
+				parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
+			}
+			
+			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+				parMesCon.put("pv_otvalor12","7RDH");
+				parMesCon.put("pv_otvalor14","7RDH001");
+			}
+				
+			//Si el tr&aacute;mite es nuevo
+			if(params.get("idNumTramite").toString().length() <= 0){
+			    WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+			    if(res.getItemMap() == null){
+			        logger.error("Sin mensaje respuesta de nmtramite!!");
+			    }else{
+			    	msgResult = (String) res.getItemMap().get("ntramite");
+			    	logger.debug("Entra a proceso 1");
+			        ProcesoAltaTramite(msgResult);
+		        }
+			}else{
+				//Existe el trámite y solo lo vamos a actualizar
+				HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
+				//1.- Verificamos si cambio el tipo de atención
+				List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
+				String valorTipoAtencion = lista.get(0).getOtvalor07mc();
+				if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
+					siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
+					modMesaControl.put("pv_otvalor01_i",null);
+				}else{
+					modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
+				}
+				
+				modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
+				modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
+				modMesaControl.put("pv_cdramo_i",params.get("cmbRamos"));
+				modMesaControl.put("pv_estado_i",params.get("estado"));
+				modMesaControl.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+				modMesaControl.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+				modMesaControl.put("pv_nmsolici_i",params.get("idNmsolici"));
+				modMesaControl.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+				modMesaControl.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
+				modMesaControl.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
+				modMesaControl.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
+				modMesaControl.put("pv_ferecepc_i",renderFechas.parse(params.get("dtFechaRecepcion")));
+				modMesaControl.put("pv_nombre_i",params.get("idnombreAsegurado"));
+				modMesaControl.put("pv_festatus_i",renderFechas.parse(params.get("dtFechaRecepcion")));
+				modMesaControl.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
+				modMesaControl.put("pv_otvalor02_i",params.get("cmbTipoPago"));
+				modMesaControl.put("pv_otvalor03_i",params.get("ImporteIndFactura"));
+				modMesaControl.put("pv_otvalor04_i",params.get("cmbBeneficiario"));
+				modMesaControl.put("pv_otvalor05_i",usuario.getUser());
+				modMesaControl.put("pv_otvalor06_i",params.get("fechaIndFactura"));
+				modMesaControl.put("pv_otvalor07_i",params.get("cmbTipoAtencion"));
+				modMesaControl.put("pv_otvalor08_i",params.get("numIndFactura"));
+				modMesaControl.put("pv_otvalor09_i",params.get("cmbAseguradoAfectado"));
+				modMesaControl.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));
+				modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
+				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
+				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
+				
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+					modMesaControl.put("pv_otvalor12","7RDH");
+					modMesaControl.put("pv_otvalor14","7RDH001");
+				}
+				siniestrosManager.actualizaValorMC(modMesaControl);
+				//2.- Verificamos Si el tipo de pago es: 1.- Reembolso y  2.- Indemnizacion
+				if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())){
+					logger.debug("Entra a proceso 2 : REEMBOLSO E INDEMIZACION"); 
+					ProcesoAltaTramite(params.get("idNumTramite"));
+				}
+			}	
+		}catch( Exception e){
+			logger.error("Error en el guardado de alta de tramite ",e);
+	        return SUCCESS;
+		}
+	    success = true;
+	    return SUCCESS;
+	}
 	
+    public String ProcesoAltaTramite(String msgResult) throws Exception {
+    	// si tipo de pago es Directo
+        if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo())){
+        	for(int i=0;i<datosTablas.size();i++) {
+        		siniestrosManager.guardaListaFacMesaControl(
+                    msgResult, 
+                    datosTablas.get(i).get("nfactura"),
+                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
+                    datosTablas.get(i).get("cdtipser"),
+                    datosTablas.get(i).get("cdpresta"),
+                    datosTablas.get(i).get("ptimport"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    datosTablas.get(i).get("cdmoneda"),
+                    datosTablas.get(i).get("tasacamb"),
+                    datosTablas.get(i).get("ptimporta"),
+                    null,
+                    null,
+                    null,
+                    null
+                );
+            }
+        }else{
+        	/*Se agrega la información de las facturas*/
+        	if(params.get("idNumTramite").toString().length() > 0){
+        		try {
+        			// Se realiza la eliminacion de las facturas
+					siniestrosManager.getEliminacionFacturaTramite(msgResult, null, "0");
+				} catch (Exception e) {
+					logger.error("error al eliminar en TfacMesCtrl ",e);
+				}
+        	}
+        	
+        	String cobertura = null;
+        	String subcobertura = null;
+        	if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+				cobertura 	 = "7RDH";
+				subcobertura = "7RDH001";
+			}
+        	
+        	for(int i=0;i<datosTablas.size();i++) {
+        		String nfactura= "0";
+        		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())){
+            		nfactura = datosTablas.get(i).get("nfactura");
+        		}else{
+        			nfactura= msgResult+""+i;
+        		}
+        		siniestrosManager.guardaListaFacMesaControl(
+                    msgResult, 
+                    nfactura,
+                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
+                    datosTablas.get(i).get("cdtipser"),
+                    datosTablas.get(i).get("cdpresta"),
+                    datosTablas.get(i).get("ptimport"),
+                    cobertura,
+                    subcobertura,
+                    null,
+                    null,
+                    datosTablas.get(i).get("cdmoneda"),
+                    datosTablas.get(i).get("tasacamb"),
+                    datosTablas.get(i).get("ptimporta"),
+                    null,
+                    null,
+                    null,
+                    null
+                );
+            }
+            
+            if(params.get("idNumTramite").toString().length() > 0){
+        	    try {
+        			// Eliminacion de tworksin por numero de tramite, 
+					siniestrosManager.getEliminacionAsegurado(msgResult, null, "0");
+				} catch (Exception e) {
+					logger.error("error al eliminar en TworkSin ",e);
+				}
+        	}
+            
+            HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
+            paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
+            paramsTworkSinPagRem.put("pv_cdunieco_i",params.get("cdunieco"));
+            paramsTworkSinPagRem.put("pv_cdramo_i",params.get("cmbRamos"));
+            paramsTworkSinPagRem.put("pv_estado_i",params.get("estado"));
+            paramsTworkSinPagRem.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+            paramsTworkSinPagRem.put("pv_nmsolici_i",params.get("idNmsolici"));
+            paramsTworkSinPagRem.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+            paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
+            paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+            paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
+            paramsTworkSinPagRem.put("pv_feocurre_i",renderFechas.parse(params.get("dtFechaOcurrencia")));
+            paramsTworkSinPagRem.put("pv_nfactura_i",null);
+            paramsTworkSinPagRem.put("pv_nmautser_i",null);
+            siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
+        }
+        success = true;
+    	return SUCCESS;
+    }
+    
+	/**
+	 * Funcion para obtener la informacion que se encuentra en TMESACONTROL
+	 * @param ntramite
+	 * @return MesaControlVO - Informacion del tramite
+	 */ 
 	public String consultaListadoMesaControl(){
 		logger.debug(" **** Entrando a consulta del registro de la mesa de control  ****");
 		try {
@@ -674,93 +1341,667 @@ public class SiniestrosAction extends PrincipalCoreAction {
    }
 	
 	/**
-	 * metodo que obtiene la informaciï¿½n de deducible y copago
-	 * @param String params [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant,subcober]
-	 * @return Lista DatosSiniestroVO con la informaciï¿½n de los asegurados
-	 */
-	public String consultaListaDatSubGeneral(){
-		logger.debug(" **** Entrando a consulta de lista de subcobertura **");
-		try {
-			HashMap<String, Object> paramDatSubGral = new HashMap<String, Object>();
-			paramDatSubGral.put("pv_cdunieco_i",params.get("cdunieco"));
-			paramDatSubGral.put("pv_estado_i",params.get("estado"));
-			paramDatSubGral.put("pv_cdramo_i",params.get("cdramo"));
-			paramDatSubGral.put("pv_nmpoliza_i",params.get("nmpoliza"));
-			paramDatSubGral.put("pv_nmsituac_i",params.get("nmsituac"));
-			paramDatSubGral.put("pv_cdgarant_i",params.get("cdgarant"));
-			paramDatSubGral.put("pv_subcober_i",params.get("subcober"));
-			paramDatSubGral.put("pv_cdpresta_i",params.get("cdpresta"));
-			paramDatSubGral.put("pv_cdtipo_i",Rol.CLINICA.getCdrol());
-			paramDatSubGral.put("pv_cdtipsit_i",params.get("cdtipsit"));
-			
-			List<DatosSiniestroVO> lista = siniestrosManager.getConsultaListaDatSubGeneral(paramDatSubGral);
-			if(lista!=null && !lista.isEmpty())	listaDatosSiniestro = lista;
-		}catch( Exception e){
-			logger.error("Error al obtener ls datos de deducible y copago ",e);
-			return SUCCESS;
-		}
-	success = true;
-	return SUCCESS;
-    }
-	
-    /**
-    * Funciï¿½n que obtiene la lista de Sbcobertura
-    * @param cdgarant
-    * @param cdsubcob
-    * @return Lista GenericVO con la informaciï¿½n de los asegurados
-    */    
-   public String consultaListaSubcobertura(){
-   	logger.debug(" **** Entrando al metodo de Lista de Subcobertura ****");
-   	logger.debug(params);
-   	  	try {
-	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"), params.get("cdramo"),params.get("cdtipsit"));
+	 * Funcion que obtiene el listado de la factura en proceso
+	 * @param nfactura, cdpresta, ptimport
+	 * @return factPagada - ntramite en donde se encuentra la factura
+	 */ 
+	public String consultaFacturaPagada(){
+	   	logger.debug(" **** Entrando al metodo para consulta si la factura ya se encuentra en proceso ****");
+	   	try {
+	   		factPagada = siniestrosManager.obtieneTramiteEnProceso(params.get("nfactura"), params.get("cdpresta"), params.get("ptimport"));
 	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
+	   		logger.error("Error al consultar el metodo para consulta si la factura ya se encuentra en proceso  ",e);
 	   		return SUCCESS;
 	   	}
 	   	success = true;
-	   	return SUCCESS;   	
-  }
+	   	return SUCCESS;
+	}
 	
-   /**
-    * Funciï¿½n que obtiene la lista de las poliza
-    * @param cdperson
-    * @return Lista GenericVO con la informaciï¿½n de los asegurados
-    */ 
-   public String consultaListaPoliza(){
-   	logger.debug(" **** Entrando al mï¿½todo de Lista de Poliza ****");
-   	logger.debug(params);
-   	try {
-				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
-				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
-			}catch( Exception e){
-				logger.error("Error al obtener los datos de la poliza ",e);
-				return SUCCESS;
+	/**
+	 * Funcion para guardar la factura, pero eliminando primero los anteriores
+	 * @param params y datosTablas  
+	 * @return success si es exito
+	 */ 
+	public String guardaFacturaAltaTramite(){
+		logger.debug(""
+		+ "\n#########################################"
+		+ "\n#########################################"
+		+ "\n###### GUARDA FACTURA ALTA TRAMITE ######"
+		+ "\n######                             ######"
+		);
+        logger.debug(datosTablas);
+        logger.debug(params);
+		try {
+				//Realizamos la eliminación de las facturas
+				siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0");
+        		for(int i=0;i<datosTablas.size();i++) {
+	        		siniestrosManager.guardaListaFacMesaControl(
+	        			params.get("idNumTramite"), 
+	                    datosTablas.get(i).get("nfactura"),
+	                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
+	                    datosTablas.get(i).get("cdtipser"),
+	                    datosTablas.get(i).get("cdpresta"),
+	                    datosTablas.get(i).get("ptimport"),
+	                    null,
+	                    null,
+	                    null,
+	                    null,
+	                    datosTablas.get(i).get("cdmoneda"),
+	                    datosTablas.get(i).get("tasacamb"),
+	                    datosTablas.get(i).get("ptimporta"),
+	                    null,
+	                    null,
+	                    null,
+	                    null
+	                );
+	            }
+	   	}catch( Exception e){
+	   		logger.error("Error al guardar las facturas",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	
+	   	logger.debug(""
+		+ "\n######                             ######"
+		+ "\n###### GUARDA FACTURA ALTA TRAMITE ######"
+		+ "\n#########################################"
+		+ "\n#########################################"
+		);
+	   	success = true;
+	   	return SUCCESS;
+	}
+
+	/**
+	 * Funcion para obtener las facturas del tramite
+	 * @param ntramite  
+	 * @return List<Map<String, String>>  de las facturas del tramite
+	 */ 
+    public String obtenerFacturasTramite()
+    {
+    	logger.debug(""
+    			+ "\n####################################"
+    			+ "\n####################################"
+    			+ "\n###### obtenerFacturasTramite ######"
+    			+ "\n######                        ######"
+    			);
+    	logger.debug("smap:"+smap);
+    	try
+    	{
+    		slist1=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
+    		mensaje="Facturas obtenidas";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al obtener facturas de tramite",ex);
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                        ######"
+    			+ "\n###### obtenerFacturasTramite ######"
+    			+ "\n####################################"
+    			+ "\n####################################"
+    			);
+    	return SUCCESS;
+    }
+
+	/**
+	 * Funcion para obtener las facturas por el asegurado
+	 * @param smap  
+	 * @return List<Map<String, String>>  de las facturas del tramite
+	 */ 
+    public String validarFacturaAsegurado()
+    {
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### valida Factura-Asegurado ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug("smap:"+smap);
+    	try {
+    		String tipoPagoTramite = smap.get("tipoPago");
+    		String faltaAsegurados="";
+    		String validacionAseg=null;
+    		boolean faltaFacturas=true;
+    		
+    		boolean esReembolso = tipoPagoTramite.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo()) ||tipoPagoTramite.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo());
+			if(esReembolso){
+				validacionAseg = "0";
+			}else{
+				List<Map<String,String>> facturas=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
+	    		for(Map<String,String>factura:facturas){
+	    			List<Map<String,String>> asegurados =siniestrosManager.obtenerAseguradosTramite(factura.get("NTRAMITE"), factura.get("NFACTURA"));
+	    			if(asegurados.size() <= 0){
+	    				faltaFacturas= false;
+	    				faltaAsegurados = faltaAsegurados +" "+factura.get("NFACTURA");
+	    			}
+	    		}
+	    		if(faltaFacturas){
+	    			validacionAseg = "0";
+	    		}else{
+	    			validacionAseg ="1";
+	    		}
 			}
+			
+			loadList = new ArrayList<HashMap<String,String>>();
+	   		HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("faltaAsegurados"   ,validacionAseg );
+	   			map.put("facturasFaltantes" , faltaAsegurados);
+	   		loadList.add(map);
+			success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al obtener facturas de tramite",ex);
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### valida Factura-Asegurado ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+
+	/**
+	 * Funcion para obtener los asegurados de la factura en el tramite
+	 * @param params  
+	 * @return List<Map<String, String>> - Listado de los asegurados
+	 */ 
+	public String obtenerAseguradosTramite()
+    {
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### obtenerAseguradosTramite ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug(params);
+    	try
+    	{
+    		slist1=siniestrosManager.obtenerAseguradosTramite(params.get("ntramite"), params.get("nfactura"));
+    		mensaje="Asegurados obtenidos";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al obtener facturas de tramite",ex);
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### obtenerAseguradosTramite ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+	
+	/**
+	 * Funcion para eliminar las facturas y sus asegurados
+	 * @param params ntramite,  nfactura
+	 * @return success - Si el guardado fue correcto
+	 */	
+	public String eliminarFactAsegurado()
+    {
+		logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### eliminarFactAsegurado	 ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug(params);
+    	try
+    	{
+    		siniestrosManager.getEliminacionAsegurado(params.get("idNumTramite"),datosTablas.get(0).get("modFactura"),"1");
+    		
+    		mensaje="Asegurados obtenidos";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al obtener facturas de tramite",ex);
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### eliminarFactAsegurado	 ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+	
+	/**
+	 * Funcion para guardar la informacion de los asegurados
+	 * @param params y datosTablas
+	 * @return success - Si el guardado fue correcto
+	 */
+	public String guardaTworksin()
+    {
+    	logger.debug(""
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			+ "\n###### guardaTworksin ######"
+    			+ "\n######                ######"
+    			);
+    	logger.debug("params: "+params);
+    	logger.debug(datosTablas);
+    	try{
+    		try {
+        			// Eliminacion de los datos en tworksin
+    				siniestrosManager.getEliminacionAsegurado(params.get("idNumTramite"),datosTablas.get(0).get("modFactura"), "1");
+    				//siniestrosManager.getEliminacionTworksin(msgResult,msgResult);
+    		} catch (Exception e) {
+    				logger.error("error al eliminar en TworkSin ",e);
+    		}
+    		for(int i=0;i<datosTablas.size();i++) {
+    			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+    			paramsTworkSin.put("pv_nmtramite_i",params.get("idNumTramite"));
+    			paramsTworkSin.put("pv_cdunieco_i",	datosTablas.get(i).get("modUnieco"));
+    			paramsTworkSin.put("pv_cdramo_i",	datosTablas.get(i).get("modRamo"));
+    			paramsTworkSin.put("pv_estado_i",	datosTablas.get(i).get("modEstado"));
+    			paramsTworkSin.put("pv_nmpoliza_i",	datosTablas.get(i).get("modPolizaAfectada"));
+    			paramsTworkSin.put("pv_nmsolici_i",	datosTablas.get(i).get("modNmsolici"));
+                paramsTworkSin.put("pv_nmsuplem_i",	datosTablas.get(i).get("modNmsuplem"));
+                paramsTworkSin.put("pv_nmsituac_i",	datosTablas.get(i).get("modNmsituac"));
+                paramsTworkSin.put("pv_cdtipsit_i",	datosTablas.get(i).get("modCdtipsit"));
+                paramsTworkSin.put("pv_cdperson_i",	datosTablas.get(i).get("modCdperson"));
+                paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia")));
+                paramsTworkSin.put("pv_nmautser_i",	null);
+                paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
+                siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+            }
+    		mensaje = "Asegurado guardado";
+    		success = true;
+    		
+    	}
+    	catch(Exception ex){
+    		logger.debug("error al guardar tworksin",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                 ######"
+    			+ "\n###### guardaTworksin  ######"
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			);
+    	return SUCCESS;
+    }
+	
+	/**
+	 * Funcion para generar Contrarecibo
+	 * @param paramsO
+	 * @return Success - Exito se genera el contrarecibo
+	 */ 
+	public String generarContrarecibo(){
+	   try {
+		    params =  new HashMap<String, String>();
+		    params.put("pv_nmtramite_i", (String) paramsO.get("pv_ntramite_i"));
+		    params.put("pv_cdtippag_i", (String) paramsO.get("pv_cdtippag_i"));
+		    params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
+	   		loadList = siniestrosManager.loadListaDocumentos(params);
+		   	
+	   		if(loadList == null || loadList.isEmpty()){
+	   			msgResult = "No se puede Generar el Contra Recibo. No hay documentos";
+   				success = false;
+   				return SUCCESS;
+	   		}
+		   		
+	   		for(HashMap<String, String> doc: loadList){
+	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
+	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios (checklist).";
+	   				success = false;
+	   				return SUCCESS;
+	   			}
+	   		}
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaDocumentos",e);
+	   		msgResult = "Error al cargar documentos obligatorios";
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+		   
+	   try {
+		   logger.debug("generarContrarecibo Siniestros: "+ paramsO);
+		   if(Constantes.MSG_TITLE_ERROR.equals(siniestrosManager.generaContraRecibo(paramsO))){
+			    msgResult = "Error al generar el n&uacute; de Contra Recibo";
+		   		success =  false;
+		   		return SUCCESS;
+		   }
+		   
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+           if(!carpeta.exists()){
+           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+           		carpeta.mkdir();
+           		if(carpeta.exists()){
+           			logger.debug("carpeta creada");
+           		} else {
+           			logger.debug("carpeta NO creada");
+           		}
+           } else {
+           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+           }
+           
+           UserVO usuario=(UserVO)session.get("USUARIO");
+           
+           String urlContrareciboSiniestro = ""
+           					   + getText("ruta.servidor.reports")
+                               + "?p_usuario=" + usuario.getUser() 
+                               + "&p_TRAMITE=" + paramsO.get("pv_ntramite_i")
+                               + "&destype=cache"
+                               + "&desformat=PDF"
+                               + "&userid="+getText("pass.servidor.reports")
+                               + "&ACCESSIBLE=YES"
+                               + "&report="+getText("rdf.siniestro.contrarecibo.nombre")
+                               + "&paramform=no"
+                               ;
+           String nombreArchivo = getText("siniestro.contrarecibo.nombre");
+           String pathArchivo=""
+           					+ getText("ruta.documentos.poliza")
+           					+ "/" + paramsO.get("pv_ntramite_i")
+           					+ "/" + nombreArchivo
+           					;
+           HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+           
+           paramsO.put("pv_feinici_i"  , new Date());
+           paramsO.put("pv_cddocume_i" , nombreArchivo);
+           paramsO.put("pv_dsdocume_i" , "Contra Recibo");
+           paramsO.put("pv_swvisible_i"   , null);
+           paramsO.put("pv_codidocu_i"   , null);
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
+           kernelManagerSustituto.guardarArchivo(paramsO);
+		   
+	   }catch( Exception e){
+		   logger.error("Error en generarContrarecibo",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+	/**
+	 * Funcion para generar el siniestro unicamente por el numero de tramite
+	 * @param params
+	 * @return Success - Exito si se genera el numero de tramite
+	 */
+	public String generaSiniestroTramite(){
+	   try {
+		   logger.debug("generaSiniestroTramite Siniestros, params:" + params);
+		   siniestrosManager.getAltaSiniestroAltaTramite(params.get("pv_ntramite_i"));
+	   }catch( Exception e){
+		   logger.error("Error en generaSiniestroTramite",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+	/**
+	 * Funcion para validar si ya existen documento cargados
+	 * @param params
+	 * @return Success - Exito si se genera el numero de tramite
+	 */
+	public String validaDocumentosCargados(){
+	   try {
+		   logger.debug("ValidaDocumentosCargados params: "+ params);
+		   msgResult = siniestrosManager.validaDocumentosCargados(params);
+		   logger.debug("Respuesta ValidaDocumentosCargados: "+ msgResult);
+		   if(StringUtils.isBlank(msgResult)){
+			   msgResult = "Error al realizar validaci&oacute; de documentos";
+			   success = false;
+		   }else if(Constantes.NO.equalsIgnoreCase(msgResult)){
+			   msgResult = "No se han anexado todos los documentos, favor de subir todos los documentos marcados como entregados en el checklist.";
+			   success =  false;
+		   }else if(Constantes.SI.equalsIgnoreCase(msgResult)){
+			   success =  true;
+		   }else{
+			   success =  false;
+		   }
+		   
+	   }catch( Exception e){
+		   logger.error("Error en validaDocumentosCargados",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   
+	   return SUCCESS;
+   }
+
+	/**
+	 * Funcion para validar el cdtipsit del tramite 
+	 * @param ntramite
+	 * @return Success - Exito
+	 */
+	public String validaCdTipsitTramite(){
+	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
+	   	try {
+		   		HashMap<String, Object> paramTramite= new HashMap<String, Object>();
+		   		paramTramite.put("pv_ntramite_i",params.get("ntramite"));
+				
+		   		validaCdTipsitTramite = siniestrosManager.validaCdTipsitAltaTramite(paramTramite);
+	   	}catch( Exception e){
+	   		logger.error("Error al obtener el cdtipsit",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
+//....;
+
+    
+/** SINIESTROS **/
+
+
+/** FUNCIONES GENERALES QUE SE UTILIZA EN AUTORIZACION DE SERVICIO, ALTA DE TRAMITE Y SINIESTROS **/
+	/**
+	 * Funcion que obtiene la lista de las poliza
+	 * @param cdperson
+	 * @return PolizaVigenteVO con la informacion de los asegurados
+	 */ 
+	public String consultaListaPoliza(){
+		logger.debug(" **** Entrando al metodo de Lista de Poliza ****");
+		logger.debug(params);
+		try {
+					List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
+					if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
+				}catch( Exception e){
+					logger.error("Error al obtener los datos de la poliza ",e);
+					return SUCCESS;
+				}
+		   	success = true;
+		   	return SUCCESS;
+	}
+
+	/**
+	 * Funcion que obtiene la lista del asegurado
+	 * @param void sin parametros de entrada
+	 * @return Lista GenericVO con la informacion de los asegurados
+	 */    
+	public String consultaListaAsegurado(){
+		logger.debug(" **** Entrando al metodo de Lista de Asegurado ****");
+	   	try {
+	   		listaAsegurado= siniestrosManager.getConsultaListaAsegurado(params.get("cdperson"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+	      
+   /**
+	* Funcion que obtiene el listado de Ramos de Salud vital
+	* @param void sin parametros de entrada
+	* @return Lista GenericVO - Informacion de los ramos
+	*/    
+   public String consultaRamosSalud(){
+   	logger.debug(" **** Entrando al metodo para la consulta de Ramos para salud ****");
+   	try {
+   		listadoRamosSalud = siniestrosManager.getConsultaListaRamoSalud();
+   	}catch( Exception e){
+   		logger.error("Error al consultar los ramos para Salud ",e);
+	   		return SUCCESS;
+	   	}
 	   	success = true;
 	   	return SUCCESS;
    }
    
-   
-   public String consultaPolizaUnica(){
-	   	logger.debug(" **** Entrando al metodo de consulta poliza Unica ****");
+   /**
+    * Funcion que obtener el listado de los motivos de rechazos
+    * @param 
+    * @return List<HashMap<String, String>> - Motivo de rechazo
+    */
+   public String loadListaRechazos(){
 	   	try {
-		   		HashMap<String, Object> paramPolUnica = new HashMap<String, Object>();
-		   		paramPolUnica.put("pv_cdunieco_i",params.get("cdunieco"));
-		   		paramPolUnica.put("pv_cdramo_i",params.get("cdramo"));
-		   		paramPolUnica.put("pv_estado_i",params.get("estado"));
-		   		paramPolUnica.put("pv_nmpoliza_i",params.get("nmpoliza"));
-		   		paramPolUnica.put("pv_cdperson_i",params.get("cdperson"));
-		   		List<PolizaVigenteVO> polUnica = siniestrosManager.getConsultaPolizaUnica(paramPolUnica);
-				if(polUnica!=null && !polUnica.isEmpty())	polizaUnica = polUnica;
-			}catch( Exception e){
-				logger.error("Error al obtener los datos de la poliza ",e);
-				return SUCCESS;
-			}
-		   	success = true;
-		   	return SUCCESS;
-	   }
+	   		loadList = new ArrayList<HashMap<String,String>>();
+	   		List<Map<String,String>>lista=siniestrosManager.loadListaRechazos();
+	   		for(Map<String,String>ele:lista){
+	   			HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("key"   , ele.get("CDMOTIVO"));
+	   			map.put("value" , ele.get("DSMOTIVO"));
+	   			loadList.add(map);
+	   		}
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaRechazos",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
 
+   /**
+    * Funcion que obtener el listado de los incisos de rechazos
+    * @param 
+    * @return List<HashMap<String, String>> - incisos de rechazo
+    */
+	public String loadListaIncisosRechazos(){
+	   try {
+		   loadList = new ArrayList<HashMap<String,String>>();
+		   List<Map<String,String>>lista= siniestrosManager.loadListaIncisosRechazos(params);
+		   for(Map<String,String>ele:lista)
+	   		{
+	   			HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("key"   , ele.get("CDCAUMOT"));
+	   			map.put("value" , ele.get("DSCAUMOT"));
+	   			loadList.add(map);
+	   		}
+	   }catch( Exception e){
+		   logger.error("Error en loadListaIncisosRechazos",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+	}
+
+   /**
+    * Funcion para generar la carta de rechazo
+    * @param params
+    * @return PDF - Carta de rechazo
+    */
+	public String generaCartaRechazo(){
+	   try {
+		   logger.debug("generaCartaRechazo Siniestros");
+		   UserVO usuario=(UserVO)session.get("USUARIO");
+		   String cdrol    = usuario.getRolActivo().getClave();
+		   String tipoPago = (String) paramsO.get("tipopago");
+		   String nombreRdf = "";
+		   
+		   if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)
+				   || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
+				   || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
+				   || RolSistema.MEDICO.getCdsisrol().equals(cdrol)
+				   || RolSistema.MEDICO_AJUSTADOR.getCdsisrol().equals(cdrol)
+				   ){
+			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
+		   }else {
+				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
+					nombreRdf = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
+				} else if(TipoPago.REEMBOLSO.getCodigo().equals(tipoPago)){
+					nombreRdf = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
+				}
+		   }
+		   
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+          if(!carpeta.exists()){
+          		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+          		carpeta.mkdir();
+          		if(carpeta.exists()){
+          			logger.debug("carpeta creada");
+          		} else {
+          			logger.debug("carpeta NO creada");
+          		}
+          } else {
+          	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+          }
+          
+          
+          String urlContrareciboSiniestro = ""
+          					   + getText("ruta.servidor.reports")
+                              + "?p_usuario=" + usuario.getUser() 
+                              + "&p_ntramite=" + paramsO.get("pv_ntramite_i")
+                              + "&destype=cache"
+                              + "&desformat=PDF"
+                              + "&userid="+getText("pass.servidor.reports")
+                              + "&ACCESSIBLE=YES"
+                              + "&report="+ nombreRdf
+                              + "&paramform=no"
+                              ;
+          String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
+          String pathArchivo=""
+          					+ getText("ruta.documentos.poliza")
+          					+ "/" + paramsO.get("pv_ntramite_i")
+          					+ "/" + nombreArchivo
+          					;
+          HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+          
+          paramsO.put("pv_feinici_i"  , new Date());
+          paramsO.put("pv_cddocume_i" , nombreArchivo);
+          paramsO.put("pv_dsdocume_i" , "Carta Rechazo");
+          paramsO.put("pv_swvisible_i"   , null);
+          paramsO.put("pv_codidocu_i"   , null);
+          paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
+          kernelManagerSustituto.guardarArchivo(paramsO);
+		   
+	   }catch( Exception e){
+		   logger.error("Error en generaCartaRechazo",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+	}
+	
+   /**
+    * Funcion para obtener el usuario al que se le turna el tramite
+    * @param ntramite, rolDestino
+    * @return usuarioTurnadoSiniestro - Usuario al que se le turno el tramite
+    */    
+    public String obtieneUsuarioTurnado(){
+	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
+	   	try {
+	   			usuarioTurnadoSiniestro = siniestrosManager.obtieneUsuarioTurnadoSiniestro(params.get("ntramite"),params.get("rolDestino"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar el periodo de espera en meses",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;// X;
+    }
+
+
+//////////////////////
 
 public String getMsgResult() {
 	return msgResult;
@@ -770,42 +2011,9 @@ public void setMsgResult(String msgResult) {
 	this.msgResult = msgResult;
 }
 
-/**
-   * Funciï¿½n que obtiene el listado de las subcobertura
-   * @param cdtabla
-   * @param otclave
-   * @return Lista GenericVO con la informaciï¿½n de los asegurados
-   */    
-   public String consultaListaCPTICD(){
-	  	logger.debug(" **** Entrando al mï¿½todo de Lista de Subcobertura ****");
-		   	try {	   		
-		   		listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("cdtabla"),params.get("otclave"));
-		   	}catch( Exception e){
-		   		logger.error("Error al consultar la Lista de subcoberturas ",e);
-		   		return SUCCESS;
-		   	}
-		   	success = true;
-		   	return SUCCESS;   	
-   }
+
 	
-   	/**
-	 * Funciï¿½n que obtiene el listado de las listas de los grids
-	 * @param String nmautser
-	 * @return Lista ConsultaTDETAUTSVO con la informaciï¿½n
-	 */
-	public String consultaListaTDeTauts(){
-		logger.debug(" **** Entrando a consulta de lista TDETAUTS ****");
-		try {
-				
-				List<ConsultaTDETAUTSVO> lista = siniestrosManager.getConsultaListaTDeTauts(params.get("nmautser"));
-				if(lista!=null && !lista.isEmpty())	listaConsultaTablas = lista;
-		}catch( Exception e){
-			logger.error("Error al obtener los datos para la informaciï¿½n de las tablas iternas",e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
+
 	
 	/**
 	 * Funciï¿½n para eliminar la listas de los grids
@@ -822,18 +2030,7 @@ public void setMsgResult(String msgResult) {
 		}
    }
 	
-	public String cambiarEstatusMAUTSERV(){
-		logger.debug(" **** Entrando a cambiar el estatus al momento de cancelarlos ****");
-		try {
-				siniestrosManager.getCambiarEstatusMAUTSERV(params.get("nmautser"), params.get("status"));
-				
-		}catch( Exception e){
-			logger.error("Error al cambiar el estatus",e);
-		}
-		
-		success = true;
-		return SUCCESS;
-   }
+
 	
 	/**
 	 * Funciï¿½n para eliminar la listas de los grids
@@ -888,35 +2085,6 @@ public void setMsgResult(String msgResult) {
 	return SUCCESS;
    }	
 	
-   @Deprecated	
-   public String consultaListaManteni(){
-		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
-		try {
-				List<ConsultaManteniVO> lista = siniestrosManager.getConsultaListaManteni(params.get("cdtabla"),params.get("codigo"));
-				if(lista!=null && !lista.isEmpty())	listaConsultaManteni = lista;
-		}catch( Exception e){
-			logger.error("Error al obtener los datos de la poliza ",e);
-			return SUCCESS;
-		}
-	success = true;
-	return SUCCESS;
-   }
-   
-   //ConsultaPorcentajeVO> listaPorcentaje
-   public String consultaListaPorcentaje(){
-		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
-		try {
-				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
-				if(lista!=null && !lista.isEmpty())	listaPorcentaje = lista;
-		}catch( Exception e){
-			logger.error("Error al obtener los datos de la poliza ",e);
-			return SUCCESS;
-		}
-	success = true;
-	return SUCCESS;
-   }
-   
-   
    /*public String generarSiniestroAutServicio(){
 		logger.debug(" **** Entrando a generar el siniestro  por medio de la autorizacion del servicio ***");
 		try {
@@ -1072,72 +2240,9 @@ public String generarSiniestroSinAutorizacion()
    	return SUCCESS;
    }
 
-   public String validaDocumentosCargados(){
-	   
-	   try {
-		   logger.debug("ValidaDocumentosCargados params: "+ params);
-		   msgResult = siniestrosManager.validaDocumentosCargados(params);
-		   logger.debug("Respuesta ValidaDocumentosCargados: "+ msgResult);
-		   if(StringUtils.isBlank(msgResult)){
-			   msgResult = "Error al realizar validaci&oacute; de documentos";
-			   success = false;
-		   }else if(Constantes.NO.equalsIgnoreCase(msgResult)){
-			   msgResult = "No se han anexado todos los documentos, favor de subir todos los documentos marcados como entregados en el checklist.";
-			   success =  false;
-		   }else if(Constantes.SI.equalsIgnoreCase(msgResult)){
-			   success =  true;
-		   }else{
-			   success =  false;
-		   }
-		   
-	   }catch( Exception e){
-		   logger.error("Error en validaDocumentosCargados",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   
-	   return SUCCESS;
-   }
 
-   public String loadListaRechazos(){
-	   	try {
-	   		loadList = new ArrayList<HashMap<String,String>>();
-	   		List<Map<String,String>>lista=siniestrosManager.loadListaRechazos();
-	   		for(Map<String,String>ele:lista)
-	   		{
-	   			HashMap<String,String>map=new HashMap<String,String>();
-	   			map.put("key"   , ele.get("CDMOTIVO"));
-	   			map.put("value" , ele.get("DSMOTIVO"));
-	   			loadList.add(map);
-	   		}
-	   	}catch( Exception e){
-	   		logger.error("Error en loadListaRechazos",e);
-	   		success =  false;
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-   }
 
-   public String loadListaIncisosRechazos(){
-	   try {
-		   loadList = new ArrayList<HashMap<String,String>>();
-		   List<Map<String,String>>lista= siniestrosManager.loadListaIncisosRechazos(params);
-		   for(Map<String,String>ele:lista)
-	   		{
-	   			HashMap<String,String>map=new HashMap<String,String>();
-	   			map.put("key"   , ele.get("CDCAUMOT"));
-	   			map.put("value" , ele.get("DSCAUMOT"));
-	   			loadList.add(map);
-	   		}
-	   }catch( Exception e){
-		   logger.error("Error en loadListaIncisosRechazos",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   success = true;
-	   return SUCCESS;
-   }
+
    
    public String rechazarTramite(){
 	   
@@ -1153,248 +2258,9 @@ public String generarSiniestroSinAutorizacion()
 	   return SUCCESS;
    }
 
-   public String generaCartaRechazo(){
-	   
-	   try {
-		   
-		   logger.debug("generaCartaRechazo Siniestros");
-		   
-		   UserVO usuario=(UserVO)session.get("USUARIO");
-		   String cdrol    = usuario.getRolActivo().getClave();
-		   String tipoPago = (String) paramsO.get("tipopago");
-		   
-		   String nombreRdf = "";
-		   
-		   if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)
-				   || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
-				   || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
-				   || RolSistema.MEDICO.getCdsisrol().equals(cdrol)
-				   || RolSistema.MEDICO_AJUSTADOR.getCdsisrol().equals(cdrol)
-				   ){
-			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
-		   }else {
-				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
-					nombreRdf = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
-				} else if(TipoPago.REEMBOLSO.getCodigo().equals(tipoPago)){
-					nombreRdf = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
-				}
-		   }
-		   
-		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
-           if(!carpeta.exists()){
-           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
-           		carpeta.mkdir();
-           		if(carpeta.exists()){
-           			logger.debug("carpeta creada");
-           		} else {
-           			logger.debug("carpeta NO creada");
-           		}
-           } else {
-           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
-           }
-           
-           
-           String urlContrareciboSiniestro = ""
-           					   + getText("ruta.servidor.reports")
-                               + "?p_usuario=" + usuario.getUser() 
-                               + "&p_ntramite=" + paramsO.get("pv_ntramite_i")
-                               + "&destype=cache"
-                               + "&desformat=PDF"
-                               + "&userid="+getText("pass.servidor.reports")
-                               + "&ACCESSIBLE=YES"
-                               + "&report="+ nombreRdf
-                               + "&paramform=no"
-                               ;
-           String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
-           String pathArchivo=""
-           					+ getText("ruta.documentos.poliza")
-           					+ "/" + paramsO.get("pv_ntramite_i")
-           					+ "/" + nombreArchivo
-           					;
-           HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
-           
-           paramsO.put("pv_feinici_i"  , new Date());
-           paramsO.put("pv_cddocume_i" , nombreArchivo);
-           paramsO.put("pv_dsdocume_i" , "Carta Rechazo");
-           paramsO.put("pv_swvisible_i"   , null);
-           paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
-           kernelManagerSustituto.guardarArchivo(paramsO);
-		   
-	   }catch( Exception e){
-		   logger.error("Error en generaCartaRechazo",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   success = true;
-	   return SUCCESS;
-   }
 
-   public String generarContrarecibo(){
-	   
-	   try {
-		    params =  new HashMap<String, String>();
-		    params.put("pv_nmtramite_i", (String) paramsO.get("pv_ntramite_i"));
-		    params.put("pv_cdtippag_i", (String) paramsO.get("pv_cdtippag_i"));
-		    params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
-	   		loadList = siniestrosManager.loadListaDocumentos(params);
-	   		
-	   		
-	   		if(loadList == null || loadList.isEmpty()){
-	   			msgResult = "No se puede Generar el Contra Recibo. No hay documentos";
-   				success = false;
-   				return SUCCESS;
-	   		}
-	   		
-	   		for(HashMap<String, String> doc: loadList){
-	   			
-	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
-	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios (checklist).";
-	   				success = false;
-	   				return SUCCESS;
-	   			}
-	   		}
-	   	}catch( Exception e){
-	   		logger.error("Error en loadListaDocumentos",e);
-	   		msgResult = "Error al cargar documentos obligatorios";
-	   		success =  false;
-	   		return SUCCESS;
-	   	}
-	   
-	   try {
-		   logger.debug("generarContrarecibo Siniestros: "+ paramsO);
-		   
-		   if(Constantes.MSG_TITLE_ERROR.equals(siniestrosManager.generaContraRecibo(paramsO))){
-			    msgResult = "Error al generar el n&uacute; de Contra Recibo";
-		   		success =  false;
-		   		return SUCCESS;
-		   }
-		   
-		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
-           if(!carpeta.exists()){
-           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
-           		carpeta.mkdir();
-           		if(carpeta.exists()){
-           			logger.debug("carpeta creada");
-           		} else {
-           			logger.debug("carpeta NO creada");
-           		}
-           } else {
-           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
-           }
-           
-           UserVO usuario=(UserVO)session.get("USUARIO");
-           
-           String urlContrareciboSiniestro = ""
-           					   + getText("ruta.servidor.reports")
-                               + "?p_usuario=" + usuario.getUser() 
-                               + "&p_TRAMITE=" + paramsO.get("pv_ntramite_i")
-                               + "&destype=cache"
-                               + "&desformat=PDF"
-                               + "&userid="+getText("pass.servidor.reports")
-                               + "&ACCESSIBLE=YES"
-                               + "&report="+getText("rdf.siniestro.contrarecibo.nombre")
-                               + "&paramform=no"
-                               ;
-           String nombreArchivo = getText("siniestro.contrarecibo.nombre");
-           String pathArchivo=""
-           					+ getText("ruta.documentos.poliza")
-           					+ "/" + paramsO.get("pv_ntramite_i")
-           					+ "/" + nombreArchivo
-           					;
-           HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
-           
-           paramsO.put("pv_feinici_i"  , new Date());
-           paramsO.put("pv_cddocume_i" , nombreArchivo);
-           paramsO.put("pv_dsdocume_i" , "Contra Recibo");
-           paramsO.put("pv_swvisible_i"   , null);
-           paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
-           kernelManagerSustituto.guardarArchivo(paramsO);
-		   
-	   }catch( Exception e){
-		   logger.error("Error en generarContrarecibo",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   success = true;
-	   return SUCCESS;
-   }
 
-   /*private void generarAutoriServicio(Map<String, Object> paramsO) {
-		// TODO Auto-generated method stub
-	   paramsO2.get(key)
-	}
-   */
-   public String generarAutoriServicio(Map<String, Object> paramsO){
-	   
-	   
-	   
-	   try {
-		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
-           if(!carpeta.exists()){
-           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
-           		carpeta.mkdir();
-           		if(carpeta.exists()){
-           			logger.debug("carpeta creada");
-           		} else {
-           			logger.debug("carpeta NO creada");
-           		}
-           } else {
-           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
-           }
-           
-           UserVO usuario=(UserVO)session.get("USUARIO");
-           //urlContrareciboSiniestro
-           String reporteSeleccion = null;
-           if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
-        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
-           }else{
-        	   reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
-           }
-           String urlAutorizacionServicio = ""
-           					   + getText("ruta.servidor.reports")
-                               + "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
-                               + "&p_ramo=" + paramsO.get("pv_cdramo_i")
-                               + "&p_estado=" + paramsO.get("pv_estado_i")
-                               + "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
-                               + "&P_AUTSER=" + paramsO.get("pv_nmAutSer_i")
-                               + "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
-                               + "&destype=cache"
-                               + "&desformat=PDF"
-                               + "&userid="+getText("pass.servidor.reports")
-                               + "&ACCESSIBLE=YES"
-                               + "&report="+reporteSeleccion
-                               + "&paramform=no"
-                               ;
-           logger.debug(urlAutorizacionServicio);
-           String nombreArchivo = getText("siniestro.autorizacionServicio.nombre");
-           String pathArchivo=""
-           					+ getText("ruta.documentos.poliza")
-           					+ "/" + paramsO.get("pv_ntramite_i")
-           					+ "/" + nombreArchivo
-           					;
-           HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
-           
-           paramsO.put("pv_feinici_i"  , new Date());
-           paramsO.put("pv_cddocume_i" , nombreArchivo);
-           paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio");
-           paramsO.put("pv_swvisible_i"   , null);
-           paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
-           paramsO.put("pv_nmsolici_i",null);
-           paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
-           logger.debug(paramsO);
-           kernelManagerSustituto.guardarArchivo(paramsO);
-		   
-	   }catch( Exception e){
-		   logger.error("Error al generar la autorizaci&oacute de s",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   success = true;
-	   return SUCCESS;
-   }
+   
    public String solicitarPago(){
 	   
 	   try {
@@ -1478,44 +2344,9 @@ public String generarSiniestroSinAutorizacion()
 	   return SUCCESS;
    }
 
-   public String generaSiniestroTramite(){
-	   
-	   try {
-		   
-		   logger.debug("generaSiniestroTramite Siniestros, params:" + params);
-		   siniestrosManager.getAltaSiniestroAltaTramite(params.get("pv_ntramite_i"));
-	   }catch( Exception e){
-		   logger.error("Error en generaSiniestroTramite",e);
-		   success =  false;
-		   return SUCCESS;
-	   }
-	   success = true;
-	   return SUCCESS;
-   }
-	
-   
-   /**
-    * Funciï¿½n que obtiene la lista del asegurado
-    * @param void sin parametros de entrada
-    * @return Lista GenericVO con la informaciï¿½n de los asegurados
-    */    
-   public String consultaListaTipoAtencion(){
-   	logger.debug(" **** consultaListaTipoAtencion ****");
-	   	try {
-	   		listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
-	   		logger.debug(listaTipoAtencion);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-   }
-   
-   
    public List<GenericVO> getListaTipoAtencion() {
-	return listaTipoAtencion;
-}
+	   return listaTipoAtencion;
+   }
 
 
 public void setListaTipoAtencion(List<GenericVO> listaTipoAtencion) {
@@ -1523,71 +2354,15 @@ public void setListaTipoAtencion(List<GenericVO> listaTipoAtencion) {
 }
 
 
-public String consultaListaPlazas(){
-	   	logger.debug(" **** Entrando al mï¿½todo de Lista de Plazas ****");
-		   	try {
-		   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
-		   	}catch( Exception e){
-		   		logger.error("Error al consultar la Lista de los asegurados ",e);
-		   		return SUCCESS;
-		   	}
-		   	success = true;
-		   	return SUCCESS;
-	   }
+
    
-   public String consultaNumeroDias(){
-	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
-	   	try {
-	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS, Validacion.DIAS_MAX_AUTORIZACION_SERVICIOS);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-   }
+
    
-   public String consultaMontoMaximo(){
-	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
-	   	try {
-	   		montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS, Validacion.MONTO_MAXIMO_AUTORIZACION_SERVICIOS);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar el monto maximo",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
+
    
-   public String consultaMesesMaximoMaternidad(){
-	   	logger.debug(" **** Entrando al metodo para obtener el numero de meses max para validar Maternidad****");
-	   	try {
-	   		mesMaximoMaternidad = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.MESES, Validacion.MESES_MAX_MATERNIDAD);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar el numero de meses maximo para maternidad ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
- }
+
    
-   public String validaExclusionPenalizacion(){
-	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
-	   	try {
-		   		HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
-		   		paramExclusion.put("pv_cdunieco_i",params.get("cdunieco"));
-		   		paramExclusion.put("pv_estado_i",params.get("estado"));
-		   		paramExclusion.put("pv_cdramo_i",params.get("cdramo"));
-		   		paramExclusion.put("pv_nmpoliza_i",params.get("nmpoliza"));
-		   		paramExclusion.put("pv_nmsituac_i",params.get("nmsituac"));
-		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
+
    
    public String obtieneMontoArancel(){
 	   	logger.debug(" **** Entrando al metodo de obtener monto del arancel  ****");
@@ -1617,40 +2392,10 @@ public String consultaListaPlazas(){
  }
    
    
-   public String obtieneRequiereAutServ(){
-	   	logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
-	   	try {
-	   		datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"),params.get("cdramo"),params.get("cdtipsit"));
-	   	}catch( Exception e){
-	   		logger.error("Error al obtener si requiere autorizacion servicio ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-}
+
    
-   public String validaAutorizacionProceso(){
-	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
-	   	try {
-		   		autorizarProceso = siniestrosManager.validaAutorizacionProceso(params.get("nmAutSer"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
- }
-   public String validaPorcentajePenalizacion(){
-	   	logger.debug(" **** Entrando al metodo de porcentaje de validaciï¿½n ****");
-	   	try {
-	   		porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"), params.get("cdRamo"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar al metodo de porcentaje de penalizaciï¿½n ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
- }
+
+
    
     public String pantallaSeleccionCobertura()
     {
@@ -5119,126 +5864,11 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     }
     
     
-    public String obtenerFacturasTramite()
-    {
-    	logger.debug(""
-    			+ "\n####################################"
-    			+ "\n####################################"
-    			+ "\n###### obtenerFacturasTramite ######"
-    			+ "\n######                        ######"
-    			);
-    	logger.debug("smap:"+smap);
-    	try
-    	{
-    		slist1=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
-    		mensaje="Facturas obtenidas";
-    		success=true;
-    	}
-    	catch(Exception ex)
-    	{
-    		success=false;
-    		logger.error("error al obtener facturas de tramite",ex);
-    		mensaje=ex.getMessage();
-    	}
-    	logger.debug(""
-    			+ "\n######                        ######"
-    			+ "\n###### obtenerFacturasTramite ######"
-    			+ "\n####################################"
-    			+ "\n####################################"
-    			);
-    	return SUCCESS;
-    }
-    
-    public String validarFacturaAsegurado()
-    {
-    	logger.debug(""
-    			+ "\n######################################"
-    			+ "\n######################################"
-    			+ "\n###### valida Factura-Asegurado ######"
-    			+ "\n######                          ######"
-    			);
-    	logger.debug("smap:"+smap);
-    	try
-    	{
-    		String tipoPagoTramite = smap.get("tipoPago");
-    		String faltaAsegurados="";
-    		String validacionAseg=null;
-    		boolean faltaFacturas=true;
-    		
-    		
-    		boolean esReembolso = tipoPagoTramite.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo()) ||tipoPagoTramite.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo());
-			if(esReembolso)
-			{
-				validacionAseg= "0";
-			}else{
-				List<Map<String,String>> facturas=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
-	    		for(Map<String,String>factura:facturas)
-	    		{
-	    			List<Map<String,String>> asegurados =siniestrosManager.obtenerAseguradosTramite(factura.get("NTRAMITE"), factura.get("NFACTURA"));
-	    			if(asegurados.size() <= 0){
-	    				faltaFacturas= false;
-	    				faltaAsegurados = faltaAsegurados +" "+factura.get("NFACTURA");
-	    			}
-	    		}
-	    		if(faltaFacturas){
-	    			validacionAseg= "0";
-	    		}else{
-	    			validacionAseg="1";
-	    		}
-			}
-			
-			loadList = new ArrayList<HashMap<String,String>>();
-	   		HashMap<String,String>map=new HashMap<String,String>();
-	   			map.put("faltaAsegurados"   ,validacionAseg );
-	   			map.put("facturasFaltantes" , faltaAsegurados);
-	   		loadList.add(map);
-			success=true;
-    	}
-    	catch(Exception ex)
-    	{
-    		success=false;
-    		logger.error("error al obtener facturas de tramite",ex);
-    		mensaje=ex.getMessage();
-    	}
-    	logger.debug(""
-    			+ "\n######                          ######"
-    			+ "\n###### valida Factura-Asegurado ######"
-    			+ "\n######################################"
-    			+ "\n######################################"
-    			);
-    	return SUCCESS;
-    }
+
+
     
     
-    public String obtenerAseguradosTramite()
-    {
-    	logger.debug(""
-    			+ "\n######################################"
-    			+ "\n######################################"
-    			+ "\n###### obtenerAseguradosTramite ######"
-    			+ "\n######                          ######"
-    			);
-    	logger.debug(params);
-    	try
-    	{
-    		slist1=siniestrosManager.obtenerAseguradosTramite(params.get("ntramite"), params.get("nfactura"));
-    		mensaje="Asegurados obtenidos";
-    		success=true;
-    	}
-    	catch(Exception ex)
-    	{
-    		success=false;
-    		logger.error("error al obtener facturas de tramite",ex);
-    		mensaje=ex.getMessage();
-    	}
-    	logger.debug(""
-    			+ "\n######                          ######"
-    			+ "\n###### obtenerAseguradosTramite ######"
-    			+ "\n######################################"
-    			+ "\n######################################"
-    			);
-    	return SUCCESS;
-    }
+
     
     public String obtenerSiniestrosTramite()
     {
@@ -5471,109 +6101,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     }
     
     
-    public String ProcesoAltaTramite(String msgResult) throws Exception
-    {
-        // si tipo de pago es Directo
-        if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo()))
-        {
-        	for(int i=0;i<datosTablas.size();i++)
-            {
-        		siniestrosManager.guardaListaFacMesaControl(
-                    msgResult, 
-                    datosTablas.get(i).get("nfactura"),
-                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
-                    datosTablas.get(i).get("cdtipser"),
-                    datosTablas.get(i).get("cdpresta"),
-                    datosTablas.get(i).get("ptimport"),
-                    null,
-                    null,
-                    null,
-                    null,
-                    datosTablas.get(i).get("cdmoneda"),
-                    datosTablas.get(i).get("tasacamb"),
-                    datosTablas.get(i).get("ptimporta"),
-                    null,
-                    null,
-                    null,
-                    null
-                );
-            }
-        }else{
-        	/*Se agrega la información de las facturas*/
-        	if(params.get("idNumTramite").toString().length() > 0){
-        		try {
-        			// Se realiza la eliminacion de las facturas
-					siniestrosManager.getEliminacionTFacMesaControl(msgResult);
-				} catch (Exception e) {
-					logger.error("error al eliminar en TfacMesCtrl ",e);
-				}
-        	}
-        	
-        	String cobertura = null;
-        	String subcobertura = null;
-        	if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
-				cobertura = "7RDH";
-				subcobertura = "7RDH001";
-			}
-        	
-        	for(int i=0;i<datosTablas.size();i++)
-            {
-        		String nfactura= "0";
-        		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())){
-            		nfactura = datosTablas.get(i).get("nfactura");
-        		}else{
-        			nfactura= msgResult+""+i;
-        		}
-        		siniestrosManager.guardaListaFacMesaControl(
-                    msgResult, 
-                    nfactura,
-                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
-                    datosTablas.get(i).get("cdtipser"),
-                    datosTablas.get(i).get("cdpresta"),
-                    datosTablas.get(i).get("ptimport"),
-                    cobertura,
-                    subcobertura,
-                    null,
-                    null,
-                    datosTablas.get(i).get("cdmoneda"),
-                    datosTablas.get(i).get("tasacamb"),
-                    datosTablas.get(i).get("ptimporta"),
-                    null,
-                    null,
-                    null,
-                    null
-                );
-            }
-            
-            if(params.get("idNumTramite").toString().length() > 0){
-        	    // SE REALIZA LA ELIMINACION EN TWORKSIN
-            	try {
-        			// numero de tramite, 
-					siniestrosManager.getEliminacionTworksin(msgResult);
-				} catch (Exception e) {
-					logger.error("error al eliminar en TworkSin ",e);
-				}
-        	}
-            
-            HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
-            paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
-            paramsTworkSinPagRem.put("pv_cdunieco_i",params.get("cdunieco"));
-            paramsTworkSinPagRem.put("pv_cdramo_i",params.get("cmbRamos"));
-            paramsTworkSinPagRem.put("pv_estado_i",params.get("estado"));
-            paramsTworkSinPagRem.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-            paramsTworkSinPagRem.put("pv_nmsolici_i",params.get("idNmsolici"));
-            paramsTworkSinPagRem.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-            paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
-            paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-            paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
-            paramsTworkSinPagRem.put("pv_feocurre_i",renderFechas.parse(params.get("dtFechaOcurrencia")));
-            paramsTworkSinPagRem.put("pv_nfactura_i",null);
-            paramsTworkSinPagRem.put("pv_nmautser_i",null);
-            siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
-        }
-        success = true;
-    	return SUCCESS;
-    }
+
     
     public String guardarCalculos()
     {
@@ -5661,17 +6189,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
-    public String validaDocumentosAutoServ(){
-	   	logger.debug(" **** Entrando al metodo de validacion de documentos de Autorizacion de servicio ****");
-	   	try {
-		   		existeDocAutServicio = siniestrosManager.validaDocumentosAutServicio(params.get("ntramite"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la validacion de documentos de Autorizacion de servicio ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
+
     
     public String obtenerUsuariosPorRol()
     {
@@ -5699,248 +6217,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
-    public String obtieneMesesTiempoEspera(){
-	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
-	   	try {
-	   			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor"),params.get("cdtabla"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar el periodo de espera en meses",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-    }
-    
-    public String obtieneUsuarioTurnado(){
-	   	logger.debug(" **** Entrando al metodo de obtencion de Tiempo de Espera ****");
-	   	try {
-	   			usuarioTurnadoSiniestro = siniestrosManager.obtieneUsuarioTurnadoSiniestro(params.get("ntramite"),params.get("rolDestino"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar el periodo de espera en meses",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-    }
-    /**
-     * Funciï¿½n que obtiene la lista del asegurado
-     * @param void sin parametros de entrada
-     * @return Lista GenericVO con la informaciï¿½n de los asegurados
-     */    
-    public String consultaRamosSalud(){
-    	logger.debug(" **** Entrando al metodo para la consulta de Ramos para salud ****");
- 	   	try {
- 	   		listadoRamosSalud = siniestrosManager.getConsultaListaRamoSalud();
- 	   	}catch( Exception e){
- 	   		logger.error("Error al consultar los ramos para Salud ",e);
- 	   		return SUCCESS;
- 	   	}
- 	   	success = true;
- 	   	return SUCCESS;
-    }
+
+
     
     
-	public String guardarCartaRechazoAutServ()
-	{
-		logger.info(""
-				+ "\n#################################"
-				+ "\n###### guardarCartaRechazo ######"
-				);
-		logger.info("map1: "+map1);
-		String ntramite    = map1.get("ntramite");
-		String comments    = map1.get("comments");
-		logger.debug(comments);
-		String commentsM   = comments.replaceAll("\n", "%0A").
-				replaceAll("á", "%C3%A1").
-				replaceAll("é", "%C3%A9").
-				replaceAll("í", "%C3%AD").
-				replaceAll("ó", "%C3%B3").
-				replaceAll("ú", "%C3%BA").
-				replaceAll("ñ", "%C3%B1").
-				replaceAll("Á", "%C3%81").
-				replaceAll("É", "%C3%89").
-				replaceAll("Í", "%C3%8D").
-				replaceAll("Ó", "%C3%93").
-				replaceAll("Ú", "%C3%9A").
-				replaceAll("Ñ", "%C3%91");
-		String cdsisrol    = map1.get("cdsisrol");
-		String cdunieco    = map1.get("cdunieco");
-		String cdramo      = map1.get("cdramo");
-		String estado      = map1.get("estado");
-		String nmpoliza    = map1.get("nmpoliza");
-		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
-		
-		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
-        if(!carpeta.exists()){
-        		logger.debug("no existe la carpeta::: "+ntramite);
-        		carpeta.mkdir();
-        		if(carpeta.exists()){
-        			logger.debug("carpeta creada");
-        		} else {
-        			logger.debug("carpeta NO creada");
-        		}
-        } else {
-        	 logger.debug("existe la carpeta   ::: "+ntramite);
-        }
-        
-		String url         = this.getText("ruta.servidor.reports")
-				+ "?destype=cache"
-				+ "&desformat=PDF"
-				+ "&userid="+this.getText("pass.servidor.reports")
-				+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
-						this.getText("rdf.emision.rechazo.medico.nombre"):
-							this.getText("rdf.emision.rechazo.admin.nombre"))
-				+ "&paramform=no"
-				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-				+ "&p_ntramite="+ntramite
-				+ "&p_comments="+commentsM;
-		logger.debug(""
-				+ "\n#################################"
-				+ "\n###### Se solicita reporte ######"
-				+ "\n###### "+url
-				);
-		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
-		logger.debug(""
-				+ "\n###### Se solicita reporte ######"
-				+ "\n#################################"
-				);
-		try
-		{
-			HashMap<String, Object> paramsR = new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i"  , cdunieco);
-			paramsR.put("pv_cdramo_i"    , cdramo);
-			paramsR.put("pv_estado_i"    , estado);
-			paramsR.put("pv_nmpoliza_i"  , nmpoliza);
-			paramsR.put("pv_nmsuplem_i"  , 0);
-			paramsR.put("pv_feinici_i"   , new Date());
-			paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
-			paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
-			paramsR.put("pv_nmsolici_i"  , nmpoliza);
-			paramsR.put("pv_ntramite_i"  , ntramite);
-			paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			paramsR.put("pv_swvisible_i" , Constantes.SI);
-			kernelManagerSustituto.guardarArchivo(paramsR);
-	    }
-		catch(Exception ex)
-		{
-			logger.error("error al crear la carta rechazo",ex);
-		}
+
 	
-		logger.info(""
-				+ "\n###### guardarCartaRechazo ######"
-				+ "\n#################################"
-				);
-		return SUCCESS;
-	}
-    
+
 	
-	public String guardaFacturaAltaTramite(){
-		logger.debug(""
-		+ "\n#########################################"
-		+ "\n#########################################"
-		+ "\n###### GUARDA FACTURA ALTA TRAMITE ######"
-		+ "\n######                             ######"
-		);
-        logger.debug(datosTablas);
-        logger.debug(params);
-		try {
-				//Realizamos la eliminación de las facturas
-				siniestrosManager.getEliminacionTFacMesaControl(params.get("idNumTramite"));
-        		for(int i=0;i<datosTablas.size();i++)
-	            {
-	        		siniestrosManager.guardaListaFacMesaControl(
-	        			params.get("idNumTramite"), 
-	                    datosTablas.get(i).get("nfactura"),
-	                    renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
-	                    datosTablas.get(i).get("cdtipser"),
-	                    datosTablas.get(i).get("cdpresta"),
-	                    datosTablas.get(i).get("ptimport"),
-	                    null,
-	                    null,
-	                    null,
-	                    null,
-	                    datosTablas.get(i).get("cdmoneda"),
-	                    datosTablas.get(i).get("tasacamb"),
-	                    datosTablas.get(i).get("ptimporta"),
-	                    null,
-	                    null,
-	                    null,
-	                    null
-	                );
-	            }
-	   	}catch( Exception e){
-	   		logger.error("Error al guardar las facturas",e);
-	   		success =  false;
-	   		return SUCCESS;
-	   	}
-	   	
-	   	logger.debug(""
-		+ "\n######                             ######"
-		+ "\n###### GUARDA FACTURA ALTA TRAMITE ######"
-		+ "\n#########################################"
-		+ "\n#########################################"
-		);
-	   	success = true;
-	   	return SUCCESS;
-	}
-	
-    public String guardaTworksin()
-    {
-    	logger.debug(""
-    			+ "\n#############################"
-    			+ "\n#############################"
-    			+ "\n###### guardaTworksin ######"
-    			+ "\n######                ######"
-    			);
-    	logger.debug("params: "+params);
-    	logger.debug(datosTablas);
-    	try
-    	{
-    		/*Primero tenemos que hacer la eliminación de los Asegurados*/
-    		// SE REALIZA LA ELIMINACION EN TWORKSIN
-    		try {
-        			// numero de tramite, 
-    				siniestrosManager.getEliminacionTworksin(params.get("idNumTramite"),datosTablas.get(0).get("modFactura"));
-    				//siniestrosManager.getEliminacionTworksin(msgResult,msgResult);
-    		} catch (Exception e) {
-    				logger.error("error al eliminar en TworkSin ",e);
-    		}
-    		for(int i=0;i<datosTablas.size();i++)
-            {
-    			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
-    			paramsTworkSin.put("pv_nmtramite_i",params.get("idNumTramite"));
-    			paramsTworkSin.put("pv_cdunieco_i",	datosTablas.get(i).get("modUnieco"));
-    			paramsTworkSin.put("pv_cdramo_i",	datosTablas.get(i).get("modRamo"));
-    			paramsTworkSin.put("pv_estado_i",	datosTablas.get(i).get("modEstado"));
-    			paramsTworkSin.put("pv_nmpoliza_i",	datosTablas.get(i).get("modPolizaAfectada"));
-    			paramsTworkSin.put("pv_nmsolici_i",	datosTablas.get(i).get("modNmsolici"));
-                paramsTworkSin.put("pv_nmsuplem_i",	datosTablas.get(i).get("modNmsuplem"));
-                paramsTworkSin.put("pv_nmsituac_i",	datosTablas.get(i).get("modNmsituac"));
-                paramsTworkSin.put("pv_cdtipsit_i",	datosTablas.get(i).get("modCdtipsit"));
-                paramsTworkSin.put("pv_cdperson_i",	datosTablas.get(i).get("modCdperson"));
-                paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia")));
-                paramsTworkSin.put("pv_nmautser_i",	null);
-                paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
-                siniestrosManager.guardaListaTworkSin(paramsTworkSin);
-            }
-    		mensaje = "Asegurado guardado";
-    		success = true;
-    		
-    	}
-    	catch(Exception ex)
-    	{
-    		logger.debug("error al guardar tworksin",ex);
-    		success=false;
-    		mensaje=ex.getMessage();
-    	}
-    	logger.debug(""
-    			+ "\n######                 ######"
-    			+ "\n###### guardaTworksin  ######"
-    			+ "\n#############################"
-    			+ "\n#############################"
-    			);
-    	return SUCCESS;
-    }
+
     
     public String guardaaseguradoUnico()
     {
@@ -6034,17 +6319,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
 
-    public String consultaFacturaPagada(){
-	   	logger.debug(" **** Entrando al metodo el tramite  de la factura ****");
-	   	try {
-	   		factPagada = siniestrosManager.obtieneTramiteEnProceso(params.get("nfactura"), params.get("cdpresta"), params.get("ptimport"));
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar la Lista de los asegurados ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
     /**
      * Funciï¿½n que obtiene la lista de las poliza
      * @param cdperson
@@ -6130,20 +6404,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
  	   	return SUCCESS;
     }
     
-    public String validaCdTipsitTramite(){
-	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
-	   	try {
-		   		HashMap<String, Object> paramTramite= new HashMap<String, Object>();
-		   		paramTramite.put("pv_ntramite_i",params.get("ntramite"));
-				
-		   		validaCdTipsitTramite = siniestrosManager.validaCdTipsitAltaTramite(paramTramite);
-	   	}catch( Exception e){
-	   		logger.error("Error al obtener el cdtipsit",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
+
 
     public String generarCalculoSiniestros()
     {
@@ -7552,171 +7813,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			);
     	return SUCCESS;
     }
-    
-    public String consultaCirculoHospitalarioMultisalud(){
-		logger.debug(" **** Entrando a consultaCirculoHospitalarioMultisalud **");
-		logger.debug(params);
-		
-		try {
-			String fechaAutorizacion = params.get("feautori");
-			logger.debug("fechaAutorizacion -->"+fechaAutorizacion);
-			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
-			logger.debug("feAutorizacion -->"+feAutorizacion);
-			
-			
-			datosInformacionAdicional = siniestrosManager.listaConsultaCirculoHospitalarioMultisalud(params.get("cdpresta"),params.get("cdramo"),renderFechas.parse(feAutorizacion));
-			logger.debug("VALOR DE RESPUESTA -->");
-			logger.debug(datosInformacionAdicional);
-		}catch( Exception e){
-			logger.error("Error al obtener los datos de consultaCirculoHospitalarioMultisalud",e);
-			return SUCCESS;
-		}
-	success = true;
-	return SUCCESS;
-    }
 
-    public String consultaPenalizacionCirculoHospitalario(){
-	   	logger.debug(" **** Entrando al metodo de validacion de consultaPenalizacionCirculoHospitalario ****");
-	   	logger.debug(params);
-	   	try {
-		   		String fechaAutorizacion = params.get("feautori");
-				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
-				HashMap<String, Object> paramPenalizacion = new HashMap<String, Object>();
-		   		paramPenalizacion.put("pv_circuloHosPoliza_i",params.get("circuloHosPoliza"));
-		   		paramPenalizacion.put("pv_circuloHosProv_i",params.get("circuloHosProv"));
-		   		paramPenalizacion.put("pv_cdramo_i",params.get("cdramo"));
-		   		paramPenalizacion.put("pv_feautori_i", feAutorizacion);
-		   		porcentajePenalizacion = siniestrosManager.penalizacionCirculoHospitalario(paramPenalizacion);
-		   		logger.debug("VALOR DE PORCENTAJE DE PENALIZACION  ===> "+porcentajePenalizacion);
-	   	}catch( Exception e){
-	   		logger.error("Error al consultar consultaPenalizacionCirculoHospitalario ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
+//.....
     
-    public String consultaPorcentajeQuirurgico(){
-	   	logger.debug(" **** Entrando al metodo de validacion de consultaPorcentajeQuirurgico ****");
-	   	logger.debug(params);
-	   	try {
-		   		String fechaAutorizacion = params.get("feautori");
-				String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
-				
-				msgResult = siniestrosManager.porcentajeQuirurgico(params.get("tipoMedico"), feAutorizacion);
-				logger.debug("VALOR DE PORCENTAJE -->"+msgResult);
-			}catch( Exception e){
-	   		logger.error("Error al consultar consultaPorcentajeQuirurgico ",e);
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-  }
-    /*public String complementarTramite(){
-    	logger.debug(" **** Entrando a Complementar tramite **");
-		logger.debug(params); //---> El parametro a pasar es  ntramite
-		
-		//List<MesaControlVO> lista;
-		try {
-			//1.- Obtenemos los valores de la MC a clonar
-			String tramiteAnterior = params.get("ntramite").toString();
-			String tramiteNuevo = null;
-			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(tramiteAnterior);
-			
-			UserVO usuario=(UserVO) session.get("USUARIO");
-			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-			parMesCon.put("pv_cdunieco_i",lista.get(0).getCduniecomc());
-			parMesCon.put("pv_cdramo_i",lista.get(0).getCdramomc());
-			parMesCon.put("pv_estado_i",lista.get(0).getEstadomc());
-			parMesCon.put("pv_nmpoliza_i",lista.get(0).getNmpolizamc());
-			parMesCon.put("pv_nmsuplem_i",lista.get(0).getNmsuplemmc());
-			parMesCon.put("pv_nmsolici_i",lista.get(0).getNmsolicimc());
-			parMesCon.put("pv_cdtipsit_i",lista.get(0).getCdtipsitmc());
-			parMesCon.put("pv_cdsucadm_i",lista.get(0).getCdsucadmmc());
-			parMesCon.put("pv_cdsucdoc_i",lista.get(0).getCdsucdocmc());
-			parMesCon.put("pv_cdtiptra_i",lista.get(0).getCdtiptramc());
-			parMesCon.put("pv_ferecepc_i",lista.get(0).getFerecepcmc());
-			parMesCon.put("pv_cdagente_i",lista.get(0).getCdagentemc());
-			parMesCon.put("pv_referencia_i",lista.get(0).getReferenciamc());
-			parMesCon.put("pv_nombre_i",lista.get(0).getNombremc());
-			parMesCon.put("pv_festatus_i",lista.get(0).getFecstatumc());
-			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-			parMesCon.put("pv_comments_i",lista.get(0).getCommentsmc());
-			parMesCon.put("pv_otvalor02",lista.get(0).getOtvalor02mc());
-			parMesCon.put("pv_otvalor03",lista.get(0).getOtvalor03mc());
-			parMesCon.put("pv_otvalor04",lista.get(0).getOtvalor04mc());
-			parMesCon.put("pv_otvalor05",lista.get(0).getOtvalor05mc());
-			parMesCon.put("pv_otvalor06",lista.get(0).getOtvalor06mc());
-			parMesCon.put("pv_otvalor07",lista.get(0).getOtvalor07mc());
-			parMesCon.put("pv_otvalor08",lista.get(0).getOtvalor08mc());
-			parMesCon.put("pv_otvalor09",lista.get(0).getOtvalor09mc());
-			parMesCon.put("pv_otvalor10",lista.get(0).getOtvalor10mc());
-			parMesCon.put("pv_otvalor11",lista.get(0).getOtvalor11mc());
-			parMesCon.put("pv_otvalor12",lista.get(0).getOtvalor12mc());
-			parMesCon.put("pv_otvalor13",lista.get(0).getOtvalor13mc());
-			parMesCon.put("pv_otvalor14",lista.get(0).getOtvalor14mc());
-			parMesCon.put("pv_otvalor15",lista.get(0).getOtvalor15mc());
-			parMesCon.put("pv_otvalor16",lista.get(0).getOtvalor16mc());
-			parMesCon.put("pv_otvalor17",lista.get(0).getOtvalor17mc());
-			parMesCon.put("pv_otvalor18",lista.get(0).getOtvalor18mc());
-			parMesCon.put("pv_otvalor19",lista.get(0).getOtvalor19mc());
-			parMesCon.put("pv_otvalor20",lista.get(0).getOtvalor20mc());
-			
-			
-			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-		    if(res.getItemMap() == null)
-		    {
-		        logger.error("Sin mensaje respuesta de nmtramite!!");
-		    }
-		    else{
-		    	tramiteNuevo = (String) res.getItemMap().get("ntramite");
-		        List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(tramiteAnterior);
-		        Map<String, String> factura;
-		        for(int i = 0; i < facturasAux.size(); i++)
-    			{
-    				factura = facturasAux.get(i);
-    				//factura.get("DESCPORC");
-    			}
-				
-	        }
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-    	success = true;
-    	return SUCCESS;
-    }*/
-    
-	/*public String subirCenso()
-	{
-		logger.info(""
-				+ "\n########################"
-				+ "\n###### subirCenso ######"
-				+ "\n censo "+censo+""
-				+ "\n censoFileName "+censoFileName+""
-				+ "\n censoContentType "+censoContentType+""
-				+ "\n smap1 "+imap
-				);
-		
-		success = true;
-		exito   = true;
-		
-		String ntramite=params.get("ntramite");
-		if(StringUtils.isBlank(ntramite))
-		{
-			String timestamp = imap.get("timestamp");
-			censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
-			logger.info("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
-		}
-		
-		logger.info(""
-				+ "\n###### subirCenso ######"
-				+ "\n########################"
-				);
-		return SUCCESS;
-	}*/
+/****************************GETTER Y SETTER *****************************************/
 	
     public String getExistePenalizacion() {
 		return existePenalizacion;

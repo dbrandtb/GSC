@@ -432,11 +432,9 @@ public interface SiniestrosManager {
 
 	public List<MesaControlVO> getConsultaListaMesaControl(String ntramite) throws Exception;
 
-	public void getEliminacionTworksin(String ntramite) throws Exception;
-	
-	public void getEliminacionTworksin(String ntramite,String factura) throws Exception;
+	public void getEliminacionAsegurado(String ntramite, String factura, String valorAccion) throws Exception;
 
-	public void getEliminacionTFacMesaControl(String ntramite) throws Exception;
+	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception;
 	
 	public void movTimpsini(String accion
 			,String cdunieco

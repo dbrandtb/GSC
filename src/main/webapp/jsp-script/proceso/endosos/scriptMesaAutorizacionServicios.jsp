@@ -21,36 +21,31 @@ var _TIPO_TRAMITE_AUTORIZACION_SERVICIOS = '<s:property value="@mx.com.gseguros.
 /* *************************************************** */
 ///////////////////////
 ////// variables //////
-var _4_urlAutorizarEndoso = '<s:url namespace="/endosos" action="autorizarEndoso" />';
-var _4_authEndUrlDoc      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
+var _4_urlAutorizarEndoso 			= '<s:url namespace="/endosos" 		action="autorizarEndoso" />';
+var _4_authEndUrlDoc      			= '<s:url namespace="/documentos" 	action="ventanaDocumentosPolizaClon" />';
 
-var _4_urlPantallaAutServ = '<s:url namespace="/siniestros" action="autorizacionServicios" />';
+var _4_urlPantallaAutServ 			= '<s:url namespace="/siniestros" 	action="autorizacionServicios" />';
 
-var _UrlGenerarAutoServicio     = '<s:url namespace="/siniestros" action="generarAutoriServicio"       />';
-var _UrlAutorizacionServicio    = '<s:url namespace="/siniestros" action="autorizacionServicios" />';
-var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
-var _URL_MONTO_MAXIMO			= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
+var _UrlGenerarAutoServicio     	= '<s:url namespace="/siniestros" 	action="generarAutoriServicio"       />';
+var _UrlAutorizacionServicio    	= '<s:url namespace="/siniestros" 	action="autorizacionServicios" />';
+var _UrlRechazarTramiteWindwow  	= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
+var _URL_MONTO_MAXIMO				= '<s:url namespace="/siniestros"  	action="consultaMontoMaximo"/>';
 
-var _UrlValidaAutoProceso    = '<s:url namespace="/siniestros" action="validaAutorizacionProceso" />';
-var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
-var _URL_TURNAR_AUTSERVICIO      =      '<s:url namespace="/mesacontrol" action="turnarAutorizacionServicio" />';
-var _URL_ActualizaStatusMAUTSERV =      '<s:url namespace="/siniestros" action="cambiarEstatusMAUTSERV" />';
-var _URL_Existe_Documentos =     '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
+var _UrlValidaAutoProceso    		= '<s:url namespace="/siniestros" 	action="validaAutorizacionProceso" />';
+var panDocUrlViewDoc     			= '<s:url namespace ="/documentos" 	action="descargaDocInline" />';
+var _URL_ActualizaStatusTramite 	= '<s:url namespace="/mesacontrol" 	action="actualizarStatusTramite" />';
+var _URL_TURNAR_AUTSERVICIO      	= '<s:url namespace="/mesacontrol" 	action="turnarAutorizacionServicio" />';
+var _URL_ActualizaStatusMAUTSERV 	= '<s:url namespace="/siniestros" 	action="cambiarEstatusMAUTSERV" />';
+var _URL_Existe_Documentos 			= '<s:url namespace="/siniestros" 	action="validaDocumentosAutoServ" />';
 
-var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
-var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
-var compleUrlGuardarCartoRechazo = '<s:url namespace="/siniestros" action="guardarCartaRechazoAutServ" />';
-var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
-var _URL_NOMBRE_TURNADO   		= '<s:url namespace="/siniestros" action="obtieneUsuarioTurnado" />';
-
-//UserVO usuario  = (UserVO)session.get("USUARIO");
-//String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+var mesConUrlDetMC        			= '<s:url namespace="/mesacontrol" 	action="obtenerDetallesTramite"    />';
+var mesConUrlFinDetalleMC 			= '<s:url namespace="/mesacontrol" 	action="finalizarDetalleTramiteMC" />';
+var compleUrlGuardarCartoRechazo 	= '<s:url namespace="/siniestros" 	action="guardarCartaRechazoAutServ" />';
+var _URL_CONSULTA_CLAUSU_DETALLE 	= '<s:url namespace="/catalogos" 	action="consultaClausulaDetalle" />';
+var _URL_CONSULTA_CLAUSU 			= '<s:url namespace="/catalogos" 	action="consultaClausulas" />';
+var _URL_NOMBRE_TURNADO   			= '<s:url namespace="/siniestros" 	action="obtieneUsuarioTurnado" />';
 
 var _4_selectedRecordEndoso;
-//var _4_windowAutorizarEndoso;
-//var _4_fieldComentAuthEndoso;
 
 _4_botonesGrid.push(
 {
@@ -58,24 +53,6 @@ _4_botonesGrid.push(
     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
     ,handler : function altaTramiteWindow(){
     	Ext.create("Ext.form.Panel").submit({url     : _4_urlPantallaAutServ,standardSubmit:true});
-        /*windowLoader = Ext.create('Ext.window.Window',{
-            modal       : true,
-            buttonAlign : 'center',
-            width       : 800,
-            height      : 730,
-            autoScroll  : true,
-            loader      : {
-                url     : _4_urlPantallaAutServ,
-                scripts  : true,
-                loadMask : true,
-                autoLoad : true,
-                ajaxOptions: {
-                    method: 'POST'
-                }
-            }
-        }).show();
-        centrarVentana(windowLoader);*/
-    }
 });
 ////// variables //////
 ///////////////////////

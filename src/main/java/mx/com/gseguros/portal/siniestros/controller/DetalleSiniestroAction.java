@@ -69,6 +69,19 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
 	
+	/* ALTA DE TRAMITE */
+	public String cargaHistorialSiniestros(){
+	   	try {
+	   			loadList = siniestrosManager.cargaHistorialSiniestros(params); 
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaFacturasTramite",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+	
 	public String detalleSiniestro() throws Exception
 	{
 		logger.debug(""
@@ -625,17 +638,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String cargaHistorialSiniestros(){
-	   	try {
-	   			loadList = siniestrosManager.cargaHistorialSiniestros(params); 
-	   	}catch( Exception e){
-	   		logger.error("Error en loadListaFacturasTramite",e);
-	   		success =  false;
-	   		return SUCCESS;
-	   	}
-	   	success = true;
-	   	return SUCCESS;
-	}
+
 	
 	// Getters and setters:
 

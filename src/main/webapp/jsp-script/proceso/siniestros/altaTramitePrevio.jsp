@@ -9,8 +9,6 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             
-            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  action="consultaListaTipoAtencion"/>';
-            
             var _CATALOGO_OFICINA_RECEP= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_RAMO_SALUD		   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOSALUD"/>';
             var _CATALOGO_TipoAtencion = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
@@ -22,6 +20,7 @@
             debug("TIPO_PAGO");
             debug(_TIPO_PAGO_DIRECTO);
             var _URL_CATALOGOS 						= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
+            var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion"/>';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
             var _URL_LISTADO_ALTATRAMITE          	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
