@@ -46,16 +46,14 @@ Ext.onReady(function() {
 	oficinaReceptora = Ext.create('Ext.data.Store', {
         model:'Generic',
         autoLoad:true,
-        proxy:
-        {
+        proxy: {
             type: 'ajax',
             url:_URL_CATALOGOS,
             extraParams : {
             	catalogo:_CATALOGO_OFICINA_RECEP,
             	'params.idPadre' : '1000'
             },
-            reader:
-            {
+            reader: {
                 type: 'json',
                 root: 'lista'
             }
@@ -76,97 +74,54 @@ Ext.onReady(function() {
 	});
     storeTipoMoneda.load();
     
-    cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
-    {
-        id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',
-        displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
-        ,listeners : {
-			select:function(e){
-				if(e.getValue() =='001'){
-					// EL TIPO DE MONEDA ES PESO
-					valorIndexSeleccionado.set('tasaCambio','0.00');
-					valorIndexSeleccionado.set('importeFactura','0.00');
-					
-					//valorIndexSeleccionado.set('PTMTOARA','0');
-				}else{
-					var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
-					var importeFactura = valorIndexSeleccionado.get('importeFactura');
-					var importeMxn = +tasaCambio * +importeFactura;
-					valorIndexSeleccionado.set('importe',importeMxn);
-				}
-			}
-        }
-    });
-    
 	oficinaEmisora = Ext.create('Ext.data.Store', {
         model:'Generic',
         autoLoad:true,
-        proxy:
-        {
+        proxy: {
             type: 'ajax',
             url:_URL_CATALOGOS,
             extraParams : {
             	catalogo:_CATALOGO_OFICINA_RECEP,
             	'params.idPadre' : '1000'},
-            reader:
-            {
+            reader: {
                 type: 'json',
                 root: 'lista'
             }
         }
     });
     
-    var storeFacturaDirecto =new Ext.data.Store(
-	{
+    var storeFacturaDirecto =new Ext.data.Store({
 	    autoDestroy: true,
 	    model: 'modelFacturaSiniestro'
 	});
 	
-	var storeFacturaReembolso =new Ext.data.Store(
-	{
+	var storeFacturaReembolso =new Ext.data.Store({
 	    autoDestroy: true,
 	    model: 'modelFacturaSiniestro'
 	});
 	
-	var storePagoIndemnizatorio =new Ext.data.Store(
-	{
+	var storePagoIndemnizatorio =new Ext.data.Store({
 		autoDestroy: true,
 		model: 'modelFacturaSiniestro'
 	});
 
-	var storeListAsegPagDirecto=new Ext.data.Store(
-	{
+	var storeListAsegPagDirecto=new Ext.data.Store({
 	    autoDestroy: true,						model: 'modelListAsegPagDirecto'
 	});
 	
 	var storeTipoAtencion = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:true,
-		proxy:
-		{
+		proxy: {
 			type: 'ajax',
 			url:_UR_TIPO_ATENCION,
-			reader:
-			{
+			reader: {
 				type: 'json',
 				root: 'listaTipoAtencion'
 			}
 		}
 	});
-	/*var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
-		model:'Generic',
-		proxy: {
-			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CATALOGO_TipoAtencion},
-			reader: {
-				type: 'json',
-				root: 'lista'
-			}
-		}
-	});
-	storeTipoAtencion.load();*/
-	
+
 	var storeAsegurados = Ext.create('Ext.data.Store', {
         model:'Generic',
         autoLoad:false,
@@ -224,13 +179,11 @@ Ext.onReady(function() {
         }
     });
 
-    var storeListadoPoliza = new Ext.data.Store(
-    {
+    var storeListadoPoliza = new Ext.data.Store({
     	pageSize : 5
-        ,model      : 'modelListadoPoliza'
+        ,model     : 'modelListadoPoliza'
         ,autoLoad  : false
-        ,proxy     :
-        {
+        ,proxy     : {
             enablePaging : true,
             reader       : 'json',
             type         : 'memory',
@@ -251,35 +204,12 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	
 	storeRamos.load();
-    
-    var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',
-	{
-	    fieldLabel  	: 'Oficina receptora',	name		: 'cmbOficReceptora',	allowBlank	: false,		editable		: true,
-	    displayField	: 'value',				emptyText   :'Seleccione...',		valueField	: 'key',		forceSelection	: true,
-	    width		 	: 300,					queryMode	:'local',				store		: oficinaReceptora
-	});
-   
-    var cmbOficinaEmisora = Ext.create('Ext.form.field.ComboBox',
-	{
-	    fieldLabel : 'Oficina emisora',			name         : 'cmbOficEmisora',	allowBlank : false,			editable     : true,
-	    displayField : 'value',					emptyText:'Seleccione...',			valueField   : 'key',		forceSelection : true,
-        width		 : 300,						queryMode      :'local',				store        : oficinaEmisora
-	});
-	
-	var comboTipoAte= Ext.create('Ext.form.ComboBox',
-    {
-        name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:true,
-        displayField: 'value',					emptyText:'Seleccione...',			valueField: 'key',			forceSelection : true,
-        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion
-    });
-    
-    cmbRamos = Ext.create('Ext.form.field.ComboBox',
-	{
+
+    cmbRamos = Ext.create('Ext.form.field.ComboBox',{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		width		 : 300,						name:'cmbRamos',						store : storeRamos,
+		width: 300,								name:'cmbRamos',					store 		   : storeRamos,
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -292,9 +222,8 @@ Ext.onReady(function() {
     		}
     	}
 	});
-	
-	var tipoPago= Ext.create('Ext.form.ComboBox',
-    {
+    
+	var tipoPago = Ext.create('Ext.form.ComboBox',{
     	name:'cmbTipoPago',						fieldLabel: 'Tipo pago',			allowBlank:false,			editable:false,
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
     	width		 : 300,						store: storeTipoPago,
@@ -331,13 +260,31 @@ Ext.onReady(function() {
     		}
     	}
 	});
-
-	aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
-    {
+	
+	var comboTipoAte = Ext.create('Ext.form.ComboBox',{
+        name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:true,
+        displayField: 'value',					emptyText:'Seleccione...',			valueField: 'key',			forceSelection : true,
+        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion
+    });
+    
+    var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',{
+	    fieldLabel  	: 'Oficina receptora',	name		: 'cmbOficReceptora',	allowBlank	: false,		editable		: true,
+	    displayField	: 'value',				emptyText   :'Seleccione...',		valueField	: 'key',		forceSelection	: true,
+	    width		 	: 300,					queryMode	:'local',				store		: oficinaReceptora
+	});
+	
+    var cmbOficinaEmisora = Ext.create('Ext.form.field.ComboBox',{
+	    fieldLabel : 'Oficina emisora',			name         : 'cmbOficEmisora',	allowBlank : false,			editable     : true,
+	    displayField : 'value',					emptyText:'Seleccione...',			valueField   : 'key',		forceSelection : true,
+        width		 : 300,						queryMode      :'local',				store        : oficinaEmisora
+	});
+	
+	aseguradoAfectado = Ext.create('Ext.form.field.ComboBox', {
     	fieldLabel : 'Asegurado afectado',      displayField : 'value',         name:'cmbAseguradoAfectado',	valueField   : 'key',
     	forceSelection : true,                 	matchFieldWidth: false,     	queryMode :'remote',            queryParam: 'params.cdperson',
     	minChars  : 2,                          store : storeAsegurados,    	triggerAction: 'all',			hideTrigger:true,	allowBlank:false,
-    	width		 : 300,						listeners : {
+    	width		 : 300,						
+    	listeners : {
             'select' : function(combo, record) {
                     obtieneCDPerson = this.getValue();
                     panelInicialPral.down('[name=idnombreAsegurado]').setValue(aseguradoAfectado.rawValue);
@@ -361,7 +308,6 @@ Ext.onReady(function() {
                                 modPolizasAltaTramite.hide();
                                 return;
                             }
-                            
                         }else{
                             Ext.Msg.show({
                                 title: 'Aviso',
@@ -371,14 +317,12 @@ Ext.onReady(function() {
                             });
                         }
                     });
-                    
                     modPolizasAltaTramite.show();
                 }
             }
     });
     
-    var cmbBeneficiario= Ext.create('Ext.form.ComboBox',
-	{
+    var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
         name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode:'remote',			displayField: 'value',
         valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
         queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
@@ -390,13 +334,12 @@ Ext.onReady(function() {
     	}
     });
     
-    
-    cmbProveedor = Ext.create('Ext.form.field.ComboBox',
-    {
+    cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
     	fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
     	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
     	minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
-    	width		: 300,				listeners : {
+    	width		: 300,
+    	listeners : {
 			'select' : function(combo, record) {
 				if(this.getValue() =='0'){
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue('');
@@ -404,17 +347,31 @@ Ext.onReady(function() {
 				}else{
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(cmbProveedor.rawValue);
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
-					//Se realiza la validación para verificar si es pagado
-					//validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue(), Ext.getCmp('txtNoFactura').getValue());
 				}
-				
-				
 			}
     	}
+    }); 
+	
+	cmbTipoMoneda = Ext.create('Ext.form.ComboBox',{
+        id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',
+        displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
+        ,listeners : {
+			select:function(e){
+				if(e.getValue() =='001'){
+					// EL TIPO DE MONEDA ES PESO
+					valorIndexSeleccionado.set('tasaCambio','0.00');
+					valorIndexSeleccionado.set('importeFactura','0.00');
+				}else{
+					var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
+					var importeFactura = valorIndexSeleccionado.get('importeFactura');
+					var importeMxn = +tasaCambio * +importeFactura;
+					valorIndexSeleccionado.set('importe',importeMxn);
+				}
+			}
+        }
     });
-    
-    cmbProveedorReembolso = Ext.create('Ext.form.field.ComboBox',
-    {
+	
+    cmbProveedorReembolso = Ext.create('Ext.form.field.ComboBox', {
     	displayField : 'nombre',		name:'cmbProveedorReembolso',	valueField   : 'cdpresta',
     	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
     	width		 : 300,				minChars  : 2,					store : storeProveedor,		triggerAction: 'all',
@@ -424,6 +381,8 @@ Ext.onReady(function() {
     /*////////////////////////////////////////////////////////////////
     ////////////////   DECLARACION DE EDITOR DE INCISOS  ////////////
     ///////////////////////////////////////////////////////////////*/
+
+    //1.- GRID´S PARA EL PAGO DIRECTO
     Ext.define('EditorFacturaDirecto', {
  		extend: 'Ext.grid.Panel',
 		name:'editorFacturaDirecto',
@@ -434,20 +393,17 @@ Ext.onReady(function() {
 	 			Ext.apply(this, {
 	 			width: 750,
 	 			height: 250
-	 			,plugins  :
-		        [
-		            Ext.create('Ext.grid.plugin.CellEditing',
-		            {
+	 			,plugins  : [
+		            Ext.create('Ext.grid.plugin.CellEditing', {
 		                clicksToEdit: 1
 		            })
 		        ],
 	 			store: storeFacturaDirecto,
 	 			columns: 
 	 			[
-				 	{	
-				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2,  allowBlank: false
-				 		,editor: {
-				                xtype: 'textfield',
+				 	{	header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2,  allowBlank: false
+				 		,editor: {		
+				 				xtype: 'textfield',
 				                editable : true,
 				                allowBlank: false
 			            }
@@ -463,20 +419,16 @@ Ext.onReady(function() {
 				 	},
 				 	{
 						header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2,  allowBlank: false
-						//,editor : cmbTipoMoneda
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string') {
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else{
+								if (v.key && v.value){
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -484,16 +436,10 @@ Ext.onReady(function() {
 							}
 							return leyenda;
 						}
-					}
-				 	,
-				 	{
-					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
-				 	},
-				 	{
-					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
-				 	},
-				 	{
-					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
+					},
+				 	{ 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',		flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false	 	},
+				 	{ 	header: 'Importe Factura', 			dataIndex: 'importeFactura',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false		},
+				 	{	header: 'Importe MXN', 				dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false,
@@ -501,11 +447,7 @@ Ext.onReady(function() {
 				                minValue: 1
 			            }
 				 	},
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 30,
-					 	sortable: false,
-					 	menuDisabled: true,
+				 	{	xtype: 'actioncolumn',			width: 30,		sortable: false,		menuDisabled: true,
 					 	items: [{
 					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
@@ -532,7 +474,6 @@ Ext.onReady(function() {
  	});
     gridFacturaDirecto=new EditorFacturaDirecto();
     
-    
 	Ext.define('EditorFacturaReembolso', {
  		extend: 'Ext.grid.Panel',
 		name:'editorFacturaReembolso',
@@ -545,13 +486,10 @@ Ext.onReady(function() {
 	 			height: 250
 	 			,plugins  :
 		        [
-		            Ext.create('Ext.grid.plugin.CellEditing',
-		            {
+		            Ext.create('Ext.grid.plugin.CellEditing', {
 		                clicksToEdit: 1
-		                ,listeners :
-							{
-								beforeedit : function()
-								{
+		                ,listeners : {
+								beforeedit : function() {
 									valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
 									debug('valorIndexSeleccionado:',valorIndexSeleccionado);
 								}
@@ -561,11 +499,7 @@ Ext.onReady(function() {
 	 			store: storeFacturaReembolso,
 	 			columns: 
 	 			[
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 40,
-					 	sortable: false,
-					 	menuDisabled: true,
+				 	{ 	xtype: 'actioncolumn',		 	width: 40,			 sortable: false,		 	menuDisabled: true,
 					 	items: [{
 					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
@@ -573,37 +507,31 @@ Ext.onReady(function() {
 					 		handler: this.onRemoveClick
 				 		}]
 				 	},
-				 	{	
-				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2
+				 	{	header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2
 				 		,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false
 			            }
 				 	},
-				 	{
-				 		header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
+				 	{	header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
 				 		,editor : {
 							xtype : 'datefield',
 							format : 'd/m/Y',
 							editable : true
 						}
 				 	},
-				 	{
-						header: 'Proveedor', 				dataIndex: 'proveedorName',	flex:2
+				 	{	header: 'Proveedor', 				dataIndex: 'proveedorName',	flex:2
 						,editor : cmbProveedorReembolso
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string'){
 								storeProveedor.each(function(rec) {
 									if (rec.data.cdpresta == v) {
 										leyenda = rec.data.nombre;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else{
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -612,22 +540,18 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{
-						header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2
+					{	header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2
 						,editor : cmbTipoMoneda
 						,renderer : function(v) {
-						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							var leyenda = '';
+							if (typeof v == 'string'){
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else{
+								if (v.key && v.value){
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -635,10 +559,8 @@ Ext.onReady(function() {
 							}
 							return leyenda;
 						}
-					}
-				 	,
-				 	{
-					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
+					},
+				 	{ 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false,
@@ -649,7 +571,6 @@ Ext.onReady(function() {
 											// EL TIPO DE MONEDA ES PESO
 											valorIndexSeleccionado.set('tasaCambio','0.00');
 											valorIndexSeleccionado.set('importeFactura','0.00');
-											
 											//valorIndexSeleccionado.set('PTMTOARA','0');
 										}else{
 											var tasaCambio = e.getValue();
@@ -661,8 +582,7 @@ Ext.onReady(function() {
 						        }
 			            }
 				 	},
-				 	{
-					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	{ 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false,
@@ -683,8 +603,7 @@ Ext.onReady(function() {
 						        }
 			            }
 				 	},
-				 	{
-					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	{	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false
@@ -692,11 +611,9 @@ Ext.onReady(function() {
 				 	}
 		 		],
 		 		tbar: [
-			 		{
-	                    text     : 'Agregar Factura'
+			 		{	text     : 'Agregar Factura'
 	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
-	                    //,hidden  : _p21_ntramite ? true : false
 	                }
 		 		]
 		 	});
@@ -721,13 +638,10 @@ Ext.onReady(function() {
 	 			height: 250
 	 			,plugins  :
 		        [
-		            Ext.create('Ext.grid.plugin.CellEditing',
-		            {
+		            Ext.create('Ext.grid.plugin.CellEditing', {
 		                clicksToEdit: 1
-		                ,listeners :
-							{
-								beforeedit : function()
-								{
+		                ,listeners : {
+								beforeedit : function(){
 									valorIndexSeleccionado = gridPagoIndemnizatorio.getView().getSelectionModel().getSelection()[0];
 									debug('valorIndexSeleccionado:',valorIndexSeleccionado);
 								}
@@ -737,11 +651,7 @@ Ext.onReady(function() {
 	 			store: storePagoIndemnizatorio,
 	 			columns: 
 	 			[
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 40,
-					 	sortable: false,
-					 	menuDisabled: true,
+				 	{ 	xtype: 'actioncolumn',	 	width: 40,		 	sortable: false,		 	menuDisabled: true,
 					 	items: [{
 					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
@@ -749,11 +659,8 @@ Ext.onReady(function() {
 					 		handler: this.onRemoveClick
 				 		}]
 				 	},
-				 	{	
-				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
-				 	},
-				 	{
-				 		header: 'Fecha de Ingreso',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
+				 	{	header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true				 	},
+				 	{	header: 'Fecha de Ingreso',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
 				 		,editor : {
 							xtype : 'datefield',
 							format : 'd/m/Y',
@@ -761,22 +668,18 @@ Ext.onReady(function() {
 							allowBlank: false
 						}
 				 	},
-				 	{
-						header: 'Proveedor', 				dataIndex: 'proveedorName',	flex:2
+				 	{	header: 'Proveedor', 				dataIndex: 'proveedorName',	flex:2
 						,editor : cmbProveedorReembolso
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string'){
 								storeProveedor.each(function(rec) {
 									if (rec.data.cdpresta == v) {
 										leyenda = rec.data.nombre;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value){
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -785,22 +688,18 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{
-						header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2
+					{	header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2
 						,editor : cmbTipoMoneda
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string'){
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value){
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -808,10 +707,8 @@ Ext.onReady(function() {
 							}
 							return leyenda;
 						}
-					}
-				 	,
-				 	{
-					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
+					},
+				 	{ 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false,
@@ -822,7 +719,6 @@ Ext.onReady(function() {
 											// EL TIPO DE MONEDA ES PESO
 											valorIndexSeleccionado.set('tasaCambio','0.00');
 											valorIndexSeleccionado.set('importeFactura','0.00');
-											
 											//valorIndexSeleccionado.set('PTMTOARA','0');
 										}else{
 											var tasaCambio = e.getValue();
@@ -834,8 +730,7 @@ Ext.onReady(function() {
 						        }
 			            }
 				 	},
-				 	{
-					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	{ 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false,
@@ -856,8 +751,7 @@ Ext.onReady(function() {
 						        }
 			            }
 				 	},
-				 	{
-					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	{ 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
 				                xtype: 'textfield',
 				                allowBlank: false
@@ -865,8 +759,7 @@ Ext.onReady(function() {
 				 	}
 		 		],
 		 		tbar: [
-			 		{
-	                    text     : 'Agregar Documento'
+			 		{   text     : 'Agregar Documento'
 	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
 	                }
@@ -883,48 +776,25 @@ Ext.onReady(function() {
     
     
     /* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
-    gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
-	{
+    gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
 	    id            : 'polizaGridAltaTramite',
 	    store         : storeListadoPoliza,
 	    selType	      : 'checkboxmodel',
 	    width         : 700,
 	    height		  : 200,
-	    columns       :
-	    [
-	        {
-	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
-	        },
-	        {
-	        	 header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
-	        },
-	        {
-	             header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',						dataIndex : 'vigenciaPoliza',		width	    : 200
-	        },
-	        {
-	             header     : 'Fecha alta <br/> asegurado',		dataIndex : 'faltaAsegurado',		width	    : 100
-	        },
-	        {
-	             header     : 'Fecha cancelaci&oacute;n <br/> asegurado',						dataIndex : 'fcancelacionAfiliado',		width	    : 150
-	        },
-	        {
-	             header     : 'Estatus<br/> asegurado',						dataIndex : 'desEstatusCliente',		width	    : 100
-	        },
-	        {
-	             header     : 'Producto',							dataIndex : 'dsramo',		width       : 150
-	        },
-	        {
-	             header     : 'Sucursal',							dataIndex : 'dssucursal',	width       : 150
-	        },
-	        {
-	             header     : 'Estado',								dataIndex : 'estado',		width	    : 100
-	        },
-	        {
-	             header     : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		width	    : 150
-	         }
+	    columns       : [
+	        {    header     : 'N&uacute;mero de P&oacute;liza',										dataIndex : 'numPoliza',			width	 	: 200		},
+	        {	 header     : 'Estatus p&oacute;liza ',												dataIndex : 'dsestatus',			width	 	: 100       },
+	        {    header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',dataIndex : 'vigenciaPoliza',		width	    : 200		},
+	        {    header     : 'Fecha alta <br/> asegurado',											dataIndex : 'faltaAsegurado',		width	    : 100		},
+	        {	 header     : 'Fecha cancelaci&oacute;n <br/> asegurado',							dataIndex : 'fcancelacionAfiliado',	width	    : 150		},
+	        {    header     : 'Estatus<br/> asegurado',												dataIndex : 'desEstatusCliente',	width	    : 100		},
+        	{	 header     : 'Producto',															dataIndex : 'dsramo',				width       : 150		},
+    		{	 header     : 'Sucursal',															dataIndex : 'dssucursal',			width       : 150		},
+			{	 header     : 'Estado',																dataIndex : 'estado',				width	    : 100		},
+			{	 header     : 'N&uacute;mero de Situaci&oacute;n',									dataIndex : 'nmsituac',				width	    : 150		}
 		],
-	    bbar :
-	    {
+	    bbar : {
 	        displayInfo : true,
 	        store       : storeListadoPoliza,
 	        xtype       : 'pagingtoolbar'
@@ -932,11 +802,10 @@ Ext.onReady(function() {
 	    listeners: {
                 itemclick: function(dv, record, item, index, e){
                 	//1.- Validamos que el asegurado este vigente
-                	if(record.get('desEstatusCliente')=="Vigente")
+                	if(record.get('desEstatusCliente') == "Vigente")
             		{
                 		var valorFechaOcurrencia;
-                		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO)
-            			{
+                		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
                 			var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
                 			valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
             			}else{
@@ -948,8 +817,7 @@ Ext.onReady(function() {
                 		var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
                 		
                 		if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
-                    		if( valorFechaOcurrencia >= valorFechaAltaAsegurado )
-                			{
+                    		if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
                     				//cumple la condición la fecha de ocurrencia es menor igual a la fecha de alta de tramite
 	                    			panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
 	            					panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
@@ -971,8 +839,7 @@ Ext.onReady(function() {
         	                	});
                 				modPolizasAltaTramite.hide();
                     			limpiarRegistros();
-                    			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO)
-                    			{
+                    			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
                     				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
                     			}else{
                     				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
@@ -988,8 +855,7 @@ Ext.onReady(function() {
     	                	});
                 			modPolizasAltaTramite.hide();
                 			limpiarRegistros();
-                			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO)
-                			{
+                			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
                 				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
                 			}else{
                 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
@@ -1005,8 +871,7 @@ Ext.onReady(function() {
 	                	});
             			modPolizasAltaTramite.hide();
             			limpiarRegistros();
-            			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO)
-            			{
+            			if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
             				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
             			}else{
             				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
@@ -1022,7 +887,6 @@ Ext.onReady(function() {
         }
     ]);
     
-    
     var modPolizasAltaTramite = Ext.create('Ext.window.Window',
 	{
 	    title        : 'Listado de P&oacute;liza'
@@ -1033,148 +897,93 @@ Ext.onReady(function() {
 	    ,width		 : 710
 	    ,minHeight 	 : 100 
 	    ,maxheight   : 400
-	    ,items       :
-	        [
+	    ,items       : [
 	            gridPolizasAltaTramite
 	        ]
 	});
     
-    var panelInicialPral= Ext.create('Ext.form.Panel',
+	var panelInicialPral= Ext.create('Ext.form.Panel',
     	    {
-    	        border    : 0
-    	        //,title: 'Alta de Tr&aacute;mite'
-    	        ,id : 'panelInicialPral'
-    	        ,renderTo : 'div_clau'
-	        	,bodyPadding: 5
-	            ,width: 758
-	            ,layout     :
-				{
-					type     : 'table'
-					,columns : 2
-				}
-				,defaults 	:
-				{
-					style : 'margin:5px;'
-				}
-    	        ,items    :
-    	        [
-					{
-					    xtype       : 'textfield',			fieldLabel : 'Unieco'				,name       : 'cdunieco'
-					    ,labelWidth: 170,	hidden:true
+    	        border      : 0,
+    	        id          : 'panelInicialPral',
+    	        renderTo    : 'div_clau',
+    	        bodyPadding : 5,
+    	        width       : 758,
+    	        layout      : {
+					type    : 'table'
+					,columns: 2
+				},
+				defaults 	: {
+					style   : 'margin:5px;'
+				},
+				items       :[
+					{    xtype       : 'textfield',			fieldLabel : 'Unieco'				,name       : 'cdunieco'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'estado'				,name       : 'estado'			
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'estado'				,name       : 'estado'			
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'Ramo'				,name       : 'cdramo'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'Ramo'					,name       : 'cdramo'
+					    ,labelWidth: 170,					hidden:true
 					},	 			
-					{
-					    xtype       : 'textfield',			fieldLabel : 'nmsituac'				,name       : 'nmsituac'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'nmsituac'				,name       : 'nmsituac'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'
-					   ,labelWidth: 170,				name:'polizaAfectada',	readOnly   : true,	hidden:true
+					{   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'
+					   ,labelWidth: 170,					name:'polizaAfectada',	readOnly   : true,	hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,name       : 'idNmsolici'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,name       : 'idNmsolici'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,name       : 'idNmsuplem'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,name       : 'idNmsuplem'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,name       : 'idCdtipsit'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,name       : 'idCdtipsit'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'numPolizaInt'			,name       : 'idNumPolizaInt'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'numPolizaInt'			,name       : 'idNumPolizaInt'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'Asegurado'			,name       : 'idnombreAsegurado'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'Asegurado'			,name       : 'idnombreAsegurado'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'NumTramite'			,name       : 'idNumTramite'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'NumTramite'			,name       : 'idNumTramite'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-					    xtype       : 'textfield',			fieldLabel : 'ImporteFactura'			,name       : 'ImporteIndFactura'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'ImporteFactura'		,name       : 'ImporteIndFactura'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-		            	xtype      : 'datefield'
-		            	,fieldLabel : 'fechaIndFactura'
-		            	,name       : 'fechaIndFactura'
-	            		,format		: 'd/m/Y'
-		            	,hidden		:true
+					{  	xtype       : 'datefield',			fieldLabel : 'fechaIndFactura'		,name       : 'fechaIndFactura'
+	            		,format		: 'd/m/Y',				hidden		:true
 		            },
-					{
-					    xtype       : 'textfield',			fieldLabel : 'No.Factura'			,name       : 'numIndFactura'
-					    ,labelWidth: 170,	hidden:true
+					{    xtype       : 'textfield',			fieldLabel : 'No.Factura'			,name       : 'numIndFactura'
+					    ,labelWidth: 170,					hidden:true
 					},
-					{
-		                name: 'txtEstado',
-		                xtype: 'textfield',
-		                fieldLabel: 'Estado',
-		                readOnly   : true,
-		                width		 : 300,
-		               value:'PENDIENTE'
-		               
+					{	xtype: 'textfield',					fieldLabel: 'Estado'				,name		: 'txtEstado'
+		                ,readOnly   : true,					width		 : 300,					value		:'PENDIENTE'
 		            },
-		            cmbRamos
-	            	,
-	            	tipoPago
-	            	,
-	            	comboTipoAte
-	            	,
-	        		cmbOficinaReceptora
-		            ,
-		            cmbOficinaEmisora
-	            	,
-	            	{
-		            	xtype      : 'datefield'
-		            	,fieldLabel : 'Fecha recepci&oacute;n'
-		            	,width		 : 300
-		            	,name       : 'dtFechaRecepcion'
-	            		,value		: new Date()
-		            	,format		: 'd/m/Y'
-		            	,readOnly   : true
-		            	,allowBlank : false
-		            }
-	            	,
-	            	{
-                        //id: 'dtFechaOcurrencia',
-                        name: 'dtFechaOcurrencia',
-                        fieldLabel: 'Fecha ocurrencia',
-                        xtype: 'datefield',
-                        format: 'd/m/Y',
-                        editable: true,
-                        width		 : 300,
-                        maxValue   :  new Date(),
-                        allowBlank : false
+		            cmbRamos,
+	            	tipoPago,
+	            	comboTipoAte,
+	        		cmbOficinaReceptora,
+		            cmbOficinaEmisora,
+	            	{  	xtype      : 'datefield',			fieldLabel  : 'Fecha recepci&oacute;n',	width	   : 300,		name       : 'dtFechaRecepcion',
+	            		value	   : new Date(),			format		: 'd/m/Y',					readOnly   : true,		allowBlank : false
+		            },
+	            	{	xtype	   : 'datefield',			fieldLabel  : 'Fecha ocurrencia',		name		: 'dtFechaOcurrencia',		maxValue   :  new Date(),
+	            		format	   : 'd/m/Y',				editable    : true,						width		: 300,						allowBlank : false
                     },
-            		aseguradoAfectado
-	            	,
-	            	cmbBeneficiario
-	            	,
-	            	cmbProveedor
-	        	    ,
-	        	    {
-					    colspan	:2,		xtype       : 'textfield',			fieldLabel : 'Nombre Proveedor'			,name       : 'idnombreBeneficiarioProv',
-					    width	: 300,
+            		aseguradoAfectado,
+	            	cmbBeneficiario,
+	            	cmbProveedor,
+	        	    {   colspan	:2,		xtype	: 'textfield',	fieldLabel : 'Nombre Proveedor',	name : 'idnombreBeneficiarioProv',		width	: 300,
 					    listeners:{
 							afterrender: function(){
 								this.hide();
 							}
 						}
 					},
-					{
-				 		colspan:2
+					{	colspan:2
 				 		,border: false
 				 		,items    :
 				 			[
@@ -1188,8 +997,7 @@ Ext.onReady(function() {
 				 			[
 				 			 	gridFacturaReembolso
 			 			 	]
-				 	}
-				 	,
+				 	},
 				 	{
 				 		colspan:2
 				 		,border: false
@@ -1208,12 +1016,9 @@ Ext.onReady(function() {
             		handler: function() {
             			
             			var form = this.up('form').getForm();
-            			if (form.isValid())
-    	                {
+            			if (form.isValid()){
     	                	
-							if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO) // Pago Directo
-        					{
-            					//PAGO DIRECTO
+							if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){ // Pago Directo
         						panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
             					var obtener = [];
                 				storeFacturaDirecto.each(function(record) {
@@ -1229,28 +1034,22 @@ Ext.onReady(function() {
     						            });
     						            return false;
                 				}else{
-	                				
-	                				
-	                				var mensaje = null;
-	                				for(i=0;i < obtener.length;i++){
-	                					//validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue() ,obtener[obtener.length -1].noFactura, obtener[obtener.length -1].importe);
-		                				Ext.Ajax.request(
-										{
+	                				var mensaje = '';
+	                				for(i = 0; i < obtener.length;i++){
+	                					var facturaProcesada = obtener[i].noFactura;
+	                					Ext.Ajax.request( {
 											url     : _URL_CONSULTA_FACTURA_PAGADA
 											,params:{
-												'params.nfactura' : obtener[i].noFactura,
+												'params.nfactura' : facturaProcesada,
 												'params.cdpresta' : panelInicialPral.down('combo[name=cmbProveedor]').getValue(),
 												'params.ptimport' : obtener[i].importe
 											}
-											,success : function (response)
-										    {
-										    	if(Ext.decode(response.responseText).factPagada !=null)
-										    	{
-										    		mensaje = mensaje + 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada;
+											,success : function (response) {
+										    	if(Ext.decode(response.responseText).factPagada !=null) {
+										    		mensaje = mensaje + 'La factura '+ facturaProcesada +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada;
 										    	}
 										    },
-										    failure : function ()
-										    {
+										    failure : function (){
 										        me.up().up().setLoading(false);
 										        centrarVentanaInterna(Ext.Msg.show({
 										            title:'Error',
@@ -1262,7 +1061,7 @@ Ext.onReady(function() {
 										});	                					
 	                				}
 									
-	                				if(obtener.length == 1){
+									if(obtener.length == 1){
 	                					panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
 										panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
 										panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);
@@ -1333,8 +1132,6 @@ Ext.onReady(function() {
 										}
 									}
 									
-									
-									
 									for(i=0;i < obtener.length;i++){
 	                					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
 	                						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
@@ -1350,9 +1147,7 @@ Ext.onReady(function() {
 	                					}
 									}
                 				}
-        					}else{
-
-        						//PAGO POR INDEMNIZACION
+        					}else{ //PAGO POR INDEMNIZACION
         						var obtener = [];
                 				storePagoIndemnizatorio.each(function(record) {
     								obtener.push(record.data);
@@ -1465,22 +1260,18 @@ Ext.onReady(function() {
     						        if(jsonResp.success==true){
     						        	var etiqueta;
     						        	var mensaje;
-    						        	if(valorAction.ntramite == null)
-    						        	{
+    						        	if(valorAction.ntramite == null) {
     						        		etiqueta = "Guardado";
     						        		mensaje = "Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult; 
     						        	}else{
     						        		etiqueta = "Modificaci&oacute;n";
     						        		mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
     						        	}
-    						            mensajeCorrecto(etiqueta,mensaje,function()
-				                		{
-				                		    Ext.create('Ext.form.Panel').submit(
-				                		    {
+    						            mensajeCorrecto(etiqueta,mensaje,function() {
+				                		    Ext.create('Ext.form.Panel').submit( {
 				                		        url             : _p12_urlMesaControl
 				                		        ,standardSubmit : true
-				                		        ,params         :
-				                		        {
+				                		        ,params         : {
 				                		            'smap1.gridTitle'      : 'Siniestros en espera'
 				                		            ,'smap2.pv_cdtiptra_i' : 16
 				                		        }
@@ -1488,7 +1279,6 @@ Ext.onReady(function() {
 				                		});
     						            panelInicialPral.getForm().reset();
     						            storeFacturaDirecto.removeAll();
-    						            
     						            windowLoader.close();
     						        }
     						        else{
@@ -1498,12 +1288,10 @@ Ext.onReady(function() {
     						                buttons: Ext.Msg.OK,
     						                icon: Ext.Msg.ERROR
     						            });
-    						            
     						            respuesta= false;
     						        }
     						    },
-    						    failure:function(response,opts)
-    						    {
+    						    failure:function(response,opts){
     						        panelInicialPrincipal.setLoading(false);
     						        Ext.Msg.show({
     						            title:'Error',
@@ -1514,8 +1302,7 @@ Ext.onReady(function() {
     						    }
     						});
     	                }
-            			else
-        				{
+            			else {
             				Ext.Msg.show({
     	                    	title:'Datos incompletos',
     	                    	msg: 'Favor de introducir todos los campos requeridos',
@@ -1528,8 +1315,7 @@ Ext.onReady(function() {
     	        {
     	            text:'Cancelar',
     	            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-    	            handler:function()
-    	            {
+    	            handler:function(){
     	            	windowLoader.close();
     	            }
     	        }
@@ -1551,13 +1337,10 @@ Ext.onReady(function() {
     	}else{
     		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
     	}
-    	
 	}
     
-    
-    
-	function limpiarRegistros()
-	{
+//////////////////			FUNCIONES 		/////////////////////
+	function limpiarRegistros() {
 		panelInicialPral.down('[name="cdunieco"]').setValue('');
 		panelInicialPral.down('[name="estado"]').setValue('');
 		panelInicialPral.down('[name="cdramo"]').setValue('');
@@ -1570,12 +1353,10 @@ Ext.onReady(function() {
     	return true;
 	}
 	
-	function limpiarRegistrosTipoPago(tipoPago)
-	{
+	function limpiarRegistrosTipoPago(tipoPago){
 		var pagoDirecto = true;
 		var pagoReembolso = true;
-		if(tipoPago == _TIPO_PAGO_DIRECTO) // Pago Directo
-		{
+		if(tipoPago == _TIPO_PAGO_DIRECTO) {// Pago Directo
 		    pagoDirecto = false;
 		    pagoReembolso = true;
 		    panelInicialPral.down('[name=editorFacturaDirecto]').show();
@@ -1643,24 +1424,19 @@ Ext.onReady(function() {
 			}else{
 				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'500',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
-			
 		}
 	}
 	
-	
 	function validarFacturaPagada(cdpresta,nfactura, totalImporte){
-		Ext.Ajax.request(
-		{
+		Ext.Ajax.request({
 			url     : _URL_CONSULTA_FACTURA_PAGADA
 			,params:{
 				'params.nfactura' : nfactura,
 				'params.cdpresta' : cdpresta,
 				'params.ptimport' : totalImporte
 			}
-			,success : function (response)
-		    {
-		    	if(Ext.decode(response.responseText).factPagada !=null)
-		    	{
+			,success : function (response) {
+		    	if(Ext.decode(response.responseText).factPagada !=null){
 		    		centrarVentanaInterna(Ext.Msg.show({
  		               title: 'Aviso',
  		               msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
@@ -1669,8 +1445,7 @@ Ext.onReady(function() {
  		           }));
 		    	}
 		    },
-		    failure : function ()
-		    {
+		    failure : function (){
 		        me.up().up().setLoading(false);
 		        centrarVentanaInterna(Ext.Msg.show({
 		            title:'Error',
