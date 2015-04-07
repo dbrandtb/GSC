@@ -2129,7 +2129,9 @@ Ext.onReady(function() {
 									}
 								});
 								panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue(listadoAsegurado[0].MODCDPERSON);//listadoAsegurado[0].MODCDPERSON);
-							}else{
+							}
+							if(listadoAsegurado.length > "1"){
+								//else{
 									/*	SI ASEGURADO ES MAYOR A 1	*/
 									panelInicialPral.down('[name="cdunieco"]').setValue('');
 									panelInicialPral.down('[name="estado"]').setValue('');
@@ -2137,8 +2139,7 @@ Ext.onReady(function() {
 									panelInicialPral.down('[name="idNmsuplem"]').setValue('');
 									panelInicialPral.down('[name="idNmsolici"]').setValue('');
 									panelInicialPral.down('[name="nmsituac"]').setValue('');
-									//panelInicialPral.down('[name="idCdtipsit"]').setValue('');
-									panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
+									panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);//...
 									panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
 									panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
 							}

@@ -1232,27 +1232,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public void getEliminacionTworksin(String ntramite) throws Exception {
+	public void getEliminacionAsegurado(String ntramite, String factura, String valorAccion) throws Exception {
 		try {
-			siniestrosDAO.eliminacionTworksin(ntramite);
+			siniestrosDAO.eliminacionAsegurado(ntramite, factura, valorAccion);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
 	
 	@Override
-	public void getEliminacionTworksin(String ntramite,String factura) throws Exception {
+	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception {
 		try {
-			siniestrosDAO.eliminacionTworksin(ntramite,factura);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-
-	@Override
-	public void getEliminacionTFacMesaControl(String ntramite) throws Exception {
-		try {
-			siniestrosDAO.eliminacionTFacMesaControl(ntramite);
+			siniestrosDAO.eliminacionFacturaTramite(ntramite, nfactura , valorAccion);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
