@@ -4320,27 +4320,29 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 List<Map<String,String>> lista = null;
     	 if(buffer!=null&&buffer.containsKey(cdtabla))
     	 {
+    		 lista = buffer.get(cdtabla);
     		 logger.debug(Utilerias.join(
     				  "\n*****************************************"
     				 ,"\n****** P_GET_CLAVE_TTAPVAT1 buffer ******"
+    				 ,"\n****** lista="    , lista
+    				 ,"\n****** buscando=" , otvalor
     				 ,"\n*****************************************"
     				 ));
-    		 lista = buffer.get(cdtabla);
     	 }
     	 else
     	 {
     		 Map<String,String>params=new LinkedHashMap<String,String>();
         	 params.put("cdtabla" , cdtabla);
-        	 params.put("otvalor" , otvalor);
         	 logger.debug(Utilerias.join(
-        			 "\n*************************************************",
-        			 "\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******",
-        			 "\n****** params=",params,
-        			 "\n*************************************************"
+        			  "\n*************************************************"
+        			 ,"\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******"
+        			 ,"\n****** params=",params
+        			 ,"\n*************************************************"
         	 ));
-        	 Map<String,Object>procResult  = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
+        	 Map<String,Object> procResult = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
         	 lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        	 if(buffer!=null&&lista!=null&&lista.size()==1)
+        	 Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1", params, lista);
+        	 if(buffer!=null&&lista!=null&&lista.size()>0)
         	 {
         		 buffer.put(cdtabla,lista);
         	 }
@@ -4348,16 +4350,22 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException(Utilerias.join(
-    				 "No hay clave para el valor '",otvalor,"' en la tabla de apoyo"
+    				 "No hay registros en la(s) tabla(s) de apoyo"
     				 ));
     	 }
-    	 if(lista.size()>1)
+    	 String otclave = null;
+    	 for(Map<String,String>elem:lista)
     	 {
-    		 throw new ApplicationException(Utilerias.join(
-    				 "Hay claves duplicadas para el valor '",otvalor,"' en la tabla de apoyo"
-    				 ));
+    		 if(elem.get("OTVALOR").equals(otvalor))
+    		 {
+    			 otclave = elem.get("OTCLAVE");
+    		 }
     	 }
-    	 return lista.get(0).get("OTCLAVE");
+    	 if(otclave==null)
+    	 {
+    		 throw new ApplicationException("No existe la clave en los registros de la tabla de apoyo");
+    	 }
+    	 return otclave;
      }
      
      protected class CargarClaveTtapvat1 extends StoredProcedure
@@ -4366,8 +4374,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
          {
              super(dataSource,"PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1");
              declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
-             declareParameter(new SqlParameter("otvalor" , OracleTypes.VARCHAR));
-             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE"})));
+             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE","OTVALOR"})));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
              declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
              compile();
