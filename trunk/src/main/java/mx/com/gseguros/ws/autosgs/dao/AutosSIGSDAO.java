@@ -19,6 +19,12 @@ public interface AutosSIGSDAO {
 	
 	public Integer endosoBeneficiario(Map<String, Object> params) throws Exception;
 	
+	public Integer endosoAseguradoAlterno(Map<String, Object> params) throws Exception;
+	
+	public Integer endosoAdaptacionesRC(Map<String, Object> params) throws Exception;
+	
+	public Integer endosoVigencia(Map<String, Object> params) throws Exception;
+	
 	public Integer endosoNombreCliente(Map<String, Object> params) throws Exception;
 	
 	public Integer endosoRfcCliente(Map<String, Object> params) throws Exception;

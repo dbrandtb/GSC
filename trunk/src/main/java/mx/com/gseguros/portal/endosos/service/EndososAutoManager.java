@@ -122,6 +122,7 @@ public interface EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String ntramite
 			,String cdelemen
 			,String cdusuari
 			,String cdtipsup

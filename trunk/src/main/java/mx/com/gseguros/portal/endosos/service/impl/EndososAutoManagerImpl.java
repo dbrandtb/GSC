@@ -1171,7 +1171,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
-				/* TODO: Descomentar
 				
 				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
 				
@@ -1182,7 +1181,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 				}
-				*/
+				
 			}
 			
 			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
@@ -1407,7 +1406,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
-				/* TODO:Descomentar
+				
 				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
 				
 				if(endosoRevertido){
@@ -1417,7 +1416,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 				}
-				*/
+				
 			}
 			
 			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
@@ -1433,6 +1432,174 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+
+	private boolean endosoAseguradoAlterno(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio AseguradoAlterno");
+		
+		List<Map<String,String>> datos = null;
+		int endosoRecuperado = -1;
+		
+		try{
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			
+			datos = endososDAO.obtieneDatosEndAseguradoAlterno(params);
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio AseguradoAlterno para SIGS",e1);
+			return false;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				Map<String,String> datosEnIt = datos.get(0);
+			
+				paramsEnd.put("vIdMotivo"  , datosEnIt.get("IdMotivo"));
+				paramsEnd.put("vSucursal"  , datosEnIt.get("Sucursal"));
+				paramsEnd.put("vRamo"      , datosEnIt.get("Ramo"));
+				paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
+				paramsEnd.put("vAsegAlterno", datosEnIt.get("AsegAlterno"));
+				
+			
+			try{
+				
+				Integer res = autosDAOSIGS.endosoAseguradoAlterno(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso: " + res);
+				
+				if(res == null || res == 0 || res == -1){
+					logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+					return false;
+				}else{
+					endosoRecuperado = res.intValue();
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Cambio AseguradoAlterno Auto: " + e.getMessage(),e);
+			}
+			
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso AseguradoAlterno de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso Cambio AseguradoAlterno no exitoso, valor de endoso en -1");
+				return false;
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio AseguradoAlterno");
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean endosoAdaptacionesRC(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio AdaptacionesRC");
+		
+		List<Map<String,String>> datos = null;
+		int endosoRecuperado = -1;
+		
+		try{
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			
+			datos = endososDAO.obtieneDatosEndAdaptacionesRC(params);
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio AdaptacionesRC para SIGS",e1);
+			return false;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+			Map<String,String> datosEnIt = datos.get(0);
+			
+			paramsEnd.put("vIdMotivo"  , datosEnIt.get("IdMotivo"));
+			paramsEnd.put("vSucursal"  , datosEnIt.get("Sucursal"));
+			paramsEnd.put("vRamo"      , datosEnIt.get("Ramo"));
+			paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
+			paramsEnd.put("vAsegAlterno", datosEnIt.get("AsegAlterno"));
+			
+			
+			try{
+				
+				Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
+				
+				logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
+				
+				if(res == null || res == 0 || res == -1){
+					logger.debug("Endoso Cambio AdaptacionesRC no exitoso");
+					return false;
+				}else{
+					endosoRecuperado = res.intValue();
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio Cambio AdaptacionesRC Auto: " + e.getMessage(),e);
+			}
+			
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso AdaptacionesRC de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso Cambio AdaptacionesRC no exitoso, valor de endoso en -1");
+				return false;
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio AdaptacionesRC");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	
 	private boolean endosoBeneficiario(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
@@ -1750,6 +1917,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String ntramite
 			,String cdelemen
 			,String cdusuari
 			,String cdtipsup
@@ -1803,6 +1971,24 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso ="Se confirma el endoso";
 			logger.info(paso);
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+			
+			
+			if(this.endosoAseguradoAlterno(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
+				logger.info("Endoso de endosoAseguradoAlterno exitoso...");
+			}else{
+				logger.error("Error al ejecutar los WS de endoso de endosoAseguradoAlterno");
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+			}
+		
+			
 		}
 		catch(Exception ex)
 		{
