@@ -1556,18 +1556,15 @@ public class SiniestrosAction extends PrincipalCoreAction {
     			+ "\n######                          ######"
     			);
     	logger.debug(params);
-    	try
-    	{
-    		siniestrosManager.getEliminacionAsegurado(params.get("idNumTramite"),datosTablas.get(0).get("modFactura"),"1");
-    		
-    		mensaje="Asegurados obtenidos";
+    	try{
+    		siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+    		siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
     		success=true;
     	}
-    	catch(Exception ex)
-    	{
-    		success=false;
+    	catch(Exception ex){
+    		success = false;
     		logger.error("error al obtener facturas de tramite",ex);
-    		mensaje=ex.getMessage();
+    		mensaje = ex.getMessage();
     	}
     	logger.debug(""
     			+ "\n######                          ######"
