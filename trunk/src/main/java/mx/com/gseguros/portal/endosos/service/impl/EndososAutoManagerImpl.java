@@ -2129,6 +2129,37 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					));
 		}
 	
+	
+	@Override
+	public void validarEndosoPagados(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception {
+			logger.info(Utilerias.join(
+					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
+					,"\n@@@@@@ cdunieco="         , cdunieco
+					,"\n@@@@@@ cdramo="           , cdramo
+					,"\n@@@@@@ estado="           , estado
+					,"\n@@@@@@ nmpoliza="         , nmpoliza
+					));
+			ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+			String paso = "";
+			try
+			{
+				paso = "Iniciando valida endoso anterior";
+				logger.info(paso);
+				endososDAO.validaEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				Utils.generaExcepcion(ex, paso);
+			}
+			
+			logger.info(Utilerias.join(
+					 "\n@@@@@@ " , resp
+					,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
+					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					));
+		}
 	@Override
 	public Map<String,Item>endosoClaveAuto(
 			String cdsisrol

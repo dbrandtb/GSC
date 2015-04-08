@@ -1100,6 +1100,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	public void validaEndosoPagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************************")
+				.append("\n****** PKG_SATELITES2.P_VAL_ENDOSO_X_RECIBOS_PAGADOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************************")
+				.toString()
+				);
+		ejecutaSP(new ValidaEndosoPagados(this.getDataSource()), params);
+	}
+	
+	protected class ValidaEndosoPagados extends StoredProcedure
+	{
+		protected ValidaEndosoPagados(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_VAL_ENDOSO_X_RECIBOS_PAGADOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void actualizaDeducibleValosit(Map<String, String> params) throws Exception
 	{
 		logger.debug(

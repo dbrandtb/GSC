@@ -155,6 +155,13 @@ public interface EndososAutoManager
 			,String cdtipsup
 			)throws Exception;
 	
+	public void validarEndosoPagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
 	public Map<String,Item>endosoClaveAuto(
 			String cdsisrol
 			,String cdramo

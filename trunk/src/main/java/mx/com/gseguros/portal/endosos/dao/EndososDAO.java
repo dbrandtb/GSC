@@ -82,6 +82,13 @@ public interface EndososDAO
 			,String nmpoliza
 			,String cdtipsup
 			)throws Exception;
+	
+	public void validaEndosoPagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 	public void                     actualizaDeducibleValosit(Map<String, String> params)      throws Exception;
 	
 	public void                     actualizaVigenciaPoliza(Map<String, String> params)        throws Exception;
