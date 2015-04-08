@@ -377,14 +377,15 @@ function _35_confirmar()
             ,slist1 : slist1
         }
         debug('datos que se enviaran:',json);
-        _35_panelPri.setLoading(true);
+        var panelMask = new Ext.LoadMask('_35_divPri', {msg:"Confirmando..."});
+		panelMask.show();
         Ext.Ajax.request(
         {
             url       : _35_urlGuardar
             ,jsonData : json
             ,success  : function(response)
             {
-                _35_panelPri.setLoading(false);
+                panelMask.hide();
                 json=Ext.decode(response.responseText);
                 debug('datos recibidos:',json);
                 if(json.success==true)
@@ -410,7 +411,7 @@ function _35_confirmar()
             }
             ,failure  : function()
             {
-                _35_panelPri.setLoading(false);
+                panelMask.hide();
                 errorComunicacion();
             }
         });
