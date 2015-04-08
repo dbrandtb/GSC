@@ -16,6 +16,16 @@
 		    defaultType: 'textfield',
 		    items: [
 		    	{
+					xtype		: 'datefield'
+					,fieldLabel	: 'Fecha Inicio Endoso'
+					,name		: 'feInival'
+					,labelWidth	: 150
+					,format		: 'd/m/Y'
+					,editable	: true
+					,allowBlank	: false
+					, value     : new Date()
+				},
+			 	{
 			        fieldLabel	: 'Asegurado Alterno',
 			        name		: 'asegAlt',
 			        width		: 600,
@@ -33,7 +43,8 @@
 					if (formPanel.form.isValid()) {
                         // Realizamos el proceso de guardado
 						var submitValues={};
-        				asegAlterno.OTVALOR02 = panelInicialPral.down('[name="asegAlt"]').getValue();
+						asegAlterno.OTVALOR02 = panelInicialPral.down('[name="asegAlt"]').getValue();
+						asegAlterno.FEINIVAL  = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
         				submitValues['smap1']= asegAlterno;
         				
         				Ext.Ajax.request(

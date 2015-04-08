@@ -549,6 +549,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		smap1.put("pv_estado", smap1.get("ESTADO"));
 		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		smap1.put("FEINIVAL", null);
 		
 		logger.debug(new StringBuilder()
 		.append("\n#####################################")
@@ -600,6 +601,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
 			smap1.put("pv_diasMinimo", retroactividad.get(0).get("DIASMINIMO"));
 			smap1.put("pv_diasMaximo", retroactividad.get(0).get("DIASMAXIMO"));
+			smap1.put("FEINIVAL", null);
 			
 			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
 			String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
@@ -657,10 +659,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-			
-			String cdtipsup      = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaEndoso   = sdf.format(new Date());
+			String cdtipsup = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
+			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
 			Map<String,String> otvalores = new HashMap<String,String>();
@@ -735,8 +735,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
 			String cdtipsup      = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaEndoso   = sdf.format(new Date());
+			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
 			endososAutoManager.guardarEndosoVigenciaPoliza(
