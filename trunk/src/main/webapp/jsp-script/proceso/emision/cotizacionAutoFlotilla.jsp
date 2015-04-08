@@ -2076,9 +2076,9 @@ Ext.onReady(function()
                 var form = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
                 debug('@CUSTOM form buscarAutoDesc:',form);
                 
-                form.buscarAutoDesc = function()
+                form.buscarAutoDesc = function(recordClave)
                 {
-                    debug('>buscarAutoDesc');
+                    debug('>buscarAutoDesc recordClave.data:',recordClave.data);
                     
                     var record   = _p30_selectedRecord;
                     var cdtipsit = record.get('cdtipsit');
@@ -2099,7 +2099,9 @@ Ext.onReady(function()
                     var claveVal = claveCmp.getValue();
                     if(!Ext.isEmpty(claveVal))
                     {
-                        var record=claveCmp.findRecord('key',claveVal);
+                        var record=recordClave;
+                        debug('claveVal:' , claveVal);
+                        debug('record:'   , record);
                         if(record!=false)
                         {
                             var claveDisplay      = record.get('value');
@@ -2108,6 +2110,7 @@ Ext.onReady(function()
                             var submarcaDisplay   = claveDisplaySplit[2];
                             var modeloDisplay     = claveDisplaySplit[3];
                             var versionDisplay    = claveDisplaySplit[4];
+                            debug('claveDisplay:',claveDisplay);
                             
                             var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=TIPO VALOR]').name;
                             var tipovalorVal  = _p30_selectedRecord.get(tipovalorName)-0;
@@ -2153,9 +2156,9 @@ Ext.onReady(function()
                 
                 form.down('[fieldLabel*=CLAVE]').on(
                 {
-                    select : function()
+                    select : function(me,records)
                     {
-                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).buscarAutoDesc();
+                        _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).buscarAutoDesc(records[0]);
                     }
                 });
             }
