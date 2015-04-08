@@ -849,6 +849,21 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 					}
 				}
+			}else if(TipoEndoso.ADAPTACIONES_EFECTO_RC.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+				if(this.endosoAdaptacionesRC(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
+					logger.info("Endoso de AdaptacionesRC exitoso...");
+				}else{
+					logger.error("Error al ejecutar los WS de endoso de AdaptacionesRC");
+					
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+					if(endosoRevertido){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
+				}
 			}else{
 
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -1548,7 +1563,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vSucursal"  , datosEnIt.get("Sucursal"));
 			paramsEnd.put("vRamo"      , datosEnIt.get("Ramo"));
 			paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
-			paramsEnd.put("vAsegAlterno", datosEnIt.get("AsegAlterno"));
+			paramsEnd.put("vInciso"    , datosEnIt.get("Inciso"));
+			paramsEnd.put("vTexto"     , datosEnIt.get("vTexto"));
 			
 			
 			try{

@@ -342,14 +342,15 @@ function _5_confirmar(boton)
 			//,parametros : _5_panelTatriper.getValues()
 		};
 		debug('datos a enviar:',json);
-		_5_panelPri.setLoading(true);
+		var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
+		panelMask.show();
 		Ext.Ajax.request(
 		{
 			url       : _5_urlGuardar
 			,jsonData : json
 			,success  : function(response)
 			{
-				_5_panelPri.setLoading(false);
+				panelMask.hide();
 				json=Ext.decode(response.responseText);
 				if(json.success==true)
 				{
@@ -369,7 +370,7 @@ function _5_confirmar(boton)
 			}
 		    ,failure  : function()
 		    {
-		    	_5_panelPri.setLoading(false);
+		    	panelMask.hide();
 		    	errorComunicacion();
 		    }
 		});

@@ -925,8 +925,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			params.put("param4" , nmpoliza);
 			params.put("param5" , nmsuplem);
 			
-//			datos = storedProceduresManager.procedureListCall(
-//					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
+			datos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_END_RFC_SIGS.getNombre(), params, null);
 			
 			
 		} catch (Exception e1) {
@@ -939,11 +939,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			try{
 				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
-				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
-				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
-				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
-				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
-				paramsEnd.put("vRFC"    , datosEnd.get("asd"));
+				paramsEnd.put("vIdMotivo", datosEnd.get("IDMOTIVO"));
+				paramsEnd.put("vSucursal", datosEnd.get("SUCURSAL"));
+				paramsEnd.put("vRamo"    , datosEnd.get("RAMO"));
+				paramsEnd.put("vPoliza"  , datosEnd.get("POLIZA"));
+				paramsEnd.put("vRFC"     , datosEnd.get("RFC"));
 				
 				Integer res = autosSIGSDAO.endosoRfcCliente(paramsEnd);
 				

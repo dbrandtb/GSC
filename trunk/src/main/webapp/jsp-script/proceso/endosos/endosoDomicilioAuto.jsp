@@ -269,7 +269,8 @@ Ext.onReady(function(){
                 {
                     if(this.up().up().getForm().isValid())
                     {
-                        this.up().up().setLoading(true);
+                        var panelMask = new Ext.LoadMask('maindivp4', {msg:"Confirmando..."});
+						panelMask.show();
                         this.up().up().getForm().submit(
                         {
                             params:
@@ -287,7 +288,7 @@ Ext.onReady(function(){
                             },
                             success:function(response,opts)
                             {
-                                formPanelp4.setLoading(false);
+                                panelMask.hide();
                                 var json=Ext.decode(opts.response.responseText);
                             	//////////////////////////////////
                                 ////// usa codigo del padre //////
@@ -304,7 +305,7 @@ Ext.onReady(function(){
                             },
                             failure:function(response,opts)
                             {
-                                formPanelp4.setLoading(false);
+                                panelMask.hide();
                             	var json=Ext.decode(opts.response.responseText);
                                 mensajeError(json.error);
                             }
