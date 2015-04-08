@@ -98,6 +98,7 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,String fecha
 			,UserVO usuarioSesion
 			)throws Exception;
 	
@@ -114,6 +115,7 @@ public interface EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,String fecha
 			,UserVO usuarioSesion
 			)throws Exception;
 

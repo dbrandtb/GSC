@@ -1479,6 +1479,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String cdsisrol
+			,String cdusuari
 			,String cdtipsup
 			)throws Exception
 	{
@@ -1488,6 +1489,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
     	params.put("cdsisrol" , cdsisrol);
+    	params.put("cdusuari" , cdusuari);
     	params.put("cdtipsup" , cdtipsup);
     	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_FECHAS_ENDOSO", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarFechasLimiteEndoso(getDataSource()),params);
@@ -1509,6 +1511,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fechamin_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fechamax_o" , OracleTypes.VARCHAR));

@@ -14,11 +14,13 @@ public interface RecuperacionSimpleManager
 			RecuperacionSimple procedimiento
 			,Map<String,String>parametros
 			,String cdsisrol
+			,String cdusuari
 			);
 	
 	public ManagerRespuestaSlistVO recuperacionSimpleLista(
 			RecuperacionSimple procedimiento
 			,Map<String,String>parametros
 			,String cdsisrol
+			,String cdusuari
 			);
 }

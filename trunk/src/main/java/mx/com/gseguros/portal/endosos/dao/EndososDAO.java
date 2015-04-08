@@ -332,6 +332,7 @@ public interface EndososDAO
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,Date   fechaEfecto
 			)throws Exception;
 	
 	public Map<String,Object> confirmarEndosoBajaIncisos(
@@ -343,6 +344,7 @@ public interface EndososDAO
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,Date   fechaEfecto
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(

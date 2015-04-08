@@ -5,7 +5,8 @@
 <head>
 <script>
 ////// urls //////
-var _p37_urlConfirmar = '<s:url namespace="/endosos" action="confirmarEndosoBajaIncisos" />';
+var _p37_urlConfirmar          = '<s:url namespace="/endosos" action="confirmarEndosoBajaIncisos" />';
+var _p37_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"         />';
 ////// urls //////
 
 ////// variables //////
@@ -104,22 +105,41 @@ Ext.onReady(function()
     ////// contenido //////
     Ext.create('Ext.grid.Panel',
     {
-        itemId       : '_p37_grid'
-        ,renderTo    : '_p37_divpri'
-        ,title       : 'Incisos'
-        ,store       : _p37_store
-        ,columns     : _p37_gridColumns
-        ,minHeight   : 200
-        ,maxHeight   : 400
-        ,buttonAlign : 'center'
-        ,buttons     :
+        itemId     : '_p37_grid'
+        ,renderTo  : '_p37_divpri'
+        ,title     : 'Incisos'
+        ,store     : _p37_store
+        ,columns   : _p37_gridColumns
+        ,minHeight : 200
+        ,maxHeight : 400
+        ,bbar      :
         [
-            {
-                itemId   : '_p37_botonConfirmar'
-                ,text    : 'Confirmar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                ,handler : function(me){ _p37_confirmar(me); }
-            }
+            '->'
+            ,{
+                xtype     : 'form'
+                ,itemId   : '_p36_formEndoso'
+                ,layout   : 'hbox'
+                ,defaults : { style : 'margin:5px;' }
+                ,items    :
+                [
+                    {
+                        xtype       : 'datefield'
+                        ,itemId     : '_p37_fechaCmp'
+                        ,fieldLabel : 'Fecha de efecto'
+                        ,value      : new Date()
+                        ,allowBlank : false
+                        ,name       : 'fechaEndoso'
+                    }
+                    ,{
+                        xtype    : 'button'
+		                ,itemId  : '_p37_botonConfirmar'
+		                ,text    : 'Confirmar'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+		                ,handler : function(me){ _p37_confirmar(me); }
+		            }
+		        ]
+		    }
+		    ,'->'
         ]
     });
     ////// contenido //////
@@ -128,6 +148,39 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    Ext.Ajax.request(
+    {
+        url      : _p37_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p37_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _p37_smap1.CDRAMO
+            ,'smap1.estado'       : _p37_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _p37_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _p37_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldByName('fechaEndoso').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldByName('fechaEndoso').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldByName('fechaEndoso').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldByName('fechaEndoso').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 
@@ -135,6 +188,14 @@ Ext.onReady(function()
 function _p37_confirmar(boton)
 {
     debug('>_p37_confirmar');
+    
+    if(!boton.up('form').getForm().isValid())
+    {
+        datosIncompletos();
+        return;
+    }
+    
+    _p37_smap1['fechaEndoso'] = Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y');
     
     boton.setDisabled(true);
     boton.setText('Cargando...');

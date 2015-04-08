@@ -75,6 +75,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			RecuperacionSimple proc
 			,Map<String,String>params
 			,String cdsisrol
+			,String cdusuari
 			)
 	{
 		logger.info(Utilerias.join(
@@ -83,6 +84,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ procedimiento=" , proc
 				,"\n@@@@@@ parametros="    , params
 				,"\n@@@@@@ cdsisrol="      , cdsisrol
+				,"\n@@@@@@ cdusuari="      , cdusuari
 				));
 		
 		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
@@ -97,7 +99,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdagente = params.get("cdagente");
 				String negocio  = params.get("negocio");
 				String tipocot  = params.get("tipocot");
-				String cdusuari = params.get("cdusuari");
 				
 				if(tipocot.equals("I"))
 				{
@@ -190,6 +191,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,estado
 						,nmpoliza
 						,cdsisrol
+						,cdusuari
 						,cdtipsup
 						));
 			}
@@ -214,6 +216,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			RecuperacionSimple proc
 			,Map<String,String>params
 			,String cdsisrol
+			,String cdusuari
 			)
 	{
 		logger.info(Utilerias.join(
@@ -222,6 +225,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ proc="     , proc
 				,"\n@@@@@@ params="   , params
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 		
 		ManagerRespuestaSlistVO resp=new ManagerRespuestaSlistVO(true);

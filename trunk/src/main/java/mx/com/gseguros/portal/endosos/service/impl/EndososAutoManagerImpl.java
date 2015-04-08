@@ -1035,6 +1035,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,String fecha
 			,UserVO usuarioSesion
 			)throws Exception
 	{
@@ -1049,12 +1050,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdelemen=" , cdelemen
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ fecha="    , fecha
 				));
 		
 		String paso = null;
 		
 		try
 		{
+			Date fechaEfecto = renderFechas.parse(fecha);
+			
 			String tstamp = String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
 			
 			paso = "Guardando situaciones temporales";
@@ -1177,7 +1181,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.info(paso);
 			
 			
-			Map<String,Object> resParams = endososDAO.confirmarEndosoAltaIncisoAuto(cdunieco,cdramo,estado,nmpoliza,tstamp,cdusuari,cdelemen,cdtipsup);
+			Map<String,Object> resParams = endososDAO.confirmarEndosoAltaIncisoAuto(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,tstamp
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEfecto
+					);
 			
 			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite = (String) resParams.get("pv_ntramite_o");
@@ -1270,6 +1284,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdusuari
 			,String cdelemen
 			,String cdtipsup
+			,String fecha
 			,UserVO usuarioSesion
 			)throws Exception
 	{
@@ -1284,12 +1299,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdelemen=" , cdelemen
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ fecha="    , fecha
 				));
 		
 		String paso = null;
 		
 		try
 		{
+			Date fechaEfecto = renderFechas.parse(fecha);
+			
 			String tstamp = String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
 			
 			paso = "Guardando situaciones temporales";
@@ -1411,7 +1429,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso="Confirmando endoso";
 			logger.info(paso);
 
-			Map<String,Object> resParams = endososDAO.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,tstamp,cdusuari,cdelemen,cdtipsup);
+			Map<String,Object> resParams = endososDAO.confirmarEndosoBajaIncisos(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,tstamp
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEfecto
+					);
 			
 			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite = (String) resParams.get("pv_ntramite_o");

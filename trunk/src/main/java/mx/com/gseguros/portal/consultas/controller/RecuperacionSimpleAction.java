@@ -93,11 +93,12 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			checkNull(session                , "No hay sesion");
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
 			try
 			{
 				RecuperacionSimple rec      = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1,cdsisrol);
+				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1,cdsisrol,cdusuari);
 				exito           = resp.isExito();
 				respuesta       = resp.getRespuesta();
 				if(exito)
@@ -140,11 +141,12 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			checkNull(session                , "No hay sesion");
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
 			try
 			{
 				RecuperacionSimple rec       = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSlistVO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol);
+				ManagerRespuestaSlistVO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
 				exito     = resp.isExito();
 				respuesta = resp.getRespuesta();
 				if(exito)
