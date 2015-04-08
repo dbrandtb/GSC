@@ -847,6 +847,26 @@ Ext.onReady(function() {
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
 			banderaFactura = "1";
+			Ext.Ajax.request({
+				url     : _URL_ELIMINAR_FACT_ASEG
+				,params:{
+					'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
+                    'params.nfactura': record.data.noFactura,
+                    'params.valorAccion': 1
+				}
+				,success : function (response){
+					var json = Ext.decode(response.responseText);
+				},
+				failure : function (){
+					me.up().up().setLoading(false);
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
 		}
 	});
 	gridFacturaDirecto=new EditorFacturaDirecto();
@@ -2561,21 +2581,24 @@ Ext.onReady(function() {
 	function _p21_agregarFactura()
 	{
 		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-			debug("banderaFactura : ",banderaFactura,"banderaAsegurado : ",banderaAsegurado);
 			if(banderaFactura =="1"){
+				//GUARDAMOS LAS FACTURAS
+				guardarFacturaSiniestro(); //Agregar Factura
+				//VERIFICAMOS SI TIENE TAMBIEN ASEGURADOS QUE NO SE HAN GUARDADO
 				if(banderaAsegurado =="1"){
-					guardarAseguradosFactura(); //Agregamos los asegurados
+					guardarAseguradosFactura(); //Agregar Factura
 				}
 				banderaFactura = "1";
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}else{
 				if(banderaAsegurado =="1"){
-					guardarAseguradosFactura(); //Agregamos los asegurados
+					guardarAseguradosFactura(); //Agregar Factura
 				}
 				banderaFactura = "1";
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
 		}else if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_REEMBOLSO){
+			debug("VALOR DE BANDERA FACTURA-->",banderaFactura);			
 			if(banderaFactura =="1"){
 				retornaMC = "0";
 				guardarInformacionAdicional();

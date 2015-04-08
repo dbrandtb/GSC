@@ -445,6 +445,17 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="eliminarFactAsegurado" class="siniestrosAction" method="eliminarFactAsegurado">
+	        <result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+	        <result name="success" type="json"/>
+		</action>
+		
 		<!-- FIN ALTA DE TRAMIE -->
         
         <!-- INICIO SINIESTRO -->
