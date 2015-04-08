@@ -347,7 +347,7 @@ Ext.onReady(function() {
 		,style         : 'margin:5px'
 		,selType: 'checkboxmodel'
 		,width   : 600
-		,height: 200
+		,height: 300
 		,columns       :
 		[
 			 {		 header     : 'N&uacute;mero <br/> Tr&aacute;mite'				 ,dataIndex : 'ntramite'				 ,width	 	: 75		 },
@@ -473,9 +473,10 @@ Ext.onReady(function() {
     		    ,autoScroll:true
     		    ,closeAction: 'hide'
     		    ,autoScroll:true
-    		    ,width		 : 650
+    		    ,width		 : 700
+    		    ,height      : 450
     		    ,minHeight 	 : 100 
-    		    ,maxheight      : 400
+    		    //,maxheight      : 550
     		    ,items       :
     		        [
     		            panelProveedorPDirecto

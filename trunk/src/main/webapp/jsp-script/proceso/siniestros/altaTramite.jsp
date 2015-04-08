@@ -56,6 +56,7 @@
             var _UrlGeneraCartaRechazo					= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
             var _URL_VALOR_CDTIPSIT						= '<s:url namespace="/siniestros"		action="validaCdTipsitTramite"/>';
             var _URL_NOMBRE_TURNADO   					= '<s:url namespace="/siniestros" 		action="obtieneUsuarioTurnado" />';
+            var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>
