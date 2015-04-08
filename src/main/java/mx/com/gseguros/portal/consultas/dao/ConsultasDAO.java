@@ -188,6 +188,7 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String cdsisrol
+			,String cdusuari
 			,String cdtipsup
 			)throws Exception;
 }

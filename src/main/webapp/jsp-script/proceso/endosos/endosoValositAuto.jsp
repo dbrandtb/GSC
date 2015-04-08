@@ -205,14 +205,9 @@ Ext.onReady(function()
                         }
                     })
                 ] : []
-                ,columns     : _p36_gridColumns
-                ,store       : _p36_store
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    
-                ]
-                ,bbar :
+                ,columns : _p36_gridColumns
+                ,store   : _p36_store
+                ,bbar    :
                 [
                     '->'
                     ,{

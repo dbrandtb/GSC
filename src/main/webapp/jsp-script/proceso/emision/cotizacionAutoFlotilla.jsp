@@ -720,6 +720,15 @@ Ext.onReady(function()
         ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
         ,style      : 'margin:5px;margin-left:15px;'
         ,hidden     : _p30_endoso
+    }
+    ,{
+        xtype       : 'datefield'
+        ,name       : 'fechaEndoso'
+        ,fieldLabel : 'Fecha de efecto'
+        ,value      : new Date()
+        ,style      : 'margin:5px;margin-left:15px;'
+        ,allowBlank : !_p30_endoso
+        ,hidden     : !_p30_endoso
     });
     
     var itemsTatripol=
@@ -1968,15 +1977,15 @@ Ext.onReady(function()
             }
             else if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
-                var sumaCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUMA ASEGURADA]');
+                var sumaCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VALOR VEH]');
                 debug('@CUSTOM suma asegurada front.:',sumaCmp);
                 sumaCmp.anidado = true;
                 sumaCmp.heredar = function()
                 {
                     var record        = _p30_selectedRecord;
                     var cdtipsit      = record.get('cdtipsit');
-                    var me            = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=SUMA ASEGURADA]');
-                    var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=VALOR A COTIZAR]').name;
+                    var me            = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VALOR VEH]');
+                    var tipovalorName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=TIPO VALOR]').name;
                     var tipovalorVal  = record.get(tipovalorName)-0;
                     
                     debug('tipovalorName:' , tipovalorName,record.data);
@@ -1986,7 +1995,7 @@ Ext.onReady(function()
                 }
                 
                 //trigger tipo valor
-                var tipovalorCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel*=VALOR A COTIZAR]');
+                var tipovalorCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO VALOR]');
                 debug('@CUSTOM valor a cotizar front. trigger suma aseg.:',tipovalorCmp);
                 tipovalorCmp.on(
                 {
@@ -1994,7 +2003,7 @@ Ext.onReady(function()
                     {
                         var record   = _p30_selectedRecord;
                         var cdtipsit = record.get('cdtipsit');
-                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=SUMA ASEGURADA]').name;
+                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=VALOR VEH]').name;
                         var sumaVal  = record.get(sumaName);
                         
                         debug('sumaName:',sumaName,record.data); 
@@ -2018,7 +2027,7 @@ Ext.onReady(function()
                     {
                         var record   = _p30_selectedRecord;
                         var cdtipsit = record.get('cdtipsit');
-                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel=SUMA ASEGURADA]').name;
+                        var sumaName = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*=VALOR VEH]').name;
                         var sumaVal  = record.get(sumaName);
                         
                         debug('sumaName:',sumaName,record.data); 
@@ -2044,7 +2053,7 @@ Ext.onReady(function()
                         change : function()
                         {
                             var sumas = [];
-                            var sumaName = _p30_tatrisitFullForms['AF'].down('[fieldLabel=SUMA ASEGURADA]').name;
+                            var sumaName = _p30_tatrisitFullForms['AF'].down('[fieldLabel*=VALOR VEH]').name;
                             debug('sumaName:',sumaName);
                             _p30_store.each(function(record)
                             {
@@ -2304,7 +2313,7 @@ Ext.onReady(function()
                     var marcaCmp   = form.down('[fieldLabel=MARCA]');
                     var modeloCmp  = form.down('[fieldLabel=MODELO]');
                     var versionCmp = form.down('[fieldLabel*=DESCRIPCI]');
-                    var sumaCmp    = form.down('[fieldLabel=SUMA ASEGURADA]');
+                    var sumaCmp    = form.down('[fieldLabel*=VALOR VEH]');
                     var suma2Cmp   = form.down('[fieldLabel=RESPALDO VALOR NADA]');
                     
                     var precioDolar = form.down('[fieldLabel*=TIPO DE CAMBIO]').getValue()-0;
@@ -2563,8 +2572,11 @@ Ext.onReady(function()
                     var formItems = Ext.ComponentQuery.query('[name]',_fieldById('_p30_form'));
                     for(var i in formItems)
                     {
-                        formItems[i].allowBlank = true;
-                        formItems[i].setReadOnly(true);
+                        if(formItems[i].name!='fechaEndoso')
+                        {
+                            formItems[i].allowBlank = true;
+                            formItems[i].setReadOnly(true);
+                        }
                     }
                 }
                 else
@@ -2578,6 +2590,40 @@ Ext.onReady(function()
                 errorComunicacion();
             }
         });
+        
+        Ext.Ajax.request(
+	    {
+	        url      : _p30_urlRecuperacionSimple
+	        ,params  :
+	        {
+	            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+	            ,'smap1.cdunieco'     : _p30_smap1.CDUNIECO
+	            ,'smap1.cdramo'       : _p30_smap1.CDRAMO
+	            ,'smap1.estado'       : _p30_smap1.ESTADO
+	            ,'smap1.nmpoliza'     : _p30_smap1.NMPOLIZA
+	            ,'smap1.cdtipsup'     : _p30_smap1.cdtipsup
+	        }
+	        ,success : function(response)
+	        {
+	            var json = Ext.decode(response.responseText);
+	            debug('### fechas:',json);
+	            if(json.exito)
+	            {
+	                _fieldByName('fechaEndoso').setMinValue(json.smap1.FECHA_MINIMA);
+	                _fieldByName('fechaEndoso').setMaxValue(json.smap1.FECHA_MAXIMA);
+	                _fieldByName('fechaEndoso').setReadOnly(json.smap1.EDITABLE=='N');
+	                _fieldByName('fechaEndoso').isValid();
+	            }
+	            else
+	            {
+	                mensajeError(json.respuesta);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            errorComunicacion();
+	        }
+	    });
     }
     ////// loaders //////
 });
@@ -5179,6 +5225,7 @@ function _p30_confirmarEndoso()
                 ,estado      : _p30_smap1.ESTADO
                 ,nmpoliza    : _p30_smap1.NMPOLIZA
                 ,cdtipsup    : _p30_smap1.cdtipsup
+                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
             }
             ,slist1 : []
             ,slist2 : []

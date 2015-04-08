@@ -422,19 +422,32 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(smap1  , "No se recibieron datos de poliza");
 			Utils.validate(slist1 , "No se recibieron incisos");
 			
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String cdtipsup    = smap1.get("cdtipsup");
+			String fechaEndoso = smap1.get("fechaEndoso");
 			
-			Utils.validate(cdunieco , "No se recibio la sucursal");
-			Utils.validate(cdramo   , "No se recibio la sucursal");
-			Utils.validate(estado   , "No se recibio el estado de la poliza");
-			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			Utils.validate(cdunieco    , "No se recibio la sucursal");
+			Utils.validate(cdramo      , "No se recibio la sucursal");
+			Utils.validate(estado      , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza    , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup    , "No se recibio el codigo de endoso");
+			Utils.validate(fechaEndoso , "No se recibio la fecha de efecto");
 			
-			endososAutoManager.confirmarEndosoAltaIncisoAuto(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup, usuarioSesion);
+			endososAutoManager.confirmarEndosoAltaIncisoAuto(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,slist1
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEndoso
+					,usuarioSesion
+					);
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
@@ -510,19 +523,32 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(smap1  , "No se recibieron datos de poliza");
 			Utils.validate(slist1 , "No se recibieron incisos");
 			
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco    = smap1.get("CDUNIECO");
+			String cdramo      = smap1.get("CDRAMO");
+			String estado      = smap1.get("ESTADO");
+			String nmpoliza    = smap1.get("NMPOLIZA");
+			String cdtipsup    = smap1.get("cdtipsup");
+			String fechaEndoso = smap1.get("fechaEndoso");
 			
-			Utils.validate(cdunieco , "No se recibio la sucursal");
-			Utils.validate(cdramo   , "No se recibio la sucursal");
-			Utils.validate(estado   , "No se recibio el estado de la poliza");
-			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			Utils.validate(cdunieco    , "No se recibio la sucursal");
+			Utils.validate(cdramo      , "No se recibio la sucursal");
+			Utils.validate(estado      , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza    , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup    , "No se recibio el codigo de endoso");
+			Utils.validate(fechaEndoso , "No se recibio la fecha de efecto");
 			
-			endososAutoManager.confirmarEndosoBajaIncisos(cdunieco,cdramo,estado,nmpoliza,slist1,cdusuari,cdelemen,cdtipsup,usuarioSesion);
+			endososAutoManager.confirmarEndosoBajaIncisos(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,slist1
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEndoso
+					,usuarioSesion
+					);
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;

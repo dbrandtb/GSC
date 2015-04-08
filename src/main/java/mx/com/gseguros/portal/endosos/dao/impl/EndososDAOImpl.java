@@ -3033,9 +3033,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdusuri
 			,String cdelemen
 			,String cdtipsup
+			,Date   fechaEfecto
 			)throws Exception
 	{
-		Map<String,String>params = new LinkedHashMap<String,String>();
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
@@ -3044,6 +3045,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuri"  , cdusuri);
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
+		params.put("feefecto" , fechaEfecto);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
 		
@@ -3063,6 +3065,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
@@ -3082,9 +3085,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdusuri
 			,String cdelemen
 			,String cdtipsup
+			,Date   fechaEfecto
 			)throws Exception
 	{
-		Map<String,String>params = new LinkedHashMap<String,String>();
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
@@ -3093,6 +3097,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuri"  , cdusuri);
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
+		params.put("feefecto" , fechaEfecto);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
 		
@@ -3112,6 +3117,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
