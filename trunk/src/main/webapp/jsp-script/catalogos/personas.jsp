@@ -290,6 +290,18 @@ Ext.onReady(function()
 					            						form.down('[name=smap1.rfc]').reset();
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
+				                        			
+				                        			if(_esCargaClienteNvo && jsonResponse.exito && records.length >0){
+					                        			var form =_p22_formBusqueda();
+			        	 								form.down('[name=smap1.rfc]').reset();
+			        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
+						                        		
+					                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+					                        			form.down('[name=smap1.rfc]').reset();
+					                        			
+					                        		}else if(_esCargaClienteNvo && jsonResponse.exito){
+					                        			irModoAgregar();
+					                        		}
 				                        		};
 				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
@@ -306,13 +318,6 @@ Ext.onReady(function()
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].enable();
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].enable();
 				                        		
-				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
-				                        			store.removeAll();
-				                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-				                        			form.down('[name=smap1.rfc]').reset();
-				                        		}else if(_esCargaClienteNvo && successful){
-				                        			irModoAgregar();
-				                        		}
 				                        	}
 				                        }
 					            })
@@ -692,12 +697,13 @@ Ext.onReady(function()
 						}),
 						listeners: {
 							select: function(combo,records){
-								_p22_fieldTipoPersona().setValue(records[0]);
+								_p22_fieldTipoPersona().select(records[0]);
 							}
 						}
 					},{
 						xtype:'combobox',
 						fieldLabel:'C&uacute;mulo de prima',
+						name: 'PTCUMUPRAGR',
 						allowBlank:false,
 						typeAhead:true,
 						anyMatch:true,
@@ -716,11 +722,16 @@ Ext.onReady(function()
 						rootProperty:'lista'
 						},
 						extraParams:{catalogo:'TCUMULOS'}
+						},
+						listeners:{
+							load: function(str, records, successful, eOpts){
+								_p22_fieldCumuloPrimaModoAgregar().select(records[0]);
+							}
 						}
 						}),
 						listeners: {
 							select: function(combo,records){
-								_p22_fieldCumuloPrima().setValue(records[0]);
+								_p22_fieldCumuloPrima().select(records[0]);
 							}
 						}
 					},{
@@ -748,7 +759,7 @@ Ext.onReady(function()
 						}),
 						listeners: {
 							select: function(combo,records){
-								_p22_fielCdNacion().setValue(records[0]);
+								_p22_fielCdNacion().select(records[0]);
 							},
 							change:  _p22_nacionalidadChange2
 						}
@@ -778,7 +789,7 @@ Ext.onReady(function()
 						}),
 						listeners: {
 							select: function(combo,records){
-								_p22_fieldResidente().setValue(records[0]);
+								_p22_fieldResidente().select(records[0]);
 							}
 						}
 					}],
@@ -1184,6 +1195,10 @@ function _p22_fieldTipoPersona()
 
 function _p22_fieldCumuloPrima(){
     return Ext.ComponentQuery.query('[name=PTCUMUPR]')[Ext.ComponentQuery.query('[name=PTCUMUPR]').length-1];
+}
+
+function _p22_fieldCumuloPrimaModoAgregar(){
+    return Ext.ComponentQuery.query('[name=PTCUMUPRAGR]')[Ext.ComponentQuery.query('[name=PTCUMUPRAGR]').length-1];
 }
 
 function _p22_fielCdNacion(){
