@@ -3866,31 +3866,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
-
-	/*@Override
-	public String obtieneDatosCirculoHospitalario(HashMap<String, Object> paramExclusion) throws Exception {
-		Map<String, Object> resultado = ejecutaSP(new ObtieneDatosCirculoHospitalario(getDataSource()), paramExclusion);
-		logger.debug( resultado.get("pv_existe_o"));
-		return (String) resultado.get("pv_existe_o");
-	}
-	
-    protected class ObtieneDatosCirculoHospitalario extends StoredProcedure {
-    	
-    	protected ObtieneDatosCirculoHospitalario(DataSource dataSource) {
-    		
-    		super(dataSource, "PKG_PRESINIESTRO.P_ELIMACION_PENALIZACION");
-    		declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		compile();
-    	}
-    }*/
-	
 	@Override
 	public String eliminarAsegurado(HashMap<String, Object> paramsTworkSin) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new eliminaAseguradoRegistrado(getDataSource()), paramsTworkSin);
