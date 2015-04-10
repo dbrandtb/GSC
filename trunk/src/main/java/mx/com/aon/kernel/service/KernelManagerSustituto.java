@@ -143,26 +143,6 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> cargarTiposClausulasExclusion() throws ApplicationException;
 	public List<Map<String, String>> obtenerExclusionesPorTipo(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerHtmlClausula(Map<String, String> paramObtenerHtml) throws ApplicationException;
-	/**
-	 * PKG_SATELITES.P_MOV_MPOLICOT
-	 */
-	public WrapperResultados PMovMpolicot(Map<String, String> smap1) throws ApplicationException;
-	/**
-	 * PKG_SATELITES.P_MOV_MPOLICOT
-	 */
-	public WrapperResultados PMovMpolicot(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac
-			,String cdclausu
-			,String nmsuplem
-			,String status
-			,String cdtipcla
-			,String swmodi
-			,String dslinea
-			,String accion) throws ApplicationException;
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public WrapperResultados PMovTvalosin(Map<String, Object> parTvalosin) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException;

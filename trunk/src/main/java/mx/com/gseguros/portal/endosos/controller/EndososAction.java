@@ -1187,11 +1187,9 @@ public class EndososAction extends PrincipalCoreAction
 			
 			if(!(smap1.get("confirmar")!=null&&smap1.get("confirmar").equalsIgnoreCase("si"))) {
 				
-				/////////////////////////////////
-				////// modificar clausulas //////
-				kernelManager.PMovMpolicot(smap1);
-				////// modificar clausulas //////
-				/////////////////////////////////
+				endososManager.guardarMpolicot(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"), 
+						smap1.get("pv_nmsituac_i"), smap1.get("pv_cdclausu_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_status_i"), smap1.get("pv_cdtipcla_i"), 
+						smap1.get("pv_swmodi_i"), smap1.get("pv_dslinea_i"), smap1.get("pv_accion_i"));
 			
 			} else {
 				// Se confirma el endoso si cumple la validacion de fechas: 
@@ -3762,22 +3760,11 @@ public class EndososAction extends PrincipalCoreAction
 					//{dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, cdtipcla=}
 					String cdclausu = cla.get("cdclausu");
 					String dslinea  = cla.get("linea_usuario");
-					String cdtipcla = cla.get("cdtipcla");					
+					String cdtipcla = cla.get("cdtipcla");
 					
-					Map<String,String>policot=new HashMap<String,String>();
-					policot.put("pv_cdunieco_i" , cdunieco);
-					policot.put("pv_cdramo_i"   , cdramo);
-					policot.put("pv_estado_i"   , estado);
-					policot.put("pv_nmpoliza_i" , nmpoliza);
-					policot.put("pv_nmsituac_i" , nmsituac);
-					policot.put("pv_cdclausu_i" , cdclausu);
-					policot.put("pv_nmsuplem_i" , nmsuplem);
-					policot.put("pv_status_i"   , "V");
-					policot.put("pv_cdtipcla_i" , cdtipcla);
-					policot.put("pv_swmodi_i"   , null);
-					policot.put("pv_dslinea_i"  , dslinea);
-					policot.put("pv_accion_i"   , "I");
-					kernelManager.PMovMpolicot(policot);
+					endososManager.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza, 
+							nmsituac, cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, 
+							null, dslinea, Constantes.INSERT_MODE);					
 				}
 				/*///////////////////*/
 				////// clausulas //////
@@ -7420,8 +7407,9 @@ public class EndososAction extends PrincipalCoreAction
 				String cdtipcla = cla.get("cdtipcla");					
 				
 				//PKG_SATELITES.P_MOV_MPOLICOT
-				kernelManager.PMovMpolicot(cdunieco, cdramo, estado, nmpoliza, nmsituac,
-						cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, null, dslinea, Constantes.INSERT_MODE);
+				endososManager.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza, 
+						nmsituac, cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, 
+						null, dslinea, Constantes.INSERT_MODE);
 			}
 			
 			//pkg_satelites.valida_extraprima_situac_read

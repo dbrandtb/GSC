@@ -26,11 +26,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
-public class ComplementariosCoberturasAction extends PrincipalCoreAction{
+public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 
+	private static final long serialVersionUID = 1197781376427981845L;
+	
 	private KernelManagerSustituto kernelManager;
-	private PantallasManager pantallasManager;
-	private EndososManager   endososManager;
+	private PantallasManager       pantallasManager;
+	private EndososManager         endososManager;
 	private Map<String,String>smap1;
 	private Map<String,String>smap2;
 	private Map<String,String>smap3;
@@ -442,25 +444,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		logger.debug("smap1: "+smap1);
 		try
 		{
-			/*Map<String,String>paramObtenerHtml=new HashMap<String,String>(0);
-			paramObtenerHtml.put("pv_cdclausu_i",smap1.get("pv_cdclausu_i"));
-			Map<String,String>clausulaConHtml=kernelManager.obtenerHtmlClausula(paramObtenerHtml);
-			/*
-			pv_cdunieco_i
-            pv_cdramo_i
-            pv_estado_i
-            pv_nmpoliza_i
-            pv_nmsituac_i
-            pv_cdclausu_i
-            pv_nmsuplem_i #0
-            pv_status_i
-            pv_cdtipcla_i
-            pv_swmodi_i   null
-            pv_dslinea_i
-            pv_accion_i   #I
-            */
-			//smap1.put("pv_dslinea_i",clausulaConHtml.get("dslinea"));
-			kernelManager.PMovMpolicot(smap1);
+			endososManager.guardarMpolicot(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"), 
+					smap1.get("pv_nmsituac_i"), smap1.get("pv_cdclausu_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_status_i"), smap1.get("pv_cdtipcla_i"), 
+					smap1.get("pv_swmodi_i"), smap1.get("pv_dslinea_i"), smap1.get("pv_accion_i"));
 			success=true;
 		}
 		catch(Exception ex)

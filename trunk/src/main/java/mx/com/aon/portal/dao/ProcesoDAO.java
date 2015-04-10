@@ -125,7 +125,6 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String LOAD_DETALLE_MESA_CONTROL = "LOAD_DETALLE_MESA_CONTROL";
     public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
-    public static final String P_MOV_MPOLICOT="P_MOV_MPOLICOT";
     public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
     public static final String P_MOV_TVALOSIN="P_MOV_TVALOSIN";
     public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
@@ -223,7 +222,6 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
         addStoredProcedure(P_GET_DOMICIL_GENERAL, new ObtenerDomicilioGeneral(getDataSource()));
         addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
-        addStoredProcedure(P_MOV_MPOLICOT, new PMovMpolicot(getDataSource()));
         addStoredProcedure(EMITIR, new Emitir(getDataSource()));
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
         addStoredProcedure(GUARDAR_ARCHIVO_PERSONA, new GuardarArchivoPersona(getDataSource()));
@@ -2540,39 +2538,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	}
 	/*////////////////////////*/
 	////// p mov mdomicil //////
-	////////////////////////////
-	
-	////////////////////////////
-	////// p mov mpolicot //////
-	/*////////////////////////*/
-	protected class PMovMpolicot extends CustomStoredProcedure {
-		
-		protected PMovMpolicot(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICOT");
-			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsituac_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_status_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipcla_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_swmodi_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dslinea_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
-			compile();
-		}
-	
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			return mapper.build(map);
-		}
-	}
-	/*////////////////////////*/
-	////// p mov mpolicot //////
 	////////////////////////////
 	
 	///////////////////////////////
