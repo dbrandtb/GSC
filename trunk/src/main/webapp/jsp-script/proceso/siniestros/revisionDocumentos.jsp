@@ -8,14 +8,14 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';            
-            var _URL_CARGA_CLAVES_CLAU =    '<s:url namespace="/catalogos" action="cargaClausulas" />';
-            var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
-            var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-            var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
-            var _URL_ACTUALIZA_CLAUSU =      '<s:url namespace="/catalogos" action="actualizaClausula" />';
+            var _URL_CARGA_CLAVES_CLAU	 		= '<s:url namespace="/catalogos" action="cargaClausulas" />';
+            var _URL_CONSULTA_CLAUSU 			= '<s:url namespace="/catalogos" action="consultaClausulas" />';
+            var _URL_CONSULTA_CLAUSU_DETALLE 	= '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
+            var _URL_INSERTA_CLAUSU 			= '<s:url namespace="/catalogos" action="insertaClausula" />';
+            var _URL_ACTUALIZA_CLAUSU 			= '<s:url namespace="/catalogos" action="actualizaClausula" />';
 
-            var _URL_ListaDocumentos =      '<s:url namespace="/siniestros" action="loadListaDocumentos" />';
-            var _GuardaDocumentos =      '<s:url namespace="/siniestros" action="guardaListaDocumentos" />';
+            var _URL_ListaDocumentos 			= '<s:url namespace="/siniestros" action="loadListaDocumentos" />';
+            var _GuardaDocumentos 				= '<s:url namespace="/siniestros" action="guardaListaDocumentos" />';
             
             var _nmTramite = '<s:property value="params.nmTramite" />';
             var _tipoPago = '<s:property value="params.cdTipoPago" />';
