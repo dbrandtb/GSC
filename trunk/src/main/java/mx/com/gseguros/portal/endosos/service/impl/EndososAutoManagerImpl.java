@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -301,17 +302,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String tipoflot
 			,List<Map<String,String>>incisos
 			,String cdsisrol
+			,String cancelada
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarEndososClasificados @@@@@@"
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ nivel="    , nivel
-				,"\n@@@@@@ multiple=" , multiple
-				,"\n@@@@@@ tipoflot=" , tipoflot
-				,"\n@@@@@@ incisos="  , incisos
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="    , cdramo
+				,"\n@@@@@@ nivel="     , nivel
+				,"\n@@@@@@ multiple="  , multiple
+				,"\n@@@@@@ tipoflot="  , tipoflot
+				,"\n@@@@@@ incisos="   , incisos
+				,"\n@@@@@@ cdsisrol="  , cdsisrol
+				,"\n@@@@@@ cancelada=" , cancelada
 				));
 
 		SlistSmapVO resp = new SlistSmapVO();
@@ -351,7 +354,22 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			paso="Recuperando lista de endosos";
 			logger.info(paso);
-			resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol));
+			
+			if("N".equals(cancelada))
+			{
+				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol));
+			}
+			else if("POLIZA".equals(nivel))
+			{
+				List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+				Map<String,String>       mapa  = new HashMap<String,String>();
+				mapa.put("CDTIPSUP"        , "57");
+				mapa.put("DSTIPSUP"        , "REHABILITACI&Oacute;N");
+				mapa.put("LIGA"            , "/endosos/includes/endosoRehabilitacionAuto.action");
+				mapa.put("TIPO_VALIDACION" , "");
+				lista.add(mapa);
+				resp.setSlist(lista);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -2456,7 +2474,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return items;
 	}
 	
-	
 	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS){
 		/**
 		 * Para Caratula
@@ -2555,4 +2572,57 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return true;
 	}
 	
+	@Override
+	public Map<String,Item> endosoRehabilitacionAuto(
+			String cdsisrol
+			,String cdramo
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoRehabilitacionAuto @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		try
+		{
+			paso = "Recuperando elementos formulario";
+			logger.info(paso);
+			
+			List<ComponenteVO>form = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_AUTO"
+					,"FORMULARIO"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario";
+			logger.info(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(form, true, false, true, false, false, false);
+			
+			items.put("itemsFormulario" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ items=",items
+				,"\n@@@@@@ endosoRehabilitacionAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return items;
+	}
 }

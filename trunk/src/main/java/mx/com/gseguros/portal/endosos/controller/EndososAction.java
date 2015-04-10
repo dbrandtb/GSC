@@ -9696,7 +9696,6 @@ public class EndososAction extends PrincipalCoreAction
 		return true;
 	}
 	
-	
 	/****************************** BASE ACTION **********************************/
 	private void manejaException(Exception ex)
 	{

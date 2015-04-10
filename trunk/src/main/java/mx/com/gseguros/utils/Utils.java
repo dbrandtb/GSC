@@ -1,7 +1,9 @@
 package mx.com.gseguros.utils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.ValidationDataException;
@@ -153,5 +155,25 @@ public class Utils {
 		}
 	}
 */
+	public static String convierteListaEnXml(List<Map<String,String>>lista)
+	{
+		StringBuilder sb = new StringBuilder("<lista>");
+		for(Map<String,String>registro:lista)
+		{
+			sb.append("<registro>");
+			for(Entry<String,String>en:registro.entrySet())
+			{
+				sb.append("<")
+				  .append(en.getKey())
+				  .append(">")
+				  .append(en.getValue()!=null?en.getValue():"")
+				  .append("</")
+				  .append(en.getKey())
+				  .append(">");
+			}
+			sb.append("</registro>");
+		}
+		return sb.append("</lista>").toString();
+	}
 
 }

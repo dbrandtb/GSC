@@ -21,6 +21,7 @@ public interface EndososAutoManager
 			,String tipoflot
 			,List<Map<String,String>>incisos
 			,String cdsisrol
+			,String cancelada
 			)throws Exception;
 	
 	public Map<String,Item>pantallaEndosoValosit(
@@ -193,6 +194,11 @@ public interface EndososAutoManager
 	
 	public Map<String,Item> endosoDevolucionPrimas(
 			String cdtipsup
+			,String cdramo
+			)throws Exception;
+	
+	public Map<String,Item> endosoRehabilitacionAuto(
+			String cdsisrol
 			,String cdramo
 			)throws Exception;
 }

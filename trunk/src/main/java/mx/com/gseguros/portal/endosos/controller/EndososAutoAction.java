@@ -134,15 +134,17 @@ public class EndososAutoAction extends PrincipalCoreAction
 		try
 		{
 			Utils.validate(smap1, "No se recibieron datos de entrada");
-			String cdramo   = smap1.get("cdramo");
-			String nivel    = smap1.get("nivel");
-			String multiple = smap1.get("multiple");
-			String tipoflot = smap1.get("tipoflot");
+			String cdramo    = smap1.get("cdramo");
+			String nivel     = smap1.get("nivel");
+			String multiple  = smap1.get("multiple");
+			String tipoflot  = smap1.get("tipoflot");
+			String cancelada = smap1.get("cancelada");
 			
-			Utils.validate(cdramo   , "No se recibio el producto");
-			Utils.validate(nivel    , "No se recibio el nivel de endoso");
-			Utils.validate(multiple , "No se recibio el tipo de seleccion");
-			Utils.validate(tipoflot , "No se recibio el tipo de poliza");
+			Utils.validate(cdramo    , "No se recibio el producto");
+			Utils.validate(nivel     , "No se recibio el nivel de endoso");
+			Utils.validate(multiple  , "No se recibio el tipo de seleccion");
+			Utils.validate(tipoflot  , "No se recibio el tipo de poliza");
+			Utils.validate(cancelada , "No se recibio el status de vigencia de poliza");
 			
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
@@ -160,6 +162,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,tipoflot
 					,slist1
 					,cdsisrol
+					,cancelada
 					);
 			
 			smap1.putAll(resp.getSmap());
@@ -966,6 +969,45 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###########################################"
 				));
 		return SUCCESS;
+	}
+	
+	public String endosoRehabilitacionAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n######################################"
+				,"\n###### endosoRehabilitacionAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		String result = ERROR;
+		try
+		{
+			Utils.validate(session , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdramo = smap1.get("CDRAMO");
+			
+			Utils.validate(cdramo , "No se recibio el producto");
+			
+			imap = endososAutoManager.endosoRehabilitacionAuto(cdsisrol,cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### result=",result
+				,"\n###### endosoRehabilitacionAuto ######"
+				,"\n######################################"
+				));
+		return result;
 	}
 
 	/*

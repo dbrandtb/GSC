@@ -3883,10 +3883,11 @@ function _p30_cargarClic()
                     var diaDif = milDif/(1000*60*60*24);
                     debug('diaDif:',diaDif);
                     
-                    if(!maestra&&!vencida)
+                    /*if(!maestra&&!vencida)
                     {
                         _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
-                    }
+                    }*/
+                    _fieldByName('feini').setValue(new Date());
                     _fieldByName('fefin').setValue
                     (
                         Ext.Date.add
