@@ -8,7 +8,7 @@
 </head>
     <body>
         <div id="dvPrincipal"></div>
-        <h1>Agregando nuevas modificaciones</h1>
+        <h1>Agregando nuevas modificaciones asjdsjhgdf</h1>
           <p>Revisando como se realiza un bloqueo a un archivo subido al repositorio, se bloqueara con la opcion KEEPS LOCKS para revisar si se genera un bloqueo para los demas desarrolladores</p>    
    </body>
 </html>
