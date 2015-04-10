@@ -223,6 +223,48 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	}
 
 	@Override
+	public Integer endosoVigenciaPol(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoVigenciaPol(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoVigenciaPol extends StoredProcedure{
+		protected EndosoVigenciaPol(DataSource dataSource){
+			super(dataSource, "sp_EndosoBCamVigencia");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo",     Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza",   Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso",  Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso",   Types.INTEGER));
+			declareParameter(new SqlParameter("vRecibo",   Types.SMALLINT));
+			declareParameter(new SqlParameter("vFIniRec",   Types.DATE));
+			declareParameter(new SqlParameter("vFFinRec",   Types.DATE));
+			declareParameter(new SqlParameter("vFIniPol",    Types.DATE));
+			declareParameter(new SqlParameter("vFFinPol",    Types.DATE));
+			declareParameter(new SqlParameter("vFEndoso",    Types.DATE));
+			declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+
+	@Override
 	public Integer endosoSerie(Map<String, Object> params) throws Exception {
 		Integer resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new EndosoSerie(getDataSource()), params);

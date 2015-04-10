@@ -1002,8 +1002,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			params.put("param4" , nmpoliza);
 			params.put("param5" , nmsuplem);
 			
-//			datos = storedProceduresManager.procedureListCall(
-//					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
+			datos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_END_NUM_CLI_SIGS.getNombre(), params, null);
 			
 			
 		} catch (Exception e1) {
@@ -1020,7 +1020,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
 				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
 				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
-				paramsEnd.put("vCveCliente"    , datosEnd.get("asd"));
+				paramsEnd.put("vCveCliente"    , datosEnd.get("CVECLIENTE"));
 				
 				Integer res = autosSIGSDAO.endosoCambioCliente(paramsEnd);
 				
