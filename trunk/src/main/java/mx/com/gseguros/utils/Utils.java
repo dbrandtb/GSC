@@ -157,7 +157,7 @@ public class Utils {
 */
 	public static String convierteListaEnXml(List<Map<String,String>>lista)
 	{
-		StringBuilder sb = new StringBuilder("<lista>");
+		StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?><lista>");
 		for(Map<String,String>registro:lista)
 		{
 			sb.append("<registro>");
