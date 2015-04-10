@@ -53,11 +53,11 @@ var _UrlRechazarTramiteWindwow  		= '<s:url namespace="/siniestros" 	action="inc
 var _UrlDetalleSiniestro        		= '<s:url namespace="/siniestros" 	action="detalleSiniestro" />';
 var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           		= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
-var _urlSeleccionCobertura      		= '<s:url namespace="/siniestros" 	action="seleccionCobertura"        />';
 var _URL_CONCEPTODESTINO        		= '<s:url namespace="/siniestros"   action="guardarConceptoDestino" />';
 var _mesasin_url_lista_reasignacion 	= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
-var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
 var _selCobUrlAvanza              		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
+var _urlSeleccionCobertura      		= '<s:url namespace="/siniestros" 	action="seleccionCobertura"        />';
+var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
 
 var windowLoader;
 var msgWindow;
