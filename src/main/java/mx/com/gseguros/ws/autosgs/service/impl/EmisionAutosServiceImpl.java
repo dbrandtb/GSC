@@ -867,6 +867,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vAPaterno"   , datosEnd.get("APATERNO"));
 				paramsEnd.put("vAMaterno"    , datosEnd.get("AMATERNO"));
 				paramsEnd.put("vRasonSocial" , datosEnd.get("RASONSOCIAL"));
+				paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 				
 				Integer res = autosSIGSDAO.endosoNombreCliente(paramsEnd);
 				
@@ -944,6 +945,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vRamo"    , datosEnd.get("RAMO"));
 				paramsEnd.put("vPoliza"  , datosEnd.get("POLIZA"));
 				paramsEnd.put("vRFC"     , datosEnd.get("RFC"));
+				paramsEnd.put("vFEndoso" , datosEnd.get("FEndoso"));
 				
 				Integer res = autosSIGSDAO.endosoRfcCliente(paramsEnd);
 				
@@ -1021,6 +1023,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
 				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
 				paramsEnd.put("vCveCliente"    , datosEnd.get("CVECLIENTE"));
+				paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 				
 				Integer res = autosSIGSDAO.endosoCambioCliente(paramsEnd);
 				
@@ -1106,6 +1109,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
+				paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 				
 				Integer res = autosSIGSDAO.endosoDomicilio(paramsEnd);
 				

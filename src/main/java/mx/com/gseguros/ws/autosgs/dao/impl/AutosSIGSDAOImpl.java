@@ -89,6 +89,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono1", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -206,6 +207,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vPlacas",   Types.VARCHAR));
 			declareParameter(new SqlParameter("vMotor",    Types.VARCHAR));
 			declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -286,6 +288,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSerie", Types.VARCHAR));
 			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -321,6 +324,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vBeneficiario", Types.VARCHAR));
 			declareParameter(new SqlParameter("vListaIncisos", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -356,6 +360,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vAsegAlterno", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -392,6 +397,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
 			declareParameter(new SqlParameter("vTexto", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -408,44 +414,44 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 		}
 	}
 	
-	@Override
-	public Integer endosoVigencia(Map<String, Object> params) throws Exception {
-		Integer resp = null;
-		Map<String, Object> mapResult = ejecutaSP(new EndosoVigencia(getDataSource()), params);
-		resp = (Integer) mapResult.get("rs");
-		
-		return resp;
-	}
-	
-	public class EndosoVigencia extends StoredProcedure{
-		protected EndosoVigencia(DataSource dataSource){
-			super(dataSource, "sp_EndosoBCamVigencia");
-			
-			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
-			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
-			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
-			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
-			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
-			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
-			declareParameter(new SqlParameter("vRecibo", Types.SMALLINT));
-			declareParameter(new SqlParameter("vFInicio", Types.DATE));
-			declareParameter(new SqlParameter("vFTermino", Types.DATE));
-			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
-			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
-				@Override  
-				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
-					Integer result = null;
-					while(rs.next()){  
-						result = rs.getInt(1);
-					}  
-					return result;  
-				}
-			}));
-			
-			compile();
-		}
-	}
+//	@Override
+//	public Integer endosoVigencia(Map<String, Object> params) throws Exception {
+//		Integer resp = null;
+//		Map<String, Object> mapResult = ejecutaSP(new EndosoVigencia(getDataSource()), params);
+//		resp = (Integer) mapResult.get("rs");
+//		
+//		return resp;
+//	}
+//	
+//	public class EndosoVigencia extends StoredProcedure{
+//		protected EndosoVigencia(DataSource dataSource){
+//			super(dataSource, "sp_EndosoBCamVigencia");
+//			
+//			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+//			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+//			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+//			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+//			declareParameter(new SqlParameter("vTEndoso", Types.VARCHAR));
+//			declareParameter(new SqlParameter("vEndoso", Types.INTEGER));
+//			declareParameter(new SqlParameter("vRecibo", Types.SMALLINT));
+//			declareParameter(new SqlParameter("vFInicio", Types.DATE));
+//			declareParameter(new SqlParameter("vFTermino", Types.DATE));
+//			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
+//			
+//			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+//				@Override  
+//				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+//					Integer result = null;
+//					while(rs.next()){  
+//						result = rs.getInt(1);
+//					}  
+//					return result;  
+//				}
+//			}));
+//			
+//			compile();
+//		}
+//	}
 
 	@Override
 	public Integer endosoNombreCliente(Map<String, Object> params) throws Exception {
@@ -468,6 +474,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vAPaterno", Types.VARCHAR));
 			declareParameter(new SqlParameter("vAMaterno", Types.VARCHAR));
 			declareParameter(new SqlParameter("vRasonSocial", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -502,6 +509,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vRFC", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -536,6 +544,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vCveCliente", Types.INTEGER));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
