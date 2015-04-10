@@ -1527,6 +1527,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vRamo"      , datosEnIt.get("Ramo"));
 				paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
 				paramsEnd.put("vAsegAlterno", datosEnIt.get("AsegAlterno"));
+				paramsEnd.put("vFEndoso"   , datosEnIt.get("FEndoso"));
 				
 			
 			try{
@@ -1611,6 +1612,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
 			paramsEnd.put("vInciso"    , datosEnIt.get("Inciso"));
 			paramsEnd.put("vTexto"     , datosEnIt.get("vTexto"));
+			paramsEnd.put("vFEndoso"   , datosEnIt.get("FEndoso"));
 			
 			
 			try{
@@ -1795,6 +1797,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 				
 				incisos = incisos + datosEnIt.get("Inciso");
+				
+				paramsEnd.put("vFEndoso"   , datosEnIt.get("FEndoso"));
 			}
 			
 			paramsEnd.put("vListaIncisos"  , incisos);
@@ -1886,6 +1890,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vPlacas"    , datosEnd.get("Placas"));
 					paramsEnd.put("vMotor"   , datosEnd.get("Motor"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
+					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
 					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
 					
@@ -1972,6 +1977,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vInciso"     , datosEnd.get("Inciso"));
 					paramsEnd.put("vSerie"    , datosEnd.get("Serie"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
+					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
 					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
 					
