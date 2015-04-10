@@ -3387,4 +3387,51 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	
+	@Override
+	public void guardarMpolicot(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String cdclausu, String nmsuplem,
+			String status, String cdtipcla, String swmodi, String dslinea,
+			String accion) throws Exception {
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_cdclausu_i", cdclausu);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_status_i"  , status);
+		params.put("pv_cdtipcla_i", cdtipcla);
+		params.put("pv_swmodi_i"  , swmodi);
+		params.put("pv_dslinea_i" , dslinea);
+		params.put("pv_accion_i"  , accion);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLICOT", params);
+		ejecutaSP(new PMovMpolicot(getDataSource()),params);
+	}
+	
+	protected class PMovMpolicot extends StoredProcedure {
+		
+		protected PMovMpolicot(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICOT");
+			declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdclausu_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipcla_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swmodi_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dslinea_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

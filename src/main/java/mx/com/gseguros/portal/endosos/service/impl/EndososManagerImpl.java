@@ -2038,6 +2038,16 @@ public class EndososManagerImpl implements EndososManager
 	}
 	/********************** BASE MANAGER ***********************/
 	
+	public void guardarMpolicot(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String cdclausu, String nmsuplem,
+			String status, String cdtipcla, String swmodi, String dslinea,
+			String accion) throws Exception {
+		
+		endososDAO.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza,
+				nmsituac, cdclausu, nmsuplem, status, cdtipcla, swmodi,
+				dslinea, accion);
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

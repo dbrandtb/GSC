@@ -382,4 +382,27 @@ public interface EndososManager
 	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception;
 	
 	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem);
+	
+	
+	/**
+	 * 
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsituac
+	 * @param cdclausu
+	 * @param nmsuplem
+	 * @param status
+	 * @param cdtipcla
+	 * @param swmodi
+	 * @param dslinea
+	 * @param accion
+	 * @throws Exception
+	 */
+	public void guardarMpolicot(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String cdclausu, String nmsuplem,
+			String status, String cdtipcla, String swmodi, String dslinea,
+			String accion) throws Exception;
+	
 }
