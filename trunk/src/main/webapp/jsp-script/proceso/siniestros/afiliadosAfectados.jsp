@@ -32,6 +32,10 @@
             var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _URL_CATALOGOS							= '<s:url namespace="/catalogos" 		action="obtieneCatalogo"/>';
 			var _URL_DOCUMENTOSPOLIZA					= '<s:url namespace="/documentos" 		action="ventanaDocumentosPoliza" />';
+			var _URL_FINDETALLEMC 						= '<s:url namespace="/mesacontrol" 		action="finalizarDetalleTramiteMC" />';
+            var _URL_DETALLEMC        					= '<s:url namespace="/mesacontrol" 		action="obtenerDetallesTramite" />';
+            var _URL_MESACONTROL						= '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+			var _URL_ACTSTATUS_TRAMITE 					= '<s:url namespace="/mesacontrol" 		action="actualizarStatusTramite" />';
 			var _11_URL_REQUIEREAUTSERV					= '<s:url namespace="/siniestros" 		action="obtieneRequiereAutServ" />';
 			var _11_URL_INICIARSINIESTROSINAUTSERV		= '<s:url namespace="/siniestros"  		action="generarSiniestrosinAutServ" />';
 			var _11_URL_INICIARSINIESTROTWORKSIN		= '<s:url namespace="/siniestros"  		action="iniciarSiniestroTworksin" />';
@@ -42,18 +46,11 @@
             var _URL_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion" />';
             var _URL_NOMBRE_TURNADO   					= '<s:url namespace="/siniestros" 		action="obtieneUsuarioTurnado" />';
             var _URL_CONSULTA_TRAMITE       			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
-          	var _URL_REVISIONDOCSINIESTRO   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos" />';
-            var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
-            var _URL_FINDETALLEMC 						= '<s:url namespace="/mesacontrol" 		action="finalizarDetalleTramiteMC" />';
-            var _URL_DETALLEMC        					= '<s:url namespace="/mesacontrol" 		action="obtenerDetallesTramite" />';
+          	var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
             var _URL_GENERARCARTARECHAZO				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
             var _URL_LISTARECHAZOS						= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
-            var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
-            var _URL_AJUSTESMEDICOS						= '<s:url namespace="/siniestros" 		action="includes/ajustesMedicos" />';
-			var _URL_MESACONTROL						= '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+            var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';            
 			var _URL_LISTA_CPTICD						= '<s:url namespace="/siniestros"  		action="consultaListaCPTICD" />';
-			var _URL_RECHAZOTRAMITE  					= '<s:url namespace="/siniestros" 		action="includes/rechazoReclamaciones" />';
-			var _URL_ACTSTATUS_TRAMITE 					= '<s:url namespace="/mesacontrol" 		action="actualizarStatusTramite" />';
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
@@ -67,13 +64,16 @@
 			var _URL_DATOS_VALIDACION					= '<s:url namespace="/siniestros" 		action="consultaDatosValidacionSiniestro" />';
 			var _URL_GUARDA_CAMBIOS_FACTURA				= '<s:url namespace="/siniestros" 		action="guardaFacturaTramite" />';
 			var _URL_VAL_AJUSTADOR_MEDICO				= '<s:url namespace="/siniestros" 		action="consultaDatosValidacionAjustadorMed" />';
-			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
-			
 			var _URL_GUARDA_ASEGURADO					= '<s:url namespace="/siniestros" 		action="guardaaseguradoUnico" />';
 			var _URL_OBTENERSINIESTROSTRAMITE			= '<s:url namespace="/siniestros"  		action="obtenerSiniestrosTramite" />';
 			var _URL_OBTENER_SUMAASEGURADA				= '<s:url namespace="/siniestros"  		action="consultaDatosSumaAsegurada" />';
+			var _URL_RECHAZOTRAMITE  					= '<s:url namespace="/siniestros" 		action="includes/rechazoReclamaciones" />';
+			var _URL_REVISIONDOCSINIESTRO   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos" />';
+            var _URL_AJUSTESMEDICOS						= '<s:url namespace="/siniestros" 		action="includes/ajustesMedicos" />';
 			
 			
+			
+			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			
 			
 			debug("VALOR DE _11_params --->",_11_params);
