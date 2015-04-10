@@ -595,4 +595,17 @@ public interface CotizacionDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception;
+	
+	public void movimientoMpolisitXml(List<Map<String,String>> lista)throws Exception;
 }

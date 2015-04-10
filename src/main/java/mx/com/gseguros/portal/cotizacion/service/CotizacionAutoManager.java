@@ -131,6 +131,7 @@ public interface CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
+			,boolean cotizacionXml
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);

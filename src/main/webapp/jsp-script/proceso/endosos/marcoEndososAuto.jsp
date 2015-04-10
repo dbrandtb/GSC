@@ -514,10 +514,11 @@ function _p34_botonEndososPolizaClic()
         {
             smap1 :
             {
-                cdramo    : cdramo
-                ,nivel    : nivel
-                ,multiple : multiple
-                ,tipoflot : tipoflot
+                cdramo     : cdramo
+                ,nivel     : nivel
+                ,multiple  : multiple
+                ,tipoflot  : tipoflot
+                ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
             }
         }
         ,success : function(response)
@@ -931,7 +932,7 @@ function _p34_botonEndososIncisosClic()
         var incisoIte=incisos[i].raw;
         incisoIte['ATRIBUTOS']=incisos[i].get('ATRIBUTOS');
         incisosRaw.push(incisoIte);
-    }    
+    }
     
     windowIncisos.setLoading(true);
     debug('_p34_storeEndosos:',_p34_storeEndosos);
@@ -942,10 +943,11 @@ function _p34_botonEndososIncisosClic()
         {
             smap1 :
             {
-                cdramo    : cdramo
-                ,nivel    : nivel
-                ,multiple : multiple
-                ,tipoflot : tipoflot
+                cdramo     : cdramo
+                ,nivel     : nivel
+                ,multiple  : multiple
+                ,tipoflot  : tipoflot
+                ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
             }
             ,slist1 : incisosRaw
         }

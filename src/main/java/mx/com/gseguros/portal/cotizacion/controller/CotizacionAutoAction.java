@@ -805,6 +805,17 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			smap1.put("cdsisrol" , cdsisrol);
 			smap1.put("cdusuari" , cdusuari);
 			
+			//parche borrar TODO qwe
+			if(smap1.containsKey("xml"))
+			{
+				session.put("cotizacionXml" , "S");
+			}
+			else
+			{
+				session.put("cotizacionXml" , "N");
+			}
+			//parche borrar TODO qwe
+			
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
 			checkBlank(tipoflot , "No se recibio el tipo de cotizacion");
@@ -872,6 +883,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdsisrol = usuario.getRolActivo().getClave();
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			
+			//parche borrar TODO qwe
+			boolean cotizacionXml = "S".equals(session.get("cotizacionXml"));
+			//parche borrar TODO qwe
+			
 			checkNull(smap1, "No se recibieron datos de poliza");
 			String cdunieco    = smap1.get("cdunieco");
 			String cdramo      = smap1.get("cdramo");
@@ -931,6 +946,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,noTarificar
 					,tipoflot
 					,tvalopol
+					,cotizacionXml
 					);
 			
 			exito           = resp.isExito();

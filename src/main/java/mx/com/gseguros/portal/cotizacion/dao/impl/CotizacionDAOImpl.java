@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -5076,6 +5077,71 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_porreadu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		params.put("tipotari" , tipotari);
+		params.put("cdperpag" , cdperpag);
+		Utilerias.debugProcedure(logger, "P_EJECUTA_LANZATARI", params);
+		ejecutaSP(new EjecutaTarificacionConcurrente(getDataSource()),params);
+	}
+	
+	protected class EjecutaTarificacionConcurrente extends StoredProcedure
+	{
+		protected EjecutaTarificacionConcurrente(DataSource dataSource)
+		{
+			super(dataSource,"P_EJECUTA_LANZATARI");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipotari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoMpolisitXml(List<Map<String,String>> lista)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("xml" , Utils.convierteListaEnXml(lista));
+		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_MOV_MPOLISIT_XML", params);
+		ejecutaSP(new MovimientoMpolisitXml(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpolisitXml extends StoredProcedure
+	{
+		protected MovimientoMpolisitXml(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_MPOLISIT_XML");
+			declareParameter(new SqlParameter("xml" , OracleTypes.CLOB));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

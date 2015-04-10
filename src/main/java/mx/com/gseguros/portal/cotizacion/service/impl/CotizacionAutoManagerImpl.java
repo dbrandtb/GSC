@@ -1666,30 +1666,32 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
+			,boolean cotizacionXml
 			)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ cotizarAutosFlotilla @@@@@@")
-				.append("\n@@@@@@ cdusuari=")    .append(cdusuari)
-				.append("\n@@@@@@ cdsisrol=")    .append(cdsisrol)
-				.append("\n@@@@@@ cdunieco=")    .append(cdunieco)
-				.append("\n@@@@@@ cdramo=")      .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=")    .append(cdtipsit)
-				.append("\n@@@@@@ estado=")      .append(estado)
-				.append("\n@@@@@@ nmpoliza=")    .append(nmpoliza)
-				.append("\n@@@@@@ fechaInicio=") .append(feini)
-				.append("\n@@@@@@ fechaFin=")    .append(fefin)
-				.append("\n@@@@@@ cdagente=")    .append(cdagente)
-				.append("\n@@@@@@ cdpersonCli=") .append(cdpersonCli)
-				.append("\n@@@@@@ cdideperCli=") .append(cdideperCli)
-				.append("\n@@@@@@ tvalosit=")    .append(tvalosit)
-				.append("\n@@@@@@ baseTvalosit=").append(baseTvalosit)
-				.append("\n@@@@@@ confTvalosit=").append(confTvalosit)
-				.append("\n@@@@@@ noTarificar=") .append(noTarificar)
-				.append("\n@@@@@@ tipoflot=")    .append(tipoflot)
-				.append("\n@@@@@@ tvalopol=")    .append(tvalopol)
+				.append("\n@@@@@@ cdusuari=")     .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")     .append(cdsisrol)
+				.append("\n@@@@@@ cdunieco=")     .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")       .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=")     .append(cdtipsit)
+				.append("\n@@@@@@ estado=")       .append(estado)
+				.append("\n@@@@@@ nmpoliza=")     .append(nmpoliza)
+				.append("\n@@@@@@ fechaInicio=")  .append(feini)
+				.append("\n@@@@@@ fechaFin=")     .append(fefin)
+				.append("\n@@@@@@ cdagente=")     .append(cdagente)
+				.append("\n@@@@@@ cdpersonCli=")  .append(cdpersonCli)
+				.append("\n@@@@@@ cdideperCli=")  .append(cdideperCli)
+				.append("\n@@@@@@ tvalosit=")     .append(tvalosit)
+				.append("\n@@@@@@ baseTvalosit=") .append(baseTvalosit)
+				.append("\n@@@@@@ confTvalosit=") .append(confTvalosit)
+				.append("\n@@@@@@ noTarificar=")  .append(noTarificar)
+				.append("\n@@@@@@ tipoflot=")     .append(tipoflot)
+				.append("\n@@@@@@ tvalopol=")     .append(tvalopol)
+				.append("\n@@@@@@ cotizacionXml=").append(cotizacionXml)
 				.toString()
 				);
 		
@@ -1773,30 +1775,61 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,tvalopol);
 				
 				setCheckpoint("Insertando maestro de situaciones");
+				List<Map<String,String>> xmlMovMpolisit = new ArrayList<Map<String,String>>();
 				for(Map<String,String>tvalositIte:tvalosit)
 				{
-					cotizacionDAO.movimientoMpolisit(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,tvalositIte.get("nmsituac")
-							,"0"                       //nmsuplem
-							,"V"                       //status
-							,tvalositIte.get("cdtipsit")
-							,null                      //swreduci
-							,"1"                       //cdagrupa
-							,"0"                       //cdestado
-							,renderFechas.parse(feini) //fefecsit
-							,renderFechas.parse(feini) //fecharef
-							,null                      //cdgrupo
-							,null                      //nmsituaext
-							,null                      //nmsitaux
-							,null                      //nmsbsitext
-							,tvalositIte.get("cdplan") //cdplan
-							,"30"                      //cdasegur
-							,"I"                       //accion
-							);
+					Map<String,String> movMpolisit = new LinkedHashMap<String,String>();
+					movMpolisit.put("pv_cdunieco_i"   , cdunieco);
+					movMpolisit.put("pv_cdramo_i"     , cdramo);
+					movMpolisit.put("pv_estado_i"     , estado);
+					movMpolisit.put("pv_nmpoliza_i"   , nmpoliza);
+					movMpolisit.put("pv_nmsituac_i"   , tvalositIte.get("nmsituac"));
+					movMpolisit.put("pv_nmsuplem_i"   , "0");
+					movMpolisit.put("pv_status_i"     , "V");
+					movMpolisit.put("pv_cdtipsit_i"   , tvalositIte.get("cdtipsit"));
+					movMpolisit.put("pv_swreduci_i"   , null);
+					movMpolisit.put("pv_cdagrupa_i"   , "1");
+					movMpolisit.put("pv_cdestado_i"   , "0");
+					movMpolisit.put("pv_fefecsit_i"   , feini);
+					movMpolisit.put("pv_fecharef_i"   , feini);
+					movMpolisit.put("pv_cdgrupo_i"    , null);
+					movMpolisit.put("pv_nmsituaext_i" , null);
+					movMpolisit.put("pv_nmsitaux_i"   , null);
+					movMpolisit.put("pv_nmsbsitext_i" , null);
+					movMpolisit.put("pv_cdplan_i"     , tvalositIte.get("cdplan"));
+					movMpolisit.put("pv_cdasegur_i"   , "30");
+					movMpolisit.put("pv_accion_i"     , "I");
+					xmlMovMpolisit.add(movMpolisit);
+					
+					if(!cotizacionXml)
+					{
+						cotizacionDAO.movimientoMpolisit(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,tvalositIte.get("nmsituac")
+								,"0"                       //nmsuplem
+								,"V"                       //status
+								,tvalositIte.get("cdtipsit")
+								,null                      //swreduci
+								,"1"                       //cdagrupa
+								,"0"                       //cdestado
+								,renderFechas.parse(feini) //fefecsit
+								,renderFechas.parse(feini) //fecharef
+								,null                      //cdgrupo
+								,null                      //nmsituaext
+								,null                      //nmsitaux
+								,null                      //nmsbsitext
+								,tvalositIte.get("cdplan") //cdplan
+								,"30"                      //cdasegur
+								,"I"                       //accion
+								);
+					}
+				}
+				if(cotizacionXml)
+				{
+					cotizacionDAO.movimientoMpolisitXml(xmlMovMpolisit);
 				}
 			}
 				
@@ -1942,6 +1975,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				setCheckpoint("Aplicando ajustes de cotizacion");
 				cotizacionDAO.aplicarAjustesCotizacionPorProducto(cdunieco, cdramo, estado, nmpoliza, cdtipsit, tipoflot);
 				
+				/*
 				setCheckpoint("Generando valores por defecto");
 				cotizacionDAO.valoresPorDefecto(
 						cdunieco
@@ -1952,6 +1986,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"0"    //nmsuplem
 						,"TODO" //cdgarant
 						,"1"    //cdtipsup
+						);
+				*/
+				
+				setCheckpoint("Generando tarificacion concurrente");
+				cotizacionDAO.ejecutaTarificacionConcurrente(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsuplem
+						,"0" //nmsituac
+						,"1" //tipotari
+						,"1" //cdperpag
 						);
 			}
 			

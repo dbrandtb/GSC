@@ -1847,10 +1847,11 @@ function _p28_cargar(boton)
                     var diaDif = milDif/(1000*60*60*24);
                     debug('diaDif:',diaDif);
                     
-                    if(!maestra&&!vencida)
+                    /*if(!maestra&&!vencida)
                     {
                         _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
-                    }
+                    }*/
+                    _fieldByName('feini').setValue(new Date());
                     _fieldByName('fefin').setValue
                     (
                         Ext.Date.add
