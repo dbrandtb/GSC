@@ -255,7 +255,7 @@ Ext.onReady(function(){
 					    ,value      : inputFechaInicio
 					    ,allowBlank : false
 					    ,name       : 'smap2.pv_fecha_i'
-					    ,readOnly   : false
+					    ,readOnly   : true
 					}
             	]
             })
