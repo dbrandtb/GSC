@@ -289,14 +289,17 @@ function _9_confirmar()
             }
         }
         debug('datos que se enviaran:',json);
-        _9_panelPri.setLoading(true);
+        
+        var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});
+		panelMask.show();
+        
         Ext.Ajax.request(
         {
             url       : _9_urlGuardar
             ,jsonData : json
             ,success  : function(response)
             {
-                _9_panelPri.setLoading(false);
+                panelMask.hide();
                 json=Ext.decode(response.responseText);
                 debug('datos recibidos:',json);
                 if(json.success==true)
@@ -318,7 +321,7 @@ function _9_confirmar()
             }
             ,failure  : function()
             {
-                _9_panelPri.setLoading(false);
+                panelMask.hide();
                 errorComunicacion();
             }
         });
