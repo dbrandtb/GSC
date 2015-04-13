@@ -9,6 +9,7 @@
 var _p38_urlCargarSumaAseguradaRamo5 = '<s:url namespace="/emision" action="cargarSumaAseguradaRamo5"    />';
 var _p38_urlCargarParametros         = '<s:url namespace="/emision" action="obtenerParametrosCotizacion" />';
 var _p38_urlConfirmarEndoso          = '<s:url namespace="/endosos" action="guardarEndosoClaveAuto"      />';
+var _p38_urlRecuperacionSimple       = '<s:url namespace="/emision" action="recuperacionSimple"          />';
 ////// urls //////
 
 ////// variables //////
@@ -189,6 +190,40 @@ Ext.onReady(function()
             debug('no encontrado:',key);
         }
     }
+    
+    Ext.Ajax.request(
+    {
+        url      : _p38_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p38_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _p38_smap1.CDRAMO
+            ,'smap1.estado'       : _p38_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _p38_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _p38_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldByName('feefecto').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldByName('feefecto').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldByName('feefecto').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldByName('feefecto').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 

@@ -69,8 +69,8 @@ public class ManagerRespuestaSlist2SmapVO extends ManagerRespuestaBaseVO
 		.append("\nRespuesta=").append(respuesta)
 		.append("\nRespuestaOculta=").append(respuestaOculta)
 		.append("\nSmap=").append(smap)
-		.append("\nSlist1=").append(slist1)
-		.append("\nSlist2=").append(slist2)
+		.append("\nSlist1=").append(slist1!=null&&slist1.size()>15?slist1.size():slist1)
+		.append("\nSlist2=").append(slist2!=null&&slist2.size()>15?slist2.size():slist2)
 		.toString();
 	}
 	

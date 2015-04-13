@@ -41,7 +41,7 @@ public class ManagerRespuestaSlistVO extends ManagerRespuestaBaseVO
 		.append("Exito=").append(exito)
 		.append("\nRespuesta=").append(respuesta)
 		.append("\nRespuestaOculta=").append(respuestaOculta)
-		.append("\nSlist=").append(slist)
+		.append("\nSlist=").append(slist!=null&&slist.size()>15?slist.size():slist)
 		.toString();
 	}
 	

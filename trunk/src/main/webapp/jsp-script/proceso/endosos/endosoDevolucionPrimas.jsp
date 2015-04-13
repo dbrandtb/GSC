@@ -9,6 +9,7 @@
 var _p39_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recuperacionSimpleLista"       />';
 var _p39_urlGuardarTvalositEndoso   = '<s:url namespace="/endosos" action="guardarTvalositEndoso"         />';
 var _p39_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="guardarEndosoDevolucionPrimas" />';
+var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recuperacionSimple"            />';
 ////// urls //////
 
 ////// variables //////
@@ -236,6 +237,7 @@ Ext.onReady(function()
                 [
                     {
                         xtype       : 'datefield'
+                        ,itemId     : '_p39_fechaCmp'
                         ,dateFormat : 'd/m/Y'
                         ,fieldLabel : 'Fecha de efecto'
                         ,value      : new Date()
@@ -303,6 +305,39 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    Ext.Ajax.request(
+    {
+        url      : _p39_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p39_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _p39_smap1.CDRAMO
+            ,'smap1.estado'       : _p39_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _p39_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _p39_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldById('_p39_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldById('_p39_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldById('_p39_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldById('_p39_fechaCmp').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 
