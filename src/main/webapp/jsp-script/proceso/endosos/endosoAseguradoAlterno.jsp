@@ -2,8 +2,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 	var _CONTEXT = '${ctx}';
-	var asegAlterno          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno"       />';
+	var asegAlterno                      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+	var guarda_Aseg_alterno              = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno" />';
+	var _pAsegAlte_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"             />';
 	
 	debug('asegAlterno :',asegAlterno);
 	
@@ -19,6 +20,7 @@
 					xtype		: 'datefield'
 					,fieldLabel	: 'Fecha Inicio Endoso'
 					,name		: 'feInival'
+					,itemId     : '_pAsegAlte_fechaCmp'
 					,labelWidth	: 150
 					,format		: 'd/m/Y'
 					,editable	: true
@@ -79,6 +81,42 @@
 				}
 			}]
 		});
+		
+		////// loaders //////
+		Ext.Ajax.request(
+	    {
+	        url      : _pAsegAlte_urlRecuperacionSimple
+	        ,params  :
+	        {
+	            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+	            ,'smap1.cdunieco'     : asegAlterno.CDUNIECO
+	            ,'smap1.cdramo'       : asegAlterno.CDRAMO
+	            ,'smap1.estado'       : asegAlterno.ESTADO
+	            ,'smap1.nmpoliza'     : asegAlterno.NMPOLIZA
+	            ,'smap1.cdtipsup'     : asegAlterno.cdtipsup
+	        }
+	        ,success : function(response)
+	        {
+	            var json = Ext.decode(response.responseText);
+	            debug('### fechas:',json);
+	            if(json.exito)
+	            {
+	                _fieldById('_pAsegAlte_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
+	                _fieldById('_pAsegAlte_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+	                _fieldById('_pAsegAlte_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
+	                _fieldById('_pAsegAlte_fechaCmp').isValid();
+	            }
+	            else
+	            {
+	                mensajeError(json.respuesta);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            errorComunicacion();
+	        }
+	    });
+		////// loaders //////
             	
     });
 </script>
