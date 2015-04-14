@@ -607,5 +607,14 @@ public interface CotizacionDAO
 			,String cdperpag
 			)throws Exception;
 	
-	public void movimientoMpolisitXml(List<Map<String,String>> lista)throws Exception;
+	public void movimientoMpolisitXml(String tstamp)throws Exception;
+	
+	public void insertaXml(String tstamp, List<Map<String,String>> lista)throws Exception;
+	
+	public void movimientoTvalositXml(String tstamp)throws Exception;
+	
+	public void movimientoTbasvalsitXml(String tstamp)throws Exception;
+	
+	public void movimientoTconvalsitXml(String tstamp)throws Exception;
+	
 }

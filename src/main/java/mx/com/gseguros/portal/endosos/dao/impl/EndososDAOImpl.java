@@ -3441,4 +3441,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void confirmarEndosoRehabilitacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date   feefecto
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("feefecto" , feefecto);
+		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
+		ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
+	}
+	
+	protected class ConfirmarEndosoRehabilitacionAuto extends StoredProcedure
+	{
+		protected ConfirmarEndosoRehabilitacionAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

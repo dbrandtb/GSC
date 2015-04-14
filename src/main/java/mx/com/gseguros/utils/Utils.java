@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.ValidationDataException;
 
@@ -175,5 +176,16 @@ public class Utils {
 		}
 		return sb.append("</lista>").toString();
 	}
-
+	
+	public static String generaTimestamp()
+	{
+		return String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
+	}
+	
+	public static UserVO validateSession(Map<String,Object>session)throws Exception
+	{
+		Utils.validate(session                , "No hay sesion");
+		Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+		return (UserVO)session.get("USUARIO");
+	}
 }

@@ -6,6 +6,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -31,7 +32,17 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws Exception {
     	
+    	long inicio = System.currentTimeMillis();
 		Map<String, Object> mapResult = storedProcedure.execute(parameters);
+		long tfinal = System.currentTimeMillis();
+		logger.debug(Utilerias.join(
+				"****** PROC-LOG seg="
+				,(tfinal-inicio)/1000d
+				,", proc="
+				,storedProcedure.getSql()
+				,", params="
+				,parameters
+				));
 		
         BaseVO mensajeRespuesta = traduceMensaje(mapResult);
         mapResult.put("msg_id", mensajeRespuesta.getKey());
@@ -74,7 +85,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
             }
             
             if (StringUtils.isBlank(msgText)) {
-    			String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
+    			String msgException = "No se encontrï¿½ el mensaje de respuesta del servicio de datos, verifique los parï¿½metros de salida";
     			logger.error(msgException);
     			throw new DaoException(msgException);
     		}
@@ -82,7 +93,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
             logger.info( new StringBuilder("MsgText=").append(msgText).toString() );
         }
         
-        // Si msgTitle es de tipo ERROR o WARNING lanzamos la excepción con el msgText obtenido:
+        // Si msgTitle es de tipo ERROR o WARNING lanzamos la excepciï¿½n con el msgText obtenido:
  		if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
  			logger.error(new StringBuilder("Error de SP: ").append(msgText).toString());
  			if(esMensajePersonalizado) {
