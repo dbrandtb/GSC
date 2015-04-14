@@ -2808,6 +2808,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Placas"
 					,"Motor"
 					,"EndosoB"
+					,"FEndoso"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2848,6 +2849,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"asd"
 					,"asd"
 					,"EndosoB"
+					,"FEndoso"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2887,6 +2889,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Inciso"
 					,"Serie"
 					,"EndosoB"
+					,"FEndoso"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2923,6 +2926,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Poliza"
 					,"Inciso"
 					,"Beneficiario"
+					,"FEndoso"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2958,6 +2962,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Ramo"
 					,"Poliza"
 					,"AsegAlterno"
+					,"FEndoso"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2994,6 +2999,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Poliza"
 					,"Inciso"
 					,"vTexto"
+					,"FEndoso"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3028,6 +3034,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Sucursal"
 					,"Ramo"
 					,"Poliza"
+					,"FEndoso"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
