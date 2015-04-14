@@ -83,6 +83,14 @@
             </interceptor-ref>
             <result name="success" type="json" />
         </action>
+
+        <action name="guardarEndosoTextoLibre" class="endososAutoAction" method="guardarEndosoTextoLibre">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
         
         <action name="guardarEndosoVigenciaPoliza" class="endososAutoAction" method="guardarEndosoVigenciaPoliza">
             <interceptor-ref name="json">
@@ -93,6 +101,22 @@
         </action>
         
         <action name="guardarEndosoCambioVigencia" class="EndososAction" method="guardarEndosoCambioVigencia">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+
+        <action name="guardarEndosoAmpliacionVigencia" class="EndososAction" method="guardarEndosoAmpliacionVigencia">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+
+        <action name="guardarEndosoDespago" class="EndososAction" method="guardarEndosoDespago">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -284,6 +308,15 @@
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoAseguradoAlterno.jsp</result>
         </action>
+
+        <action name="includes/endosoTextoLibre" class="endososAutoAction" method="endosoTextoLibre">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoTextoLibre.jsp</result>
+        </action>
         
         <action name="includes/endosoVigenciaPoliza" class="endososAutoAction" method="endosoVigenciaPoliza">
             <interceptor-ref name="json">
@@ -292,6 +325,24 @@
             </interceptor-ref>
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoVigenciaPoliza.jsp</result>
+        </action>
+
+        <action name="includes/endosoAmpliacionVigencia" class="endososAutoAction" method="endosoAmpliacionVigencia">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoAmpliacionVigencia.jsp</result>
+        </action>
+        
+        <action name="includes/endosoDespago" class="endososAutoAction" method="endosoDespago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDespago.jsp</result>
         </action>
         
         <action name="guardarEndosoDomicilioAutoFull" class="EndososAction" method="guardarEndosoDomicilioAutoFull">
