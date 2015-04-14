@@ -2740,4 +2740,52 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		return items;
 	}
+	
+	@Override
+	public void confirmarEndosoRehabilitacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date   feefecto
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ date="     , feefecto
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Confirmando endoso";
+			endososDAO.confirmarEndosoRehabilitacionAuto(
+					cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,feefecto
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

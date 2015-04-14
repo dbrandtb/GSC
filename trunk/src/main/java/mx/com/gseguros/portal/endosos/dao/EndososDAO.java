@@ -401,4 +401,13 @@ public interface EndososDAO
 			String status, String cdtipcla, String swmodi, String dslinea,
 			String accion) throws Exception;
 	
+	public void confirmarEndosoRehabilitacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date   feefecto
+			)throws Exception;
 }

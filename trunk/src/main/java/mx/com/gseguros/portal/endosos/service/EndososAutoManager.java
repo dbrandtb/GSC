@@ -202,4 +202,14 @@ public interface EndososAutoManager
 			String cdsisrol
 			,String cdramo
 			)throws Exception;
+	
+	public void confirmarEndosoRehabilitacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date   feefecto
+			)throws Exception;
 }

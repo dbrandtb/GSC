@@ -39,7 +39,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,String>       smap2;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
-	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	
 	private boolean exito           = false;
 	private String  respuestaOculta = null;
 	
@@ -1010,6 +1012,50 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n######################################"
 				));
 		return result;
+	}
+	
+	public String confirmarEndosoRehabilitacionAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n###############################################"
+				,"\n###### confirmarEndosoRehabilitacionAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String feefecto = smap1.get("feefecto");
+			
+			endososAutoManager.confirmarEndosoRehabilitacionAuto(
+					user.getUser()
+					,user.getRolActivo().getClave()
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,renderFechas.parse(feefecto)
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### confirmarEndosoRehabilitacionAuto ######"
+				,"\n###############################################"
+				));
+		return SUCCESS;
 	}
 
 	/*

@@ -5126,11 +5126,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void movimientoMpolisitXml(List<Map<String,String>> lista)throws Exception
+	public void movimientoMpolisitXml(String tstamp)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("xml" , Utils.convierteListaEnXml(lista));
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_MOV_MPOLISIT_XML", params);
+		params.put("tstamp" , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_MPOLISIT", params);
 		ejecutaSP(new MovimientoMpolisitXml(getDataSource()),params);
 	}
 	
@@ -5138,8 +5138,94 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected MovimientoMpolisitXml(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_MPOLISIT_XML");
-			declareParameter(new SqlParameter("xml" , OracleTypes.CLOB));
+			super(dataSource,"PKG_PROCESA_XML.PR_PROC_MPOLISIT");
+			declareParameter(new SqlParameter("tstamp" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void insertaXml(String tstamp,List<Map<String,String>> lista)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("tstamp" , tstamp);
+		params.put("xml"    , Utils.convierteListaEnXml(lista));
+		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_CARGA_XML", params);
+		ejecutaSP(new InsertaXml(getDataSource()),params);
+	}
+	
+	protected class InsertaXml extends StoredProcedure
+	{
+		protected InsertaXml(DataSource dataSource)
+		{
+			super(dataSource,"PKG_PROCESA_XML.PR_CARGA_XML");
+			declareParameter(new SqlParameter("tstamp" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("xml"    , OracleTypes.CLOB));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoTvalositXml(String tstamp)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("tstamp" , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TVALOSIT", params);
+		ejecutaSP(new MovimientoTvalositXml(getDataSource()),params);
+	}
+	
+	protected class MovimientoTvalositXml extends StoredProcedure
+	{
+		protected MovimientoTvalositXml(DataSource dataSource)
+		{
+			super(dataSource,"PKG_PROCESA_XML.PR_PROC_TVALOSIT");
+			declareParameter(new SqlParameter("tstamp" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoTbasvalsitXml(String tstamp)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("tstamp" , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TBASVALSIT", params);
+		ejecutaSP(new MovimientoTbasvalsitXml(getDataSource()),params);
+	}
+	
+	protected class MovimientoTbasvalsitXml extends StoredProcedure
+	{
+		protected MovimientoTbasvalsitXml(DataSource dataSource)
+		{
+			super(dataSource,"PKG_PROCESA_XML.PR_PROC_TBASVALSIT");
+			declareParameter(new SqlParameter("tstamp" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoTconvalsitXml(String tstamp)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("tstamp" , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TCONVALSIT", params);
+		ejecutaSP(new MovimientoTconvalsitXml(getDataSource()),params);
+	}
+	
+	protected class MovimientoTconvalsitXml extends StoredProcedure
+	{
+		protected MovimientoTconvalsitXml(DataSource dataSource)
+		{
+			super(dataSource,"PKG_PROCESA_XML.PR_PROC_TCONVALSIT");
+			declareParameter(new SqlParameter("tstamp" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
