@@ -1667,7 +1667,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
-			,boolean cotizacionXml
 			)
 	{
 		logger.info(
@@ -1692,7 +1691,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ noTarificar=")  .append(noTarificar)
 				.append("\n@@@@@@ tipoflot=")     .append(tipoflot)
 				.append("\n@@@@@@ tvalopol=")     .append(tvalopol)
-				.append("\n@@@@@@ cotizacionXml=").append(cotizacionXml)
 				.toString()
 				);
 		
@@ -1776,196 +1774,185 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,tvalopol);
 				
 				setCheckpoint("Insertando maestro de situaciones");
+				long inicioMpolisit = System.currentTimeMillis();
 				List<Map<String,String>> xmlMovMpolisit = new ArrayList<Map<String,String>>();
 				for(Map<String,String>tvalositIte:tvalosit)
 				{
-					if(cotizacionXml)
-					{
-						Map<String,String> movMpolisit = new LinkedHashMap<String,String>();
-						movMpolisit.put("cdunieco"   , cdunieco);
-						movMpolisit.put("cdramo"     , cdramo);
-						movMpolisit.put("estado"     , estado);
-						movMpolisit.put("nmpoliza"   , nmpoliza);
-						movMpolisit.put("nmsituac"   , tvalositIte.get("nmsituac"));
-						movMpolisit.put("nmsuplem"   , "0");
-						movMpolisit.put("status"     , "V");
-						movMpolisit.put("cdtipsit"   , tvalositIte.get("cdtipsit"));
-						movMpolisit.put("swreduci"   , null);
-						movMpolisit.put("cdagrupa"   , "1");
-						movMpolisit.put("cdestado"   , "0");
-						movMpolisit.put("fefecsit"   , feini);
-						movMpolisit.put("fecharef"   , feini);
-						movMpolisit.put("cdgrupo"    , null);
-						movMpolisit.put("nmsituaext" , null);
-						movMpolisit.put("nmsitaux"   , null);
-						movMpolisit.put("nmsbsitext" , null);
-						movMpolisit.put("cdplan"     , tvalositIte.get("cdplan"));
-						movMpolisit.put("cdasegur"   , "30");
-						movMpolisit.put("accion"     , "I");
-						xmlMovMpolisit.add(movMpolisit);
-					}
-					else
-					{
-						cotizacionDAO.movimientoMpolisit(
-								cdunieco
-								,cdramo
-								,estado
-								,nmpoliza
-								,tvalositIte.get("nmsituac")
-								,"0"                       //nmsuplem
-								,"V"                       //status
-								,tvalositIte.get("cdtipsit")
-								,null                      //swreduci
-								,"1"                       //cdagrupa
-								,"0"                       //cdestado
-								,renderFechas.parse(feini) //fefecsit
-								,renderFechas.parse(feini) //fecharef
-								,null                      //cdgrupo
-								,null                      //nmsituaext
-								,null                      //nmsitaux
-								,null                      //nmsbsitext
-								,tvalositIte.get("cdplan") //cdplan
-								,"30"                      //cdasegur
-								,"I"                       //accion
-								);
-					}
-				}
-				if(cotizacionXml)
-				{
-					setCheckpoint("Insertando maestro de situaciones en lote");
-					String tstamp = Utils.generaTimestamp();
-					cotizacionDAO.insertaXml(tstamp, xmlMovMpolisit);
-					cotizacionDAO.movimientoMpolisitXml(tstamp);
-				}
-			}
-				
-			setCheckpoint("Insertando atributos de situacion");
-			List<Map<String,String>> xmlMovTvalosit = new ArrayList<Map<String,String>>();
-			for(Map<String,String>tvalositIte:tvalosit)
-			{
-				if(cotizacionXml)
-				{
-					Map<String,String> movTvalosit = new LinkedHashMap<String,String>();
-					movTvalosit.put("cdunieco" , cdunieco);
-					movTvalosit.put("cdramo"   , cdramo);
-					movTvalosit.put("estado"   , estado);
-					movTvalosit.put("nmpoliza" , nmpoliza);
-					movTvalosit.put("nmsituac" , tvalositIte.get("nmsituac"));
-					movTvalosit.put("nmsuplem" , "0");
-					movTvalosit.put("status"   , "V");
-					movTvalosit.put("cdtipsit" , tvalositIte.get("cdtipsit"));
-					for(Entry<String,String>valosit:tvalositIte.entrySet())
-					{
-						String key = valosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							movTvalosit.put(key.substring("parametros.pv_".length()),valosit.getValue());
-						}
-					}
-					movTvalosit.put("accion"   , "I");
-					xmlMovTvalosit.add(movTvalosit);
-				}
-				else
-				{
-					Map<String,String>valores=new HashMap<String,String>();
-					for(Entry<String,String>valosit:tvalositIte.entrySet())
-					{
-						String key = valosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							valores.put(key.substring("parametros.pv_".length()),valosit.getValue());
-						}
-					}
+					Map<String,String> movMpolisit = new LinkedHashMap<String,String>();
+					movMpolisit.put("cdunieco"   , cdunieco);
+					movMpolisit.put("cdramo"     , cdramo);
+					movMpolisit.put("estado"     , estado);
+					movMpolisit.put("nmpoliza"   , nmpoliza);
+					movMpolisit.put("nmsituac"   , tvalositIte.get("nmsituac"));
+					movMpolisit.put("nmsuplem"   , "0");
+					movMpolisit.put("status"     , "V");
+					movMpolisit.put("cdtipsit"   , tvalositIte.get("cdtipsit"));
+					movMpolisit.put("swreduci"   , null);
+					movMpolisit.put("cdagrupa"   , "1");
+					movMpolisit.put("cdestado"   , "0");
+					movMpolisit.put("fefecsit"   , feini);
+					movMpolisit.put("fecharef"   , feini);
+					movMpolisit.put("cdgrupo"    , null);
+					movMpolisit.put("nmsituaext" , null);
+					movMpolisit.put("nmsitaux"   , null);
+					movMpolisit.put("nmsbsitext" , null);
+					movMpolisit.put("cdplan"     , tvalositIte.get("cdplan"));
+					movMpolisit.put("cdasegur"   , "30");
+					movMpolisit.put("accion"     , "I");
+					xmlMovMpolisit.add(movMpolisit);
 					
-					cotizacionDAO.movimientoTvalosit(
+					/*
+					cotizacionDAO.movimientoMpolisit(
 							cdunieco
 							,cdramo
 							,estado
 							,nmpoliza
 							,tvalositIte.get("nmsituac")
-							,"0"               //nmsuplem
-							,"V"               //status
+							,"0"                       //nmsuplem
+							,"V"                       //status
 							,tvalositIte.get("cdtipsit")
-							,valores
-							,"I"               //accion
+							,null                      //swreduci
+							,"1"                       //cdagrupa
+							,"0"                       //cdestado
+							,renderFechas.parse(feini) //fefecsit
+							,renderFechas.parse(feini) //fecharef
+							,null                      //cdgrupo
+							,null                      //nmsituaext
+							,null                      //nmsitaux
+							,null                      //nmsbsitext
+							,tvalositIte.get("cdplan") //cdplan
+							,"30"                      //cdasegur
+							,"I"                       //accion
 							);
+					*/
 				}
+				setCheckpoint("Insertando maestro de situaciones en lote");
+				String tstampMpolisit = Utils.generaTimestamp();
+				cotizacionDAO.insertaXml(tstampMpolisit, xmlMovMpolisit);
+				cotizacionDAO.movimientoMpolisitXml(tstampMpolisit);
+				logger.debug(Utilerias.join("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
-			if(cotizacionXml)
+				
+			setCheckpoint("Insertando atributos de situacion");
+			long inicioTvalosit = System.currentTimeMillis();
+			List<Map<String,String>> xmlMovTvalosit = new ArrayList<Map<String,String>>();
+			for(Map<String,String>tvalositIte:tvalosit)
 			{
-				setCheckpoint("Insertando atributos de situacion en lote");
-				String tstamp = Utils.generaTimestamp();
-				cotizacionDAO.insertaXml(tstamp, xmlMovTvalosit);
-				cotizacionDAO.movimientoTvalositXml(tstamp);
+				Map<String,String> movTvalosit = new LinkedHashMap<String,String>();
+				movTvalosit.put("cdunieco" , cdunieco);
+				movTvalosit.put("cdramo"   , cdramo);
+				movTvalosit.put("estado"   , estado);
+				movTvalosit.put("nmpoliza" , nmpoliza);
+				movTvalosit.put("nmsituac" , tvalositIte.get("nmsituac"));
+				movTvalosit.put("nmsuplem" , "0");
+				movTvalosit.put("status"   , "V");
+				movTvalosit.put("cdtipsit" , tvalositIte.get("cdtipsit"));
+				for(Entry<String,String>valosit:tvalositIte.entrySet())
+				{
+					String key = valosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
+					{
+						movTvalosit.put(key.substring("parametros.pv_".length()),valosit.getValue());
+					}
+				}
+				movTvalosit.put("accion"   , "I");
+				xmlMovTvalosit.add(movTvalosit);
+				
+				/*
+				Map<String,String>valores=new HashMap<String,String>();
+				for(Entry<String,String>valosit:tvalositIte.entrySet())
+				{
+					String key = valosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
+					{
+						valores.put(key.substring("parametros.pv_".length()),valosit.getValue());
+					}
+				}
+				
+				cotizacionDAO.movimientoTvalosit(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,tvalositIte.get("nmsituac")
+						,"0"               //nmsuplem
+						,"V"               //status
+						,tvalositIte.get("cdtipsit")
+						,valores
+						,"I"               //accion
+						);
+				*/
 			}
+			setCheckpoint("Insertando atributos de situacion en lote");
+			String tstampTvalosit = Utils.generaTimestamp();
+			cotizacionDAO.insertaXml(tstampTvalosit, xmlMovTvalosit);
+			cotizacionDAO.movimientoTvalositXml(tstampTvalosit);
+			logger.debug(Utilerias.join("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
 				
 			setCheckpoint("Borrando situaciones base anteriores");
 			cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
 		
 			setCheckpoint("Inserando situaciones base");
+			long inicioTbasvalsit = System.currentTimeMillis();
 			List<Map<String,String>> xmlMovTbasvalsit = new ArrayList<Map<String,String>>();
 			for(Map<String,String>baseTvalositIte:baseTvalosit)
 			{
-				if(cotizacionXml)
+				Map<String,String> movTbasvalsit = new LinkedHashMap<String,String>();
+				movTbasvalsit.put("cdunieco" , cdunieco);
+				movTbasvalsit.put("cdramo"   , cdramo);
+				movTbasvalsit.put("estado"   , estado);
+				movTbasvalsit.put("nmpoliza" , nmpoliza);
+				movTbasvalsit.put("nmsituac" , String.valueOf(baseTvalositIte.get("nmsituac")));
+				movTbasvalsit.put("nmsuplem" , "0");
+				movTbasvalsit.put("status"   , "V");
+				movTbasvalsit.put("cdtipsit" , baseTvalositIte.get("cdtipsit"));
+				for(Entry<String,String>valosit:baseTvalositIte.entrySet())
 				{
-					Map<String,String> movTbasvalsit = new LinkedHashMap<String,String>();
-					movTbasvalsit.put("cdunieco" , cdunieco);
-					movTbasvalsit.put("cdramo"   , cdramo);
-					movTbasvalsit.put("estado"   , estado);
-					movTbasvalsit.put("nmpoliza" , nmpoliza);
-					movTbasvalsit.put("nmsituac" , String.valueOf(baseTvalositIte.get("nmsituac")));
-					movTbasvalsit.put("nmsuplem" , "0");
-					movTbasvalsit.put("status"   , "V");
-					movTbasvalsit.put("cdtipsit" , baseTvalositIte.get("cdtipsit"));
-					for(Entry<String,String>valosit:baseTvalositIte.entrySet())
+					String key = valosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
-						String key = valosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							movTbasvalsit.put(key.substring("parametros.pv_".length()),valosit.getValue());
-						}
+						movTbasvalsit.put(key.substring("parametros.pv_".length()),valosit.getValue());
 					}
-					xmlMovTbasvalsit.add(movTbasvalsit);
 				}
-				else
-				{
-					Map<String,String>valores=new HashMap<String,String>();
-					for(Entry<String,String>basvalosit:baseTvalositIte.entrySet())
-					{
-						String key = basvalosit.getKey();
-						if(!isBlank(key)
-								&&key.length()>"parametros.pv_".length()
-								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-						{
-							valores.put(key.substring("parametros.pv_".length()),basvalosit.getValue());
-						}
-					}
+				xmlMovTbasvalsit.add(movTbasvalsit);
 					
-					cotizacionDAO.guardarTbasvalsit(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,String.valueOf(baseTvalositIte.get("nmsituac")) //nmsituac
-							,"0"               //nmsuplem
-							,"V"               //status
-							,baseTvalositIte.get("cdtipsit")
-							,valores);
+				/*
+				Map<String,String>valores=new HashMap<String,String>();
+				for(Entry<String,String>basvalosit:baseTvalositIte.entrySet())
+				{
+					String key = basvalosit.getKey();
+					if(!isBlank(key)
+							&&key.length()>"parametros.pv_".length()
+							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
+					{
+						valores.put(key.substring("parametros.pv_".length()),basvalosit.getValue());
+					}
 				}
+				
+				cotizacionDAO.guardarTbasvalsit(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,String.valueOf(baseTvalositIte.get("nmsituac")) //nmsituac
+						,"0"               //nmsuplem
+						,"V"               //status
+						,baseTvalositIte.get("cdtipsit")
+						,valores);
+				*/
 			}
-			if(cotizacionXml)
-			{
-				setCheckpoint("Insertando situaciones base en lote");
-				String tstamp = Utils.generaTimestamp();
-				cotizacionDAO.insertaXml(tstamp, xmlMovTbasvalsit);
-				cotizacionDAO.movimientoTbasvalsitXml(tstamp);
-			}
+			setCheckpoint("Insertando situaciones base en lote");
+			String tstampTbasvalsit = Utils.generaTimestamp();
+			cotizacionDAO.insertaXml(tstampTbasvalsit, xmlMovTbasvalsit);
+			cotizacionDAO.movimientoTbasvalsitXml(tstampTbasvalsit);
+				
+			logger.debug(Utilerias.join("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
 			
 			if(noTarificar==false)
 			{
@@ -1973,92 +1960,65 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				cotizacionDAO.borrarTconvalsit(cdunieco, cdramo, estado, nmpoliza);
 				
 				setCheckpoint("Inserando configuracion de situaciones");
+				long inicioTconvalsit = System.currentTimeMillis();
 				List<Map<String,String>> xmlMovTconvalsit = new ArrayList<Map<String,String>>();
 				int aux=1;
 				for(Map<String,String>confTvalositIte:confTvalosit)
 				{
-					if(cotizacionXml)
+					Map<String,String> movTconvalsit = new LinkedHashMap<String,String>();
+					movTconvalsit.put("cdunieco" , cdunieco);
+					movTconvalsit.put("cdramo"   , cdramo);
+					movTconvalsit.put("estado"   , estado);
+					movTconvalsit.put("nmpoliza" , nmpoliza);
+					movTconvalsit.put("nmsituac" , String.valueOf(aux));
+					movTconvalsit.put("nmsuplem" , "0");
+					movTconvalsit.put("status"   , "V");
+					movTconvalsit.put("cdtipsit" , confTvalositIte.get("cdtipsit"));
+					for(Entry<String,String>valosit:confTvalositIte.entrySet())
 					{
-						Map<String,String> movTconvalsit = new LinkedHashMap<String,String>();
-						movTconvalsit.put("cdunieco" , cdunieco);
-						movTconvalsit.put("cdramo"   , cdramo);
-						movTconvalsit.put("estado"   , estado);
-						movTconvalsit.put("nmpoliza" , nmpoliza);
-						movTconvalsit.put("nmsituac" , String.valueOf(aux));
-						movTconvalsit.put("nmsuplem" , "0");
-						movTconvalsit.put("status"   , "V");
-						movTconvalsit.put("cdtipsit" , confTvalositIte.get("cdtipsit"));
-						for(Entry<String,String>valosit:confTvalositIte.entrySet())
+						String key = valosit.getKey();
+						if(!isBlank(key)
+								&&key.length()>"parametros.pv_".length()
+								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 						{
-							String key = valosit.getKey();
-							if(!isBlank(key)
-									&&key.length()>"parametros.pv_".length()
-									&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-							{
-								movTconvalsit.put(key.substring("parametros.pv_".length()),valosit.getValue());
-							}
+							movTconvalsit.put(key.substring("parametros.pv_".length()),valosit.getValue());
 						}
-						xmlMovTconvalsit.add(movTconvalsit);
 					}
-					else
+					xmlMovTconvalsit.add(movTconvalsit);
+					
+					/*
+					Map<String,String>valores=new HashMap<String,String>();
+					for(Entry<String,String>convalosit:confTvalositIte.entrySet())
 					{
-						Map<String,String>valores=new HashMap<String,String>();
-						for(Entry<String,String>convalosit:confTvalositIte.entrySet())
+						String key = convalosit.getKey();
+						if(!isBlank(key)
+								&&key.length()>"parametros.pv_".length()
+								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 						{
-							String key = convalosit.getKey();
-							if(!isBlank(key)
-									&&key.length()>"parametros.pv_".length()
-									&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
-							{
-								valores.put(key.substring("parametros.pv_".length()),convalosit.getValue());
-							}
+							valores.put(key.substring("parametros.pv_".length()),convalosit.getValue());
 						}
-						
-						cotizacionDAO.guardarTconvalsit(
-								cdunieco
-								,cdramo
-								,estado
-								,nmpoliza
-								,String.valueOf(aux) //nmsituac
-								,"0"               //nmsuplem
-								,"V"               //status
-								,confTvalositIte.get("cdtipsit")
-								,valores);
 					}
-					aux=aux+1;
-				}
-				if(cotizacionXml)
-				{
-					setCheckpoint("Insertando configuracion de situaciones en lote");
-					String tstamp = Utils.generaTimestamp();
-					cotizacionDAO.insertaXml(tstamp, xmlMovTconvalsit);
-					cotizacionDAO.movimientoTconvalsitXml(tstamp);
-				}
-				
-				/*
-				setCheckpoint("Clonando situaciones");
-				for(Map<String,String>tvalositIte:tvalosit)
-				{
-					cotizacionDAO.clonarPersonas(
-							cdelemen
-							,cdunieco
+					
+					cotizacionDAO.guardarTconvalsit(
+							cdunieco
 							,cdramo
 							,estado
 							,nmpoliza
-							,tvalositIte.get("nmsituac")
-							,tvalositIte.get("cdtipsit")
-							,fechaHoy
-							,cdusuari
-							,""                //nombre1
-							,""                //nombre2
-							,""                //apellido1
-							,""                //apellido2
-							,""                //sexo
-							,fechaHoy          //fenacimi
-							,""                //parentesco
-							);
+							,String.valueOf(aux) //nmsituac
+							,"0"               //nmsuplem
+							,"V"               //status
+							,confTvalositIte.get("cdtipsit")
+							,valores);
+					*/
+					
+					aux=aux+1;
 				}
-				*/
+				setCheckpoint("Insertando configuracion de situaciones en lote");
+				String tstampTconvalsit = Utils.generaTimestamp();
+				cotizacionDAO.insertaXml(tstampTconvalsit, xmlMovTconvalsit);
+				cotizacionDAO.movimientoTconvalsitXml(tstampTconvalsit);
+
+				logger.debug(Utilerias.join("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
 				
 				if(!isBlank(cdpersonCli))
 				{
@@ -2082,20 +2042,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				setCheckpoint("Aplicando ajustes de cotizacion");
 				cotizacionDAO.aplicarAjustesCotizacionPorProducto(cdunieco, cdramo, estado, nmpoliza, cdtipsit, tipoflot);
-				
-				/*
-				setCheckpoint("Generando valores por defecto");
-				cotizacionDAO.valoresPorDefecto(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,"0"    //nmsituac
-						,"0"    //nmsuplem
-						,"TODO" //cdgarant
-						,"1"    //cdtipsup
-						);
-				*/
 				
 				setCheckpoint("Generando tarificacion concurrente");
 				cotizacionDAO.ejecutaTarificacionConcurrente(
