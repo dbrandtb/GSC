@@ -603,7 +603,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				"\n###########################################"
 				,"\n###########################################"
-				,"\n###### 		endosoTextoLibre 	 ######"
+				,"\n###### 		endosoTextoLibre 	     ######"
 				,"\n###### smap1="  , smap1
 				,"\n######                               ######"));
 		try {
@@ -611,7 +611,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("CDRAMO");
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
-			String cdtipsup      = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
+			String cdtipsup = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
 			
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
@@ -1130,7 +1130,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 				"\n############################################"
 				,"\n###########################################"
 				,"\n######  guardarEndosoTextoLibre  ######"
-				,"\n###### smap1="  , smap1
+				,"\n###### smap1 ="  , smap1
+				,"\n###### slist1="  , slist1
 				,"\n######                               ######"));
 		try
 		{
@@ -1145,6 +1146,18 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
 			String ntramite = smap1.get("ntramite");
+			String dslinea  = smap1.get("TEXTOEND");
+			List<Map<String,String>> situaciones = null;
+			
+			if(slist1 != null && !slist1.isEmpty() && slist1.get(0).containsKey("NMSITUAC") && StringUtils.isNotBlank(slist1.get(0).get("NMSITUAC"))){
+				situaciones = slist1;
+			}else{
+				HashMap<String,String> nivelPoliza = new HashMap<String, String>();
+				nivelPoliza.put("NMSITUAC", "0");
+				situaciones = new ArrayList<Map<String,String>>();
+				situaciones.add(nivelPoliza);
+			}
+			
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1166,7 +1179,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
-			endososAutoManager.guardarEndosoVigenciaPoliza(
+			endososAutoManager.guardarEndosoTextoLibre(
 					cdunieco,
 					cdramo,
 					estado,
@@ -1179,7 +1192,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					fechaEndoso,
 					dFechaEndoso,
 					feefecto,
-					feproren);
+					feproren,
+					situaciones,
+					dslinea);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}

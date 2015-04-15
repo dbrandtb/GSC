@@ -1700,11 +1700,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vPoliza"   , datosEnd.get("Poliza"));
 					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
 					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
-					paramsEnd.put("vRecibo"     , datosEnd.get("asd"));
-					paramsEnd.put("vFIniRec"    , datosEnd.get("asd"));
-					paramsEnd.put("vFFinRec"    , datosEnd.get("asd"));
-					paramsEnd.put("vFIniPol"    , datosEnd.get("asd"));
-					paramsEnd.put("vFEndoso"    , datosEnd.get("asd"));
+					paramsEnd.put("vRecibo"     , datosEnd.get("Recibo"));
+					paramsEnd.put("vFIniRec"    , datosEnd.get("FIniRec"));
+					paramsEnd.put("vFFinRec"    , datosEnd.get("FFinRec"));
+					paramsEnd.put("vFIniPol"    , datosEnd.get("FIniPol"));
+					paramsEnd.put("vFFinPol"    , datosEnd.get("FFinPol"));
+					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
 					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
@@ -1752,6 +1753,97 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			return false;
 		}
 
+		
+		return true;
+	}
+
+	private boolean endosoTextoLibre(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
+		
+		logger.debug(">>>>> Entrando a metodo endosoTextoLibre");
+		
+		List<Map<String,String>> datos = null;
+		int endosoRecuperado = -1;
+		
+		try{
+			HashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i" , cdramo);
+			params.put("pv_estado_i" , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			
+			//datos = endososDAO.obtieneDatosEndVigenciaPol(params);
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para endosoTextoLibre para SIGS",e1);
+			return false;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			
+			for(Map<String,String> datosEnd : datos){
+				try{
+					
+					HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+					paramsEnd.put("vIdMotivo"  , datosEnd.get("IdMotivo"));
+					paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
+					paramsEnd.put("vRamo"    , datosEnd.get("Ramo"));
+					paramsEnd.put("vPoliza"   , datosEnd.get("Poliza"));
+					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
+					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
+					paramsEnd.put("vRecibo"     , datosEnd.get("asd"));
+					paramsEnd.put("vFIniRec"    , datosEnd.get("asd"));
+					paramsEnd.put("vFFinRec"    , datosEnd.get("asd"));
+					paramsEnd.put("vFIniPol"    , datosEnd.get("asd"));
+					paramsEnd.put("vFEndoso"    , datosEnd.get("asd"));
+					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
+					
+					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
+					
+					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
+					
+					if(res == null || res == 0 || res == -1){
+						logger.debug("Endoso endosoTextoLibre no exitoso");
+						return false;
+					}else{
+						endosoRecuperado = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio endosoTextoLibre Auto: " + e.getMessage(),e);
+				}
+				
+			}
+			
+			if(endosoRecuperado != -1){
+				try{
+					HashMap<String, String> params = new LinkedHashMap<String, String>();
+					params.put("pv_cdunieco_i" , cdunieco);
+					params.put("pv_cdramo_i" , cdramo);
+					params.put("pv_estado_i" , estado);
+					params.put("pv_nmpoliza_i" , nmpoliza);
+					params.put("pv_nmsuplem_i" , nmsuplem);
+					params.put("pv_numend_sigs_i", Integer.toString(endosoRecuperado));
+					
+					endososDAO.actualizaNumeroEndosSigs(params);
+					
+					this.generaCaratulasSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, Integer.toString(endosoRecuperado));
+					
+				} catch (Exception e1) {
+					logger.error("Error en llamar al PL Para actualizar endoso Vigencia de SIGS",e1);
+					return false;
+				}
+			}else{
+				logger.debug("Endoso endosoTextoLibre no exitoso, valor de endoso en -1");
+				return false;
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de endosoTextoLibre");
+			return false;
+		}
+		
 		
 		return true;
 	}
@@ -2257,6 +2349,115 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+
+	@Override
+	public void guardarEndosoTextoLibre(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,List<Map<String,String>> situaciones
+			,String dslinea
+			)throws Exception
+			{
+		logger.info(Utilerias.join(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoTextoLibre @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ cdelemen="         , cdelemen
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				,"\n@@@@@@ fechaEndoso="      , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
+				,"\n@@@@@@ feefecto="         , feefecto
+				,"\n@@@@@@ feproren="         , feproren
+				,"\n@@@@@@ situciones="       , situaciones
+				,"\n@@@@@@ dslinea="          , dslinea
+				));
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		try
+		{
+			paso = "Iniciando endoso";
+			logger.info(paso);
+			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,dFechaEndoso
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso = "Registra los valores en TVALOPOL";
+			logger.debug(paso);
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i"  , cdunieco);
+			params.put("pv_cdramo_i"    , cdramo);
+			params.put("pv_estado_i"    , estado);
+			params.put("pv_nmpoliza_i"  , nmpoliza);
+			
+			params.put("pv_cdclausu_i"  , "END500");
+			params.put("pv_nmsuplem_i"  , nmsuplem);
+			params.put("pv_status_i"    , status);
+			params.put("pv_cdtipcla_i"  , "3");
+			params.put("pv_swmodi_i"    , null);
+			params.put("pv_dslinea_i"   , dslinea);
+			params.put("pv_accion_i"    , Constantes.INSERT_MODE);
+			
+			for(Map<String,String> situacionIt : situaciones){
+				params.put("pv_nmsituac_i", situacionIt.get("NMSITUAC"));
+				logger.debug("EndososManager inserta MPOLICOT params: "+params);
+				endososDAO.insertaTextoLibre(params);
+			}
+			
+			paso = "Se confirma el endoso";
+			logger.debug(paso);
+			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+			
+			if(this.endosoTextoLibre(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
+				logger.info("Endoso de Vigencia exitoso...");
+			}else{
+				logger.error("Error al ejecutar los WS de endoso de TextoLibre");
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem);
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				"\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoTextoLibre @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+			}
 
 	@Override
 	public void validarEndosoAnterior(String cdunieco, String cdramo,

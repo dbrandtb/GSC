@@ -150,6 +150,24 @@ public interface EndososAutoManager
 			,String feefecto
 			,String feproren
 			)throws Exception;
+
+	public void guardarEndosoTextoLibre(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,List<Map<String,String>> situaciones
+			,String dslinea
+			)throws Exception;
 	
 	public void validarEndosoAnterior(
 			String cdunieco

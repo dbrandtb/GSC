@@ -83,7 +83,7 @@
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPrincipal.setLoading(false);
+	   						        panelInicialPral.setLoading(false);
 	   						        Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',

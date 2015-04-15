@@ -1234,6 +1234,43 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public void insertaTextoLibre(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_MPOLICOT ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new InsertaTextoLibre(this.getDataSource()), params);
+	}
+	
+	protected class InsertaTextoLibre extends StoredProcedure
+	{
+		protected InsertaTextoLibre(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_MOV_MPOLICOT");
+			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdclausu_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipcla_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swmodi_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dslinea_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public Map<String, String> pClonarPolizaReexped(Map<String, String> params) throws Exception
@@ -2821,10 +2858,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndVigenciaPol(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.", params);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndVigenciaPol(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.", params, lista);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params, lista);
 		return lista;
 	}
 	
@@ -2832,7 +2869,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndVigenciaPol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.");
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2845,11 +2882,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"Poliza"
 					,"TEndoso"
 					,"Endoso"
-					,"asd"
-					,"asd"
-					,"asd"
-					,"EndosoB"
+					,"Recibo"
+					,"FIniRec"
+					,"FFinRec"
+					,"FIniPol"
+					,"FFinPol"
 					,"FEndoso"
+					,"EndosoB"
+					
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

@@ -3,6 +3,7 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+	var situaciones          = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 	var guardaTextoLibre = '<s:url namespace="/endosos" action=" guardarEndosoTextoLibre"       />';
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
@@ -55,6 +56,7 @@
 	        				paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
 	        				paramsEntrada.TEXTOEND = panelInicialPral.down('[name="textoEndoso"]').getValue();
 	        				submitValues['smap1']= paramsEntrada;
+	        				submitValues['slist1']= situaciones;
 	        				Ext.Ajax.request( {
 	   						    url: guardaTextoLibre,
 	   						    jsonData: Ext.encode(submitValues),
@@ -64,7 +66,7 @@
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPrincipal.setLoading(false);
+	   						        panelInicialPral.setLoading(false);
 	   						        Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',
