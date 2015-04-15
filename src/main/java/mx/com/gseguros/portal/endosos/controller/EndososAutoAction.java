@@ -1381,10 +1381,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		String result = ERROR;
 		try
 		{
-			Utils.validate(session , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			UserVO user = Utils.validateSession(session);
 			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
@@ -1392,7 +1389,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			Utils.validate(cdramo , "No se recibio el producto");
 			
-			imap = endososAutoManager.endosoRehabilitacionAuto(cdsisrol,cdramo);
+			imap = endososAutoManager.endosoRehabilitacionAuto(user.getRolActivo().getClave(),cdramo);
 			
 			result = SUCCESS;
 		}
@@ -1427,7 +1424,25 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
-			String feefecto = smap1.get("feefecto");
+			String cdtipsup = smap1.get("cdtipsup");
+			String nsuplogi = smap1.get("nsuplogi");
+			String cddevcia = smap1.get("cddevcia");
+			String cdgestor = smap1.get("cdgestor");
+			String feemisio = smap1.get("feemisio");
+			String feinival = smap1.get("feinival");
+			String fefinval = smap1.get("fefinval");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			Utils.validate(nsuplogi , "No se recibio el consecutivo de endoso");
+			Utils.validate(cddevcia , "No se recibio el tipo de endoso");
+			Utils.validate(cdgestor , "No se recibio el numero de endoso");
+			Utils.validate(feemisio , "No se recibio la fecha de emision de endoso");
+			Utils.validate(feinival , "No se recibio la fecha de inicio de endoso");
+			Utils.validate(fefinval , "No se recibio la fecha de fin de endoso");
 			
 			endososAutoManager.confirmarEndosoRehabilitacionAuto(
 					user.getUser()
@@ -1436,7 +1451,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdramo
 					,estado
 					,nmpoliza
-					,renderFechas.parse(feefecto)
+					,cdtipsup
+					,nsuplogi
+					,cddevcia
+					,cdgestor
+					,renderFechas.parse(feemisio)
+					,renderFechas.parse(feinival)
+					,renderFechas.parse(fefinval)
 					);
 			
 			success = true;

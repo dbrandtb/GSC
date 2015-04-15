@@ -192,4 +192,11 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdtipsup
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarEndososRehabilitables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

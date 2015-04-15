@@ -210,6 +210,12 @@ public interface EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,Date   feefecto
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
 			)throws Exception;
 }
