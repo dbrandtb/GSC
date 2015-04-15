@@ -147,6 +147,7 @@ Ext.onReady(function()
                             
                             me.disable();
                             me.setText('Cargando...');
+                            var record = _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0];
                             Ext.Ajax.request(
                             {
                                 url      : _p40_urlConfirmarEndoso
@@ -157,12 +158,16 @@ Ext.onReady(function()
                                     ,'smap1.estado'   : _p40_smap1.ESTADO
                                     ,'smap1.nmpoliza' : _p40_smap1.NMPOLIZA
                                     ,'smap1.cdtipsup' : _p40_smap1.cdtipsup
-                                    ,'smap1.nsuplogi' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].get('NSUPLOGI')
-                                    ,'smap1.cddevcia' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].get('CDDEVCIA')
-                                    ,'smap1.cdgestor' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].get('CDGESTOR')
-                                    ,'smap1.feemisio' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].raw['FEEMISIO']
-                                    ,'smap1.feinival' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].raw['FEINIVAL']
-                                    ,'smap1.fefinval' : _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0].raw['FEFINVAL']
+                                    ,'smap1.nsuplogi' : record.get('NSUPLOGI')
+                                    ,'smap1.cddevcia' : record.get('CDDEVCIA')
+                                    ,'smap1.cdgestor' : record.get('CDGESTOR')
+                                    ,'smap1.feemisio' : record.raw['FEEMISIO']
+                                    ,'smap1.feinival' : record.raw['FEINIVAL']
+                                    ,'smap1.fefinval' : record.raw['FEFINVAL']
+                                    ,'smap1.feefecto' : record.raw['FEEFECTO']
+                                    ,'smap1.feproren' : record.raw['FEPROREN']
+                                    ,'smap1.cdmoneda' : record.get('CDMONEDA')
+                                    ,'smap1.nmsuplem' : record.get('NMSUPLEM')
                                 }
                                 ,success : function(response)
                                 {

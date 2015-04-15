@@ -1446,6 +1446,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feemisio = smap1.get("feemisio");
 			String feinival = smap1.get("feinival");
 			String fefinval = smap1.get("fefinval");
+			String feefecto = smap1.get("feefecto");
+			String feproren = smap1.get("feproren");
+			String cdmoneda = smap1.get("cdmoneda");
+			String nmsuplem = smap1.get("nmsuplem");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1458,6 +1462,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(feemisio , "No se recibio la fecha de emision de endoso");
 			Utils.validate(feinival , "No se recibio la fecha de inicio de endoso");
 			Utils.validate(fefinval , "No se recibio la fecha de fin de endoso");
+			Utils.validate(feefecto , "No se recibio la fecha de efecto");
+			Utils.validate(feproren , "No se recibio la fecha de proxima renovacion");
+			Utils.validate(cdmoneda , "No se recibio la clave de moneda");
+			Utils.validate(nmsuplem , "No se recibio el numero de suplemento");
 			
 			endososAutoManager.confirmarEndosoRehabilitacionAuto(
 					user.getUser()
@@ -1473,6 +1481,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,renderFechas.parse(feemisio)
 					,renderFechas.parse(feinival)
 					,renderFechas.parse(fefinval)
+					,renderFechas.parse(feefecto)
+					,renderFechas.parse(fefinval)
+					,cdmoneda
+					,nmsuplem
+					,user.getEmpresa().getElementoId()
 					);
 			
 			success = true;

@@ -3002,6 +3002,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,Date   feemisio
 			,Date   feinival
 			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -3020,6 +3025,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ feemisio=" , feemisio
 				,"\n@@@@@@ feinival=" , feinival
 				,"\n@@@@@@ fefinval=" , fefinval
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ feproren=" , feproren
+				,"\n@@@@@@ cdmoneda=" , cdmoneda
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdelemen=" , cdelemen
 				));
 		
 		String paso = null;
@@ -3040,6 +3050,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,feemisio
 					,feinival
 					,fefinval
+					,feefecto
+					,feproren
+					,cdmoneda
+					,nmsuplem
+					,cdelemen
 					);
 		}
 		catch(Exception ex)
