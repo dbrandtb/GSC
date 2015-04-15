@@ -3449,7 +3449,13 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,Date   feefecto
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -3459,7 +3465,13 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		params.put("feefecto" , feefecto);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("cddevcia" , cddevcia);
+		params.put("cdgestor" , cdgestor);
+		params.put("feemisio" , feemisio);
+		params.put("feinival" , feinival);
+		params.put("fefinval" , fefinval);
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
 	}
@@ -3475,7 +3487,13 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddevcia" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgestor" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feemisio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feinival" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fefinval" , OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

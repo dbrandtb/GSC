@@ -2704,10 +2704,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		String           paso  = null;
 		try
 		{
-			paso = "Recuperando elementos formulario";
+			paso = "Recuperando elementos formulario de lectura";
 			logger.info(paso);
 			
-			List<ComponenteVO>form = pantallasDAO.obtenerComponentes(
+			List<ComponenteVO>formLectura = pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
 					,cdramo
@@ -2715,17 +2715,62 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //estado
 					,cdsisrol
 					,"ENDOSO_REHABILITACION_AUTO"
-					,"FORMULARIO"
+					,"FORM_LECTURA"
 					,null
 					);
 			
-			paso = "Construyendo componentes del formulario";
+			paso = "Construyendo componentes del formulario de lectura";
 			logger.info(paso);
 			
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.generaComponentes(form, true, false, true, false, false, false);
+			gc.generaComponentes(formLectura, true, false, true, false, false, false);
 			
-			items.put("itemsFormulario" , gc.getItems());
+			items.put("formLecturaItems" , gc.getItems());
+			
+			paso = "Recuperando elementos formulario de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>formEndoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_AUTO"
+					,"FORM_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(formEndoso, true, false, true, false, false, false);
+			
+			items.put("formEndosoItems" , gc.getItems());
+			
+			paso = "Recuperando componentes de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>endoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_AUTO"
+					,"MODELO_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(endoso, true, true, false, true, false, false);
+			
+			items.put("modeloEndosoFields" , gc.getFields());
+			items.put("gridEndososColumns" , gc.getColumns());
 		}
 		catch(Exception ex)
 		{
@@ -2749,7 +2794,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,Date   feefecto
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -2761,7 +2812,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdramo="   , cdramo
 				,"\n@@@@@@ estado="   , estado
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ date="     , feefecto
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ nsuplogi=" , nsuplogi
+				,"\n@@@@@@ cddevcia=" , cddevcia
+				,"\n@@@@@@ cdgestor=" , cdgestor
+				,"\n@@@@@@ feemisio=" , feemisio
+				,"\n@@@@@@ feinival=" , feinival
+				,"\n@@@@@@ fefinval=" , fefinval
 				));
 		
 		String paso = null;
@@ -2775,7 +2832,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdramo
 					,estado
 					,nmpoliza
-					,feefecto
+					,cdtipsup
+					,nsuplogi
+					,cddevcia
+					,cdgestor
+					,feemisio
+					,feinival
+					,fefinval
 					);
 		}
 		catch(Exception ex)

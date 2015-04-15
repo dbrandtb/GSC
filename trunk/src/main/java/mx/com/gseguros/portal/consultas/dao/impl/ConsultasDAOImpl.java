@@ -1524,4 +1524,47 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public List<Map<String,String>> recuperarEndososRehabilitables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_X_POLIZA_A_REHAB", params);
+    	Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososRehabilitables(getDataSource()),params);
+    	List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	if(lista==null)
+    	{
+    		lista = new ArrayList<Map<String,String>>();
+    	}
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_X_POLIZA_A_REHAB", params, lista);
+    	return lista;
+	}
+    
+    protected class RecuperarEndososRehabilitables extends StoredProcedure
+    {
+    	protected RecuperarEndososRehabilitables(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_ENDOSOS_X_POLIZA_A_REHAB");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

@@ -391,6 +391,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String tstamp   = params.get("tstamp");
 				resp.setSlist(endososDAO.recuperarCoberturasEndosoDevolucionPrimas(cdunieco, cdramo, estado, nmpoliza, nmsituac, tstamp));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_ENDOSOS_REHABILITABLES))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSlist(consultasDAO.recuperarEndososRehabilitables(cdunieco, cdramo, estado, nmpoliza));
+			}
 			
 			setCheckpoint("0");
 		}
