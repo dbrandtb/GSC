@@ -51,6 +51,8 @@ public class AutorizacionServicioVO implements Serializable{
 	private String especialidadMedico;
 	private String cveTipoAutorizaG;
 	private String cdtipsit;
+	private String aplicaZonaHosp;
+	private String aplicaCirHos;
 	
 	
 	public String getCopagofi() {
@@ -368,6 +370,22 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setCdtipsit(String cdtipsit) {
 		this.cdtipsit = cdtipsit;
+	}
+
+	public String getAplicaZonaHosp() {
+		return aplicaZonaHosp;
+	}
+
+	public void setAplicaZonaHosp(String aplicaZonaHosp) {
+		this.aplicaZonaHosp = aplicaZonaHosp;
+	}
+
+	public String getAplicaCirHos() {
+		return aplicaCirHos;
+	}
+
+	public void setAplicaCirHos(String aplicaCirHos) {
+		this.aplicaCirHos = aplicaCirHos;
 	}	
 	
 }
