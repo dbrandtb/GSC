@@ -108,7 +108,7 @@
             <result name="success" type="json" />
         </action>
 
-        <action name="guardarEndosoAmpliacionVigencia" class="EndososAction" method="guardarEndosoAmpliacionVigencia">
+        <action name="guardarEndosoAmpliacionVigencia" class="endososAutoAction" method="guardarEndosoAmpliacionVigencia">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>

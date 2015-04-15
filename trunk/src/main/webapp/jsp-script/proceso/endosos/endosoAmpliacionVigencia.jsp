@@ -34,24 +34,19 @@
 				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Maximo',			name	: 'feMax',				hidden		: true,
 					format		: 'd/m/Y',		editable	: true,						value	: paramsEntrada.FEEFECTO
 				},
-				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Inicio Endoso',	name	: 'feInival',			labelWidth	: 150,
-					format		: 'd/m/Y',		editable	: true, 					value   : new Date(),			allowBlank	: false,
-					colspan		:2
-				},
 				{
 					xtype		: 'datefield',	fieldLabel	: 'Fecha Efecto',			name	: 'feIngreso',			labelWidth	: 150,
-					format		: 'd/m/Y',		editable	: true,						value	: paramsEntrada.FEEFECTO,	allowBlank	: false,
-					listeners:{
-			    	    change:function(field,value) {
-			    	    	fechaFeefecto = new Date(panelInicialPral.down('[name="feEfecto"]').getValue());
-			    	    	panelInicialPral.down('[name="feMin"]').setValue(Ext.Date.add(fechaFeefecto, Ext.Date.DAY, -(+paramsEntrada.pv_diasMinimo)));
-			    	    	panelInicialPral.down('[name="feMax"]').setValue(Ext.Date.add(fechaFeefecto, Ext.Date.DAY, paramsEntrada.pv_diasMaximo));
-			    	    	panelInicialPral.down('[name="feFin"]').setValue(Ext.Date.add(value, Ext.Date.DAY, paramsEntrada.pv_difDate));
-			    	    }
-			    	}
+					format		: 'd/m/Y',		editable	: true,						value	: paramsEntrada.FEEFECTO,	allowBlank	: false
+					,readOnly  	: true
+					
 				},
 		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha Fin',				name	: 'feFin',				labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true,						value	: paramsEntrada.FEPROREN, readOnly  	: true
+				},
+				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Ampliaci&oacute;n Vigencia', name	: 'feAmpliacion', labelWidth	: 150,
+					format		: 'd/m/Y',		editable	: true, 					value   : paramsEntrada.FEPROREN,			allowBlank	: false,
+					colspan		:2, minValue : new Date(),
+					minText:'La fecha de Ampliaci&oacute;n Vigencia debe ser mayor a Fecha Fin'
 				}
 	    	]
 			,buttonAlign:'center'
@@ -63,16 +58,13 @@
 					var formPanel = this.up().up();
 					if (formPanel.form.isValid()) {
                         //1.- Verificamos la información de las fechas
-                        var fechaMinValMod = Ext.Date.format(panelInicialPral.down('[name="feMin"]').getValue(),'d/m/Y');
-						var fechaMaxValMod = Ext.Date.format(panelInicialPral.down('[name="feMax"]').getValue(),'d/m/Y');
-						var fechaEfectoMod = Ext.Date.format(panelInicialPral.down('[name="feIngreso"]').getValue(),'d/m/Y');
 						
-						if(validate_fechaMayorQue(fechaEfectoMod , fechaMinValMod) == 0 && validate_fechaMayorQue(fechaMaxValMod ,fechaEfectoMod) == 0){
+						var feAmpli  = new Date(panelInicialPral.down('[name="feAmpliacion"]').getValue());
+						var feProren = new Date(panelInicialPral.down('[name="feFin"]').getValue());
+						
+						if(feAmpli > feProren){
 						    //Exito
 							var submitValues={};
-							paramsEntrada.FEEFECTO = Ext.Date.format(panelInicialPral.down('[name="feIngreso"]').getValue(),'d/m/Y');
-	        				paramsEntrada.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feFin"]').getValue(),'d/m/Y');
-	        				paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
 	        				submitValues['smap1']= paramsEntrada;
 	        				Ext.Ajax.request( {
 	   						    url: guarda_Vigencia_Poliza,
@@ -98,7 +90,7 @@
 						    //Error
 							centrarVentanaInterna(Ext.Msg.show({
 		                        title:'Error',
-		                        msg: 'La fecha efecto esta fuera del rango. Fecha Minimo: '+fechaMinValMod+' Fecha M&aacute;ximo:'+fechaMaxValMod,
+		                        msg: 'La fecha de Ampliaci&oacute;n de Vigencia debe ser mayor a la Fecha Fin',
 		                        buttons: Ext.Msg.OK,
 		                        icon: Ext.Msg.WARNING
 		                    }));
@@ -115,20 +107,6 @@
 			}]
 		});
 
-		function validate_fechaMayorQue(fechaInicial,fechaFinal){
-            debug("fechaInicial : "+fechaInicial+" fechaFinal : "+fechaFinal);
-			valuesStart = fechaInicial.split("/");
-            valuesEnd   = fechaFinal.split("/");
-			 // Verificamos que la fecha no sea posterior a la actual
-            var dateStart = new Date(valuesStart[2],(valuesStart[1]-1),valuesStart[0]);
-			debug("dateStart -->",dateStart);
-            var dateEnd = new Date(valuesEnd[2],(valuesEnd[1]-1),valuesEnd[0]);
-            debug("dateEnd -->",dateEnd);
-            if(dateStart >= dateEnd){
-                return 0;
-            }
-            return 1;
-        }
 		
     });
 </script>
