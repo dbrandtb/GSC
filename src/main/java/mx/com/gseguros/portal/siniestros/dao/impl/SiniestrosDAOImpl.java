@@ -111,6 +111,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setEspecialidadMedico(rs.getString("ESPECMED"));
         	consulta.setCveTipoAutorizaG(rs.getString("TPAUTORI"));
         	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
+        	consulta.setAplicaCirHos(rs.getString("SWPECIHO"));
+        	consulta.setAplicaZonaHosp(rs.getString("SWPEZOHO"));
             return consulta;
         }
     }
@@ -500,8 +502,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	protected class GuardaAutorizacionServicioSP extends StoredProcedure {
 
 		protected GuardaAutorizacionServicioSP(DataSource dataSource) {
-			super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2");
-			
+			super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_MAUTSERV");
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmautant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
@@ -534,6 +535,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_nombmedi_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_especmed_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tpautori_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idaplicaCirHosp_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idaplicaZona_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGuardardoAutorizacionServicioMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
