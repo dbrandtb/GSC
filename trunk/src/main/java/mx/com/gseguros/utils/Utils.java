@@ -128,6 +128,20 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Obtiene el tamaño de una lista (null safe)
+	 * @param lista
+	 * @return Devuelve el tama&ntilde;o de la lista o null
+	 */
+	public static Integer size(Collection<?> lista) {
+		if(lista == null) {
+			return null;
+		} else {
+			return CollectionUtils.size(lista);
+		}
+	}
+	
+	
 /*	
 	public static void main(String[] args) {
 		try {
