@@ -235,5 +235,10 @@ public interface EndososAutoManager
 			,Date   feemisio
 			,Date   feinival
 			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
 			)throws Exception;
 }

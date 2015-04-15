@@ -416,5 +416,10 @@ public interface EndososDAO
 			,Date   feemisio
 			,Date   feinival
 			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmonea
+			,String nmsuplem
+			,String cdelemen
 			)throws Exception;
 }

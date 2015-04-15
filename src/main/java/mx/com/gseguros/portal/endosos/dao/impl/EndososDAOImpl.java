@@ -3496,6 +3496,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,Date   feemisio
 			,Date   feinival
 			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -3512,6 +3517,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("feemisio" , feemisio);
 		params.put("feinival" , feinival);
 		params.put("fefinval" , fefinval);
+		params.put("feefecto" , feefecto);
+		params.put("feproren" , feproren);
+		params.put("cdmoneda" , cdmoneda);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdelemen" , cdelemen);
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
 	}
@@ -3534,6 +3544,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("feemisio" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("feinival" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("fefinval" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feproren" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdmoneda" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
