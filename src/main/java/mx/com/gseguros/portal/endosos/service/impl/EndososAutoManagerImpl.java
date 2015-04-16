@@ -2321,6 +2321,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso = "Se confirma el endoso";
 			logger.debug(paso);
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+			//paso = "Se Registra recibos de nueva vigencia";
+			//logger.debug(paso);
+			//endososDAO.insertaRecibosNvaVigencia(params);
 			
 			if(this.endosoVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 				logger.info("Endoso de Vigencia exitoso...");

@@ -4096,6 +4096,29 @@ public class SiniestrosAction extends PrincipalCoreAction {
     //... Fin de siniestros
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public String afiliadosAfectadosConsulta(){
+		logger.info(""
+			+ "\n################################"
+			+ "\n################################"
+			+ "\n###### afiliadosAfectados ######"
+			+ "\n######                    ######"
+		);
+		logger.info("params: "+params);
+		try{
+			slist1 = siniestrosManager.listaAseguradosTramite(params.get("ntramite"), params.get("nfactura"), params.get("tipoProceso"));
+			logger.debug("#####VALOR DE ASEGURADOS#####");
+			logger.debug("VALORES DE LOS REGISTROS --->>>"+slist1.size());
+		}catch(Exception ex){
+			logger.error("error al cargar pantalla de asegurados afectados",ex);
+		}
+		logger.info(""
+			+ "\n######                    ######"
+			+ "\n###### afiliadosAfectados ######"
+			+ "\n################################"
+			+ "\n################################"
+		);
+		return SUCCESS;
+	}
 	/*
 	params:
 	cdramo   = 2,

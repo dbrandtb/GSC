@@ -4,24 +4,23 @@ var storeIncisos;
 
 Ext.define('modelClau',
 {
-    extend:'Ext.data.Model',
-    fields:['noFactura','fechaFactura','tipoServicio','proveedor','importe']
+	extend:'Ext.data.Model',
+	fields:['noFactura','fechaFactura','tipoServicio','proveedor','importe']
 });
 
 storeIncisos=new Ext.data.Store(
 {
-    autoDestroy: true,
-    model: 'modelClau'
+	autoDestroy: true,
+	model: 'modelClau'
 });
 
 Ext.onReady(function() {
-
-    Ext.selection.CheckboxModel.override( {
-        mode: 'SINGLE',
-        allowDeselect: true
-    });
-    
-    ///// NUEVOS
+	Ext.selection.CheckboxModel.override( {
+		mode: 'SINGLE',
+		allowDeselect: true
+	});
+	
+	///// NUEVOS
 	Ext.define('DatosFacturaxTramite',{
 		extend: 'Ext.data.Model',
 		fields: [ 
@@ -55,15 +54,7 @@ Ext.onReady(function() {
 		features:[{
 			ftype:'summary'
 		}],
-		columns: _11_columnas_Factura/*,
-		tbar: [{
-			icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
-			text: 'Agregar Factura',
-			scope: this,
-			handler: function() {
-		        centrarVentanaInterna(modAgregarFacturas.show());
-		    }
-		}]*/
+		columns: _11_columnas_Factura
 	});
 	
 	gridDatosFacturaxTramite.store.sort([{ 
@@ -152,6 +143,4 @@ Ext.onReady(function() {
 			}
 		]
 	}); 
-	/*_fieldByName('OTVALOR11').forceSelection=true;
-	_fieldByName('OTVALOR11').setEditable(true);*/
-	});
+});

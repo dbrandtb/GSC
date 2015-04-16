@@ -422,4 +422,6 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdelemen
 			)throws Exception;
+	
+	public void                     insertaRecibosNvaVigencia(Map<String, String> params)        throws Exception;
 }
