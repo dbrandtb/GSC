@@ -248,4 +248,27 @@ public interface EndososAutoManager
 			)throws Exception;
 	
 	public Map<String,String> buscarError(String codigo,String rutaLogs,String archivo) throws Exception;
+	
+	public void confirmarEndosoCancelacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
+			,Date   fechainicio
+			)throws Exception;
+	
 }
