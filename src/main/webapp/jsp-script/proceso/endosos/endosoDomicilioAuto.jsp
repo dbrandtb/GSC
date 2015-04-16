@@ -16,6 +16,7 @@ var inputEstadop4          = '<s:property value="smap1.ESTADO" />';
 var inputNmpolizap4        = '<s:property value="smap1.NMPOLIZA" />';
 var inputCdpersonp4        = '<s:property value="smap1.CDPERSON" />';
 var inputCdrfcp4           = '<s:property value="smap1.CDRFC" escapeHtml="false" />';
+var inputAsegurado         = '<s:property value="smap1.DSNOMBRE" escapeHtml="false" /> <s:property value="smap1.DSNOMBRE1" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO1" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.CDTIPSIT" />';
 var inputNtramite          = '<s:property value="smap1.NTRAMITE" />';
 var tipoFlotilla           = '<s:property value="smap1.TIPOFLOT" />';
@@ -109,6 +110,7 @@ Ext.onReady(function(){
                     {
                         fieldLabel : 'Contratante',
                         xtype      : 'textfield',
+                        width      : 400,
                         readOnly   : true,
                         name       : 'smap1.asegurado'
                     },
@@ -302,6 +304,7 @@ Ext.onReady(function(){
                                     msg: json.mensaje,
                                     buttons: Ext.Msg.OK
                                 });
+                                marendNavegacion(2);
                             },
                             failure:function(response,opts)
                             {
@@ -357,6 +360,10 @@ Ext.onReady(function(){
             }*/
         ]
     });
+    
+    
+    _comboEstadoEnd().forceSelection = false;
+    _comboMunicipioEnd().forceSelection = false;
     
     _codPosEnd().setReadOnly(true);
     
@@ -437,18 +444,25 @@ Ext.onReady(function(){
     loaderFormp4.load(123, {
         success: function(resp) {
             debug(resp);
-            resp.data['smap1.asegurado'] ='';
-            resp.data['smap1.rfc']       =inputCdrfcp4;
-            debug(resp);
-            formPanelp4.loadRecord(resp);
+            resp.data['smap1.asegurado'] = inputAsegurado;
+            resp.data['smap1.rfc']       = inputCdrfcp4;
             
+            debug('Valores a Cargar: ' , resp);
+            
+           
             _comboColoniasEnd().getStore().load(
             {
                 params :
                 {
                     'params.cp' : resp.data['smap1.CODPOSTAL']
-                }
+                },
+                 callback: function(records, operation, success) {
+                 	formPanelp4.loadRecord(resp);
+           			heredarPanel(formPanelp4);
+           			//formPanelp4.loadRecord(resp);
+			    }
             });
+            
         },
         failure:function()
         {
