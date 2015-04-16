@@ -1501,6 +1501,71 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String endosoCancelacionAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n###################################"
+				,"\n###### endosoCancelacionAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		String result = ERROR;
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdramo = smap1.get("CDRAMO");
+			
+			Utils.validate(cdramo , "No se recibio el producto");
+			
+			imap = endososAutoManager.endosoCancelacionAuto(user.getRolActivo().getClave(),cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### result=",result
+				,"\n###### endosoCancelacionAuto ######"
+				,"\n###################################"
+				));
+		return result;
+	}
+	
+	public String buscarError()
+	{
+		logger.info(Utilerias.join(
+				 "\n#########################"
+				,"\n###### buscarError ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1                , "No se recibieron datos");
+			Utils.validate(smap1.get("error")   , "No se recibio el numero de error");
+			Utils.validate(smap1.get("archivo") , "No se recibio el nombre del archivo");
+			
+			smap1.putAll(endososAutoManager.buscarError(smap1.get("error"),getText("logs.ruta"),smap1.get("archivo")));
+			
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### buscarError ######"
+				,"\n#########################"
+				));
+		return SUCCESS;
+	}
 
 	/*
 	 * Getters y setters

@@ -85,6 +85,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="error" class="endososAutoAction" method="buscarError">
+            <result name="success">/jsp-script/general/pantallaLogError.jsp</result>
+        </action>
+        
 	</package>
 	
 </struts>

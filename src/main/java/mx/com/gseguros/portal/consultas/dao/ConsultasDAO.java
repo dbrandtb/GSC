@@ -199,4 +199,11 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarEndososCancelables(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

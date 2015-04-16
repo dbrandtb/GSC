@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -3069,5 +3071,194 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				 "\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+	}
+	
+	@Override
+	public Map<String,Item> endosoCancelacionAuto(
+			String cdsisrol
+			,String cdramo
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoCancelacionAuto @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		try
+		{
+			paso = "Recuperando elementos formulario de lectura";
+			logger.info(paso);
+			
+			List<ComponenteVO>formLectura = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_CANCELACION_AUTO"
+					,"FORM_LECTURA"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario de lectura";
+			logger.info(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(formLectura, true, false, true, false, false, false);
+			
+			items.put("formLecturaItems" , gc.getItems());
+			
+			paso = "Recuperando elementos formulario de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>formEndoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_CANCELACION_AUTO"
+					,"FORM_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(formEndoso, true, false, true, false, false, false);
+			
+			items.put("formEndosoItems" , gc.getItems());
+			
+			paso = "Recuperando componentes de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>endoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_CANCELACION_AUTO"
+					,"MODELO_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(endoso, true, true, false, true, false, false);
+			
+			items.put("modeloEndosoFields" , gc.getFields());
+			items.put("gridEndososColumns" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ items=",items
+				,"\n@@@@@@ endosoCancelacionAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return items;
+	}
+	
+	@Override
+	public Map<String,String> buscarError(String codigo,String rutaLogs,String archivo) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ buscarError @@@@@@"
+				,"\n@@@@@@ codigo="   , codigo
+				,"\n@@@@@@ rutaLogs=" , rutaLogs
+				,"\n@@@@@@ archivo="  , archivo
+				));
+		
+		Map<String,String> mapa = new HashMap<String,String>();
+		String             paso = null;
+		
+		try
+		{
+			paso = "Convirtiendo codigo a numero";
+			logger.info(paso);
+			long timestamp;
+			
+			if(codigo.length()<12)
+			{
+				timestamp = Long.parseLong(codigo.toLowerCase(), 36);
+			}
+			else
+			{
+				timestamp = Long.parseLong(codigo);
+			}
+			
+			mapa.put("timestamp" , String.format("%d",timestamp));
+			mapa.put("fecha"     , new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(timestamp)));
+			
+			paso = "Abriendo archivo de log";
+			logger.info(paso);
+			DataInputStream in    = new DataInputStream(new FileInputStream(Utilerias.join(rutaLogs,Constantes.SEPARADOR_ARCHIVO,archivo)));
+			String          linea = null;
+			StringBuilder   sb    = new StringBuilder();
+			int             i     = 0;
+			try
+			{
+				while((linea=in.readLine())!=null)
+				{
+					if(i==0)//no se ha encontrado
+					{
+						if(linea.toLowerCase().contains(Utilerias.join("#",codigo.toLowerCase())))
+						{
+							sb.append(linea).append("<br/>");
+							i=1;
+						}
+					}
+					else if(i>0&&i<250)
+					{
+						sb.append(linea).append("<br/>");
+						i++;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+				in.close();
+				throw ex;
+			}
+			in.close();
+			if(i==0)
+			{
+				mapa.put("log","No se encuentra el codigo de error en el log");
+			}
+			else
+			{
+				mapa.put("log",sb.toString());
+			}
+			
+			logger.debug(String.format("En long %d",timestamp));
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ buscarError @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
 	}
 }

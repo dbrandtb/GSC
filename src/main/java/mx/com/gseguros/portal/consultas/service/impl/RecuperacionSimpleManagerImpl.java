@@ -399,6 +399,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String nmpoliza = params.get("nmpoliza");
 				resp.setSlist(consultasDAO.recuperarEndososRehabilitables(cdunieco, cdramo, estado, nmpoliza));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_ENDOSOS_CANCELABLES))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSlist(consultasDAO.recuperarEndososCancelables(cdunieco, cdramo, estado, nmpoliza));
+			}
 			
 			setCheckpoint("0");
 		}
