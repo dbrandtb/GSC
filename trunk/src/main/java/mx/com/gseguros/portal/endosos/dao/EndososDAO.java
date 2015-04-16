@@ -423,5 +423,28 @@ public interface EndososDAO
 			,String cdelemen
 			)throws Exception;
 	
-	public void                     insertaRecibosNvaVigencia(Map<String, String> params)        throws Exception;
+	public void insertaRecibosNvaVigencia(Map<String, String> params) throws Exception;
+	
+	public void confirmarEndosoCancelacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmonea
+			,String nmsuplem
+			,String cdelemen
+			,Date   feinicio
+			)throws Exception;
+	
 }

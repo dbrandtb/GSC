@@ -3587,4 +3587,81 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void confirmarEndosoCancelacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
+			,Date   feinicio
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("cddevcia" , cddevcia);
+		params.put("cdgestor" , cdgestor);
+		params.put("feemisio" , feemisio);
+		params.put("feinival" , feinival);
+		params.put("fefinval" , fefinval);
+		params.put("feefecto" , feefecto);
+		params.put("feproren" , feproren);
+		params.put("cdmoneda" , cdmoneda);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdelemen" , cdelemen);
+		params.put("feinicio" , feinicio);
+		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO", params);
+		ejecutaSP(new ConfirmarEndosoCancelacionAuto(getDataSource()),params);
+	}
+	
+	protected class ConfirmarEndosoCancelacionAuto extends StoredProcedure
+	{
+		protected ConfirmarEndosoCancelacionAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddevcia" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgestor" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feemisio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feinival" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fefinval" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feproren" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdmoneda" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinicio" , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

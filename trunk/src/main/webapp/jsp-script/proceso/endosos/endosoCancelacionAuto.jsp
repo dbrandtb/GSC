@@ -109,7 +109,7 @@ Ext.onReady(function()
                             debug('selected:',selected);
                             if(selected.length==1)
                             {
-                                _fieldByName('feefecto').setValue(selected[0].get('FEINIVAL'));
+                                _fieldByName('feefecto').setValue(selected[0].get('FEINICIO'));
                             }
                             else
                             {
@@ -168,6 +168,7 @@ Ext.onReady(function()
                                     ,'smap1.feproren' : record.raw['FEPROREN']
                                     ,'smap1.cdmoneda' : record.get('CDMONEDA')
                                     ,'smap1.nmsuplem' : record.get('NMSUPLEM')
+                                    ,'smap1.feinicio' : record.raw['FEINICIO']
                                 }
                                 ,success : function(response)
                                 {

@@ -3261,4 +3261,88 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 		return mapa;
 	}
+	
+	@Override
+	public void confirmarEndosoCancelacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
+			,Date   feinicio
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoCancelacionAuto @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ nsuplogi=" , nsuplogi
+				,"\n@@@@@@ cddevcia=" , cddevcia
+				,"\n@@@@@@ cdgestor=" , cdgestor
+				,"\n@@@@@@ feemisio=" , feemisio
+				,"\n@@@@@@ feinival=" , feinival
+				,"\n@@@@@@ fefinval=" , fefinval
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ feproren=" , feproren
+				,"\n@@@@@@ cdmoneda=" , cdmoneda
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ feinicio=" , feinicio
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Confirmando endoso";
+			endososDAO.confirmarEndosoCancelacionAuto(
+					cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					,nsuplogi
+					,cddevcia
+					,cdgestor
+					,feemisio
+					,feinival
+					,fefinval
+					,feefecto
+					,feproren
+					,cdmoneda
+					,nmsuplem
+					,cdelemen
+					,feinicio
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoCancelacionAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }
