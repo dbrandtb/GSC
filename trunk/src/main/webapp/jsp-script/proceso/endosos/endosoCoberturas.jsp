@@ -261,6 +261,14 @@
                 ,'ATRIBUTOS','NOMBRECOMPLETO'
             ]
         });
+        
+        // Seteamos los nuevos campos para el modelo:
+        var arrAtributos = [];
+        debug('keys:', Ext.Object.getKeys(paramsincisos[0]));
+        Ext.each(Ext.Object.getKeys(paramsincisos[0]), function(name) {
+            arrAtributos.push(name);
+        });
+        Ext.ModelManager.getModel('ModelInciso_p3').setFields(arrAtributos);
         /*/////////////////*/
         ////// Modelos //////
         /////////////////////
