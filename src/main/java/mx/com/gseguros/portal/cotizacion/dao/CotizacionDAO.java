@@ -6,6 +6,10 @@ import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.PInsertaTbasvalsitDTO;
+import mx.com.gseguros.portal.cotizacion.model.PInsertaTconvalsitDTO;
+import mx.com.gseguros.portal.cotizacion.model.PMovMpolisitDTO;
+import mx.com.gseguros.portal.cotizacion.model.PMovTvalositDTO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
@@ -607,14 +611,12 @@ public interface CotizacionDAO
 			,String cdperpag
 			)throws Exception;
 	
-	public void movimientoMpolisitXml(String tstamp)throws Exception;
+	public void movimientoMpolisitLote(List<PMovMpolisitDTO> lista)throws Exception;
 	
-	public void insertaXml(String tstamp, List<Map<String,String>> lista)throws Exception;
+	public void movimientoTvalositLote(List<PMovTvalositDTO> lista)throws Exception;
 	
-	public void movimientoTvalositXml(String tstamp)throws Exception;
+	public void movimientoTbasvalsitLote(List<PInsertaTbasvalsitDTO> lista)throws Exception;
 	
-	public void movimientoTbasvalsitXml(String tstamp)throws Exception;
-	
-	public void movimientoTconvalsitXml(String tstamp)throws Exception;
+	public void movimientoTconvalsitLote(List<PInsertaTconvalsitDTO> lista)throws Exception;
 	
 }
