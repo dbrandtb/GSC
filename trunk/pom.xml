@@ -111,6 +111,13 @@
             <version>${spring.version}</version>
         </dependency>
         
+        <!-- Spring Data JDBC extension (for Oracle) -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-oracle</artifactId>
+            <version>1.1.0.RELEASE</version>
+        </dependency>
+        
         <!-- AOP dependency -->
         <dependency>
             <groupId>cglib</groupId>
