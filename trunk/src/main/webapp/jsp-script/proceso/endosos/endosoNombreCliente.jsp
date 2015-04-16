@@ -267,8 +267,8 @@ Ext.onReady(function()
         ]
         ,items       :
         [
-            _35_formLectura
-            ,_35_gridContratantes
+            //_35_formLectura
+            _35_gridContratantes
             ,_35_formContratante
             ,_35_panelEndoso
         ]

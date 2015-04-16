@@ -284,7 +284,9 @@ Ext.onReady(function()
 		                                    jsonDatosConfirmacion.slist1.push(valores);
 		                                });
 		                                
-		                                panel.setDisabled(true);
+		                                var panelMask = new Ext.LoadMask('_p36_divpri', {msg:"Confirmando..."});
+										panelMask.show();
+										
 		                                Ext.Ajax.request(
 		                                {
 		                                    url     : _p36_urlConfirmarEndoso
@@ -292,7 +294,7 @@ Ext.onReady(function()
 		                                    ,success : function(response)
 		                                    {
 		                                        _p36_store.commitChanges();
-		                                        panel.setDisabled(false);
+		                                        panelMask.hide();
 		                                        var json = Ext.decode(response.responseText);
 		                                        debug('### confirmar endoso:',json);
 		                                        if(json.success)
@@ -307,7 +309,7 @@ Ext.onReady(function()
 		                                    }
 		                                    ,failure : function(response)
 		                                    {
-		                                        panel.setDisabled(false);
+		                                        panelMask.hide();
 		                                        errorComunicacion();
 		                                    }
 		                                });
