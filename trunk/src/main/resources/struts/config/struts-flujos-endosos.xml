@@ -726,6 +726,19 @@
             <result type="json" />
         </action>
         
+        <action name="includes/endosoCancelacionAuto" class="endososAutoAction" method="endosoCancelacionAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCancelacionAuto.jsp</result>
+        </action>
+        
+        <action name="confirmarEndosoCancelacionAuto" class="endososAutoAction" method="confirmarEndosoCancelacionAuto">
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>

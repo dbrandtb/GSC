@@ -241,4 +241,11 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			)throws Exception;
+	
+	public Map<String,Item> endosoCancelacionAuto(
+			String cdsisrol
+			,String cdramo
+			)throws Exception;
+	
+	public Map<String,String> buscarError(String codigo,String rutaLogs,String archivo) throws Exception;
 }
