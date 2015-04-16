@@ -3555,4 +3555,36 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void insertaRecibosNvaVigencia(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_VIGENCIA_MPOLIZAS ******")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new InsertaRecibosNvaVigencia(this.getDataSource()), params);
+	}
+	
+	protected class InsertaRecibosNvaVigencia extends StoredProcedure
+	{
+		protected InsertaRecibosNvaVigencia(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_RECIBOS_NVA_VIGENCIA");
+			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feproren_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
