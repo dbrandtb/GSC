@@ -2808,11 +2808,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		);
 		logger.debug("params: "+params);
 		try {
+			Map<String,String> factura        = null;
+			Map<String,String> siniestroIte   = null;
+			Map<String,String> proveedor      = null;
+			Map<String,String> siniestro      = null;
+			List<Map<String,String>>conceptos = null;
+			
+			slist2                  		  = new ArrayList<Map<String,String>>();
+			slist3                  		  = new ArrayList<Map<String,String>>();
+			llist1                  		  = new ArrayList<List<Map<String,String>>>();
+			lhosp                   		  = new ArrayList<Map<String,String>>();
+			lpdir                   		  = new ArrayList<Map<String,String>>();
+			lprem                   		  = new ArrayList<Map<String,String>>();
+			datosPenalizacion       		  = new ArrayList<Map<String,String>>();
+			datosCoberturaxCal      		  = new ArrayList<Map<String,String>>();
+			listaImportesWS         		  = new ArrayList<Map<String,String>>();
+			String                ntramite    = params.get("ntramite");
+			UserVO                usuario     = (UserVO)session.get("USUARIO");
+			String                cdrol       = usuario.getRolActivo().getClave();
+			
 			this.facturasxSiniestro=new ArrayList<Map<String,Object>>();
 			imap = new HashMap<String,Item>();
-			String             ntramite    = params.get("ntramite");
-			UserVO             usuario     = (UserVO)session.get("USUARIO");
-			String             cdrol       = usuario.getRolActivo().getClave();
 			Map<String,String> tramite     = siniestrosManager.obtenerTramiteCompleto(ntramite);
 			logger.debug("Paso 1.- Tramite : "+tramite);
 			smap = tramite;
@@ -2833,21 +2849,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			}
 			logger.debug("Paso 4.- Es pago Directo : "+ esPagoDirecto);
 			
-			Map<String,String> factura        = null;
-			Map<String,String> siniestroIte   = null;
-			Map<String,String> proveedor      = null;
-			Map<String,String> siniestro      = null;
-			List<Map<String,String>>conceptos = null;
-			
-			slist2                  		  = new ArrayList<Map<String,String>>();
-			slist3                  		  = new ArrayList<Map<String,String>>();
-			llist1                  		  = new ArrayList<List<Map<String,String>>>();
-			lhosp                   		  = new ArrayList<Map<String,String>>();
-			lpdir                   		  = new ArrayList<Map<String,String>>();
-			lprem                   		  = new ArrayList<Map<String,String>>();
-			datosPenalizacion       		  = new ArrayList<Map<String,String>>();
-			datosCoberturaxCal      		  = new ArrayList<Map<String,String>>();
-			listaImportesWS         		  = new ArrayList<Map<String,String>>(); 
 			if(TipoPago.DIRECTO.getCodigo().equals(tramite.get("OTVALOR02"))) {
 				logger.debug("Paso 5.- EL PROCESO DE PAGO ES DIRECTO ");
 				smap.put("PAGODIRECTO","S");
@@ -2876,8 +2877,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					logger.debug("Paso 9.- Obtenemos la informacion de los conceptos de la factura : "+conceptos);
 
 					for( int j= 0; j < siniestros.size();j++){
+						String	aplicaPenalCircHosp		  = "S";
+						String	aplicaPenalZonaHosp		  = "S";
+						
 						logger.debug("Paso 10.- Recorremos los Siniestros - El proceso j : "+j+"  Siniestro : "+siniestros.get(j));
 						siniestroIte    = siniestros.get(j);
+						
+						if(StringUtils.isNotBlank(siniestroIte.get("NMAUTSER"))){
+							List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(siniestroIte.get("NMAUTSER"));
+							logger.debug("Paso 10.1.- Verificamos la informacion si tiene Autorizacion de servicio : "+lista);
+							aplicaPenalCircHosp		  = lista.get(0).getAplicaCirHos()+"";
+							aplicaPenalZonaHosp		  = lista.get(0).getAplicaZonaHosp()+"";
+						}
+						
 						Map<String,Object>aseguradoObj = new HashMap<String,Object>();
 						aseguradoObj.putAll(siniestroIte);
 						this.aseguradosxSiniestro.add(aseguradoObj);
@@ -2957,11 +2969,21 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramExclusion.put("pv_nmpoliza_i",nmpoliza);
 							paramExclusion.put("pv_nmsituac_i",nmsituac);
 							if(cdramo.equalsIgnoreCase("2") || cdramo.equalsIgnoreCase("7")){
-								existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-								penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-								informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"),cdramo);
+								logger.debug("Valor de aplicaPenalZonaHosp"+aplicaPenalZonaHosp);
+								logger.debug("Valor de aplicaPenalCircHosp "+aplicaPenalCircHosp);
+								if(aplicaPenalZonaHosp.equalsIgnoreCase("N")){
+									penalizacionCambioZona = 0d;
+								}else{
+									existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+									penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+									informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"),cdramo);
+								}
+								if(aplicaPenalCircHosp.equalsIgnoreCase("N")){
+									penalizacionCirculoHosp = 0d;
+								}else{
+									penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"), cdramo);
+								}
 								aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
-								penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"), cdramo);
 								aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
 							}else{
 								aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
@@ -4323,9 +4345,18 @@ public class SiniestrosAction extends PrincipalCoreAction {
     				//RECORREMOS LOS SINIESTROS
     				this.aseguradosxSiniestro=new ArrayList<Map<String,Object>>();
     				for( int j= 0; j < siniestros.size();j++){
-    					
+    					String	aplicaPenalCircHosp		  = "S";
+						String	aplicaPenalZonaHosp		  = "S";
     					//Se realiza la asignacion del primer asegurado
         				siniestroIte    = siniestros.get(j);
+        				
+        				if(StringUtils.isNotBlank(siniestroIte.get("NMAUTSER"))){
+							List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(siniestroIte.get("NMAUTSER"));
+							logger.debug("VALOR DE RESPUESTA -->"+lista);
+							aplicaPenalCircHosp		  = lista.get(0).getAplicaCirHos()+"";
+							aplicaPenalZonaHosp		  = lista.get(0).getAplicaZonaHosp()+"";
+						}
+        				
         				Map<String,Object>aseguradoObj=new HashMap<String,Object>();
     					aseguradoObj.putAll(siniestroIte);
     					this.aseguradosxSiniestro.add(aseguradoObj);
@@ -4399,13 +4430,24 @@ public class SiniestrosAction extends PrincipalCoreAction {
             		   		
             		   		//1.- verificamos el ramo
             		   		if(cdramo.equalsIgnoreCase("2") || cdramo.equalsIgnoreCase("7")){
-                		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-                		   		//4.2.- Obtenemos la penalización por cambio de Zona
-                		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
-                						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"), cdramo);
+            		   			
+            		   			if(aplicaPenalZonaHosp.equalsIgnoreCase("N")){
+									penalizacionCambioZona = 0d;
+								}else{
+									existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+	                		   		//4.2.- Obtenemos la penalización por cambio de Zona
+	                		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+	                						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"), cdramo);
+	                		   		
+								}
+								if(aplicaPenalCircHosp.equalsIgnoreCase("N")){
+									penalizacionCirculoHosp = 0d;
+								}else{
+									//4.3.- Obtenemos la penalización por circulo Hospitalario
+	                				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"), cdramo);
+								}
+								
                 		   		aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
-                				//4.3.- Obtenemos la penalización por circulo Hospitalario
-                				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"), cdramo);
                 				aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);            		   			
             		   		}else{
             		   			aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
