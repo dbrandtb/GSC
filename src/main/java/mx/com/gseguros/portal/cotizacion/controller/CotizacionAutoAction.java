@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -855,9 +856,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				.append("\n##################################")
 				.append("\n###### cotizarAutosFlotilla ######")
 				.append("\n###### smap1=") .append(smap1)
-				.append("\n###### slist1=").append(slist1)
-				.append("\n###### slist2=").append(slist2)
-				.append("\n###### slist3=").append(slist3)
+				.append("\n###### slist1=").append(Utils.size(slist1))
+				.append("\n###### slist2=").append(Utils.size(slist2))
+				.append("\n###### slist3=").append(Utils.size(slist3))
 				.toString()
 				);
 		
