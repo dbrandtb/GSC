@@ -1401,6 +1401,25 @@ Ext.onReady(function()
                             }
                             ,callback : function()
                             {
+                                var val = me.getValue();
+                                var den = false;
+                                me.getStore().each(function(record)
+                                {
+                                    if(record.get('key')==val)
+                                    {
+                                        den = true;
+                                    }
+                                });
+                                if(!den)
+                                {
+                                    me.clearValue();
+                                }
+                                var claveCmps = Ext.ComponentQuery.query('[fieldLabel*=CLAVE GS]',_fieldById('_p30_tatrisitAutoForm'+cdtipsit));
+                                debug('claveCmps:',claveCmps);
+                                for(var i in claveCmps)
+                                {
+                                    claveCmps[i].store.proxy.extraParams['params.uso'] = me.getValue();
+                                }
                                 if(!Ext.isEmpty(callback))
                                 {
                                     callback
@@ -1424,11 +1443,35 @@ Ext.onReady(function()
                 
                 _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO SERVICIO]').on(
                 {
-                    select : function()
+                    select : function(me)
                     {
                         var record      = _p30_selectedRecord;
                         var cdtipsit    = record.get('cdtipsit');
                         _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO USO]').heredar(true);
+                        var claveCmps = Ext.ComponentQuery.query('[fieldLabel*=CLAVE GS]',_fieldById('_p30_tatrisitAutoForm'+cdtipsit));
+                        debug('claveCmps:',claveCmps);
+                        for(var i in claveCmps)
+                        {
+                            claveCmps[i].store.proxy.extraParams['params.servicio'] = me.getValue();
+                        }
+                    }
+                });
+                
+                tipoUsoCmp.on(
+                {
+                    change : function(me,val)
+                    {
+                        var record     = _p30_selectedRecord;
+                        var cdtipsit   = record.get('cdtipsit');
+                        var claveCmp   = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=CLAVE GS]');
+                        var modeloName = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').name;
+                        claveCmp.store.proxy.extraParams['params.uso'] = val;
+                        if(!Ext.isEmpty(record.get(claveCmp.name))&&!Ext.isEmpty(record.get(modeloName)))
+                        {
+                            record.set(claveCmp.name  , '');
+                            record.set(modeloCmp.name , '');
+                            mensajeWarning('Debe actualizar el veh&iacute;culo');
+                        }
                     }
                 });
             }
@@ -4632,6 +4675,7 @@ function _p30_editarAutoBuscar()
     heredarPanel(form,true);
     form.micallback = function(me)
     {
+        debug('>callback:');
         var record   = _p30_selectedRecord;
         var cdtipsit = record.get('cdtipsit');
         var data     = me.getValues();
@@ -4642,10 +4686,14 @@ function _p30_editarAutoBuscar()
         
         if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
         {
+            debug('dentro de ','|AR|CR|PC|PP|');
             var planVal = record.get('cdplan');
+            debug('planVal:',planVal);
             if(!Ext.isEmpty(planVal))
             {
-                var planCmp=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=PAQUETE]');
+                debug('planVal no empty');
+                var planCmp=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel*=PAQUETE]');
+                debug('planCmp:',planCmp);
                 planCmp.heredar(true,function(planCmp)
                 {
                     var valido = false;

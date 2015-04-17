@@ -326,10 +326,11 @@ Ext.onReady(function()
     
     _p28_panel1Items.push(
     {
-        xtype  : 'fieldset'
-        ,width : 435
-        ,title : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
-        ,items : _p28_panel2Items
+        xtype   : 'fieldset'
+        ,itemId : '_p28_fieldsetVehiculo'
+        ,width  : 435
+        ,title  : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
+        ,items  : _p28_panel2Items
     }
     ,{
         xtype  : 'fieldset'
@@ -606,6 +607,7 @@ Ext.onReady(function()
                 if(me.findRecord('key',val)!=false)
                 {
                     _p28_cargarParametrizacionCoberturas();
+                    _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
                 }
             }
         });
@@ -636,12 +638,34 @@ Ext.onReady(function()
 	                }
 	                ,callback : function()
 	                {
+	                    var me  = _fieldByLabel('TIPO USO');
+	                    var val = me.getValue();
+	                    var den = false;
+	                    me.getStore().each(function(record)
+	                    {
+	                        if(record.get('key')==val)
+	                        {
+	                            den = true;
+	                        }
+	                    });
+	                    if(!den)
+	                    {
+	                        me.clearValue();
+	                    }
+	                    _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();
 	                    if(!Ext.isEmpty(micallback))
 	                    {
 	                        micallback(_fieldByLabel('TIPO USO'));
 	                    }
 	                }
 	            });
+	        }
+	        else
+	        {
+	            if(!Ext.isEmpty(micallback))
+	            {
+	                micallback(_fieldByLabel('TIPO USO'));
+	            }
 	        }
 	    };
 	    
@@ -663,6 +687,25 @@ Ext.onReady(function()
                 if(me.findRecord('key',val)!=false)
                 {
                     _fieldByLabel('TIPO USO').heredar(true);
+                }
+            }
+        });
+        
+        usoCmp.on(
+        {
+            change : function(me,val)
+            {
+                var claveCmp = _fieldLikeLabel('CLAVE');
+                var modelo   = _fieldByLabel('MODELO').getValue(); 
+                claveCmp.store.proxy.extraParams['params.uso']=val;
+                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
+                {
+                    var fs = _fieldById('_p28_fieldsetVehiculo');
+                    for(var i in fs.items.items)
+                    {
+                        fs.items.items[i].setValue();
+                        fs.items.items[i].clearValue();
+                    }
                 }
             }
         });
@@ -808,7 +851,7 @@ Ext.onReady(function()
 	        var canadaCmp = _fieldLikeLabel('CANAD');
 	        debug('@CUSTOM canada:',canadaCmp);
 	        canadaCmp.anidado = true;
-	        canadaCmp.heredar = function()
+	        canadaCmp.heredar = function(remoto,micallback)
 	        {
     	        var me        = _fieldLikeLabel('CANAD');
 	            var postalCmp = _fieldLikeLabel('CIRCULACI');
@@ -834,38 +877,19 @@ Ext.onReady(function()
 	                            if(json.smap1.fronterizo+'x'=='Sx')
 	                            {
 	                                me.setValue('S');
-	                                /*
-	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
-                                    {
-                                        me.setReadOnly(false);
-                                        me.addCls('green');
-                                        me.removeCls('red');
-                                    }
-                                    else
-                                    {
-                                        me.show();
-                                    }
-                                    */
 	                            }
 	                            else
 	                            {
 	                                me.setValue('N');
-	                                /*
-	                                if(<s:property value='%{getSmap1().containsKey("debug")}' />)
-                                    {
-                                        me.setReadOnly(true);
-                                        me.addCls('red');
-                                        me.removeCls('green');
-                                    }
-                                    else
-                                    {
-                                        me.hide();
-                                    }*/
 	                            }
 	                        }
 	                        else
 	                        {
     	                        mensajeError(json.respuesta);
+	                        }
+	                        if(!Ext.isEmpty(micallback))
+	                        {
+	                            micallback(_fieldLikeLabel('CANAD'));
 	                        }
 	                    }
 	                    ,failure : function()
@@ -874,6 +898,13 @@ Ext.onReady(function()
 	                        errorComunicacion();
 	                    }
 	                });
+	            }
+	            else
+	            {
+	                if(!Ext.isEmpty(micallback))
+	                {
+	                    micallback(_fieldLikeLabel('CANAD'));
+	                }
 	            }
 	        }
 	    

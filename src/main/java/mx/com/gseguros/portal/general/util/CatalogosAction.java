@@ -90,6 +90,7 @@ public class CatalogosAction extends PrincipalCoreAction {
      */
     public String obtieneCatalogo() throws Exception {
     	logger.debug("catalogo=" + catalogo);
+    	logger.debug("params="   + params);
         try {
         	Catalogos cat = Catalogos.valueOf(catalogo);
         	switch(cat) {
@@ -497,10 +498,27 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String, String>();
 					}
-					lista = catalogosManager.cargarAutosPorCadenaRamo5(
-							params.get("cadena")
-							,params.get("cdtipsit")
-							);
+					String cadena    = params.get("cadena");
+					String cdtipsit2 = params.get("cdtipsit");
+					String servicio  = params.get("servicio");
+					String uso       = params.get("uso");
+					if(StringUtils.isBlank(cadena)
+							||StringUtils.isBlank(cdtipsit2)
+							||StringUtils.isBlank(servicio)
+							||StringUtils.isBlank(uso))
+					{
+						logger.error("No estan todos los datos");
+						lista = new ArrayList<GenericVO>();
+					}
+					else
+					{
+						lista = catalogosManager.cargarAutosPorCadenaRamo5(
+								cadena
+								,cdtipsit2
+								,servicio
+								,uso
+								);
+					}
 					break;
 				case RAMO_5_MARCAS:
 				case RAMO_5_SUBMARCAS:

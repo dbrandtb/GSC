@@ -530,7 +530,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit)
+	public List<GenericVO>cargarAutosPorCadenaRamo5(
+			String cadena
+			,String cdtipsit
+			,String servicio
+			,String uso
+			)
 	{
 		logger.info(
 				new StringBuilder()
@@ -538,12 +543,14 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				.append("\n@@@@@@ cargarAutosPorCadenaRamo5 @@@@@@")
 				.append("\n@@@@@@ cadena=")  .append(cadena)
 				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ servicio=").append(servicio)
+				.append("\n@@@@@@ uso=")     .append(uso)
 				.toString()
 				);
 		List<GenericVO>lista=null;
 		try
 		{
-			lista = catalogosDAO.cargarAutosPorCadenaRamo5(cadena,cdtipsit);
+			lista = catalogosDAO.cargarAutosPorCadenaRamo5(cadena,cdtipsit,servicio,uso);
 		}
 		catch(Exception ex)
 		{
