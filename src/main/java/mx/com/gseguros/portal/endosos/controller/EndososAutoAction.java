@@ -1153,6 +1153,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				situaciones = slist1;
 			}else{
 				HashMap<String,String> nivelPoliza = new HashMap<String, String>();
+				nivelPoliza.put("NIVEL_POLIZA", "NIVEL_POLIZA");
 				nivelPoliza.put("NMSITUAC", "0");
 				situaciones = new ArrayList<Map<String,String>>();
 				situaciones.add(nivelPoliza);
