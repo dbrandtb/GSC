@@ -72,7 +72,12 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo,String cdtipsit)throws Exception;
 	
-	public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit)throws Exception;
+	public List<GenericVO>cargarAutosPorCadenaRamo5(
+			String cadena
+			,String cdtipsit
+			,String servicio
+			,String uso
+			)throws Exception;
 	
 	public List<GenericVO>cargarTtapvat1(String cdtabla)throws ApplicationException,Exception;
 	public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit)throws Exception;

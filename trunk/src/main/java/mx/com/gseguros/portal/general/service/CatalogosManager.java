@@ -93,7 +93,13 @@ public interface CatalogosManager {
     
     public List<GenericVO>cargarVersionesPorModeloSubmarcaRamo5(String submarca,String modelo,String cdtipsit);
     
-    public List<GenericVO>cargarAutosPorCadenaRamo5(String cadena,String cdtipsit);
+    public List<GenericVO>cargarAutosPorCadenaRamo5(
+    		String cadena
+    		,String cdtipsit
+    		,String servicio
+    		,String uso
+    		);
+    
     public List<GenericVO>cargarTtapvat1(String cdtabla);
     public List<GenericVO>cargarNegocioPorCdtipsitRamo5(String cdtipsit);
     public List<GenericVO>cargarUsosPorNegocioRamo5(String cdnegocio,String cdtipsit,String servicio,String tipocot);
