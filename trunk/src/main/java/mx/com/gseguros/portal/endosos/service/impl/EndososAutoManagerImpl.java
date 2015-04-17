@@ -1760,7 +1760,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 
 	private boolean endosoTextoLibre(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup, boolean nivelPoliza){
 		
 		logger.debug(">>>>> Entrando a metodo endosoTextoLibre");
 		
@@ -2432,11 +2432,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				endososDAO.insertaTextoLibre(params);
 			}
 			
+			boolean nivelPoliza = situaciones.get(0).containsKey("NIVEL_POLIZA");
+			
 			paso = "Se confirma el endoso";
 			logger.debug(paso);
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
 			
-			if(this.endosoTextoLibre(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
+			if(this.endosoTextoLibre(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, nivelPoliza)){
 				logger.info("Endoso de Vigencia exitoso...");
 			}else{
 				logger.error("Error al ejecutar los WS de endoso de TextoLibre");
