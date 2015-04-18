@@ -1853,7 +1853,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug(" **** Entrando al metodo de Lista de Subcobertura ****");
 		logger.debug(params);
 		try {
-			listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"), params.get("cdramo"),params.get("cdtipsit"));
+			//cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob
+			listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdunieco"),params.get("cdramo"), params.get("estado"),
+								params.get("nmpoliza"),params.get("nmsituac"),params.get("cdtipsit"),params.get("cdgarant"),params.get("cdsubcob"));
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de subcoberturas ",e);
 			return SUCCESS;
@@ -2447,7 +2449,24 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	success = true;
 	return SUCCESS;
 	}
-
+	/**
+	* Funcion donde obtenemos los datos de las validaciones del siniestro
+	* @param params
+	* @return List<Map<String, String>> datosValidacion
+	*/ 
+	public String consultaDatosAseguradoSiniestro(){
+		logger.debug(" **** Entrando al metodo para obtener los datos de la validacion del Siniestro ****");
+		logger.debug(params);
+		try {
+			datosValidacion = siniestrosManager.obtenerInfAseguradosTramite(params.get("ntramite"));
+			logger.debug(datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de la validacion del Siniestro ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+	}
 	/**
 	* Funcion donde obtenemos los datos de la validacion del Ajustador Medico
 	* @param params

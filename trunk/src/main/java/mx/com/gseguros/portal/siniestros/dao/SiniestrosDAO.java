@@ -39,7 +39,8 @@ public interface SiniestrosDAO {
 	
 	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob,String cdramo, String cdtipsit) throws Exception;
+	public List<GenericVO> obtieneListadoSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
+						String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception;
 	
 	public List<GenericVO> obtieneListadoSubcoberturaTotales() throws Exception;
 	
@@ -433,6 +434,8 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>> obtenerAseguradosTramite(Map<String, String> params) throws Exception;
 
+	public List<Map<String,String>> obtenerInfAseguradosTramite(Map<String, String> params) throws Exception;
+	
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 
 	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;

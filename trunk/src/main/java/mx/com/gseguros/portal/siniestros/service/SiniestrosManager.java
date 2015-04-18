@@ -67,7 +67,7 @@ public interface SiniestrosManager {
 	
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant, String cdsubcob, String cdramo,String cdtipsit) throws Exception;
+	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
 	
@@ -229,6 +229,8 @@ public interface SiniestrosManager {
 	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception;
 	
 	public List<Map<String,String>> obtenerAseguradosTramite(String ntramite,String nfactura) throws Exception;
+	
+	public List<Map<String,String>> obtenerInfAseguradosTramite(String ntramite) throws Exception;
 	
 	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(String ntramite, String siniestro) throws Exception;
 

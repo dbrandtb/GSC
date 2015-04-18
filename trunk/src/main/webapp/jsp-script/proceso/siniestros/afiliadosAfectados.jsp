@@ -845,7 +845,7 @@
 				var cobertura = Ext.create('Ext.form.field.ComboBox',
 				{
 					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	/*allowBlank: false,*/				displayField : 'value',
-					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,		hidden: true,
+					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,				hidden: true,
 					queryMode :'remote',			store : storeCobertura,		editable:false,
 					listeners : {
 						'change' : function(combo, record) {
@@ -868,12 +868,18 @@
 			    	listeners : {
 						'select' : function(combo, record) {
 							banderaAsegurado = 1;
-							debug("VALOR DE LA BANDERA ASEURADO -->",banderaAsegurado);
 							_11_aseguradoSeleccionado.set('CDGARANT',this.getValue());
 							storeSubcoberturaAsegurado.removeAll();
 							storeSubcoberturaAsegurado.load({
 								params:{
-									'params.cdgarant' :this.getValue()
+									'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+					            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+					            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+					            	'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+					            	'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+					            	'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
+					            	'params.cdgarant' :this.getValue(),
+					            	'params.cdsubcob' :null
 								}
 							});
 						}
@@ -998,7 +1004,7 @@
 											storeConceptos.removeAll();
 										}else{
 											_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-											debug("VALOR SELECCIONADO -->",_11_aseguradoSeleccionado);
+											debug("VALOR SELECCIONADO ALBERTO-->",_11_aseguradoSeleccionado);
 											storeCoberturaxAsegurado.proxy.extraParams=
 											{
 												'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
@@ -1010,7 +1016,14 @@
 											
 											storeSubcoberturaAsegurado.load({
 												params:{
-													'params.cdgarant' :_11_aseguradoSeleccionado.get('CDGARANT')
+													'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+									            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+									            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+									            	'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+									            	'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+									            	'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
+									            	'params.cdgarant' :_11_aseguradoSeleccionado.get('CDGARANT'),
+									            	'params.cdsubcob' :null//_11_aseguradoSeleccionado.get('CDCONVAL')
 												}
 											});
 										}
@@ -2931,6 +2944,7 @@
 				
 				panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
 				
+				debug("VALOR JOSE ;( -->",_11_recordActivo);
 				storeSubcobertura.load({
 					params:{
 						'params.cdgarant' :_11_recordActivo.get('params.cdgarant')

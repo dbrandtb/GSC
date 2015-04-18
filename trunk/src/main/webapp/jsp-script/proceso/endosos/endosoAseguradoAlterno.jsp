@@ -9,6 +9,7 @@
 	debug('asegAlterno :',asegAlterno);
 	
 	Ext.onReady(function() {
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Alta Asegurado',
@@ -32,6 +33,7 @@
 			        name		: 'asegAlt',
 			        width		: 600,
 			        labelWidth	: 150,
+			        value 		: asegAlterno.OTVALOR02,
 			        allowBlank	: false
 		    	}
 	    	]
@@ -42,6 +44,8 @@
 				,buttonAlign : 'center',
 				handler: function() {
 					var formPanel = this.up().up();
+					//panelInicialPral.setLoading(true);
+					myMask.show();
 					if (formPanel.form.isValid()) {
                         // Realizamos el proceso de guardado
 						var submitValues={};
@@ -54,13 +58,14 @@
    						    url: guarda_Aseg_alterno,
    						    jsonData: Ext.encode(submitValues),
    						    success:function(response,opts){
-   						    	 panelInicialPral.setLoading(false);
+   						    	myMask.hide();
+   						    	panelInicialPral.setLoading(false);
    						         var jsonResp = Ext.decode(response.responseText);
    						         mensajeCorrecto("Endoso",jsonResp.respuesta,null);
    						    },
    						    failure:function(response,opts)
    						    {
-   						        panelInicialPrincipal.setLoading(false);
+   						    	myMask.hide();
    						        Ext.Msg.show({
    						            title:'Error',
    						            msg: 'Error de comunicaci&oacute;n',
@@ -71,6 +76,7 @@
    						});
         				
 					}else {
+						myMask.hide();
 						Ext.Msg.show({
 							title: 'Aviso',
 							msg: 'Complete la informaci&oacute;n requerida',
