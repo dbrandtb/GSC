@@ -9,6 +9,7 @@
 	debug('asegAlterno  -->:',asegAlterno);
 	
 	Ext.onReady(function() {
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Vigencia P&oacute;liza',
@@ -26,27 +27,17 @@
 			}
 			,
 		    items: [
-		    	{	xtype		: 'datefield', 	fieldLabel	: 'Fecha Original',			name	: 'feEfecto',			hidden		: true,
-					format		:  'm/d/Y', 	editable	: true,						value	: asegAlterno.FEEFECTO
-				},
-				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Minimo',			name	: 'feMin',				hidden		: true,
-					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO
-				},
-				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Maximo',			name	: 'feMax',				hidden		: true,
-					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO
-				},
-				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Inicio Endoso',	name	: 'feInival',			labelWidth	: 150,
+		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha Inicio Endoso',	name	: 'feInival',			labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true, 					value   : new Date(),			allowBlank	: false,
 					colspan		:2
 				},
 				{
 					xtype		: 'datefield',	fieldLabel	: 'Fecha Efecto',			name	: 'feIngreso',			labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO,	allowBlank	: false,
+					minValue: asegAlterno.pv_fechaMinima ,
+					maxValue: asegAlterno.pv_fechaMaxima ,
 					listeners:{
 			    	    change:function(field,value) {
-			    	    	fechaFeefecto = new Date(panelInicialPral.down('[name="feEfecto"]').getValue());
-			    	    	panelInicialPral.down('[name="feMin"]').setValue(Ext.Date.add(fechaFeefecto, Ext.Date.DAY, -(+asegAlterno.pv_diasMinimo)));
-			    	    	panelInicialPral.down('[name="feMax"]').setValue(Ext.Date.add(fechaFeefecto, Ext.Date.DAY, asegAlterno.pv_diasMaximo));
 			    	    	panelInicialPral.down('[name="feFin"]').setValue(Ext.Date.add(value, Ext.Date.DAY, asegAlterno.pv_difDate));
 			    	    }
 			    	}
@@ -62,14 +53,8 @@
 				,buttonAlign : 'center',
 				handler: function() {
 					var formPanel = this.up().up();
+					myMask.show();
 					if (formPanel.form.isValid()) {
-                        //1.- Verificamos la información de las fechas
-                        var fechaMinValMod = Ext.Date.format(panelInicialPral.down('[name="feMin"]').getValue(),'d/m/Y');
-						var fechaMaxValMod = Ext.Date.format(panelInicialPral.down('[name="feMax"]').getValue(),'d/m/Y');
-						var fechaEfectoMod = Ext.Date.format(panelInicialPral.down('[name="feIngreso"]').getValue(),'d/m/Y');
-						
-						if(validate_fechaMayorQue(fechaEfectoMod , fechaMinValMod) == 0 && validate_fechaMayorQue(fechaMaxValMod ,fechaEfectoMod) == 0){
-						    //Exito
 							var submitValues={};
 							asegAlterno.FEEFECTO = Ext.Date.format(panelInicialPral.down('[name="feIngreso"]').getValue(),'d/m/Y');
 	        				asegAlterno.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feFin"]').getValue(),'d/m/Y');
@@ -79,13 +64,14 @@
 	   						    url: guarda_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
+	   						    	 myMask.hide();
 	   						    	 panelInicialPral.setLoading(false);
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPrincipal.setLoading(false);
-	   						        Ext.Msg.show({
+	   						    	myMask.hide();
+	   						    	Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',
 	   						            buttons: Ext.Msg.OK,
@@ -93,18 +79,8 @@
 	   						        });
 	   						    }
 	   						});
-						    
-						    
-						}else{
-						    //Error
-							centrarVentanaInterna(Ext.Msg.show({
-		                        title:'Error',
-		                        msg: 'La fecha efecto esta fuera del rango. Fecha Minimo: '+fechaMinValMod+' Fecha M&aacute;ximo:'+fechaMaxValMod,
-		                        buttons: Ext.Msg.OK,
-		                        icon: Ext.Msg.WARNING
-		                    }));
-						}
 					}else {
+						myMask.hide();
 						Ext.Msg.show({
 							title: 'Aviso',
 							msg: 'Complete la informaci&oacute;n requerida',
@@ -115,22 +91,6 @@
 				}
 			}]
 		});
-
-		function validate_fechaMayorQue(fechaInicial,fechaFinal){
-            debug("fechaInicial : "+fechaInicial+" fechaFinal : "+fechaFinal);
-			valuesStart = fechaInicial.split("/");
-            valuesEnd   = fechaFinal.split("/");
-			 // Verificamos que la fecha no sea posterior a la actual
-            var dateStart = new Date(valuesStart[2],(valuesStart[1]-1),valuesStart[0]);
-			debug("dateStart -->",dateStart);
-            var dateEnd = new Date(valuesEnd[2],(valuesEnd[1]-1),valuesEnd[0]);
-            debug("dateEnd -->",dateEnd);
-            if(dateStart >= dateEnd){
-                return 0;
-            }
-            return 1;
-        }
-		
     });
 </script>
 <div id="maindivHist" style="height:1000px;"></div>

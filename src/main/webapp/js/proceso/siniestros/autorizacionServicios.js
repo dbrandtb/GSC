@@ -709,11 +709,28 @@ Ext.onReady(function() {
 				Ext.getCmp('idTipoCopago').setValue('');
 				Ext.getCmp('idCopago').setValue('');
 				storeSubcobertura.removeAll();
+				//cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob..
+				/*cdunieco = params.get("cdunieco");
+						estado = params.get("estado");
+						cdramo = params.get("cdramo");
+						nmpoliza = params.get("nmpoliza");
+						nmsituac = params.get("nmsituac");
+						cdsubcob = params.get("cdsubcob");
+						cdtipsit = params.get("cdtipsit");
+						
+						//idUnieco		idcdRamo		idEstado	idNmSituac		idcdtipsit
+			
+				*/
 				storeSubcobertura.load({
 					params:{
+						'params.cdunieco' : Ext.getCmp('idUnieco').getValue(),
+						'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+						'params.estado' : Ext.getCmp('idEstado').getValue(),
+						'params.nmpoliza' : Ext.getCmp('polizaAfectada').getValue(),
+						'params.nmsituac' : Ext.getCmp('idNmSituac').getValue(),
+						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue(),
 						'params.cdgarant' : Ext.getCmp('idCobAfectada').getValue(),
-						'params.cdramo'   : Ext.getCmp('idcdRamo').getValue(),
-						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+						'params.cdsubcob' : null
 					}
 				});
 			}
@@ -2285,9 +2302,18 @@ Ext.onReady(function() {
 			}
 			,success : function (response) {
 				var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-				debug("VALOR DEL JSON DEL MAUTSER ESPECIFICO -->",json);
-				Ext.getCmp('idaplicaCirHosp').setValue(json.aplicaCirHos);
-				Ext.getCmp('idaplicaZona').setValue(json.aplicaZonaHosp);
+				
+				if(json.aplicaCirHos == null ||json.aplicaCirHos ==''){
+					Ext.getCmp('idaplicaCirHosp').setValue('S');
+				}else{
+					Ext.getCmp('idaplicaCirHosp').setValue(json.aplicaCirHos);
+				}
+				if(json.idaplicaZona == null ||json.idaplicaZona ==''){
+					Ext.getCmp('idaplicaZona').setValue('S');
+				}else{
+					Ext.getCmp('idaplicaZona').setValue(json.aplicaZonaHosp);
+				}
+				
 				Ext.getCmp('idUnieco').setValue(json.cdunieco);								// Valor de Cdunieco
 				Ext.getCmp('idEstado').setValue(json.estado);								// Valor de Estado
 				Ext.getCmp('idcdRamo').setValue(json.cdramo);								// Valor del Ramo
@@ -2445,9 +2471,14 @@ Ext.onReady(function() {
 				/*Se llena la informacion de la Sub-Cobertura y se realiza la asignacion*/
 				storeSubcobertura.load({
 					params:{
+						'params.cdunieco' : Ext.getCmp('idUnieco').getValue(),
+						'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+						'params.estado' : Ext.getCmp('idEstado').getValue(),
+						'params.nmpoliza' : Ext.getCmp('polizaAfectada').getValue(),
+						'params.nmsituac' : Ext.getCmp('idNmSituac').getValue(),
+						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue(),
 						'params.cdgarant' : Ext.getCmp('idCobAfectada').getValue(),
-						'params.cdramo'   : Ext.getCmp('idcdRamo').getValue(),
-						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+						'params.cdsubcob' : null
 					}
 				});
 				Ext.getCmp('idSubcobertura').setValue(json.cdconval);							// Valor de la Sub-Cobertura

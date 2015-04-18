@@ -108,11 +108,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant,
-			String cdsubcob, String cdramo, String cdtipsit) throws Exception {
+	
+	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza, 
+						String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception {
 		try {
-			log.debug("getConsultaListaSubcobertura cdgarant: "+cdgarant+", cdsubcob: "+cdsubcob);
-			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob,cdramo,cdtipsit);
+			log.debug("getConsultaListaSubcobertura cdunieco : "+cdunieco+" cdramo : "+cdramo+" estado : "+
+						estado+" nmpoliza : "+nmpoliza+" nmsituac : "+nmsituac+" cdtipsit : "+cdtipsit+" cdgarant : "+cdgarant+"cdsubcob : "+cdsubcob);
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob);
 			if(lista==null)
 			{
 				lista= new ArrayList<GenericVO>();
@@ -1540,6 +1542,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return lista;
 	}
 
+	@Override
+	public List<Map<String,String>> obtenerInfAseguradosTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("obtenerFacturasTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.obtenerInfAseguradosTramite(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("lista: "+lista);
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
+	
 	@Override
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception {
 		// TODO Auto-generated method stub

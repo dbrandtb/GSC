@@ -1091,7 +1091,15 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                     url       : _p34_contexto+record.get('LIGA')
                                     ,autoLoad : false
                                     ,scripts  : true
-                                }
+                                },
+	                            listeners:{
+	            					close:function(){
+	            						if(true){
+	            							_p34_storePolizas.reload();
+	            							_fieldById('_p34_windowEndosos').close()
+	            						}
+	            					}
+	            				}
                             }).show());
                             
                             _fieldById('_p34_endosoWindow').getLoader().load(

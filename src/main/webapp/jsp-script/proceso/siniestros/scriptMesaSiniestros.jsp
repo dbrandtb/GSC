@@ -58,6 +58,7 @@ var _mesasin_url_lista_reasignacion 	= '<s:url namespace="/siniestros" 	action="
 var _selCobUrlAvanza              		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
 var _urlSeleccionCobertura      		= '<s:url namespace="/siniestros" 	action="seleccionCobertura"        />';
 var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
+var _URL_INF_ASEGURADO					= '<s:url namespace="/siniestros" 	action="consultaDatosAseguradoSiniestro"/>';
 
 var windowLoader;
 var msgWindow;
@@ -525,101 +526,97 @@ var msgWindow;
 	function detalleReclamacionWindow(grid,rowIndex,colIndex)
 	{
 		var record = grid.getStore().getAt(rowIndex);
-		debug('record:',record.data);
+		debug('record Valor de respuesta :',record.data);
 		
-		var formapago = record.get('parametros.pv_otvalor02');
-		debug('formapago:',formapago);
-		
-		var esPagoDirecto = formapago == _PAGO_DIRECTO;
-		debug('esPagoDirecto:',esPagoDirecto ? 'si' : 'no');
-		
-		var params = {};
-		
-		params['params.tipopago'] = formapago;
-		params['params.ntramite'] = record.get('ntramite');
-		
-		var conCoberYSubcober = false;
-		/*if(esPagoDirecto||true)
-		{
-			if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
-			{
-				conCoberYSubcober = true;
+		Ext.Ajax.request({
+			url	 : _URL_INF_ASEGURADO
+			,params:{
+				'params.ntramite': record.get('ntramite')
 			}
-		}*/
-		debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
-		
-		var urlDestino;
-		if(esPagoDirecto||true) 
-		{
-			if(true)
+			,success : function (response)
 			{
-				if(esPagoDirecto)
-				{
-					urlDestino = _UrlDetalleSiniestroDirecto;
-					debug('urlDestino_1 :',urlDestino);
-					debug('params_1 :',params);
-					Ext.create('Ext.form.Panel').submit(
-					{
-						url             : urlDestino
-						,params         : params
-					    ,standardSubmit : true
-					});
-				}
-				else
-				{
-					// Pago diferente a Directo
-					if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
-					{
-						conCoberYSubcober = true;
-					}
+				if(Ext.decode(response.responseText).datosValidacion != null){
+					var json = Ext.decode(response.responseText).datosValidacion[0];
+					debug("Valor del Json --> ",json);
+					//
 					
-					if(conCoberYSubcober)// true
-					{
-						urlDestino = _selCobUrlAvanza;
-						debug('urlDestino_2 :',urlDestino);
-						debug('params_2:',params);
-						Ext.create('Ext.form.Panel').submit(
-						{
-							url             : urlDestino
-							,params         : params
-						    ,standardSubmit : true
-						});
-					}else{
-						//PASAMOS LOS VALORES PARA SELECCIONAR LA COBERTURA Y SUBCOBERTURA
-						urlDestino = _urlSeleccionCobertura;
-						params['params.cdunieco']  = record.get('cdsucdoc');
-						params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
-						params['params.cdramo']    = record.get('cdramo');
-						params['params.cdtipsit']  = record.get('cdtipsit');
-						debug('urlDestino_4 :',urlDestino);
-						debug('params_4 :',params);
-						Ext.create('Ext.form.Panel').submit(
-						{
-							url             : urlDestino
-							,params         : params
-						    ,standardSubmit : true
-						});
+					var formapago = json.OTVALOR02;
+					debug('formapago:',formapago);
+					
+					var esPagoDirecto = formapago == _PAGO_DIRECTO;
+					debug('esPagoDirecto:',esPagoDirecto ? 'si' : 'no');
+					
+					var params = {};
+					
+					params['params.tipopago'] = formapago;
+					params['params.ntramite'] = json.NTRAMITE;
+					
+					var conCoberYSubcober = false;
+					
+					debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
+					
+					var urlDestino;
+					if(esPagoDirecto||true) {
+						if(true){
+							if(esPagoDirecto){
+								urlDestino = _UrlDetalleSiniestroDirecto;
+								debug('urlDestino_1 :',urlDestino);
+								debug('params_1 :',params);
+								Ext.create('Ext.form.Panel').submit({
+									url             : urlDestino
+									,params         : params
+								    ,standardSubmit : true
+								});
+							}
+							else{
+								// Pago diferente a Directo
+								if(json.OTVALOR12 && json.OTVALOR12.length>0){
+									conCoberYSubcober = true;
+								}
+								
+								if(conCoberYSubcober){ // true
+									urlDestino = _selCobUrlAvanza;
+									debug('urlDestino_2 :',urlDestino);
+									debug('params_2:',params);
+									Ext.create('Ext.form.Panel').submit({
+										url             : urlDestino
+										,params         : params
+									    ,standardSubmit : true
+									});
+								}else{
+									//PASAMOS LOS VALORES PARA SELECCIONAR LA COBERTURA Y SUBCOBERTURA
+									urlDestino = _urlSeleccionCobertura;
+									params['params.cdunieco']  = json.CDSUCDOC;//record.get('cdsucdoc');
+									params['params.otvalor02'] = json.OTVALOR02;//record.get('parametros.pv_otvalor02');
+									params['params.cdramo']    = json.CDRAMO;//record.get('cdramo');
+									params['params.cdtipsit']  = json.CDTIPSIT;//record.get('cdtipsit');
+									params['params.nmpoliza']  = json.NMPOLIZA;
+									params['params.nmsituac']  = json.NMSITUAC;
+									params['params.estado']    = json.ESTADO;
+									debug('urlDestino_4 :',urlDestino);
+									debug('params_4 :',params);
+									Ext.create('Ext.form.Panel').submit(
+									{
+										url             : urlDestino
+										,params         : params
+									    ,standardSubmit : true
+									});
+								}
+							}
+						}
 					}
 				}
-			}
-			else
-			{
-				//PASAMOS LOS VALORES PARA SELECCIONAR LA COBERTURA Y SUBCOBERTURA
-				urlDestino = _urlSeleccionCobertura;
-				params['params.cdunieco']  = record.get('cdsucdoc');
-				params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
-				params['params.cdramo']    = record.get('cdramo');
-				params['params.cdtipsit']  = record.get('cdtipsit');
-				debug('urlDestino_4 :',urlDestino);
-				debug('params_4 :',params);
-				Ext.create('Ext.form.Panel').submit(
-				{
-					url             : urlDestino
-					,params         : params
-				    ,standardSubmit : true
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
 				});
 			}
-		}
+		});
 	}
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){

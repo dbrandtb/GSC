@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -692,8 +693,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("pv_estado", smap1.get("ESTADO"));
 			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
-			smap1.put("pv_diasMinimo", retroactividad.get(0).get("DIASMINIMO"));
-			smap1.put("pv_diasMaximo", retroactividad.get(0).get("DIASMAXIMO"));
+			
 			smap1.put("FEINIVAL", null);
 			
 			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
@@ -709,6 +709,21 @@ public class EndososAutoAction extends PrincipalCoreAction
 	        long diffDays = diff / (24 * 60 * 60 * 1000);
 	        
 			smap1.put("pv_difDate",diffDays+"");
+			
+	        Date dateMin = java.sql.Date.valueOf(FEEFECTO[2].toString()+"-"+FEEFECTO[1].toString()+"-"+FEEFECTO[0].toString());
+	        Calendar calMin = new GregorianCalendar();
+	        calMin.setTime(dateMin);
+	        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	        calMin.add(Calendar.DATE, -Integer.parseInt(retroactividad.get(0).get("DIASMINIMO")));
+	        String fechaMinima = sdf.format(calMin.getTime());
+			smap1.put("pv_fechaMinima", fechaMinima);
+			
+			Date dateMax = java.sql.Date.valueOf(FEEFECTO[2].toString()+"-"+FEEFECTO[1].toString()+"-"+FEEFECTO[0].toString());
+	        Calendar calMax = new GregorianCalendar();
+	        calMax.setTime(dateMax);
+	        calMax.add(Calendar.DATE, Integer.parseInt(retroactividad.get(0).get("DIASMAXIMO")));
+	        String fechaMaxima = sdf.format(calMax.getTime());
+	        smap1.put("pv_fechaMaxima", fechaMaxima);
 			logger.debug(new StringBuilder()
 			.append("\n######                         ######")
 			.append("\n######  endosoVigenciaPoliza   ######")

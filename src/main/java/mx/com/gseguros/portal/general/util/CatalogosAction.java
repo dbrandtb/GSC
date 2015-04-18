@@ -331,15 +331,26 @@ public class CatalogosAction extends PrincipalCoreAction {
 					
 					
 				case SUBCOBERTURAS:
+					String cdunieco = null;
+					String estado = null;
+					String cdramo = null;
+					String nmpoliza = null;
+					String nmsituac = null;
 					String cdgarant = null;
 					String cdsubcob = null;
-					String cdramo = null;
 					String cdtipsit = null;
 					if(params!=null)
 					{
-						cdsubcob = params.get("cdsubcob");
+						logger.debug("Valores de entrada --> "+params);
+						cdunieco = params.get("cdunieco");
+						estado = params.get("estado");
 						cdramo = params.get("cdramo");
+						nmpoliza = params.get("nmpoliza");
+						nmsituac = params.get("nmsituac");
+						cdsubcob = params.get("cdsubcob");
 						cdtipsit = params.get("cdtipsit");
+						
+						
 						if(params.get("cdgarant")!=null)
 						{
 							cdgarant = params.get("cdgarant");
@@ -349,7 +360,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							cdgarant = params.get("idPadre");
 						}
 					}
-					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob,cdramo,cdtipsit);
+					lista = siniestrosManager.getConsultaListaSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob);
 					break;
 					
 				case SUBCOBERTURASTOTALES:

@@ -114,6 +114,46 @@
                         }
                     });
                 });
+                
+                _selCobForm.items.items[3].on('blur',function()
+                        {
+                            var comboSubcobertura = _selCobForm.items.items[4];
+                            comboSubcobertura.getStore().load(
+                            {
+                                params :
+                                {
+                                    'params.cdramo'  : _selCobForm.items.items[1].getValue()
+                                    ,'params.cdgarant'  : _selCobForm.items.items[3].getValue()
+                                    ,'params.cdtipsit' : _selCobForm.items.items[2].getValue()
+                                    ,'params.ntramite'  : _selCobParams.ntramite
+                                    ,'params.tipopago'  :_selCobParams.tipopago
+                                    ,'params.estado'  : _selCobParams.estado
+                                    ,'params.cdunieco'  : _selCobParams.cdunieco
+                                    ,'params.nmpoliza'  : _selCobParams.nmpoliza
+                                    ,'params.nmsituac'  : _selCobParams.nmsituac
+                                }
+                            });
+                        });
+
+                        _selCobForm.items.items[4].on('focus',function()
+                        {
+                            var comboSubcobertura = _selCobForm.items.items[4];
+                            comboSubcobertura.getStore().load(
+                            {
+                                params :
+                                {
+                                    'params.cdramo'  : _selCobForm.items.items[1].getValue()
+                                    ,'params.cdgarant'  : _selCobForm.items.items[3].getValue()
+                                    ,'params.cdtipsit' : _selCobForm.items.items[2].getValue()
+                                    ,'params.ntramite'  : _selCobParams.ntramite
+                                    ,'params.tipopago'  :_selCobParams.tipopago
+                                    ,'params.estado'    : _selCobParams.estado
+                                    ,'params.cdunieco'  : _selCobParams.cdunieco
+                                    ,'params.nmpoliza'  : _selCobParams.nmpoliza
+                                    ,'params.nmsituac'  : _selCobParams.nmsituac
+                                }
+                            });
+                        });
 
                 /*/////////////////DECLARACION DE GRID FACTURAS ///////////////*/
                 Ext.define('EditorFacturasTramite', {
