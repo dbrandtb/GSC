@@ -531,6 +531,15 @@
             <result type="json"></result>
         </action>
         
+		<action name="consultaDatosAseguradoSiniestro" class="siniestrosAction" method="consultaDatosAseguradoSiniestro">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
         <!-- FIN SINIESTRO -->
         
         <!-- INICIO FUNCIONES GENERALES -->
