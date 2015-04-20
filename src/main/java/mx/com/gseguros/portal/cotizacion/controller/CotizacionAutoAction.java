@@ -818,6 +818,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,cdtipsit
 					,ntramite
 					,tipoflot
+					,"S".equals(endoso)
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();

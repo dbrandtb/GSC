@@ -1185,6 +1185,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdtipsit
 			,String ntramite
 			,String tipoflot
+			,boolean endoso
 			)
 	{
 		logger.info(
@@ -1197,6 +1198,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ cdramo=")  .append(cdramo)
 				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.append("\n@@@@@@ ntramite=").append(ntramite)
+				.append("\n@@@@@@ endoso=")  .append(endoso)
 				.toString()
 				);
 		
@@ -1463,6 +1465,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					if(tatri.getColumna().equals("S")
 							&&tatri.getSwpresenflot().equals("S"))
+					{
+						tatrisitSitIteParcial.add(tatri);
+					}
+					else if(endoso&&StringUtils.isNotBlank(tatri.getSwCompFlot())
+								&&tatri.getSwCompFlot().equals("S"))
 					{
 						tatrisitSitIteParcial.add(tatri);
 					}
