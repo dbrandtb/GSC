@@ -1568,6 +1568,31 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitPanel=tatrisitPanelAux;
 				
+				setCheckpoint(Utilerias.join("Ordenando atributos de panel dinamico ",situacionPanel));
+				ComponenteVO auxOrd = null;
+				for(int i=0;i<tatrisitPanel.size()-1;i++)
+				{
+					int nmordenflotI = tatrisitPanel.get(i).getNmordenFlot();
+					if(nmordenflotI==0)
+					{
+						nmordenflotI=99;
+					}
+					for(int j=i+1;j<tatrisitPanel.size();j++)
+					{
+						int nmordenflotJ = tatrisitPanel.get(j).getNmordenFlot();
+						if(nmordenflotJ==0)
+						{
+							nmordenflotJ=99;
+						}
+						if(nmordenflotI>nmordenflotJ)
+						{
+							auxOrd = tatrisitPanel.get(i);
+							tatrisitPanel.set(i , tatrisitPanel.get(j));
+							tatrisitPanel.set(j , auxOrd);
+						}
+					}
+				}
+				
 				setCheckpoint("Recuperando componentes adicionales para configuracion");
 				List<ComponenteVO>listaAdicionales=pantallasDAO.obtenerComponentes(
 						null                   //cdtiptra
