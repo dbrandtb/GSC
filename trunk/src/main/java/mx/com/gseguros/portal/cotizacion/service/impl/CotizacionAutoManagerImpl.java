@@ -1596,6 +1596,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							auxOrd = tatrisitPanel.get(i);
 							tatrisitPanel.set(i , tatrisitPanel.get(j));
 							tatrisitPanel.set(j , auxOrd);
+							nmordenflotI = nmordenflotJ;
 						}
 					}
 				}
