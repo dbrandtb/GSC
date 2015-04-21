@@ -1465,12 +1465,15 @@ Ext.onReady(function()
                         var cdtipsit   = record.get('cdtipsit');
                         var claveCmp   = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=CLAVE GS]');
                         var modeloName = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel=MODELO]').name;
-                        claveCmp.store.proxy.extraParams['params.uso'] = val;
-                        if(!Ext.isEmpty(record.get(claveCmp.name))&&!Ext.isEmpty(record.get(modeloName)))
+                        if(!Ext.isEmpty(claveCmp))
                         {
-                            record.set(claveCmp.name  , '');
-                            record.set(modeloCmp.name , '');
-                            mensajeWarning('Debe actualizar el veh&iacute;culo');
+                            claveCmp.store.proxy.extraParams['params.uso'] = val;
+                            if(!Ext.isEmpty(record.get(claveCmp.name))&&!Ext.isEmpty(record.get(modeloName)))
+                            {
+                                record.set(claveCmp.name  , '');
+                                record.set(modeloCmp.name , '');
+                                mensajeWarning('Debe actualizar el veh&iacute;culo');
+                            }
                         }
                     }
                 });
