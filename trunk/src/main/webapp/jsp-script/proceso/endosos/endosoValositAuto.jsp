@@ -155,12 +155,10 @@ Ext.onReady(function()
             })
             ,Ext.create('Ext.grid.Panel',
             {
-                itemId      : '_p36_grid'
-                ,title      : 'Incisos'
-                ,minHeight  : 200
-                ,maxHeight  : 400
-                ,autoScroll : true
-                ,plugins    :
+                itemId   : '_p36_grid'
+                ,title   : 'Incisos'
+                ,height  : 300
+                ,plugins :
                 _p36_itemsEdicion.length==0 ?
                 [
                     Ext.create('Ext.grid.plugin.CellEditing',
@@ -395,5 +393,5 @@ Ext.onReady(function()
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p36_divpri" style="height:600px;border:1px solid #999999;"></div></body>
+<body><div id="_p36_divpri" style="height:330px;border:1px solid #999999;"></div></body>
 </html>
