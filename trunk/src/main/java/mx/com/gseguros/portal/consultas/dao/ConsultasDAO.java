@@ -206,4 +206,6 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public boolean recuperarPermisoDevolucionPrimasUsuario(String cdusuari) throws Exception;
 }

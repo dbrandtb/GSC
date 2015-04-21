@@ -130,6 +130,20 @@ Ext.onReady(function()
                         ,allowBlank : false
                         ,name       : 'fechaEndoso'
                     }
+                    ,Ext.create('Ext.form.ComboBox',
+                    {
+                        xtype           : 'combo'
+                        ,store          : _g_storeSino
+                        ,allowBlank     : false
+                        ,forceSelection : true
+                        ,valueField     : 'key'
+                        ,displayField   : 'value'
+                        ,queryMode      : 'local'
+                        ,value          : 'N'
+                        ,hidden         : true
+                        ,name           : 'devoPrim'
+                        ,fieldLabel     : 'Devoluci&oacute;n prima'
+                    })
                     ,{
                         xtype    : 'button'
 		                ,itemId  : '_p37_botonConfirmar'
@@ -181,6 +195,36 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
+    
+    
+    Ext.Ajax.request(
+    {
+        url      : _p37_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_PERMISO_USUARIO_DEVOLUCION_PRIMAS'
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### permiso:',json);
+            if(json.exito)
+            {
+                if(json.smap1.permiso=='S')
+                {
+                    _fieldByName('devoPrim').show();
+                }
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 
@@ -196,6 +240,7 @@ function _p37_confirmar(boton)
     }
     
     _p37_smap1['fechaEndoso'] = Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y');
+    _p37_smap1['devoPrim']    = _fieldByName('devoPrim').getValue();
     
     boton.setDisabled(true);
     boton.setText('Cargando...');

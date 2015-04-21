@@ -1306,6 +1306,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdtipsup
 			,String fecha
 			,UserVO usuarioSesion
+			,boolean devolver
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -1320,6 +1321,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdelemen=" , cdelemen
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
 				,"\n@@@@@@ fecha="    , fecha
+				,"\n@@@@@@ devolver=" , devolver
 				));
 		
 		String paso = null;

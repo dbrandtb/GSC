@@ -195,6 +195,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,cdtipsup
 						));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_PERMISO_USUARIO_DEVOLUCION_PRIMAS))
+			{
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("permiso" , consultasDAO.recuperarPermisoDevolucionPrimasUsuario(cdusuari) ? "S" : "N");
+			}
 			
 			setCheckpoint("0");
 		}
