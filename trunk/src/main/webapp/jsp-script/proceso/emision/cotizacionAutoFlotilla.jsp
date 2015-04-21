@@ -2514,11 +2514,18 @@ Ext.onReady(function()
                             {
                                 if(!Ext.isEmpty(callback))
                                 {
-                                    callback
-                                    (
-                                        _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'))
-                                            .down('[fieldLabel=CARGA]')
-                                    );
+                                    try
+                                    {
+                                        callback
+                                        (
+                                            _fieldById('_p30_tatrisitParcialForm'+_p30_selectedRecord.get('cdtipsit'),true)
+                                                .down('[fieldLabel=CARGA]')
+                                        );
+                                    }
+                                    catch(ex)
+                                    {
+                                        debugError(ex);
+                                    }
                                 }
                             } 
                         });
