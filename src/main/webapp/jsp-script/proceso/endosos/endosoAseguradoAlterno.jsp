@@ -62,6 +62,8 @@
    						    	panelInicialPral.setLoading(false);
    						         var jsonResp = Ext.decode(response.responseText);
    						         mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+   						         //usa codigo del marcoEndososAuto.jsp
+                                 marendNavegacion(2);
    						    },
    						    failure:function(response,opts)
    						    {
