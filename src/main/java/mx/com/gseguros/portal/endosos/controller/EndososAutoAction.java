@@ -535,6 +535,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza    = smap1.get("NMPOLIZA");
 			String cdtipsup    = smap1.get("cdtipsup");
 			String fechaEndoso = smap1.get("fechaEndoso");
+			String devolucionP = smap1.get("devoPrim");
 			
 			Utils.validate(cdunieco    , "No se recibio la sucursal");
 			Utils.validate(cdramo      , "No se recibio la sucursal");
@@ -542,6 +543,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(nmpoliza    , "No se recibio el numero de poliza");
 			Utils.validate(cdtipsup    , "No se recibio el codigo de endoso");
 			Utils.validate(fechaEndoso , "No se recibio la fecha de efecto");
+			Utils.validate(devolucionP , "No se recibio el parametro de devolucion de prima");
 			
 			endososAutoManager.confirmarEndosoBajaIncisos(
 					cdunieco
@@ -554,6 +556,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdtipsup
 					,fechaEndoso
 					,usuarioSesion
+					,"S".equals(devolucionP)
 					);
 			
 			respuesta = "Endoso generado correctamente";

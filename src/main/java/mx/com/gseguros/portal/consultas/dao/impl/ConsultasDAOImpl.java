@@ -1612,4 +1612,28 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public boolean recuperarPermisoDevolucionPrimasUsuario(String cdusuari) throws Exception
+    {
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdusuari" , cdusuari);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA", params);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarPermisoDevolucionPrimasUsuario(getDataSource()),params);
+    	logger.debug(Utilerias.join("****** PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA permiso=",procResult.get("pv_permiso_o")));
+    	return "S".equals((String)procResult.get("pv_permiso_o"));
+    }
+    
+    protected class RecuperarPermisoDevolucionPrimasUsuario extends StoredProcedure
+    {
+    	protected RecuperarPermisoDevolucionPrimasUsuario(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA");
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

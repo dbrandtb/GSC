@@ -118,6 +118,7 @@ public interface EndososAutoManager
 			,String cdtipsup
 			,String fecha
 			,UserVO usuarioSesion
+			,boolean devolver
 			)throws Exception;
 
 	public void guardarEndosoAseguradoAlterno(
