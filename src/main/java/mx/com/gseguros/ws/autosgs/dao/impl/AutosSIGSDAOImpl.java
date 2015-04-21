@@ -267,6 +267,41 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	}
 
 	@Override
+	public Integer endosoTextoLibre(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoTextoLibre(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoTextoLibre extends StoredProcedure{
+		protected EndosoTextoLibre(DataSource dataSource){
+			super(dataSource, "sp_EndosoBTextoLibre");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo",     Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza",   Types.INTEGER));
+			declareParameter(new SqlParameter("vTexto",  Types.VARCHAR));
+			declareParameter(new SqlParameter("vFEndoso",  Types.DATE));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+
+	@Override
 	public Integer endosoSerie(Map<String, Object> params) throws Exception {
 		Integer resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new EndosoSerie(getDataSource()), params);

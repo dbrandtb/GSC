@@ -17,6 +17,8 @@ public interface AutosSIGSDAO {
 
 	public Integer endosoVigenciaPol(Map<String, Object> params) throws Exception;
 
+	public Integer endosoTextoLibre(Map<String, Object> params) throws Exception;
+
 	public Integer endosoSerie(Map<String, Object> params) throws Exception;
 	
 	public Integer endosoBeneficiario(Map<String, Object> params) throws Exception;
