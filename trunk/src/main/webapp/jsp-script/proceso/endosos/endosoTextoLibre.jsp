@@ -57,16 +57,20 @@
 	        				paramsEntrada.TEXTOEND = panelInicialPral.down('[name="textoEndoso"]').getValue();
 	        				submitValues['smap1']= paramsEntrada;
 	        				submitValues['slist1']= situaciones;
+	        				
+	        				var panelMask = new Ext.LoadMask('maindivText', {msg:"Confirmando..."});
+							panelMask.show();
+							
 	        				Ext.Ajax.request( {
 	   						    url: guardaTextoLibre,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
-	   						    	 panelInicialPral.setLoading(false);
+	   						    	 panelMask.hide();
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPral.setLoading(false);
+	   						        panelMask.hide();
 	   						        Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',

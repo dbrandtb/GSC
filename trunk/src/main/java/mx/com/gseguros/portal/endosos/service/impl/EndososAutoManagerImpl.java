@@ -1775,14 +1775,14 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			params.put("pv_nmpoliza_i" , nmpoliza);
 			params.put("pv_nmsuplem_i" , nmsuplem);
 			
-			//datos = endososDAO.obtieneDatosEndVigenciaPol(params);
+			datos = endososDAO.obtieneDatosEndTextoLibre(params);
 			
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de datos para endosoTextoLibre para SIGS",e1);
 			return false;
 		}	
 		
-		if(datos != null && !datos.isEmpty()){
+		if(datos != null && !datos.isEmpty() && nivelPoliza){
 			
 			for(Map<String,String> datosEnd : datos){
 				try{
@@ -1792,16 +1792,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
 					paramsEnd.put("vRamo"    , datosEnd.get("Ramo"));
 					paramsEnd.put("vPoliza"   , datosEnd.get("Poliza"));
-					paramsEnd.put("vTEndoso"    , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
-					paramsEnd.put("vEndoso"  , datosEnd.get("Endoso"));
-					paramsEnd.put("vRecibo"     , datosEnd.get("asd"));
-					paramsEnd.put("vFIniRec"    , datosEnd.get("asd"));
-					paramsEnd.put("vFFinRec"    , datosEnd.get("asd"));
-					paramsEnd.put("vFIniPol"    , datosEnd.get("asd"));
-					paramsEnd.put("vFEndoso"    , datosEnd.get("asd"));
-					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
+					paramsEnd.put("vTexto"    , datosEnd.get("Texto"));
+					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
+					Integer res = autosDAOSIGS.endosoTextoLibre(paramsEnd);
 					
 					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
 					
