@@ -73,6 +73,7 @@
 	   						    	 panelInicialPral.setLoading(false);
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+	   						      	 marendNavegacion(2);
 	   						    },
 	   						    failure:function(response,opts){
 	   						        panelInicialPral.setLoading(false);
