@@ -413,7 +413,7 @@ function consultaDinamica(accion,inParams,form,callback)
 	debug('<consultaDinamica');
 }
 
-function _fieldById(id)
+function _fieldById(id,ocultarErrores)
 {
     //debug('_fieldById:',id);
     var comp;
@@ -421,7 +421,10 @@ function _fieldById(id)
     if(arr.length==0)
     {
         debugError('No se encuentra el campo con id "'+id+'"');
-        mensajeError('No se encuentra el campo con id "'+id+'"');
+        if(Ext.isEmpty(ocultarErrores)||ocultarErrores==false)
+        {
+            mensajeError('No se encuentra el campo con id "'+id+'"');
+        }
     }
     else
     {
