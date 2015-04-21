@@ -34,7 +34,9 @@
 					fieldLabel: 'Texto',
 					name:       'textoEndoso',
 					width: 600,
-					height: 200
+					height: 200,
+					maxLength: 2000,
+					maxLengthText: 'No se permite mas de 2000 caracteres'
 				}
 	    	]
 			,buttonAlign:'center'
@@ -68,6 +70,7 @@
 	   						    	 panelMask.hide();
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+	   						      	 marendNavegacion(2);
 	   						    },
 	   						    failure:function(response,opts){
 	   						        panelMask.hide();
