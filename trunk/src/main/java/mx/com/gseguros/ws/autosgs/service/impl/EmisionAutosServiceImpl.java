@@ -326,7 +326,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							for(Map<String,String>row:lista)
 							{
 								nuevoVersion = new Version();
-								nuevoVersion.setAmis(Integer.valueOf(m.get("AMIS")));
+								nuevoVersion.setAmis(Integer.valueOf(row.get("AMIS")));
 								nuevoInciso = new Inciso();
 								nuevoInciso.setVersion(nuevoVersion);
 								
@@ -450,7 +450,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							//version
 							Version version=new Version();
 							version.setDescripcion(row.get("DESCRIPCION"));
-							version.setAmis(Integer.valueOf(m.get("AMIS")));
+							version.setAmis(Integer.valueOf(row.get("AMIS")));
 							incisoIterado.setVersion(version);
 							
 							ConfiguracionPaquete confPaq=new ConfiguracionPaquete();
@@ -460,8 +460,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							incisoIterado.setPrimaNeta(Double.valueOf(row.get("PRIMANETAINC")));
 							
 							
-							incisoIterado.setCilindraje(m.get("CILINDRAJE"));
-							incisoIterado.setDescuentoInciso(Double.valueOf(m.get("DESCUENTOINCISO")));
+							incisoIterado.setCilindraje(row.get("CILINDRAJE"));
+							incisoIterado.setDescuentoInciso(Double.valueOf(row.get("DESCUENTOINCISO")));
 							
 							//versionTarifa
 							confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
