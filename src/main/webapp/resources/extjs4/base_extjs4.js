@@ -53,14 +53,17 @@ function rendererDinamico(value,combo,view)
     else
     {
         value='Cargando...';
-        store.padreView=view;
-        store.on(
+        if(Ext.isEmpty(store.padreView))
         {
-            load : function(me)
+            store.padreView=view;
+            store.on(
             {
-                me.padreView.refresh();
-            }
-        });
+                load : function(me)
+                {
+                    me.padreView.refresh();
+                }
+            });
+        }
     }
     return value;
 }
