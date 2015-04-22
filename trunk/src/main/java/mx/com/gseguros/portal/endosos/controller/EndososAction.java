@@ -1577,10 +1577,10 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////////////*/
 	public String guardarEndosoDomicilioAuto() {
 		logger.debug("\n#########################################"
-				+ "\n#########################################"
-				+ "\n###### guardar endoso de domicilio ######"
-				+ "\n######                             ######"
-				+ "\n######                             ######");
+				+ "\n############################################"
+				+ "\n###### guardar endoso de domicilio Auto ####"
+				+ "\n######                                ######"
+				+ "\n######                                ######");
 		try {
 			logger.debug("smap1: "+smap1);
 			logger.debug("smap2: "+smap2);
@@ -1805,11 +1805,11 @@ public class EndososAction extends PrincipalCoreAction
 			success = false;
 			error = ex.getMessage();
 		}
-		logger.debug("\n######                             ######"
-				+ "\n######                             ######"
-				+ "\n###### guardar endoso de domicilio ######"
-				+ "\n#########################################"
-				+ "\n#########################################");
+		logger.debug("\n######                              ######"
+				+ "\n######                                 ######"
+				+ "\n###### guardar endoso de domicilio Auto######"
+				+ "\n#############################################"
+				+ "\n#############################################");
 		return SUCCESS;
 	}
 	/*//////////////////////////////////////////////////*/
@@ -9559,7 +9559,7 @@ public class EndososAction extends PrincipalCoreAction
 		
 			kernelManager.guardarArchivo(paramsR);
 		} catch (Exception e) {
-			logger.error("Error al generar la Caratula tipo B para el tipo de endoso: " + cdtipsup);
+			logger.error("Error al generar la Caratula tipo B para el tipo de endoso: " + cdtipsup,e);
 			return false;
 		}
 		
@@ -9677,7 +9677,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 			}
 		} catch (Exception e) {
-			logger.error("Error al generar las Caratulas de endoso: " + cdtipsup);
+			logger.error("Error al generar las Caratulas de endoso: " + cdtipsup, e);
 			return false;
 		}
 		
