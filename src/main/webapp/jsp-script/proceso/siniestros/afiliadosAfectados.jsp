@@ -70,6 +70,7 @@
 			var _URL_RECHAZOTRAMITE  					= '<s:url namespace="/siniestros" 		action="includes/rechazoReclamaciones" />';
 			var _URL_REVISIONDOCSINIESTRO   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos" />';
             var _URL_AJUSTESMEDICOS						= '<s:url namespace="/siniestros" 		action="includes/ajustesMedicos" />';
+            var _URL_ELIMINAR_ASEGURADO					= '<s:url namespace="/siniestros"		action="eliminarAsegurado" />';
 			
 			
 			
@@ -1037,7 +1038,7 @@
 							{
 								xtype		 : 'actioncolumn'
 								,menuDisabled : true
-								,width		: 70
+								,width		: 100
 								,items		:
 								[
 									{
@@ -1054,6 +1055,11 @@
 										icon	 : '${ctx}/resources/fam3icons/icons/folder.png'
 										,tooltip : 'Siniestro'
 										,handler : _11_pedirMsiniestMaestro
+									},
+									{
+										icon		: '${ctx}/resources/fam3icons/icons/user_delete.png'
+										,tooltip : 'Eliminar Asegurado'
+										,handler : eliminarAsegurado
 									}
 								]
 							},
@@ -1114,6 +1120,7 @@
 									{
 										if(storeCoberturaxAseguradoRender.cargado)
 										{
+											//debug("storeCoberturaxAseguradoRender :",storeCoberturaxAseguradoRender);
 											storeCoberturaxAseguradoRender.each(function(rec)
 										    {
 												if (rec.data.key == v)
@@ -1146,8 +1153,12 @@
 									var leyenda = '';
 									if (typeof v == 'string')
 									{
+										debug("Valor de V : "+v);
+										debug("Valor de storeSubcoberturaAseguradoRender.cargado : "+storeSubcoberturaAseguradoRender.cargado);
 										if(storeSubcoberturaAseguradoRender.cargado)
 										{
+											debug("storeSubcoberturaAseguradoRender");
+											debug(storeSubcoberturaAseguradoRender);
 											storeSubcoberturaAseguradoRender.each(function(rec)
 										    {
 												if (rec.data.key == v)
@@ -1299,11 +1310,11 @@
 							}
 						],
 						tbar:[
-								/*{
+								{
 									text	: 'Agregar Asegurado'
-									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,icon		: '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
-								}*/
+								},
 								{
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
@@ -1369,8 +1380,12 @@
 												for(i = 0; i < conceptos.length; i++){
 													totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
 												}
+												if(record.get('CDRAMO') == '7' ){
+													obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), 
+																		  record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'),
+																		  totalConsumido);
+												}
 												
-												obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido);
 											},
 											failure : function ()
 											{
@@ -2343,7 +2358,8 @@
 										{
 											url	 : _URL_GUARDA_ASEGURADO
 											,params:{
-												//'params.nmtramite'  : _11_params.NTRAMITE,
+												'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+												'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
 												'params.cdunieco'   : datos.cdUniecoAsegurado,
 												'params.cdramo'     : datos.cdRamoAsegurado,
 												'params.estado'     : datos.estadoAsegurado,
@@ -2357,7 +2373,14 @@
 											}
 											,success : function (response)
 											{
-												alert("Guardado");
+												//alert("Guardado");
+												banderaAsegurado = 0;
+												storeAseguradoFactura.load({
+													params: {
+														'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+														'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+													}
+												});
 											},
 											failure : function ()
 											{
@@ -2370,35 +2393,6 @@
 												});
 											}
 										});
-										
-										
-										
-										panelListadoAsegurado.form.submit({
-										waitMsg:'Procesando...',
-										//standardSubmit : true,
-										params: {
-											//'params.nmtramite'  : _11_params.NTRAMITE,
-											'params.cdunieco'   : datos.cdUniecoAsegurado,
-											'params.cdramo'     : datos.cdRamoAsegurado,
-											'params.estado'     : datos.estadoAsegurado,
-											'params.nmpoliza'   : datos.nmPolizaAsegurado,
-											'params.nmsolici'   : datos.nmSoliciAsegurado,
-											'params.nmsuplem'   : datos.nmSuplemAsegurado,
-											'params.nmsituac'   : datos.nmSituacAsegurado,
-											'params.cdtipsit'   : datos.cdTipsitAsegurado,
-											'params.cdperson'   : datos.cmbAseguradoAfect,
-											'params.feocurre'   : datos.dtfechaOcurrencias
-										},
-										failure: function(form, action) {
-											centrarVentanaInterna(mensajeError("Error al guardar el Asegurado"));
-										},
-										success: function(form, action) {
-											alert("Correcto");
-											
-											
-										}
-									});
-									//limpiarRegistros();
 									panelListadoAsegurado.getForm().reset();
 									ventanaAgregarAsegurado.close();
 								}
@@ -3088,7 +3082,6 @@
 				{
 					mensajeCorrecto('Asociar',"Se ha asociado el siniestro a uno existente",function(){
 						debug("VALOR DEL SINIESTRO SELECCIONADO -->",formulario.nmsiniestroRef);
-						//obtenerSumaAsegurada(_11_recordActivo.data.CDUNIECO, _11_recordActivo.data.CDRAMO, _11_recordActivo.data.ESTADO, _11_recordActivo.data.NMPOLIZA, _11_recordActivo.data.CDPERSON, formulario.nmsiniestroRef);
 						_11_WindowPedirMsiniest.close();
 						storeAseguradoFactura.removeAll();
 						storeAseguradoFactura.load({
@@ -4602,6 +4595,59 @@
 				}
 		});
 		centrarVentana(msgWindow);
+	}
+	
+	function eliminarAsegurado(grid,rowIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		debug('record.eliminarAsegurado:',record.raw);
+		centrarVentanaInterna(Ext.Msg.show({
+			title: 'Aviso',
+			msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
+			buttons: Ext.Msg.YESNO,
+			icon: Ext.Msg.QUESTION,
+			fn: function(buttonId, text, opt){
+				if(buttonId == 'yes'){
+					debug("VALOR DEL RECORD");
+					debug(record);
+					Ext.Ajax.request({
+						url: _URL_ELIMINAR_ASEGURADO,
+						params: {
+							'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+							'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
+							'params.cdunieco'   : record.get('CDUNIECO'),
+							'params.cdramo'     : record.get('CDRAMO'),
+							'params.estado'     : record.get('ESTADO'),
+							'params.nmpoliza'   : record.get('NMPOLIZA'),
+							'params.nmsuplem'   : record.get('NMSUPLEM'),
+							'params.nmsituac'   : record.get('NMSITUAC'),
+							'params.cdtipsit'   : record.get('CDTIPSIT'),
+							'params.cdperson'   : record.get('CDPERSON'),
+							'params.feocurre'   : record.get('FEOCURRE'),
+							'params.nmsinies'   : record.get('NMSINIES')
+						},
+						success: function(response) {
+							var res = Ext.decode(response.responseText);
+							if(res.success){
+								mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
+									banderaAsegurado = 0;
+									storeAseguradoFactura.load({
+										params: {
+											'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+											'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+										}
+									});
+								});
+							}else {
+								centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+							}
+						},
+						failure: function(){
+							centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+						}
+					});
+				}
+			}
+		}));
 	}
 	
 	//FIN DE FUNCIONES

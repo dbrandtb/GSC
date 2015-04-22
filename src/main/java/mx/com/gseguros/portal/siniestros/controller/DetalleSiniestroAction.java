@@ -101,24 +101,33 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
 		try {
-					Date dFeocurre = renderFechas.parse(params.get("feocurre"));
-					String valor = null;
-					if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
-						valor = params.get("nmautser");
-					}
-					siniestrosManager.actualizaDatosGeneralesSiniestro(
-						params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"),
-						params.get("nmsuplem"),params.get("aaapertu"),
-						params.get("nmsinies"), dFeocurre,
-						params.get("nmreclamo"), params.get("cdicd"),
-						params.get("cdicd2"), params.get("cdcausa"),
-						params.get("cdgarant"), params.get("cdconval"),
-						valor);
-					String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
-					
-					siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(formatoFechaFactura), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),renderFechas.parse(params.get("feegreso")), params.get("diasdedu"),null);
+				logger.debug("VAlores de entrada : "+params);
+				Date dFeocurre = renderFechas.parse(params.get("feocurre"));
+				String valor = null;
+				if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
+					valor = params.get("nmautser");
+				}
+				siniestrosManager.actualizaDatosGeneralesSiniestro(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsuplem"),params.get("aaapertu"),
+					params.get("nmsinies"), dFeocurre,
+					params.get("nmreclamo"), params.get("cdicd"),
+					params.get("cdicd2"), params.get("cdcausa"),
+					params.get("cdgarant"), params.get("cdconval"),
+					valor);
 			
+				String formatoFeEgreso;
+				if(params.get("feegreso").length() > 0){
+					formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);
+				}else{
+					formatoFeEgreso = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
+				}
+				String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
+				Date dFeFactura = renderFechas.parse(formatoFechaFactura);
+				Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
+				
+				siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null);
 			success = true;
 		}catch(Exception e){
 			logger.error("Error en actualizaDatosGeneralesSiniestro", e);

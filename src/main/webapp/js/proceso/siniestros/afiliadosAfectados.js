@@ -55,6 +55,11 @@ Ext.onReady(function() {
 			ftype:'summary'
 		}],
 		columns: _11_columnas_Factura
+		/*,tbar: [{
+                    text     : 'Agregar Factura'
+                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+                    //,handler : _p21_agregarGrupoClic
+                }]*/
 	});
 	
 	gridDatosFacturaxTramite.store.sort([{ 

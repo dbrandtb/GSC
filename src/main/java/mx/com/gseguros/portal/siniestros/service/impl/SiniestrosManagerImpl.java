@@ -33,6 +33,8 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+
+import com.jcraft.jsch.Logger;
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	
@@ -134,7 +136,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			{
 				lista= new ArrayList<GenericVO>();
 			}
-			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+			log.debug("getConsultaListaSubcoberturaTotales lista size: "+lista.size());
 			return lista;
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
@@ -348,7 +350,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		// TODO Auto-generated method stub
 		try {
 			String accion = null;
-			
+			log.debug("Entra a esta parte --> : "+feegreso);
 			if(tipoAccion == null || tipoAccion == ""){
 				accion = Constantes.INSERT_MODE;
 			}else{
