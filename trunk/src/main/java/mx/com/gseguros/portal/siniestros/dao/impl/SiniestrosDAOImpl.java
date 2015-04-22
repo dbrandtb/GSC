@@ -3887,6 +3887,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected eliminaAseguradoRegistrado(DataSource dataSource) {
 			super(dataSource, "PKG_PRESINIESTRO.P_ELIMINA_ASEGURADO");
 			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -3896,6 +3897,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
