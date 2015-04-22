@@ -129,7 +129,7 @@ public class Utils {
 	
 	
 	/**
-	 * Obtiene el tamaño de una lista (null safe)
+	 * Obtiene el tamaï¿½o de una lista (null safe)
 	 * @param lista
 	 * @return Devuelve el tama&ntilde;o de la lista o null
 	 */
@@ -193,7 +193,7 @@ public class Utils {
 	
 	public static String generaTimestamp()
 	{
-		return String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
+		return Long.toString(System.currentTimeMillis());
 	}
 	
 	public static UserVO validateSession(Map<String,Object>session)throws Exception

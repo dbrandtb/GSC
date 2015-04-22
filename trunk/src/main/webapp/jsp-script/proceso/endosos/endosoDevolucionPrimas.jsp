@@ -260,6 +260,23 @@ Ext.onReady(function()
                                 return;
                             }
                             
+                            var lista = [];
+                            _p39_storeIncisos.each(function(record)
+                            {
+                                var inc =
+                                {
+                                    cdunieco  : record.get('CDUNIECO')
+                                    ,cdramo   : record.get('CDRAMO')
+                                    ,estado   : record.get('ESTADO')
+                                    ,nmpoliza : record.get('NMPOLIZA')
+                                    ,nmsituac : record.get('NMSITUAC')
+                                    ,nmsuplem : record.get('NMSUPLEM')
+                                    ,status   : record.get('STATUS')
+                                    ,cdtipsit : record.get('CDTIPSIT')
+                                };
+                                lista.push(inc);
+                            });
+                            
                             me.setDisabled(true);
                             me.setText('Cargando...');
                             Ext.Ajax.request(
@@ -267,8 +284,9 @@ Ext.onReady(function()
                                 url       : _p39_urlConfirmarEndoso
                                 ,jsonData :
                                 {
-                                    smap1  : _p39_smap1
-                                    ,smap2 : me.up('form').getForm().getValues()
+                                    smap1   : _p39_smap1
+                                    ,smap2  : me.up('form').getForm().getValues()
+                                    ,slist1 : lista
                                 }
                                 ,success  : function(response)
                                 {
