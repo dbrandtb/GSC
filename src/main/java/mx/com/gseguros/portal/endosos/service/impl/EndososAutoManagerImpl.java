@@ -2151,7 +2151,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					nmtramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 		
 		}catch(Exception e){
-			logger.debug("Error al guardar la caratula de endoso B");
+			logger.error("Error al guardar la caratula de endoso B",e);
 			return false;
 		}
 		return true;
@@ -2879,7 +2879,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 			}
 		}catch(Exception ex){
-			logger.error("error al guardar el endoso de coberturas", ex);
+			logger.error("Error al ejecutar caratula endoso con tarifa", ex);
 			return false;
 		}
 		return true;
@@ -3033,7 +3033,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		try
 		{
 			paso = "Confirmando endoso";
-			endososDAO.confirmarEndosoRehabilitacionAuto(
+			/*Map<String,Object> resParams = */endososDAO.confirmarEndosoRehabilitacionAuto(
 					cdusuari
 					,cdsisrol
 					,cdunieco
@@ -3053,6 +3053,29 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmsuplem
 					,cdelemen
 					);
+			
+//			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
+//			String ntramite = (String) resParams.get("pv_ntramite_o");
+//			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+//			
+//			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+//			if(aux == null || !aux.isExitoRecibos()){
+//				logger.error("Error al ejecutar los WS de endoso");
+//				
+//				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+//				
+//				if(endosoRevertido){
+//					logger.error("Endoso revertido exitosamente.");
+//					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+//				}else{
+//					logger.error("Error al revertir el endoso");
+//					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+//				}
+//				
+//			}
+//			
+//			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			
 		}
 		catch(Exception ex)
 		{
