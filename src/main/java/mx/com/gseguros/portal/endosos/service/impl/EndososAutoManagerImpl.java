@@ -324,11 +324,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
-			double millis = System.currentTimeMillis();
-			double random = 1000d*Math.random();
-			logger.debug(millis);
-			logger.debug(random);
-			String stamp  = String.format("%.0f.%.0f",millis,random);
+			String stamp  = Utils.generaTimestamp();
 			
 			logger.debug(Utilerias.join("stamp=",stamp));
 			
@@ -1079,7 +1075,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		{
 			Date fechaEfecto = renderFechas.parse(fecha);
 			
-			String tstamp = String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
+			String tstamp = Utils.generaTimestamp();
 			
 			paso = "Guardando situaciones temporales";
 			logger.info(paso);
@@ -1330,7 +1326,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		{
 			Date fechaEfecto = renderFechas.parse(fecha);
 			
-			String tstamp = String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random());
+			String tstamp = Utils.generaTimestamp();
 			
 			paso = "Guardando situaciones temporales";
 			logger.info(paso);
@@ -2617,9 +2613,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso = "Generando id operacion";
 			logger.info(paso);
 			
-			double millis = System.currentTimeMillis();
-			double random = 1000d*Math.random();
-			String tstamp = String.format("%.0f.%.0f",millis,random);
+			String tstamp = Utils.generaTimestamp();
 			logger.debug(Utilerias.join("stamp=",tstamp));
 			
 			paso = "Guardando situacion temporal";
