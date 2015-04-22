@@ -448,4 +448,16 @@ public interface EndososDAO
 			,Date   feinicio
 			)throws Exception;
 	
+	public void guardarEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			)throws Exception;
 }

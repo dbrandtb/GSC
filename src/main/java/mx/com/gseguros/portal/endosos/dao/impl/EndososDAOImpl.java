@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -2783,6 +2784,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuari" , cdusuari);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdelemen" , cdelemen);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
 		
@@ -2794,19 +2796,20 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected ConfirmarEndosoTvalositAuto(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO");
-			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("tstamp"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("feefecto"  , OracleTypes.DATE));
-			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdelemen"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -3169,6 +3172,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("feefecto" , fechaEfecto);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
 		
@@ -3189,11 +3193,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
-			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -3221,6 +3226,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("feefecto" , fechaEfecto);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
 		
@@ -3241,6 +3247,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
@@ -3318,6 +3325,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdusuri"  , cdusuri);
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_CLAVE_AUTO", params);
 		ejecutaSP(new GuardarEndosoClaveAuto(getDataSource()),params);
 	}
@@ -3336,6 +3344,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdusuri"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
@@ -3558,6 +3567,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdmoneda" , cdmoneda);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdelemen" , cdelemen);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
 	}
@@ -3585,6 +3595,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdmoneda" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -3666,6 +3677,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdelemen" , cdelemen);
 		params.put("feinicio" , feinicio);
+		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO", params);
 		ejecutaSP(new ConfirmarEndosoCancelacionAuto(getDataSource()),params);
 	}
@@ -3694,6 +3706,59 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feinicio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdelemen" , cdelemen);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("tstamp"   , tstamp);
+		params.put("feefecto" , feefecto);
+		params.put("idproces" , Utils.generaTimestamp());
+		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS", params);
+		ejecutaSP(new GuardarEndosoDevolucionPrimas(getDataSource()),params);
+	}
+	
+	protected class GuardarEndosoDevolucionPrimas extends StoredProcedure
+	{
+		protected GuardarEndosoDevolucionPrimas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

@@ -3343,4 +3343,90 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	public void guardarEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			,List<Map<String,String>> incisos
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ tstamp="   , tstamp
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ incisos="  , incisos
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Guardando incisos temporales";
+			logger.info(paso);
+			for(Map<String,String> inciso : incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,inciso.get("nmsituac")
+						,inciso.get("nmsuplem")
+						,inciso.get("status")
+						,inciso.get("cdtipsit")
+						,"BAJA"  , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null
+						,tstamp
+						);
+			}
+			
+			paso = "Confirmando endoso";
+			logger.info(paso);
+			endososDAO.guardarEndosoDevolucionPrimas(
+					cdusuari
+					,cdsisrol
+					,cdelemen
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					,tstamp
+					,feefecto
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ guardarEndosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

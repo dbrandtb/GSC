@@ -1381,14 +1381,48 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				 "\n###########################################"
 				,"\n###### guardarEndosoDevolucionPrimas ######"
-				,"\n###### smap1=" , smap1
-				,"\n###### smap2=" , smap2
+				,"\n###### smap1="  , smap1
+				,"\n###### smap2="  , smap2
+				,"\n###### slist1=" , slist1
 				));
 		
 		try
 		{
-			Utils.validate(smap1 , "No se recibieron datos de poliza");
-			Utils.validate(smap2 , "No se recibieron datos de endoso");
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(smap2  , "No se recibieron datos de endoso");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			UserVO user = Utils.validateSession(session);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsup = smap1.get("cdtipsup");
+			String tstamp   = smap1.get("tstamp");
+			String fechaEnd = smap2.get("feefecto");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			Utils.validate(tstamp   , "No se recibio el ID de proceso");
+			Utils.validate(fechaEnd , "No se recibio la fecha de efecto");
+			
+			endososAutoManager.guardarEndosoDevolucionPrimas(
+					user.getUser()
+					,user.getRolActivo().getClave()
+					,user.getEmpresa().getElementoId()
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					,tstamp
+					,renderFechas.parse(fechaEnd)
+					,slist1
+					);
 			
 			success = true;
 		}

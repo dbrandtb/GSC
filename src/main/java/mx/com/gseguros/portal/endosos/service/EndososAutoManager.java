@@ -272,4 +272,17 @@ public interface EndososAutoManager
 			,Date   fechainicio
 			)throws Exception;
 	
+	public void guardarEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			,List<Map<String,String>> incisos
+			)throws Exception;
 }
