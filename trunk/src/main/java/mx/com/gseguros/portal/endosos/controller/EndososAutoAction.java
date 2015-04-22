@@ -206,7 +206,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo , "No se recibio el producto");
 			
 			//override del tstamp
-			smap1.put("tstamp" , String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random()));
+			smap1.put("tstamp" , Utils.generaTimestamp());
 			
 			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo);
 			
@@ -1358,7 +1358,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
 			
-			smap1.put("tstamp" , String.format("%.0f.%.0f",(double)System.currentTimeMillis(),1000d*Math.random()));
+			smap1.put("tstamp" , Utils.generaTimestamp());
 			
 			imap = endososAutoManager.endosoDevolucionPrimas(cdtipsup, cdramo);
 			

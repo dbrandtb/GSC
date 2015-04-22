@@ -431,7 +431,7 @@ function _p39_guardarCambio(record,callback,i)
         }
         valores[key]=value;
     }
-    valores['NMSUPLEM']  = Math.random()*1000000;
+    valores['NMSUPLEM']  = '999';
     valores['STATUS']    = 'V';
     valores['CDTIPSIT']  = record.get('CDGARANT');
     valores['OTVALOR01'] = record.get('DEVOLVER');
