@@ -285,4 +285,21 @@ public interface EndososAutoManager
 			,Date   feefecto
 			,List<Map<String,String>> incisos
 			)throws Exception;
+	
+	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
+	
+	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco,String cdramo,String nmpoliza)throws Exception;
+	
+	public void confirmarEndosoCancelacionPolAuto(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdtipsup
+			)throws Exception;
 }

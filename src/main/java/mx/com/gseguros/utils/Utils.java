@@ -202,4 +202,12 @@ public class Utils {
 		Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 		return (UserVO)session.get("USUARIO");
 	}
+	
+	public static void validate(String... args) throws ValidationDataException
+	{
+		for(int i=0;i<args.length;i=i+2)
+		{
+			Utils.validate(args[i],args[i+1]);
+		}
+	}
 }
