@@ -205,6 +205,20 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	}
 
 	/**
+	* Funcion para la visualizacion de la autorizacion de servicio 
+	* @return params con los valores para hacer las consultas
+	*/
+	public String altaFacturasProceso(){
+		logger.debug(" **** Dar de alta Facturas nuevas al pago del Siniestro ****");
+		try {
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+	}
+	/**
 	* Funcion que obtiene el listado de  de Autorizacion de Servicio
 	* @param String cdperson
 	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
@@ -1099,6 +1113,101 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+	
+	
+	/**
+	* metodo para el guardado del alta del tramite
+	* @param Json con todos los valores del formulario y los grid
+	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
+	*/
+	
+	public void actualizaMesaControlSiniestro (String ntramiteProceso){
+		//obtenemos el total de facturas por el tramite
+		try{
+			slist1 = siniestrosManager.obtenerFacturasTramite(ntramiteProceso);
+			double SumaTotal = 0d;
+			String nfacturaInd = null;
+			for(int i=0; i< slist1.size();i++){
+				SumaTotal += Double.parseDouble(slist1.get(i).get("PTIMPORT"));
+				nfacturaInd = slist1.get(i).get("NFACTURA");
+			}
+			logger.debug("Valor de Suma Total ---> "+SumaTotal);
+			logger.debug("Total de Facturas  ---> "+slist1.size());
+			//modificamos la mesa de control valores ot
+			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(ntramiteProceso);
+			logger.debug("Valores de TMESACONTROL --> : "+lista);
+			
+			HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
+			modMesaControl.put("pv_ntramite_i",ntramiteProceso);
+			modMesaControl.put("pv_cdunieco_i",lista.get(0).getCduniecomc());
+			modMesaControl.put("pv_cdramo_i",lista.get(0).getCdramomc());
+			modMesaControl.put("pv_estado_i",lista.get(0).getEstadomc());
+			modMesaControl.put("pv_nmpoliza_i",lista.get(0).getNmpolizamc());
+			modMesaControl.put("pv_nmsuplem_i",lista.get(0).getNmsuplemmc());
+			modMesaControl.put("pv_nmsolici_i",lista.get(0).getNmsolicimc());
+			modMesaControl.put("pv_cdtipsit_i",lista.get(0).getCdtipsitmc());
+			modMesaControl.put("pv_cdsucadm_i",lista.get(0).getCdsucadmmc());
+			modMesaControl.put("pv_cdsucdoc_i",lista.get(0).getCdsucdocmc());
+			modMesaControl.put("pv_cdtiptra_i",lista.get(0).getCdtiptramc());
+			modMesaControl.put("pv_ferecepc_i",renderFechas.parse(lista.get(0).getFerecepcmc()));
+			modMesaControl.put("pv_nombre_i",lista.get(0).getNombremc());
+			modMesaControl.put("pv_festatus_i",renderFechas.parse(lista.get(0).getFecstatumc()));
+			modMesaControl.put("pv_status_i",lista.get(0).getStatusmc());
+			modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
+			modMesaControl.put("pv_otvalor02_i",lista.get(0).getOtvalor02mc());
+			modMesaControl.put("pv_otvalor03_i",SumaTotal+"");
+			modMesaControl.put("pv_otvalor04_i",lista.get(0).getOtvalor04mc());
+			modMesaControl.put("pv_otvalor05_i",lista.get(0).getOtvalor05mc());
+			modMesaControl.put("pv_otvalor06_i",lista.get(0).getOtvalor06mc());
+			modMesaControl.put("pv_otvalor07_i",lista.get(0).getOtvalor07mc());
+			modMesaControl.put("pv_otvalor08_i",(slist1.size()>1)?null:nfacturaInd);
+			modMesaControl.put("pv_otvalor09_i",lista.get(0).getOtvalor09mc());
+			modMesaControl.put("pv_otvalor10_i",lista.get(0).getOtvalor10mc());
+			modMesaControl.put("pv_otvalor11_i",lista.get(0).getOtvalor11mc());
+			modMesaControl.put("pv_otvalor15_i",lista.get(0).getOtvalor15mc());
+			modMesaControl.put("pv_otvalor20_i",lista.get(0).getOtvalor20mc());
+			siniestrosManager.actualizaValorMC(modMesaControl);
+		}catch( Exception e){
+			logger.error("Error al modificar la Mesa de control",e);
+		}
+	}
+	public String guardaFacturasTramite(){
+		logger.debug(" **** Entrando al guardado de alta de tramite ****");
+		logger.debug(params);
+		logger.debug(datosTablas);
+		try{
+			this.session=ActionContext.getContext().getSession();
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			//1.- tenemos que actualizar la informacion te tmesacontrol
+			for(int i=0;i<datosTablas.size();i++) {
+				siniestrosManager.guardaListaFacMesaControl(
+					params.get("nmtramite"),
+					datosTablas.get(i).get("nfactura"),
+					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
+					datosTablas.get(i).get("cdtipser"),
+					datosTablas.get(i).get("cdpresta"),
+					datosTablas.get(i).get("ptimport"),
+					null,
+					null,
+					null,
+					null,
+					datosTablas.get(i).get("cdmoneda"),
+					datosTablas.get(i).get("tasacamb"),
+					datosTablas.get(i).get("ptimporta"),
+					null,
+					null,
+					null,
+					null
+				);
+				actualizaMesaControlSiniestro(params.get("nmtramite"));
+			}
+		}catch( Exception e){
+			logger.error("Error en el guardado de alta de tramite ",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	/**
 	* metodo para el guardado del tramite (TFACMESCTRL Y TWORKSIN) 
 	* @param Json con todos los valores del formulario y los grid
@@ -1408,9 +1517,23 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		);
 		logger.debug(params);
 		try{
-			siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
-			siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
-			success=true;
+			String tipoPagoTramite = params.get("tipoPago").toString();
+			String procedencia = params.get("procedencia").toString();
+			if(procedencia.equalsIgnoreCase("ALTA_TRAMITE")){
+				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+				siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+				success=true;
+			}else{
+				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+				if(TipoPago.DIRECTO.getCodigo().equals(tipoPagoTramite)){
+					siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+					actualizaMesaControlSiniestro(params.get("ntramite"));
+					success=true;
+				}else{
+					actualizaMesaControlSiniestro(params.get("ntramite"));
+					success=true;
+				}
+			}
 		}
 		catch(Exception ex){
 			success = false;
@@ -4154,6 +4277,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     //... Fin de siniestros
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	public String afiliadosAfectadosConsulta(){
 		logger.info(""
 			+ "\n################################"

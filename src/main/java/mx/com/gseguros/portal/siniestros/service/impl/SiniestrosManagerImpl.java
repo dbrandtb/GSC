@@ -1055,29 +1055,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
 		return siniestrosDAO.actualizaMsiniestroReferenciado(params);
 	}
-	
-	
-	@Override
-	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
-			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception {
-		
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i",   cdramo);
-		params.put("pv_estado_i",   estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsituac_i", nmsituac);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		params.put("pv_status_i",   status);
-		params.put("pv_aaapertu_i", aaapertu);
-		params.put("pv_nmsinies_i", nmsinies);
-		params.put("pv_ntramite_i", ntramite);
-		
-		log.debug("obtieneHistorialReclamaciones params: "+params);
-		return siniestrosDAO.obtieneHistorialReclamaciones(params);
-	}
-	
-	
+
 	@Override
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
 			String cdunieco,

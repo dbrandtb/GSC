@@ -2516,43 +2516,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(Map<String, Object> params) throws Exception {
-		Map<String, Object> result = ejecutaSP(new ObtieneHistorialReclamaciones(this.getDataSource()), params);
-		return (List<HistorialSiniestroVO>)result.get("pv_registro_o");
-	}
-	
-	protected class ObtieneHistorialReclamaciones extends StoredProcedure {
-		protected ObtieneHistorialReclamaciones(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "");
-			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_status_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneHistorialReclamacionesMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	protected class ObtieneHistorialReclamacionesMapper  implements RowMapper<HistorialSiniestroVO> {
-        public HistorialSiniestroVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	HistorialSiniestroVO historialReclamacion = new HistorialSiniestroVO();
-        	// TODO: Terminar cuando este listo el SP
-            return historialReclamacion;
-        }
-    }
-	
-	
-	
-	@Override
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
 			String cdunieco,
 			String cdramo,

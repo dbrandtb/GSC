@@ -71,7 +71,10 @@
 			var _URL_REVISIONDOCSINIESTRO   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos" />';
             var _URL_AJUSTESMEDICOS						= '<s:url namespace="/siniestros" 		action="includes/ajustesMedicos" />';
             var _URL_ELIMINAR_ASEGURADO					= '<s:url namespace="/siniestros"		action="eliminarAsegurado" />';
-			
+			var _VER_ALTA_FACTURAS 						= '<s:url namespace="/siniestros"  		action="includes/altaFacturas" />';
+			var _URL_GUARDA_FACTURAS_TRAMITE  			= '<s:url namespace="/siniestros"       action="guardaFacturasTramite" />';
+			var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
+            
 			
 			
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
@@ -163,7 +166,7 @@
 				{
 					xtype			: 'actioncolumn'
 					,menuDisabled	: true
-					,width			: 70
+					,width			: 100
 					,align			: 'center'
 					,items			:
 					[
@@ -171,6 +174,11 @@
 							icon		: '${ctx}/resources/fam3icons/icons/pencil.png'
 							,tooltip	: 'Factura'
 							,handler	: _11_editar
+						},
+						{
+							icon		: '${ctx}/resources/fam3icons/icons/delete.png'
+							,tooltip	: 'Eliminar Factura'
+							,handler	: _11_eliminarFactura
 						}
 					]
 				},{
@@ -1057,9 +1065,10 @@
 										,handler : _11_pedirMsiniestMaestro
 									},
 									{
-										icon		: '${ctx}/resources/fam3icons/icons/user_delete.png'
+										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
 										,handler : eliminarAsegurado
+										
 									}
 								]
 							},
@@ -1311,9 +1320,10 @@
 						],
 						tbar:[
 								{
-									text	: 'Agregar Asegurado'
-									,icon		: '${ctx}/resources/fam3icons/icons/user_add.png'
+									text	 : 'Agregar Asegurado'
+									,icon	 : '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
+									,hidden  : _tipoPago != _TIPO_PAGO_DIRECTO
 								},
 								{
 									text	: 'Generar Calculo'
@@ -2071,7 +2081,7 @@
 					,closable	: true
 					,closeAction: 'hide'
 					,width		 : 900
-					,border	: 0
+					//,border	: 0
 					/*,layout	 :
 					{
 						type	 : 'table'
@@ -2846,6 +2856,50 @@
 		}
 	}
 
+	function _11_eliminarFactura(grid,rowindex){
+		_11_recordActivo = grid.getStore().getAt(rowindex);
+ 		centrarVentanaInterna(Ext.Msg.show({
+	        title: 'Aviso',
+	        msg: '&iquest;Esta seguro que desea eliminar esta factura?',
+	        buttons: Ext.Msg.YESNO,
+	        icon: Ext.Msg.QUESTION,
+	        fn: function(buttonId, text, opt){
+	        	if(buttonId == 'yes'){
+	        		Ext.Ajax.request({
+						url     : _URL_ELIMINAR_FACT_ASEG
+						,params:{
+							'params.ntramite': _11_recordActivo.get('ntramite'),
+		                    'params.nfactura': _11_recordActivo.get('factura'),
+		                    'params.tipoPago': _tipoPago,
+		                    'params.procedencia' : 'SINIESTROS',
+		                    'params.valorAccion' : 1
+						}
+						,success : function (response){
+							Ext.create('Ext.form.Panel').submit(
+							{
+								standardSubmit :true
+								,params		:
+								{
+									'params.ntramite' : _11_params.NTRAMITE
+								}
+							});
+						},
+						failure : function (){
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+	        	}
+	        	
+	        }
+	    }));
+	}
+	
 	function _11_editar(grid,rowindex)
 	{
 		_11_recordActivo = grid.getStore().getAt(rowindex);
@@ -3663,7 +3717,7 @@
 	}
 
 	function _p21_agregarAsegurado(){
-		ventanaAgregarAsegurado.show();
+		centrarVentanaInterna(ventanaAgregarAsegurado.show());
 	}
 	
 	function obtenerTotalPagos(ntramite, nfactura)
@@ -4348,6 +4402,47 @@
 		});
 	}
 	
+	function _p11_agregarFacturas(){
+		debug("Valor de _11_params  --> : : : : ",_11_params);
+		windowLoader = Ext.create('Ext.window.Window',{
+			title         : 'Alta de Facturas'
+			,buttonAlign  : 'center'
+			,width        : 750
+			,height       : 400
+			,autoScroll   : true
+			,loader       : {
+				url       : _VER_ALTA_FACTURAS
+				,scripts  : true
+				,autoLoad : true
+				,params   : {
+					'params.ntramite'   :  _11_params.NTRAMITE,
+					'params.cdTipoPago' : _11_params.OTVALOR02,
+					'params.cdTipoAtencion'  : _11_params.OTVALOR07,
+					'params.cdpresta'  : _11_params.OTVALOR11,
+					'params.cdramo'  : _11_params.CDRAMO
+				}
+			},
+			listeners:{
+				 close:function(){
+					 if(true){
+						Ext.create('Ext.form.Panel').submit(
+						{
+							standardSubmit :true
+							,params		:
+							{
+								'params.ntramite' : _11_params.NTRAMITE
+							}
+						});
+						 panelInicialPral.getForm().reset();
+						storeAseguradoFactura.removeAll();
+						storeConceptos.removeAll();
+					 }
+				 }
+			}
+		}).show();
+		centrarVentanaInterna(windowLoader);
+	}
+	
 	function _11_revDocumentosWindow(){
 		windowLoader = Ext.create('Ext.window.Window',{
 			modal       : true,
@@ -4598,56 +4693,65 @@
 	}
 	
 	function eliminarAsegurado(grid,rowIndex){
-		var record = grid.getStore().getAt(rowIndex);
-		debug('record.eliminarAsegurado:',record.raw);
-		centrarVentanaInterna(Ext.Msg.show({
-			title: 'Aviso',
-			msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
-			buttons: Ext.Msg.YESNO,
-			icon: Ext.Msg.QUESTION,
-			fn: function(buttonId, text, opt){
-				if(buttonId == 'yes'){
-					debug("VALOR DEL RECORD");
-					debug(record);
-					Ext.Ajax.request({
-						url: _URL_ELIMINAR_ASEGURADO,
-						params: {
-							'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
-							'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
-							'params.cdunieco'   : record.get('CDUNIECO'),
-							'params.cdramo'     : record.get('CDRAMO'),
-							'params.estado'     : record.get('ESTADO'),
-							'params.nmpoliza'   : record.get('NMPOLIZA'),
-							'params.nmsuplem'   : record.get('NMSUPLEM'),
-							'params.nmsituac'   : record.get('NMSITUAC'),
-							'params.cdtipsit'   : record.get('CDTIPSIT'),
-							'params.cdperson'   : record.get('CDPERSON'),
-							'params.feocurre'   : record.get('FEOCURRE'),
-							'params.nmsinies'   : record.get('NMSINIES')
-						},
-						success: function(response) {
-							var res = Ext.decode(response.responseText);
-							if(res.success){
-								mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
-									banderaAsegurado = 0;
-									storeAseguradoFactura.load({
-										params: {
-											'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
-											'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
-										}
+		if(_tipoPago == _TIPO_PAGO_DIRECTO){
+			var record = grid.getStore().getAt(rowIndex);
+			debug('record.eliminarAsegurado:',record.raw);
+			centrarVentanaInterna(Ext.Msg.show({
+				title: 'Aviso',
+				msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.Msg.QUESTION,
+				fn: function(buttonId, text, opt){
+					if(buttonId == 'yes'){
+						debug("VALOR DEL RECORD");
+						debug(record);
+						Ext.Ajax.request({
+							url: _URL_ELIMINAR_ASEGURADO,
+							params: {
+								'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+								'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
+								'params.cdunieco'   : record.get('CDUNIECO'),
+								'params.cdramo'     : record.get('CDRAMO'),
+								'params.estado'     : record.get('ESTADO'),
+								'params.nmpoliza'   : record.get('NMPOLIZA'),
+								'params.nmsuplem'   : record.get('NMSUPLEM'),
+								'params.nmsituac'   : record.get('NMSITUAC'),
+								'params.cdtipsit'   : record.get('CDTIPSIT'),
+								'params.cdperson'   : record.get('CDPERSON'),
+								'params.feocurre'   : record.get('FEOCURRE'),
+								'params.nmsinies'   : record.get('NMSINIES')
+							},
+							success: function(response) {
+								var res = Ext.decode(response.responseText);
+								if(res.success){
+									mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
+										banderaAsegurado = 0;
+										storeAseguradoFactura.load({
+											params: {
+												'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+												'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+											}
+										});
 									});
-								});
-							}else {
+								}else {
+									centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+								}
+							},
+							failure: function(){
 								centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 							}
-						},
-						failure: function(){
-							centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
-						}
-					});
+						});
+					}
 				}
-			}
-		}));
+			}));
+		}else{
+			centrarVentanaInterna(Ext.Msg.show({ 
+				title: 'Aviso',
+				msg: 'El asegurado no puede ser eliminado.',
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.WARNING
+			}));
+		}
 	}
 	
 	//FIN DE FUNCIONES

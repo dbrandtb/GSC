@@ -284,9 +284,6 @@ public interface SiniestrosDAO {
 	
 	public Map<String, Object> actualizaMsiniestroReferenciado(Map<String, Object> params) throws Exception;
 	
-	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(Map<String, Object> params) throws Exception;
-	
-	
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
 			String cdunieco,
 			String cdramo,

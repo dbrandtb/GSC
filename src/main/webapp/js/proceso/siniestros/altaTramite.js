@@ -850,9 +850,11 @@ Ext.onReady(function() {
 			Ext.Ajax.request({
 				url     : _URL_ELIMINAR_FACT_ASEG
 				,params:{
-					'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
-                    'params.nfactura': record.data.noFactura,
-                    'params.valorAccion': 1
+					'params.ntramite'     : panelInicialPral.down('[name=idNumTramite]').getValue(),
+					'params.nfactura'     : record.data.noFactura,
+					'params.tipoPago'     : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+					'params.procedencia'  : 'ALTA_TRAMITE',
+					'params.valorAccion'  : 1
 				}
 				,success : function (response){
 					var json = Ext.decode(response.responseText);

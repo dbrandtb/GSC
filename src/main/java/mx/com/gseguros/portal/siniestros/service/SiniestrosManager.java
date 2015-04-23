@@ -375,9 +375,6 @@ public interface SiniestrosManager {
 	public Map<String, Object> actualizaMsiniestroReferenciado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
 			String nmsituac, String aaapertu, String status, String nmsinies, String nmsinref) throws Exception;
 	
-	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
-			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception;
-	
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
 			String cdunieco,
 			String cdramo,
