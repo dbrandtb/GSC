@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
@@ -26,6 +27,7 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.ThreadCounter;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -77,6 +79,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private AutosSIGSDAO        autosDAOSIGS;
+	
+	@Autowired
+	private CancelacionDAO      cancelacionDAO;
 	
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
@@ -3444,6 +3449,201 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		logger.info(Utilerias.join(
 				 "\n@@@@@@ guardarEndosoDevolucionPrimas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Construyendo componentes de pantalla";
+			logger.info(paso);
+			ThreadCounter tc = new ThreadCounter(ServletActionContext.getServletContext().getServletContextName(),pantallasDAO);
+			tc.agregarConstructor(new ConstructorComponentesAsync(
+					"panelLectura" //llaveGenerador
+					,null          //cdtiptra
+					,null          //cdunieco
+					,cdramo
+					,null          //cdtipsit
+					,null          //estado
+					,cdsisrol
+					,"ENDOSO_CANCELACION_POLIZA"
+					,"PANEL_LECTURA"
+					,null          //orden
+					,true          //parcial
+					,false         //fields
+					,true          //items
+					,false         //columns
+					,false         //editor
+					,false         //buttons
+					)
+			);
+			
+			tc.agregarConstructor(new ConstructorComponentesAsync(
+					"formEndoso" //llaveGenerador
+					,null        //cdtiptra
+					,null        //cdunieco
+					,cdramo
+					,null        //cdtipsit
+					,null        //estado
+					,cdsisrol
+					,"ENDOSO_CANCELACION_POLIZA"
+					,"FORM_ENDOSO"
+					,null        //orden
+					,true        //parcial
+					,false       //fields
+					,true        //items
+					,false       //columns
+					,false       //editor
+					,false       //buttons
+					)
+			);
+			
+			Map<String,GeneradorCampos>mapaGc = tc.run();
+			
+			items.put("panelLecturaItems" , mapaGc.get("panelLectura").getItems());
+			items.put("formEndosoItems"   , mapaGc.get("formEndoso").getItems());
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ endosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
+	
+	@Override
+	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco, String cdramo, String nmpoliza) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ marcarPolizaCancelarPorEndoso @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		Map<String,String> poliza = null;
+		String             paso   = null;
+		try
+		{
+			paso = "Seleccionando poliza";
+			logger.info(paso);
+			cancelacionDAO.seleccionaPolizaUnica(
+					cdunieco
+					,cdramo
+					,nmpoliza
+					,null       //agencia
+					,new Date() //fechapro
+					);
+			
+			paso = "Recuperando poliza";
+			logger.info(paso);
+			List<Map<String,String>> polizas = cancelacionDAO.obtenerPolizasCandidatas(
+					null //asegurado
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,null //nmsituac
+					);
+			
+			Utils.validate(polizas , "No se puede cancelar la poliza");
+			if(polizas.size()>1)
+			{
+				throw new ApplicationException("Poliza repetida en los registros");
+			}
+			
+			poliza = polizas.get(0);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ poliza=",poliza
+				,"\n@@@@@@ marcarPolizaCancelarPorEndoso @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return poliza;
+	}
+	
+	@Override
+	public void confirmarEndosoCancelacionPolAuto(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdtipsup
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdrazon="  , cdrazon
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ fevencim=" , fevencim
+				,"\n@@@@@@ fecancel=" , fecancel
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Cancelando poliza";
+			logger.info(paso);
+			
+			String nmsuplemCancelacion = cancelacionDAO.cancelaPoliza(
+					cdunieco
+					,cdramo
+					,cdunieco //cduniage
+					,estado
+					,nmpoliza
+					,null     //nmsituac
+					,cdrazon
+					,null     //comenta
+					,feefecto
+					,fevencim
+					,fecancel
+					,cdusuari
+					,cdtipsup
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 }

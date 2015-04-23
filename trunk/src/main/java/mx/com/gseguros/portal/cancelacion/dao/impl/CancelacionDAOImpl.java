@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cancelacion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -23,6 +26,8 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class CancelacionDAOImpl extends AbstractManagerDAO implements CancelacionDAO
 {
+	
+	private static Logger logger = Logger.getLogger(CancelacionDAOImpl.class);
 
 	////////////////////////////
 	////// buscar polizas //////
@@ -109,11 +114,38 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// obtener polizas candidatas //////
 	/*////////////////////////////////////*/
 	@Override
+	@Deprecated
 	public List<Map<String,String>> obtenerPolizasCandidatas(Map<String,String> params) throws Exception
 	{
 		
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerPolizasCandidatas(this.getDataSource()), params);
 		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerPolizasCandidatas(
+			String asegurado
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_asegurado_i" , asegurado);
+		params.put("pv_dsuniage_i"  , cdunieco);
+		params.put("pv_dsramo_i"    , cdramo);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsituac_i"  , nmsituac);
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params);
+		Map<String,Object> procResult  = ejecutaSP(new ObtenerPolizasCandidatas(this.getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String, String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params, lista);
+		return lista;
 	}
 	
 	protected class ObtenerPolizasCandidatas extends StoredProcedure
@@ -172,10 +204,47 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// cancelar poliza //////
 	/*/////////////////////////*/
 	@Override
+	@Deprecated
 	public String cancelaPoliza (Map<String,String> params) throws Exception
 	{
 		Map<String,Object> resultadoMap = ejecutaSP(new CancelaPoliza(getDataSource()),Utilerias.ponFechas(params));
 		return (String) resultadoMap.get("pv_nmsuplem_o");
+	}
+	
+	@Override
+	public String cancelaPoliza(
+			String cdunieco
+			,String cdramo
+			,String cduniage
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrazon
+			,String comenta
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdusuari
+			,String cdtipsup
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_cduniage_i" , cduniage);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_cdrazon_i"  , cdrazon);
+		params.put("pv_comenta_i"  , comenta);
+		params.put("pv_feefecto_i" , feefecto);
+		params.put("pv_fevencim_i" , fevencim);
+		params.put("pv_fecancel_i" , fecancel);
+		params.put("pv_usuario_i"  , cdusuari);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
+		Map<String,Object> procResult = ejecutaSP(new CancelaPoliza(getDataSource()),params);
+		return (String) procResult.get("pv_nmsuplem_o");
 	}
 	
 	protected class CancelaPoliza extends StoredProcedure
@@ -212,8 +281,28 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// grabar poliza unica en tagrucan //////
 	/*/////////////////////////////////////////*/
 	@Override
+	@Deprecated
 	public void seleccionaPolizaUnica(Map<String,Object> params) throws Exception
 	{
+		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
+	}
+	
+	@Override
+	public void seleccionaPolizaUnica(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String agencia
+			,Date   fechapro
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_agencia_i"  , agencia);
+		params.put("pv_fechapro_i" , fechapro);
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_selecciona_poliza_unica", params);
 		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
 	}
 	

@@ -1,7 +1,7 @@
 package mx.com.gseguros.portal.cancelacion.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +11,18 @@ public interface CancelacionDAO
 {
     public List<Map<String,String>> buscarPolizas             (Map<String,String> params) throws Exception;
     public Map<String,String>       obtenerDetalleCancelacion (Map<String,String> params) throws Exception;
+    
+	@Deprecated
     public List<Map<String,String>> obtenerPolizasCandidatas  (Map<String,String> params) throws Exception;
+	
     public void                     seleccionaPolizas         (Map<String,Object> params) throws Exception;
+    
+    @Deprecated
     public String                   cancelaPoliza             (Map<String,String> params) throws Exception;
+
+	@Deprecated
     public void                     seleccionaPolizaUnica     (Map<String,Object> params) throws Exception;
+	
     public void                     actualizarTagrucan        (Map<String,String> params) throws Exception;
     public void                     cancelacionMasiva         (Map<String,String> params) throws Exception;
     /**
@@ -23,4 +31,36 @@ public interface CancelacionDAO
 	 */
 	public List<Map<String,String>> reimprimeDocumentos       (Map<String,String> params) throws Exception;
 	public ArrayList<PolizaVO> obtienePolizasCancelacionMasiva(Map<String,String> params) throws Exception;
+	
+	public void seleccionaPolizaUnica(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String agencia
+			,Date   fechapro
+			)throws Exception;
+	
+	public List<Map<String,String>> obtenerPolizasCandidatas(
+			String asegurado
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception;
+	
+	public String cancelaPoliza(
+			String cdunieco
+			,String cdramo
+			,String cduniage
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrazon
+			,String comenta
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdusuari
+			,String cdtipsup
+			)throws Exception;
 }
