@@ -69,10 +69,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	/* ALTA DE TRAMITE */
+	//ALTA DE TRAMITE
+	/**
+	* Funcion que visualiza la informacion del historial de reclamaciones
+	* @param params
+	* @return Historial de reclamaciones de siniestros
+	*/
 	public String cargaHistorialSiniestros(){
 		try {
-				loadList = siniestrosManager.cargaHistorialSiniestros(params); 
+			loadList = siniestrosManager.cargaHistorialSiniestros(params); 
 		}catch( Exception e){
 			logger.error("Error en loadListaFacturasTramite",e);
 			success =  false;
@@ -82,16 +87,20 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-//FIN DE ALTA DE TRAMITE 
-/////SINIESTROS
+	//SINIESTROS
+	/**
+	* Funcion para asociar al Siniestro Maestro para GMMI
+	* @param cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,aaapertu, status, nmsinies, nmsiniesRef
+	* @return exito si se asocia el siniestro
+	*/
 	public String asociaMsiniestroReferenciado() throws Exception {
 		try {
 			siniestrosManager.actualizaMsiniestroReferenciado(
-					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"),
-					params.get("nmsuplem"),params.get("nmsituac"),
-					params.get("aaapertu"),params.get("status"),
-					params.get("nmsinies"), params.get("nmsiniesRef"));
+				params.get("cdunieco"), params.get("cdramo"),
+				params.get("estado"), params.get("nmpoliza"),
+				params.get("nmsuplem"),params.get("nmsituac"),
+				params.get("aaapertu"),params.get("status"),
+				params.get("nmsinies"), params.get("nmsiniesRef"));
 			success = true;
 		} catch(Exception e) {
 			logger.error("Error en actualizaDatosGeneralesSiniestro", e);
@@ -99,35 +108,40 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/**
+	* Funcion para asociar al Siniestro Maestro para GMMI
+	* @param cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,aaapertu, status, nmsinies, nmsiniesRef
+	* @return exito si se asocia el siniestro
+	*/
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
 		try {
-				logger.debug("VAlores de entrada : "+params);
-				Date dFeocurre = renderFechas.parse(params.get("feocurre"));
-				String valor = null;
-				if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
-					valor = params.get("nmautser");
-				}
-				siniestrosManager.actualizaDatosGeneralesSiniestro(
-					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"),
-					params.get("nmsuplem"),params.get("aaapertu"),
-					params.get("nmsinies"), dFeocurre,
-					params.get("nmreclamo"), params.get("cdicd"),
-					params.get("cdicd2"), params.get("cdcausa"),
-					params.get("cdgarant"), params.get("cdconval"),
-					valor);
+			logger.debug("VAlores de entrada : "+params);
+			Date dFeocurre = renderFechas.parse(params.get("feocurre"));
+			String valor = null;
+			if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
+				valor = params.get("nmautser");
+			}
+			siniestrosManager.actualizaDatosGeneralesSiniestro(
+				params.get("cdunieco"), params.get("cdramo"),
+				params.get("estado"), params.get("nmpoliza"),
+				params.get("nmsuplem"),params.get("aaapertu"),
+				params.get("nmsinies"), dFeocurre,
+				params.get("nmreclamo"), params.get("cdicd"),
+				params.get("cdicd2"), params.get("cdcausa"),
+				params.get("cdgarant"), params.get("cdconval"),
+				valor);
 			
-				String formatoFeEgreso;
-				if(params.get("feegreso").length() > 0){
-					formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);
-				}else{
-					formatoFeEgreso = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
-				}
-				String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
-				Date dFeFactura = renderFechas.parse(formatoFechaFactura);
-				Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
-				
-				siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null);
+			String formatoFeEgreso;
+			if(params.get("feegreso").length() > 0){
+				formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);
+			}else{
+				formatoFeEgreso = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
+			}
+			String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
+			Date dFeFactura = renderFechas.parse(formatoFechaFactura);
+			Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
+			
+			siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null);
 			success = true;
 		}catch(Exception e){
 			logger.error("Error en actualizaDatosGeneralesSiniestro", e);
@@ -135,6 +149,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/**
+	* Funcion para guardar la informacion de la factura
+	* @param params y parametros
+	* @return guardamos la informacion en TVALOSIN, MAUTSINI
+	*/
 	public String guardaFacturaTramite() throws ApplicationException{
 		logger.debug(""
 		+ "\n######################################"
@@ -155,8 +174,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),feegreso,params.get("diasdedu"),null);
 			
 			List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
-			logger.debug("#####VALOR DE LOS ASEGURADOS######");
-			logger.debug(asegurados.size());
 			
 			for(int i =0; i < asegurados.size();i++){
 				String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
@@ -262,7 +279,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String entradaRevisionAdmin(){
-		
 		try {
 			logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
 			
@@ -406,205 +422,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-
-	
-	public String actualizaFacturaTramite(){
-		logger.debug(""
-		+ "\n######################################"
-		+ "\n######################################"
-		+ "\n###### 	ACTUALIZA FACT      #######"
-		+ "\n######                         #######"
-		);
-		logger.debug("parametros de entrada modificacion : "+ params);
-		String cdunieco  = params.get("cdunieco");
-		String cdramo    = params.get("cdramo");
-		String estado    = params.get("estado");
-		String nmpoliza  = params.get("nmpoliza");
-		String nmsituac  = params.get("nmsituac");
-		String nmsuplem  = params.get("nmsuplem");
-		String status    = params.get("status");
-		String aaapertu  = params.get("aaapertu");
-		String nmsinies  = params.get("nmsinies");
-		String nfactura  = params.get("nfactura");
-		
-		String autrecla = params.get("autrecla");
-		String commenar = params.get("commenar");
-		String autmedic = params.get("autmedic");
-		String commenme = params.get("commenme");
-		
-		UserVO usuario  = (UserVO)session.get("USUARIO");
-		String cdrol    = usuario.getRolActivo().getClave();
-		
-		logger.debug("Actuliza Factura, Rol Sistema: "+cdrol);
-		try {
-			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"), Constantes.UPDATE_MODE,params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"));
-			
-			
-				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
-	   					null,null,null,null,null,
-	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.UPDATE_MODE);
-			
-				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
-	   					null,null,null,null,null,
-	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.UPDATE_MODE);
-			
-				
-				Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
-				paramsTvalosin.put("pv_cdunieco"  , params.get("cdunieco"));
-				paramsTvalosin.put("pv_cdramo"    , params.get("cdramo"));
-				paramsTvalosin.put("pv_aaapertu"    , params.get("aaapertu"));
-				paramsTvalosin.put("pv_status"    , params.get("status"));
-				paramsTvalosin.put("pv_nmsinies"    , params.get("nmsinies"));
-				paramsTvalosin.put("pv_cdtipsit"    , params.get("cdtipsit"));
-				paramsTvalosin.put("pv_nmsuplem"    , params.get("nmsuplem"));
-				paramsTvalosin.put("pv_cdusuari"    , null);
-				paramsTvalosin.put("pv_feregist"    , null);
-				paramsTvalosin.put("pv_otvalor01"    , parametros.get("pv_otvalor01"));
-				paramsTvalosin.put("pv_otvalor02"    , parametros.get("pv_otvalor02"));
-				paramsTvalosin.put("pv_otvalor03"    , parametros.get("pv_otvalor03"));
-				paramsTvalosin.put("pv_accion_i","I");
-		        kernelManager.PMovTvalosin(paramsTvalosin);
-		        
-			
-			boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
-			String  cdmotivo    = params.get("cdmotivo");
-			String  rechazoCome = params.get("rechazocomment");
-			
-			if(cancela){
-				String ntramite = params.get("ntramite");
-				Map<String,String> tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
-				String tipoPago = tramiteCompleto.get("OTVALOR02");
-				Boolean rolMedico = null;
-				if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
-						||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
-						||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
-						||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
-						||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
-						){
-					rolMedico = Boolean.TRUE;
-				}
-				else if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol())
-						||cdrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
-						){
-					rolMedico = Boolean.FALSE;
-				}
-				
-				if(rolMedico==null){
-					throw new Exception("El usuario actual no puede cancelar");
-				}
-				
-				MesaControlAction mca = new MesaControlAction();
-				mca.setKernelManager(kernelManager);
-				mca.setSession(session);
-				Map<String,String>smap1=new HashMap<String,String>();
-				smap1.put("ntramite" , ntramite);
-				smap1.put("status"   , EstatusTramite.RECHAZADO.getCodigo());
-				smap1.put("cdmotivo" , cdmotivo);
-				smap1.put("comments" , rechazoCome);
-				mca.setSmap1(smap1);
-				mca.actualizarStatusTramite();
-				if(!mca.isSuccess()){
-					throw new Exception("Error al cancelar el trámite");
-				}
-				
-				String nombreReporte = null;
-				String nombreArchivo = null;
-				if(rolMedico){
-					nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
-					nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
-				}
-				else//cancelacion por area de reclamaciones
-				{
-					boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
-					if(esReembolso){
-						nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
-						nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
-					}
-					else
-					{
-						nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
-						nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
-					}
-				}
-				
-				File carpeta=new File(getText("ruta.documentos.poliza") + "/" + ntramite);
-				if(!carpeta.exists()){
-					logger.debug("no existe la carpeta::: "+ntramite);
-					carpeta.mkdir();
-					if(carpeta.exists()){
-						logger.debug("carpeta creada");
-					}
-					else{
-						logger.debug("carpeta NO creada");
-					}
-				}
-				else{
-					logger.debug("existe la carpeta   ::: "+ntramite);
-				}
-				
-				String urlContrareciboSiniestro = ""
-						+ getText("ruta.servidor.reports")
-						+ "?p_usuario="  + usuario.getUser()
-						+ "&P_NTRAMITE=" + ntramite
-						+ "&userid="     + getText("pass.servidor.reports")
-						+ "&report="     + nombreReporte
-						+ "&destype=cache"
-						+ "&desformat=PDF"
-						+ "&ACCESSIBLE=YES"
-						+ "&paramform=no";
-				String pathArchivo=""
-						+ getText("ruta.documentos.poliza")
-						+ "/" + ntramite
-						+ "/" + nombreArchivo;
-				
-				HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
-				
-				Map<String,Object>paramsDocupol = new HashMap<String,Object>();
-				paramsDocupol.put("pv_cdunieco_i"  , cdunieco);
-				paramsDocupol.put("pv_cdramo_i"    , cdramo);
-				paramsDocupol.put("pv_estado_i"    , estado);
-				paramsDocupol.put("pv_nmpoliza_i"  , nmpoliza);
-				paramsDocupol.put("pv_nmsuplem_i"  , nmsuplem);
-				paramsDocupol.put("pv_feinici_i"   , new Date());
-				paramsDocupol.put("pv_cddocume_i"  , nombreArchivo);
-				paramsDocupol.put("pv_dsdocume_i"  , "Carta rechazo");
-				paramsDocupol.put("pv_ntramite_i"  , ntramite);
-				paramsDocupol.put("pv_nmsolici_i"  , null);
-				paramsDocupol.put("pv_tipmov_i"    , tipoPago);
-				paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
-				paramsDocupol.put("pv_codidocu_i"  , null);
-				paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCdtiptra());
-				kernelManager.guardarArchivo(paramsDocupol);
-			}
-		}catch( Exception e){
-			logger.error("Error en actualizaFacturaTramite",e);
-			success =  false;
-			return SUCCESS;
-		}
-		
-		logger.debug(""
-		+ "\n######                           ######"
-		+ "\n###### 	ACTUALIZA FACTURA	  ######"
-		+ "\n#######################################"
-		+ "\n#######################################"
-		);
-		success = true;
-		return SUCCESS;
-	}
-
-	public String borraFacturaTramite(){
-		
-		try {
-			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), null, null, null, null, null, null, null, null, Constantes.DELETE_MODE,null,null,null,null);
-		}catch( Exception e){
-			logger.error("Error en borraFacturaTramite",e);
-			success =  false;
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
 	public String obtieneDatosGeneralesSiniestro() throws Exception {
 		try {
 			siniestro = siniestrosManager.obtieneDatosGeneralesSiniestro(
@@ -620,23 +437,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String obtieneHistorialReclamaciones() throws Exception {
-		try {
-			// Dummy data:
-			historialSiniestro = siniestrosManager.obtieneHistorialReclamaciones(
-					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"),
-					params.get("nmsituac"), params.get("nmsuplem"),
-					params.get("status"), params.get("aaapertu"),
-					params.get("nmsinies"), params.get("ntramite"));
-			
-			success = true;
-		} catch(Exception e) {
-	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
-	   	}
-		return SUCCESS;
-	}
-
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
 	}

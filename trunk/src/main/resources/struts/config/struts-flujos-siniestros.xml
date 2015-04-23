@@ -12,6 +12,10 @@
 		<action name="includes/verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
 			<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
 		</action>
+		
+		<action name="includes/altaFacturas" class="siniestrosAction" method="altaFacturasProceso">
+			<result>/jsp-script/proceso/siniestros/altaFacturas.jsp</result>
+		</action>
 
 		<action name="consultaListaAutorizacion" class="siniestrosAction" method="consultaListaAutorizacion">
 			<result type="json">
@@ -260,6 +264,16 @@
 	        </interceptor-ref>
 	        <result name="success" type="json"/>
 		</action>
+		
+		<action name="guardaFacturasTramite" class="siniestrosAction" method="guardaFacturasTramite">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
+		
+		
 		
 		<action name="consultaFacturaPagada" class="siniestrosAction" method="consultaFacturaPagada">
 			<result type="json">
@@ -732,7 +746,7 @@
 				</param>
 			</result>
 		</action>
-		<action name="eliminaFacturaTramite" class="detalleSiniestroAction" method="borraFacturaTramite">
+		<!--<action name="eliminaFacturaTramite" class="detalleSiniestroAction" method="borraFacturaTramite">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -740,7 +754,7 @@
 					msgResult
 				</param>
 			</result>
-		</action>
+		</action>-->
 		
 		<!-- FIN DE REVISION ADMINISTRATIVA -->
 		
@@ -780,9 +794,9 @@
 				</param>
 			</result>
 		</action>
-        <action name="obtieneHistorialReclamaciones" class="detalleSiniestroAction" method="obtieneHistorialReclamaciones">
+        <!--<action name="obtieneHistorialReclamaciones" class="detalleSiniestroAction" method="obtieneHistorialReclamaciones">
             <result type="json"></result>
-        </action>
+        </action>-->
         <action name="eliminarAsegurado" class="siniestrosAction" method="eliminarAsegurado">
             <result type="json"></result>
         </action>
