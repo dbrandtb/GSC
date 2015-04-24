@@ -1793,6 +1793,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		{
 			String cdusuari = Utils.validateSession(session).getUser();
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO"); 
+			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
 			String cdunieco = smap1.get("cdunieco");
@@ -1826,6 +1828,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,renderFechas.parse(fevencim)
 					,renderFechas.parse(fecancel)
 					,cdtipsup
+					,usuarioSesion
 					);
 			
 			success = true;

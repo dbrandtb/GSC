@@ -726,6 +726,7 @@ Ext.onReady(function()
 						listeners:{
 							load: function(str, records, successful, eOpts){
 								_p22_fieldCumuloPrimaModoAgregar().select(records[0]);
+								_p22_fieldCumuloPrima().select(records[0]);
 							}
 						}
 						}),

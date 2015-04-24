@@ -212,7 +212,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	}
 	
 	@Override
-	public String cancelaPoliza(
+	public Map<String,Object> cancelaPoliza(
 			String cdunieco
 			,String cdramo
 			,String cduniage
@@ -243,8 +243,9 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_usuario_i"  , cdusuari);
 		params.put("pv_cdtipsup_i" , cdtipsup);
 		Utilerias.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
-		Map<String,Object> procResult = ejecutaSP(new CancelaPoliza(getDataSource()),params);
-		return (String) procResult.get("pv_nmsuplem_o");
+		Map<String,Object> resParams = ejecutaSP(new CancelaPoliza(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class CancelaPoliza extends StoredProcedure
@@ -266,7 +267,9 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_usuario_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 			
-			declareParameter(new SqlOutParameter("pv_nmsuplem_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));

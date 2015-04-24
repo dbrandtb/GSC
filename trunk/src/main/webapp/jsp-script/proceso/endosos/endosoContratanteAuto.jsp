@@ -32,7 +32,7 @@ var _35_fieldFechaEndoso;
 var _35_storeContratantes;
 var _35_gridContratantes;
 
-var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoNombreCliente"       />';
+var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoContratante"       />';
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 var _p35_urlRecuperarCliente = '<s:url namespace="/" action="buscarPersonasRepetidas" />';
@@ -41,7 +41,7 @@ debug('_35_smap1:',_35_smap1);
 
 
 var _cdpersonActual;
-var _cdpersonNuevo;
+var _cdpersonNuevo = '';
 ////// variables //////
 ///////////////////////
 
@@ -193,7 +193,9 @@ Ext.onReady(function()
 					xtype: 'textfield',
 					name:  'nuevoContratante',
 					width: 550,
-					fieldLabel: 'Nombre'
+					fieldLabel: 'Nombre',
+					allowBlank: false,
+					readOnly: true
 				},
 				{
 					xtype: 'button',
@@ -461,10 +463,10 @@ function _35_confirmar()
     
     if(valido)
     {
-        valido=_35_panelEndoso.isValid();
+        valido=!Ext.isEmpty(_cdpersonNuevo);
         if(!valido)
         {
-            datosIncompletos();
+            mensajeWarning('Seleccione el nuevo Contratante.');
         }
     }
     
