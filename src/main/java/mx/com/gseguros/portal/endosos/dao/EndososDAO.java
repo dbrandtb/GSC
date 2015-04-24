@@ -464,4 +464,11 @@ public interface EndososDAO
 			,String tstamp
 			,Date   feefecto
 			)throws Exception;
+	
+	public void validaEndosoCambioVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

@@ -689,6 +689,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdsisrol,cdramo,cdtipsup, fechaProceso);
 			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			endososAutoManager.validaEndosoCambioVigencia(cdunieco, cdramo, estado, nmpoliza);
 			success   = true;
 			
 			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
