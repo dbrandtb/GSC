@@ -546,6 +546,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					}
 				} catch (Exception e1) {
 					logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
+					return null;
 				}	
 				
 				if(datosCotizacionAuto != null){
@@ -599,15 +600,19 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							
 						}else{
 							logger.error("Error en la cotizacion de Autos WS, respuesta no exitosa");
+							return null;
 						}
 						
 					} catch(WSException wse){
 						logger.error("Error en WS de Autos, xml enviado: " + wse.getPayload(), wse);
+						return null;
 					} catch (Exception e){
 						logger.error("Error en WS de Autos: " + e.getMessage(),e);
+						return null;
 					}
 				}else{
 					logger.error("Error, No se tienen datos del Auto");
+					return null;
 				}
 		
 		

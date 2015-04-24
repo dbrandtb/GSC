@@ -279,11 +279,12 @@ Ext.onReady(function()
     		debug('contratantes cargados:',json);
     		
     		nombreInicial = {
-    				rfc    : json.slist1.CDRFC,
-    				nombre : json.slist1.DSNOMBRE,
-    				snombre: json.slist1.DSNOMBRE1,
-    				appat  : json.slist1.DSAPELLIDO,
-    				apmat  : json.slist1.DSAPELLIDO1
+    				cdperson: json.slist1[0].CDPERSON,
+    				rfc     : json.slist1[0].CDRFC,
+    				nombre  : json.slist1[0].DSNOMBRE,
+    				snombre : json.slist1[0].DSNOMBRE1,
+    				appat   : json.slist1[0].DSAPELLIDO,
+    				apmat   : json.slist1[0].DSAPELLIDO1
     			};
     		
     		if(json.success==true)
@@ -361,6 +362,7 @@ function _35_confirmar()
             ,smap3:{
             	'pv_cdperson_i' : _35_storeContratantes.getAt(0).get('CDPERSON'),
             	'pv_cdrfc_i'    : _35_formContratante.down('[name=cdrfc]').getValue(),
+            	'cdperson'         : nombreInicial.cdperson,
             	'rfc'              : nombreInicial.rfc,
             	'nombre'           : nombreInicial.nombre,
             	'snombre'          : nombreInicial.snombre,
