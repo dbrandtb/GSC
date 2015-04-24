@@ -3740,4 +3740,35 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 		return items;
 	}
+	
+	@Override
+	public void validaEndosoCambioVigencia(String cdunieco, String cdramo,
+		String estado, String nmpoliza) throws Exception {
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				));
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		try
+		{
+			paso = "Iniciando valida endoso cambio vigencia";
+			logger.info(paso);
+			endososDAO.validaEndosoCambioVigencia(cdunieco, cdramo, estado, nmpoliza);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

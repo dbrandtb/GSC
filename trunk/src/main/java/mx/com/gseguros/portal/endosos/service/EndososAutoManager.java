@@ -311,4 +311,11 @@ public interface EndososAutoManager
 			,String cdramo
 			,List<Map<String,String>> incisos
 			) throws Exception;
+	
+	public void validaEndosoCambioVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
