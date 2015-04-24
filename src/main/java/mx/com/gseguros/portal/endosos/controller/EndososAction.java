@@ -8370,13 +8370,6 @@ public class EndososAction extends PrincipalCoreAction
 		
 		kernelManager.movMpoliper(paramsMpopliper);
 		
-		
-		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
-		
-		if(!esProductoSalud){
-			
-		}
-		
 		endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 		
 		//// Se confirma el endoso si cumple la validacion de fechas: 
@@ -8385,20 +8378,96 @@ public class EndososAction extends PrincipalCoreAction
 		// Si el endoso fue confirmado:
 		if(respConfirmacionEndoso.isConfirmado()) {
 		
-		// Regeneramos los documentos:
-		String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
-		
-		String sucursal = cdunieco;
-		
-		// Ejecutamos el Web Service de Recibos:
-		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-			estado, nmpoliza, 
-			nmsuplem, null, 
-			sucursal, nmsolici, ntramite, 
-			true, cdtipsup, 
-			(UserVO) session.get("USUARIO"));
-		
-		mensaje="Se ha guardado el endoso "+nsuplogi;
+			// Regeneramos los documentos:
+			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
+			String sucursal = cdunieco;
+			
+			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+			
+			if(!esProductoSalud){
+
+				/**
+				 * PARA WS ENDOSO DE AUTOS
+				 */
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+				
+				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
+					
+					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+					error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
+					logger.error("Error al ejecutar los WS de endoso");
+					
+					
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					if(endosoRevertido){
+						logger.error("Endoso revertido exitosamente.");
+						error+=" Favor de volver a itentar.";
+					}else{
+						logger.error("Error al revertir el endoso");
+						error+=" No se ha revertido el endoso.";
+					}
+					
+					success = false;
+					return SUCCESS;
+				}
+				
+				
+				int numEndRes = 0;
+				if(aux.isEndosoSinRetarif()){
+					
+					/**
+					 * PARA WS ENDOSO DE AUTOS
+					 */
+					numEndRes = emisionAutosService.endosoCambioClienteAutos(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					
+					if(numEndRes == 0){
+						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+						logger.error("Error al ejecutar sp de endoso sigs");
+						
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						
+						if(endosoRevertido){
+							logger.error("Endoso revertido exitosamente.");
+							error+=" Favor de volver a itentar.";
+						}else{
+							logger.error("Error al revertir el endoso");
+							error+=" No se ha revertido el endoso.";
+						}
+						
+						success = false;
+						return SUCCESS;
+					}else{
+						ejecutaCaratulaEndosoBsigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, Integer.toString(numEndRes));
+					}
+					
+					
+				}else if(aux.isExitoRecibos()){
+					
+					String tipoGrupoInciso = smap1.get("TIPOFLOT");
+					
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					
+				}else{
+					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+					logger.error("Error al ejecutar sp de endoso sigs");
+					
+					success = false;
+					return SUCCESS;
+				}
+			}else{
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+					estado, nmpoliza, 
+					nmsuplem, null, 
+					sucursal, nmsolici, ntramite, 
+					true, cdtipsup, 
+					(UserVO) session.get("USUARIO"));
+			}
+			
+			
+			mensaje="Se ha guardado el endoso "+nsuplogi;
 		
 		} else {
 		mensaje="El endoso "+nsuplogi

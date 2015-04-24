@@ -48,7 +48,7 @@ public interface CancelacionDAO
 			,String nmsituac
 			)throws Exception;
 	
-	public String cancelaPoliza(
+	public Map<String,Object> cancelaPoliza(
 			String cdunieco
 			,String cdramo
 			,String cduniage

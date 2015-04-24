@@ -304,6 +304,7 @@ public interface EndososAutoManager
 			,Date fevencim
 			,Date fecancel
 			,String cdtipsup
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public Map<String,Item> endosoValositFormsAuto(
