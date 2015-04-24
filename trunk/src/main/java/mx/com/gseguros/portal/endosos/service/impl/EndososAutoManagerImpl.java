@@ -3646,4 +3646,74 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	public Map<String,Item> endosoValositFormsAuto(
+			String cdtipsup
+			,String cdsisrol
+			,String cdramo
+			,List<Map<String,String>> incisos
+			) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoValositFormsAuto @@@@@@"
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ incisos="  , Utils.size(incisos)
+				));
+		
+		Map<String,Item> items = new LinkedHashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Creando hilos de lectores de componentes";
+			logger.info(paso);
+			ThreadCounter hilos = new ThreadCounter(ServletActionContext.getServletContext().getServletContextName(), pantallasDAO);
+			
+			for(Map<String,String> inciso : incisos)
+			{
+				hilos.agregarConstructor(new ConstructorComponentesAsync(
+						Utilerias.join("items",inciso.get("NMSITUAC"))
+						,cdtipsup
+						,null //cdunieco
+						,cdramo
+						,Utilerias.join("|",inciso.get("CDTIPSIT"),"|")
+						,null //estado
+						,cdsisrol
+						,"ENDOSO_VALOSIT_FORMS_AUTO"
+						,"ITEMS"
+						,null  //orden
+						,true  //esParcial
+						,false //conField
+						,true  //conItem
+						,false //conColumn
+						,false //conEditor
+						,false //conButton
+						));
+			}
+			
+			paso = "Disparando hilos de constructores de componentes";
+			logger.info(paso);
+			Map<String,GeneradorCampos> generadores = hilos.run();
+			
+			for(Map<String,String> inciso : incisos)
+			{
+				String key = Utilerias.join("items",inciso.get("NMSITUAC"));
+				items.put(key,generadores.get(key).getItems());
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ endosoValositFormsAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
 }

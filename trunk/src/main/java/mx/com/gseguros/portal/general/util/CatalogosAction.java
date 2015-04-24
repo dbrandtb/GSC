@@ -632,6 +632,20 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista=catalogosManager.cargarSumaAseguradaRamo4(params.get("cdsisrol"),params.get("cdplan"));
 					break;
+				case TIPO_SERVICIO_X_AUTO:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTiposServicioPorAuto(
+							params.get("cdunieco")
+							,params.get("cdramo")
+							,params.get("estado")
+							,params.get("nmpoliza")
+							,params.get("nmsituac")
+							,params.get("nmsuplem")
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

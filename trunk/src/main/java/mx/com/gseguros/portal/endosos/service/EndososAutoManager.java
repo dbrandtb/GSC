@@ -302,4 +302,11 @@ public interface EndososAutoManager
 			,Date fecancel
 			,String cdtipsup
 			)throws Exception;
+	
+	public Map<String,Item> endosoValositFormsAuto(
+			String cdtipsup
+			,String cdsisrol
+			,String cdramo
+			,List<Map<String,String>> incisos
+			) throws Exception;
 }

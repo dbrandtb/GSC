@@ -888,4 +888,46 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>recuperarTiposServicioPorAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTiposServicioPorAuto @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				));
+		
+		List<GenericVO>lista=new ArrayList<GenericVO>();
+		if(StringUtils.isNotBlank(cdunieco)
+				&&StringUtils.isNotBlank(cdramo)
+				&&StringUtils.isNotBlank(estado)
+				&&StringUtils.isNotBlank(nmpoliza)
+				&&StringUtils.isNotBlank(nmsituac)
+				&&StringUtils.isNotBlank(nmsuplem)
+				)
+		{
+			lista = catalogosDAO.recuperarTiposServicioPorAuto(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTiposServicioPorAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+		
+	}
 }

@@ -1429,4 +1429,58 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO>recuperarTiposServicioPorAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPO_SERVICIO_AUTO", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarTiposServicioPorAuto(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
+			}
+		}
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPO_SERVICIO_AUTO", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class RecuperarTiposServicioPorAuto extends StoredProcedure
+	{
+		protected RecuperarTiposServicioPorAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TIPO_SERVICIO_AUTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"OTCLAVE"
+					,"OTVALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
