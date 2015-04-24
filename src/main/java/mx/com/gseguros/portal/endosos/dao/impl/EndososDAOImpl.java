@@ -3480,6 +3480,71 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public boolean revierteDomicilio(Map<String, String> params)
+	{
+		try {
+			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
+			ejecutaSP(new RevierteDomicilio(getDataSource()),params);
+			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
+		} catch (Exception e) {
+			logger.error("Error al revertir el domicilio. " ,e);
+			return false;
+		}
+		return true;
+	}
+	
+	protected class RevierteDomicilio extends StoredProcedure
+	{
+		protected RevierteDomicilio(DataSource dataSource)
+		{
+			super(dataSource,"P_SACAENDOSO_DAT_MDOMICIL");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdomici_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpostal_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumero_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumint_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdedo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmunici_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcoloni_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	@Override
+	public boolean revierteNombrePersona(Map<String, String> params)
+	{
+		try {
+			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+			ejecutaSP(new RevierteNombrePersona(getDataSource()),params);
+			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+		} catch (Exception e) {
+			logger.error("Error al revertir el nombre de persona. " ,e);
+			return false;
+		}
+		return true;
+	}
+	
+	protected class RevierteNombrePersona extends StoredProcedure
+	{
+		protected RevierteNombrePersona(DataSource dataSource)
+		{
+			super(dataSource,"P_SACAENDOSO_DAT_MPERSONA");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrfc_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre1_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido1_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	
 	@Override
 	public void guardarMpolicot(String cdunieco, String cdramo, String estado,

@@ -1584,6 +1584,7 @@ public class EndososAction extends PrincipalCoreAction
 		try {
 			logger.debug("smap1: "+smap1);
 			logger.debug("smap2: "+smap2);
+			logger.debug("smap3: "+smap3);
 			logger.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
@@ -1778,6 +1779,18 @@ public class EndososAction extends PrincipalCoreAction
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nsuplogi_o"), resEndDomi.get("pv_nmsuplem_o"));
 							
 					if(endosoRevertido){
+						
+						Map<String,String> paramRevDom = new HashMap<String, String>();
+						paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+						paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+						paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+						paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+						paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+						paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+						paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+						paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+						endososManager.revierteDomicilio(paramRevDom);
+						
 						logger.error("Endoso revertido exitosamente.");
 						error+=" Favor de volver a itentar.";
 					}else{
@@ -6081,6 +6094,7 @@ public class EndososAction extends PrincipalCoreAction
 				 * PARA WS ENDOSO DE AUTOS
 				 */
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+				
 				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
 					success = false;
 					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
@@ -6088,8 +6102,20 @@ public class EndososAction extends PrincipalCoreAction
 					logger.error("Error al ejecutar los WS de endoso");
 					
 					
-					boolean endosoRevertido = false;//endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 					if(endosoRevertido){
+						
+						Map<String,String> paramRevDom = new HashMap<String, String>();
+						paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+						paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+						paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+						paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+						paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+						paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+						paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+						paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+						endososManager.revierteDomicilio(paramRevDom);
+						
 						logger.error("Endoso revertido exitosamente.");
 						error+=" Favor de volver a itentar.";
 					}else{
@@ -6114,9 +6140,21 @@ public class EndososAction extends PrincipalCoreAction
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar sp de endoso sigs");
 						
-						boolean endosoRevertido = false;//endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 						
 						if(endosoRevertido){
+							
+							Map<String,String> paramRevDom = new HashMap<String, String>();
+							paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+							paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+							paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+							paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+							paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+							paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+							paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+							paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+							endososManager.revierteDomicilio(paramRevDom);
+							
 							logger.error("Endoso revertido exitosamente.");
 							error+=" Favor de volver a itentar.";
 						}else{
@@ -8636,6 +8674,7 @@ public class EndososAction extends PrincipalCoreAction
 	);
 	logger.debug("smap1: "+smap1);
 	logger.debug("smap2: "+smap2);
+	logger.debug("smap3: "+smap3);
 	logger.debug("slist1: "+slist1);
 	
 	this.session=ActionContext.getContext().getSession();
@@ -8695,6 +8734,16 @@ public class EndososAction extends PrincipalCoreAction
 		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 		
 		if(endosoRevertido){
+			
+			Map<String,String> paramRevNom = new HashMap<String, String>();
+			paramRevNom.put("pv_cdperson_i" , smap3.get("cdperson"));
+			paramRevNom.put("pv_cdrfc_i" ,    smap3.get("rfc"));
+			paramRevNom.put("pv_dsnombre_i" , smap3.get("nombre"));
+			paramRevNom.put("pv_dsnombre1_i" , smap3.get("snombre"));
+			paramRevNom.put("pv_dsapellido_i" , smap3.get("appat"));
+			paramRevNom.put("pv_dsapellido1_i"    , smap3.get("apmat"));
+			endososManager.revierteNombrePersona(paramRevNom);
+			
 			logger.error("Endoso revertido exitosamente.");
 			error+=" Favor de volver a itentar.";
 		}else{
@@ -8885,6 +8934,7 @@ public class EndososAction extends PrincipalCoreAction
 	);
 	logger.debug("smap1: "+smap1);
 	logger.debug("smap2: "+smap2);
+	logger.debug("smap3: "+smap3);
 	logger.debug("slist1: "+slist1);
 	
 	this.session=ActionContext.getContext().getSession();
@@ -8945,6 +8995,16 @@ public class EndososAction extends PrincipalCoreAction
 		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 		
 		if(endosoRevertido){
+			
+			Map<String,String> paramRevNom = new HashMap<String, String>();
+			paramRevNom.put("pv_cdperson_i" , smap3.get("cdperson"));
+			paramRevNom.put("pv_cdrfc_i" ,    smap3.get("rfc"));
+			paramRevNom.put("pv_dsnombre_i" , smap3.get("nombre"));
+			paramRevNom.put("pv_dsnombre1_i" , smap3.get("snombre"));
+			paramRevNom.put("pv_dsapellido_i" , smap3.get("appat"));
+			paramRevNom.put("pv_dsapellido1_i"    , smap3.get("apmat"));
+			endososManager.revierteNombrePersona(paramRevNom);
+			
 			logger.error("Endoso revertido exitosamente.");
 			error+=" Favor de volver a itentar.";
 		}else{

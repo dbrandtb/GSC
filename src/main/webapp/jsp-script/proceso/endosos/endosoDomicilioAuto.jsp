@@ -288,7 +288,15 @@ Ext.onReady(function(){
                                 'smap1.pv_cdrol'    : '1',
                                 'smap1.TIPOFLOT'    : tipoFlotilla,
                                 'smap1.NTRAMITE'    : inputNtramite,
-                                'smap2.cdtipsit'    : inputCdtipsit
+                                'smap2.cdtipsit'    : inputCdtipsit,
+                                'smap3.cdperson'    : inputCdpersonp4,
+                                'smap3.calle'       : datosIniciales.data['smap1.DSDOMICI'],
+                                'smap3.cp'          : datosIniciales.data['smap1.CODPOSTAL'],
+                                'smap3.numext'      : datosIniciales.data['smap1.NMNUMERO'],
+                                'smap3.numint'      : datosIniciales.data['smap1.NMNUMINT'],
+                                'smap3.cdedo'       : datosIniciales.data['smap1.CDEDO'],
+                                'smap3.cdmunici'    : datosIniciales.data['smap1.CDMUNICI'],
+                                'smap3.cdcoloni'    : datosIniciales.data['smap1.CDCOLONI']
                             },
                             success:function(response,opts)
                             {
