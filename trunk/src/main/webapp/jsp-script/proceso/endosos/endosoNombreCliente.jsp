@@ -36,6 +36,8 @@ var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoNombr
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 debug('_35_smap1:',_35_smap1);
+
+var nombreInicial;
 ////// variables //////
 ///////////////////////
 
@@ -297,6 +299,15 @@ Ext.onReady(function()
     		debug('contratantes cargados:',json);
     		if(json.success==true)
     		{
+    			
+    			nombreInicial = {
+    				rfc    : json.slist1.CDRFC,
+    				nombre : json.slist1.DSNOMBRE,
+    				snombre: json.slist1.DSNOMBRE1,
+    				appat  : json.slist1.DSAPELLIDO,
+    				apmat  : json.slist1.DSAPELLIDO1
+    			};
+    				
     			/*
     			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdcontratante, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
     			*/
@@ -372,7 +383,12 @@ function _35_confirmar()
             	'pv_dsnombre_i'    : _35_formContratante.down('[name=nombre]').getValue(),
             	'pv_dsnombre1_i'   : _35_formContratante.down('[name=nombre1]').getValue(),
             	'pv_dsapellido_i'  : _35_formContratante.down('[name=apellido]').getValue(),
-            	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue()
+            	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue(),
+            	'rfc'              : nombreInicial.rfc,
+            	'nombre'           : nombreInicial.nombre,
+            	'snombre'          : nombreInicial.snombre,
+            	'appat'            : nombreInicial.appat,
+            	'apmat'            : nombreInicial.apmat
             }
             ,slist1 : slist1
         }

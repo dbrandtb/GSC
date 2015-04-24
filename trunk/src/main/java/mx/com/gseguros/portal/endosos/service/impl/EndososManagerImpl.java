@@ -2036,6 +2036,14 @@ public class EndososManagerImpl implements EndososManager
 	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem){
 		return endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 	}
+	
+	public boolean revierteDomicilio(Map<String, String> params){
+		return endososDAO.revierteDomicilio(params);
+	}
+
+	public boolean revierteNombrePersona(Map<String, String> params){
+		return endososDAO.revierteNombrePersona(params);
+	}
 	/********************** BASE MANAGER ***********************/
 	
 	public void guardarMpolicot(String cdunieco, String cdramo, String estado,

@@ -44,6 +44,8 @@ var _5_panelEndoso;
 var _5_fieldFechaEndoso;
 var _5_panelPri;
 
+var datosIniciales;
+
 debug('_5_smap1:',_5_smap1);
 //////variables //////
 //////////////////////
@@ -226,6 +228,9 @@ Ext.onReady(function()
 	    	_5_panelPri.setLoading(false);
 	    	var json=Ext.decode(response.responseText);
 	    	debug('respuesta',json);
+	    	
+	    	datosIniciales = json.smap1;
+	    	
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
 	    	
 	    	debug('codpost:',_codPosEnd());
@@ -344,7 +349,15 @@ function _5_confirmar(boton)
 			,smap2      : _5_formDomicil.getValues()
 			,smap3      :
 			{
-				fecha_endoso : Ext.Date.format(_5_fieldFechaEndoso.getValue(),'d/m/Y')
+				fecha_endoso : Ext.Date.format(_5_fieldFechaEndoso.getValue(),'d/m/Y'),
+				cdperson     : _5_smap1.cdperson,
+				calle        : datosIniciales.DSDOMICI,
+				cp           : datosIniciales.CODPOSTAL,
+				numext       : datosIniciales.NMNUMERO,
+				numint       : datosIniciales.NMNUMINT,
+				cdedo        : datosIniciales.CDEDO,
+				cdmunici     : datosIniciales.CDMUNICI,
+				cdcoloni     : datosIniciales.CDCOLONI
 			}
 			//,parametros : _5_panelTatriper.getValues()
 		};

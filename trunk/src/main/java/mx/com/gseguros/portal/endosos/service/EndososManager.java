@@ -383,6 +383,10 @@ public interface EndososManager
 	
 	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem);
 	
+	public boolean revierteDomicilio(Map<String, String> params);
+
+	public boolean revierteNombrePersona(Map<String, String> params);
+	
 	
 	/**
 	 * 

@@ -36,6 +36,8 @@ var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoRfcCl
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 debug('_35_smap1:',_35_smap1);
+
+var nombreInicial;
 ////// variables //////
 ///////////////////////
 
@@ -275,6 +277,15 @@ Ext.onReady(function()
     		_35_panelPri.setLoading(false);
     		var json=Ext.decode(response.responseText);
     		debug('contratantes cargados:',json);
+    		
+    		nombreInicial = {
+    				rfc    : json.slist1.CDRFC,
+    				nombre : json.slist1.DSNOMBRE,
+    				snombre: json.slist1.DSNOMBRE1,
+    				appat  : json.slist1.DSAPELLIDO,
+    				apmat  : json.slist1.DSAPELLIDO1
+    			};
+    		
     		if(json.success==true)
     		{
     			/*
@@ -349,7 +360,12 @@ function _35_confirmar()
             }
             ,smap3:{
             	'pv_cdperson_i' : _35_storeContratantes.getAt(0).get('CDPERSON'),
-            	'pv_cdrfc_i'    : _35_formContratante.down('[name=cdrfc]').getValue()
+            	'pv_cdrfc_i'    : _35_formContratante.down('[name=cdrfc]').getValue(),
+            	'rfc'              : nombreInicial.rfc,
+            	'nombre'           : nombreInicial.nombre,
+            	'snombre'          : nombreInicial.snombre,
+            	'appat'            : nombreInicial.appat,
+            	'apmat'            : nombreInicial.apmat
             }
             ,slist1 : slist1
         }
