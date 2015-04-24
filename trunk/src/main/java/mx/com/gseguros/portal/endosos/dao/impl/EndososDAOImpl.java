@@ -3941,4 +3941,51 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void modificarNmsuplemSatelites(
+		String cdunieco,
+		String cdramo,
+		String estado,
+		String nmpoliza,
+		String nmsuplemOriginal,
+		Date feEfecto,
+		Date feproren)throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplemOriginal);
+		params.put("pv_feefecto_i" , feEfecto);
+		params.put("pv_feproren_i" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************************")
+				.append("\n******    P_ACTUALIZA_NMSUPLEM_SATELITES			 *******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************************")
+				.toString()
+				);
+		ejecutaSP(new ModificaNmsuplemSatelites(this.getDataSource()), params);
+	}
+		
+	protected class ModificaNmsuplemSatelites extends StoredProcedure
+	{
+		protected ModificaNmsuplemSatelites(DataSource dataSource)
+		{
+			super(dataSource, "P_ACTUALIZA_NMSUPLEM_SATELITES");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feproren_i" , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
