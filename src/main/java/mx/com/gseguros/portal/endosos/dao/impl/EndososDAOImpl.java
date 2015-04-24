@@ -2891,7 +2891,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"FIniPol"
 					,"FFinPol"
 					,"FEndoso"
-					,"EndosoB"
+					,"EndoB"
 					
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
