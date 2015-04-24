@@ -432,6 +432,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
 			declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
 			declareParameter(new SqlParameter("vTexto", Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  

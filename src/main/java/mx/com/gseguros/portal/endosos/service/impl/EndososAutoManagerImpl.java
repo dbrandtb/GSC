@@ -26,7 +26,7 @@ import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
-import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;>
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ThreadCounter;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -1609,35 +1609,37 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}	
 		
 		if(datos != null && !datos.isEmpty()){
-			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
-			Map<String,String> datosEnIt = datos.get(0);
 			
-			paramsEnd.put("vIdMotivo"  , datosEnIt.get("IdMotivo"));
-			paramsEnd.put("vSucursal"  , datosEnIt.get("Sucursal"));
-			paramsEnd.put("vRamo"      , datosEnIt.get("Ramo"));
-			paramsEnd.put("vPoliza"    , datosEnIt.get("Poliza"));
-			paramsEnd.put("vInciso"    , datosEnIt.get("Inciso"));
-			paramsEnd.put("vTexto"     , datosEnIt.get("vTexto"));
-			paramsEnd.put("vFEndoso"   , datosEnIt.get("FEndoso"));
+			for(Map<String,String> datosEnd : datos){
 			
-			
-			try{
-				
-				Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
-				
-				logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
-				
-				if(res == null || res == 0 || res == -1){
-					logger.debug("Endoso Cambio AdaptacionesRC no exitoso");
-					return false;
-				}else{
-					endosoRecuperado = res.intValue();
+				try{
+					
+					HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+					
+					paramsEnd.put("vIdMotivo"  , datosEnd.get("IdMotivo"));
+					paramsEnd.put("vSucursal"  , datosEnd.get("Sucursal"));
+					paramsEnd.put("vRamo"      , datosEnd.get("Ramo"));
+					paramsEnd.put("vPoliza"    , datosEnd.get("Poliza"));
+					paramsEnd.put("vInciso"    , datosEnd.get("Inciso"));
+					paramsEnd.put("vTexto"     , datosEnd.get("vTexto"));
+					paramsEnd.put("vEndoB"     , (endosoRecuperado==-1)?0:endosoRecuperado);
+					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
+					
+					Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
+					
+					logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
+					
+					if(res == null || res == 0 || res == -1){
+						logger.debug("Endoso Cambio AdaptacionesRC no exitoso");
+						return false;
+					}else{
+						endosoRecuperado = res.intValue();
+					}
+					
+				} catch (Exception e){
+					logger.error("Error en Envio Cambio AdaptacionesRC Auto: " + e.getMessage(),e);
 				}
-				
-			} catch (Exception e){
-				logger.error("Error en Envio Cambio AdaptacionesRC Auto: " + e.getMessage(),e);
 			}
-			
 			
 			if(endosoRecuperado != -1){
 				try{
