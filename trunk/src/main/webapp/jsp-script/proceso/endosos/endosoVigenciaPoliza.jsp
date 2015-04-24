@@ -32,9 +32,11 @@
 					colspan		:2,				hidden      :  true
 				},
 				{
-					colspan		:2,
 					xtype		: 'datefield',	fieldLabel	: 'Vigencia actual',		name	: 'feVigencia',			labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO, readOnly  	: true
+				},
+				{	xtype		: 'datefield',	fieldLabel	: 'Fecha fin',				name	: 'finVigencia',		labelWidth	: 150,
+					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEPROREN, readOnly  	: true
 				},
 				{
 					xtype		: 'datefield',	fieldLabel	: 'Vigencia nueva',			name	: 'feIngreso',			labelWidth	: 150,
@@ -47,7 +49,7 @@
 			    	    }
 			    	}
 				},
-		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha Fin',				name	: 'feFin',				labelWidth	: 150,
+		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha fin',				name	: 'feFin',				labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEPROREN, readOnly  	: true
 				}
 	    	]
