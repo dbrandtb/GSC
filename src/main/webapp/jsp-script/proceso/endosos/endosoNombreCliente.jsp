@@ -301,11 +301,12 @@ Ext.onReady(function()
     		{
     			
     			nombreInicial = {
-    				rfc    : json.slist1.CDRFC,
-    				nombre : json.slist1.DSNOMBRE,
-    				snombre: json.slist1.DSNOMBRE1,
-    				appat  : json.slist1.DSAPELLIDO,
-    				apmat  : json.slist1.DSAPELLIDO1
+    				cdperson: json.slist1[0].CDPERSON,
+    				rfc     : json.slist1[0].CDRFC,
+    				nombre  : json.slist1[0].DSNOMBRE,
+    				snombre : json.slist1[0].DSNOMBRE1,
+    				appat   : json.slist1[0].DSAPELLIDO,
+    				apmat   : json.slist1[0].DSAPELLIDO1
     			};
     				
     			/*
@@ -384,6 +385,7 @@ function _35_confirmar()
             	'pv_dsnombre1_i'   : _35_formContratante.down('[name=nombre1]').getValue(),
             	'pv_dsapellido_i'  : _35_formContratante.down('[name=apellido]').getValue(),
             	'pv_dsapellido1_i' : _35_formContratante.down('[name=apellido1]').getValue(),
+            	'cdperson'         : nombreInicial.cdperson,
             	'rfc'              : nombreInicial.rfc,
             	'nombre'           : nombreInicial.nombre,
             	'snombre'          : nombreInicial.snombre,
