@@ -26,7 +26,7 @@ import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
-import mx.com.gseguros.portal.general.dao.PantallasDAO;>
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ThreadCounter;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
