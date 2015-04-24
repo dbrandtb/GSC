@@ -3592,7 +3592,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void confirmarEndosoRehabilitacionAuto(
+	public Map<String,Object> confirmarEndosoRehabilitacionAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco
@@ -3634,7 +3634,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
-		ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class ConfirmarEndosoRehabilitacionAuto extends StoredProcedure
@@ -3661,6 +3663,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -3700,7 +3705,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void confirmarEndosoCancelacionAuto(
+	public Map<String,Object> confirmarEndosoCancelacionAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco
@@ -3744,7 +3749,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("feinicio" , feinicio);
 		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO", params);
-		ejecutaSP(new ConfirmarEndosoCancelacionAuto(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoCancelacionAuto(getDataSource()),params);
+		
+		return resParams;
 	}
 	
 	protected class ConfirmarEndosoCancelacionAuto extends StoredProcedure
@@ -3772,6 +3779,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feinicio" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

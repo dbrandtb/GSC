@@ -241,6 +241,7 @@ public interface EndososAutoManager
 			,String cdmoneda
 			,String nmsuplem
 			,String cdelemen
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionAuto(
@@ -270,6 +271,7 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,Date   fechainicio
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public void guardarEndosoDevolucionPrimas(

@@ -407,7 +407,7 @@ public interface EndososDAO
 			String status, String cdtipcla, String swmodi, String dslinea,
 			String accion) throws Exception;
 	
-	public void confirmarEndosoRehabilitacionAuto(
+	public Map<String,Object> confirmarEndosoRehabilitacionAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco
@@ -430,7 +430,7 @@ public interface EndososDAO
 	
 	public void insertaRecibosNvaVigencia(Map<String, String> params) throws Exception;
 	
-	public void confirmarEndosoCancelacionAuto(
+	public Map<String,Object> confirmarEndosoCancelacionAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco

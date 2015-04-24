@@ -1486,6 +1486,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		{
 			UserVO user = Utils.validateSession(session);
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
 			String cdunieco = smap1.get("cdunieco");
@@ -1539,6 +1541,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdmoneda
 					,nmsuplem
 					,user.getEmpresa().getElementoId()
+					,usuarioSesion
 					);
 			
 			success = true;
@@ -1631,6 +1634,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		try
 		{
 			UserVO user = Utils.validateSession(session);
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
@@ -1688,6 +1692,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmsuplem
 					,user.getEmpresa().getElementoId()
 					,renderFechas.parse(feinicio)
+					,usuarioSesion
 					);
 			
 			success = true;
