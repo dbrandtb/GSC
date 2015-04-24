@@ -3009,6 +3009,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdmoneda
 			,String nmsuplem
 			,String cdelemen
+			,UserVO usuarioSesion
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -3038,7 +3039,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		try
 		{
 			paso = "Confirmando endoso";
-			/*Map<String,Object> resParams = */endososDAO.confirmarEndosoRehabilitacionAuto(
+			Map<String,Object> resParams = endososDAO.confirmarEndosoRehabilitacionAuto(
 					cdusuari
 					,cdsisrol
 					,cdunieco
@@ -3059,27 +3060,27 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdelemen
 					);
 			
-//			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
-//			String ntramite = (String) resParams.get("pv_ntramite_o");
-//			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
-//			
-//			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
-//			if(aux == null || !aux.isExitoRecibos()){
-//				logger.error("Error al ejecutar los WS de endoso");
-//				
-//				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
-//				
-//				if(endosoRevertido){
-//					logger.error("Endoso revertido exitosamente.");
-//					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
-//				}else{
-//					logger.error("Error al revertir el endoso");
-//					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-//				}
-//				
-//			}
-//			
-//			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+			if(aux == null || !aux.isExitoRecibos()){
+				logger.error("Error al ejecutar los WS de endoso");
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+				
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+				
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
 			
 		}
 		catch(Exception ex)
@@ -3303,6 +3304,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,Date   feinicio
+			,UserVO usuarioSesion
 			)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -3333,7 +3335,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		try
 		{
 			paso = "Confirmando endoso";
-			endososDAO.confirmarEndosoCancelacionAuto(
+			Map<String,Object> resParams = endososDAO.confirmarEndosoCancelacionAuto(
 					cdusuari
 					,cdsisrol
 					,cdunieco
@@ -3354,6 +3356,28 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdelemen
 					,feinicio
 					);
+			
+			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+			if(aux == null || !aux.isExitoRecibos()){
+				logger.error("Error al ejecutar los WS de endoso");
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+				
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+				
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
 		}
 		catch(Exception ex)
 		{
