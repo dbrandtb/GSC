@@ -6,6 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
+var _p44_urlConfirmar          = '<s:url namespace="/endosos" action="confirmarEndosoValositFormsAuto" />';
+var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"              />';
 ////// urls //////
 
 ////// variables //////
@@ -61,67 +63,121 @@ Ext.onReady(function()
     ////// contenido //////
     Ext.create('Ext.panel.Panel',
     {
-        renderTo     : '_p44_divpri'
-        ,itemId      : '_p44_panelpri'
-        ,defaults    : { style : 'margin:5px;' }
-        ,maxHeight   : 750
-        ,autoScroll  : true
-        ,items       : _p44_items
-        ,buttonAlign : 'center'
-        ,buttons     :
+        renderTo    : '_p44_divpri'
+        ,itemId     : '_p44_panelpri'
+        ,defaults   : { style : 'margin:5px;' }
+        ,maxHeight  : 750
+        ,autoScroll : true
+        ,items      : _p44_items
+        ,bbar       :
         [
-            {
-                text     : 'Confirmar'
-                ,itemId  : '_p44_botonConfirmar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                ,handler : function(me)
-                {
-                    var forms = Ext.ComponentQuery.query('form[nmsituac]',_fieldById('_p44_panelpri'));
-                    debug('forms:',forms);
-                    
-                    for(var i in forms)
+            '->'
+            ,{
+                xtype     : 'form'
+                ,layout   : 'hbox'
+                ,defaults : { style : 'margin:5px;' }
+                ,items    :
+                [
                     {
-                        if(!forms[i].getForm().isValid())
-                        {
-                            mensajeWarning('Verificar inciso '+forms[i].nmsituac);
-                            return;
-                        }
+		                xtype       : 'datefield'
+		                ,itemId     : '_p44_fechaCmp'
+		                ,format     : 'd/m/Y'
+		                ,fieldLabel : 'Fecha de efecto'
+		                ,value      : new Date()
+		                ,allowBlank : false
                     }
-                    
-                    var json =
-                    {
-                        smap1   : _p44_smap1
-                        ,slist1 : []
-                    };
-                    
-                    for(var i in forms)
-                    {
-                        var form   = forms[i];
-                        var inciso =
-                        {
-                            cdunieco  : form.down('[name=CDUNIECO]').getValue()
-                            ,cdramo   : form.down('[name=CDRAMO]').getValue()
-                            ,estado   : form.down('[name=ESTADO]').getValue()
-                            ,nmpoliza : form.down('[name=NMPOLIZA]').getValue()
-                            ,nmsituac : form.down('[name=NMSITUAC]').getValue()
-                            ,nmsuplem : form.down('[name=NMSUPLEM]').getValue()
-                        };
-                        var items = Ext.ComponentQuery.query('[name][hidden=false][readOnly=false]',form);
-                        debug('items:',items);
-                        for(var j in items)
-                        {
-                            var item = items[j];
-                            inciso['OTVALOR'+item.orden] = item.getValue();
-                        }
-                        
-                        json.slist1.push(inciso);
+                    ,{
+                        xtype : 'button'
+                        ,text     : 'Confirmar'
+		                ,itemId  : '_p44_botonConfirmar'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+		                ,handler : function(me)
+		                {
+		                    var forms = Ext.ComponentQuery.query('form[nmsituac]',_fieldById('_p44_panelpri'));
+		                    debug('forms:',forms);
+		                    
+		                    for(var i in forms)
+		                    {
+		                        if(!forms[i].getForm().isValid())
+		                        {
+		                            mensajeWarning('Verificar inciso '+forms[i].nmsituac);
+		                            return;
+		                        }
+		                    }
+		                    
+		                    if(!_fieldById('_p44_fechaCmp').isValid())
+		                    {
+		                        mensajeWarning('Verificar fecha');
+		                        return;
+		                    }
+		                    
+		                    var json =
+		                    {
+		                        smap1   : _p44_smap1
+		                        ,slist1 : []
+		                    };
+		                    
+		                    json.smap1['feinival'] = Ext.Date.format(_fieldById('_p44_fechaCmp').getValue(),'d/m/Y');
+		                    
+		                    for(var i in forms)
+		                    {
+		                        var form   = forms[i];
+		                        var inciso =
+		                        {
+		                            cdunieco  : form.down('[name=CDUNIECO]').getValue()
+		                            ,cdramo   : form.down('[name=CDRAMO]').getValue()
+		                            ,estado   : form.down('[name=ESTADO]').getValue()
+		                            ,nmpoliza : form.down('[name=NMPOLIZA]').getValue()
+		                            ,nmsituac : form.down('[name=NMSITUAC]').getValue()
+		                            ,nmsuplem : form.down('[name=NMSUPLEM]').getValue()
+		                            ,cdtipsit : form.down('[name=CDTIPSIT]').getValue()
+		                        };
+		                        var items = Ext.ComponentQuery.query('[name][hidden=false][readOnly=false]',form);
+		                        debug('items:',items);
+		                        for(var j in items)
+		                        {
+		                            var item = items[j];
+		                            inciso['OTVALOR'+item.orden] = item.getValue();
+		                        }
+		                        
+		                        json.slist1.push(inciso);
+		                    }
+		                    
+		                    debug('json a enviar:',json);
+		                    
+		                    me.disable();
+		                    me.setText('Cargando...');
+		                    Ext.Ajax.request(
+		                    {
+		                        url       : _p44_urlConfirmar
+		                        ,jsonData : json
+		                        ,success  : function(response)
+		                        {
+		                            me.setText('Confirmar');
+		                            me.enable();
+		                            var json2 = Ext.decode(response.responseText);
+		                            debug('### confirmar:',json2);
+		                            if(json2.success)
+		                            {
+		                                mensajeCorrecto('Endoso generado','Endoso generado');
+		                            }
+		                            else
+		                            {
+		                                mensajeError(json2.respuesta);
+		                            }
+		                        }
+		                        ,failure  : function()
+		                        {
+		                            me.setText('Confirmar');
+		                            me.enable();
+		                            errorComunicacion();
+		                        }
+		                    });
+		                }
                     }
-                    
-                    debug('json a enviar:',json);
-                    
-                    alert('pendiente');
-                }
+                ]
             }
+            ,'->'
         ]
     });
     ////// contenido //////
@@ -229,6 +285,40 @@ Ext.onReady(function()
             }
         }
     }
+    
+    Ext.Ajax.request(
+    {
+        url      : _p44_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p44_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _p44_smap1.CDRAMO
+            ,'smap1.estado'       : _p44_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _p44_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _p44_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldById('_p44_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldById('_p44_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldById('_p44_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldById('_p44_fechaCmp').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 

@@ -1880,6 +1880,64 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return result;
 	}
+	
+	public String confirmarEndosoValositFormsAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n#############################################"
+				,"\n###### confirmarEndosoValositFormsAuto ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , Utils.size(slist1)
+				));
+		
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String feinival = smap1.get("feinival");
+			
+			Utils.validate(cdtipsup  , "No se recibio el codigo de endoso"
+					       ,cdunieco , "No se recibio la sucursal"
+					       ,cdramo   , "No se recibio el producto"
+					       ,estado   , "No se recibio el estado de la poliza"
+					       ,nmpoliza , "No se recibio el numero de poliza"
+					       ,feinival , "No se recibio la fecha de endoso"
+					       );
+			
+			endososAutoManager.confirmarEndosoValositFormsAuto(
+					user.getUser()
+					,user.getRolActivo().getClave()
+					,user.getEmpresa().getElementoId()
+					,cdtipsup
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,renderFechas.parse(feinival)
+					,slist1
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### confirmarEndosoValositFormsAuto ######"
+				,"\n#############################################"
+				));
+		return SUCCESS;
+	}
 
 	/*
 	 * Getters y setters

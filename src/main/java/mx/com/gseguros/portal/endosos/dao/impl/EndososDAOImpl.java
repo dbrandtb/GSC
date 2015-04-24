@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Constantes;
@@ -3873,6 +3874,68 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public PropiedadesDeEndosoParaWS confirmarEndosoValositFormsAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdtipsup
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feinival
+			,String tstamp
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdelemen" , cdelemen);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("feinival" , feinival);
+		params.put("tstamp"   , tstamp);
+		params.put("idproces" , tstamp);
+		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_VALOSIT_FORM", params);
+		Map<String,Object> procResult = ejecutaSP(new ConfirmarEndosoValositFormsAuto(getDataSource()),params);
+		String tipoflot = (String)procResult.get("pv_tipoflot_o");
+		String ntramite = (String)procResult.get("pv_ntramite_o");
+		String nmsuplem = (String)procResult.get("pv_nmsuplem_o");
+		PropiedadesDeEndosoParaWS prop = new PropiedadesDeEndosoParaWS();
+		prop.setTipoflot(tipoflot);
+		prop.setNtramite(ntramite);
+		prop.setNmsuplem(nmsuplem);
+		return prop;
+	}
+	
+	protected class ConfirmarEndosoValositFormsAuto extends StoredProcedure
+	{
+		protected ConfirmarEndosoValositFormsAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_VALOSIT_FORM");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinival" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
