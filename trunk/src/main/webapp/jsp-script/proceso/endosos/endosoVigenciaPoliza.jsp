@@ -27,12 +27,17 @@
 			}
 			,
 		    items: [
-		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha Inicio Endoso',	name	: 'feInival',			labelWidth	: 150,
+		    	{	xtype		: 'datefield',	fieldLabel	: 'Fecha emisi&oacute;n endoso',	name	: 'feInival',			labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true, 					value   : new Date(),			allowBlank	: false,
-					colspan		:2
+					colspan		:2,				hidden      :  true
 				},
 				{
-					xtype		: 'datefield',	fieldLabel	: 'Fecha Efecto',			name	: 'feIngreso',			labelWidth	: 150,
+					colspan		:2,
+					xtype		: 'datefield',	fieldLabel	: 'Vigencia actual',		name	: 'feVigencia',			labelWidth	: 150,
+					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO, readOnly  	: true
+				},
+				{
+					xtype		: 'datefield',	fieldLabel	: 'Vigencia nueva',			name	: 'feIngreso',			labelWidth	: 150,
 					format		: 'd/m/Y',		editable	: true,						value	: asegAlterno.FEEFECTO,	allowBlank	: false,
 					minValue: asegAlterno.pv_fechaMinima ,
 					maxValue: asegAlterno.pv_fechaMaxima ,
