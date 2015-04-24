@@ -6,6 +6,7 @@ import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
+import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
@@ -470,5 +471,18 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+	
+	public PropiedadesDeEndosoParaWS confirmarEndosoValositFormsAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdtipsup
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feinival
+			,String tstamp
 			)throws Exception;
 }

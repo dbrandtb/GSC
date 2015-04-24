@@ -310,12 +310,25 @@ public interface EndososAutoManager
 			,String cdsisrol
 			,String cdramo
 			,List<Map<String,String>> incisos
-			) throws Exception;
+			)throws Exception;
 	
 	public void validaEndosoCambioVigencia(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+	
+	public void confirmarEndosoValositFormsAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdtipsup
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feinival
+			,List<Map<String,String>> incisos
 			)throws Exception;
 }
