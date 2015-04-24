@@ -949,7 +949,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
-			String ntramite = smap1.get("ntramite");
+			String ntramite = smap1.get("NTRAMITE");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -967,7 +967,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
-			String cdtipsup      = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
+			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
@@ -1020,7 +1020,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
-			String ntramite = smap1.get("ntramite");
+			String ntramite = smap1.get("NTRAMITE");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1091,7 +1091,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
-			String ntramite = smap1.get("ntramite");
+			String ntramite = smap1.get("NTRAMITE");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1163,7 +1163,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
-			String ntramite = smap1.get("ntramite");
+			String ntramite = smap1.get("NTRAMITE");
 			String dslinea  = smap1.get("TEXTOEND");
 			List<Map<String,String>> situaciones = null;
 			

@@ -6088,7 +6088,7 @@ public class EndososAction extends PrincipalCoreAction
 					logger.error("Error al ejecutar los WS de endoso");
 					
 					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					boolean endosoRevertido = false;//endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						error+=" Favor de volver a itentar.";
@@ -6114,7 +6114,7 @@ public class EndososAction extends PrincipalCoreAction
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar sp de endoso sigs");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = false;//endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");

@@ -30,6 +30,8 @@ var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatal
 var esElContratanteP4   = true;
 var formPanelp4;
 
+var datosIniciales;
+
 debug('inputCduniecop4'        , inputCduniecop4);
 debug('inputCdramop4'          , inputCdramop4);
 debug('inputEstadop4'          , inputEstadop4);
@@ -449,6 +451,7 @@ Ext.onReady(function(){
             
             debug('Valores a Cargar: ' , resp);
             
+            datosIniciales = resp;
            
             _comboColoniasEnd().getStore().load(
             {

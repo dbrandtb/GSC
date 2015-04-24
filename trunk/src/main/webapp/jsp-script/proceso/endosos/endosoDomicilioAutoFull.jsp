@@ -316,6 +316,13 @@ Ext.onReady(function()
 //////funciones //////
 function _5_confirmar(boton)
 {
+	
+	centrarVentana(Ext.Msg.show({
+        title: 'Confirmar acci&oacute;n',
+        msg: '&iquest;Esta seguro de cambiar este domicilio?',
+        buttons: Ext.Msg.YESNO,
+        fn: function(buttonId, text, opt) {
+        	if(buttonId == 'yes') {
 	debug('_5_confirmar');
 	
 	var valido=true;
@@ -375,6 +382,13 @@ function _5_confirmar(boton)
 		    }
 		});
 	}
+}else{
+        		return;
+        	}
+		},
+        icon: Ext.Msg.QUESTION
+	}).defer(300));
+
 }
 
 
