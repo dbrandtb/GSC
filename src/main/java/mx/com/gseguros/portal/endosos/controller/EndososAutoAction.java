@@ -1830,6 +1830,50 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String endosoValositFormsAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n####################################"
+				,"\n###### endosoValositFormsAuto ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , Utils.size(slist1)
+				));
+		
+		String result = ERROR;
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1  , "No se recibieron datos");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdramo   = smap1.get("CDRAMO");
+			String cdtipsup = smap1.get("cdtipsup");
+			
+			Utils.validate(cdramo    , "No se recibio el producto"
+					       ,cdtipsup , "No se recibio el codigo de endoso");
+			
+			imap = endososAutoManager.endosoValositFormsAuto(
+					cdtipsup
+					,user.getRolActivo().getClave()
+					,cdramo
+					,slist1
+					);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### endosoValositFormsAuto ######"
+				,"\n####################################"
+				));
+		return result;
+	}
 
 	/*
 	 * Getters y setters

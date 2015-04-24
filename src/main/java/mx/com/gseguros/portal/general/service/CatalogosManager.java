@@ -125,4 +125,13 @@ public interface CatalogosManager {
     public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio,String producto)throws Exception;
     public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception;
     public List<GenericVO>cargarSumaAseguradaRamo4(String cdsisrol,String cdplan)throws Exception;
+    
+    public List<GenericVO>recuperarTiposServicioPorAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception;
 }
