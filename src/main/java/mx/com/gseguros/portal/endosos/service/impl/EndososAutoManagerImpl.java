@@ -2270,6 +2270,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,Date dFechaEndoso
 			,String feefecto
 			,String feproren
+			,String nmsuplemOriginal
 		)throws Exception
 	{
 		logger.info(Utilerias.join(
@@ -2286,13 +2287,27 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
 				,"\n@@@@@@ feefecto="         , feefecto
 				,"\n@@@@@@ feproren="         , feproren
+				,"\n@@@@@@ nmsuplemOriginal=" , nmsuplemOriginal
 				));
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		String paso = "";
 		try
 		{
+			paso = "Modificar nmsuplem";
+			logger.info(paso);
+			endososDAO.modificarNmsuplemSatelites(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplemOriginal
+				,renderFechas.parse(feefecto)
+				,renderFechas.parse(feproren)
+			);
+			
 			paso = "Iniciando endoso";
 			logger.info(paso);
+			
 			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
 					cdunieco
 					,cdramo

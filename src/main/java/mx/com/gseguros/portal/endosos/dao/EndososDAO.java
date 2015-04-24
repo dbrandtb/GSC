@@ -473,6 +473,16 @@ public interface EndososDAO
 			,String nmpoliza
 			)throws Exception;
 	
+	public void modificarNmsuplemSatelites(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplemOriginal,
+			Date feEfecto,
+			Date feproren
+			)throws Exception;
+	
 	public PropiedadesDeEndosoParaWS confirmarEndosoValositFormsAuto(
 			String cdusuari
 			,String cdsisrol

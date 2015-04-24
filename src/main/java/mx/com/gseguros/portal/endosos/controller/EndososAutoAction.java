@@ -951,6 +951,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
 			String ntramite = smap1.get("NTRAMITE");
+			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -985,7 +986,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					fechaEndoso,
 					dFechaEndoso,
 					feefecto,
-					feproren);
+					feproren,
+					nmsuplemOriginal);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}
@@ -1022,6 +1024,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
 			String ntramite = smap1.get("NTRAMITE");
+			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1042,7 +1045,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdtipsup      = TipoEndoso.AMPLIACION_DE_VIGENCIA.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
-			
 			endososAutoManager.guardarEndosoVigenciaPoliza(
 					cdunieco,
 					cdramo,
@@ -1056,7 +1058,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					fechaEndoso,
 					dFechaEndoso,
 					feefecto,
-					feproren);
+					feproren,
+					nmsuplemOriginal);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}
@@ -1093,6 +1096,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
 			String ntramite = smap1.get("NTRAMITE");
+			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1127,7 +1131,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					fechaEndoso,
 					dFechaEndoso,
 					feefecto,
-					feproren);
+					feproren,
+					nmsuplemOriginal);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}

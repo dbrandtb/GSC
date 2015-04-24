@@ -150,6 +150,7 @@ public interface EndososAutoManager
 			,Date dFechaEndoso
 			,String feefecto
 			,String feproren
+			,String nmsuplemOriginal
 			)throws Exception;
 
 	public void guardarEndosoTextoLibre(
