@@ -1,7 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 var datosgrid;
 var storeIncisos;
-
 Ext.define('modelClau',
 {
 	extend:'Ext.data.Model',
@@ -19,7 +18,6 @@ Ext.onReady(function() {
 		mode: 'SINGLE',
 		allowDeselect: true
 	});
-	
 	///// NUEVOS
 	Ext.define('DatosFacturaxTramite',{
 		extend: 'Ext.data.Model',

@@ -1,6 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
 	var valorIndexSeleccionado= null;
+	var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 	
 	Ext.selection.CheckboxModel.override( {
 	    mode: 'SINGLE',
@@ -140,8 +141,8 @@ Ext.onReady(function() {
 
     cmbRamos = Ext.create('Ext.form.field.ComboBox',{
 		fieldLabel   : 'Producto',				allowBlank     : false,				editable   : false,
-		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		width: 300,								name:'cmbRamos',					store 		   : storeRamos,
+		displayField: 'value',					valueField: 'key',					forceSelection : false,				queryMode :'local',
+		width: 300,								name:'cmbRamos',					store 		   : storeRamos,		readOnly : true,
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -158,7 +159,7 @@ Ext.onReady(function() {
 	var tipoPago = Ext.create('Ext.form.ComboBox',{
     	name:'cmbTipoPago',						fieldLabel: 'Tipo pago',			allowBlank:false,			editable:false,
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
-    	width		 : 300,						store: storeTipoPago,
+    	width		 : 300,						store: storeTipoPago,				readOnly : true,
     	listeners : {
     		'select':function(e){
     			limpiarRegistrosTipoPago(e.getValue());
@@ -169,7 +170,7 @@ Ext.onReady(function() {
 	var comboTipoAte = Ext.create('Ext.form.ComboBox',{
         name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:true,
         displayField: 'value',					emptyText:'Seleccione...',			valueField: 'key',			forceSelection : true,
-        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion
+        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion,	readOnly : true
     });
     
     cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
@@ -177,7 +178,7 @@ Ext.onReady(function() {
     	fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
     	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
     	minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
-    	width		: 300
+    	width		: 300,				readOnly : true
     }); 
 	
 	cmbTipoMoneda = Ext.create('Ext.form.ComboBox',{
@@ -659,6 +660,7 @@ Ext.onReady(function() {
     	            text: 'Guardar Facturas',
             		handler: function() {
             			var form = this.up('form').getForm();
+            			myMask.show();
             			if (form.isValid()){
     	                	
 							if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){ // Pago Directo
@@ -668,6 +670,7 @@ Ext.onReady(function() {
 								});
                 				
                 				if(obtener.length <= 0){
+                					myMask.hide();
                 					centrarVentanaInterna(Ext.Msg.show({
 										title:'Error',
 										msg: 'Se requiere ingresar al menos una factura',
@@ -680,6 +683,7 @@ Ext.onReady(function() {
 	                				for(i=0;i < obtener.length;i++){
 	                					if(obtener[i].noFactura == null ||obtener[i].fechaFactura == null ||obtener[i].importe == null ||
 	                						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""){
+	                						myMask.hide();
 	                						centrarVentanaInterna(Ext.Msg.show({
 	    						                title:'Facturas',
 	    						                msg: 'Favor de introducir los campos requeridos en la factura',
@@ -699,6 +703,7 @@ Ext.onReady(function() {
 								});
 								
 								if(obtener.length <= 0){
+									myMask.hide();
                 					centrarVentanaInterna(Ext.Msg.show({
     						                title:'Error',
     						                msg: 'Se requiere ingresar al menos una factura',
@@ -730,6 +735,7 @@ Ext.onReady(function() {
 								});
 								
 								if(obtener.length <= 0){
+									myMask.hide();
                 					centrarVentanaInterna(Ext.Msg.show({
     						                title:'Error',
     						                msg: 'Se requiere ingresar al menos una documento',
@@ -743,6 +749,7 @@ Ext.onReady(function() {
 	                						obtener[i].importeFactura == null ||obtener[i].proveedorName == null ||obtener[i].tasaCambio == null ||
 	                						obtener[i].noFactura == "" ||obtener[i].fechaFactura == "" ||obtener[i].importe == ""||
 	                						obtener[i].importeFactura == "" ||obtener[i].proveedorName == "" ||obtener[i].tasaCambio == ""){
+	                						myMask.hide();
 	                						centrarVentanaInterna(Ext.Msg.show({
 	    						                title:'Facturas',
 	    						                msg: 'Favor de introducir los campos requeridos en la factura',
@@ -816,13 +823,14 @@ Ext.onReady(function() {
 									panelInicialPral.setLoading(false);
 									var jsonResp = Ext.decode(response.responseText);
 									if(jsonResp.success == true){
-										debug("VALOR DE jsonResp ::::::::::::::::>>>",jsonResp);
+										myMask.hide();
 										mensajeCorrecto("&Eeacute;xito"," Se han guardado las Facturas",null);
 										storeFacturaDirecto.removeAll();
 										storeFacturaReembolso.removeAll();
 										storePagoIndemnizatorio.removeAll();
 									}
 									else{
+										myMask.hide();
 										Ext.Msg.show({
 											title:'Error',
 											msg: 'Error en el guardado del alta de tr&aacute;mite',

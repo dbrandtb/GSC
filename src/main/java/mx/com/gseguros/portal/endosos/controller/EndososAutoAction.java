@@ -968,7 +968,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
 			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
-			String fechaEndoso   = smap1.get("FEINIVAL");
+			String fechaEndoso   = smap1.get("FEEFECTO");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
 			endososAutoManager.guardarEndosoVigenciaPoliza(

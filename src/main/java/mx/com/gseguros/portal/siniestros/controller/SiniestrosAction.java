@@ -3030,6 +3030,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			}
 			logger.debug("Paso 4.- Es pago Directo : "+ esPagoDirecto);
 			
+			/***************************** 		P A G O		D I R E C T O  		*************************/
 			if(TipoPago.DIRECTO.getCodigo().equals(tramite.get("OTVALOR02"))) {
 				logger.debug("Paso 5.- EL PROCESO DE PAGO ES DIRECTO ");
 				smap.put("PAGODIRECTO","S");
@@ -3699,7 +3700,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 					facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
-			}else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
+			}
+			/***************************** 		P A G O		R E E M B O L S O 		*************************/
+			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
 				
 				double importeSiniestroUnico 	= 0d;
@@ -4094,7 +4097,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("<<WS del siniestro unico");
 			
 		}else{
-			//PAGO X INDEMNIZACION
+			/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
 			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null,null);
 			logger.debug("VALOR DEL listaSiniestrosMsiniesTramite -->"+siniestros);
 			siniestro  = siniestros.get(0);
@@ -4104,7 +4107,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			smap3.put("a","a");
 			smap.put("PAGODIRECTO","N");
 			slist1     = facturasAux;
-			logger.debug("FACTURAS -->"+slist1);
+			logger.debug("FACTURAS"+slist1);
 			
 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 			paramCobertura.put("pv_cdunieco_i",siniestro.get("CDUNIECO"));

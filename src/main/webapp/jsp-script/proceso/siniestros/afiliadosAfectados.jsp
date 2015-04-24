@@ -76,7 +76,6 @@
 			var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
             
 			
-			
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			
 			
@@ -133,6 +132,7 @@
 			var storeDestinoPago;
 			var storeCatConcepto;
 			var ventanaAgregarAsegurado;
+			
 			<s:set name="contadorFactura" value="0" />
 			<s:iterator value="slist2">
 				recordsStoreFactura.push({
@@ -1390,6 +1390,7 @@
 												for(i = 0; i < conceptos.length; i++){
 													totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
 												}
+												debug("VALOR DE CDRAMO ...-----_______ >>>>",record.get('CDRAMO'));
 												if(record.get('CDRAMO') == '7' ){
 													obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), 
 																		  record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'),
@@ -4407,8 +4408,8 @@
 		windowLoader = Ext.create('Ext.window.Window',{
 			title         : 'Alta de Facturas'
 			,buttonAlign  : 'center'
-			,width        : 750
-			,height       : 400
+			,width        : 800
+			,height       : 430
 			,autoScroll   : true
 			,loader       : {
 				url       : _VER_ALTA_FACTURAS
