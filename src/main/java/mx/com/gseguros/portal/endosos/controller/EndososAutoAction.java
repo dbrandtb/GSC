@@ -1948,6 +1948,155 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String endosoRehabilitacionPolAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n#########################################"
+				,"\n###### endosoRehabilitacionPolAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		String result = ERROR;
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdramo = smap1.get("CDRAMO");
+			
+			Utils.validate(cdramo , "No se recibio el producto");
+			
+			imap = endososAutoManager.confirmarEndosoRehabilitacionPolAuto(user.getRolActivo().getClave(),cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### endosoRehabilitacionPolAuto ######"
+				,"\n#########################################"
+				));
+		return result;
+	}
+	
+	public String marcarPolizaParaRehabilitar()
+	{
+		logger.info(Utilerias.join(
+				 "\n#########################################"
+				,"\n###### marcarPolizaParaRehabilitar ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			Utils.validate(cdunieco  , "No se recibio la sucursal"
+					       ,cdramo   , "No se recibio el producto"
+					       ,nmpoliza , "No se recibio el numero de poliza"
+					       );
+			
+			smap1.putAll(endososAutoManager.marcarPolizaParaRehabilitar(cdunieco,cdramo,nmpoliza));
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### marcarPolizaParaRehabilitar ######"
+				,"\n#########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String confirmarEndosoRehabilitacionPolAuto()
+	{
+		logger.info(Utilerias.join(
+				 "\n##################################################"
+				,"\n###### confirmarEndosoRehabilitacionPolAuto ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo"); 
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String f_efecto = smap1.get("feefecto");
+			String f_proren = smap1.get("feproren");
+			String f_cancel = smap1.get("fecancel");
+			String f_inival = smap1.get("feinival");
+			String cdrazon  = smap1.get("cdrazon");
+			String cdperson = smap1.get("cdperson");
+			String cdmoneda = smap1.get("cdmoneda");
+			String nmcancel = smap1.get("nmcancel");
+			String comments = smap1.get("comments");
+			String nmsuplem = smap1.get("nmsuplem");
+			
+			Utils.validate(
+					cdtipsup  , "No se recibio el codigo de endoso"
+					,cdunieco , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado"
+					,nmpoliza , "No se recibio el numero de poliza"
+					,f_efecto , "No se recibio el inicio de vigencia de la poliza"
+					,f_proren , "No se recibio el fin de vigencia de la poliza"
+					,f_cancel , "No se recibio la fecha de cancelacion"
+					,f_inival , "No se recibio la fecha de rehabilitacion"
+					,cdrazon  , "No se recibio el motivo de cancelacion"
+					,cdperson , "No se recibio la clave de person"
+					,cdmoneda , "No se recibio la clave de moneda"
+					,nmcancel , "No se recibio el consecutivo de cancelacion"
+					,nmsuplem , "No se recibio el numero de suplemento"
+					);
+			
+			endososAutoManager.confirmarEndosoRehabilitacionPolAuto(
+					cdtipsup
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,renderFechas.parse(f_efecto)
+					,renderFechas.parse(f_proren)
+					,renderFechas.parse(f_cancel)
+					,renderFechas.parse(f_inival)
+					,cdrazon
+					,cdperson
+					,cdmoneda
+					,nmcancel
+					,comments
+					,nmsuplem
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### confirmarEndosoRehabilitacionPolAuto ######"
+				,"\n##################################################"
+				));
+		return SUCCESS;
+	}
 
 	/*
 	 * Getters y setters
