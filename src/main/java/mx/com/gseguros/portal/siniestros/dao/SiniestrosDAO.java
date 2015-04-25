@@ -447,6 +447,10 @@ public interface SiniestrosDAO {
 	
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
 
-	List<Map<String, String>> obtieneListaDatosSumaAsegurada(HashMap<String, Object> params) throws Exception;
+	public List<Map<String, String>> obtieneListaDatosSumaAsegurada(HashMap<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> obtieneSumaAseguradaPeriodoEsperaRec(HashMap<String, Object> params) throws Exception;
+
+	public List<Map<String, String>> obtieneEsquemaSumaAseguradaRec(HashMap<String, Object> params) throws Exception;
 
 }
