@@ -332,5 +332,6 @@ public interface EndososAutoManager
 			,String nmpoliza
 			,Date feinival
 			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
 			)throws Exception;
 }

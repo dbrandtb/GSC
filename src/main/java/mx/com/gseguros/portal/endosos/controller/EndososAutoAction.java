@@ -1901,6 +1901,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		try
 		{
 			UserVO user = Utils.validateSession(session);
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			Utils.validate(smap1  , "No se recibieron datos de poliza");
 			Utils.validate(slist1 , "No se recibieron incisos");
@@ -1931,6 +1932,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmpoliza
 					,renderFechas.parse(feinival)
 					,slist1
+					,usuarioSesion
 					);
 			
 			success = true;
