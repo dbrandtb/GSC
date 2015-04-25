@@ -4254,4 +4254,53 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public List<Map<String, String>> obtieneSumaAseguradaPeriodoEsperaRec(
+			HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneSumaAseguradaPeriodoEsperaRec(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	protected class ObtieneSumaAseguradaPeriodoEsperaRec extends StoredProcedure {
+		protected ObtieneSumaAseguradaPeriodoEsperaRec(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_GET_DATOS_RECUPERA");
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cobertura_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_subcobertura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i",   OracleTypes.DATE));
+			String[] cols = new String[]{
+					"PLAZOESPERA"
+					,"SUMAASEG"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneEsquemaSumaAseguradaRec(
+			HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneEsquemaSumaAseguradaRec(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	protected class ObtieneEsquemaSumaAseguradaRec extends StoredProcedure {
+		protected ObtieneEsquemaSumaAseguradaRec(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_GET_ESQUEMASUMA_RECUPERA");
+			declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"ESQUEMAASEG"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

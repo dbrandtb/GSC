@@ -1947,11 +1947,10 @@
 							xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
 						{
-							xtype		: 'datefield',			fieldLabel	: 'Fecha Egreso',			name	: 'params.feegreso',	format	: 'd/m/Y'
+							xtype		: 'datefield',			fieldLabel	: 'Fecha Egreso',			name	: 'params.feegreso',	format	: 'd/m/Y',		allowBlank : false
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Deducible (D&iacute;as)',		name	: 'params.diasdedu'//,
-							//allowBlank	: false
+							xtype		: 'numberfield',		fieldLabel 	: 'Deducible (D&iacute;as)',		name	: 'params.diasdedu',		allowBlank : false
 						},
 						cmbProveedor,
 						comboTipoAte,
@@ -2924,14 +2923,22 @@
 				panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));
 				panelInicialPral.down('[name=params.feegreso]').setValue(_11_recordActivo.get('feegreso')); 
 				panelInicialPral.down('[name=params.diasdedu]').setValue(_11_recordActivo.get('diasdedu'));
-
+				var valorRequerido = true;
 				if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
 					gridEditorConceptos.hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
-					panelInicialPral.down('[name=params.feegreso]').show(); 
-					panelInicialPral.down('[name=params.diasdedu]').show();
+					if(_11_params.CDRAMO =="1"){
+						panelInicialPral.down('[name=params.feegreso]').hide(); 
+						panelInicialPral.down('[name=params.diasdedu]').hide();
+						valorRequerido = true;
+					}else{
+						panelInicialPral.down('[name=params.feegreso]').show(); 
+						panelInicialPral.down('[name=params.diasdedu]').show();
+						valorRequerido = false;
+					}
+					
 				}else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
 					gridEditorConceptos.show();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
@@ -2939,6 +2946,7 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
 					panelInicialPral.down('[name=params.feegreso]').hide(); 
 					panelInicialPral.down('[name=params.diasdedu]').hide();
+					valorRequerido = true;
 				}else{
 					gridEditorConceptos.show();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();
@@ -2946,8 +2954,10 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();
 					panelInicialPral.down('[name=params.feegreso]').hide(); 
 					panelInicialPral.down('[name=params.diasdedu]').hide();
+					valorRequerido = true;
 				}
-				
+				panelInicialPral.down('[name=params.feegreso]').allowBlank = valorRequerido;
+				panelInicialPral.down('[name=params.diasdedu]').allowBlank = valorRequerido;
 				storeProveedor.load();
 				
 				panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));

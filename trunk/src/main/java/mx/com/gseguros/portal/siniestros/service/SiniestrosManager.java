@@ -539,5 +539,9 @@ public interface SiniestrosManager {
 	
 	public String validaCdTipsitAltaTramite(HashMap<String, Object> paramTramite) throws Exception;
 
-	List<Map<String, String>> getConsultaDatosSumaAsegurada(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
+	public List<Map<String, String>> getConsultaDatosSumaAsegurada(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
+
+	public List<Map<String, String>> listaSumaAseguradaPeriodoEsperaRec(String  cdramo, String cobertura, String subcobertura, Date feEfecto) throws Exception;
+	
+	public List<Map<String, String>> listaEsquemaSumaAseguradaRec(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsituac) throws Exception;
 }

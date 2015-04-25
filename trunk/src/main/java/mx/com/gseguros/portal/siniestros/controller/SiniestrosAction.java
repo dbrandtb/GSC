@@ -17,6 +17,9 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -58,6 +61,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONException;
 import org.apache.struts2.json.JSONUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -145,6 +150,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
     private Map<String, String> map1;
     private List<Map<String,String>>  datosInformacionAdicional;
     private List<Map<String,String>>  datosValidacion;
+
+    @Autowired
+	@Qualifier("consultasAseguradoManagerImpl")
+    private ConsultasAseguradoManager consultasAseguradoManager;
     
     /*** 	A U T O R I Z A C I O N    	D E	     S E R V I C I O 	 ***/
 	/**
@@ -4098,8 +4107,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			
 		}else{
 			/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
+			logger.debug("Paso 5.- EL PROCESO DE PAGO DE INDEMNIZACION");
+			
 			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,null,null);
-			logger.debug("VALOR DEL listaSiniestrosMsiniesTramite -->"+siniestros);
+			logger.debug("Paso 6.- Obtenemos el valor del Siniestro para el pago : "+siniestros.get(0));
+			
 			siniestro  = siniestros.get(0);
 			siniestros = null;
 			smap2      = siniestro;
@@ -4116,9 +4128,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramCobertura.put("pv_nmpoliza_i",siniestro.get("NMPOLIZA"));
 			paramCobertura.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
 			paramCobertura.put("pv_cdgarant_i",null);
-
-			List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
-			logger.debug("<-- VALORES listaCobertura -->"+listaCobertura);
 
 			//hospitalizacion
 			Map<String,String> hosp = new HashMap<String,String>();
@@ -4156,6 +4165,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			//for(Map<String,String>facturaIte:facturasAux)
 			for(int i = 0; i < facturasAux.size(); i++){
 				facturaIte = facturasAux.get(i);
+				logger.debug("Paso 6.- Factura en proceso : "+i+ " Informacion Factura : "+facturaIte);
+				
 				Map<String,Object>facturaObj=new HashMap<String,Object>();
 				facturaObj.putAll(facturaIte);
 				this.facturasxSiniestro.add(facturaObj);
@@ -4165,31 +4176,59 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				mprem.put("SUBTOTAL"  , "0");
 				lprem.add(mprem);
 				
-				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
-					siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"),
-					siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
-				logger.debug("<-- copagoDeducibleFacturaIte -->"+copagoDeducibleFacturaIte);
-				
-				Map<String,String>rentaDiariaxHospitalizacion =siniestrosManager.obtenerRentaDiariaxHospitalizacion(
-					siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"));
-				double sumaAsegurada = Double.valueOf(rentaDiariaxHospitalizacion.get("OTVALOR"));
-				double beneficioMax = Double.parseDouble(copagoDeducibleFacturaIte.get("BENEFMAX").replace("%",""));
-				//OBTENEMOS EL VALOR Y SE REALIZA UN REEMPLA
-				Calendar fechas = Calendar.getInstance();        				 
-				//fecha inicio
-				Calendar fechaInicio = new GregorianCalendar();
-				fechaInicio.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
-				Calendar fechaFin = new GregorianCalendar();
-				fechaFin.set(Integer.parseInt(facturaIte.get("FEEGRESO").substring(6,10)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(3,5)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(0,2)));
-				fechas.setTimeInMillis(fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());
-				int totalDias = fechas.get(Calendar.DAY_OF_YEAR);
-				int diasPantalla = 0;
-				if(facturaIte.get("FEEGRESO").length() > 0){
-					diasPantalla = Integer.parseInt(facturaIte.get("DIASDEDU"));
+				if(siniestro.get("CDTIPSIT").equalsIgnoreCase("RI")){
+					logger.debug("Paso 7.- El Pago a realizar es Recupera");
+					
+					PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+					datosPol.setCdunieco(siniestro.get("CDUNIECO"));
+					datosPol.setCdramo(siniestro.get("CDRAMO"));
+					datosPol.setEstado(siniestro.get("ESTADO"));
+					datosPol.setNmpoliza(siniestro.get("NMPOLIZA"));
+					
+					List<ConsultaDatosGeneralesPolizaVO> lista = consultasAseguradoManager.obtieneDatosPoliza(datosPol);
+					String feEfecto = lista.get(0).getFeefecto();
+					logger.debug("Paso 8.- Obtenemos la fecha Efecto de la Poliza : "+feEfecto);
+					
+					List<Map<String,String>> datosAdicionales = siniestrosManager.listaSumaAseguradaPeriodoEsperaRec(siniestro.get("CDRAMO"),facturaIte.get("CDGARANT"),facturaIte.get("CDCONVAL"),renderFechas.parse(feEfecto));
+					double SumaAsegurada = Double.parseDouble(datosAdicionales.get(0).get("SUMAASEG"));
+					logger.debug("Paso 9.- Obtenemos la suma Asegurada : "+SumaAsegurada);
+					
+					List<Map<String,String>> esquemaSum = siniestrosManager.listaEsquemaSumaAseguradaRec(siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSITUAC"));
+					double esquemaSumaAseg = Double.parseDouble(esquemaSum.get(0).get("ESQUEMAASEG"));
+					logger.debug("Paso 10.- Obtenemos el esquema de suma Asegurada : "+esquemaSumaAseg);
+					
+					double totalFactura = SumaAsegurada * esquemaSumaAseg;
+					facturaObj.put("TOTALFACTURAIND",totalFactura+"");
+					importeSiniestroUnico += totalFactura;
+					
+				}else{
+					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
+							siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"),
+							siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
+					logger.debug("<-- copagoDeducibleFacturaIte -->"+copagoDeducibleFacturaIte);
+					
+					Map<String,String>rentaDiariaxHospitalizacion =siniestrosManager.obtenerRentaDiariaxHospitalizacion(
+						siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"));
+					
+					double sumaAsegurada = Double.valueOf(rentaDiariaxHospitalizacion.get("OTVALOR"));
+					double beneficioMax = Double.parseDouble(copagoDeducibleFacturaIte.get("BENEFMAX").replace("%",""));
+					//OBTENEMOS EL VALOR Y SE REALIZA UN REEMPLA
+					Calendar fechas = Calendar.getInstance();
+					//fecha inicio
+					Calendar fechaInicio = new GregorianCalendar();
+					fechaInicio.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
+					Calendar fechaFin = new GregorianCalendar();
+					fechaFin.set(Integer.parseInt(facturaIte.get("FEEGRESO").substring(6,10)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(3,5)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(0,2)));
+					fechas.setTimeInMillis(fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());
+					int totalDias = fechas.get(Calendar.DAY_OF_YEAR);
+					int diasPantalla = 0;
+					if(facturaIte.get("FEEGRESO").length() > 0){
+						diasPantalla = Integer.parseInt(facturaIte.get("DIASDEDU"));
+					}
+					double totalFactura = sumaAsegurada * (beneficioMax/100d) * (totalDias - diasPantalla);
+					facturaObj.put("TOTALFACTURAIND",totalFactura+"");
+					importeSiniestroUnico += totalFactura;	
 				}
-				double totalFactura = sumaAsegurada * (beneficioMax/100d) * (totalDias - diasPantalla);
-				facturaObj.put("TOTALFACTURAIND",totalFactura+"");
-				importeSiniestroUnico += totalFactura;
 			}
 
 			logger.debug(">>WS del siniestro unico");
